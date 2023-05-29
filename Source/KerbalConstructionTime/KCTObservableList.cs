@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public class KCTObservableList<T> : List<T>
+    public class KCTObservableList<T> : PersistentList<T> where T : IConfigNode
     {
         public event Action Updated = delegate { };
         public event Action<int, T> Added = delegate (int idx, T element) { };
@@ -86,14 +87,24 @@ namespace KerbalConstructionTime
             Updated();
         }
 
-        public new void RemoveAll(Predicate<T> match)
+        public new int RemoveAll(Predicate<T> match)
         {
-            List<T> found = FindAll(match);
-            foreach (T item in found)
+            int removed = 0;
+            for (int i = base.Count - 1; i >= 0; --i)
             {
-                Remove(item);
+                T item = base[i];
+                if (match(item))
+                {
+                    base.RemoveAt(i);
+                    Removed(i, item);
+                    ++removed;
+                }
             }
-            Updated();
+
+            if (removed > 0)
+                Updated();
+
+            return removed;
         }
 
         public new T this[int index]
@@ -107,6 +118,16 @@ namespace KerbalConstructionTime
                 base[index] = value;
                 Updated();
             }
+        }
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            for (int i = 0; i < Count; ++i)
+            {
+                Added(i, base[i]);
+            }
+            Updated();
         }
     }
 }

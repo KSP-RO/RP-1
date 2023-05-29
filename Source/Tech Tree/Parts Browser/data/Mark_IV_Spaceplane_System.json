@@ -9,7 +9,7 @@
         "category": "FLIGHT",
         "info": "Engine",
         "year": "1973",
-        "technology": "matureTurbofans",
+        "technology": "efficientSupersonic",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

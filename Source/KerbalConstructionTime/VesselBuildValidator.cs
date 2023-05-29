@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using System.Reflection;
 using UnityEngine;
+using RP0.UI;
+using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -17,7 +19,7 @@ namespace KerbalConstructionTime
         /// <summary>
         /// If true, will only give a warning message to the user and not fail the validation.
         /// </summary>
-        public bool BypassFacilityRequirements { get; set; } = true;
+        public bool BypassFacilityRequirements { get; set; } = false;
         public bool CheckPartAvailability { get; set; } = true;
         public bool CheckPartConfigs { get; set; } = true;
         public bool CheckAvailableFunds { get; set; } = true;
@@ -41,12 +43,6 @@ namespace KerbalConstructionTime
                 InputLockManager.RemoveControlLock(InputLockID);
             });
 
-            if (!Utilities.CurrentGameIsCareer())
-            {
-                _successActions(blv);
-                return;
-            }
-
             if (_routine != null)
                 KerbalConstructionTime.Instance.StopCoroutine(_routine);
 
@@ -60,6 +56,11 @@ namespace KerbalConstructionTime
             if (ProcessFacilityChecks(blv) != ValidationResult.Success)
             {
                 _failureActions();
+                yield break;
+            }
+            if (!Utilities.CurrentGameIsCareer())
+            {
+                _successActions(blv);
                 yield break;
             }
 
@@ -103,12 +104,14 @@ namespace KerbalConstructionTime
             if (CheckFacilityRequirements)
             {
                 //Check if vessel fails facility checks but can still be built
-                List<string> facilityChecks = blv.MeetsFacilityRequirements(true);
-                if (facilityChecks.Count != 0)
+                List<string> facilityChecks = new List<string>();
+                if (!blv.MeetsFacilityRequirements(facilityChecks))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
                         "Failed editor checks!",
-                        "Warning! This vessel did not pass the editor checks! It will still be built, but you will not be able to launch it without upgrading. Listed below are the failed checks:\n"
+                        "Warning! This vessel did not pass the editor checks! " 
+                            + (BypassFacilityRequirements ? "It will still be added to plans, but you cannot build it without rectifying these issues." : string.Empty)
+                            + "\nListed below are the failed checks:\n"
                         + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()),
                         "Acknowledged",
                         false,
@@ -139,7 +142,7 @@ namespace KerbalConstructionTime
             IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> lockedParts = partStatuses.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable);
             if (lockedParts.Any())
             {
-                KCTDebug.Log($"Tried to add {blv.ShipName} to build list but it contains locked parts.");
+                KCTDebug.Log($"Tried to add {blv.shipName} to build list but it contains locked parts.");
 
                 // Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
                 string lockedMsg = ConstructLockedPartsWarning(lockedParts);
@@ -159,15 +162,26 @@ namespace KerbalConstructionTime
 
             string devPartsMsg = ConstructUnlockablePartsWarning(purchasableParts);
             List<AvailablePart> partList = purchasableParts.Select(kvp => kvp.Key).ToList();
+            
             // PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
-            int unlockCost = Utilities.FindUnlockCost(partList);
+            
+            double unlockCost = Utilities.FindUnlockCost(partList);
+            var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
+            double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds);
+
+            double subsidy = UnlockSubsidyHandler.Instance.GetSubsidyAmount(partList);
+
+            double spentSubsidy = Math.Min(postCMQUnlockCost, subsidy);
+            double postSubsidyTotal = postCMQUnlockCost - spentSubsidy;
+            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentSubsidy);
+
             int partCount = purchasableParts.Count();
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for {unlockCost} Fund{(unlockCost > 1? "s":"")} and {mode}", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{postSubsidyTotal:N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentSubsidy:N0} subsidy)", () =>
                 {
-                    if (Funding.Instance.Funds > unlockCost)
+                    if (cmq.CanAfford())
                     {
                         Utilities.UnlockExperimentalParts(partList);
                         _validationResult = ValidationResult.Success;
@@ -201,7 +215,7 @@ namespace KerbalConstructionTime
             }
 
             Dictionary<Part, List<PartConfigValidationError>> dict = GetConfigErrorsDict(blv);
-            if (dict.Count == 0)
+            if (dict == null || dict.Count == 0)
             {
                 _validationResult = ValidationResult.Success;
                 return;
@@ -226,11 +240,11 @@ namespace KerbalConstructionTime
             if (CheckAvailableFunds)
             {
                 double totalCost = blv.GetTotalCost();
-                double prevFunds = Funding.Instance.Funds;
-                if (totalCost > prevFunds)
+                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, -totalCost, 0d, 0d);
+                if (!cmq.CanAfford())
                 {
-                    KCTDebug.Log($"Tried to add {blv.ShipName} to build list but not enough funds.");
-                    KCTDebug.Log($"Vessel cost: {Utilities.GetTotalVesselCost(blv.ShipNode)}, Current funds: {prevFunds}");
+                    KCTDebug.Log($"Tried to add {blv.shipName} to build list but not enough funds.");
+                    KCTDebug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds)}, Current funds: {Funding.Instance.Funds}");
                     var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
 
@@ -276,9 +290,11 @@ namespace KerbalConstructionTime
 
         private Dictionary<Part, List<PartConfigValidationError>> GetConfigErrorsDict(BuildListVessel blv)
         {
-            var dict = new Dictionary<Part, List<PartConfigValidationError>>();
-
             ShipConstruct sc = blv.GetShip();
+            if (sc == null)
+                return null;
+
+            var dict = new Dictionary<Part, List<PartConfigValidationError>>();
             foreach (Part part in sc.parts)
             {
                 foreach (PartModule pm in part.Modules)
@@ -311,12 +327,13 @@ namespace KerbalConstructionTime
                                 PM = pm,
                                 Error = (string)parameters[0],
                                 CanBeResolved = (bool)parameters[1],
-                                CostToResolve = (float)parameters[2]
+                                CostToResolve = (float)parameters[2],
+                                TechToResolve = (string)parameters[3]
                             };
 
                             // Try to autoresolve issues that cost next to nothing
                             if (validationError.CanBeResolved && validationError.CostToResolve <= 1.1 &&
-                                PurchaseConfig(pm))
+                                PurchaseConfig(pm, validationError.TechToResolve))
                             {
                                 continue;
                             }
@@ -354,16 +371,26 @@ namespace KerbalConstructionTime
                     if (error.CanBeResolved)
                     {
                         string txt = $"<color=green><b>{p.partInfo.title}: {error.Error}</b></color>\n";
+                        var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -error.CostToResolve, 0f, 0f);
+                        string costStr = cmq.GetCostLineOverride(true, false, false, true);
+                        double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds);
+                        double invertCMQOp = error.CostToResolve / trueTotal;
+                        double subsidyAmtToUse = Math.Min(trueTotal, UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve));
+                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidyAmtToUse);
+                        string costAfterSubsidyStr = $"{cmq.GetCostLine(true, false, true, true)} after subsidy";
+                        var button = new DialogGUIButtonWithTooltip($"Unlock ({costStr})",
+                                                         () =>
+                                                         {
+                                                             PurchaseConfig(error.PM, error.TechToResolve);
+                                                             _validationResult = ValidationResult.Rerun;
+                                                         },
+                                                         () => cmq.CanAfford(),
+                                                         100, -1, true)
+                                                            { tooltipText = costAfterSubsidyStr };
                         list.Add(new DialogGUIHorizontalLayout(TextAnchor.MiddleLeft,
                                      new DialogGUILabel("<color=green><size=20>•</size></color>", 7),
                                      new DialogGUILabel(txt, expandW: true),
-                                     new DialogGUIButton($"Unlock ({error.CostToResolve:N0})",
-                                                         () => {
-                                                             PurchaseConfig(error.PM);
-                                                             _validationResult = ValidationResult.Rerun;
-                                                         },
-                                                         () => Funding.CanAfford(error.CostToResolve),
-                                                         100, -1, true)));
+                                     button));
                     }
                     else
                     {
@@ -382,10 +409,12 @@ namespace KerbalConstructionTime
             return list.ToArray();
         }
 
-        private bool PurchaseConfig(PartModule pm)
+        private bool PurchaseConfig(PartModule pm, string tech)
         {
+            RP0.Harmony.RFECMPatcher.techNode = tech;
             var mi = pm.GetType().GetMethod("ResolveValidationError", BindingFlags.Instance | BindingFlags.Public);
             object retVal = mi?.Invoke(pm, new object[] { });
+            RP0.Harmony.RFECMPatcher.techNode = null;
 
             return (retVal is bool b) && b;
         }
@@ -396,6 +425,7 @@ namespace KerbalConstructionTime
             public string Error { get; set; }
             public bool CanBeResolved { get; set; }
             public float CostToResolve { get; set; }
+            public string TechToResolve { get; set; }
         }
     }
 }

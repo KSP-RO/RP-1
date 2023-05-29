@@ -1,13 +1,27 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UniLinq;
 
 namespace KerbalConstructionTime
 {
     public class PresetManager
     {
         public static PresetManager Instance;
-        public KCT_Preset ActivePreset;
+        public KCT_Preset ActivePreset
+        {
+            get { return _activePreset; }
+            set
+            {
+                _activePreset = value;
+
+                if (value == null)
+                    return;
+
+                RP0.LocalizationHandler.UpdateLocalizedText();
+            }
+        }
+        private KCT_Preset _activePreset;
         public List<KCT_Preset> Presets;
         public List<string> PresetPaths;
 
@@ -153,19 +167,19 @@ namespace KerbalConstructionTime
             LoadPresets();
         }
 
-        public int StartingUpgrades(Game.Modes mode)
+        public int StartingPersonnel(Game.Modes mode)
         {
             if (mode == Game.Modes.CAREER)
             {
-                return ActivePreset.StartUpgrades[0];
+                return ActivePreset.StartPersonnel[0];
             }
             else if (mode == Game.Modes.SCIENCE_SANDBOX)
             {
-                return ActivePreset.StartUpgrades[1];
+                return ActivePreset.StartPersonnel[1];
             }
             else
             {
-                return ActivePreset.StartUpgrades[2];
+                return ActivePreset.StartPersonnel[2];
             }
         }
     }
@@ -175,28 +189,48 @@ namespace KerbalConstructionTime
         internal string _presetFileLocation = string.Empty;
 
         public KCT_Preset_General GeneralSettings = new KCT_Preset_General();
-        public KCT_Preset_Time TimeSettings = new KCT_Preset_Time();
-        public KCT_Preset_Formula FormulaSettings = new KCT_Preset_Formula();
         public KCT_Preset_Part_Variables PartVariables = new KCT_Preset_Part_Variables();
 
         public string Name = "UNINIT", ShortName = "UNINIT", Description = "NA", Author = "NA";
         public bool CareerEnabled = true, ScienceEnabled = true, SandboxEnabled = true;    //These just control whether it should appear during these game types
         public bool AllowDeletion = true;
 
-        private int[] _upgradesInternal;
-        public int[] StartUpgrades
+        private int[] _personnelInternal;
+        public int[] StartPersonnel
         {
             get
             {
-                if (_upgradesInternal == null)
+                if (_personnelInternal == null)
                 {
-                    _upgradesInternal = new int[3] {0, 0, 0}; //career, science, sandbox
-                    string[] upgrades = GeneralSettings.StartingPoints.Split(',');
+                    _personnelInternal = new int[3] { 0, 0, 0 }; //career, science, sandbox
+                    string[] personnel = GeneralSettings.StartingPersonnel.Split(new char[] { ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
                     for (int i = 0; i < 3; i++)
-                        if (!int.TryParse(upgrades[i], out _upgradesInternal[i]))
-                            _upgradesInternal[i] = 0;
+                        if (!int.TryParse(personnel[i], out _personnelInternal[i]))
+                            _personnelInternal[i] = 0;
                 }
-                return _upgradesInternal;
+                return _personnelInternal;
+            }
+        }
+
+        private int[] _researcherCaps = null;
+        public int[] ResearcherCaps
+        {
+            get
+            {
+                if (_researcherCaps == null)
+                {
+                    string[] caps = GeneralSettings.ResearcherCaps.Split(new char[] { ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
+                    _researcherCaps = new int[caps.Length];
+                    for (int i = 0; i < caps.Length; ++i)
+                        if (int.TryParse(caps[i], out _researcherCaps[i]))
+                        {
+                            if (_researcherCaps[i] == -1)
+                                _researcherCaps[i] = int.MaxValue;
+                        }
+                        else
+                            _researcherCaps[i] = 5;
+                }
+                return _researcherCaps;
             }
         }
 
@@ -225,10 +259,7 @@ namespace KerbalConstructionTime
             ScienceEnabled = Source.ScienceEnabled;
             SandboxEnabled = Source.SandboxEnabled;
 
-            ConfigNode.LoadObjectFromConfig(GeneralSettings, Source.GeneralSettings.AsConfigNode());
-            ConfigNode.LoadObjectFromConfig(TimeSettings, Source.TimeSettings.AsConfigNode());
-            ConfigNode.LoadObjectFromConfig(FormulaSettings, Source.FormulaSettings.AsConfigNode());
-            FormulaSettings.YearBasedRateMult = Source.FormulaSettings.YearBasedRateMult;
+            ConfigNode.LoadObjectFromConfig(GeneralSettings, ConfigNode.CreateConfigFromObject(Source.GeneralSettings));
             PartVariables.FromConfigNode(Source.PartVariables.AsConfigNode());
         }
 
@@ -246,16 +277,8 @@ namespace KerbalConstructionTime
             node.AddValue("science", ScienceEnabled);
             node.AddValue("sandbox", SandboxEnabled);
 
-            node.AddNode(GeneralSettings.AsConfigNode());
-            node.AddNode(TimeSettings.AsConfigNode());
-
-            ConfigNode fNode = FormulaSettings.AsConfigNode();
-            if (FormulaSettings.YearBasedRateMult != null)
-            {
-                ConfigNode rateNode = fNode.AddNode("YearBasedRateMult");
-                FormulaSettings.YearBasedRateMult.Save(rateNode);
-            }
-            node.AddNode(fNode);
+            var gs = node.AddNode("KCT_Preset_General");
+            ConfigNode.CreateConfigFromObject(GeneralSettings, gs);
 
             node.AddNode(PartVariables.AsConfigNode());
             return node;
@@ -274,18 +297,8 @@ namespace KerbalConstructionTime
             bool.TryParse(node.GetValue("science"), out ScienceEnabled);
             bool.TryParse(node.GetValue("sandbox"), out SandboxEnabled);
 
-            ConfigNode.LoadObjectFromConfig(GeneralSettings, node.GetNode("KCT_Preset_General"));
-            ConfigNode.LoadObjectFromConfig(TimeSettings, node.GetNode("KCT_Preset_Time"));
-
-            ConfigNode fNode = node.GetNode("KCT_Preset_Formula");
-            ConfigNode.LoadObjectFromConfig(FormulaSettings, fNode);
-            if (fNode.HasNode("YearBasedRateMult"))
-            {
-                var fc = new FloatCurve();
-                var rateNode = fNode.GetNode("YearBasedRateMult");
-                fc.Load(rateNode);
-                FormulaSettings.YearBasedRateMult = fc;
-            }
+            ConfigNode gNode = node.GetNode("KCT_Preset_General");
+            ConfigNode.LoadObjectFromConfig(GeneralSettings, gNode);
 
             if (node.HasNode("KCT_Preset_Part_Variables"))
                 PartVariables.FromConfigNode(node.GetNode("KCT_Preset_Part_Variables"));
@@ -320,52 +333,94 @@ namespace KerbalConstructionTime
         }
     }
 
-    public class KCT_Preset_General : ConfigNodeStorage
+    public class ApplicantsFromContracts : EfficiencyUpgrades, IConfigNode
     {
-        [Persistent]
-        public bool Enabled = true, BuildTimes = true, ReconditioningTimes = true, ReconditioningBlocksPad = false, TechUnlockTimes = true, KSCUpgradeTimes = true,
-            TechUpgrades = true, SharedUpgradePool = false, CommonBuildLine = false;
-        [Persistent]
-        public string StartingPoints = "15,15,45", //Career, Science, and Sandbox modes
-            VABRecoveryTech = null;
-        [Persistent]
-        public int MaxRushClicks = 0;
-        [Persistent]
-        public float PadUnlimitedTonnageThreshold = 3500;
+        public int GetApplicantsFromContract(string contract) => (int)GetValue(contract);
     }
 
-    public class KCT_Preset_Time : ConfigNodeStorage
+    public class EfficiencyUpgrades : IConfigNode
     {
-        [Persistent]
-        public double OverallMultiplier = 1.0, BuildEffect = 1.0, InventoryEffect = 100.0, ReconditioningEffect = 1728, MaxReconditioning = 345600, RolloutReconSplit = 0.25, MergingTimePenalty = 0.05;
+        private Dictionary<string, double> techMultipliers = new Dictionary<string, double>();
+
+        public void Load(ConfigNode node)
+        {
+            techMultipliers.Clear();
+            foreach (ConfigNode.Value kvp in node.values)
+            {
+                if (double.TryParse(kvp.value, out double val))
+                    techMultipliers[kvp.name] = val;
+            }
+        }
+
+        public void Save(ConfigNode node)
+        {
+            foreach (var kvp in techMultipliers)
+                node.AddValue(kvp.Key, kvp.Value);
+        }
+
+        public double GetMultiplier()
+        {
+            double mult = 1d;
+            foreach (var kvp in techMultipliers)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
+                    mult += kvp.Value;
+            }
+            return mult;
+        }
+
+        public double GetSum()
+        {
+            double sum = 0d;
+            foreach (var kvp in techMultipliers)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
+                    sum += kvp.Value;
+            }
+            return sum;
+        }
+
+        public double GetValue(string tech)
+        {
+            double val;
+            if (techMultipliers.TryGetValue(tech, out val))
+                return val;
+
+            return 0d;
+        }
     }
 
-    public class KCT_Preset_Formula : ConfigNodeStorage
+    public class KCT_Preset_General
     {
         [Persistent]
-        public string NodeFormula = "2^([N]+1) / 86400",
-            UpgradeFundsFormula = "min(2^([N]+4) * 1000, 1024000)",
-            UpgradesForScience = "0",
-            ResearchFormula = "[N]*0.5/86400",
-            EffectivePartFormula = "min([C]/([I] + ([B]*([U]+1))) *[MV]*[PV], [C])",
-            ProceduralPartFormula = "(([C]-[A]) + ([A]*10/max([I],1))) / max([B]*([U]+1),1) *[MV]*[PV]",
-            BPFormula = "([E]^(1/2))*2000*[O]",
-            KSCUpgradeFormula = "([C]^(1/2))*1000*[O]",
-            ReconditioningFormula = "min([M]*[O]*[E], [X])*abs([RE]-[S])",
-            BuildRateFormula = "(([I]+1)*0.05*[N] + max(0.1-[I], 0))*sign(2*[L]-[I]+1)",
-            UpgradeResetFormula = "2*([N]+1)",    //N = number of times it's been reset
-            InventorySaleFormula = "([V]+[P] / 10000)^(0.5)",    //Gives the TOTAL amount of points, decimals are kept //[V] = inventory value in funds, [P] = Value of all previous sales combined
-            IntegrationTimeFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
-            RolloutCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
-            IntegrationCostFormula = "0",    //[M]=Vessel loaded mass, [m]=vessel empty mass, [C]=vessel loaded cost, [c]=vessel empty cost, [BP]=vessel BPs, [E]=editor level, [L]=launch site level (pad), [VAB]=1 if VAB craft, 0 if SPH
-            NewLaunchPadCostFormula = "100000*([N]^3)",    //[N]=total number of unlocked launchpads (negative disables)
-            RushCostFormula = "[TC]*0.2",
-            AirlaunchCostFormula = "[E]*0.25",
-            AirlaunchTimeFormula = "[BP]*0.25",
-            EngineRefurbFormula = "0.5*(1+max(0,1-([RT]/10)))";    //[RT]=Runtime of used engine
+        public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true;
+        [Persistent]
+        public string StartingPersonnel = "20, 50, 10000", //Career, Science, and Sandbox modes
+            VABRecoveryTech = null,
+            ResearcherCaps = "300, 500, 750, 1250, 2000, 3500, -1";
+        [Persistent]
+        public int HireCost = 200, UpgradeCost = 2000;
+        [Persistent]
+        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, InventoryEffect = 100d, MergingTimePenalty = 0.05d;
+        [Persistent]
+        public FloatCurve EngineerSkillupRate = new FloatCurve();
+        [Persistent]
+        public FloatCurve ConstructionRushCost = new FloatCurve();
+        [Persistent]
+        public FloatCurve YearBasedRateMult = new FloatCurve();
+        [Persistent]
+        public EfficiencyUpgrades LCEfficiencyUpgradesMin = new EfficiencyUpgrades();
+        [Persistent]
+        public EfficiencyUpgrades LCEfficiencyUpgradesMax = new EfficiencyUpgrades();
+        [Persistent]
+        public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
 
         [Persistent]
-        public FloatCurve YearBasedRateMult = null;
+        public ApplicantsFromContracts ContractApplicants = new ApplicantsFromContracts();
+
+        public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
+        public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
+        public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier();
     }
 
     public class KCT_Preset_Part_Variables
@@ -429,7 +484,7 @@ namespace KerbalConstructionTime
             return 1.0;
         }
 
-        public double GetValueModifier(Dictionary<string, double> dict, List<string> tags)
+        public double GetValueModifier(Dictionary<string, double> dict, IEnumerable<string> tags)
         {
             double value = 1.0;
             foreach (var name in tags)
@@ -444,7 +499,7 @@ namespace KerbalConstructionTime
         //These are all multiplied in case multiple variables exist on one part
         public double GetResourceVariable(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
 
-        public double GetGlobalVariable(List<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
+        public double GetGlobalVariable(IEnumerable<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
 
         public double GetResourceVariable(PartResourceList resources)
         {

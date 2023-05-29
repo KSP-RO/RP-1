@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -16,7 +16,8 @@ namespace KerbalConstructionTime
         private double lastUT = 0;
         private int desiredWarpRate = 0;
         private bool warping = false;
-        internal IKCTBuildItem target;
+        private bool isNextThing = false;
+        internal IKCTBuildItem warpTarget;
         public static KCTWarpController Instance { get; private set; } = null;
         private static GameObject go = null;
 
@@ -26,8 +27,17 @@ namespace KerbalConstructionTime
                 go.DestroyGameObject();
             go = new GameObject("KCTWarpController");
             var controller = go.AddComponent<KCTWarpController>();
-            controller.target = warpTarget;
-            Debug.Log($"{ModTag} Created for warp target {warpTarget.GetItemName()}");
+            if (warpTarget != null)
+            {
+                controller.isNextThing = false;
+                controller.warpTarget = warpTarget;
+            }
+            else
+            {
+                controller.isNextThing = true;
+                controller.warpTarget = Utilities.GetNextThingToFinish();
+            }
+            Debug.Log($"{ModTag} Created for warp target {controller.warpTarget.GetItemName()}");
         }
 
         public void Awake()
@@ -39,7 +49,7 @@ namespace KerbalConstructionTime
 
         public void OnDestroy()
         {
-            Debug.Log($"{ModTag} {target.GetItemName()} OnDestroy.");
+            Debug.Log($"{ModTag} {warpTarget.GetItemName()} OnDestroy.");
             if (Instance == this)
             {
                 Destroy(this);
@@ -49,12 +59,15 @@ namespace KerbalConstructionTime
 
         public void Start()
         {
-            lastUT = Planetarium.GetUniversalTime();
-            if (target == null)
-                target = Utilities.GetNextThingToFinish();
+            lastUT = Utilities.GetUT();
+            if (warpTarget == null || warpTarget.IsComplete())
+            {
+                StopWarp();
+                return;
+            }
 
             // These KCTGameStates fields should fade out.
-            desiredWarpRate = RampUpWarp(target);
+            desiredWarpRate = RampUpWarp(warpTarget);
             warping = true;
         }
 
@@ -64,21 +77,45 @@ namespace KerbalConstructionTime
             {
                 return;
             }
-            // If the warp target has been reached, exit.
-            // Or if the player (or something else) has warped us down to 1x, exit.
-            if (target.IsComplete() || TimeWarp.CurrentRateIndex == 0)
+            
+            int warpRate = TimeWarp.CurrentRateIndex;
+
+            // if the player (or something else) has warped us down to 1x, exit.
+            if (warpRate == 0)
             {
                 Instance.gameObject.DestroyGameObject();
                 return;
             }
 
+            // If the target goes null or completes, stop warp and exit
+            if (warpTarget == null || warpTarget.IsComplete())
+            {
+                StopWarp();
+                return;
+            }
+
+            if (isNextThing)
+            {
+                var newTarget = Utilities.GetNextThingToFinish();
+                if (newTarget != warpTarget)
+                {
+                    warpTarget = newTarget;
+                    // second check
+                    if (warpTarget == null || warpTarget.IsComplete())
+                    {
+                        StopWarp();
+                        return;
+                    }
+                }
+            }
+
             Profiler.BeginSample("KCT.WarpController");
-            double remaining = target.GetTimeLeft();
-            double UT = Planetarium.GetUniversalTime();
+            double remaining = warpTarget.GetTimeLeft();
+            double UT = Utilities.GetUT();
             double dT = UT - lastUT;
             if (dT > 0)
             {
-                int warpRate = TimeWarp.CurrentRateIndex;
+                
                 if (warping && warpRate < desiredWarpRate) //if something else changes the warp rate then release control to them, such as Kerbal Alarm Clock
                 {
                     // This will prevent us warping up again--but note this does _not_ make us exit.
@@ -124,7 +161,7 @@ namespace KerbalConstructionTime
 
         public void StopWarp()
         {
-            Debug.Log($"{ModTag} Halting warp to target {target.GetItemName()}");
+            Debug.Log($"{ModTag} Halting warp to target {warpTarget?.GetItemName() ?? "(null)"}");
             TimeWarp.SetRate(0, true);
             warping = false;
             gameObject.DestroyGameObject();

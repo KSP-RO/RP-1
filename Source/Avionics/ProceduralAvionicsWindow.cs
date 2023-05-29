@@ -304,10 +304,16 @@ namespace RP0.ProceduralAvionics
         {
             bool switchedConfig = false;
             if (unlockCost <= 0) return switchedConfig;
-
-            GUI.enabled = techNode.IsAvailable && Funding.Instance.Funds > unlockCost;
-            _gc.text = $"Unlock ({BuildCostString(unlockCost)})";
-            _gc.tooltip = techNode.IsAvailable ? string.Empty : $"Needs tech: {techNode.TechNodeTitle}";
+            var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
+            double trueCost = -cmq.GetTotal(CurrencyRP0.Funds);
+            double subsidyToUse = Math.Min(trueCost, UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode.TechNodeName));
+            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidyToUse);
+            GUI.enabled = techNode.IsAvailable && cmq.CanAfford();
+            _gc.text = $"Unlock ({BuildCostString(Math.Max(0d, trueCost - subsidyToUse), trueCost)})";
+            string tooltip = string.Empty;
+            if (trueCost > 0) tooltip = $"Base cost: {BuildCostString(trueCost, trueCost)}\nSubsidy Applied: {BuildCostString(subsidyToUse, -1)}";
+            if(techNode.IsAvailable) tooltip += (tooltip != string.Empty ? "\n" : string.Empty) + $"Needs tech: {techNode.TechNodeTitle}";
+            _gc.tooltip = tooltip;
             if (GUILayout.Button(_gc, HighLogic.Skin.button, GUILayout.Width(120)))
             {
                 switchedConfig = PurchaseConfig(curCfgName, techNode);
@@ -441,8 +447,8 @@ namespace RP0.ProceduralAvionics
             return techNode.IsAvailable ? title : $"<color=orange>{title}</color>";
         }
 
-        private string BuildCostString(int cost) =>
-            (cost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) ? string.Empty : $"{cost:N0}";
+        private string BuildCostString(double cost, double baseCost) =>
+            (baseCost == 0 || HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch) ? string.Empty : $"{cost:N0}";
 
         private string ConstructTooltipForAvionicsTL(ProceduralAvionicsTechNode techNode)
         {
@@ -452,25 +458,34 @@ namespace RP0.ProceduralAvionics
                 sb.AppendLine($"<color=orange>This tech level can be used in simulations but will prevent the vessel from being built until {techNode.TechNodeTitle} has been researched.</color>\n");
             }
 
-            if (techNode.IsScienceCore)
+            float calcMass = GetStatsForTechNode(techNode, _newControlMass, out float massKG, out _, out float powerWatts);
+            string indent = string.Empty;
+            if (!techNode.IsScienceCore)
             {
-                sb.AppendLine($"Mass: {GetAvionicsMass(techNode, 0) * 1000:0.#}kg");
-                sb.AppendLine($"Power consumption: {GetEnabledkW(techNode, 0) * 1000:0.#}W");
-            }
-            else
-            {
-                float calcMass = _newControlMass;
-                if (calcMass <= 0) calcMass = techNode.interplanetary ? 0.5f : 100f;
                 sb.AppendLine($"At {calcMass:0.##}t controllable mass:");
-                sb.AppendLine($"  Mass: {GetAvionicsMass(techNode, calcMass) * 1000:0.#}kg");
-                sb.AppendLine($"  Power consumption: {GetEnabledkW(techNode, calcMass) * 1000:0.#}W");
+                indent = "  ";
             }
+            sb.AppendLine($"{indent}Mass: {massKG:0.#}kg");
+            sb.AppendLine($"{indent}Power consumption: {powerWatts:0.#}W");
 
             sb.AppendLine($"Axial control: {BoolToYesNoString(techNode.allowAxial)}");
             sb.AppendLine($"Can hibernate: {BoolToYesNoString(techNode.disabledPowerFactor > 0)}");
             sb.Append($"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}");
 
             return sb.ToStringAndRelease();
+        }
+
+        public static float GetStatsForTechNode(ProceduralAvionicsTechNode techNode, float controllableMass, out float massKG, out float cost, out float powerWatts)
+        {
+            if (techNode.IsScienceCore)
+                controllableMass = 0f;
+            else if (controllableMass <= 0)
+                controllableMass = techNode.interplanetary ? 0.5f : 100f;
+            
+            massKG = GetAvionicsMass(techNode, controllableMass) * 1000;
+            cost = GetAvionicsCost(controllableMass, techNode);
+            powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;
+            return controllableMass;
         }
 
         private static string BoolToYesNoString(bool b) => b ? "Yes" : "No";

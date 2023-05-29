@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 
 namespace KerbalConstructionTime
@@ -9,6 +9,8 @@ namespace KerbalConstructionTime
     {
         public static HashSet<string> ValidFuelRes = new HashSet<string>();
         public static HashSet<string> WasteRes = new HashSet<string>();
+        public static HashSet<string> PadIgnoreRes = new HashSet<string>();
+        public static HashSet<string> HangarIgnoreRes = new HashSet<string>();
 
         private void Awake()
         {
@@ -44,6 +46,19 @@ namespace KerbalConstructionTime
                     if (!string.IsNullOrEmpty(item))
                         GuiDataAndWhitelistItemsDatabase.WasteRes.Add(item);
                 }
+                foreach (var item in configNode?.GetValuesList("padIgnoreResource"))
+                {
+                    if (!string.IsNullOrEmpty(item))
+                    {
+                        GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Add(item);
+                        GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes.Add(item);
+                    }
+                }
+                foreach (var item in configNode?.GetValuesList("hangarIgnoreResource"))
+                {
+                    if (!string.IsNullOrEmpty(item))
+                        GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes.Add(item);
+                }
             }
 
             KerbalConstructionTime.KCTCostModifiers.Clear();
@@ -69,6 +84,11 @@ namespace KerbalConstructionTime
                     KerbalConstructionTime.TechNodePeriods[x.id] = x;
                 }
             }
+
+            KerbalConstructionTime.NodeTypes.Clear();
+            ConfigNode typeNode = GameDatabase.Instance.GetConfigNode("KCT_TECH_NODE_TYPES");
+            if (typeNode != null)
+                KerbalConstructionTime.NodeTypes.Load(typeNode);
         }
 
         public override bool IsReady() => LoadingScreen.Instance?.loaders != null;

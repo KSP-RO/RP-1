@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-namespace RP0
+﻿namespace RP0
 {
     public class LogPeriod : IConfigNode
     {
@@ -17,6 +13,12 @@ namespace RP0
 
         [Persistent]
         public double CurrentSci;
+
+        [Persistent]
+        public int RnDQueueLength;
+
+        [Persistent]
+        public double ProgramFunds;
 
         [Persistent]
         public double ContractRewards;
@@ -40,16 +42,28 @@ namespace RP0
         public double EntryCosts;
 
         [Persistent]
+        public double ConstructionFees;
+
+        [Persistent]
         public double OtherFees;
 
         [Persistent]
-        public int VABUpgrades;
+        public double SubsidySize;
 
         [Persistent]
-        public int SPHUpgrades;
+        public double SubsidyPaidOut;
 
         [Persistent]
-        public int RnDUpgrades;
+        public double RepFromPrograms;
+
+        [Persistent]
+        public int NumEngineers;
+
+        [Persistent]
+        public int NumResearchers;
+
+        [Persistent]
+        public double EfficiencyEngineers;
 
         [Persistent]
         public double FundsGainMult;
@@ -57,10 +71,13 @@ namespace RP0
         [Persistent]
         public int NumNautsKilled;
 
-        [Persistent] 
+        [Persistent]
+        public double Confidence;
+
+        [Persistent]
         public double Reputation;
 
-        [Persistent] 
+        [Persistent]
         public double HeadlinesHype;
 
         public LogPeriod()

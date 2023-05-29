@@ -49,23 +49,24 @@ namespace RP0
             Instance = new Tooltip();
         }
 
-        public void RecordTooltip(int windowId)
+        public void RecordTooltip(int windowId, bool skipOnEvent = true, string overrideTooltip = null)
         {
-            if (Event.current.type != EventType.Repaint) return;
+            if (skipOnEvent && Event.current.type != EventType.Repaint) return;
 
             if (!_windowTooltipTexts.TryGetValue(windowId, out string tooltipText))
             {
                 tooltipText = string.Empty;
             }
 
-            if (tooltipText != GUI.tooltip)
+            string newTooltipStr = overrideTooltip != null ? overrideTooltip : GUI.tooltip;
+            if (tooltipText != newTooltipStr)
             {
                 _isTooltipChanged = true;
                 if (!string.IsNullOrEmpty(tooltipText))
                 {
                     _tooltipBeginDt = DateTime.UtcNow;
                 }
-                _windowTooltipTexts[windowId] = GUI.tooltip;
+                _windowTooltipTexts[windowId] = newTooltipStr;
             }
         }
 
@@ -83,8 +84,8 @@ namespace RP0
                     width = Math.Min(width, TooltipMaxWidth);
                     float height = _tooltipStyle.CalcHeight(c, TooltipMaxWidth);
                     _tooltipRect = new Rect(
-                        Input.mousePosition.x + 15,
-                        Screen.height - Input.mousePosition.y + 10,
+                        Math.Min(Screen.width - width, Input.mousePosition.x + 15),
+                        Math.Min(Screen.height - height, Screen.height - Input.mousePosition.y + 10),
                         width, height);
                     _isTooltipChanged = false;
                 }

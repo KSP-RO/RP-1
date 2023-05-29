@@ -11,13 +11,20 @@ namespace KerbalConstructionTime
 
         private static Rect _centralWindowPosition = new Rect((Screen.width - 150) / 2, (Screen.height - 50) / 2, 150, 50);
         private static Rect _blPlusPosition = new Rect(Screen.width - 500, 40, 100, 1);
+        private static Rect _lcResourcesPosition = new Rect(_centralWindowPosition.xMin - 150, _centralWindowPosition.yMin, 250, 200);
         private static Vector2 _scrollPos;
+        private static Vector2 _scrollPos2;
         private static GUISkin _windowSkin;
         private static GUIStyle _orangeText;
 
         private static bool _unlockEditor;
         private static bool _isKSCLocked = false;
+        private static bool _inSCSubscene = false;
+        public static bool InSCSubscene => _inSCSubscene;
         private static readonly List<GameScenes> _validScenes = new List<GameScenes> { GameScenes.FLIGHT, GameScenes.EDITOR, GameScenes.SPACECENTER, GameScenes.TRACKSTATION };
+        private static GUIStyle _styleLabelRightAlign;
+        private static GUIStyle _styleLabelCenterAlign;
+        private static GUIStyle _styleTextFieldRightAlign;
 
         public static bool IsPrimarilyDisabled => PresetManager.PresetLoaded() && (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
                                                                                    !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes);
@@ -32,14 +39,17 @@ namespace KerbalConstructionTime
             if (_validScenes.Contains(HighLogic.LoadedScene))
             {
                 if (GUIStates.ShowSettings)
-                    _presetPosition = DrawWindowWithTooltipSupport(_presetPosition, "DrawPresetWindow", "KCT Settings", DrawPresetWindow);
+                    _presetPosition = DrawWindowWithTooltipSupport(_presetPosition, "DrawPresetWindow", "Settings", DrawPresetWindow);
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     return;
 
+                if (RP0.Milestones.NewspaperUI.IsOpen)
+                    return;
+
                 if (GUIStates.ShowEditorGUI)
-                    EditorWindowPosition = DrawWindowWithTooltipSupport(EditorWindowPosition, "DrawEditorGUI", "Kerbal Construction Time", DrawEditorGUI);
+                    EditorWindowPosition = DrawWindowWithTooltipSupport(EditorWindowPosition, "DrawEditorGUI", "Integration Info", DrawEditorGUI);
                 if (GUIStates.ShowSimulationGUI)
-                    _simulationWindowPosition = DrawWindowWithTooltipSupport(_simulationWindowPosition, "DrawSimGUI", "KCT Simulation", DrawSimulationWindow);
+                    _simulationWindowPosition = DrawWindowWithTooltipSupport(_simulationWindowPosition, "DrawSimGUI", "Simulation", DrawSimulationWindow);
                 if (GUIStates.ShowSimConfig)
                     _simulationConfigPosition = DrawWindowWithTooltipSupport(_simulationConfigPosition, "DrawSimConfGUI", "Simulation Configuration", DrawSimulationConfigure);
                 if (GUIStates.ShowSimBodyChooser)
@@ -47,7 +57,7 @@ namespace KerbalConstructionTime
                 if (GUIStates.ShowBuildList)
                 {
                     ref Rect pos = ref (HighLogic.LoadedSceneIsEditor ? ref EditorBuildListWindowPosition : ref BuildListWindowPosition);
-                    pos = DrawWindowWithTooltipSupport(pos, "DrawBuildListWindow", "Build List", DrawBuildListWindow);
+                    pos = DrawWindowWithTooltipSupport(pos, "DrawBuildListWindow", "Space Center Management", DrawBuildListWindow);
                 }
                 if (GUIStates.ShowClearLaunch)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawClearLaunch", "Launch site not clear!", DrawClearLaunch);
@@ -55,24 +65,36 @@ namespace KerbalConstructionTime
                     _crewListWindowPosition = DrawWindowWithTooltipSupport(_crewListWindowPosition, "DrawShipRoster", "Select Crew", DrawShipRoster);
                 if (GUIStates.ShowCrewSelect)
                     _crewListWindowPosition = DrawWindowWithTooltipSupport(_crewListWindowPosition, "DrawCrewSelect", "Select Crew & Launch", DrawCrewSelect);
-                if (GUIStates.ShowUpgradeWindow)
-                    _upgradePosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawUpgradeWindow", "Upgrades", DrawUpgradeWindow);
+                //if (GUIStates.ShowUpgradeWindow)
+                //    _upgradePosition = DrawWindowWithTooltipSupport(_upgradePosition, "DrawUpgradeWindow", "Upgrades", DrawUpgradeWindow);
+                if (GUIStates.ShowPersonnelWindow)
+                    _personnelPosition = DrawWindowWithTooltipSupport(_personnelPosition, "DrawPersonnelWindow", "Staffing", DrawPersonnelWindow);
                 if (GUIStates.ShowBLPlus)
                     _blPlusPosition = DrawWindowWithTooltipSupport(_blPlusPosition, "DrawBLPlusWindow", "Options", DrawBLPlusWindow);
                 if (GUIStates.ShowDismantlePad)
-                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawDismantlePadWindow", "Dismantle pad", DrawDismantlePadWindow);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawDismantlePadWindow", "Dismantle Pad", DrawDismantlePadWindow);
+                if (GUIStates.ShowDismantleLC)
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawDismantlePadWindow", "Dismantle Launch Complex", DrawDismantlePadWindow);
                 if (GUIStates.ShowRename)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawRenameWindow", "Rename", DrawRenameWindow);
                 if (GUIStates.ShowNewPad)
-                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewPadWindow", "New launch pad", DrawNewPadWindow);
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewPadWindow", "New Launch Pad", DrawNewPadWindow);
+                if (GUIStates.ShowNewLC)
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawNewLCWindow", "New Launch Complex", DrawNewLCWindow);
+                if (GUIStates.ShowModifyLC)
+                    _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawModifyLCWindow", "Modify Launch Complex", DrawNewLCWindow);
+                if (GUIStates.ShowLCResources)
+                    _lcResourcesPosition = DrawWindowWithTooltipSupport(_lcResourcesPosition, "DrawLCResourcesWindow", "Resources", DrawLCResourcesWindow);
                 if (GUIStates.ShowFirstRun)
-                    _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Kerbal Construction Time", DrawFirstRun);
+                    _firstRunWindowPosition = DrawWindowWithTooltipSupport(_firstRunWindowPosition, "DrawFirstRun", "Space Center Setup", DrawFirstRun);
                 if (GUIStates.ShowPresetSaver)
                     _presetNamingWindowPosition = DrawWindowWithTooltipSupport(_presetNamingWindowPosition, "DrawPresetSaveWindow", "Save as New Preset", DrawPresetSaveWindow);
                 if (GUIStates.ShowLaunchSiteSelector)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawLaunchSiteChooser", "Select Site", DrawLaunchSiteChooser);
 
-                if (GUIStates.ShowBuildPlansWindow)
+                // Only show plans if we don't have a popup
+                // or allow overriding if New/ModifyLC is up
+                if (_overrideShowBuildPlans || (GUIStates.ShowBuildPlansWindow && !_isKSCLocked))
                     _buildPlansWindowPosition = DrawWindowWithTooltipSupport(_buildPlansWindowPosition, "DrawBuildPlansWindow", "Building Plans & Construction", DrawBuildPlansWindow);
 
                 // both flags can be true when it's necessary to first show ClearLaunch and then Airlaunch right after that
@@ -85,14 +107,13 @@ namespace KerbalConstructionTime
                     _unlockEditor = false;
                 }
 
-                if (HighLogic.LoadedSceneIsEditor)
+                if (_inSCSubscene && HighLogic.LoadedScene != GameScenes.SPACECENTER)
                 {
-                    DoBuildPlansList();
-                    CreateDevPartsToggle();
+                        _inSCSubscene = false;
                 }
 
                 //Disable KSC things when certain windows are shown.
-                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch)
+                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowLCResources || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
                 {
                     if (!_isKSCLocked)
                     {
@@ -127,11 +148,11 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow();
 
-                if (Utilities.IsSimulationActive && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
+                if (KerbalConstructionTimeData.Instance.IsSimulatedFlight && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
                 {
                     GUIStates.ShowAirlaunch = isVisible;
                 }
-                if (KCTGameStates.IsSimulatedFlight)
+                if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
                 {
                     GUIStates.ShowSimulationGUI = isVisible;
                     _simulationWindowPosition.height = 1;
@@ -221,9 +242,15 @@ namespace KerbalConstructionTime
             GUIStates.ShowCrewSelect = false;
             GUIStates.ShowSettings = false;
             GUIStates.ShowUpgradeWindow = false;
+            GUIStates.ShowPersonnelWindow = false;
             GUIStates.ShowBLPlus = false;
             GUIStates.ShowRename = false;
             GUIStates.ShowDismantlePad = false;
+            GUIStates.ShowDismantleLC = false;
+            GUIStates.ShowNewLC = false;
+            GUIStates.ShowLCResources = false;
+            GUIStates.ShowNewPad = false;
+            GUIStates.ShowModifyLC = false;
             GUIStates.ShowFirstRun = false;
             GUIStates.ShowPresetSaver = false;
             GUIStates.ShowLaunchSiteSelector = false;
@@ -238,10 +265,6 @@ namespace KerbalConstructionTime
         {
             _fundsCost = int.MinValue;
             _nodeRate = int.MinValue;
-            _upNodeRate = int.MinValue;
-            _researchRate = int.MinValue;
-            _upResearchRate = int.MinValue;
-            _costOfNewLP = int.MinValue;
         }
 
         public static void CenterWindow(ref Rect window)
@@ -284,6 +307,51 @@ namespace KerbalConstructionTime
                 if (window.y + halfH > Screen.height)
                     window.y = Screen.height - halfH;
             }
+        }
+
+        private static GUIStyle GetLabelRightAlignStyle()
+        {
+            if (_styleLabelRightAlign == null)
+            {
+                _styleLabelRightAlign = new GUIStyle(GUI.skin.label);
+                _styleLabelRightAlign.alignment = TextAnchor.LowerRight;
+            }
+            return _styleLabelRightAlign;
+        }
+
+        private static GUIStyle GetLabelCenterAlignStyle()
+        {
+            if (_styleLabelCenterAlign == null)
+            {
+                _styleLabelCenterAlign = new GUIStyle(GUI.skin.label);
+                _styleLabelCenterAlign.alignment = TextAnchor.LowerCenter;
+            }
+            return _styleLabelCenterAlign;
+        }
+
+        private static GUIStyle GetTextFieldRightAlignStyle()
+        {
+            if (_styleTextFieldRightAlign == null)
+            {
+                _styleTextFieldRightAlign = new GUIStyle(GUI.skin.textField);
+                _styleTextFieldRightAlign.alignment = TextAnchor.LowerRight;
+            }
+            return _styleTextFieldRightAlign;
+        }
+
+        public static void EnterSCSubcene()
+        {
+            _inSCSubscene = true;
+        }
+        public static void ExitSCSubcene()
+        {
+            _inSCSubscene = false;
+        }
+
+        public static void OnDestroy()
+        {
+            _wasShowBuildList = false;
+            _overrideShowBuildPlans = false;
         }
     }
 }

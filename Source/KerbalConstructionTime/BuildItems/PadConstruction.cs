@@ -1,30 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class PadConstruction : IKCTBuildItem
+    public class PadConstruction : ConstructionBuildItem
     {
-        /// <summary>
-        /// Index of the pad in KSCItem.LaunchPads.
-        /// </summary>
-        public int LaunchpadIndex = 0;
-        public double Progress = 0, BP = 0, Cost = 0;
-        public string Name;
-        public bool UpgradeProcessed = false;
+        [Persistent]
+        public Guid id;
 
-        private KSCItem _ksc = null;
+        private LCItem _lc = null;
 
-        public KSCItem KSC
+        public LCItem LC
         {
             get
             {
-                if (_ksc == null)
+                if (_lc == null)
                 {
-                    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.PadConstructions.Contains(this));
+                    foreach (var ksc in KCTGameStates.KSCs)
+                    {
+                        foreach (var lc in ksc.LaunchComplexes)
+                        {
+                            if (lc.PadConstructions.Contains(this))
+                            {
+                                _lc = lc;
+                                break;
+                            }
+                        }
+                    }
                 }
-                return _ksc;
+                return _lc;
             }
         }
 
@@ -34,86 +38,52 @@ namespace KerbalConstructionTime
 
         public PadConstruction(string name)
         {
-            Name = name;
+            base.name = name;
         }
 
-        public double GetBuildRate()
+        public override string GetItemName() => $"{LC.Name}: {name}";
+
+        protected override void ProcessCancel()
         {
-            double rateTotal = 0;
-            if (KSC != null)
+            KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
+            int index = LC.LaunchPads.IndexOf(lp);
+            LC.LaunchPads.RemoveAt(index);
+            if (LC.ActiveLaunchPadIndex >= index)
+                LC.ActiveLaunchPadIndex = Math.Max(0, LC.ActiveLaunchPadIndex - 1); // should not change active pad.
+
+            LC.PadConstructions.Remove(this);
+
+            try
             {
-                rateTotal = Utilities.GetBothBuildRateSum(KSC);
+                KCTEvents.OnPadConstructionCancel?.Fire(this, lp);
             }
-            return rateTotal;
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+
+            LC.KSC.RecalculateBuildRates(false);
         }
 
-        public string GetItemName() => Name;
-
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
-
-        public double GetFractionComplete() => Progress / BP;
-
-        public double GetTimeLeft() => (BP - Progress) / GetBuildRate();
-
-        public void IncrementProgress(double UTDiff)
+        protected override void ProcessComplete()
         {
-            if (!IsComplete()) AddProgress(GetBuildRate() * UTDiff);
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes))
-            {
-                if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
-                {
-                    KCT_LaunchPad lp = KSC.LaunchPads[LaunchpadIndex];
-                    lp.isOperational = true;
-                    lp.DestructionNode = new ConfigNode("DestructionState");
-                    UpgradeProcessed = true;
 
-                    try
-                    {
-                        KCTEvents.OnPadConstructionComplete?.Fire(this, lp);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogException(ex);
-                    }
+            if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
+            {
+                KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
+                lp.isOperational = true;
+                lp.DestructionNode = new ConfigNode("DestructionState");
+                upgradeProcessed = true;
+
+                try
+                {
+                    KCTEvents.OnPadConstructionComplete?.Fire(this, lp);
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogException(ex);
                 }
             }
-        }
-
-        public bool IsComplete() => Progress >= BP;
-
-        public void SetBP(double cost)
-        {
-            BP = CalculateBP(cost);
-        }
-
-        public static double CalculateBP(double cost)
-        {
-            var variables = new Dictionary<string, string>()
-            {
-                { "C", cost.ToString() },
-                { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() },
-                { "Adm", "0" },
-                { "AC", "0" },
-                { "LP", "1" },
-                { "MC", "0" },
-                { "RD", "0" },
-                { "RW", "0" },
-                { "TS", "0" },
-                { "SPH", "0" },
-                { "VAB", "0" },
-                { "Other", "0" }
-            };
-
-            double bp = MathParser.GetStandardFormulaValue("KSCUpgrade", variables);
-            if (bp <= 0) { bp = 1; }
-
-            return bp;
-        }
-
-        private void AddProgress(double amt)
-        {
-            Progress += amt;
-            if (Progress > BP) Progress = BP;
         }
     }
 }

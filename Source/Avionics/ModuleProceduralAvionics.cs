@@ -4,7 +4,7 @@ using RP0.Utilities;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.Profiling;
@@ -119,7 +119,8 @@ namespace RP0.ProceduralAvionics
         private float GetAvionicsMass() => GetAvionicsMass(GetInternalMassLimit());
         private float GetAvionicsMass(float controllableMass) => GetPolynomial(controllableMass, CurrentProceduralAvionicsTechNode.massExponent, CurrentProceduralAvionicsTechNode.massConstant, CurrentProceduralAvionicsTechNode.massFactor) / 1000f;
         private static float GetAvionicsMass(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.massExponent, techNode.massConstant, techNode.massFactor) / 1000f;
-        private float GetAvionicsCost() => GetPolynomial(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode.costExponent, CurrentProceduralAvionicsTechNode.costConstant, CurrentProceduralAvionicsTechNode.costFactor);
+        private float GetAvionicsCost() => GetAvionicsCost(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode);
+        private static float GetAvionicsCost(float massLimit, ProceduralAvionicsTechNode techNode) => GetPolynomial(massLimit, techNode.costExponent, techNode.costConstant, techNode.costFactor);
         private float GetAvionicsVolume() => GetAvionicsMass() / CurrentProceduralAvionicsTechNode.avionicsDensity;
         private float GetShieldedAvionicsMass() => GetShieldedAvionicsMass(GetInternalMassLimit());
         private float GetShieldedAvionicsMass(float controllableMass)
@@ -536,7 +537,7 @@ namespace RP0.ProceduralAvionics
                                          "ShowOutdatedProcPartWarning",
                                          "Outdated Procedural Parts version",
                                          "RP-1 has detected an outdated version of the Procedural Parts mod. Some procedural avionics features will now be disabled. For best experience please update to the latest Procedural Parts release.",
-                                         "OK",
+                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
                                          HighLogic.UISkin);
         }
@@ -603,10 +604,11 @@ namespace RP0.ProceduralAvionics
             if (CurrentProceduralAvionicsConfig == null && !string.IsNullOrEmpty(avionicsConfigName))
                 CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
 
+            techToResolve = CurrentProceduralAvionicsTechNode.TechNodeName;
+
             if (!CurrentProceduralAvionicsTechNode.IsAvailable)
             {
                 validationError = $"unlock tech {CurrentProceduralAvionicsTechNode.TechNodeTitle}";
-                techToResolve = CurrentProceduralAvionicsTechNode.TechNodeName;
                 return false;
             }
 

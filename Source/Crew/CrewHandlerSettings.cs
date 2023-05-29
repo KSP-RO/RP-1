@@ -18,13 +18,16 @@ namespace RP0.Crew
         public double trainingProficiencyStupidMin = 1.5, trainingProficiencyStupidMax = 0.5, trainingProficiencyRefresherTimeMult = 0.25;
 
         [Persistent]
-        public int trainingProficiencyXP = 1;
-
-        [Persistent]
         public double trainingMissionExpirationDays = 120, trainingMissionStupidMin = 0.5, trainingMissionStupidMax = 1.5;
 
         [Persistent]
         public double minFlightDurationSecondsForTrainingExpire = 30;
+
+        [Persistent]
+        public double retireIncreaseMultiplierToTrainingLengthProficiency = 0.125d;
+
+        [Persistent]
+        public double retireIncreaseMultiplierToTrainingLengthMission = 0.25d;
 
         [Persistent]
         public double flightHighAltitude = 40000;

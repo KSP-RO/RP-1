@@ -32,6 +32,9 @@ namespace RP0
 
         public override string GetInfo()
         {
+            if (crewDeathAltitude > 140000d)
+                return "Cockpit is now fully pressurized.";
+
             return $"Cockpit is unpressurized and will lead to crew death above {crewDeathAltitude / 1000:0.#}km";
         }
 

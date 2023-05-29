@@ -1,11 +1,12 @@
 ﻿using Contracts;
 using Csv;
 using KerbalConstructionTime;
+using RP0.Programs;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
+using UniLinq;
 using System.Reflection;
 using System.Text;
 using UnityEngine;
@@ -31,18 +32,27 @@ namespace RP0
 
         private EventData<TechItem> onKctTechCompletedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
+        private EventData<FacilityUpgrade> onKctFacilityUpgradeCancelEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeCompletedEvent;
+        private EventData<LCConstruction, LCItem> onKctLCConstructionQueuedEvent;
+        private EventData<LCConstruction, LCItem> onKctLCConstructionCancelEvent;
+        private EventData<LCConstruction, LCItem> onKctLCConstructionCompleteEvent;
+        private EventData<LCItem> onKctLCDismantledEvent;
         private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionQueuedEvent;
+        private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCancelEvent;
         private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCompletedEvent;
+        private EventData<KCT_LaunchPad> onKctPadDismantledEvent;
         private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
         private readonly List<ContractEvent> _contractDict = new List<ContractEvent>();
         private readonly List<LaunchEvent> _launchedVessels = new List<LaunchEvent>();
         private readonly List<FailureEvent> _failures = new List<FailureEvent>();
-        private readonly List<FacilityConstructionEvent> _facilityConstructions = new List<FacilityConstructionEvent>();
+        private readonly List<LCLogItem> _lcs = new List<LCLogItem>();
+        private readonly List<FacilityConstruction> _facilityConstructions = new List<FacilityConstruction>();
+        private readonly List<LPConstruction> _lpConstructions = new List<LPConstruction>();
+        private readonly List<FacilityConstructionEvent> _facilityConstructionEvents = new List<FacilityConstructionEvent>();
         private readonly List<TechResearchEvent> _techEvents = new List<TechResearchEvent>();
         private bool _eventsBound = false;
         private bool _launched = false;
-        private MethodInfo _mInfContractName;
         private double _prevFundsChangeAmount;
         private TransactionReasons _prevFundsChangeReason;
         private LogPeriod _currentPeriod;
@@ -99,22 +109,64 @@ namespace RP0
                 onKctFacilityUpgradeQueuedEvent.Add(OnKctFacilityUpgdQueued);
             }
 
+            onKctFacilityUpgradeCancelEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeCancel");
+            if (onKctFacilityUpgradeCancelEvent != null)
+            {
+                onKctFacilityUpgradeCancelEvent.Add(OnKctFacilityUpgdCancel);
+            }
+
             onKctFacilityUpgradeCompletedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeComplete");
             if (onKctFacilityUpgradeCompletedEvent != null)
             {
                 onKctFacilityUpgradeCompletedEvent.Add(OnKctFacilityUpgdComplete);
             }
 
-            onKctPadConstructionQueuedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>> ("OnKctPadConstructionQueued");
+            onKctLCConstructionQueuedEvent = GameEvents.FindEvent<EventData<LCConstruction, LCItem>>("OnKctLCConstructionQueued");
+            if (onKctLCConstructionQueuedEvent != null)
+            {
+                onKctLCConstructionQueuedEvent.Add(OnKctLCConstructionQueued);
+            }
+
+            onKctLCConstructionCancelEvent = GameEvents.FindEvent<EventData<LCConstruction, LCItem>>("OnKctLCConstructionCancel");
+            if (onKctLCConstructionCancelEvent != null)
+            {
+                onKctLCConstructionCancelEvent.Add(OnKctLCConstructionCancel);
+            }
+
+            onKctLCConstructionCompleteEvent = GameEvents.FindEvent<EventData<LCConstruction, LCItem>>("OnKctLCConstructionComplete");
+            if (onKctLCConstructionCompleteEvent != null)
+            {
+                onKctLCConstructionCompleteEvent.Add(OnKctLCConstructionComplete);
+            }
+
+            onKctLCDismantledEvent = GameEvents.FindEvent<EventData<LCItem>>("OnKctLCDismantled");
+            if (onKctLCDismantledEvent != null)
+            {
+                onKctLCDismantledEvent.Add(OnKctLCDismantled);
+            }
+
+            onKctPadConstructionQueuedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionQueued");
             if (onKctPadConstructionQueuedEvent != null)
             {
                 onKctPadConstructionQueuedEvent.Add(OnKctPadConstructionQueued);
+            }
+
+            onKctPadConstructionCancelEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionCancel");
+            if (onKctPadConstructionCancelEvent != null)
+            {
+                onKctPadConstructionCancelEvent.Add(OnKctPadConstructionCancel);
             }
 
             onKctPadConstructionCompletedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionComplete");
             if (onKctPadConstructionCompletedEvent != null)
             {
                 onKctPadConstructionCompletedEvent.Add(OnKctPadConstructionComplete);
+            }
+
+            onKctPadDismantledEvent = GameEvents.FindEvent<EventData<KCT_LaunchPad>>("OnKctPadDismantled");
+            if (onKctPadDismantledEvent != null)
+            {
+                onKctPadDismantledEvent.Add(OnKctPadDismantled);
             }
         }
 
@@ -125,9 +177,16 @@ namespace RP0
 
             if (onKctTechCompletedEvent != null) onKctTechCompletedEvent.Remove(OnKctTechCompleted);
             if (onKctFacilityUpgradeQueuedEvent != null) onKctFacilityUpgradeQueuedEvent.Remove(OnKctFacilityUpgdQueued);
+            if (onKctFacilityUpgradeCancelEvent != null) onKctFacilityUpgradeCancelEvent.Remove(OnKctFacilityUpgdCancel);
             if (onKctFacilityUpgradeCompletedEvent != null) onKctFacilityUpgradeCompletedEvent.Remove(OnKctFacilityUpgdComplete);
+            if (onKctLCConstructionQueuedEvent != null) onKctLCConstructionQueuedEvent.Remove(OnKctLCConstructionQueued);
+            if (onKctLCConstructionCancelEvent != null) onKctLCConstructionCancelEvent.Remove(OnKctLCConstructionCancel);
+            if (onKctLCConstructionCompleteEvent != null) onKctLCConstructionCompleteEvent.Remove(OnKctLCConstructionComplete);
+            if (onKctLCDismantledEvent != null) onKctLCDismantledEvent.Remove(OnKctLCDismantled);
             if (onKctPadConstructionQueuedEvent != null) onKctPadConstructionQueuedEvent.Remove(OnKctPadConstructionQueued);
+            if (onKctPadConstructionCancelEvent != null) onKctPadConstructionCancelEvent.Remove(OnKctPadConstructionCancel);
             if (onKctPadConstructionCompletedEvent != null) onKctPadConstructionCompletedEvent.Remove(OnKctPadConstructionComplete);
+            if (onKctPadDismantledEvent != null) onKctPadDismantledEvent.Remove(OnKctPadDismantled);
 
             if (_eventsBound)
             {
@@ -189,12 +248,39 @@ namespace RP0
                 }
             }
 
+            foreach (ConfigNode n in node.GetNodes("LCS"))
+            {
+                foreach (ConfigNode fn in n.GetNodes("LC"))
+                {
+                    var lc = new LCLogItem(fn);
+                    _lcs.Add(lc);
+                }
+            }
+
             foreach (ConfigNode n in node.GetNodes("FACILITYCONSTRUCTIONS"))
             {
                 foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTRUCTION"))
                 {
-                    var fc = new FacilityConstructionEvent(fn);
+                    var fc = new FacilityConstruction(fn);
                     _facilityConstructions.Add(fc);
+                }
+            }
+
+            foreach (ConfigNode n in node.GetNodes("LPCONSTRUCTIONS"))
+            {
+                foreach (ConfigNode fn in n.GetNodes("LPCONSTRUCTION"))
+                {
+                    var fc = new LPConstruction(fn);
+                    _lpConstructions.Add(fc);
+                }
+            }
+
+            foreach (ConfigNode n in node.GetNodes("FACILITYCONSTREVENTS"))
+            {
+                foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTREVENT"))
+                {
+                    var fc = new FacilityConstructionEvent(fn);
+                    _facilityConstructionEvents.Add(fc);
                 }
             }
 
@@ -236,10 +322,28 @@ namespace RP0
                 f.Save(n.AddNode("FAILUREEVENT"));
             }
 
+            n = node.AddNode("LCS");
+            foreach (LCLogItem lc in _lcs)
+            {
+                lc.Save(n.AddNode("LC"));
+            }
+
             n = node.AddNode("FACILITYCONSTRUCTIONS");
-            foreach (FacilityConstructionEvent fc in _facilityConstructions)
+            foreach (FacilityConstruction fc in _facilityConstructions)
             {
                 fc.Save(n.AddNode("FACILITYCONSTRUCTION"));
+            }
+
+            n = node.AddNode("LPCONSTRUCTIONS");
+            foreach (LPConstruction lp in _lpConstructions)
+            {
+                lp.Save(n.AddNode("LPCONSTRUCTION"));
+            }
+
+            n = node.AddNode("FACILITYCONSTREVENTS");
+            foreach (FacilityConstructionEvent fc in _facilityConstructionEvents)
+            {
+                fc.Save(n.AddNode("FACILITYCONSTREVENT"));
             }
 
             n = node.AddNode("TECHS");
@@ -263,19 +367,6 @@ namespace RP0
                 NodeName = tech.ProtoNode.techID,
                 YearMult = tech.YearBasedRateMult,
                 ResearchRate = tech.BuildRate
-            });
-        }
-
-        public void AddFacilityConstructionEvent(SpaceCenterFacility facility, float newLevel, double cost, ConstructionState state)
-        {
-            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
-
-            _facilityConstructions.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
-            {
-                Facility = facility,
-                NewLevel = newLevel,
-                Cost = cost,
-                State = state
             });
         }
 
@@ -308,16 +399,11 @@ namespace RP0
                 double failureFunds = -_contractDict.Where(c => (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(p))
                                                     .Select(c => c.FundsChange)
                                                     .Sum();
-
-                double constructionFees = _facilityConstructions.Where(f => f.State == ConstructionState.Started && f.IsInPeriod(p))
-                                                                .Select(c => c.Cost)
-                                                                .Sum();
                 return new[]
                 {
                     UTToDate(p.StartUT).ToString("yyyy-MM"),
-                    p.VABUpgrades.ToString(),
-                    p.SPHUpgrades.ToString(),
-                    p.RnDUpgrades.ToString(),
+                    p.NumEngineers.ToString(),
+                    p.NumResearchers.ToString(),
                     p.CurrentFunds.ToString("F0"),
                     p.CurrentSci.ToString("F1"),
                     p.ScienceEarned.ToString("F1"),
@@ -329,8 +415,9 @@ namespace RP0
                     p.MaintenanceFees.ToString("F0"),
                     p.ToolingFees.ToString("F0"),
                     p.EntryCosts.ToString("F0"),
-                    constructionFees.ToString("F0"),
-                    (p.OtherFees - constructionFees).ToString("F0"),
+                    p.ConstructionFees.ToString("F0"),
+                    p.OtherFees.ToString("F0"),
+                    p.Confidence.ToString("F1"),
                     p.Reputation.ToString("F1"),
                     p.HeadlinesHype.ToString("F1"),
                     string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
@@ -345,13 +432,14 @@ namespace RP0
                     string.Join(", ", _techEvents.Where(t => t.IsInPeriod(p))
                                                  .Select(t => t.NodeName)
                                                  .ToArray()),
-                    string.Join(", ", _facilityConstructions.Where(f => f.IsInPeriod(p))
-                                                            .Select(f => $"{f.Facility} ({f.NewLevel + 1}) - {f.State}")
-                                                            .ToArray())
+                    // TODO: LCs and LPs
+                    string.Join(", ", _facilityConstructionEvents.Where(f => f.IsInPeriod(p))
+                                                                 .Select(f => $"{f.Facility} ({(_facilityConstructions.FirstOrDefault(fc => fc.FacilityID == f.FacilityID)?.NewLevel ?? -1) + 1}) - {f.State}")
+                                                                 .ToArray())
                 };
             });
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
+            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -367,8 +455,14 @@ namespace RP0
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
 
+            const string jsonVer = "2.0";
+            var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(GetType().Assembly.Location);
+            string rp1Ver = fvi.FileVersion;
+
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
-            var jsonToSend = "{ \"periods\": [";
+            var jsonToSend = "{ \"jsonVer\": \"" + jsonVer + "\", ";
+            jsonToSend += "\"rp1Ver\": \"" + rp1Ver + "\", ";
+            jsonToSend += "\"periods\": [";
 
             for (var i = 0; i < logPeriods.Length; i++)
             {
@@ -385,12 +479,39 @@ namespace RP0
                 else jsonToSend += JsonUtility.ToJson(dto);
             }
 
-            jsonToSend += "], \"facilityEvents\": [";
+            jsonToSend += "], \"facilityConstructions\": [";
 
             for (var i = 0; i < _facilityConstructions.Count; i++)
             {
-                var dto = new FacilityConstructionEventDto(_facilityConstructions[i]);
+                var dto = new FacilityConstructionDto(_facilityConstructions[i]);
                 if (i < _facilityConstructions.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"lcs\": [";
+
+            for (var i = 0; i < _lcs.Count; i++)
+            {
+                var dto = new LCDto(_lcs[i]);
+                if (i < _lcs.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"lpConstructions\": [";
+
+            for (var i = 0; i < _lpConstructions.Count; i++)
+            {
+                var dto = new LPConstructionDto(_lpConstructions[i]);
+                if (i < _lpConstructions.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"facilityEvents\": [";
+
+            for (var i = 0; i < _facilityConstructionEvents.Count; i++)
+            {
+                var dto = new FacilityConstructionEventDto(_facilityConstructionEvents[i]);
+                if (i < _facilityConstructionEvents.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
                 else jsonToSend += JsonUtility.ToJson(dto);
             }
 
@@ -418,6 +539,16 @@ namespace RP0
             {
                 var dto = new FailureEventDto(_failures[i]);
                 if (i < _failures.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"programs\": [";
+
+            var allPrograms = ProgramHandler.Instance.CompletedPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+            for (var i = 0; i < allPrograms.Length; i++)
+            {
+                var dto = new ProgramDto(allPrograms[i]);
+                if (i < allPrograms.Length - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
                 else jsonToSend += JsonUtility.ToJson(dto);
             }
 
@@ -455,49 +586,32 @@ namespace RP0
 
         private CareerLogDto CreateLogDto(LogPeriod logPeriod)
         {
-            double advanceFunds = _contractDict
-                .Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(logPeriod))
-                .Select(c => c.FundsChange)
-                .Sum();
-
-            double rewardFunds = _contractDict
-                .Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(logPeriod))
-                .Select(c => c.FundsChange)
-                .Sum();
-
-            double failureFunds = -_contractDict.Where(c =>
-                    (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(logPeriod))
-                .Select(c => c.FundsChange)
-                .Sum();
-
-            double constructionFees = _facilityConstructions
-                .Where(f => f.State == ConstructionState.Started && f.IsInPeriod(logPeriod))
-                .Select(c => c.Cost)
-                .Sum();
-
             return new CareerLogDto
             {
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
                 startDate = UTToDate(logPeriod.StartUT).ToString("o"),
                 endDate = UTToDate(logPeriod.EndUT).ToString("o"),
-                vabUpgrades = logPeriod.VABUpgrades,
-                sphUpgrades = logPeriod.SPHUpgrades,
-                rndUpgrades = logPeriod.RnDUpgrades,
+                numEngineers = logPeriod.NumEngineers,
+                numResearchers = logPeriod.NumResearchers,
+                efficiencyEngineers = logPeriod.EfficiencyEngineers,
                 currentFunds = logPeriod.CurrentFunds,
                 currentSci = logPeriod.CurrentSci,
+                rndQueueLength = logPeriod.RnDQueueLength,
                 scienceEarned = logPeriod.ScienceEarned,
-                advanceFunds = advanceFunds,
-                rewardFunds = rewardFunds,
-                failureFunds = failureFunds,
+                programFunds = logPeriod.ProgramFunds,
                 otherFundsEarned = logPeriod.OtherFundsEarned,
                 launchFees = logPeriod.LaunchFees,
                 maintenanceFees = logPeriod.MaintenanceFees,
                 toolingFees = logPeriod.ToolingFees,
                 entryCosts = logPeriod.EntryCosts,
-                constructionFees = logPeriod.OtherFees,
-                otherFees = logPeriod.OtherFees - constructionFees,
+                constructionFees = logPeriod.ConstructionFees,
+                otherFees = logPeriod.OtherFees,
+                subsidySize = logPeriod.SubsidySize,
+                subsidyPaidOut = logPeriod.SubsidyPaidOut,
+                repFromPrograms = logPeriod.RepFromPrograms,
                 fundsGainMult = logPeriod.FundsGainMult,
                 numNautsKilled = logPeriod.NumNautsKilled,
+                confidence = logPeriod.Confidence,
                 reputation = logPeriod.Reputation,
                 headlinesHype = logPeriod.HeadlinesHype
             };
@@ -510,11 +624,14 @@ namespace RP0
             {
                 _prevPeriod.CurrentFunds = Funding.Instance.Funds;
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
-                _prevPeriod.VABUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.VehicleAssemblyBuilding);
-                _prevPeriod.SPHUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.SpaceplaneHangar);
-                _prevPeriod.RnDUpgrades = GetKCTUpgradeCounts(SpaceCenterFacility.ResearchAndDevelopment);
+                _prevPeriod.RnDQueueLength = KerbalConstructionTimeData.Instance.TechList.Sum(t => t.scienceCost);
+                _prevPeriod.NumEngineers = KCTGameStates.TotalEngineers;
+                _prevPeriod.NumResearchers = KerbalConstructionTimeData.Instance.Researchers;
+                _prevPeriod.EfficiencyEngineers = KCTGameStates.WeightedAverageEfficiencyEngineers;
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+                _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmountForSeconds(_prevPeriod.EndUT - _prevPeriod.StartUT);
+                _prevPeriod.Confidence = Confidence.CurrentConfidence;
                 _prevPeriod.Reputation = Reputation.CurrentRep;
                 _prevPeriod.HeadlinesHype = GetHeadlinesHype();
             }
@@ -562,17 +679,21 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            float changeDelta = query.GetTotal(Currency.Funds);
-            if (changeDelta != 0f)
+            float fundsDelta = query.GetTotal(Currency.Funds);
+            if (fundsDelta != 0f)
             {
-                FundsChanged(changeDelta, query.reason);
+                FundsChanged(fundsDelta, query.reason);
+            }
+
+            float repDelta = query.GetTotal(Currency.Reputation);
+            if (repDelta != 0f)
+            {
+                RepChanged(repDelta, query.reason);
             }
         }
 
         private void FundsChanged(float changeDelta, TransactionReasons reason)
         {
-            if (CareerEventScope.ShouldIgnore) return;
-
             _prevFundsChangeAmount = changeDelta;
             _prevFundsChangeReason = reason;
 
@@ -580,6 +701,12 @@ namespace RP0
                 reason == TransactionReasons.ContractAdvance || reason == TransactionReasons.ContractReward)
             {
                 CurrentPeriod.ContractRewards += changeDelta;
+                return;
+            }
+
+            if (reason == TransactionReasons.Mission)
+            {
+                CurrentPeriod.ProgramFunds += changeDelta;
                 return;
             }
 
@@ -601,9 +728,15 @@ namespace RP0
                 return;
             }
 
-            if (reason == TransactionReasons.RnDPartPurchase)
+            if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock.Stock())
             {
                 CurrentPeriod.EntryCosts -= changeDelta;
+                return;
+            }
+
+            if (reason == TransactionReasons.StructureConstruction)
+            {
+                CurrentPeriod.ConstructionFees -= changeDelta;
                 return;
             }
 
@@ -614,6 +747,15 @@ namespace RP0
             else
             {
                 CurrentPeriod.OtherFees -= changeDelta;
+            }
+        }
+
+        private void RepChanged(float repDelta, TransactionReasons reason)
+        {
+            if (reason == TransactionReasons.Mission)
+            {
+                CurrentPeriod.RepFromPrograms += repDelta;
+                return;
             }
         }
 
@@ -689,6 +831,21 @@ namespace RP0
             });
         }
 
+        public void ProgramAccepted(Program p)
+        {
+            // TODO
+        }
+
+        public void ProgramObjectivesMet(Program p)
+        {
+            // TODO
+        }
+
+        public void ProgramCompleted(Program p)
+        {
+            // TODO
+        }
+
         private void VesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> ev)
         {
             if (CareerEventScope.ShouldIgnore) return;
@@ -704,7 +861,9 @@ namespace RP0
                     VesselName = FlightGlobals.ActiveVessel?.vesselName,
                     VesselUID = ev.host.GetKCTVesselId(),
                     LaunchID = ev.host.GetVesselLaunchId(),
-                    BuiltAt = ev.host.GetVesselBuiltAt() ?? EditorFacility.None    // KSP can't serialize nullables
+                    LCID = ev.host.GetVesselLCID(),
+                    LCModID = ev.host.GetVesselLCModID(),
+                    BuiltAt = ev.host.GetVesselBuiltAt() ?? EditorFacility.None    // KSP can't serialize nullables,
                 });
             }
         }
@@ -713,32 +872,18 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore) return;
 
-            CurrentPeriod.NumNautsKilled++;
+            if (!HighLogic.CurrentGame.CrewRoster.Tourist.Any(c => c.name == data.sender))    // Do not count tourist/test animal deaths
+            {
+                CurrentPeriod.NumNautsKilled++;
+            }
         }
 
         private string GetContractInternalName(Contract c)
         {
-            if (_mInfContractName == null)
-            {
-                Assembly ccAssembly = AssemblyLoader.loadedAssemblies.First(a => a.assembly.GetName().Name == "ContractConfigurator").assembly;
-                Type ccType = ccAssembly.GetType("ContractConfigurator.ConfiguredContract", true);
-                _mInfContractName = ccType.GetMethod("contractTypeName", BindingFlags.Public | BindingFlags.Static);
-            }
+            if (c is ContractConfigurator.ConfiguredContract cc && cc.contractType != null)
+                return cc.contractType.name;
 
-            return (string)_mInfContractName.Invoke(null, new object[] { c });
-        }
-
-        private int GetKCTUpgradeCounts(SpaceCenterFacility facility)
-        {
-            try
-            {
-                return KerbalConstructionTime.Utilities.GetSpentUpgradesFor(facility);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogException(ex);
-                return 0;
-            }
+            return string.Empty;
         }
 
         private float GetSciPointTotalFromKCT()
@@ -746,7 +891,7 @@ namespace RP0
             try
             {
                 // KCT returns -1 if the player hasn't earned any sci yet
-                return Math.Max(0, KCTGameStates.SciPointsTotal);
+                return Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);
             }
             catch (Exception ex)
             {
@@ -764,30 +909,125 @@ namespace RP0
 
         private void OnKctFacilityUpgdQueued(FacilityUpgrade data)
         {
-            if (CareerEventScope.ShouldIgnore || !data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+            AddFacilityConstructionEvent(data, ConstructionState.Started);
+        }
 
-            AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Started);
+        private void OnKctFacilityUpgdCancel(FacilityUpgrade data)
+        {
+            AddFacilityConstructionEvent(data, ConstructionState.Cancelled);
         }
 
         private void OnKctFacilityUpgdComplete(FacilityUpgrade data)
         {
-            if (CareerEventScope.ShouldIgnore || !data.FacilityType.HasValue) return;    // can be null in case of third party mods that define custom facilities
+            AddFacilityConstructionEvent(data, ConstructionState.Completed);
+        }
 
-            AddFacilityConstructionEvent(data.FacilityType.Value, data.UpgradeLevel, data.Cost, ConstructionState.Completed);
+        private void OnKctLCConstructionQueued(LCConstruction data, LCItem lc)
+        {
+            AddLCConstructionEvent(data, lc, ConstructionState.Started);
+        }
+
+        private void OnKctLCConstructionCancel(LCConstruction data, LCItem lc)
+        {
+            AddLCConstructionEvent(data, lc, ConstructionState.Cancelled);
+        }
+
+        private void OnKctLCConstructionComplete(LCConstruction data, LCItem lc)
+        {
+            AddLCConstructionEvent(data, lc, ConstructionState.Completed);
+        }
+
+        private void OnKctLCDismantled(LCItem lc)
+        {
+            AddLCConstructionEvent(null, lc, ConstructionState.Dismantled);
         }
 
         private void OnKctPadConstructionQueued(PadConstruction data, KCT_LaunchPad lp)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            AddPadConstructionEvent(data, lp, ConstructionState.Started);
+        }
 
-            AddFacilityConstructionEvent(SpaceCenterFacility.LaunchPad, lp.fractionalLevel, data.Cost, ConstructionState.Started);
+        private void OnKctPadConstructionCancel(PadConstruction data, KCT_LaunchPad lp)
+        {
+            AddPadConstructionEvent(data, lp, ConstructionState.Cancelled);
         }
 
         private void OnKctPadConstructionComplete(PadConstruction data, KCT_LaunchPad lp)
         {
+            AddPadConstructionEvent(data, lp, ConstructionState.Completed);
+        }
+
+        private void OnKctPadDismantled(KCT_LaunchPad lp)
+        {
+            AddPadConstructionEvent(null, lp, ConstructionState.Dismantled);
+        }
+
+        private void AddFacilityConstructionEvent(FacilityUpgrade data, ConstructionState state)
+        {
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;    // facility type can be null in case of third party mods that define custom facilities
+
+            if (!_facilityConstructions.Any(fc => fc.FacilityID == data.uid))
+            {
+                _facilityConstructions.Add(new FacilityConstruction
+                {
+                    Facility = data.FacilityType,
+                    FacilityID = data.uid,
+                    Cost = data.cost,
+                    NewLevel = data.upgradeLevel
+                });
+            }
+
+            _facilityConstructionEvents.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
+            {
+                Facility = FacilityConstructionEvent.ParseFacilityType(data.FacilityType),
+                FacilityID = data.uid,
+                State = state
+            });
+        }
+
+        private void AddLCConstructionEvent(LCConstruction data, LCItem lc, ConstructionState state)
+        {
             if (CareerEventScope.ShouldIgnore) return;
 
-            AddFacilityConstructionEvent(SpaceCenterFacility.LaunchPad, lp.fractionalLevel, data.Cost, ConstructionState.Completed);
+            Guid modId = data?.modId ?? lc.ModID;    // Should only happen when LCs are created through code and thus do not have Construction items
+            if (!_lcs.Any(logLC => logLC.ModID == modId))
+            {
+                var logItem = data == null ? new LCLogItem(lc) : new LCLogItem(data);
+                logItem.ModID = modId;
+                _lcs.Add(logItem);
+            }
+
+            _facilityConstructionEvents.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
+            {
+                Facility = FacilityType.LaunchComplex,
+                State = state,
+                FacilityID = modId
+            });
+        }
+
+        private void AddPadConstructionEvent(PadConstruction data, KCT_LaunchPad lp, ConstructionState state)
+        {
+            if (CareerEventScope.ShouldIgnore) return;
+
+            Guid id = data?.id ?? lp.id;
+            LCItem lc = data?.LC ?? lp.LC;
+            if (!_lpConstructions.Any(lpc => lpc.LPID == id))
+            {
+                _lpConstructions.Add(new LPConstruction
+                {
+                    LPID = id,
+                    LCID = lc.ID,
+                    LCModID = lc.ModID,
+                    Cost = data?.cost ?? 0
+                });
+            }
+
+            _facilityConstructionEvents.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
+            {
+                Facility = FacilityType.LaunchPad,
+                State = state,
+                FacilityID = id
+            });
         }
     }
 }

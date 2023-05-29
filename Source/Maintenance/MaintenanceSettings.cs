@@ -1,17 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using KSP;
-using UnityEngine;
-using System.Reflection;
-
-namespace RP0
+﻿namespace RP0
 {
-    public class MaintenanceSettings : IConfigNode
+    public class MaintenanceSettings
     {
-        [Persistent]
-        public double maintenanceOffset = -10d;
-
         [Persistent]
         public double facilityLevelCostMult = 0.00002d;
 
@@ -19,10 +9,22 @@ namespace RP0
         public double facilityLevelCostPow = 1d;
 
         [Persistent]
-        public double kctBPMult = 20d;
+        public int salaryEngineers = 1000;
 
         [Persistent]
-        public double kctResearchMult = 100d * 86400d;
+        public int salaryResearchers = 1000;
+
+        [Persistent]
+        public double researcherSalaryToUnlockSubsidy = 0.75d;
+
+        [Persistent]
+        public double hangarCostForMaintenanceOffset = 240000d;
+
+        [Persistent]
+        public double hangarCostForMaintenanceMin = 20000d;
+
+        [Persistent]
+        public double lcCostMultiplier = 2d;
 
         [Persistent]
         public double nautYearlyUpkeepAdd = 5000d;
@@ -34,7 +36,15 @@ namespace RP0
         public double nautInFlightDailyRate = 100d;
 
         [Persistent]
-        public double nautOrbitProficiencyDailyRate = 20d;
+        public double nautOrbitProficiencyUpkeepAdd = 20d;
+
+        [Persistent]
+        public double nautInactiveMult = 0.5d;
+
+        [Persistent]
+        public double nautSubOrbitProficiencyUpkeepAdd = 20d;
+        [Persistent]
+        public double nautTrainingCostMultiplier = 100d;
 
         [Persistent]
         public double freeCoursesPerLevel = 0.5d;
@@ -42,14 +52,16 @@ namespace RP0
         [Persistent]
         public double courseMultiplierDivisor = 3d;
 
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
+        [Persistent]
+        public double repToSubsidyConversion = 100d;
 
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
-        }
+        [Persistent]
+        public double subsidyMultiplierForMax = 2d;
+
+        [Persistent]
+        public double repPortionLostPerDay = 0.9995d;
+
+        [Persistent]
+        public FloatCurve subsidyCurve = new FloatCurve();
     }
 }

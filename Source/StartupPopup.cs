@@ -3,12 +3,12 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 
-namespace RP0InstallChecker
+namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class StartupPopup : MonoBehaviour
     {
-        private const string PreferenceFileName = "RP1UpgradeWarning";
+        private const string PreferenceFileName = "RP1UpgradeWarningPLC";
         private static string PreferenceFilePath => Path.Combine(
             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
             "PluginData",
@@ -24,7 +24,7 @@ namespace RP0InstallChecker
                     new Vector2(0, 0),
                     new MultiOptionDialog(
                         "RP1StartupDialog",
-                        "This is the legacy version of RP-1, and is no longer supported. There is a new version of RP-1, the Programs and Launch Complexes rework, now available. It is savebreaking, and a work in progress, but if you are starting a new save it is highly recommended to switch to that version. Please uninstall RP-1 (Legacy) and install RP-1 (PLC). You can do this by uninstalling and reinstalling the RP-1 Express Install and choosing one of the non-Legacy options.",
+                        "This is the Programs and Launch Complexes version of RP-1, and it is NOT SAVE COMPATIBLE with legacy RP-1. If you wish to continue an existing RP-1 save please uninstall this and install RP-1 (Legacy). You can do this by uninstalling and reinstalling the RP-1 Express Install and choosing one of the Legacy options.",
                         "RP-1",
                         HighLogic.UISkin,
                         new DialogGUIVerticalLayout(
@@ -38,6 +38,10 @@ namespace RP0InstallChecker
 
         private static void RememberPreference()
         {
+            FileInfo fi = new FileInfo(PreferenceFilePath);
+            if (!Directory.Exists(fi.Directory.FullName))
+                Directory.CreateDirectory(fi.Directory.FullName);
+
             // create empty file
             File.Create(PreferenceFilePath).Close();
         }

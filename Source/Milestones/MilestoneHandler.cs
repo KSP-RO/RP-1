@@ -1,0 +1,237 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using UnityEngine;
+using System.Reflection;
+using ContractConfigurator;
+using Contracts;
+using RP0.DataTypes;
+using System.Collections;
+
+namespace RP0.Milestones
+{
+    [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
+    public class MilestoneHandler : ScenarioModule
+    {
+        public static MilestoneHandler Instance { get; private set; }
+        public static Dictionary<string, Milestone> ProgramToMilestone { get; private set; }
+        public static Dictionary<string, Milestone> ContractToMilestone { get; private set; }
+        public static Dictionary<string, Milestone> Milestones { get; private set; }
+
+        private int _tickCount = 0;
+        private const int _TicksToStart = 3;
+
+        [KSPField(isPersistant = true)]
+        private PersistentHashSetValueType<string> seenMilestones = new PersistentHashSetValueType<string>();
+
+        [KSPField(isPersistant = true)]
+        private PersistentListValueType<string> queuedMilestones = new PersistentListValueType<string>();
+
+        [KSPField(isPersistant = true)]
+        private PersistentDictionaryValueTypeKey<string, PersistentListValueType<string>> milestoneData = new PersistentDictionaryValueTypeKey<string, PersistentListValueType<string>>();
+
+        public override void OnAwake()
+        {
+            if (Instance != null)
+            {
+                Destroy(Instance);
+            }
+            Instance = this;
+
+            GameEvents.Contract.onCompleted.Add(OnContractComplete);
+            GameEvents.onCrewKilled.Add(OnCrewKilled);
+
+            if (ContractToMilestone == null)
+            {
+                ContractToMilestone = new Dictionary<string, Milestone>();
+                ProgramToMilestone = new Dictionary<string, Milestone>();
+                Milestones = new Dictionary<string, Milestone>();
+
+                foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_MILESTONE"))
+                {
+                    Milestone m = new Milestone(n);
+                    Milestones.Add(m.name, m);
+                    if (!string.IsNullOrEmpty(m.contractName))
+                        ContractToMilestone.Add(m.contractName, m);
+                    if (!string.IsNullOrEmpty(m.programName))
+                        ProgramToMilestone.Add(m.programName, m);
+                }
+            }
+        }
+
+        private void Update()
+        {
+            // ContractSystem takes a little extra time to wake up
+            if (_tickCount < _TicksToStart)
+            {
+                ++_tickCount;
+                return;
+            }
+
+            // If we have queued milestones, and we're not in a subscene, and there isn't one showing, try showing
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && queuedMilestones.Count > 0 && !KerbalConstructionTime.KCT_GUI.InSCSubscene && !NewspaperUI.IsOpen)
+            {
+                TryCreateNewspaper();
+            }
+        }
+
+        public void OnDestroy()
+        {
+            GameEvents.Contract.onCompleted.Remove(OnContractComplete);
+            GameEvents.onCrewKilled.Remove(OnCrewKilled);
+        }
+
+        private void TryAddDate(string name)
+        {
+            if (!milestoneData.TryGetValue(name, out var list))
+            {
+                list = new PersistentListValueType<string>();
+                milestoneData.Add(name, list);
+                list.Add(KSPUtil.PrintDate(KSPUtils.GetUT(), false));
+            }
+        }
+
+        private void AddVesselCrewData(string milestone, Vessel v)
+        {
+            if (v == null)
+            {
+                AddData(milestone, string.Empty);
+                AddData(milestone, string.Empty);
+                return;
+            }
+                var crew = v.GetVesselCrew();
+            if (crew.Count > 0)
+                AddData(milestone, crew[0].displayName);
+            else
+                AddData(milestone, string.Empty);
+
+            AddData(milestone, v.vesselName);
+        }
+
+        /// <summary>
+        /// Returns the index of the data added, or -1 if it did not add because
+        /// there wasn't a date yet (or there was no data assigned at all)
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="data"></param>
+        /// <returns></returns>
+        private int AddData(string name, string data)
+        {
+            if (!milestoneData.TryGetValue(name, out var list) || list.Count == 0)
+                return -1; // can't add data before adding a date.
+
+            list.Add(data);
+            return list.Count - 1;
+        }
+
+        private void OnCrewKilled(EventReport evt)
+        {
+            const string crewKilledMilestoneName = "CrewKilledMilestone";
+            if (Milestones.ContainsKey(crewKilledMilestoneName) && evt.eventType == FlightEvents.CREW_KILLED)
+            {
+                if (!queuedMilestones.Contains(crewKilledMilestoneName))
+                {
+                    queuedMilestones.Add(crewKilledMilestoneName);
+                    TryAddDate(crewKilledMilestoneName);
+                    // empty vessel and first-crewmember data
+                    AddVesselCrewData(crewKilledMilestoneName, null);
+                }
+                AddData(crewKilledMilestoneName, HighLogic.CurrentGame.CrewRoster[evt.sender].displayName);
+            }
+        }
+
+        public void OnProgramComplete(string name)
+        {
+            if (ProgramToMilestone.TryGetValue(name, out var milestone) && !seenMilestones.Contains(milestone.name))
+            {
+                seenMilestones.Add(milestone.name);
+                queuedMilestones.Add(milestone.name);
+                TryAddDate(milestone.name);
+                // No vessel or crew
+                AddVesselCrewData(milestone.name, null);
+                // Add extra data here if desired
+            }
+        }
+
+        private void OnContractComplete(Contract data)
+        {
+            if(data is ConfiguredContract cc)
+                StartCoroutine(ContractCompleteRoutine(cc));
+        }
+
+        private IEnumerator ContractCompleteRoutine(ConfiguredContract cc)
+        {
+            // The contract will only be seen as completed after the ContractSystem has run its next update
+            // This will happen within 1 or 2 frames of the contract completion event getting fired.
+            yield return null;
+            yield return null;
+
+            if (ContractToMilestone.TryGetValue(cc.contractType.name, out var milestone) && !seenMilestones.Contains(milestone.name))
+            {
+                seenMilestones.Add(milestone.name);
+                queuedMilestones.Add(milestone.name);
+                TryAddDate(milestone.name);
+                AddVesselCrewData(milestone.name, FlightGlobals.ActiveVessel);
+                // Add extra data here if desired
+
+                if (!HighLogic.LoadedSceneIsFlight)
+                    yield break;
+
+                bool wasShowing = KSP.UI.UIMasterController.Instance.mainCanvas.enabled;
+                if (wasShowing)
+                    GameEvents.onHideUI.Fire();
+
+                string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{milestone.name}.png";
+
+                float oldDist = FlightCamera.fetch.distance;
+                float oldMin = FlightCamera.fetch.minDistance;
+                
+                FlightCamera.fetch.minDistance = 1f;
+                Vector3 size = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
+                float newDist = KSPCameraUtil.GetDistanceToFit(size, FlightCamera.fetch.FieldOfView) * 1.1f + 1f;
+                FlightCamera.fetch.SetDistanceImmediate(newDist);
+
+                yield return new WaitForEndOfFrame();
+
+                int width = Screen.width;
+                int height = Screen.height;
+                int desiredHeight = Mathf.CeilToInt(height / (float)width * 512f);
+
+                // This works around a Unity 2019.3+ bug. See http://answers.unity.com/answers/1914706/view.html
+                // Normally we'd use ScreenCapture.CaptureScreenAsTexture
+                Texture2D tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
+                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                tex.Apply();
+
+                RenderTexture rt = new RenderTexture(512, desiredHeight, 0);
+                RenderTexture.active = rt;
+                Graphics.Blit(tex, rt);
+                Texture2D result = new Texture2D(512, desiredHeight);
+                result.ReadPixels(new Rect(0, 0, 512, desiredHeight), 0, 0);
+                result.Apply();
+
+                var bytes = ImageConversion.EncodeToPNG(result);
+                System.IO.File.WriteAllBytes(filePath, bytes);
+
+                FlightCamera.fetch.minDistance = oldMin;
+                FlightCamera.fetch.SetDistanceImmediate(oldDist);
+
+                if (wasShowing)
+                    GameEvents.onShowUI.Fire();
+            }
+
+        }
+
+        public void TryCreateNewspaper()
+        {
+            if (queuedMilestones.Count > 0)
+            {
+                var m = Milestones[queuedMilestones.Pop()];
+                NewspaperUI.ShowGUI(m, milestoneData.ValueOrDefault(m.name));
+                if (m.canRequeue)
+                    seenMilestones.Remove(m.name);
+            }
+        }
+    }
+}

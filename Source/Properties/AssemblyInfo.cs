@@ -35,12 +35,16 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion("1.0.0.0")]
 #if CIBUILD
 [assembly: AssemblyFileVersion("@MAJOR@.@MINOR@.@PATCH@.@BUILD@")]
+[assembly: AssemblyInformationalVersion("@ASSEMBLYINFORMATIONALVERSION@")]
 #else
 [assembly: AssemblyFileVersion("1.11.2.0")]
+[assembly: AssemblyInformationalVersion("1.11.2.0")]
 #endif
 
 [assembly: KSPAssembly("RP-0", 1, 0)]
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]
-[assembly: KSPAssemblyDependency("RealFuels", 15, 1)]
+[assembly: KSPAssemblyDependency("RealFuels", 15, 2)]
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]
-[assembly: KSPAssemblyDependency("KerbalConstructionTime", 2, 0)]
+[assembly: KSPAssemblyDependency("ContractConfigurator", 2, 0)]
+[assembly: KSPAssemblyDependency("ToolbarController", 1, 0)]
+[assembly: KSPAssemblyDependency("KSPCommunityFixes", 1, 22, 1)]

@@ -23,7 +23,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowSimulationGUI = false;
                 Utilities.EnableSimulationLocks();
                 FlightDriver.RevertToLaunch();
-                KCTGameStates.SimulationParams.Reset();
+                KerbalConstructionTimeData.Instance.SimulationParams.Reset();
                 _centralWindowPosition.height = 1;
             }
 
@@ -31,7 +31,7 @@ namespace KerbalConstructionTime
             {
                 GUIStates.ShowSimulationGUI = false;
                 Utilities.DisableSimulationLocks();
-                var facility = KCTGameStates.LaunchedVessel.Type == BuildListVessel.ListType.VAB ? EditorFacility.VAB : EditorFacility.SPH;
+                var facility = ShipConstruction.ShipType; // This uses stock behavior because the LaunchedVessel is no longer valid.
                 FlightDriver.RevertToPrelaunch(facility);
                 _centralWindowPosition.height = 1;
             }
@@ -50,11 +50,11 @@ namespace KerbalConstructionTime
 
         public static void DrawSimulationConfigure(int windowID)
         {
-            SimulationParams simParams = KCTGameStates.SimulationParams;
+            SimulationParams simParams = KerbalConstructionTimeData.Instance.SimulationParams;
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Body: ");
-            if (simParams == null) simParams = KCTGameStates.SimulationParams = new SimulationParams();
+            if (simParams == null) simParams = KerbalConstructionTimeData.Instance.SimulationParams = new SimulationParams();
             if (simParams.SimulationBody == null)
             {
                 simParams.SimulationBody = Planetarium.fetch.Home;
@@ -144,7 +144,7 @@ namespace KerbalConstructionTime
             {
                 if (GUILayout.Button(body.bodyName))
                 {
-                    KCTGameStates.SimulationParams.SimulationBody = body;
+                    KerbalConstructionTimeData.Instance.SimulationParams.SimulationBody = body;
                     GUIStates.ShowSimBodyChooser = false;
                     GUIStates.ShowSimConfig = true;
                     _centralWindowPosition.height = 1;
@@ -159,10 +159,10 @@ namespace KerbalConstructionTime
 
         private static void StartSim(SimulationParams simParams)
         {
-            if (KCTGameStates.IsSimulatedFlight)
+            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
             {
                 string msg = "Current save already appears to be a simulation. Starting a simulation inside a simulation isn't allowed.";
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "simErrorPopup", "KCT Simulation error", msg, "Understood", false, HighLogic.UISkin);
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "simErrorPopup", "Simulation error", msg, "Understood", false, HighLogic.UISkin);
                 return;
             }
 
@@ -225,10 +225,11 @@ namespace KerbalConstructionTime
             string tempFile = KSPUtil.ApplicationRootPath + "saves/" + HighLogic.SaveFolder + "/Ships/temp.craft";
             Utilities.MakeSimulationSave();
 
-            Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-            double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
-            double bp = Utilities.GetBuildTime(effCost);
-            KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL);
+            // Create the LaunchedVessel fresh instead of cloning the EditorVessel, since it's possible that the player
+            // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.
+            KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
+            // Just in case, let's set the LCID
+            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)
@@ -236,8 +237,13 @@ namespace KerbalConstructionTime
                 manifest = HighLogic.CurrentGame.CrewRoster.DefaultCrewForVessel(EditorLogic.fetch.ship.SaveShip(), null, true);
             }
             EditorLogic.fetch.ship.SaveShip().Save(tempFile);
-            KCTGameStates.IsSimulatedFlight = true;
-            FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, EditorLogic.fetch.launchSiteName, manifest);
+            KerbalConstructionTimeData.Instance.IsSimulatedFlight = true;
+            string launchSiteName = EditorLogic.fetch.launchSiteName;
+            if (launchSiteName == "LaunchPad" && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad)
+            {
+                launchSiteName = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.launchSiteName;
+            }
+            FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
         }
     }
 }

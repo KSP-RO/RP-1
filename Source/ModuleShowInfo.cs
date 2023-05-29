@@ -2,23 +2,30 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using System.Reflection;
 using UnityEngine;
+using RealFuels;
 
 namespace RP0
 {
-    [KSPAddon(KSPAddon.Startup.SpaceCentre, false)]
+    [KSPAddon(KSPAddon.Startup.FlightEditorAndKSC, false)]
     public class ModuleShowInfoUpdater : MonoBehaviour
     {
         protected bool run = true;
+
+        private void Awake()
+        {
+            if (HighLogic.LoadedSceneIsFlight)
+                GameObject.Destroy(this);
+        }
+
         private void Update()
         {
             if (run)
             {
                 EntryCostDatabaseAccessor.Init();
                 EntryCostDatabaseAccessor.GetFields();
-//                EntryCostDatabaseAccessor.ScanDatabase();
                 foreach (AvailablePart ap in EntryCostDatabaseAccessor.nameToPart.Values)
                 {
                     if (ap.partPrefab.FindModuleImplementing<ModuleShowInfo>() is ModuleShowInfo msi)
@@ -41,10 +48,8 @@ namespace RP0
 
     public class EntryCostDatabaseAccessor
     {
-        public static Dictionary<string, RealFuels.PartEntryCostHolder> holders = null;
         public static Dictionary<string, AvailablePart> nameToPart = null;
-        private static FieldInfo holdersField = null, nameToPartField = null;
-        public static MethodInfo GetPartName = null;
+        private static FieldInfo nameToPartField = null;
         private static bool initialized = false;
 
         public static void Init()
@@ -52,81 +57,56 @@ namespace RP0
             if (initialized) return;
             initialized = true;
 
-            if (AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "RealFuels") is var RealFuelsAssembly &&
-                RealFuelsAssembly.assembly.GetType("RealFuels.EntryCostDatabase") is Type rfEntryCostDatabaseType)
-            {
-                holdersField = rfEntryCostDatabaseType.GetField("holders", BindingFlags.NonPublic | BindingFlags.Static);
-                nameToPartField = rfEntryCostDatabaseType.GetField("nameToPart", BindingFlags.NonPublic | BindingFlags.Static);
-                GetPartName = rfEntryCostDatabaseType.GetMethod("GetPartName", BindingFlags.NonPublic | BindingFlags.Static, null, new Type[1] { typeof(string) }, null);
-            } 
+            nameToPartField = typeof(EntryCostDatabase).GetField("nameToPart", BindingFlags.NonPublic | BindingFlags.Static);
         }
 
         public static void GetFields()
         {
-            holders = (Dictionary<string, RealFuels.PartEntryCostHolder>)holdersField.GetValue(null);
             nameToPart = (Dictionary<string, AvailablePart>)nameToPartField.GetValue(null);
         }
 
-        public static RealFuels.PartEntryCostHolder GetHolder(string s)
+        public static int GetCost(PartEntryCostHolder h, bool clearTracker=true)
         {
-            if (holders is null) return null;
-            if (!holders.TryGetValue(s, out RealFuels.PartEntryCostHolder val))
-            {
-                // Debug.LogWarning($"EntryCostModifierDatabase missing ECM PartHolder for {s}");
-            }
-            return val;
-        }
-
-        public static int GetCost(RealFuels.PartEntryCostHolder h, bool clearTracker=true)
-        {
-            if (clearTracker) RealFuels.EntryCostDatabase.ClearTracker();
+            if (h == null)
+                return 0;
+            if (clearTracker) EntryCostDatabase.ClearTracker();
             return h.GetCost();
         }
 
-        public static bool IsUnlocked(string name) => RealFuels.EntryCostDatabase.IsUnlocked(name);
-        private static string Color(bool unlocked) => unlocked ? "<color=green>" : null;
-        private static string Uncolor(bool unlocked) => unlocked ? "</color>" : null;
-
-        private static string CostString(RealFuels.PartEntryCostHolder h, int cost=-1)
+        private static string CostString(PartEntryCostHolder h, int cost=-1)
         {
+            if (h == null)
+                return string.Empty;
+
             if (cost == -1) cost = GetCost(h);
-            bool unlocked = IsUnlocked(h.name);
-            string sCost = !unlocked ? $": {cost}" : null;
-            return $"{Color(unlocked)}{h.name}{sCost}{Uncolor(unlocked)}";
+            string ret = h.name;
+            if (EntryCostDatabase.IsUnlocked(h.name))
+                ret = $"<color=green>{ret}</color>"; 
+            else
+                ret += $": {cost}";
+
+            return ret;
         }
 
         public static string DisplayHolder(RealFuels.PartEntryCostHolder h, bool recurse=false)
         {
             if (h is null) return "null";
-            if (h.cost == 0 && h.children.Count == 1) return DisplayHolder(GetHolder(h.children.First()), recurse);
+            if (h.cost == 0 && h.children.Count == 1) return DisplayHolder(EntryCostDatabase.GetHolder(h.children[0]), recurse);
             string s = string.Empty;
             foreach (string child in h.children)
             {
-                if (GetHolder(child) is RealFuels.PartEntryCostHolder childHolder)
-                    s += $" | {CostString(childHolder)}";
+                s += $" | {CostString(EntryCostDatabase.GetHolder(child))}";
             }
             // Append the recursive scan after building the top level, instead of during.
             if (recurse)
             {
                 foreach (string child in h.children)
                 {
-                    if (GetHolder(child) is RealFuels.PartEntryCostHolder childHolder)
-                        s += $"[{DisplayHolder(childHolder, recurse)}]";
+                    s += $"[{DisplayHolder(EntryCostDatabase.GetHolder(child), recurse)}]";
                 }
             }
 
             return $"{CostString(h, h.cost)}{s}";
-        }
-
-        public static void ScanDatabase()
-        {
-            if (holders != null)
-            {
-                foreach (var x in holders)   // Recurse through the database to touch all holders.
-                {
-                    DisplayHolder(x.Value, true);
-                }
-            }
         }
     }
 
@@ -153,8 +133,8 @@ namespace RP0
             EntryCostDatabaseAccessor.GetFields();
 
             string data = null, apInfo = null;
-            string nm = (string)EntryCostDatabaseAccessor.GetPartName.Invoke(null, new object[] { part.name });
-            if (EntryCostDatabaseAccessor.GetHolder(nm) is RealFuels.PartEntryCostHolder h)
+            string nm = RealFuels.Utilities.SanitizeName(part.name);
+            if (HighLogic.LoadedScene != GameScenes.LOADING && EntryCostDatabase.GetHolder(nm) is PartEntryCostHolder h)
                 data = $"Total cost: {EntryCostDatabaseAccessor.GetCost(h)}\n{EntryCostDatabaseAccessor.DisplayHolder(h, false)}";
             if (part.partInfo is AvailablePart ap)
             {

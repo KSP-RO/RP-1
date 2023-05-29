@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 
 namespace RP0
 {
@@ -17,6 +17,12 @@ namespace RP0
 
         [Persistent]
         public EditorFacility BuiltAt;
+
+        [Persistent]
+        public string LCID;
+
+        [Persistent]
+        public string LCModID;
 
         public LaunchEvent(double UT) : base(UT)
         {

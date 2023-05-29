@@ -13,7 +13,7 @@ namespace RP0
 
         private readonly MaintenanceGUI _maintUI = new MaintenanceGUI();
         private readonly ToolingGUI _toolUI = new ToolingGUI();
-        private readonly Crew.FSGUI _fsUI = new Crew.FSGUI();
+        private readonly Crew.TrainingGUI _fsUI = new Crew.TrainingGUI();
         private readonly AvionicsGUI _avUI = new AvionicsGUI();
         private readonly ContractGUI _contractUI = new ContractGUI();
         private readonly CareerLogGUI _logUI = new CareerLogGUI();
@@ -58,14 +58,14 @@ namespace RP0
         private void UpdateSelectedTab()
         {
             GUILayout.BeginHorizontal();
-            if (ShouldShowTab(UITab.Maintenance) && RenderToggleButton("Maintenance", _currentTab == UITab.Maintenance))
-                SwitchTabTo(UITab.Maintenance);
+            if (ShouldShowTab(UITab.Budget) && RenderToggleButton("Budget", _currentTab == UITab.Budget))
+                SwitchTabTo(UITab.Budget);
             if (ShouldShowTab(UITab.Tooling) && RenderToggleButton("Tooling", _currentTab == UITab.Tooling))
                 SwitchTabTo(UITab.Tooling);
-            if (ShouldShowTab(UITab.Training) && RenderToggleButton("Astronauts", _currentTab == UITab.Training))
+            if (ShouldShowTab(UITab.Astronauts) && RenderToggleButton("Astronauts", _currentTab == UITab.Astronauts))
+                SwitchTabTo(UITab.Astronauts);
+            if (ShouldShowTab(UITab.Training) && RenderToggleButton("Training", _currentTab == UITab.Training))
                 SwitchTabTo(UITab.Training);
-            if (ShouldShowTab(UITab.Courses) && RenderToggleButton("Courses", _currentTab == UITab.Courses))
-                SwitchTabTo(UITab.Courses);
             if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
                 SwitchTabTo(UITab.Avionics);
             if (ShouldShowTab(UITab.Contracts) && RenderToggleButton("Contracts", _currentTab == UITab.Contracts))
@@ -80,16 +80,12 @@ namespace RP0
             GUILayout.BeginVertical();
             try
             {
-                // If TotalUpkeep is zero, we probably haven't calculated the upkeeps yet, so recalculate now
-                if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER && MaintenanceHandler.Instance.TotalUpkeep == 0)
-                    MaintenanceHandler.Instance?.UpdateUpkeep();
-
                 UpdateSelectedTab();
                 if (ShouldShowTab(_currentTab))
                 {
                     switch (_currentTab)
                     {
-                        case UITab.Maintenance:
+                        case UITab.Budget:
                             _maintUI.RenderSummaryTab();
                             break;
                         case UITab.Facilities:
@@ -98,7 +94,13 @@ namespace RP0
                         case UITab.Integration:
                             _maintUI.RenderIntegrationTab();
                             break;
-                        case UITab.Astronauts:
+                        case UITab.Construction:
+                            _maintUI.RenderConstructionTab();
+                            break;
+                        case UITab.Programs:
+                            _maintUI.RenderProgramTab();
+                            break;
+                        case UITab.AstronautCosts:
                             _maintUI.RenderAstronautsTab();
                             break;
                         case UITab.Tooling:
@@ -107,10 +109,10 @@ namespace RP0
                         case UITab.ToolingType:
                             _toolUI.RenderTypeTab();
                             break;
-                        case UITab.Training:
+                        case UITab.Astronauts:
                             SwitchTabTo(_fsUI.RenderSummaryTab());
                             break;
-                        case UITab.Courses:
+                        case UITab.Training:
                             SwitchTabTo(_fsUI.RenderCoursesTab());
                             break;
                         case UITab.NewCourse:

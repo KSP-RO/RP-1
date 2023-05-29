@@ -32,6 +32,19 @@ namespace RP0
         }
     }
 
+    [KSPAddon(KSPAddon.Startup.AllGameScenes, false)]
+    public class GameVariablesCorrector : MonoBehaviour
+    {
+        public void Update()
+        {
+            GameVariables.Instance.contractPrestigeTrivial = 1f;
+            GameVariables.Instance.contractPrestigeSignificant = 1f;
+            GameVariables.Instance.contractPrestigeExceptional = 1f;
+
+            GameObject.Destroy(this);
+        }
+    }
+
     public class RP0Settings : GameParameters.CustomParameterNode
     {
         public override string Title { get { return "General Settings"; } }
@@ -40,9 +53,6 @@ namespace RP0
         public override string DisplaySection { get { return "RP-1"; } }
         public override int SectionOrder { get { return 1; } }
         public override bool HasPresets { get { return true; } }
-
-        [GameParameters.CustomParameterUI("Enable X-Plane contracts", toolTip = "Disable this option if don't intend to build and fly any planes at all. Will slightly increase rewards of other contracts in the early game.", newGameOnly = true, gameMode = GameParameters.GameMode.CAREER)]
-        public bool PlaneContractsEnabled = true;
 
         [GameParameters.CustomParameterUI("Include craft files", toolTip = "", newGameOnly = true)]
         public bool IncludeCraftFiles = true;
@@ -59,23 +69,20 @@ namespace RP0
         [GameParameters.CustomParameterUI("Downtime post mission", toolTip = "Enable crew downtime post mission, crew will be unavailable for flight/training.")]
         public bool IsCrewRnREnabled = true;
 
-        [GameParameters.CustomFloatParameterUI("Contract deadline multiplier", toolTip = "Used to lengthen or shorten all contract deadlines.", minValue = 0.5f, maxValue = 5f, stepCount = 46, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
-        public float ContractDeadlineMult = 1f;
+        [GameParameters.CustomFloatParameterUI("Starting Confidence", minValue = 0f, maxValue = 1000f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
+        public float StartingConfidence = 500f;
 
-        [GameParameters.CustomFloatParameterUI("Maintenance cost multiplier", minValue = 0f, maxValue = 10f, stepCount = 101, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
-        public float MaintenanceCostMult = 1f;
+        [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 200f, maxValue = 1000f, stepCount = 33, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
+        public float RepLossNautDeathFixed = 500f;
 
-        [GameParameters.CustomParameterUI("Enable part tooling", gameMode = GameParameters.GameMode.CAREER)]
-        public bool IsToolingEnabled = true;
-        
+        [GameParameters.CustomFloatParameterUI("Kerbal Death Percent Rep Loss", minValue = 0.05f, maxValue = 0.5f, stepCount = 46, displayFormat = "P0", gameMode = GameParameters.GameMode.CAREER)]
+        public float RepLossNautDeathPercent = 0.1f;
+
         [GameParameters.CustomParameterUI("Enable career progress logging", gameMode = GameParameters.GameMode.CAREER)]
         public bool CareerLogEnabled = true;
 
         [GameParameters.CustomParameterUI("Kerbalism resource handling for avionics", toolTip = "Use Kerbalism (enabled) or Stock (disabled) rules for resource consumption during the flight scene.")]
         public bool AvionicsUseKerbalism = false;
-
-        [GameParameters.CustomParameterUI("Avionics Units Stack", toolTip = "When enabled, multiple avionics units stack their controllable mass.")]
-        public bool IsAvionicsStackable = true;
 
         [GameParameters.CustomParameterUI("Procedural avionics window auto opens", toolTip = "When enabled, the Procedural Avionics configuration window is automatically opened when you right click on a part with Proc Avionics.")]
         public bool IsProcAvionicsAutoShown = true;
@@ -100,7 +107,6 @@ namespace RP0
             bool isCareer = MainMenu.newGameMode == Game.Modes.CAREER;
             IsCrewRnREnabled = isCareer;
             CareerLogEnabled = isCareer;
-            IsToolingEnabled = isCareer;
             NeverShowToolingReminders = !isCareer;
 
             switch (preset)
@@ -110,32 +116,36 @@ namespace RP0
                     IsTrainingEnabled = false;
                     IsMissionTrainingEnabled = false;
                     IsRetirementEnabled = false;
-                    ContractDeadlineMult = 1.7f;
-                    IsAvionicsStackable = false;
+                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathPercent = 0.1f;
+                    StartingConfidence = 750f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    ContractDeadlineMult = 1.3f;
-                    IsAvionicsStackable = false;
+                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathPercent = 0.1f;
+                    StartingConfidence = 500f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    ContractDeadlineMult = 1f;
-                    IsAvionicsStackable = false;
+                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathPercent = 0.1f;
+                    StartingConfidence = 500f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    ContractDeadlineMult = 0.8f;
-                    IsAvionicsStackable = false;
+                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathPercent = 0.2f;
+                    StartingConfidence = 350f;
                     break;
             }
         }

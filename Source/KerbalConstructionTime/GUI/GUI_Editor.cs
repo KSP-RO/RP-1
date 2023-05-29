@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 
 namespace KerbalConstructionTime
@@ -10,9 +10,16 @@ namespace KerbalConstructionTime
         public static Rect EditorWindowPosition = new Rect(Screen.width / 3.5f, Screen.height / 3.5f, 275, 135);
         public static string BuildRateForDisplay;
 
-        private static int _rateIndexHolder = 0;
-        private static double _finishedShipBP = -1;
         private static bool _isEditorLocked = false;
+        private static bool _wasShowBuildList = false;
+        private static readonly GUIContent _gcMaxBuildRate = new GUIContent("M", "Display build rate for max engineers");
+        private static readonly GUIContent _gcCurBuildRate = new GUIContent("C", "Display build rate for current engineers");
+        private static readonly GUIContent _gcSwitchToLC = new GUIContent("Switch to LC", "The Hangar is currently selected; this will switch to a launch complex, needed for rockets.");
+        private static readonly GUIContent _gcNoLCAvailable = new GUIContent("No LC Available", "Build a new one.");
+        private static readonly GUIContent _gcNoLCAvailableSomeConstructing = new GUIContent("No LC Available Now", "There is no operational launch complex. Build a new one or wait for an existing one to finish construction.");
+        private static readonly GUIContent _gcNewLC = new GUIContent("New LC", "Build a new launch complex to support this vessel, with a margin of 10% to vessel mass and size upgrades.");
+        private static readonly GUIContent _gcNoHangar = new GUIContent("Hangar Unavailable", "The Hangar is currently being modified.");
+        private static readonly GUIContent _gcSwitchToHangar = new GUIContent("Switch to Hangar", "A Launch Complex is currently selected; this will switch to the Hangar, needed for planes.");
 
         public static void DrawEditorGUI(int windowID)
         {
@@ -45,56 +52,44 @@ namespace KerbalConstructionTime
 
         private static void RenderBuildMode()
         {
-            double buildTime = KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime;
-            BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Build Time at ");
-            if (BuildRateForDisplay == null) BuildRateForDisplay = Utilities.GetBuildRate(0, type, null).ToString();
-            BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
-            GUILayout.Label(" BP/s:");
+            double buildPoints = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
+            BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            double rateWithCurEngis = Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
+                * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency
+                * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
 
-            List<double> rates;
-            if (type == BuildListVessel.ListType.VAB) rates = Utilities.GetVABBuildRates(null);
-            else rates = Utilities.GetSPHBuildRates(null);
+            RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
+                GUILayout.Label(Utilities.GetFormattedTime(buildPoints / bR, 0, false));
+
+                if (KCTGameStates.EditorRolloutTime > 0)
                 {
-                    _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                    bR = rates[_rateIndexHolder];
-                    if (bR > 0)
-                        BuildRateForDisplay = bR.ToString();
-                    else
-                    {
-                        _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                        bR = rates[_rateIndexHolder];
-                        BuildRateForDisplay = bR.ToString();
-                    }
+                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR, 0, false)}");
                 }
-                GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(buildTime / bR));
             }
             else
             {
-                GUILayout.EndHorizontal();
                 GUILayout.Label("Invalid Build Rate");
             }
 
-            if (KCTGameStates.EditorRolloutTime > 0)
+            if (EditorDriver.editorFacility == EditorFacility.SPH || (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated && !KerbalConstructionTime.Instance.EditorVessel.humanRated))
             {
-                bR = Utilities.GetBuildRateForFastestVABLine(KCTGameStates.ActiveKSC);
-                GUILayout.Label($"Rollout Time: {MagiCore.Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR)}");
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Engineer Cap:");
+                GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? KCTGameStates.ActiveKSC.Hangar : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance).MaxEngineersFor(KerbalConstructionTime.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
             }
 
-            if (KCTGameStates.EditorIntegrationCosts > 0)
-                GUILayout.Label($"Integration Cost: √{KCTGameStates.EditorIntegrationCosts:N1}");
+            if (KerbalConstructionTime.Instance.EditorVessel.integrationCost > 0)
+                GUILayout.Label($"Integration Cost: √{KerbalConstructionTime.Instance.EditorVessel.integrationCost:N1}");
 
             if (KCTGameStates.EditorRolloutCosts > 0)
-                GUILayout.Label($"Rollout Cost: √{KCTGameStates.EditorRolloutCosts:N1}");
+                GUILayout.Label($"Rollout Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCosts):N1}");
 
             if (KCTGameStates.EditorUnlockCosts > 0)
-                GUILayout.Label($"Unlock Cost: √{KCTGameStates.EditorUnlockCosts:N1}");
+                GUILayout.Label($"Unlock Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.PartOrUpgradeUnlock, -KCTGameStates.EditorUnlockCosts):N1}");
 
             if (KCTGameStates.EditorRequiredTechs.Count > 0)
             {
@@ -110,6 +105,13 @@ namespace KerbalConstructionTime
                 }
                 GUILayout.Label(techLabel);
             }
+
+            if (KerbalConstructionTime.Instance.EditorVessel.humanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
+            {
+                GUILayout.Label("WARNING: Cannot build vessel!");
+                GUILayout.Label("Select a human-rated Launch Complex.");
+            }
+
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Simulate"))
             {
@@ -123,64 +125,173 @@ namespace KerbalConstructionTime
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
             }
             GUILayout.EndHorizontal();
-            if (GUILayout.Button("Show/Hide Build List"))
+            if (GUILayout.Button("Show/Hide Management"))
             {
-                GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
+                if (!GUIStates.ShowNewLC && !GUIStates.ShowModifyLC)
+                    GUIStates.ShowBuildList = !GUIStates.ShowBuildList;
             }
+
+            RenderEditorLaunchComplexControls();
+        }
+
+        private static void RenderEditorLaunchComplexControls()
+        {
+            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            bool rightLC = (EditorDriver.editorFacility == EditorFacility.SPH) == (activeLC.LCType == LaunchComplexType.Hangar);
+            int lcCount = KCTGameStates.ActiveKSC.LaunchComplexCountPad;
+
+            GUILayout.BeginHorizontal();
+            if (rightLC)
+            {
+                if (EditorDriver.editorFacility == EditorFacility.VAB)
+                {
+                    if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
+                    {
+                        KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
+                        BuildRateForDisplay = null;
+                    }
+                }
+                GUILayout.FlexibleSpace();
+                string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
+                string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
+                GUILayout.Label(new GUIContent(lcText, lcTooltip));
+                GUILayout.FlexibleSpace();
+                if (EditorDriver.editorFacility == EditorFacility.VAB)
+                {
+                    if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+                    {
+                        KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
+                        BuildRateForDisplay = null;
+                    }
+                }
+            }
+            else
+            {
+                if (EditorDriver.editorFacility == EditorFacility.VAB)
+                {
+                    if (lcCount > 0)
+                    {
+                        if (GUILayout.Button(_gcSwitchToLC))
+                            KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
+                    }
+                    else
+                    {
+                        GUILayout.Label(KCTGameStates.ActiveKSC.LaunchComplexes.Count > 1 ? _gcNoLCAvailableSomeConstructing : _gcNoLCAvailable, GetLabelCenterAlignStyle());
+                    }
+                }
+                else
+                {
+                    if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
+                    {
+                        if (GUILayout.Button(_gcSwitchToHangar))
+                            KCTGameStates.ActiveKSC.SwitchLaunchComplex(KCTGameStates.ActiveKSC.LaunchComplexes.IndexOf(KCTGameStates.ActiveKSC.Hangar));
+                    }
+                    else
+                    {
+                        GUILayout.Label(_gcNoHangar, GetLabelCenterAlignStyle());
+                    }
+                }
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(_gcNewLC))
+            {
+                SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel);
+
+                _wasShowBuildList = GUIStates.ShowBuildList;
+                GUIStates.ShowNewLC = true;
+                GUIStates.ShowLCResources = false;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+                _centralWindowPosition.width = 300;
+            }
+            if (rightLC)
+            {
+                bool canModify = activeLC.CanModify;
+
+                const string modifyFailTooltip = "Currently in use! Only modifications that leave any in-progress vessels capable of being serviced by this complex will be permitted.";
+                if (GUILayout.Button(new GUIContent("Reconstruct",
+                    canModify ? $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants." : modifyFailTooltip),
+                    canModify ? GUI.skin.button : _yellowButton))
+                {
+                    SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel, activeLC);
+
+                    _wasShowBuildList = GUIStates.ShowBuildList;
+                    GUIStates.ShowModifyLC = true;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
+                    _centralWindowPosition.width = 300;
+                }
+                if (GUILayout.Button(new GUIContent("Upgrade",
+                    canModify ? $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible." : modifyFailTooltip),
+                    canModify ? GUI.skin.button : _yellowButton))
+                {
+                    SetFieldsFromVesselKeepOld(KerbalConstructionTime.Instance.EditorVessel, activeLC);
+
+                    _wasShowBuildList = GUIStates.ShowBuildList;
+                    GUIStates.ShowModifyLC = true;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
+                    _centralWindowPosition.width = 300;
+                }
+            }
+            GUILayout.EndHorizontal();
         }
 
         private static void RenderEditMode()
         {
-            BuildListVessel ship = KCTGameStates.EditedVessel;
-            if (_finishedShipBP < 0 && ship.IsFinished)
-            {
-                // If ship is finished, then both build and integration times can be refreshed with newly calculated values
-                _finishedShipBP = Utilities.GetBuildTime(ship.ExtractedPartNodes);
-                ship.BuildPoints = _finishedShipBP;
-                ship.IntegrationPoints = MathParser.ParseIntegrationTimeFormula(ship);
-            }
+            BuildListVessel editedVessel = KerbalConstructionTimeData.Instance.EditedVessel;
+            double fullVesselBP = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
 
-            Utilities.GetShipEditProgress(ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
-            GUILayout.Label($"Original: {Math.Max(0, Math.Round(100 * originalCompletionPercent, 2))}%");
-            GUILayout.Label($"Edited: {Math.Round(100 * newCompletionPercent, 2)}%");
+            Utilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
+            GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
+            GUILayout.Label($"Edited: {newCompletionPercent:P2}");
 
-            BuildListVessel.ListType type = EditorLogic.fetch.launchSiteName == "LaunchPad" ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Build Time at ");
-            if (BuildRateForDisplay == null) BuildRateForDisplay = Utilities.GetBuildRate(0, type, null).ToString();
-            BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
-            GUILayout.Label(" BP/s:");
-            List<double> rates = new List<double>();
-            if (ship.Type == BuildListVessel.ListType.VAB) rates = Utilities.GetVABBuildRates(null);
-            else rates = Utilities.GetSPHBuildRates(null);
+            double rateWithCurEngis = Utilities.GetBuildRate(editedVessel.LC, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
+                * editedVessel.LC.Efficiency * editedVessel.LC.StrategyRateMultiplier;
+
+            RenderBuildRateInputRow(fullVesselBP, rateWithCurEngis);
+
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                if (GUILayout.Button(new GUIContent("*", "Switch build line that is used for build time calculations"), GUILayout.ExpandWidth(false)))
+                GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(fullVesselBP - newProgressBP) / bR, 0, false));
+
+                if (KCTGameStates.EditorRolloutTime > 0)
                 {
-                    _rateIndexHolder = (_rateIndexHolder + 1) % rates.Count;
-                    bR = rates[_rateIndexHolder];
-                    BuildRateForDisplay = bR.ToString();
+                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR, 0, false)}");
                 }
-                GUILayout.EndHorizontal();
-                GUILayout.Label(MagiCore.Utilities.GetFormattedTime(Math.Abs(KCTGameStates.EditorBuildTime + KCTGameStates.EditorIntegrationTime - newProgressBP) / bR));
             }
             else
             {
-                GUILayout.EndHorizontal();
                 GUILayout.Label("Invalid Build Rate");
             }
 
             GUILayout.BeginHorizontal();
+            if (EditorDriver.editorFacility == EditorFacility.SPH || (KerbalConstructionTime.Instance.EditorVessel.LC.IsHumanRated && !KerbalConstructionTime.Instance.EditorVessel.humanRated))
+            {
+                GUILayout.Label("Engineer Cap:");
+                GUILayout.Label(KerbalConstructionTime.Instance.EditorVessel.LC.MaxEngineersFor(KerbalConstructionTime.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
+            }
+            else
+            {
+                GUILayout.Label(string.Empty);
+            }
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save Edits"))
             {
-                _finishedShipBP = -1;
-                Utilities.TrySaveShipEdits(ship);
+                Utilities.TrySaveShipEdits(editedVessel);
             }
             if (GUILayout.Button("Cancel Edits"))
             {
                 KCTDebug.Log("Edits cancelled.");
-                _finishedShipBP = -1;
-                ScrapYardWrapper.ProcessVessel(KCTGameStates.EditedVessel.ExtractedPartNodes);
                 KCTGameStates.ClearVesselEditMode();
 
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
@@ -190,18 +301,16 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Simulate"))
             {
-                _finishedShipBP = -1;
                 _simulationConfigPosition.height = 1;
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
 
-                double effCost = Utilities.GetEffectiveCost(EditorLogic.fetch.ship.Parts);
-                double bp = Utilities.GetBuildTime(effCost);
-                KCTGameStates.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, effCost, bp, EditorLogic.FlagURL);
+                KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
+                KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = editedVessel.LC.ID; // should already be correct, but just in case.
             }
             GUILayout.EndHorizontal();
 
-            if (KCTGameStates.LaunchedVessel != null && !KCTGameStates.LaunchedVessel.AreTanksFull() &&
+            if (!KerbalConstructionTime.Instance.EditorVessel.AreTanksFull() &&
                 GUILayout.Button("Fill Tanks"))
             {
                 foreach (Part p in EditorLogic.fetch.ship.parts)
@@ -232,7 +341,37 @@ namespace KerbalConstructionTime
                 }
             }
 
-            RenderMergeSection(ship);
+            //RenderMergeSection(ship);
+        }
+
+        private static void RenderBuildRateInputRow(double buildPoints, double rateWithCurEngis)
+        {
+            if (BuildRateForDisplay == null)
+                BuildRateForDisplay = rateWithCurEngis.ToString();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Build Time at ");
+
+            BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
+            GUILayout.Label(" BP/s:");
+
+            double bR;
+            if (GUILayout.Button(_gcCurBuildRate, GUILayout.ExpandWidth(false)))
+            {
+                bR = rateWithCurEngis;
+                BuildRateForDisplay = bR.ToString();
+            }
+
+            if (GUILayout.Button(_gcMaxBuildRate, GUILayout.ExpandWidth(false)))
+            {
+                var ship = KerbalConstructionTime.Instance.EditorVessel;
+                var deltaToMaxEngineers = int.MaxValue - KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Engineers;
+                bR = Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
+                    * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
+                BuildRateForDisplay = bR.ToString();
+            }
+
+            GUILayout.EndHorizontal();
         }
 
         private static void CheckEditorLock()

@@ -50,20 +50,13 @@ namespace ContractConfigurator.RP0
         private static void RegisterMethods()
         {
             Debug.Log("[RP0] CustomExpressionParserRegistrer registering methods");
-            RegisterGlobalFunction(new Function<float>("RP1DeadlineMult", GetDeadlineMult, false));
             RegisterGlobalFunction(new Function<int>("RP1CommsPayload", GetCommsPayload, false));
             RegisterGlobalFunction(new Function<int>("RP1WeatherPayload", GetWeatherPayload, false));
-            RegisterGlobalFunction(new Function<bool>("RP1YesPlanes", GetPlaneContractsEnabled, false));
         }
 
         private static void RegisterRP0Hooks()
         {
             ContractGUI.WithdrawContractAction = WithdrawContract;
-        }
-
-        private static float GetDeadlineMult()
-        {
-            return HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.ContractDeadlineMult ?? 1;
         }
 
         private static int GetCommsPayload()
@@ -74,11 +67,6 @@ namespace ContractConfigurator.RP0
         private static int GetWeatherPayload()
         {
             return ContractGUI.WeatherPayload;
-        }
-
-        private static bool GetPlaneContractsEnabled()
-        {
-            return HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.PlaneContractsEnabled ?? true;
         }
 
         private static bool WithdrawContract(string contractName)

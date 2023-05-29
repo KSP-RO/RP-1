@@ -14,20 +14,40 @@ namespace KerbalConstructionTime
         private static string _errorMsg;
         private static AirlaunchParams _airlaunchParams;
 
+        private static void ResetToMax()
+        {
+            AirlaunchTechLevel lvl = KerbalConstructionTimeData.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
+                                                                        AirlaunchTechLevel.GetCurrentLevel();
+            if (lvl != null)
+            {
+                _airlaunchParams.KscDistance = lvl.MaxKscDistance;
+                _airlaunchParams.Altitude = lvl.MaxAltitude;
+                _airlaunchParams.Velocity = lvl.MaxVelocity;
+            }
+        }
+
+        private static void SetAirlaunchStrings(bool all)
+        {
+            _sKscDistance = (_airlaunchParams.KscDistance / 1000).ToString();
+            _sAltitude = _airlaunchParams.Altitude.ToString();
+            _sVelocity = _airlaunchParams.Velocity.ToString();
+            if (all)
+            {
+                _sAzimuth = _airlaunchParams.LaunchAzimuth.ToString();
+                _sKscAzimuth = _airlaunchParams.KscAzimuth.ToString();
+            }
+        }
+
         public static void DrawAirlaunchWindow(int windowID)
         {
             if (_airlaunchParams == null)
             {
-                _airlaunchParams = new AirlaunchParams();
+                _airlaunchParams = new AirlaunchParams(KerbalConstructionTimeData.Instance.AirlaunchParams);
 
-                AirlaunchTechLevel lvl = Utilities.IsSimulationActive ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
-                                                                        AirlaunchTechLevel.GetCurrentLevel();
-                if (lvl != null)
-                {
-                    _sKscDistance = (lvl.MaxKscDistance / 1000).ToString();
-                    _sAltitude = lvl.MaxAltitude.ToString();
-                    _sVelocity = lvl.MaxVelocity.ToString();
-                }
+                if (_airlaunchParams.Altitude == 0)
+                    ResetToMax();
+
+                SetAirlaunchStrings(true);
             }
 
             GUILayout.BeginVertical();
@@ -62,6 +82,21 @@ namespace KerbalConstructionTime
             GUILayout.Label("m/s", GUILayout.Width(25f));
             GUILayout.EndHorizontal();
 
+            try
+            {
+                _airlaunchParams.Altitude = double.Parse(_sAltitude);
+                _airlaunchParams.Velocity = double.Parse(_sVelocity);
+                _airlaunchParams.LaunchAzimuth = double.Parse(_sAzimuth);
+                _airlaunchParams.KscDistance = double.Parse(_sKscDistance) * 1000;
+                _airlaunchParams.KscAzimuth = double.Parse(_sKscAzimuth);
+
+                _airlaunchParams.Validate(out _errorMsg);
+            }
+            catch
+            {
+                _errorMsg = "Parsing error";
+            }
+
             if (_errorMsg != null)
             {
                 if (_orangeText == null)
@@ -72,11 +107,20 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label(_errorMsg, _orangeText);
             }
+            else
+            {
+                GUILayout.Label("");
+            }
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Launch"))
             {
                 HandleLaunch();
+            }
+            if (GUILayout.Button("Max"))
+            {
+                ResetToMax();
+                SetAirlaunchStrings(false);
             }
             if (GUILayout.Button("Cancel"))
             {
@@ -99,14 +143,9 @@ namespace KerbalConstructionTime
         {
             try
             {
-                bool isSim = Utilities.IsSimulationActive;
-                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KCTGameStates.LaunchedVessel.Id;
-                _airlaunchParams.Altitude = double.Parse(_sAltitude);
-                _airlaunchParams.Velocity = double.Parse(_sVelocity);
-                _airlaunchParams.LaunchAzimuth = double.Parse(_sAzimuth);
-                _airlaunchParams.KscDistance = double.Parse(_sKscDistance) * 1000;
-                _airlaunchParams.KscAzimuth = double.Parse(_sKscAzimuth);
-
+                bool isSim = KerbalConstructionTimeData.Instance.IsSimulatedFlight;
+                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KerbalConstructionTimeData.Instance.LaunchedVessel.shipID;
+                
                 bool valid = _airlaunchParams.Validate(out _errorMsg);
                 if (valid)
                 {
@@ -119,10 +158,11 @@ namespace KerbalConstructionTime
                         return;
                     }
 
-                    KCTGameStates.AirlaunchParams = _airlaunchParams;
+                    KerbalConstructionTimeData.Instance.AirlaunchParams = _airlaunchParams;
+                    _airlaunchParams = null;
 
-                    BuildListVessel b = KCTGameStates.LaunchedVessel;
-                    if (!IsCrewable(b.ExtractedParts))
+                    BuildListVessel b = KerbalConstructionTimeData.Instance.LaunchedVessel;
+                    if (!b.IsCrewable())
                     {
                         b.Launch();
                     }

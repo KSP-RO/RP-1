@@ -8,11 +8,19 @@ namespace RP0
     public class UIHolder : MonoBehaviour
     {
         private bool _isGuiEnabled = false;
+        private bool _wasGuiEnabled = false;
         private ApplicationLauncherButton _button;
         private TopWindow _tw;
 
+        public static UIHolder Instance { get; protected set; }
+
         protected void Awake()
         {
+            if (Instance != null)
+                Destroy(Instance);
+
+            Instance = this;
+
             GameEvents.onGUIApplicationLauncherReady.Add(OnGuiAppLauncherReady);
             GameEvents.onGameSceneLoadRequested.Add(OnSceneChange);
         }
@@ -33,20 +41,36 @@ namespace RP0
             {
                 ApplicationLauncher.Instance.RemoveModApplication(_button);
             }
+
+            if (Instance == this)
+                Instance = null;
         }
 
         protected void OnGUI()
         {
-            if (_isGuiEnabled)
+            if (_isGuiEnabled && !Milestones.NewspaperUI.IsOpen)
                 _tw.OnGUI();
         }
 
-        private void ShowWindow()
+        public void HideIfShowing()
+        {
+            _wasGuiEnabled = _isGuiEnabled;
+            if (_isGuiEnabled)
+                _button.toggleButton.Value = false;
+        }
+
+        public void ShowIfWasHidden()
+        {
+            if(_wasGuiEnabled && !_isGuiEnabled)
+                _button.toggleButton.Value = true;
+        }
+
+        public void ShowWindow()
         {
             _isGuiEnabled = true;
         }
 
-        private void HideWindow()
+        public void HideWindow()
         {
             _isGuiEnabled = false;
         }
@@ -66,7 +90,7 @@ namespace RP0
                 null,
                 null,
                 null,
-                ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.VAB | ApplicationLauncher.AppScenes.SPH,
+                ApplicationLauncher.AppScenes.ALWAYS & ~ApplicationLauncher.AppScenes.MAINMENU,
                 GameDatabase.Instance.GetTexture("RP-0/maintecost", false));
         }
     }

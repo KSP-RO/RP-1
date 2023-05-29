@@ -5,68 +5,77 @@ using Upgradeables;
 
 namespace KerbalConstructionTime
 {
-    public class FacilityUpgrade : IKCTBuildItem
+    public class FacilityUpgrade : ConstructionBuildItem
     {
-        public SpaceCenterFacility? FacilityType;
-        public int UpgradeLevel, CurrentLevel;
-        public string Id, CommonName;
-        public double Progress = 0, BP = 0, Cost = 0;
-        public bool UpgradeProcessed = false;
+        [Persistent]
+        public int upgradeLevel;
+        [Persistent]
+        public int currentLevel;
+        [Persistent]
+        public string id;
+        [Persistent]
+        public Guid uid;
 
-        [Obsolete("Only used for migrating over to PadConstruction. Remove at a later date.")]
-        public int LaunchpadID = 0;
-        [Obsolete("Only used for migrating over to PadConstruction. Remove at a later date.")]
-        public bool IsLaunchpad = false;
+        [Persistent]
+        protected SpaceCenterFacility sFacilityType;
+        public override SpaceCenterFacility FacilityType
+        {
+            get { return sFacilityType; }
+            set { sFacilityType = value; }
+        }
 
-        private KSCItem _ksc = null;
+        public override string GetItemName()
+        {
+            return ScenarioUpgradeableFacilities.GetFacilityName(sFacilityType);
+        }
+
+        
 
         public FacilityUpgrade()
         {
         }
 
-        public FacilityUpgrade(SpaceCenterFacility? type, string facilityID, int newLevel, int oldLevel, string name)
+        public FacilityUpgrade(SpaceCenterFacility type, string facilityID, int newLevel, int oldLevel, string name)
         {
-            FacilityType = type;
-            Id = facilityID;
-            UpgradeLevel = newLevel;
-            CurrentLevel = oldLevel;
-            CommonName = name;
+            uid = Guid.NewGuid();
+            sFacilityType = type;
+            id = facilityID;
+            upgradeLevel = newLevel;
+            currentLevel = oldLevel;
+            base.name = name;
 
             KCTDebug.Log($"Upgrade of {name} requested from {oldLevel} to {newLevel}");
         }
 
         public void Downgrade()
         {
-            KCTDebug.Log($"Downgrading {CommonName} to level {CurrentLevel}");
-            foreach (UpgradeableFacility facility in GetFacilityReferencesById(Id))
+            KCTDebug.Log($"Downgrading {name} to level {currentLevel}");
+            foreach (UpgradeableFacility facility in GetFacilityReferencesById(id))
             {
-                KCTEvents.AllowedToUpgrade = true;
-                facility.SetLevel(CurrentLevel);
+                facility.SetLevel(currentLevel);
             }
         }
 
         public void Upgrade()
         {
-            KCTDebug.Log($"Upgrading {CommonName} to level {UpgradeLevel}");
+            KCTDebug.Log($"Upgrading {name} to level {upgradeLevel}");
 
-            List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(Id);
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine &&
-                FacilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
+            List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(id);
+            if (sFacilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
             {
                 // Also upgrade the SPH to the same level as VAB when playing with unified build queue
                 facilityRefs.AddRange(GetFacilityReferencesByType(SpaceCenterFacility.SpaceplaneHangar));
             }
 
-            KCTEvents.AllowedToUpgrade = true;
             foreach (UpgradeableFacility facility in facilityRefs)
             {
-                facility.SetLevel(UpgradeLevel);
+                facility.SetLevel(upgradeLevel);
             }
 
-            int newLvl = Utilities.GetBuildingUpgradeLevel(Id);
-            UpgradeProcessed = newLvl == UpgradeLevel;
+            int newLvl = Utilities.GetBuildingUpgradeLevel(id);
+            upgradeProcessed = newLvl == upgradeLevel;
 
-            KCTDebug.Log($"Upgrade processed: {UpgradeProcessed} Current: {newLvl} Desired: {UpgradeLevel}");
+            KCTDebug.Log($"Upgrade processed: {upgradeProcessed} Current: {newLvl} Desired: {upgradeLevel}");
         }
 
         public static List<UpgradeableFacility> GetFacilityReferencesById(string id)
@@ -80,140 +89,48 @@ namespace KerbalConstructionTime
             return GetFacilityReferencesById(internalId);
         }
 
-        public void SetBP(double cost)
-        {
-            BP = CalculateBP(cost, FacilityType);
-        }
-
         public bool AlreadyInProgress()
         {
-            return KSC != null;
+            return AlreadyInProgressByID(this.id);
         }
 
-        public KSCItem KSC
+        public static bool AlreadyInProgressByID(string id)
         {
-            get
+            return KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == id) != null) != null;
+        }
+
+        protected override void ProcessCancel()
+        {
+            KSC.FacilityUpgrades.Remove(this);
+
+            try
             {
-                if (_ksc == null)
+                KCTEvents.OnFacilityUpgradeCancel?.Fire(this);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+
+            KSC.RecalculateBuildRates(false);
+        }
+
+        protected override void ProcessComplete()
+        {
+
+            if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
+            {
+                Upgrade();
+
+                try
                 {
-                    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.KSCTech.Find(ub => ub.Id == this.Id) != null);
+                    KCTEvents.OnFacilityUpgradeComplete?.Fire(this);
                 }
-                return _ksc;
-            }
-        }
-
-        public string GetItemName() => CommonName;
-
-        public double GetBuildRate()
-        {
-            double rateTotal = 0;
-            if (KSC != null)
-            {
-                rateTotal = Utilities.GetBothBuildRateSum(KSC);
-            }
-            return rateTotal;
-        }
-
-        public double GetFractionComplete() => Progress / BP;
-
-        public double GetTimeLeft() => (BP - Progress) / GetBuildRate();
-
-        public bool IsComplete() => Progress >= BP;
-
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
-
-        public void IncrementProgress(double UTDiff)
-        {
-            if (!IsComplete()) AddProgress(GetBuildRate() * UTDiff);
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes))
-            {
-                if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
+                catch (Exception ex)
                 {
-                    Upgrade();
-
-                    try
-                    {
-                        KCTEvents.OnFacilityUpgradeComplete?.Fire(this);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.LogException(ex);
-                    }
+                    Debug.LogException(ex);
                 }
             }
-        }
-
-        public static double CalculateBP(double cost, SpaceCenterFacility? facilityType)
-        {
-            int isAdm = 0, isAC = 0, isLP = 0, isMC = 0, isRD = 0, isRW = 0, isTS = 0, isSPH = 0, isVAB = 0, isOther = 0;
-            switch (facilityType)
-            {
-                case SpaceCenterFacility.Administration:
-                    isAdm = 1;
-                    break;
-                case SpaceCenterFacility.AstronautComplex:
-                    isAC = 1;
-                    break;
-                case SpaceCenterFacility.LaunchPad:
-                    isLP = 1;
-                    break;
-                case SpaceCenterFacility.MissionControl:
-                    isMC = 1;
-                    break;
-                case SpaceCenterFacility.ResearchAndDevelopment:
-                    isRD = 1;
-                    break;
-                case SpaceCenterFacility.Runway:
-                    isRW = 1;
-                    break;
-                case SpaceCenterFacility.TrackingStation:
-                    isTS = 1;
-                    break;
-                case SpaceCenterFacility.SpaceplaneHangar:
-                    isSPH = 1;
-                    break;
-                case SpaceCenterFacility.VehicleAssemblyBuilding:
-                    isVAB = 1;
-                    break;
-                default:
-                    isOther = 1;
-                    break;
-            }
-
-            var variables = new Dictionary<string, string>()
-            {
-                { "C", cost.ToString() },
-                { "O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString() },
-                { "Adm", isAdm.ToString() },
-                { "AC", isAC.ToString() },
-                { "LP", isLP.ToString() },
-                { "MC", isMC.ToString() },
-                { "RD", isRD.ToString() },
-                { "RW", isRW.ToString() },
-                { "TS", isTS.ToString() },
-                { "SPH", isSPH.ToString() },
-                { "VAB", isVAB.ToString() },
-                { "Other", isOther.ToString() }
-            };
-
-            double bp = MathParser.GetStandardFormulaValue("KSCUpgrade", variables);
-            if (bp <= 0) { bp = 1; }
-
-            return bp;
-        }
-
-        public static double CalculateBuildTime(double cost, SpaceCenterFacility? facilityType, KSCItem KSC = null)
-        {
-            double bp = CalculateBP(cost, facilityType);
-            double rateTotal = Utilities.GetBothBuildRateSum(KSC ?? KCTGameStates.ActiveKSC);
-
-            return bp / rateTotal;
-        }
-
-        private void AddProgress(double amt)
-        {
-            Progress += amt;
-            if (Progress > BP) Progress = BP;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿using System.IO;
-using System.Linq;
+using UniLinq;
 
 namespace KerbalConstructionTime
 {
@@ -28,6 +28,10 @@ namespace KerbalConstructionTime
         public int WindowMode = 1;
         [Persistent]
         public bool CleanUpKSCDebris;
+        [Persistent]
+        public bool UseDates;
+        [Persistent]
+        public bool InPlaceEdit;
 
         public KCTSettings()
         {
@@ -38,6 +42,8 @@ namespace KerbalConstructionTime
             AutoKACAlarms = false;
             PreferBlizzyToolbar = false;
             CleanUpKSCDebris = true;
+            UseDates = true;
+            InPlaceEdit = false;
         }
 
         public void Load()

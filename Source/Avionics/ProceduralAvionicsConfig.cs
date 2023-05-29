@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using System.Text;
 
 namespace RP0.ProceduralAvionics
@@ -26,6 +26,18 @@ namespace RP0.ProceduralAvionics
                     InitializeTechNodes();
                 }
                 return techNodes;
+            }
+        }
+        private ProceduralAvionicsTechNode[] techNodesSorted;
+        public ProceduralAvionicsTechNode[] TechNodesSorted
+        {
+            get
+            {
+                if (techNodes == null)
+                {
+                    InitializeTechNodes();
+                }
+                return techNodesSorted;
             }
         }
 
@@ -68,10 +80,12 @@ namespace RP0.ProceduralAvionics
             ProceduralAvionicsUtils.Log("TechNode deserialization needed");
             techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
             var techNodeList = techNodesSerialized == null ? new List<ProceduralAvionicsTechNode>() : ObjectSerializer.Deserialize<List<ProceduralAvionicsTechNode>>(techNodesSerialized);
+            techNodesSorted = new ProceduralAvionicsTechNode[techNodeList.Count];
             foreach (var item in techNodeList)
             {
                 ProceduralAvionicsUtils.Log("Deserialized " + item.name);
                 techNodes.Add(item.name, item);
+                techNodesSorted[item.techLevel] = item;
             }
             ProceduralAvionicsUtils.Log("Deserialized " + techNodes.Count + " techNodes");
         }

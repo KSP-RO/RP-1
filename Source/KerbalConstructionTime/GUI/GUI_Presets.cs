@@ -11,14 +11,13 @@ namespace KerbalConstructionTime
         private static int _presetIndex = -1;
         private static KCT_Preset _workingPreset;
         private static Vector2 _presetScrollView, _presetMainScroll;
-        private static bool _isChanged = false, _showFormula = false;
-        private static string _oMultTmp = "", _bEffTmp = "", _iEffTmp = "", _reEffTmp = "", _maxReTmp = "", _mTimePTmp = "";
+        private static bool _isChanged = false;
 
         private static string _saveName, _saveShort, _saveDesc, _saveAuthor;
         private static bool _saveCareer, _saveScience, _saveSandbox;
         private static KCT_Preset _toSave;
 
-        private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms, _cleanUpKSCDebris;
+        private static bool _disableAllMsgs, _showSimWatermark, _debug, _overrideLaunchBtn, _autoAlarms, _cleanUpKSCDebris, _useDates, _inPlaceEdit;
         private static int _newTimewarp;
 
         public static void DrawPresetWindow(int windowID)
@@ -97,179 +96,21 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical(HighLogic.Skin.textArea);
             _workingPreset.GeneralSettings.Enabled = GUILayout.Toggle(_workingPreset.GeneralSettings.Enabled, "Mod Enabled", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.BuildTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.BuildTimes, "Build Times", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.ReconditioningTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.ReconditioningTimes, "Launchpad Reconditioning", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.ReconditioningBlocksPad = GUILayout.Toggle(_workingPreset.GeneralSettings.ReconditioningBlocksPad, "Reconditioning Blocks Pad", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.TechUnlockTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUnlockTimes, "Tech Unlock Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.KSCUpgradeTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.TechUpgrades = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUpgrades, "Upgrades From Tech Tree", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.SharedUpgradePool = GUILayout.Toggle(_workingPreset.GeneralSettings.SharedUpgradePool, "Shared Upgrade Pool (KSCSwitcher)", HighLogic.Skin.button);
-            _workingPreset.GeneralSettings.CommonBuildLine = GUILayout.Toggle(_workingPreset.GeneralSettings.CommonBuildLine, "Common build line for SPH+VAB", HighLogic.Skin.button);
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Starting Upgrades:");
-            _workingPreset.GeneralSettings.StartingPoints = GUILayout.TextField(_workingPreset.GeneralSettings.StartingPoints, GUILayout.Width(100));
+            GUILayout.Label("Starting Personnel:");
+            _workingPreset.GeneralSettings.StartingPersonnel = GUILayout.TextField(_workingPreset.GeneralSettings.StartingPersonnel, GUILayout.Width(100));
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             GUILayout.EndVertical(); //end Features
 
 
-            GUILayout.BeginVertical(); //Begin time settings
-            GUILayout.Label("Time Settings", _yellowText);
-            GUILayout.BeginVertical(HighLogic.Skin.textArea);
-            GUILayout.BeginHorizontal();
-            GUILayout.BeginVertical();
-            GUILayout.Label("Overall Multiplier: ");
-            double.TryParse(_oMultTmp = GUILayout.TextField(_oMultTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.OverallMultiplier);
-            GUILayout.Label("Merging Time Penalty: ");
-            double.TryParse(_mTimePTmp = GUILayout.TextField(_mTimePTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MergingTimePenalty);
-            GUILayout.EndVertical(); 
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Build Effect: ");
-            double.TryParse(_bEffTmp = GUILayout.TextField(_bEffTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.BuildEffect);
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Inventory Effect: ");
-            double.TryParse(_iEffTmp = GUILayout.TextField(_iEffTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.InventoryEffect);
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Reconditioning Effect: ");
-            double.TryParse(_reEffTmp = GUILayout.TextField(_reEffTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.ReconditioningEffect);
-            GUILayout.EndHorizontal();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Max Reconditioning: ");
-            double.TryParse(_maxReTmp = GUILayout.TextField(_maxReTmp, 10, GUILayout.Width(80)), out _workingPreset.TimeSettings.MaxReconditioning);
-            GUILayout.EndHorizontal();
-            GUILayout.Label("Rollout-Reconditioning Split:");
-            GUILayout.BeginHorizontal();
-            //GUILayout.Label("Rollout", GUILayout.ExpandWidth(false));
-            _workingPreset.TimeSettings.RolloutReconSplit = GUILayout.HorizontalSlider((float)Math.Floor(_workingPreset.TimeSettings.RolloutReconSplit * 100f), 0, 100)/100.0;
-            //GUILayout.Label("Recon.", GUILayout.ExpandWidth(false));
-            GUILayout.EndHorizontal();
-            GUILayout.Label((Math.Floor(_workingPreset.TimeSettings.RolloutReconSplit*100))+"% Rollout, "+(100-Math.Floor(_workingPreset.TimeSettings.RolloutReconSplit*100))+"% Reconditioning");
-            GUILayout.EndVertical(); //end time settings
-            GUILayout.EndVertical();
+            
             GUILayout.EndHorizontal(); //end feature/time setting split
 
-            //begin formula settings
-            GUILayout.BeginVertical();
-            GUILayout.Label("Formula Settings (Advanced)", _yellowText);
-            GUILayout.BeginVertical(HighLogic.Skin.textArea);
-            GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Show/Hide Formulas"))
-            {
-                _showFormula = !_showFormula;
-            }
-            GUILayout.EndHorizontal();
-
-            if (_showFormula)
-            {
-                //show half here, half on other side? Or all in one big list
-                int textWidth = 350;
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("NodeFormula: ");
-                _workingPreset.FormulaSettings.NodeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.NodeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("UpgradeFunds: ");
-                _workingPreset.FormulaSettings.UpgradeFundsFormula = GUILayout.TextField(_workingPreset.FormulaSettings.UpgradeFundsFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("UpgradesForScience: ");
-                _workingPreset.FormulaSettings.UpgradesForScience = GUILayout.TextField(_workingPreset.FormulaSettings.UpgradesForScience, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("ResearchFormula: ");
-                _workingPreset.FormulaSettings.ResearchFormula = GUILayout.TextField(_workingPreset.FormulaSettings.ResearchFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("EffectivePart: ");
-                _workingPreset.FormulaSettings.EffectivePartFormula = GUILayout.TextField(_workingPreset.FormulaSettings.EffectivePartFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("ProceduralPart: ");
-                _workingPreset.FormulaSettings.ProceduralPartFormula = GUILayout.TextField(_workingPreset.FormulaSettings.ProceduralPartFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("BPFormula: ");
-                _workingPreset.FormulaSettings.BPFormula = GUILayout.TextField(_workingPreset.FormulaSettings.BPFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("KSCUpgrade: ");
-                _workingPreset.FormulaSettings.KSCUpgradeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.KSCUpgradeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Reconditioning: ");
-                _workingPreset.FormulaSettings.ReconditioningFormula = GUILayout.TextField(_workingPreset.FormulaSettings.ReconditioningFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("BuildRate: ");
-                _workingPreset.FormulaSettings.BuildRateFormula = GUILayout.TextField(_workingPreset.FormulaSettings.BuildRateFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("UpgradeReset: ");
-                _workingPreset.FormulaSettings.UpgradeResetFormula = GUILayout.TextField(_workingPreset.FormulaSettings.UpgradeResetFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("InventorySale: ");
-                _workingPreset.FormulaSettings.InventorySaleFormula = GUILayout.TextField(_workingPreset.FormulaSettings.InventorySaleFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("RolloutCosts: ");
-                _workingPreset.FormulaSettings.RolloutCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.RolloutCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("IntegrationCosts: ");
-                _workingPreset.FormulaSettings.IntegrationCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.IntegrationCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("IntegrationTime: ");
-                _workingPreset.FormulaSettings.IntegrationTimeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.IntegrationTimeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("NewLaunchPadCost: ");
-                _workingPreset.FormulaSettings.NewLaunchPadCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.NewLaunchPadCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("RushCost: ");
-                _workingPreset.FormulaSettings.RushCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.RushCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("AirlaunchCost: ");
-                _workingPreset.FormulaSettings.AirlaunchCostFormula = GUILayout.TextField(_workingPreset.FormulaSettings.AirlaunchCostFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("AirlaunchTime: ");
-                _workingPreset.FormulaSettings.AirlaunchTimeFormula = GUILayout.TextField(_workingPreset.FormulaSettings.AirlaunchTimeFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("EngineRefurbCredit: ");
-                _workingPreset.FormulaSettings.EngineRefurbFormula = GUILayout.TextField(_workingPreset.FormulaSettings.EngineRefurbFormula, GUILayout.Width(textWidth));
-                GUILayout.EndHorizontal();
-            }
-
-            GUILayout.EndVertical();
-            GUILayout.EndVertical(); //end formula settings
-
+            
             GUILayout.EndScrollView();
 
             GUILayout.BeginHorizontal();
@@ -289,6 +130,8 @@ namespace KerbalConstructionTime
                 KCTGameStates.Settings.Debug = _debug;
                 KCTGameStates.Settings.AutoKACAlarms = _autoAlarms;
                 KCTGameStates.Settings.CleanUpKSCDebris = _cleanUpKSCDebris;
+                KCTGameStates.Settings.UseDates = _useDates;
+                KCTGameStates.Settings.InPlaceEdit = _inPlaceEdit;
 
                 KCTGameStates.Settings.Save();
                 GUIStates.ShowSettings = false;
@@ -300,16 +143,10 @@ namespace KerbalConstructionTime
                 }
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
 
-                for (int j = 0; j < KCTGameStates.TechList.Count; j++)
-                    KCTGameStates.TechList[j].UpdateBuildRate(j);
+                KCTGameStates.RecalculateBuildRates();
 
-                foreach (KSCItem ksc in KCTGameStates.KSCs)
-                {
-                    ksc.RecalculateBuildRates();
-                    ksc.RecalculateUpgradedBuildRates();
-                }
                 ResetFormulaRateHolders();
-                KSCContextMenuOverrider.AreTextsUpdated = false;
+                RP0.Harmony.PatchKSCFacilityContextMenu.AreTextsUpdated = false;
             }
             if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
             {
@@ -322,8 +159,7 @@ namespace KerbalConstructionTime
                     RefreshToolbarState();
                 }
 
-                for (int j = 0; j < KCTGameStates.TechList.Count; j++)
-                    KCTGameStates.TechList[j].UpdateBuildRate(j);
+                KCTGameStates.RecalculateBuildRates();
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
@@ -355,6 +191,8 @@ namespace KerbalConstructionTime
             _showSimWatermark = GUILayout.Toggle(_showSimWatermark, "Show sim watermark", HighLogic.Skin.button);
             _debug = GUILayout.Toggle(_debug, "Debug Logging", HighLogic.Skin.button);
             _cleanUpKSCDebris = GUILayout.Toggle(_cleanUpKSCDebris, "Autoclean KSC Debris", HighLogic.Skin.button);
+            _useDates = GUILayout.Toggle(_useDates, "Use Dates Not +Days", HighLogic.Skin.button);
+            _inPlaceEdit = GUILayout.Toggle(_inPlaceEdit, "Edit Keeps Buildorder", HighLogic.Skin.button);
 
             GUILayout.EndVertical();
             GUILayout.EndVertical();
@@ -377,13 +215,6 @@ namespace KerbalConstructionTime
                 _presetIndex = PresetManager.Instance.PresetShortNames(true).Length - 1;
                 _workingPreset.RenameToCustom();
             }
-
-            _oMultTmp = _workingPreset.TimeSettings.OverallMultiplier.ToString();
-            _mTimePTmp = _workingPreset.TimeSettings.MergingTimePenalty.ToString(); 
-            _bEffTmp = _workingPreset.TimeSettings.BuildEffect.ToString();
-            _iEffTmp = _workingPreset.TimeSettings.InventoryEffect.ToString();
-            _reEffTmp = _workingPreset.TimeSettings.ReconditioningEffect.ToString();
-            _maxReTmp = _workingPreset.TimeSettings.MaxReconditioning.ToString();
         }
 
         public static void DrawPresetSaveWindow(int windowID)
@@ -479,6 +310,8 @@ namespace KerbalConstructionTime
             _overrideLaunchBtn = KCTGameStates.Settings.OverrideLaunchButton;
             _autoAlarms = KCTGameStates.Settings.AutoKACAlarms;
             _cleanUpKSCDebris = KCTGameStates.Settings.CleanUpKSCDebris;
+            _useDates = KCTGameStates.Settings.UseDates;
+            _inPlaceEdit = KCTGameStates.Settings.InPlaceEdit;
 
             GUIStates.ShowSettings = !GUIStates.ShowSettings;
         }

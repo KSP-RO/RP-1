@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
+using UniLinq;
 using Upgradeables;
 
 namespace KerbalConstructionTime
 {
-    public class KCT_LaunchPad : ConfigNodeStorage
+    public enum LaunchPadState
+    {
+        None,
+        Destroyed,
+        Nonoperational,
+        Rollout,
+        Rollback,
+        Reconditioning,
+        Free,
+    }
+
+    public class KCT_LaunchPad : IConfigNode
     {
         public const string LPID = "SpaceCenter/LaunchPad";
 
@@ -14,6 +24,11 @@ namespace KerbalConstructionTime
         /// Zero-based level of the launch pad
         /// </summary>
         [Persistent] public int level = 0;
+
+        /// <summary>
+        /// Unique ID of the launch pad
+        /// </summary>
+        [Persistent] public Guid id;
 
         /// <summary>
         /// Used for creating custom pad sizes that lie somewhere between the full levels
@@ -24,16 +39,6 @@ namespace KerbalConstructionTime
         /// Whether the pad is fully built. Does not account for destruction state.
         /// </summary>
         [Persistent] public bool isOperational = false;
-
-        /// <summary>
-        /// Max mass in tons that can be launched from this pad
-        /// </summary>
-        [Persistent] public float supportedMass = 0;
-
-        /// <summary>
-        /// Max size of the vessel that can be launched from this pad (width x height x width)
-        /// </summary>
-        [Persistent] public Vector3 supportedSize;
 
         /// <summary>
         /// Name given to the launch pad. Is also used for associating rollout/reconditioning with pads.
@@ -47,28 +52,6 @@ namespace KerbalConstructionTime
 
         public ConfigNode DestructionNode = new ConfigNode("DestructionState");
 
-        public float SupportedMass
-        {
-            get
-            {
-                EnsureMassAndSizeInitialized();
-                return supportedMass;
-            }
-        }
-
-        public Vector3 SupportedSize
-        {
-            get
-            {
-                EnsureMassAndSizeInitialized();
-                return supportedSize;
-            }
-        }
-
-        public string SupportedMassAsPrettyText => SupportedMass == float.MaxValue ? "unlimited" : $"{SupportedMass:#.#}t";
-
-        public string SupportedSizeAsPrettyText => SupportedSize.y == float.MaxValue ? "unlimited" : $"{SupportedSize.x:#.#}x{SupportedSize.y:#.#}m";
-
         public bool IsDestroyed
         {
             get
@@ -80,107 +63,140 @@ namespace KerbalConstructionTime
             }
         }
 
-        /// <summary>
-        /// Used for deserializing from ConfigNodes.
-        /// </summary>
-        /// <param name="name"></param>
-        public KCT_LaunchPad(string name)
+        public LCItem LC
         {
-            this.name = name;
+            get
+            {
+                foreach (KSCItem currentKSC in KCTGameStates.KSCs)
+                {
+                    if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LCItem currentLC)
+                    {
+                        return currentLC;
+                    }
+                }
+
+                return null;
+            }
         }
 
-        /// <summary>
-        /// Creates a new pad with non-fractional level. Will also mark it as built/operational.
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="lvl">0-based level</param>
-        public KCT_LaunchPad(string name, int lvl)
+        public LaunchPadState State
         {
-            this.name = name;
-            fractionalLevel = lvl;
-            level = lvl;
-            isOperational = true;
+            get
+            {
+                if (IsDestroyed)
+                    return LaunchPadState.Destroyed;
 
-            EnsureMassAndSizeInitialized();
+                if (!isOperational)
+                    return LaunchPadState.Nonoperational;
+
+                foreach (var rr in LC.Recon_Rollout)
+                {
+                    if (rr.launchPadID == launchSiteName)
+                    {
+                        switch (rr.RRType)
+                        {
+                            case ReconRollout.RolloutReconType.Reconditioning: return LaunchPadState.Reconditioning;
+                            case ReconRollout.RolloutReconType.Rollback: return LaunchPadState.Rollback;
+                            case ReconRollout.RolloutReconType.Rollout: return LaunchPadState.Rollout;
+                        }
+                        break;
+                    }
+                }
+
+                return LaunchPadState.Free;
+            }
         }
+
+        public KCT_LaunchPad() { }
 
         /// <summary>
         /// Creates a new pad with fractional level. Will NOT mark it as built/operational.
         /// </summary>
+        /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="lvl">0-based level, can be fractional</param>
-        /// <param name="supportedMass"></param>
-        /// <param name="supportedSize"></param>
-        public KCT_LaunchPad(string name, float lvl, float supportedMass, Vector3 supportedSize)
+        public KCT_LaunchPad(Guid id, string name, float lvl)
         {
+            this.id = id;
             this.name = name;
             fractionalLevel = lvl;
             level = (int)lvl;
             isOperational = false;
-            this.supportedMass = supportedMass;
-            this.supportedSize = supportedSize;
+
+            KerbalConstructionTimeData.Instance.RegisterLP(this);
         }
 
         public bool Delete(out string failReason)
         {
-            bool found = false;
-            foreach (KSCItem ksc in KCTGameStates.KSCs)
+            foreach (KSCItem currentKSC in KCTGameStates.KSCs)
             {
-                int idx = ksc.LaunchPads.IndexOf(this);
-                if (idx < 0) continue;
+                foreach (LCItem currentLC in currentKSC.LaunchComplexes)
+                {
+                    int idx = currentLC.LaunchPads.IndexOf(this);
+                    if (idx < 0) continue;
 
-                var rr = ksc.Recon_Rollout.FirstOrDefault(r => r.LaunchPadID == name);
-                if (rr != null)
-                {
-                    failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout or reconditioning";
-                    return false;
-                }
+                    var rr = currentLC.Recon_Rollout.FirstOrDefault(r => r.launchPadID == name);
+                    if (rr != null)
+                    {
+                        failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout or reconditioning";
+                        return false;
+                    }
 
-                foreach (BuildListVessel vessel in ksc.VABWarehouse)
-                {
-                    if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
-                }
-                foreach (BuildListVessel vessel in ksc.VABList)
-                {
-                    if (vessel.LaunchSiteID > idx) vessel.LaunchSiteID--;
-                }
-                foreach (PadConstruction building in ksc.PadConstructions)
-                {
-                    if (building.LaunchpadIndex > idx) building.LaunchpadIndex--;
-                }
+                    foreach (BuildListVessel vessel in currentLC.Warehouse)
+                    {
+                        if (vessel.launchSiteIndex >= idx) vessel.launchSiteIndex--;
+                    }
+                    foreach (BuildListVessel vessel in currentLC.BuildList)
+                    {
+                        if (vessel.launchSiteIndex >= idx) vessel.launchSiteIndex--;
+                    }
+                    
+                    try
+                    {
+                        KCTEvents.OnPadDismantled?.Fire(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        UnityEngine.Debug.LogException(ex);
+                    }
 
-                ksc.LaunchPads.RemoveAt(idx);
+                    currentLC.LaunchPads.RemoveAt(idx);
 
-                if (ksc == KCTGameStates.ActiveKSC)
-                {
-                    ksc.SwitchLaunchPad(0);
+                    if (currentLC == KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance)
+                    {
+                        currentLC.SwitchLaunchPad(0);
+                    }
+
+                    KerbalConstructionTimeData.Instance.UnregsiterLP(this);
                 }
             }
 
             failReason = null;
-            return !found;
+            return true;
         }
 
         public void Rename(string newName)
         {
             //find everything that references this launchpad by name and update the name reference
-            if (KCTGameStates.KSCs.FirstOrDefault(x => x.LaunchPads.Contains(this)) is KSCItem ksc)
+
+            LCItem lc = LC;
+            if (lc != null)
             {
-                if (ksc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
+                if (lc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
                     return; //can't name it something that already is named that
 
-                foreach (ReconRollout rr in ksc.Recon_Rollout)
+                foreach (ReconRollout rr in lc.Recon_Rollout)
                 {
-                    if (rr.LaunchPadID == name)
+                    if (rr.launchPadID == name)
                     {
-                        rr.LaunchPadID = newName;
+                        rr.launchPadID = newName;
                     }
                 }
-                foreach (PadConstruction pc in ksc.PadConstructions)
+                foreach (PadConstruction pc in lc.PadConstructions)
                 {
-                    if (pc.LaunchpadIndex == ksc.LaunchPads.IndexOf(this))
+                    if (pc.id == id)
                     {
-                        pc.Name = newName;
+                        pc.name = newName;
                     }
                 }
             }
@@ -189,18 +205,18 @@ namespace KerbalConstructionTime
 
         public void SetActive()
         {
+            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+                return;
+
             try
             {
-                EnsureMassAndSizeInitialized();
-
-                KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}");
-                KCTGameStates.ActiveKSC.ActiveLaunchPadID = KCTGameStates.ActiveKSC.LaunchPads.IndexOf(this);
+                int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
+                KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
 
                 //set the level to this level
                 if (Utilities.CurrentGameIsCareer())
                 {
                     UpgradeableFacility facility = GetUpgradeableFacilityReference();
-                    KCTEvents.AllowedToUpgrade = true;
                     facility.SetLevel(level);
                 }
 
@@ -210,23 +226,6 @@ namespace KerbalConstructionTime
             catch (Exception ex)
             {
                 KCTDebug.LogError("Error while calling SetActive: " + ex);
-            }
-        }
-
-        private void EnsureMassAndSizeInitialized()
-        {
-            if (supportedMass == default || supportedSize == default)
-            {
-                var upgdFacility = GetUpgradeableFacilityReference();
-                if (upgdFacility == null) return;   // Looks like facility upgrades are not initialized yet. Need to retry at a later time.
-
-                float normalizedLevel = (float)level / (float)upgdFacility.MaxLevel;
-                float massLimit = GameVariables.Instance.GetCraftMassLimit(normalizedLevel, true);
-                Vector3 sizeLimit = GameVariables.Instance.GetCraftSizeLimit(normalizedLevel, true);
-
-                supportedMass = massLimit;
-                supportedSize = sizeLimit;
-                fractionalLevel = level;
             }
         }
 
@@ -278,16 +277,6 @@ namespace KerbalConstructionTime
             return ScenarioUpgradeableFacilities.protoUpgradeables.TryGetValue(LPID, out var f) ? f.facilityRefs.FirstOrDefault() : null;
         }
 
-        public void MigrateFromOldState()
-        {
-            if (level == -1) return;    // This is migrated in PadConstructionStorageItem instead
-
-            fractionalLevel = level;
-            if (level >= 0) isOperational = true;
-
-            EnsureMassAndSizeInitialized();
-        }
-
         private List<DestructibleBuilding> GetDestructibleFacilityReferences()
         {
             List<DestructibleBuilding> destructibles = new List<DestructibleBuilding>();
@@ -299,6 +288,18 @@ namespace KerbalConstructionTime
                 }
             }
             return destructibles;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            ConfigNode.LoadObjectFromConfig(this, node);
+            DestructionNode = node.GetNode("DestructionState");
+        }
+
+        public void Save(ConfigNode node)
+        {
+            ConfigNode.CreateConfigFromObject(this, node);
+            node.AddNode(DestructionNode);
         }
     }
 }

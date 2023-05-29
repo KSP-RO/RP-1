@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ContractConfigurator.RP0</RootNamespace>
     <AssemblyName>CC_RP0</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -61,13 +61,14 @@
     <Compile Include="AvionicsCheckFactory.cs" />
     <Compile Include="ContractClobberer.cs" />
     <Compile Include="CustomExpressionParserRegistrer.cs" />
+    <Compile Include="RP1CollectScience.cs" />
+    <Compile Include="RP1CollectScienceFactory.cs" />
     <Compile Include="DownrangeDistanceFactory.cs" />
     <Compile Include="DownrangeDistanceVesselParam.cs" />
     <Compile Include="HorizontalLandingFactory.cs" />
     <Compile Include="HorizontalLandingVesselParam.cs" />
-    <Compile Include="RP1FixedResourceConsumptionFactory.cs" />
+    <Compile Include="ProgramActiveRequirement.cs" />
     <Compile Include="RP1RendezvousFactory.cs" />
-    <Compile Include="RP1FixedResourceConsumptionVesselParam.cs" />
     <Compile Include="RP1RendezvousVesselParam.cs" />
     <Compile Include="ImpactCBFactory.cs" />
     <Compile Include="ImpactCBParam.cs" />
@@ -78,10 +79,6 @@
     <Compile Include="RP1ReturnHomeFactory.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\KerbalConstructionTime\KerbalConstructionTime.csproj">
-      <Project>{93908b2a-0859-4dab-8873-d32a4c633308}</Project>
-      <Name>KerbalConstructionTime</Name>
-    </ProjectReference>
     <ProjectReference Include="..\RP0.csproj">
       <Project>{997854F8-4EFB-4A78-87BC-F7C8CEA64669}</Project>
       <Name>RP0</Name>

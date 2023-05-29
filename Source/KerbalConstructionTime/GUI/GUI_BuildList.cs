@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 
 namespace KerbalConstructionTime
@@ -8,60 +8,59 @@ namespace KerbalConstructionTime
     public static partial class KCT_GUI
     {
         public enum VesselPadStatus { InStorage, RollingOut, RolledOut, RollingBack, Recovering };
+        public enum RenameType { None, Vessel, Pad, LaunchComplex };
 
-        public static Rect BuildListWindowPosition = new Rect(Screen.width - 400, 40, 400, 1);
-        public static Rect EditorBuildListWindowPosition = new Rect(Screen.width - 400, 40, 400, 1);
+        public static Rect BuildListWindowPosition = new Rect(Screen.width - 400, 40, 500, 1);
+        public static Rect EditorBuildListWindowPosition = new Rect(Screen.width - 400, 40, 500, 1);
 
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
         private static int _mouseOnAirlaunchButton = -1;
-        private static bool _combineVabAndSph, _isVABSelected, _isSPHSelected, _isTechSelected;
+        private static bool _isOperationsSelected, _isConstructionSelected, _isResearchSelected, _isCombinedSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
-        private static double _costOfNewLP = int.MinValue;
+
+        private static double _accumulatedTimeBefore;
 
         private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
-        private static GUIContent _settingsTexture, _planeTexture, _rocketTexture;
+        private static GUIContent _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
+            _reconTexture, _rolloutTexture, _rollbackTexture, _airlaunchTexture, _recoveryTexture, _hangarTexture;
         private const int _width1 = 120;
         private const int _width2 = 100;
         private const int _butW = 20;
 
-        private static bool IsRolloutEnabled => PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningTimes &&
-                                                PresetManager.Instance.ActivePreset.TimeSettings.RolloutReconSplit > 0;
-
         public static void SelectList(string list)
         {
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
-            bool isCommon = PresetManager.Instance?.ActivePreset?.GeneralSettings.CommonBuildLine ?? false;
             switch (list)
             {
+                case "Operations":
+                    _isOperationsSelected = !_isOperationsSelected;
+                    _isConstructionSelected = false;
+                    _isResearchSelected = false;
+                    _isCombinedSelected = false;
+                    break;
+                case "Construction":
+                    _isOperationsSelected = false;
+                    _isConstructionSelected = !_isConstructionSelected;
+                    _isResearchSelected = false;
+                    _isCombinedSelected = false;
+                    break;
+                case "Research":
+                    _isOperationsSelected = false;
+                    _isConstructionSelected = false;
+                    _isResearchSelected = !_isResearchSelected;
+                    _isCombinedSelected = false;
+                    break;
                 case "Combined":
-                    _combineVabAndSph = isCommon && !_combineVabAndSph;
-                    _isVABSelected = false;
-                    _isSPHSelected = false;
-                    _isTechSelected = false;
-                    break;
-                case "VAB":
-                    _combineVabAndSph = isCommon;
-                    _isVABSelected = !isCommon && !_isVABSelected;
-                    _isSPHSelected = false;
-                    _isTechSelected = false;
-                    break;
-                case "SPH":
-                    _combineVabAndSph = isCommon;
-                    _isVABSelected = false;
-                    _isSPHSelected = !isCommon && !_isSPHSelected;
-                    _isTechSelected = false;
-                    break;
-                case "Tech":
-                    _combineVabAndSph = false;
-                    _isVABSelected = false;
-                    _isSPHSelected = false;
-                    _isTechSelected = !_isTechSelected;
+                    _isCombinedSelected = !_isCombinedSelected;
+                    _isOperationsSelected = false;
+                    _isConstructionSelected = false;
+                    _isResearchSelected = false;
                     break;
                 default:
-                    _combineVabAndSph = _isTechSelected = _isVABSelected = _isSPHSelected = false;
+                    _isOperationsSelected = _isConstructionSelected = _isResearchSelected = _isCombinedSelected = false;
                     break;
             }
         }
@@ -70,17 +69,17 @@ namespace KerbalConstructionTime
         {
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
             BuildListWindowPosition.width = EditorBuildListWindowPosition.width = 500;
-            if (deselectList)
-                SelectList("None");
+            //if (deselectList)
+            //    SelectList("None");
         }
 
         public static void InitBuildListVars()
         {
             KCTDebug.Log("InitBuildListVars");
             _redText = new GUIStyle(GUI.skin.label);
-            _redText.normal.textColor = Color.red;
+            _redText.normal.textColor = XKCDColors.KSPNotSoGoodOrange;
             _yellowText = new GUIStyle(GUI.skin.label);
-            _yellowText.normal.textColor = Color.yellow;
+            _yellowText.normal.textColor = XKCDColors.KSPMellowYellow;
             _greenText = new GUIStyle(GUI.skin.label);
             _greenText.normal.textColor = Color.green;
             _blobText = new GUIStyle(GUI.skin.label);
@@ -89,22 +88,30 @@ namespace KerbalConstructionTime
             _blobText.alignment = TextAnchor.MiddleCenter;
 
             _yellowButton = new GUIStyle(GUI.skin.button);
-            _yellowButton.normal.textColor = Color.yellow;
-            _yellowButton.hover.textColor = Color.yellow;
-            _yellowButton.active.textColor = Color.yellow;
+            _yellowButton.normal.textColor = XKCDColors.KSPMellowYellow;
+            _yellowButton.hover.textColor = XKCDColors.KSPMellowYellow;
+            _yellowButton.active.textColor = XKCDColors.KSPMellowYellow;
             _redButton = new GUIStyle(GUI.skin.button);
-            _redButton.normal.textColor = Color.red;
-            _redButton.hover.textColor = Color.red;
-            _redButton.active.textColor = Color.red;
+            _redButton.normal.textColor = XKCDColors.KSPNotSoGoodOrange;
+            _redButton.hover.textColor = XKCDColors.KSPNotSoGoodOrange;
+            _redButton.active.textColor = XKCDColors.KSPNotSoGoodOrange;
 
             _greenButton = new GUIStyle(GUI.skin.button);
             _greenButton.normal.textColor = Color.green;
             _greenButton.hover.textColor = Color.green;
             _greenButton.active.textColor = Color.green;
 
-            _settingsTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_settings16", false));
+            _airlaunchTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_airlaunch16", false));
+            _constructTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_construct16", false));
             _planeTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_flight16", false));
+            _hangarTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_hangar16", false));
+            _recoveryTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_landing16", false));
+            _reconTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_recon16", false));
             _rocketTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rocket16", false));
+            _rollbackTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rollback16", false));
+            _rolloutTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rollout16", false));
+            _settingsTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_settings16", false));
+            _techTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_tech16", false));
         }
 
         public static void DrawBuildListWindow(int windowID)
@@ -122,32 +129,52 @@ namespace KerbalConstructionTime
                     if (reconRoll.RRType == ReconRollout.RolloutReconType.Reconditioning)
                     {
                         txt = "Reconditioning";
-                        locTxt = reconRoll.LaunchPadID;
+                        locTxt = reconRoll.launchPadID;
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
                     {
-                        BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                        txt = $"{associated.ShipName} Rollout";
-                        locTxt = reconRoll.LaunchPadID;
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                        txt = $"{associated.shipName} Rollout";
+                        locTxt = reconRoll.launchPadID;
                     }
                     else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
                     {
-                        BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                        txt = $"{associated.ShipName} Rollback";
-                        locTxt = reconRoll.LaunchPadID;
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                        txt = $"{associated.shipName} Rollback";
+                        locTxt = reconRoll.launchPadID;
+                    }
+                    else if (reconRoll.RRType == ReconRollout.RolloutReconType.Recovery)
+                    {
+                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                        txt = $"{associated.shipName} Recovery";
+                        locTxt = associated.LC.Name;
                     }
                     else
                     {
-                        locTxt = "VAB";
+                        locTxt = "Storage";
                     }
                 }
-                else if (buildItem.GetListType() == BuildListVessel.ListType.VAB)
+                else if (buildItem.GetListType() == BuildListVessel.ListType.AirLaunch)
                 {
-                    locTxt = "VAB";
+                    AirlaunchPrep ar = buildItem as AirlaunchPrep;
+                    BuildListVessel associated = ar.AssociatedBLV;
+                    if (associated != null)
+                    {
+                        if (ar.direction == AirlaunchPrep.PrepDirection.Mount)
+                            txt = $"{associated.shipName} Mounting";
+                        else
+                            txt = $"{associated.shipName} Unmounting";
+                    }
+                    else
+                        txt = "Airlaunch Operations";
+
+                    locTxt = ar.LC.Name;
+
                 }
-                else if (buildItem.GetListType() == BuildListVessel.ListType.SPH)
+                else if (buildItem.GetListType() == BuildListVessel.ListType.VAB || buildItem.GetListType() == BuildListVessel.ListType.SPH)
                 {
-                    locTxt = "SPH";
+                    BuildListVessel blv = buildItem as BuildListVessel;
+                    locTxt = blv == null || blv.LC == null ? "Vessel" : blv.LC.Name;
                 }
                 else if (buildItem.GetListType() == BuildListVessel.ListType.TechNode)
                 {
@@ -157,14 +184,19 @@ namespace KerbalConstructionTime
                 {
                     locTxt = "KSC";
                 }
+                else if (buildItem.GetListType() == BuildListVessel.ListType.Crew)
+                {
+                    locTxt = txt;
+                    txt = "Training";
+                }
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
-                GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(buildItem.GetTimeLeft()));
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
 
-                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button($"Warp to{Environment.NewLine}Complete"))
+                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(buildItem.GetTimeLeft()):N0}")))
                 {
-                    KCTWarpController.Create(buildItem);
+                    KCTWarpController.Create(null); // warp to next item
                 }
                 else if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex > 0 && GUILayout.Button($"Stop{Environment.NewLine}Warp"))
                 {
@@ -182,30 +214,30 @@ namespace KerbalConstructionTime
                         KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KCTGameStates.KACAlarmId);
                         if (alarm == null)
                         {
-                            alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.StartsWith("KCT: "));
+                            alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.StartsWith("RP-1: "));
                         }
                         if (alarm != null)
                         {
                             KCTDebug.Log("Removing existing alarm");
                             KACWrapper.KAC.DeleteAlarm(alarm.ID);
                         }
-                        txt = "KCT: ";
+                        txt = "RP-1: ";
                         if (buildItem.GetListType() == BuildListVessel.ListType.Reconditioning)
                         {
                             ReconRollout reconRoll = buildItem as ReconRollout;
                             if (reconRoll.RRType == ReconRollout.RolloutReconType.Reconditioning)
                             {
-                                txt += $"{reconRoll.LaunchPadID} Reconditioning";
+                                txt += $"{reconRoll.launchPadID} Reconditioning";
                             }
                             else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
                             {
-                                BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                                txt += $"{associated.ShipName} rollout at {reconRoll.LaunchPadID}";
+                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                                txt += $"{associated.shipName} rollout at {reconRoll.launchPadID}";
                             }
                             else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
                             {
-                                BuildListVessel associated = reconRoll.KSC.VABWarehouse.FirstOrDefault(blv => blv.Id.ToString() == reconRoll.AssociatedID);
-                                txt += $"{associated.ShipName} rollback at {reconRoll.LaunchPadID}";
+                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                                txt += $"{associated.shipName} rollback at {reconRoll.launchPadID}";
                             }
                             else
                             {
@@ -227,40 +259,65 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
 
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.CommonBuildLine)
-            {
-                bool commonSelectedNew = GUILayout.Toggle(_combineVabAndSph, "Vessels", GUI.skin.button);
-                if (commonSelectedNew != _combineVabAndSph)
-                    SelectList("Combined");
-            }
-            else
-            {
-                bool VABSelectedNew = GUILayout.Toggle(_isVABSelected, "VAB", GUI.skin.button);
-                bool SPHSelectedNew = GUILayout.Toggle(_isSPHSelected, "SPH", GUI.skin.button);
-                if (VABSelectedNew != _isVABSelected)
-                    SelectList("VAB");
-                else if (SPHSelectedNew != _isSPHSelected)
-                    SelectList("SPH");
-            }
+
+            bool operationsSelectedNew = GUILayout.Toggle(_isOperationsSelected, "Operations", GUI.skin.button);
+            if (operationsSelectedNew != _isOperationsSelected)
+                SelectList("Operations");
+
+            bool constructionSelectedNew = false;
+            if (Utilities.CurrentGameIsCareer())
+                constructionSelectedNew = GUILayout.Toggle(_isConstructionSelected, "Construction", GUI.skin.button);
+            if (constructionSelectedNew != _isConstructionSelected)
+                SelectList("Construction");
 
             bool techSelectedNew = false;
             if (Utilities.CurrentGameHasScience())
-                techSelectedNew = GUILayout.Toggle(_isTechSelected, "Tech", GUI.skin.button);
+                techSelectedNew = GUILayout.Toggle(_isResearchSelected, "Research", GUI.skin.button);
+            if (techSelectedNew != _isResearchSelected)
+                SelectList("Research");
 
-            if (techSelectedNew != _isTechSelected)
-                SelectList("Tech");
+            bool combinedSelectedNew = GUILayout.Toggle(_isCombinedSelected, "Combined", GUI.skin.button);
+            if (combinedSelectedNew != _isCombinedSelected)
+                SelectList("Combined");
+
+            //if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
+            //{
+            //    GUIStates.ShowUpgradeWindow = true;
+            //    GUIStates.ShowBuildList = false;
+            //    GUIStates.ShowBLPlus = false;
+            //    _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexID;
+            //}
+            bool hasIdleEngineers = false;
+            // This reimplements FreeEngineers for speed, since we also have to check LCs for idle
+            int engCount = KCTGameStates.ActiveKSC.Engineers;
+            foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)
+            {
+                if (!lc.IsOperational || lc.Engineers == 0)
+                    continue;
+
+                engCount -= lc.Engineers;
+
+                if (!lc.IsActive)
+                {
+                    hasIdleEngineers = true;
+                    break;
+                }
+            }
+            if (!hasIdleEngineers && engCount > 0)
+                hasIdleEngineers = true;
+
+            if (GUILayout.Button(new GUIContent("Staff", hasIdleEngineers ? "Some engineers are idle!" : (KerbalConstructionTimeData.Instance.Applicants > 0 ? "Applicants can be hired for free!" : "Hire/fire/reassign staff")),
+                hasIdleEngineers ? _yellowButton : (KerbalConstructionTimeData.Instance.Applicants > 0 ? _greenButton : GUI.skin.button)))
+            {
+                GUIStates.ShowPersonnelWindow = true;
+                //GUIStates.ShowBuildList = false;
+                //GUIStates.ShowBLPlus = false;
+                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex;
+                _currentPersonnelHover = PersonnelButtonHover.None;
+            }
             if (GUILayout.Button("Plans"))
             {
                 GUIStates.ShowBuildPlansWindow = !GUIStates.ShowBuildPlansWindow;
-            }
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.FLIGHT)
-            {
-                if (GUILayout.Button("Upgrades", AvailablePoints > 0 ? _greenButton : GUI.skin.button))
-                {
-                    GUIStates.ShowUpgradeWindow = true;
-                    GUIStates.ShowBuildList = false;
-                    GUIStates.ShowBLPlus = false;
-                }
             }
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
@@ -273,21 +330,21 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            if (_combineVabAndSph)
+            if (_isOperationsSelected)
             {
-                RenderCombinedBuildList();
+                RenderBuildList();
             }
-            else if(_isVABSelected)
+            else if (_isConstructionSelected)
             {
-                RenderVABBuildList();
+                RenderConstructionList();
             }
-            else if (_isSPHSelected)
-            {
-                RenderSPHBuildList();
-            }
-            else if (_isTechSelected)
+            else if (_isResearchSelected)
             {
                 RenderTechList();
+            }
+            else if (_isCombinedSelected)
+            {
+                RenderCombinedList();
             }
 
             GUILayout.EndVertical();
@@ -299,63 +356,117 @@ namespace KerbalConstructionTime
             ClampWindow(ref pos, strict: true);
         }
 
-        private static void RenderVABBuildList()
+        private static void RenderConstructionList()
         {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.VABList;
+            KSCItem ksc = KCTGameStates.ActiveKSC;
 
-            RenderBuildlistHeader();
-            RenderRollouts();
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Name:");
+            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2 + 30));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
+            GUILayout.Space(20);
+            GUILayout.EndHorizontal();
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
 
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
+            if (ksc.Constructions.Count == 0)
+                GUILayout.Label("No constructions under way at this space center.");
+
+            int cancelID = -1;
+            double totalCost = 0d;
+            for (int i = 0; i < ksc.Constructions.Count; i++)
             {
-                RenderVesselsBeingBuilt(buildList);
-                RenderVabWarehouse();
+                ConstructionBuildItem constr = ksc.Constructions[i];
+                double rCost = constr.RemainingCost;
+                totalCost += rCost;
+                GUILayout.BeginHorizontal();
+
+                if (GUILayout.Button("X", GUILayout.Width(_butW)))
+                {
+                    InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
+
+                    cancelID = i;
+                    DialogGUIBase[] options = new DialogGUIBase[2];
+                    options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
+                    options[1] = new DialogGUIButton("No", RemoveInputLocks);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.spentRushCost:N0} funds on this construction ({(constr.spentCost / constr.cost):P0} of the total).", "Cancel Construction?", null, 300, options);
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
+                }
+
+                double buildRate = constr.GetBuildRate();
+                DrawTypeIcon(constr);
+                Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
+                GUILayout.Label(new GUIContent(constr.GetItemName(), "name" + costTooltip));
+                GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                if (buildRate > 0d)
+                {
+                    double seconds = constr.GetTimeLeft();
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                }
+                else
+                {
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                }
+
+                if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d)
+                {
+                    if (GUILayout.Button(new GUIContent("Warp", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(constr.GetTimeLeft()):N0}"), GUILayout.Width(45)))
+                    {
+                        KCTWarpController.Create(constr);
+                    }
+                }
+                else
+                {
+                    GUILayout.Space(45);
+                }
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("     Work rate:", GUILayout.Width(90));
+                GUILayout.Label(new GUIContent(constr.workRate.ToString("P0"), $"rate{identifier}¶Daily cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+                
+                float newWorkRate = GUILayout.HorizontalSlider(constr.workRate, 0f, 1.5f, GUILayout.Width(150));
+                constr.workRate = Mathf.RoundToInt(newWorkRate * 20f) * 0.05f;
+
+                GUILayout.Label("Remaining Cost:", GUILayout.Width(100));
+                GUILayout.Label($"√{rCost:N0}", GetLabelRightAlignStyle());
+
+                
+                GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
 
-            RenderLaunchPadControls();
-        }
-
-        private static void RenderSPHBuildList()
-        {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.SPHList;
-
-            RenderBuildlistHeader();
-
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Cost/day:");
+            double costday = 0d;
+            foreach(var c in ksc.Constructions)
             {
-                RenderVesselsBeingBuilt(buildList);
-                RenderSphWarehouse();
+                double br = c.GetBuildRate();
+                if (br > 0d)
+                {
+                    costday += br * 86400d / c.BP * -RP0.CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction, -c.cost * c.RushMultiplier);
+                }
             }
-            GUILayout.EndScrollView();
+            GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Remaining cost of all constructions:");
+            GUILayout.Label($"√{totalCost:N0}", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
         }
 
         private static void RenderTechList()
         {
-            List<FacilityUpgrade> facilityItems = KCTGameStates.ActiveKSC.KSCTech;
-            List<PadConstruction> padItems = KCTGameStates.ActiveKSC.PadConstructions;
-            KCTObservableList<TechItem> techList = KCTGameStates.TechList;
+            _accumulatedTimeBefore = 0d;
+
+            KCTObservableList<TechItem> techList = KerbalConstructionTimeData.Instance.TechList;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label("Time Left:", GUILayout.Width(_width1));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(70);
             GUILayout.EndHorizontal();
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(250));
-
-            if (Utilities.CurrentGameIsCareer())
-            {
-                if (facilityItems.Count == 0 && padItems.Count == 0)
-                    GUILayout.Label("No KSC upgrade projects are currently underway.");
-                foreach (PadConstruction pItem in padItems)
-                {
-                    RenderInProgressFacilityItem(pItem);
-                }
-                foreach (FacilityUpgrade fItem in facilityItems)
-                {
-                    RenderInProgressFacilityItem(fItem);
-                }
-            }
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
 
             if (techList.Count == 0)
                 GUILayout.Label("No tech nodes are being researched!\nBegin research by unlocking tech in the R&D building.");
@@ -368,22 +479,24 @@ namespace KerbalConstructionTime
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
+                    InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
                     forceRecheck = true;
                     cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
                     options[0] = new DialogGUIButton("Yes", () => { CancelTechNode(cancelID); });
                     options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                    MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.TechName}?\n\nThis will also cancel any dependent techs.", "Cancel Node?", null, 300, options);
+                    MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.techName}?\n\nThis will also cancel any dependent techs."
+                        + (RP0.Crew.CrewHandler.Instance?.GetTrainingCoursesForTech(t.techID) ?? string.Empty), "Cancel Node?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 }
 
                 // Can move up if item above is not a parent.
-                List<string> parentList = KerbalConstructionTimeData.techNameToParents[t.TechID];
-                bool canMoveUp = i > 0 && (parentList == null || !parentList.Contains(techList[i - 1].TechID));
+                List<string> parentList = KerbalConstructionTimeData.techNameToParents[t.techID];
+                bool canMoveUp = i > 0 && (parentList == null || !parentList.Contains(techList[i - 1].techID));
 
                 // Can move down if item below is not a child.
-                List<string> nextParentList = i < techList.Count - 1 ? KerbalConstructionTimeData.techNameToParents[techList[i + 1].TechID] : null;
-                bool canMoveDown = nextParentList == null || !nextParentList.Contains(t.TechID);
+                List<string> nextParentList = i < techList.Count - 1 ? KerbalConstructionTimeData.techNameToParents[techList[i + 1].techID] : null;
+                bool canMoveDown = nextParentList == null || !nextParentList.Contains(t.techID);
 
                 if (i > 0 && t.BuildRate != techList[0].BuildRate)
                 {
@@ -397,7 +510,7 @@ namespace KerbalConstructionTime
                             int newLocation = i - 1;
                             while (newLocation >= 0)
                             {
-                                if (parentList != null && parentList.Contains(techList[newLocation].TechID))
+                                if (parentList != null && parentList.Contains(techList[newLocation].techID))
                                     break;
                                 --newLocation;
                             }
@@ -426,8 +539,8 @@ namespace KerbalConstructionTime
                             int newLocation = i + 1;
                             while (newLocation < techList.Count)
                             {
-                                nextParentList = KerbalConstructionTimeData.techNameToParents[techList[newLocation].TechID];
-                                if (nextParentList != null && nextParentList.Contains(t.TechID))
+                                nextParentList = KerbalConstructionTimeData.techNameToParents[techList[newLocation].techID];
+                                if (nextParentList != null && nextParentList.Contains(t.techID))
                                     break;
                                 ++newLocation;
                             }
@@ -446,26 +559,32 @@ namespace KerbalConstructionTime
                 if (forceRecheck)
                 {
                     forceRecheck = false;
-                    for (int j = 0; j < techList.Count; j++)
-                        techList[j].UpdateBuildRate(j);
+                    KerbalConstructionTimeData.Instance.UpdateTechTimes();
                 }
 
                 string blockingPrereq = t.GetBlockingTech(techList);
 
-                GUILayout.Label(t.TechName);
-                GUILayout.Label($"{Math.Round(100 * t.GetFractionComplete(), 2)} %", GUILayout.Width(_width1 / 2));
+                DrawTypeIcon(t);
+                GUILayout.Label(t.techName);
+                GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (t.BuildRate > 0)
                 {
-                    DrawYearBasedMult(t);
+                    DrawYearBasedMult(t, 0);
                     if (blockingPrereq == null)
-                        GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(t.TimeLeft), GUILayout.Width(_width1));
+                    {
+                        double seconds = t.TimeLeft;
+                        GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName()), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                        _accumulatedTimeBefore += seconds;
+                    }
                     else
                         GUILayout.Label("Waiting for PreReq", GUILayout.Width(_width1));
                 }
                 else
                 {
-                    DrawYearBasedMult(t);
-                    GUILayout.Label($"Est: {MagiCore.Utilities.GetColonFormattedTime(t.EstimatedTimeLeft)}", GUILayout.Width(_width1));
+                    DrawYearBasedMult(t, _accumulatedTimeBefore);
+                    double seconds = t.GetTimeLeftEst(_accumulatedTimeBefore);
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    _accumulatedTimeBefore += seconds;
                 }
                 if (t.BuildRate > 0 && blockingPrereq == null)
                 {
@@ -484,24 +603,146 @@ namespace KerbalConstructionTime
             GUILayout.EndScrollView();
         }
 
-        private static void RenderInProgressFacilityItem(IKCTBuildItem item)
+        private static int CompareBuildItems(IKCTBuildItem a, IKCTBuildItem b)
         {
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(item.GetItemName());
-            GUILayout.Label($"{Math.Round(100 * item.GetFractionComplete(), 2)} %", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(item.GetTimeLeft()), GUILayout.Width(_width1));
-            if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp", GUILayout.Width(70)))
-            {
-                KCTWarpController.Create(item);
-            }
-            else if (HighLogic.LoadedSceneIsEditor)
-                GUILayout.Space(70);
-            GUILayout.EndHorizontal();
+            double offA, offB;
+            _timeBeforeItem.TryGetValue(a, out offA);
+            _timeBeforeItem.TryGetValue(b, out offB);
+            return (offA + a.GetTimeLeftEst(offA)).CompareTo(offB + b.GetTimeLeftEst(offB));
         }
 
-        private static void DrawYearBasedMult(TechItem t)
+        private static List<IKCTBuildItem> _allItems = new List<IKCTBuildItem>();
+        private static Dictionary<IKCTBuildItem, double> _timeBeforeItem = new Dictionary<IKCTBuildItem, double>();
+        private static void RenderCombinedList()
         {
-            double mult = t.YearBasedRateMult;
+            double accTime;
+            foreach (var k in KCTGameStates.KSCs)
+            {
+                foreach (var l in k.LaunchComplexes)
+                {
+                    accTime = 0d;
+                    foreach (var b in l.BuildList)
+                    {
+                        // FIXME handle multiple rates
+                        _timeBeforeItem[b] = accTime;
+                        accTime += b.GetTimeLeftEst(accTime);
+                        _allItems.Add(b);
+                    }
+                    _allItems.AddRange(l.Recon_Rollout);
+                    _allItems.AddRange(l.Airlaunch_Prep);
+                }
+                accTime = 0d;
+                foreach (var c in k.Constructions)
+                {
+                    _timeBeforeItem[c] = accTime;
+                    _allItems.Add(c);
+                }
+            }
+            accTime = 0d;
+            foreach (var t in KerbalConstructionTimeData.Instance.TechList)
+            {
+                _timeBeforeItem[t] = accTime;
+                accTime += t.GetTimeLeftEst(accTime);
+                _allItems.Add(t);
+            }
+            _allItems.AddRange(RP0.Crew.CrewHandler.Instance.TrainingCourses);
+            _allItems.Sort(CompareBuildItems);
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Name:", GUILayout.Width(250));
+            GUILayout.Label("Progress:");
+            GUILayout.Space(18);
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.EndHorizontal();
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350 - GUI.skin.label.lineHeight * 5));
+
+            for (int i = 0; i < _allItems.Count; i++)
+            {
+                IKCTBuildItem t = _allItems[i];
+                if (t.IsComplete())
+                    continue;
+
+                GUILayout.BeginHorizontal();
+                DrawTypeIcon(t);
+                BuildListVessel blv;
+                if (t is ReconRollout r)
+                {
+                    if (r.RRType == ReconRollout.RolloutReconType.Reconditioning)
+                        GUILayout.Label($"{r.LC.Name}: {r.GetItemName()} {r.launchPadID}");
+                    else if ((blv = r.AssociatedBLV) != null)
+                    {
+                        if (r.RRType == ReconRollout.RolloutReconType.Rollout)
+                            GUILayout.Label($"{blv.LC.Name}: Rollout {blv.shipName} to {r.launchPadID}");
+                        else
+                            GUILayout.Label($"{blv.LC.Name}: {r.GetItemName()} {blv.shipName}");
+                    }
+                    else
+                        GUILayout.Label(r.GetItemName());
+                }
+                else if (t is AirlaunchPrep a && (blv = a.AssociatedBLV) != null)
+                    GUILayout.Label($"{a.GetItemName()}: {blv.shipName}");
+                else if (t is BuildListVessel b)
+                    GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
+                else if (t is ConstructionBuildItem constr)
+                {
+                    Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
+                    GUILayout.Label(new GUIContent(t.GetItemName(), "name" + costTooltip));
+                }
+                else if (t is RP0.Crew.TrainingCourse course)
+                {
+                    var sb = StringBuilderCache.Acquire();
+                    sb.Append("Astronauts:");
+                    foreach (var pcm in course.Students)
+                        sb.Append("\n").Append(pcm.displayName);
+                    GUILayout.Label(new GUIContent(course.GetItemName(), sb.ToStringAndRelease()));
+                }
+                else
+                    GUILayout.Label(t.GetItemName());
+
+                GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+
+                double timeBeforeItem;
+                _timeBeforeItem.TryGetValue(t, out timeBeforeItem);
+                if (t is TechItem tech)
+                    DrawYearBasedMult(tech, timeBeforeItem);
+                else
+                    GUILayout.Space(18);
+
+                if (t.GetBuildRate() > 0d)
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                else if (t is BuildListVessel b && !b.LC.IsOperational)
+                    GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                else
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                GUILayout.EndHorizontal();
+            }
+
+            GUILayout.EndScrollView();
+
+            GUILayout.Label("__________________________________________________");
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Storage");
+            GUILayout.EndHorizontal();
+
+            _scrollPos2 = GUILayout.BeginScrollView(_scrollPos2, GUILayout.Height(GUI.skin.label.lineHeight * 5));
+
+            int idx = 0;
+            foreach (var lc in KCTGameStates.ActiveKSC.LaunchComplexes)
+            {
+                foreach (var b in lc.Warehouse)
+                    RenderWarehouseRow(b, idx++, true);
+            }
+            if(idx == 0)
+                GUILayout.Label("No vessels in storage!");
+
+            GUILayout.EndScrollView();
+            _allItems.Clear();
+            _timeBeforeItem.Clear();
+        }
+
+        private static void DrawYearBasedMult(TechItem t, double offset)
+        {
+            double mult = offset == 0 ? t.YearBasedRateMult : t.CalculateYearBasedRateMult(offset);
 
             string rateDesc;
             if (mult < 0.5)
@@ -526,24 +767,72 @@ namespace KerbalConstructionTime
             }
 
             string txt = $"{rateDesc}\nResearch rate: {mult:F2}x";
-            GUILayout.Label(new GUIContent("•", txt), _blobText, GUILayout.ExpandWidth(false));
+            GUILayout.Label(new GUIContent("•", txt), _blobText, GUILayout.Width(15));
         }
 
-        private static void RenderCombinedBuildList()
+        private static GUIContent GetTypeIcon(IKCTBuildItem b)
         {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.BuildList;
+            switch (b.GetListType())
+            {
+                case BuildListVessel.ListType.VAB:
+                    return _rocketTexture;
+
+                case BuildListVessel.ListType.SPH:
+                    return _planeTexture;
+
+                case BuildListVessel.ListType.Reconditioning:
+                    if (b is ReconRollout r)
+                    {
+                        switch (r.RRType)
+                        {
+                            case ReconRollout.RolloutReconType.Reconditioning:
+                                return _reconTexture;
+                            case ReconRollout.RolloutReconType.Recovery:
+                                return _recoveryTexture;
+                            case ReconRollout.RolloutReconType.Rollback:
+                                return _rollbackTexture;
+                            case ReconRollout.RolloutReconType.Rollout:
+                                return _rolloutTexture;
+                        }
+                    }
+                    return _rocketTexture;
+
+                case BuildListVessel.ListType.AirLaunch:
+                    if (b is AirlaunchPrep a && a.direction == AirlaunchPrep.PrepDirection.Mount)
+                        return _airlaunchTexture;
+                    return _hangarTexture;
+
+                case BuildListVessel.ListType.KSC:
+                    return _constructTexture;
+
+                case BuildListVessel.ListType.TechNode:
+                    return _techTexture;
+            }
+
+            return _constructTexture;
+        }
+
+        private static void DrawTypeIcon(IKCTBuildItem b)
+        {
+            GUILayout.Label(GetTypeIcon(b), GUILayout.ExpandWidth(false));
+        }
+
+        private static void RenderBuildList()
+        {
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             RenderBuildlistHeader();
-            RenderRollouts();
 
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(275));
-            {
-                RenderVesselsBeingBuilt(buildList);
-                RenderVabWarehouse();
-                RenderSphWarehouse();
-            }
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(375));
+
+            if (activeLC.LCType == LaunchComplexType.Pad)
+                RenderRollouts();
+            RenderVesselsBeingBuilt(activeLC.BuildList);
+            RenderWarehouse();
+
             GUILayout.EndScrollView();
 
+            RenderLaunchComplexControls();
             RenderLaunchPadControls();
         }
 
@@ -552,23 +841,24 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label("Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
         }
 
         private static void RenderRollouts()
         {
-            foreach (ReconRollout reconditioning in KCTGameStates.ActiveKSC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            foreach (ReconRollout reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
-                if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("Warp To", GUILayout.Width((_butW + 4) * 3)))
+                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(reconditioning.GetTimeLeft()):N0}"), GUILayout.Width((_butW + 4) * 3)))
                 {
                     KCTWarpController.Create(reconditioning);
                 }
-
-                GUILayout.Label($"Reconditioning: {reconditioning.LaunchPadID}");
-                GUILayout.Label($"{reconditioning.ProgressPercent()}%", GUILayout.Width(_width1 / 2));
-                GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(reconditioning.GetTimeLeft()), GUILayout.Width(_width2));
+                DrawTypeIcon(reconditioning);
+                GUILayout.Label($"Reconditioning: {reconditioning.launchPadID}");
+                GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
 
                 GUILayout.EndHorizontal();
             }
@@ -576,10 +866,15 @@ namespace KerbalConstructionTime
 
         private static void RenderVesselsBeingBuilt(List<BuildListVessel> buildList)
         {
+            _accumulatedTimeBefore = 0d;
             if (buildList.Count == 0)
             {
-                GUILayout.Label("No vessels under construction! Go to the Editor to build more.");
+                if (HighLogic.LoadedSceneIsEditor)
+                    GUILayout.Label("No vessels under construction!");
+                else
+                    GUILayout.Label($"No vessels under construction! Go to the {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad ? "VAB" : "SPH")} to build more.");
             }
+            bool recalc = false;
             for (int i = 0; i < buildList.Count; i++)
             {
                 BuildListVessel b = buildList[i];
@@ -587,25 +882,30 @@ namespace KerbalConstructionTime
                     continue;
                 GUILayout.BeginHorizontal();
 
-                if (!HighLogic.LoadedSceneIsEditor && GUILayout.Button("*", GUILayout.Width(_butW)))
-                {
-                    if (_selectedVesselId == b.Id)
-                        GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
-                    else
-                        GUIStates.ShowBLPlus = true;
-                    _selectedVesselId = b.Id;
-                }
-                else if (HighLogic.LoadedSceneIsEditor)
+                if (HighLogic.LoadedSceneIsEditor)
                 {
                     if (GUILayout.Button("X", GUILayout.Width(_butW)))
                     {
                         InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
-                        _selectedVesselId = b.Id;
+                        _selectedVesselId = b.shipID;
                         DialogGUIBase[] options = new DialogGUIBase[2];
                         options[0] = new DialogGUIButton("Yes", ScrapVessel);
                         options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, options: options);
+                        MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
+                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselPurchase, b.cost, 0f, 0f).GetCostLineOverride(false, false) +".",
+                            "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
+                    }
+                }
+                else
+                {
+                    if (GUILayout.Button("*", GUILayout.Width(_butW)))
+                    {
+                        if (_selectedVesselId == b.shipID)
+                            GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
+                        else
+                            GUIStates.ShowBLPlus = true;
+                        _selectedVesselId = b.shipID;
                     }
                 }
 
@@ -613,10 +913,12 @@ namespace KerbalConstructionTime
                 {
                     buildList.RemoveAt(i);
                     buildList.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, b);
+                    recalc = true;
                 }
 
                 if (i < buildList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
                 {
+                    recalc = true;
                     buildList.RemoveAt(i);
                     if (GameSettings.MODIFIER_KEY.GetKey())
                     {
@@ -628,40 +930,47 @@ namespace KerbalConstructionTime
                     }
                 }
 
-                GUIContent typeIcon = b.GetListType() == BuildListVessel.ListType.VAB ? _rocketTexture : _planeTexture;
-                GUILayout.Label(typeIcon, GUILayout.ExpandWidth(false));
-                GUILayout.Label(b.ShipName);
-                GUILayout.Label($"{Math.Round(b.ProgressPercent(), 2)}%", GUILayout.Width(_width1 / 2));
+                DrawTypeIcon(b);
+                GUILayout.Label(b.shipName);
+                GUILayout.Label($"{b.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (b.BuildRate > 0)
                 {
-                    string timeLeft = MagiCore.Utilities.GetColonFormattedTime(b.TimeLeft);
-                    GUILayout.Label(timeLeft, GUILayout.Width(_width2));
+                    double seconds = b.TimeLeft;
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    _accumulatedTimeBefore += seconds; // FIXME what to do with multiple lines? Min() I guess?
                 }
                 else
                 {
-                    double bpLeft = b.BuildPoints + b.IntegrationPoints - b.Progress;
-                    double buildRate = Utilities.GetBuildRate(0, b.GetListType(), null);
-                    string timeLeft = MagiCore.Utilities.GetColonFormattedTime(bpLeft / buildRate);
-                    GUILayout.Label($"Est: {timeLeft}", GUILayout.Width(_width2));
+                    double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore);
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    _accumulatedTimeBefore += seconds;
                 }
                 GUILayout.EndHorizontal();
             }
+            if (recalc)
+            {
+                for (int i = buildList.Count; i-- > 0;)
+                    buildList[i].UpdateBuildRate();
+            }
         }
 
-        private static void RenderVabWarehouse()
+        private static void RenderWarehouse()
         {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.VABWarehouse;
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            bool isPad = activeLC.LCType == LaunchComplexType.Pad;
+            List<BuildListVessel> buildList = activeLC.Warehouse;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
-            GUILayout.Label(_rocketTexture, GUILayout.ExpandWidth(false));
-            GUILayout.Label("VAB Storage");
+            GUILayout.Label(isPad ? _rocketTexture : _planeTexture, GUILayout.ExpandWidth(false));
+            GUILayout.Label("Storage");
             GUILayout.EndHorizontal();
-            if (HighLogic.LoadedSceneIsFlight && Utilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) &&
-                GUILayout.Button("Recover Active Vessel To VAB"))
+            if (HighLogic.LoadedSceneIsFlight && 
+                (isPad ? Utilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) : Utilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) ) &&
+                GUILayout.Button("Recover Active Vessel To Warehouse"))
             {
-                if (!Utilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.VAB))
+                if (!Utilities.RecoverActiveVesselToStorage(isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH))
                 {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", "OK", false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin);
                 }
             }
             if (buildList.Count == 0)
@@ -672,35 +981,59 @@ namespace KerbalConstructionTime
             for (int i = 0; i < buildList.Count; i++)
             {
                 BuildListVessel b = buildList[i];
-                RenderVabWarehouseRow(b, i);
+                RenderWarehouseRow(b, i, false);
             }
         }
 
-        private static void RenderVabWarehouseRow(BuildListVessel b, int listIdx)
+        private static void RenderWarehouseRow(BuildListVessel b, int listIdx, bool isCombinedList)
         {
             if (!b.AllPartsValid)
                 return;
-            string launchSite = b.LaunchSite;
-            if (launchSite == "LaunchPad")
+
+            LCItem vesselLC = b.LC;
+
+            bool isPad = vesselLC != KCTGameStates.ActiveKSC.Hangar;
+
+            string launchSite = b.launchSite;
+            if (launchSite == "LaunchPad" && isPad)
             {
-                if (b.LaunchSiteID >= 0)
-                    launchSite = KCTGameStates.ActiveKSC.LaunchPads[b.LaunchSiteID].name;
+                if (b.launchSiteIndex >= 0 && b.launchSiteIndex < b.LC.LaunchPads.Count)
+                    launchSite = b.LC.LaunchPads[b.launchSiteIndex].name;
                 else
-                    launchSite = KCTGameStates.ActiveKSC.ActiveLPInstance.name;
+                    launchSite = b.LC.ActiveLPInstance.name;
             }
-            ReconRollout rollout = KCTGameStates.ActiveKSC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
-            ReconRollout rollback = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Rollback);
-            ReconRollout recovery = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
+            ReconRollout rollout = null, rollback = null, recovery = null, padRollout = null;
+            string blvID = b.shipID.ToString();
+            foreach (var rr in vesselLC.Recon_Rollout)
+            {
+                if (rr.associatedID == blvID)
+                {
+                    switch (rr.RRType)
+                    {
+                        case ReconRollout.RolloutReconType.Recovery: recovery = rr; break;
+                        case ReconRollout.RolloutReconType.Rollback: rollback = rr; break;
+                        case ReconRollout.RolloutReconType.Rollout: rollout = rr; break;
+                        // any other type is wrong.
+                    }
+                }
+                else if (isPad && rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.launchPadID == launchSite)
+                    padRollout = rr; // something else is being rollout out to this launchsite.
+            }
+            AirlaunchPrep airlaunchPrep = !isPad ? vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blvID) : null;
+
+            IKCTBuildItem typeIcon = rollout ?? rollback ?? recovery ?? null;
+            typeIcon = typeIcon ?? airlaunchPrep;
+            typeIcon = typeIcon ?? b;
 
             VesselPadStatus padStatus = VesselPadStatus.InStorage;
-            if (rollback != null)
-                padStatus = VesselPadStatus.RollingBack;
             if (recovery != null)
                 padStatus = VesselPadStatus.Recovering;
+            if ( isPad && rollback != null)
+                padStatus = VesselPadStatus.RollingBack;
 
             GUIStyle textColor = GUI.skin.label;
             string status = "In Storage";
-            if (rollout != null && rollout.AssociatedID == b.Id.ToString())
+            if (rollout != null)
             {
                 padStatus = VesselPadStatus.RollingOut;
                 status = $"Rolling Out to {launchSite}";
@@ -722,219 +1055,7 @@ namespace KerbalConstructionTime
                 status = "Recovering";
                 textColor = _redText;
             }
-
-            GUILayout.BeginHorizontal();
-            if (!HighLogic.LoadedSceneIsEditor && (padStatus == VesselPadStatus.InStorage || padStatus == VesselPadStatus.RolledOut))
-            {
-                if (GUILayout.Button("*", GUILayout.Width(_butW)))
-                {
-                    if (_selectedVesselId == b.Id)
-                        GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
-                    else
-                        GUIStates.ShowBLPlus = true;
-                    _selectedVesselId = b.Id;
-                }
-            }
-            else
-                GUILayout.Space(_butW + 4);
-
-            GUILayout.Label(b.ShipName, textColor);
-            GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
-            bool siteHasActiveRolloutOrRollback = rollout != null || KCTGameStates.ActiveKSC.GetReconRollout(ReconRollout.RolloutReconType.Rollback, launchSite) != null;
-            if (IsRolloutEnabled && !HighLogic.LoadedSceneIsEditor && recovery == null && !siteHasActiveRolloutOrRollback) //rollout if the pad isn't busy
-            {
-                bool hasRecond = false;
-                GUIStyle btnColor = _greenButton;
-                if (KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed)
-                    btnColor = _redButton;
-                else if (hasRecond = KCTGameStates.ActiveKSC.GetReconditioning(KCTGameStates.ActiveKSC.ActiveLPInstance.name) != null)
-                    btnColor = _yellowButton;
-                else if (b.MeetsFacilityRequirements(false).Count != 0)
-                    btnColor = _yellowButton;
-                ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, b.Id.ToString(), launchSite);
-                if (tmpRollout.Cost > 0d)
-                    GUILayout.Label("√" + tmpRollout.Cost.ToString("N0"));
-                string rolloutText = listIdx == _mouseOnRolloutButton ? MagiCore.Utilities.GetColonFormattedTime(tmpRollout.GetTimeLeft()) : "Rollout";
-                if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
-                {
-                    if (PresetManager.Instance.ActivePreset.GeneralSettings.ReconditioningBlocksPad && hasRecond)
-                    {
-                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutReconditioningPopup", "Cannot Roll out!", "You must finish reconditioning the launchpad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin);
-                    }
-                    else
-                    {
-                        List<string> facilityChecks = b.MeetsFacilityRequirements(false);
-                        if (facilityChecks.Count == 0)
-                        {
-                            if (!KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed)
-                            {
-                                b.LaunchSiteID = KCTGameStates.ActiveKSC.ActiveLaunchPadID;
-
-                                if (rollout != null)
-                                {
-                                    rollout.SwapRolloutType();
-                                }
-                                // tmpRollout.launchPadID = KCT_GameStates.ActiveKSC.ActiveLPInstance.name;
-                                KCTGameStates.ActiveKSC.Recon_Rollout.Add(tmpRollout);
-                            }
-                            else
-                            {
-                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchRepairPopup", "Cannot Launch!", "You must repair the launchpad before you can launch a vessel from it!", "Acknowledged", false, HighLogic.UISkin);
-                            }
-                        }
-                        else
-                        {
-                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade the VAB and/or Launchpad it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
-                        }
-                    }
-                }
-                if (Event.current.type == EventType.Repaint)
-                    if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
-                        _mouseOnRolloutButton = listIdx;
-                    else if (listIdx == _mouseOnRolloutButton)
-                        _mouseOnRolloutButton = -1;
-            }
-            else if (IsRolloutEnabled && !HighLogic.LoadedSceneIsEditor && recovery == null && rollback == null &&
-                     rollout != null && b.Id.ToString() == rollout.AssociatedID && !rollout.IsComplete() &&
-                     GUILayout.Button(MagiCore.Utilities.GetColonFormattedTime(rollout.GetTimeLeft()), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
-            {
-                rollout.SwapRolloutType();
-            }
-            else if (IsRolloutEnabled && !HighLogic.LoadedSceneIsEditor && recovery == null && rollback != null && !rollback.IsComplete())
-            {
-                if (rollout == null)
-                {
-                    if (GUILayout.Button(MagiCore.Utilities.GetColonFormattedTime(rollback.GetTimeLeft()), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
-                        rollback.SwapRolloutType();
-                }
-                else
-                {
-                    GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(rollback.GetTimeLeft()), GUILayout.ExpandWidth(false));
-                }
-            }
-            else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION && recovery == null &&
-                     (!IsRolloutEnabled || (rollout != null && b.Id.ToString() == rollout.AssociatedID && rollout.IsComplete())))
-            {
-                KCT_LaunchPad pad = KCTGameStates.ActiveKSC.LaunchPads.Find(lp => lp.name == launchSite);
-                bool operational = pad != null ? !pad.IsDestroyed : !KCTGameStates.ActiveKSC.ActiveLPInstance.IsDestroyed;
-                GUIStyle btnColor = _greenButton;
-                string launchTxt = "Launch";
-                if (!operational)
-                {
-                    launchTxt = "Repairs Required";
-                    btnColor = _redButton;
-                }
-                else if (Utilities.ReconditioningActive(null, launchSite))
-                {
-                    launchTxt = "Reconditioning";
-                    btnColor = _yellowButton;
-                }
-                if (IsRolloutEnabled && GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button("Roll Back", GUILayout.ExpandWidth(false)))
-                {
-                    rollout.SwapRolloutType();
-                }
-                else if (!GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button(launchTxt, btnColor, GUILayout.ExpandWidth(false)))
-                {
-                    if (b.LaunchSiteID >= 0)
-                    {
-                        KCTGameStates.ActiveKSC.SwitchLaunchPad(b.LaunchSiteID);
-                    }
-                    b.LaunchSiteID = KCTGameStates.ActiveKSC.ActiveLaunchPadID;
-
-                    List<string> facilityChecks = b.MeetsFacilityRequirements(false);
-                    if (facilityChecks.Count == 0)
-                    {
-                        if (!operational)
-                        {
-                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchRepairPopup", "Cannot Launch!", "You must repair the launchpad before you can launch a vessel from it!", "Acknowledged", false, HighLogic.UISkin);
-                        }
-                        else if (Utilities.ReconditioningActive(null, launchSite))
-                        {
-                            ScreenMessage message = new ScreenMessage($"[KCT] Cannot launch while LaunchPad is being reconditioned. It will be finished in {MagiCore.Utilities.GetFormattedTime(KCTGameStates.ActiveKSC.GetReconditioning(launchSite).GetTimeLeft())}", 4f, ScreenMessageStyle.UPPER_CENTER);
-                            ScreenMessages.PostScreenMessage(message);
-                        }
-                        else
-                        {
-                            KCTGameStates.LaunchedVessel = b;
-                            KCTGameStates.LaunchedVessel.KSC = null;
-                            if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, b.LaunchSite).Count == 0)
-                            {
-                                GUIStates.ShowBLPlus = false;
-                                if (!IsCrewable(b.ExtractedParts))
-                                    b.Launch();
-                                else
-                                {
-                                    GUIStates.ShowBuildList = false;
-
-                                    KCTGameStates.ToolbarControl?.SetFalse();
-
-                                    _centralWindowPosition.height = 1;
-                                    AssignInitialCrew();
-                                    GUIStates.ShowShipRoster = true;
-                                }
-                            }
-                            else
-                            {
-                                GUIStates.ShowBuildList = false;
-                                GUIStates.ShowClearLaunch = true;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade the VAB and/or Launchpad it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
-                    }
-                }
-            }
-            else if (!HighLogic.LoadedSceneIsEditor && recovery != null)
-            {
-                GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(recovery.GetTimeLeft()), GUILayout.ExpandWidth(false));
-            }
-
-            GUILayout.EndHorizontal();
-        }
-
-        private static void RenderSphWarehouse()
-        {
-            List<BuildListVessel> buildList = KCTGameStates.ActiveKSC.SPHWarehouse;
-            GUILayout.Label("__________________________________________________");
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(_planeTexture, GUILayout.ExpandWidth(false));
-            GUILayout.Label("SPH Storage");
-            GUILayout.EndHorizontal();
-            if (HighLogic.LoadedSceneIsFlight && Utilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) &&
-                GUILayout.Button("Recover Active Vessel To SPH"))
-            {
-                if (!Utilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.SPH))
-                {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "recoverShipErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", "OK", false, HighLogic.UISkin);
-                }
-            }
-            if (buildList.Count == 0)
-            {
-                GUILayout.Label("No vessels in storage!\nThey will be stored here when they are complete.");
-            }
-
-            for (int i = 0; i < buildList.Count; i++)
-            {
-                BuildListVessel b = buildList[i];
-                RenderSphWarehouseRow(b, i);
-            }
-        }
-
-        private static void RenderSphWarehouseRow(BuildListVessel b, int listIdx)
-        {
-            if (!b.AllPartsValid)
-                return;
-            string status = string.Empty;
-
-            ReconRollout recovery = KCTGameStates.ActiveKSC.Recon_Rollout.FirstOrDefault(r => r.AssociatedID == b.Id.ToString() && r.RRType == ReconRollout.RolloutReconType.Recovery);
-            if (recovery != null)
-                status = "Recovering";
-
-            GUIStyle textColor = GUI.skin.label;
-            AirlaunchPrep airlaunchPrep = KCTGameStates.ActiveKSC.AirlaunchPrep.FirstOrDefault(r => r.AssociatedID == b.Id.ToString());
-            if (airlaunchPrep != null)
+            else if (airlaunchPrep != null)
             {
                 if (airlaunchPrep.IsComplete())
                 {
@@ -947,148 +1068,445 @@ namespace KerbalConstructionTime
                     textColor = _yellowText;
                 }
             }
+            if (!b.LC.IsOperational)
+                textColor = _redText;
 
             GUILayout.BeginHorizontal();
-            if (!HighLogic.LoadedSceneIsEditor && status == string.Empty)
+            if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && (padStatus == VesselPadStatus.InStorage || padStatus == VesselPadStatus.RolledOut))
             {
                 if (GUILayout.Button("*", GUILayout.Width(_butW)))
                 {
-                    if (_selectedVesselId == b.Id)
+                    if (_selectedVesselId == b.shipID)
                         GUIStates.ShowBLPlus = !GUIStates.ShowBLPlus;
                     else
                         GUIStates.ShowBLPlus = true;
-                    _selectedVesselId = b.Id;
+                    _selectedVesselId = b.shipID;
                 }
             }
             else
                 GUILayout.Space(_butW + 4);
 
-            GUILayout.Label(b.ShipName, textColor);
-            GUILayout.Label(status + "   ", GUILayout.ExpandWidth(false));
-
-            if (HighLogic.LoadedScene != GameScenes.EDITOR && recovery == null && airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
+            DrawTypeIcon(typeIcon);
+            GUILayout.Label(b.shipName, textColor);
+            
+            if (!b.LC.IsOperational)
             {
-                var tmpPrep = new AirlaunchPrep(b, b.Id.ToString());
-                if (tmpPrep.Cost > 0d)
-                    GUILayout.Label("√" + tmpPrep.Cost.ToString("N0"));
-                string airlaunchText = listIdx == _mouseOnAirlaunchButton ? MagiCore.Utilities.GetColonFormattedTime(tmpPrep.GetTimeLeft()) : "Prep for airlaunch";
-                if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
-                {
-                    AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
-                    if (!lvl.CanLaunchVessel(b, out string failedReason))
-                    {
-                        ScreenMessages.PostScreenMessage($"Vessel failed validation: {failedReason}", 6f, ScreenMessageStyle.UPPER_CENTER);
-                    }
-                    else
-                    {
-                        KCTGameStates.ActiveKSC.AirlaunchPrep.Add(tmpPrep);
-                    }
-                }
-                if (Event.current.type == EventType.Repaint)
-                    if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
-                        _mouseOnAirlaunchButton = listIdx;
-                    else if (listIdx == _mouseOnAirlaunchButton)
-                        _mouseOnAirlaunchButton = -1;
-            }
-            else if (HighLogic.LoadedScene != GameScenes.EDITOR && recovery == null && airlaunchPrep != null)
-            {
-                string btnText = airlaunchPrep.IsComplete() ? "Unmount" : MagiCore.Utilities.GetColonFormattedTime(airlaunchPrep.GetTimeLeft());
-                if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
-                {
-                    airlaunchPrep.SwitchDirection();
-                }
+                GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.EndHorizontal();
+                return;
             }
 
-            string launchBtnText = airlaunchPrep != null ? "Airlaunch" : "Launch";
-            if (HighLogic.LoadedScene != GameScenes.TRACKSTATION && recovery == null && (airlaunchPrep == null || airlaunchPrep.IsComplete()) &&
-                GUILayout.Button(launchBtnText, GUILayout.ExpandWidth(false)))
+            GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
+            
+            if (recovery != null)
             {
-                List<string> facilityChecks = b.MeetsFacilityRequirements(false);
-                if (facilityChecks.Count == 0)
+                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+            }
+            else
+            {
+                if (isPad)
                 {
-                    bool operational = Utilities.IsLaunchFacilityIntact(BuildListVessel.ListType.SPH);
-                    if (!operational)
+                    KCT_LaunchPad foundPad = null;
+                    LaunchPadState lpState = LaunchPadState.None;
+                    if (rollout == null && rollback == null)
                     {
-                        ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
-                    }
-                    else
-                    {
-                        GUIStates.ShowBLPlus = false;
-                        KCTGameStates.LaunchedVessel = b;
-                        KCTGameStates.LaunchedVessel.KSC = null;
-
-                        if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
+                        if (isCombinedList)
                         {
-                            if (airlaunchPrep != null)
-                            {
-                                GUIStates.ShowBuildList = false;
-                                GUIStates.ShowAirlaunch = true;
-                            }
-                            else if (!IsCrewable(b.ExtractedParts))
-                            {
-                                b.Launch();
-                            }
+                            foundPad = vesselLC.FindFreeLaunchPad();
+                            if (foundPad != null)
+                                lpState = LaunchPadState.Free;
                             else
-                            {
-                                GUIStates.ShowBuildList = false;
-                                KCTGameStates.ToolbarControl?.SetFalse();
-                                _centralWindowPosition.height = 1;
-                                AssignInitialCrew();
-                                GUIStates.ShowShipRoster = true;
-                            }
+                                lpState = vesselLC.GetBestLaunchPadState();
                         }
                         else
                         {
-                            GUIStates.ShowBuildList = false;
-                            GUIStates.ShowClearLaunch = true;
-                            GUIStates.ShowAirlaunch = airlaunchPrep != null;
+                            lpState = vesselLC.ActiveLPInstance.State;
+                            if (padRollout == null && vesselLC.GetReconRollout(ReconRollout.RolloutReconType.None, launchSite) == null)
+                            {
+                                foundPad = vesselLC.ActiveLPInstance;
+                            }
+                        }
+                    }
+
+                    if (!HighLogic.LoadedSceneIsEditor && lpState > LaunchPadState.Nonoperational) //rollout if the pad isn't busy
+                    {
+                        List<string> facilityChecks = new List<string>();
+                        bool meetsChecks = b.MeetsFacilityRequirements(facilityChecks);
+
+                        GUIStyle btnColor = _greenButton;
+                        if (lpState == LaunchPadState.Destroyed)
+                            btnColor = _redButton;
+                        else if (lpState <  LaunchPadState.Free)
+                            btnColor = _yellowButton;
+                        else if (!meetsChecks)
+                            btnColor = _yellowButton;
+                        ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, blvID, launchSite);
+                        if (tmpRollout.cost > 0d)
+                            GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -tmpRollout.cost):N0}");
+                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
+                        if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
+                        {
+                            if (foundPad != null && lpState == LaunchPadState.Free)
+                            {
+                                if (meetsChecks)
+                                {
+                                    b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
+                                    vesselLC.Recon_Rollout.Add(tmpRollout);
+                                }
+                                else
+                                {
+                                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
+                                }
+                            }
+                            else if (lpState == LaunchPadState.Destroyed)
+                            {
+                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutDestroyedPopup", "Cannot Roll out!", "You must repair the launchpad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin);
+                            }
+                            else if (lpState == LaunchPadState.Reconditioning)
+                            {
+                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutReconditioningPopup", "Cannot Roll out!", "You must finish reconditioning at least one pad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin);
+                            }
+                            else if (lpState != LaunchPadState.Free)
+                            {
+                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutBusyPopup", "Cannot Roll out!", isCombinedList ? "All pads are in use by other vessels" : "This launchpad is in use by another vessel.", "Acknowledged", false, HighLogic.UISkin);
+                            }
+                        }
+                        if (Event.current.type == EventType.Repaint)
+                            if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                                _mouseOnRolloutButton = listIdx;
+                            else if (listIdx == _mouseOnRolloutButton)
+                                _mouseOnRolloutButton = -1;
+                    }
+                    else if (!HighLogic.LoadedSceneIsEditor && rollback == null && rollout != null && !rollout.IsComplete() &&
+                             GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+ blvID), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
+                    {
+                        rollout.SwapRolloutType();
+                    }
+                    else if (!HighLogic.LoadedSceneIsEditor && rollback != null && !rollback.IsComplete())
+                    {
+                        if (rollout == null && padRollout == null)
+                        {
+                            if (GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
+                                rollback.SwapRolloutType();
+                        }
+                        else
+                        {
+                            GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                        }
+                    }
+                    else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
+                             (rollout != null && rollout.IsComplete()))
+                    {
+                        KCT_LaunchPad pad = vesselLC.LaunchPads.Find(lp => lp.name == rollout.launchPadID);
+                        bool operational = pad != null && !pad.IsDestroyed && pad.isOperational;
+                        GUIStyle btnColor = _greenButton;
+                        string launchTxt = "Launch";
+                        if (!operational)
+                        {
+                            launchTxt = pad == null ? "No Pad" : "Repairs Required";
+                            btnColor = _redButton;
+                        }
+                        else if (Utilities.ReconditioningActive(vesselLC, rollout.launchPadID))
+                        {
+                            launchTxt = "Reconditioning";
+                            btnColor = _yellowButton;
+                        }
+                        if (GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button("Roll Back", GUILayout.ExpandWidth(false)))
+                        {
+                            rollout.SwapRolloutType();
+                        }
+                        else if (!GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button(launchTxt, btnColor, GUILayout.ExpandWidth(false)))
+                        {
+                            if (b.launchSiteIndex >= 0)
+                            {
+                                vesselLC.SwitchLaunchPad(b.launchSiteIndex);
+                            }
+                            b.launchSiteIndex = vesselLC.ActiveLaunchPadIndex;
+
+                            List<string> facilityChecks = new List<string>();
+                            if (b.MeetsFacilityRequirements(facilityChecks))
+                            {
+                                if (pad == null)
+                                {
+                                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchNoPad", "Cannot Launch!", "Somehow this vessel is not associated with a launch pad!", "Acknowledged", false, HighLogic.UISkin);
+                                }
+                                else if (!operational)
+                                {
+                                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchRepairPopup", "Cannot Launch!", "You must repair the launchpad before you can launch a vessel from it!", "Acknowledged", false, HighLogic.UISkin);
+                                }
+                                else if (vesselLC.GetReconditioning(launchSite) is ReconRollout recon)
+                                {
+                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {Utilities.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessages.PostScreenMessage(message);
+                                }
+                                else
+                                {
+                                    KerbalConstructionTimeData.Instance.LaunchedVessel = b;
+                                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
+                                    {
+                                        GUIStates.ShowBLPlus = false;
+                                        if (!b.IsCrewable())
+                                            b.Launch();
+                                        else
+                                        {
+                                            GUIStates.ShowBuildList = false;
+
+                                            KCTGameStates.ToolbarControl?.SetFalse();
+
+                                            _centralWindowPosition.height = 1;
+                                            AssignInitialCrew();
+                                            GUIStates.ShowShipRoster = true;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        GUIStates.ShowBuildList = false;
+                                        GUIStates.ShowClearLaunch = true;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
+                            }
                         }
                     }
                 }
                 else
                 {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade the SPH and/or Runway it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
+                    if (!HighLogic.LoadedSceneIsEditor)
+                    {
+                        if (airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
+                        {
+                            var tmpPrep = new AirlaunchPrep(b, blvID);
+                            if (tmpPrep.cost > 0d)
+                                GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
+                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ blvID) : new GUIContent("Prep for airlaunch");
+                            if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
+                            {
+                                AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
+                                if (!lvl.CanLaunchVessel(b, out string failedReason))
+                                {
+                                    ScreenMessages.PostScreenMessage($"Vessel failed validation: {failedReason}", 6f, ScreenMessageStyle.UPPER_CENTER);
+                                }
+                                else
+                                {
+                                    vesselLC.Airlaunch_Prep.Add(tmpPrep);
+                                }
+                            }
+                            if (Event.current.type == EventType.Repaint)
+                                if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                                    _mouseOnAirlaunchButton = listIdx;
+                                else if (listIdx == _mouseOnAirlaunchButton)
+                                    _mouseOnAirlaunchButton = -1;
+                        }
+                        else if (airlaunchPrep != null)
+                        {
+                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : Utilities.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.associatedID);
+                            if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
+                            {
+                                airlaunchPrep.SwitchDirection();
+                            }
+                        }
+                    }
+
+                    string launchBtnText = airlaunchPrep != null ? "Airlaunch" : "Launch";
+                    if (HighLogic.LoadedScene != GameScenes.TRACKSTATION && (airlaunchPrep == null || airlaunchPrep.IsComplete()) &&
+                        GUILayout.Button(launchBtnText, GUILayout.ExpandWidth(false)))
+                    {
+                        List<string> facilityChecks = new List<string>();
+                        if (b.MeetsFacilityRequirements(facilityChecks))
+                        {
+                            bool operational = Utilities.IsLaunchFacilityIntact(BuildListVessel.ListType.SPH);
+                            if (!operational)
+                            {
+                                ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
+                            }
+                            else
+                            {
+                                GUIStates.ShowBLPlus = false;
+                                KerbalConstructionTimeData.Instance.LaunchedVessel = b;
+
+                                if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
+                                {
+                                    if (airlaunchPrep != null)
+                                    {
+                                        GUIStates.ShowBuildList = false;
+                                        GUIStates.ShowAirlaunch = true;
+                                    }
+                                    else if (!b.IsCrewable())
+                                    {
+                                        b.Launch();
+                                    }
+                                    else
+                                    {
+                                        GUIStates.ShowBuildList = false;
+                                        KCTGameStates.ToolbarControl?.SetFalse();
+                                        _centralWindowPosition.height = 1;
+                                        AssignInitialCrew();
+                                        GUIStates.ShowShipRoster = true;
+                                    }
+                                }
+                                else
+                                {
+                                    GUIStates.ShowBuildList = false;
+                                    GUIStates.ShowClearLaunch = true;
+                                    GUIStates.ShowAirlaunch = airlaunchPrep != null;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex (the Hangar) it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin);
+                        }
+                    }
                 }
             }
-            else if (recovery != null)
+
+            GUILayout.EndHorizontal();
+        }
+
+        private static void RenderLaunchComplexControls()
+        {
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+
+            GUILayout.BeginHorizontal();
+            // Don't allow switching in edit mode
+            int lcCount = KCTGameStates.EditorShipEditingMode ? 1 : KCTGameStates.ActiveKSC.LaunchComplexCount;
+            if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
-                GUILayout.Label(MagiCore.Utilities.GetColonFormattedTime(recovery.GetTimeLeft()), GUILayout.ExpandWidth(false));
+                KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
+            }
+            GUILayout.FlexibleSpace();
+            string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
+            string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
+            GUILayout.Label(new GUIContent(lcText, lcTooltip));
+
+            if (GUILayout.Button(new GUIContent("Rename", "Rename Complex"), GUILayout.ExpandWidth(false)))
+            {
+                _renameType = RenameType.LaunchComplex;
+                _newName = activeLC.Name;
+                GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowDismantleLC = false;
+                GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
+                GUIStates.ShowRename = true;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+                _centralWindowPosition.width = 300;
+            }
+            bool canModify = activeLC.CanModify && !GUIStates.ShowPersonnelWindow;
+            const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
+            const string staffWindowFailTooltip = "Staff window open";
+            //if (GUILayout.Button(new GUIContent("Modify", canModify ? ("Modify " + (activeLC.LCType == LaunchComplexType.Pad ? "launch complex limits" : "hangar limits")) : (GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip)), 
+            //    canModify ? GUI.skin.button : _yellowButton, GUILayout.ExpandWidth(false)))
+            //{
+            //    if (canModify)
+            //    {
+            //        SetFieldsFromLC(activeLC);
+                    
+            //        GUIStates.ShowDismantlePad = false;
+            //        GUIStates.ShowModifyLC = true;
+            //        GUIStates.ShowDismantleLC = false;
+            //        GUIStates.ShowNewPad = false;
+            //        GUIStates.ShowNewLC = false;
+            //        GUIStates.ShowLCResources = false;
+            //        GUIStates.ShowRename = false;
+            //        GUIStates.ShowBuildList = false;
+            //        GUIStates.ShowBLPlus = false;
+            //        _centralWindowPosition.width = 300;
+            //    }
+            //    else
+            //    {
+            //        PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", modifyFailTooltip, "Can't Modify", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin);
+            //    }
+            //}
+            //if (GUILayout.Button(new GUIContent("New", "Build a new launch complex"), GUILayout.ExpandWidth(false)))
+            //{
+            //    SetFieldsFromStartingLCData(LCItem.StartingLC);
+
+            //    GUIStates.ShowDismantlePad = false;
+            //    GUIStates.ShowModifyLC = false;
+            //    GUIStates.ShowDismantleLC = false;
+            //    GUIStates.ShowNewPad = false;
+            //    GUIStates.ShowNewLC = true;
+            //    GUIStates.ShowLCResources = false;
+            //    GUIStates.ShowRename = false;
+            //    GUIStates.ShowBuildList = false;
+            //    GUIStates.ShowBLPlus = false;
+            //    _centralWindowPosition.width = 300;
+            //}
+            if (!HighLogic.LoadedSceneIsEditor && activeLC.LCType == LaunchComplexType.Pad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip),
+                canModify ? GUI.skin.button : _redButton, GUILayout.ExpandWidth(false)))
+            {
+                if (canModify)
+                {
+                    GUIStates.ShowDismantlePad = false;
+                    GUIStates.ShowModifyLC = false;
+                    GUIStates.ShowDismantleLC = true;
+                    GUIStates.ShowNewPad = false;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
+                    GUIStates.ShowRename = false;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                    _centralWindowPosition.width = 300;
+                }
+                else
+                {
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip, "Can't Dismantle", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin);
+                }
+            }
+            GUILayout.FlexibleSpace();
+            if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
+            {
+                KCTGameStates.ActiveKSC.SwitchToNextLaunchComplex();
             }
             GUILayout.EndHorizontal();
         }
 
         private static void RenderLaunchPadControls()
         {
-            KCT_LaunchPad activePad = KCTGameStates.ActiveKSC.ActiveLPInstance;
+            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginHorizontal();
-            int lpCount = KCTGameStates.ActiveKSC.LaunchPadCount;
+            bool oldRushing = activeLC.IsRushing;
+            activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
+                $"Enable rush building.\nRate: {PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult:N1}x\nSalary cost: {PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult:N1}x{(activeLC.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"));
+            if (oldRushing != activeLC.IsRushing)
+                Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
+
+            KCT_LaunchPad activePad = activeLC.ActiveLPInstance;
+            
+            GUILayout.Space(15);
+
+            if (activePad == null)
+            {
+                // Hangar, no pads to switch
+                GUILayout.EndHorizontal();
+                return;
+            }
+
+            int lpCount = activeLC.LaunchPadCount;
             if (lpCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
-                KCTGameStates.ActiveKSC.SwitchToPrevLaunchPad();
-                if (HighLogic.LoadedSceneIsEditor)
-                {
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                }
+                activeLC.SwitchToPrevLaunchPad();
             }
             GUILayout.FlexibleSpace();
-            string padTxt = $"Current: {activePad.name} ({activePad.SupportedMassAsPrettyText})";
-            string padDesc = $"Size limit: {activePad.SupportedSizeAsPrettyText}";
-            GUILayout.Label(new GUIContent(padTxt, padDesc));
-            if (_costOfNewLP == int.MinValue)
-            {
-                _costOfNewLP = MathParser.GetStandardFormulaValue("NewLaunchPadCost", new Dictionary<string, string>
-                {
-                    { "N", KCTGameStates.ActiveKSC.LaunchPads.Count.ToString() }
-                });
-            }
+            GUILayout.Label(new GUIContent(activePad.name, "Uses Launch Complex limits"));
 
             if (GUILayout.Button(new GUIContent("Rename", "Rename pad"), GUILayout.ExpandWidth(false)))
             {
-                _isRenamingLaunchPad = true;
+                _renameType = RenameType.Pad;
                 _newName = activePad.name;
                 GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = true;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1104,22 +1522,31 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available!", "No Launch Sites", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available!", "No Launch Sites", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin);
                 }
             }
-            if (_costOfNewLP >= 0 && GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
+            if (GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
             {
-                _newName = $"LaunchPad {(KCTGameStates.ActiveKSC.LaunchPads.Count + 1)}";
+                _newName = $"LaunchPad {(activeLC.LaunchPads.Count + 1)}";
                 GUIStates.ShowDismantlePad = false;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = true;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
+                _centralWindowPosition.width = 300;
             }
             if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
             {
                 GUIStates.ShowDismantlePad = true;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = false;
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
@@ -1127,32 +1554,35 @@ namespace KerbalConstructionTime
             GUILayout.FlexibleSpace();
             if (lpCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
             {
-                KCTGameStates.ActiveKSC.SwitchToNextLaunchPad();
-                if (HighLogic.LoadedSceneIsEditor)
-                {
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                }
+                activeLC.SwitchToNextLaunchPad();
             }
             GUILayout.EndHorizontal();
         }
 
-        public static void CancelTechNode(int index)
+        public static void CancelTechNode(int index, bool initialCancel = true)
         {
-            if (KCTGameStates.TechList.Count > index)
+            if (initialCancel)
             {
-                TechItem node = KCTGameStates.TechList[index];
-                KCTDebug.Log($"Cancelling tech: {node.TechName}");
+                RemoveInputLocks();
+                KerbalConstructionTimeData.Instance.TechIgnoreUpdates = true;
+                Utilities.RemoveResearchedPartsFromExperimental();
+            }
+
+            if (KerbalConstructionTimeData.Instance.TechList.Count > index)
+            {
+                TechItem node = KerbalConstructionTimeData.Instance.TechList[index];
+                KCTDebug.Log($"Cancelling tech: {node.techName}");
 
                 // cancel children
-                for (int i = 0; i < KCTGameStates.TechList.Count; i++)
+                for (int i = 0; i < KerbalConstructionTimeData.Instance.TechList.Count; i++)
                 {
-                    List<string> parentList = KerbalConstructionTimeData.techNameToParents[KCTGameStates.TechList[i].TechID];
-                    if (parentList.Contains(node.TechID))
+                    List<string> parentList = KerbalConstructionTimeData.techNameToParents[KerbalConstructionTimeData.Instance.TechList[i].techID];
+                    if (parentList.Contains(node.techID))
                     {
-                        CancelTechNode(i);
+                        CancelTechNode(i, false);
                         // recheck list in case multiple levels of children were deleted.
                         i = -1;
-                        index = KCTGameStates.TechList.FindIndex(t => t.TechID == node.TechID);
+                        index = KerbalConstructionTimeData.Instance.TechList.FindIndex(t => t.techID == node.techID);
                     }
                 }
 
@@ -1162,15 +1592,34 @@ namespace KerbalConstructionTime
                     KCTGameStates.IsRefunding = true;
                     try
                     {
-                        ResearchAndDevelopment.Instance.AddScience(node.ScienceCost, TransactionReasons.None);    //Should maybe do tech research as the reason
+                        ResearchAndDevelopment.Instance.AddScience(node.scienceCost, TransactionReasons.RnDTechResearch);
                     }
                     finally
                     {
                         KCTGameStates.IsRefunding = valBef;
                     }
                 }
-                node.DisableTech();
-                KCTGameStates.TechList.RemoveAt(index);
+                KerbalConstructionTimeData.Instance.TechList.RemoveAt(index);
+                RP0.Crew.CrewHandler.Instance?.OnTechCanceled(node.techID);
+
+                if (initialCancel) // do this only once
+                {
+                    KerbalConstructionTimeData.Instance.TechListUpdated();
+                    KerbalConstructionTimeData.Instance.TechIgnoreUpdates = false;
+                    Utilities.AddResearchedPartsToExperimental();
+                }
+            }
+        }
+
+        public static void CancelConstruction(int index)
+        {
+            RemoveInputLocks();
+
+            if (KCTGameStates.ActiveKSC.Constructions.Count > index)
+            {
+                ConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
+                KCTDebug.Log($"Cancelling construction: {item.GetItemName()}");
+                item.Cancel();
             }
         }
 
@@ -1179,23 +1628,25 @@ namespace KerbalConstructionTime
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
             _blPlusPosition.height = 225;
-            BuildListVessel b = Utilities.FindBLVesselByID(_selectedVesselId);
+            BuildListVessel b = Utilities.FindBLVesselByID(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
             GUILayout.BeginVertical();
-            string launchSite = b.LaunchSite;
+            string launchSite = b.launchSite;
 
             if (launchSite == "LaunchPad")
             {
-                if (b.LaunchSiteID >= 0)
-                    launchSite = b.KSC.LaunchPads[b.LaunchSiteID].name;
+                if (b.launchSiteIndex >= 0 && b.launchSiteIndex < b.LC.LaunchPads.Count)
+                    launchSite = b.LC.LaunchPads[b.launchSiteIndex].name;
                 else
-                    launchSite = b.KSC.ActiveLPInstance.name;
+                    launchSite = b.LC.ActiveLPInstance.name;
             }
-            ReconRollout rollout = KCTGameStates.ActiveKSC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
-            bool onPad = rollout != null && rollout.IsComplete() && rollout.AssociatedID == b.Id.ToString();
-            //This vessel is rolled out onto the pad
+            string blvID = b.shipID.ToString();
+            ReconRollout rollout = b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
+            bool isRollingOut = rollout != null && rollout.associatedID == blvID;
+            bool onPad = isRollingOut && rollout.IsComplete();
 
-            // 1.4 Addition
-            if (!onPad && GUILayout.Button("Select LaunchSite"))
+            // Only allow selecting launch site for planes.
+            // Rockets use whatever location is set for their pad.
+            if (b.Type == BuildListVessel.ListType.SPH && b.LC.Airlaunch_Prep.Find(a => a.associatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
             {
                 _launchSites = Utilities.GetLaunchSites(b.Type == BuildListVessel.ListType.VAB);
                 if (_launchSites.Any())
@@ -1206,7 +1657,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available to choose from. Try visiting an editor first.", "No Launch Sites", null, new DialogGUIButton("OK", () => { })), false, HighLogic.UISkin);
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available to choose from. Try visiting an editor first.", "No Launch Sites", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin);
                 }
             }
 
@@ -1216,10 +1667,12 @@ namespace KerbalConstructionTime
                 DialogGUIBase[] options = new DialogGUIBase[2];
                 options[0] = new DialogGUIButton("Yes", ScrapVessel);
                 options[1] = new DialogGUIButton("No", RemoveInputLocks);
-                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselConfirmPopup", "Are you sure you want to scrap this vessel?", "Scrap Vessel", null, 300, options);
+                MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
+                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselPurchase, b.cost, 0f, 0f).GetCostLineOverride(false, false) + ".",
+                            "Scrap Vessel", null, options: options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                 GUIStates.ShowBLPlus = false;
-                ResetBLWindow();
+                ResetBLWindow(false);
             }
 
             if (!onPad && GUILayout.Button("Edit"))
@@ -1227,18 +1680,17 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 EditorWindowPosition.height = 1;
                 string tempFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/temp.craft";
-                b.ShipNode.Save(tempFile);
+                b.UpdateNodeAndSave(tempFile);
+                KerbalConstructionTimeData.Instance.EditedVessel = b;
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
-                KCTGameStates.EditedVessel = b;
-                KCTGameStates.EditedVessel.KSC = null;
                 KCTGameStates.EditorShipEditingMode = true;
-                KCTGameStates.MergingAvailable = b.IsFinished;
+                KerbalConstructionTimeData.Instance.MergingAvailable = b.IsFinished;
 
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_EXIT, "KCTEditExit");
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_NEW, "KCTEditNew");
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, "KCTEditLaunch");
 
-                EditorDriver.StartAndLoadVessel(tempFile, b.Type == BuildListVessel.ListType.VAB ? EditorFacility.VAB : EditorFacility.SPH);
+                EditorDriver.StartAndLoadVessel(tempFile, b.Type == BuildListVessel.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB);
             }
 
             if (GUILayout.Button("Rename"))
@@ -1249,28 +1701,31 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 GUIStates.ShowNewPad = false;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
                 GUIStates.ShowRename = true;
-                _newName = b.ShipName;
-                _isRenamingLaunchPad = false;
+                _newName = b.shipName;
+                _renameType = RenameType.Vessel;
             }
 
             if (GUILayout.Button("Duplicate"))
             {
-                Utilities.TryAddVesselToBuildList(b.CreateCopy(true), skipPartChecks: true);
+                Utilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true);
             }
 
             if (GUILayout.Button("Add to Plans"))
             {
-                AddVesselToPlansList(b.CreateCopy(true));
+                AddVesselToPlansList(b.CreateCopy());
             }
 
-            if (KCTGameStates.ActiveKSC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()) != null && GUILayout.Button("Rollback"))
+            ReconRollout blvRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.associatedID == blvID);
+            if (blvRollout != null && GUILayout.Button("Rollback"))
             {
-                KCTGameStates.ActiveKSC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.AssociatedID == b.Id.ToString()).SwapRolloutType();
+                blvRollout.SwapRolloutType();
                 GUIStates.ShowBLPlus = false;
             }
 
-            if (!b.IsFinished && GUILayout.Button("Warp To"))
+            if (!b.IsFinished && b.BuildRate > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(b.GetTimeLeft()):N0}")))
             {
                 KCTWarpController.Create(b);
                 GUIStates.ShowBLPlus = false;
@@ -1278,28 +1733,15 @@ namespace KerbalConstructionTime
 
             if (!b.IsFinished && GUILayout.Button("Move to Top"))
             {
-                if (_combineVabAndSph)
+                if (_isOperationsSelected)
                 {
-                    if (KCTGameStates.ActiveKSC.BuildList.Remove(b))
-                        KCTGameStates.ActiveKSC.BuildList.Insert(0, b);
+                    LCItem lc = b.LC;
+                    if (lc.BuildList.Remove(b))
+                    {
+                        lc.BuildList.Insert(0, b);
+                        lc.RecalculateBuildRates();
+                    }
                 }
-                else if (b.Type == BuildListVessel.ListType.VAB)
-                {
-                    b.RemoveFromBuildList();
-                    KCTGameStates.ActiveKSC.VABList.Insert(0, b);
-                }
-                else if (b.Type == BuildListVessel.ListType.SPH)
-                {
-                    b.RemoveFromBuildList();
-                    KCTGameStates.ActiveKSC.SPHList.Insert(0, b);
-                }
-            }
-
-            if (!b.IsFinished &&
-                (PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks == 0 || b.RushBuildClicks < PresetManager.Instance.ActivePreset.GeneralSettings.MaxRushClicks) &&
-                GUILayout.Button($"Rush Build 10%\n√{Math.Round(b.GetRushCost())}"))
-            {
-                b.DoRushBuild();
             }
 
             if (GUILayout.Button("Close"))
@@ -1316,6 +1758,8 @@ namespace KerbalConstructionTime
 
         public static void DrawLaunchSiteChooser(int windowID)
         {
+            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+
             GUILayout.BeginVertical();
             _launchSiteScrollView = GUILayout.BeginScrollView(_launchSiteScrollView, GUILayout.Height((float)Math.Min(Screen.height * 0.75, 25 * _launchSites.Count + 10)));
 
@@ -1326,12 +1770,12 @@ namespace KerbalConstructionTime
                     if (_isSelectingLaunchSiteForVessel)
                     {
                         //Set the chosen vessel's launch site to the selected site
-                        BuildListVessel blv = Utilities.FindBLVesselByID(_selectedVesselId);
-                        blv.LaunchSite = launchsite;
+                        BuildListVessel blv = Utilities.FindBLVesselByID(null, _selectedVesselId);
+                        blv.launchSite = launchsite;
                     }
                     else
                     {
-                        KCTGameStates.ActiveKSC.ActiveLPInstance.launchSiteName = launchsite;
+                        activeLC.ActiveLPInstance.launchSiteName = launchsite;
                         _isSelectingLaunchSiteForVessel = true; // reset
                     }
                     GUIStates.ShowLaunchSiteSelector = false;
@@ -1344,43 +1788,14 @@ namespace KerbalConstructionTime
 
         private static void ScrapVessel()
         {
-            InputLockManager.RemoveControlLock("KCTPopupLock");
-            BuildListVessel b = Utilities.FindBLVesselByID(_selectedVesselId);
+            RemoveInputLocks();
+            BuildListVessel b = Utilities.FindBLVesselByID(null, _selectedVesselId);
             if (b == null)
             {
                 KCTDebug.Log("Tried to remove a vessel that doesn't exist!");
                 return;
             }
-            KCTDebug.Log($"Scrapping {b.ShipName}");
-            if (!b.IsFinished)
-            {
-                List<ConfigNode> parts = b.ExtractedPartNodes;
-                b.RemoveFromBuildList();
-
-                //only add parts that were already a part of the inventory
-                if (ScrapYardWrapper.Available)
-                {
-                    List<ConfigNode> partsToReturn = new List<ConfigNode>();
-                    foreach (ConfigNode partNode in parts)
-                    {
-                        if (ScrapYardWrapper.PartIsFromInventory(partNode))
-                        {
-                            partsToReturn.Add(partNode);
-                        }
-                    }
-                    if (partsToReturn.Any())
-                    {
-                        ScrapYardWrapper.AddPartsToInventory(partsToReturn, false);
-                    }
-                }
-            }
-            else
-            {
-                b.RemoveFromBuildList();
-                ScrapYardWrapper.AddPartsToInventory(b.ExtractedPartNodes, false);    //don't count as a recovery
-            }
-            ScrapYardWrapper.SetProcessedStatus(ScrapYardWrapper.GetPartID(b.ExtractedPartNodes[0]), false);
-            Utilities.AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
+            Utilities.ScrapVessel(b);
         }
     }
 }

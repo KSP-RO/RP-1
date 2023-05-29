@@ -3,7 +3,7 @@ using System.IO;
 using System.Reflection;
 using UnityEngine;
 
-namespace RP0InstallChecker
+namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class StartupPopup : MonoBehaviour
@@ -38,6 +38,10 @@ namespace RP0InstallChecker
 
         private static void RememberPreference()
         {
+            FileInfo fi = new FileInfo(PreferenceFilePath);
+            if (!Directory.Exists(fi.Directory.FullName))
+                Directory.CreateDirectory(fi.Directory.FullName);
+
             // create empty file
             File.Create(PreferenceFilePath).Close();
         }

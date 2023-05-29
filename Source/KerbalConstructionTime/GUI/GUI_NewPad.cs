@@ -10,6 +10,8 @@ namespace KerbalConstructionTime
 
         public static void DrawNewPadWindow(int windowID)
         {
+            _centralWindowPosition.height = 1;
+
             LCItem curLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginVertical();

@@ -3097,7 +3097,7 @@
         "spacecraft": "",
         "engine_config": "RCS",
         "upgrade": true,
-        "entry_cost_mods": "Kerosene+O2",
+        "entry_cost_mods": "RP-1+O2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5790,7 +5790,7 @@
         "module_tags": []
     },
     {
-        "name": "Kerosene+O2",
+        "name": "RP-1+O2",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -15753,7 +15753,7 @@
         "spacecraft": "",
         "engine_config": "RCS",
         "upgrade": true,
-        "entry_cost_mods": "SyntinFuel,Kerosene+O2",
+        "entry_cost_mods": "SyntinFuel,RP-1+O2",
         "identical_part_name": "",
         "module_tags": []
     },

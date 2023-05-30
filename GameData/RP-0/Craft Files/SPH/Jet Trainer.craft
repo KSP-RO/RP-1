@@ -39,11 +39,11 @@ PART
 	modCost = 18.2906723
 	modMass = 0.0052720001
 	modSize = 0,0,0
-	link = RO-RFTank-Seperate_4285178348
-	link = RO-RFTank-Seperate_4284924482
+	link = RO-RFTank-Separate_4285178348
+	link = RO-RFTank-Separate_4284924482
 	link = SmallGearBay_4284869142
-	attN = top,RO-RFTank-Seperate_4284924482_0|1.73466003|0_0|1|0_0|1.73466003|0_0|1|0
-	attN = bottom,RO-RFTank-Seperate_4285178348_0|-1.52680504|0_0|-1|0_0|-1.52680504|0_0|-1|0
+	attN = top,RO-RFTank-Separate_4284924482_0|1.73466003|0_0|1|0_0|1.73466003|0_0|1|0
+	attN = bottom,RO-RFTank-Separate_4285178348_0|-1.52680504|0_0|-1|0_0|-1.52680504|0_0|-1|0
 	EVENTS
 	{
 	}
@@ -1358,7 +1358,7 @@ PART
 }
 PART
 {
-	part = RO-RFTank-Seperate_4285178348
+	part = RO-RFTank-Separate_4285178348
 	partName = Part
 	persistentId = 2164691614
 	pos = 0,10,-2.02684188
@@ -1825,7 +1825,7 @@ PART
 	modCost = 0
 	modMass = 0
 	modSize = 0,0,0
-	attN = top,RO-RFTank-Seperate_4285178348_0|0|0_0|1|0_0|0|0_0|1|0
+	attN = top,RO-RFTank-Separate_4285178348_0|0|0_0|1|0_0|0|0_0|1|0
 	EVENTS
 	{
 	}
@@ -2096,7 +2096,7 @@ PART
 }
 PART
 {
-	part = RO-RFTank-Seperate_4284924482
+	part = RO-RFTank-Separate_4284924482
 	partName = Part
 	persistentId = 974930403
 	attPos = 0,0,0
@@ -2617,7 +2617,7 @@ PART
 	modCost = 0
 	modMass = 0
 	modSize = 0,0,0
-	attN = bottom01,RO-RFTank-Seperate_4284924482_0|0|0_0|-1|0_0|0|0_0|-1|0
+	attN = bottom01,RO-RFTank-Separate_4284924482_0|0|0_0|-1|0_0|0|0_0|-1|0
 	EVENTS
 	{
 	}
@@ -2816,7 +2816,7 @@ PART
 	link = RO-B9ProcWing-Early_4284893336
 	link = RO-B9ProcCS-Early_4284301122
 	link = RO-B9ProcCS-Early_4291682018
-	srfN = srfAttach,RO-RFTank-Seperate_4285178348,collisionMesh,0|0|0,-1|0|0,0|0|0
+	srfN = srfAttach,RO-RFTank-Separate_4285178348,collisionMesh,0|0|0,-1|0|0,0|0|0
 	EVENTS
 	{
 	}
@@ -4424,7 +4424,7 @@ PART
 	link = RO-B9ProcWing-Early_4284872344
 	link = SmallGearBay_4284866784
 	sym = RO-B9ProcWing-Early_4284881870
-	srfN = srfAttach,RO-RFTank-Seperate_4285178348,collisionMesh,0|0|0,-1|0|0,0|0|0
+	srfN = srfAttach,RO-RFTank-Separate_4285178348,collisionMesh,0|0|0,-1|0|0,0|0|0
 	EVENTS
 	{
 	}
@@ -5086,7 +5086,7 @@ PART
 	link = RO-B9ProcWing-Early_4284871428
 	link = SmallGearBay_4284867358
 	sym = RO-B9ProcWing-Early_4284930490
-	srfN = srfAttach,RO-RFTank-Seperate_4285178348,collisionMesh,0|0|0,-1|0|0,0|0|0
+	srfN = srfAttach,RO-RFTank-Separate_4285178348,collisionMesh,0|0|0,-1|0|0,0|0|0
 	EVENTS
 	{
 	}

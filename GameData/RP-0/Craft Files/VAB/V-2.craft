@@ -2709,9 +2709,9 @@ PART
 	modCost = 175.192917
 	modMass = 0.116795279
 	modSize = 0,0,0
-	link = RO-RFTank-Seperate_4287597968
+	link = RO-RFTank-Separate_4287597968
 	attN = top,proceduralAvionics_4287616526_0|0.0825000033|0_0|1|0_0|0.0825000033|0_0|1|0
-	attN = bottom,RO-RFTank-Seperate_4287597968_0|-0.0825000033|0_0|-1|0_0|-0.0825000033|0_0|-1|0
+	attN = bottom,RO-RFTank-Separate_4287597968_0|-0.0825000033|0_0|-1|0_0|-0.0825000033|0_0|-1|0
 	EVENTS
 	{
 	}
@@ -2974,7 +2974,7 @@ PART
 }
 PART
 {
-	part = RO-RFTank-Seperate_4287597968
+	part = RO-RFTank-Separate_4287597968
 	partName = Part
 	persistentId = 3144004601
 	pos = -0.105966628,7.90236187,0.0401157588
@@ -3537,7 +3537,7 @@ PART
 	link = KzProcFairingSide1.TU_4287253338
 	attN = top,ROE-A4_4287371164_0|0.0599999987|0_0|1|0_0|0.0891000032|0_0|1|0
 	attN = top1,Null_0_0|2|0_0|1|0_0|2.98900008|0_0|1|0
-	attN = bottom,RO-RFTank-Seperate_4287597968_0|0|0_0|-1|0_0|0|0_0|-1|0
+	attN = bottom,RO-RFTank-Separate_4287597968_0|0|0_0|-1|0_0|0|0_0|-1|0
 	attN = connect01,KzProcFairingSide1.TU_4287254226_1|0.0445500016|0_0|1|0_0.825000048|0.0445500016|0_0|1|0
 	attN = connect02,KzProcFairingSide1.TU_4287328798_-4.37113883E-08|0.0445500016|1_0|1|0_-3.60618984E-08|0.0445500016|0.825000048_0|1|0
 	attN = connect03,KzProcFairingSide1.TU_4287253338_-1|0.0445500016|-8.74227766E-08_0|1|0_-0.825000048|0.0445500016|-7.21237967E-08_0|1|0
@@ -6321,7 +6321,7 @@ PART
 	sym = RO-B9ProcWing-Early_4286110212
 	sym = RO-B9ProcWing-Early_4286110076
 	sym = RO-B9ProcWing-Early_4286109940
-	srfN = srfAttach,RO-RFTank-Seperate_4287597968,collisionMesh,0|0|0,-1|0|0,0|0|0
+	srfN = srfAttach,RO-RFTank-Separate_4287597968,collisionMesh,0|0|0,-1|0|0,0|0|0
 	EVENTS
 	{
 	}
@@ -6645,7 +6645,7 @@ PART
 	sym = RO-B9ProcWing-Early_4286110076
 	sym = RO-B9ProcWing-Early_4286109940
 	sym = RO-B9ProcWing-Early_4286130112
-	srfN = srfAttach,RO-RFTank-Seperate_4287597968,collisionMesh,0|0|0,-1|0|0,0|0|0
+	srfN = srfAttach,RO-RFTank-Separate_4287597968,collisionMesh,0|0|0,-1|0|0,0|0|0
 	EVENTS
 	{
 	}
@@ -6969,7 +6969,7 @@ PART
 	sym = RO-B9ProcWing-Early_4286109940
 	sym = RO-B9ProcWing-Early_4286130112
 	sym = RO-B9ProcWing-Early_4286110212
-	srfN = srfAttach,RO-RFTank-Seperate_4287597968,collisionMesh,0|0|0,-1|0|0,0|0|0
+	srfN = srfAttach,RO-RFTank-Separate_4287597968,collisionMesh,0|0|0,-1|0|0,0|0|0
 	EVENTS
 	{
 	}
@@ -7293,7 +7293,7 @@ PART
 	sym = RO-B9ProcWing-Early_4286130112
 	sym = RO-B9ProcWing-Early_4286110212
 	sym = RO-B9ProcWing-Early_4286110076
-	srfN = srfAttach,RO-RFTank-Seperate_4287597968,collisionMesh,0|0|0,-1|0|0,0|0|0
+	srfN = srfAttach,RO-RFTank-Separate_4287597968,collisionMesh,0|0|0,-1|0|0,0|0|0
 	EVENTS
 	{
 	}
@@ -7614,7 +7614,7 @@ PART
 	modCost = 0
 	modMass = 0
 	modSize = 0,0,0
-	srfN = srfAttach,RO-RFTank-Seperate_4287597968,collisionMesh,0|6.98758078|1.08000004,0|0|-1,0|6.98758078|1.08000004
+	srfN = srfAttach,RO-RFTank-Separate_4287597968,collisionMesh,0|6.98758078|1.08000004,0|0|-1,0|6.98758078|1.08000004
 	EVENTS
 	{
 	}

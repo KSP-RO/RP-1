@@ -2,7 +2,6 @@
 using RealFuels.Tanks;
 using RP0.Utilities;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UniLinq;
 using System.Reflection;
@@ -55,9 +54,9 @@ namespace RP0.ProceduralAvionics
 
         private bool _started = false;
         private float _cachedVolume = float.MaxValue;
-        private BaseEventDetails _cachedEventData = null;
 
         private PartModule _procPartPM;
+        private PartModule _procShapePM;
         private PartModule _roTankPM;
         private ModuleFuelTanks _rfPM;
         private System.Collections.ObjectModel.KeyedCollection<string, FuelTank> _tankList = null;
@@ -66,6 +65,8 @@ namespace RP0.ProceduralAvionics
         private MethodInfo _seekVolumeMethod;
         private FieldInfo _procPartMinVolumeField;
         private PropertyInfo _procPartCurShapeProp;
+        private PropertyInfo _procPartVolumeProp;
+        private PropertyInfo _roTankVolumeProp;
 
         public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig { get; private set; }
 
@@ -182,10 +183,19 @@ namespace RP0.ProceduralAvionics
             SetupGUI();
             base.OnStart(state);
             massLimit = controllableMass;
-            _started = true;
-            if (_cachedEventData != null)
-                OnPartVolumeChanged(_cachedEventData);
             Profiler.EndSample();
+        }
+
+        public override void OnStartFinished(StartState _)
+        {
+            base.OnStartFinished(_);
+
+            // ProceduralParts and ROTanks will initialize their volume values in OnStart
+            _cachedVolume = _procPartVolumeProp != null ? (float)_procPartVolumeProp.GetValue(_procPartPM)
+                                                        : (float)_roTankVolumeProp.GetValue(_roTankPM);
+            _started = true;
+            UpdateMassLimitsAndVolume();
+            RefreshDisplays();
         }
 
         public void Start()
@@ -201,29 +211,33 @@ namespace RP0.ProceduralAvionics
 
         private void LoadPartModulesAndFields()
         {
-            _roTankPM = part.Modules.GetModule("ModuleROTank");
-            _procPartPM = part.Modules.GetModule("ProceduralPart");
-            if (_procPartPM != null)
+            BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+            if (part.Modules.GetModule("ProceduralPart") is PartModule pm)
             {
-                BindingFlags flags = BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
+                _procPartPM = pm;
                 _procPartMinVolumeField = _procPartPM.GetType().GetField("volumeMin", flags);
                 _procPartCurShapeProp = _procPartPM.GetType().GetProperty("CurrentShape", flags);
+                _procPartVolumeProp = _procPartPM.GetType().GetProperty("Volume", flags);
+            }
+            else if (part.Modules.GetModule("ModuleROTank") is PartModule pm2)
+            {
+                _roTankPM = pm2;
+                _roTankVolumeProp = _roTankPM.GetType().GetProperty("Volume", flags);
+
+                if (_roTankVolumeProp == null)
+                {
+                    ShowOutdatedROLibWarning();
+                }
+            }
+            else
+            {
+                Debug.LogError("[RP0ProcAvi] Part needs to be procedural");
             }
 
             _rfPM = part.Modules.GetModule<ModuleFuelTanks>();
             FieldInfo fiDict = typeof(ModuleFuelTanks).GetField("tanksDict", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            if (fiDict != null)
-            {
-                _tanksDict = (Dictionary<string, FuelTank>)fiDict.GetValue(_rfPM);
-                _ecTank = _tanksDict["ElectricCharge"];
-            }
-            else
-            {
-                Debug.Log("[RP-0] Could not find tank dictionary on RF part module, falling back to FuelTankList");
-                FieldInfo fiTanks = typeof(ModuleFuelTanks).GetField("tankList", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-                _tankList = (System.Collections.ObjectModel.KeyedCollection<string, FuelTank>)fiTanks.GetValue(_rfPM);
-                _ecTank = _tankList["ElectricCharge"];
-            }
+            _tanksDict = (Dictionary<string, FuelTank>)fiDict.GetValue(_rfPM);
+            _ecTank = _tanksDict["ElectricCharge"];
 
             _seekVolumeMethod = GetSeekVolumeMethod();
         }
@@ -234,9 +248,6 @@ namespace RP0.ProceduralAvionics
             {
                 BindingFlags flags = BindingFlags.Public | BindingFlags.Instance;
                 MethodInfo mi = _procPartPM.GetType().GetMethod("SeekVolume", flags);
-
-                if (mi.GetParameters().Length == 1)
-                    ShowOutdatedProcPartWarning();
 
                 return mi;
             }
@@ -360,7 +371,7 @@ namespace RP0.ProceduralAvionics
             Log($"ControllableMassChanged to {arg1.GetValue(this)} from {arg2}");
             if (float.IsNaN(controllableMass))
             {
-                Debug.LogError("ProcAvi - ControllableMassChanged tried to set to NAN! Resetting to 0.");
+                Debug.LogError("[RP0ProcAvi] - ControllableMassChanged tried to set to NAN! Resetting to 0.");
                 controllableMass = 0;
             }
 
@@ -425,13 +436,6 @@ namespace RP0.ProceduralAvionics
             Profiler.BeginSample("RP0ProcAvi OnPartVolumeChanged");
             float volume = (float)eventData.Get<double>("newTotalVolume");
             Log($"OnPartVolumeChanged to {volume} from {_cachedVolume}");
-            if (!_started)
-            {
-                Log("Delaying OnPartVolumeChanged until after Start()");
-                _cachedEventData = eventData;
-                Profiler.EndSample();
-                return;
-            }
             _cachedVolume = volume;
 
             UpdateMassLimitsAndVolume();
@@ -453,8 +457,8 @@ namespace RP0.ProceduralAvionics
             if (_started && _cachedVolume < float.MaxValue)
             {
                 Events[nameof(OnPartVolumeChanged)].active = false;
-                InternalTanksVolume = SphericalTankUtilities.GetSphericalTankVolume(GetAvailableVolume());
                 float availVol = GetAvailableVolume();
+                InternalTanksVolume = SphericalTankUtilities.GetSphericalTankVolume(availVol);
                 Log($"SendRemainingVolume():  Cached Volume: {_cachedVolume}. AvionicsVolume: {GetAvionicsVolume()}.  AvailableVolume: {availVol}.  Internal Tanks: {InternalTanksVolume}");
                 SendVolumeChangedEvent(InternalTanksVolume);
                 _rfPM?.CalculateMass();
@@ -530,13 +534,13 @@ namespace RP0.ProceduralAvionics
             Profiler.EndSample();
         }
 
-        private void ShowOutdatedProcPartWarning()
+        private void ShowOutdatedROLibWarning()
         {
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                          new Vector2(0.5f, 0.5f),
-                                         "ShowOutdatedProcPartWarning",
-                                         "Outdated Procedural Parts version",
-                                         "RP-1 has detected an outdated version of the Procedural Parts mod. Some procedural avionics features will now be disabled. For best experience please update to the latest Procedural Parts release.",
+                                         "ShowOutdatedROLibWarning",
+                                         "Outdated ROLibrary version",
+                                         "RP-1 has detected an outdated version of ROLibrary. The probe core part will be broken unless ROLib is updated to the latest release.",
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
                                          HighLogic.UISkin);

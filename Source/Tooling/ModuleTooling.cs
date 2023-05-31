@@ -24,6 +24,7 @@ namespace RP0
         protected BaseEvent tEvent;
         protected Dictionary<string, float> reducerDict;
         protected bool onStartFinished;
+        protected bool onStartFinishedFinished;
 
         public virtual string ToolingType => toolingType;
         public virtual string ToolingTypeTitle => string.IsNullOrEmpty(toolingTypeTitle) ? ToolingType : toolingTypeTitle;
@@ -119,6 +120,11 @@ namespace RP0
             onStartFinished = true;
 
             TryApplyToolingDefinition();
+        }
+
+        public override void OnStartFinished(StartState state)
+        {
+            onStartFinishedFinished = true;
         }
 
         protected virtual void LoadPartModules()

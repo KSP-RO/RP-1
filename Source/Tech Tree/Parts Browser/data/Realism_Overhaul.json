@@ -545,9 +545,11 @@
         "spacecraft": "Ranger",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, solarLevel1, solarDeployable",
+        "entry_cost_mods": "1000, solarTL0, solarDeployable",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     },
     {
         "name": "ROAdvCapsule",
@@ -1175,9 +1177,11 @@
         "spacecraft": "Level 3",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "5000, solarLevel3, solarFolding, solarTracking",
+        "entry_cost_mods": "5000, solarTL6, solarFolding, solarTracking",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     },
     {
         "name": "sepMotorLarge",
@@ -1246,8 +1250,10 @@
         "spacecraft": "Level 2",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "500, solarLevel2",
+        "entry_cost_mods": "500, solarTL4",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     }
 ]

@@ -133,9 +133,10 @@
         "spacecraft": "Skylab",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "25000, solarLevel3, solarFolding",
+        "entry_cost_mods": "25000, solarTL6, solarFolding",
         "identical_part_name": "",
-        "module_tags": [
+        "module_tags":
+        [
             "Instruments"
         ]
     },
@@ -257,9 +258,11 @@
         "spacecraft": "Skylab",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "8000, solarLevel3, solarFolding, solarShielding",
+        "entry_cost_mods": "8000, solarTL6, solarFolding, solarShielding",
         "identical_part_name": "Skylab Solarpanel",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     },
     {
         "name": "sl_right_panel",
@@ -280,8 +283,10 @@
         "spacecraft": "Skylab",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "8000, solarLevel3, solarFolding, solarShielding",
+        "entry_cost_mods": "8000, solarTL6, solarFolding, solarShielding",
         "identical_part_name": "Skylab Solarpanel",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     }
 ]

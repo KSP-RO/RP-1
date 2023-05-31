@@ -496,8 +496,10 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "500, solarLevel2",
+        "entry_cost_mods": "500, solarTL4",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     }
 ]

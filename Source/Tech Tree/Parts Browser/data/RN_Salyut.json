@@ -41,9 +41,11 @@
         "spacecraft": "Salyut 4",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "25000,solarLevel3,solarFolding,solarTracking",
+        "entry_cost_mods": "25000,solarTL6,solarFolding,solarTracking",
         "identical_part_name": "Kosmos TKS Solar",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     },
     {
         "name": "Kosmos_TKS_Solar_Array_rn2_2",
@@ -111,9 +113,11 @@
         "spacecraft": "Almaz",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "25000,solarLevel3,solarFolding,solarTracking",
+        "entry_cost_mods": "25000,solarTL6,solarFolding,solarTracking",
         "identical_part_name": "Almaz Solar",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     },
     {
         "name": "almaz_pan_r",

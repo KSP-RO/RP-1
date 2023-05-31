@@ -394,9 +394,11 @@
         "spacecraft": "ISS",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "solarLevel4",
+        "entry_cost_mods": "solarTL9",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     },
     {
         "name": "ht2_trussPort",

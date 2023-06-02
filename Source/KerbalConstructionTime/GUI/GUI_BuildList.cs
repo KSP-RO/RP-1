@@ -1453,6 +1453,7 @@ namespace KerbalConstructionTime
                     GUIStates.ShowBuildList = false;
                     GUIStates.ShowBLPlus = false;
                     _centralWindowPosition.width = 300;
+                    _centralWindowPosition.height = 1;
                 }
                 else
                 {
@@ -1538,9 +1539,11 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
+                _centralWindowPosition.height = 1;
             }
             if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
             {
+                _centralWindowPosition.height = 1;
                 GUIStates.ShowDismantlePad = true;
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowDismantleLC = false;

@@ -206,6 +206,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = false;
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
+                _centralWindowPosition.height = 1;
             }
             if (rightLC)
             {

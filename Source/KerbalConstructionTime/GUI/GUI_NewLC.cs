@@ -193,8 +193,6 @@ namespace KerbalConstructionTime
 
         public static void DrawNewLCWindow(int windowID)
         {
-            _centralWindowPosition.height = 1;
-
             LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             double oldVABCost = 0, oldPadCost = 0, lpMult = 1;
 

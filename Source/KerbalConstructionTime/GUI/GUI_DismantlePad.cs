@@ -7,8 +7,6 @@ namespace KerbalConstructionTime
     {
         public static void DrawDismantlePadWindow(int windowID)
         {
-            _centralWindowPosition.height = 1;
-
             LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             bool isLC = GUIStates.ShowDismantleLC;
             GUILayout.BeginVertical();

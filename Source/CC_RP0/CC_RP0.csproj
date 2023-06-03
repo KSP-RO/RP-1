@@ -61,6 +61,8 @@
     <Compile Include="AvionicsCheckFactory.cs" />
     <Compile Include="ContractClobberer.cs" />
     <Compile Include="CustomExpressionParserRegistrer.cs" />
+    <Compile Include="HasCompleted.cs" />
+    <Compile Include="HasCompletedFactory.cs" />
     <Compile Include="RP1CollectScience.cs" />
     <Compile Include="RP1CollectScienceFactory.cs" />
     <Compile Include="DownrangeDistanceFactory.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="HorizontalLandingFactory.cs" />
     <Compile Include="HorizontalLandingVesselParam.cs" />
     <Compile Include="ProgramActiveRequirement.cs" />
+    <Compile Include="RP1ContractTracker.cs" />
     <Compile Include="RP1RendezvousFactory.cs" />
     <Compile Include="RP1RendezvousVesselParam.cs" />
     <Compile Include="ImpactCBFactory.cs" />

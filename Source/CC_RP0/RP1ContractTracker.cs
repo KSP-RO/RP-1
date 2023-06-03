@@ -46,7 +46,7 @@ namespace ContractConfigurator.RP0
                 Vessel trackedVessel = vpg.TrackedVessel;
                 if (trackedVessel != null)
                 {
-                    string contractName = cc.contractType.tag ?? cc.contractType.name; 
+                    string contractName = string.IsNullOrEmpty(cc.contractType.tag) ? cc.contractType.name : cc.contractType.tag; 
                     AddToContractTracker(trackedVessel, contractName);
                     CheckClosedVPGs(cc, trackedVessel);
                 }

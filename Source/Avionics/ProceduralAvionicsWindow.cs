@@ -331,12 +331,16 @@ namespace RP0.ProceduralAvionics
                 _sControllableMass = $"{controllableMass:0.###}";
                 return;
             }
-            if (!float.TryParse(_sExtraVolume, out float extraVolumeLiters) || extraVolumeLiters < 0)
+
+            float extraVolumeLiters = 0;
+            bool canSeekVolume = _seekVolumeMethod != null && _seekVolumeMethod.GetParameters().Length == 2;
+            if (canSeekVolume && (!float.TryParse(_sExtraVolume, out extraVolumeLiters) || extraVolumeLiters < 0))
             {
                 ScreenMessages.PostScreenMessage("Invalid Additional volume value");
                 _sExtraVolume = "0";
                 return;
             }
+
             if (!float.TryParse(_sECAmount, out float ecAmount) || ecAmount <= 0)
             {
                 ScreenMessages.PostScreenMessage("EC amount needs to be larger than 0");
@@ -345,7 +349,6 @@ namespace RP0.ProceduralAvionics
             }
 
             controllableMass = newControlMass;
-            bool canSeekVolume = _seekVolumeMethod != null && _seekVolumeMethod.GetParameters().Length == 2;
             if (shouldSeekVolume && canSeekVolume)
             {
                 // Store and sum together the volume of all resources other than EC on this part

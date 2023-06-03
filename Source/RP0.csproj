@@ -65,6 +65,7 @@
     <Compile Include="DesignConcerns\UntooledParts.cs" />
     <Compile Include="Harmony\CrewListItem.cs" />
     <Compile Include="Harmony\EditorDriver.cs" />
+    <Compile Include="Harmony\EditorPartIcon.cs" />
     <Compile Include="Harmony\KSCSwitcher.cs" />
     <Compile Include="Harmony\EditorExtensionsRedux.cs" />
     <Compile Include="Harmony\EngineersReport.cs" />

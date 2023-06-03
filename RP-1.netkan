@@ -32,69 +32,10 @@
 		{ "name" : "KerbalChangelog" }
 	],
 	"recommends" : [
-		{ "name" : "RSSDateTimeFormatter" },
-		{ "any_of": [
-			{ "name" : "ReStock" },
-			{ "name" : "VenStockRevamp" }
-		] },
-		{
-			"name" : "ROEngines",
-			"min_version" : "v2.0.0.0"
-		},
-		{ "name" : "ROTanks" },
-		{
-			"name" : "ROCapsules",
-			"min_version" : "v2.0.0.0"
-		},
-		{
-			"name" : "ROSolar",
-			"min_version" : "v2.0.0.0"
-		},
-		{ "name" : "ROHeatshields" },
-		{ "name" : "B9-PWings-Fork" },
-		{ "name" : "KSPWheel" },
-		{ "name" : "HangerExtenderExtended" },
-		{ "name" : "KerbalAlarmClock" },
-		{ "name" : "KerbalRenamer" },
-		{ "name" : "KSCSwitcher" },
-		{ "name" : "MechJeb2" },
-		{ "name" : "AtmosphereAutopilot" },
-		{ "name" : "ProceduralFairings" },
-		{ "name" : "ProceduralParts" },
-		{ "name" : "RCSBuildAid" },
-		{ "name" : "RCSBuildAidCont" },
-		{ "name" : "RealAntennas" },
-		{ "name" : "ShipManifest" },
-		{ "any_of": [
-			{ "name" : "TestFlight" },
-			{ "name" : "TestLite" }
-		] },
-		{ "name" : "RSSVE-Textures" },
-		{ "name" : "TransferWindowPlannerFork" },
-		{ "name" : "Waterfall" },
-		{ "name" : "ModularLaunchPads" }
+		{ "name" : "RSSDateTimeFormatter" }
 	],
 	"suggests" : [
-		{ "name" : "BluedogDB" },
-		{ "name" : "FASA" },
-		{ "name" : "TextureReplacer" },
-		{ "name" : "SemiSaturatableRW" },
-		{ "name" : "JanitorsCloset" },
-		{ "name" : "HyperEdit" },
-		{ "name" : "EditorExtensionsRedux" },
-		{ "name" : "KerbalEngineerRedux" },
-		{ "name" : "kOS" },
-		{ "name" : "RealScaleBoosters" },
-		{ "name" : "NearFutureSolar" },
-		{ "name" : "NearFutureConstruction" },
-		{ "name" : "InternalRCS" },
-		{ "name" : "ProbesPlus" },
-		{ "name" : "ATKPropulsionPack" },
-		{ "name" : "WaypointManager" },
-		{ "name" : "SCANsat" },
-		{ "name" : "NavHudRenewed" },
-		{ "name" : "ConformalDecals" },
-		{ "name" : "CanaveralPads" }
+		{ "name" : "InternalRCS" }
 	],
 	"conflicts" : [
 		{ "name" : "RP-0" },

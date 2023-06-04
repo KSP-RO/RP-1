@@ -1,11 +1,11 @@
 {
 	"spec_version" : "v1.26",
-	"identifier" : "RP-0",
-	"name"       : "RP-1 Legacy Version",
-	"abstract"   : "LEGACY Realistic Progression One - Career for Realism Overhaul. Use for finishing old saves.",
+	"identifier" : "RP-1",
+	"name"       : "Realistic Progression One (RP-1)",
+	"abstract"   : "Realistic Progression One - Career for Realism Overhaul",
 	"license"    : "CC-BY-4.0",
 	"author"     : "RP-1 Group",
-	"$kref"      : "#/ckan/github/KSP-RO/RP-1/asset_match/v1",
+	"$kref"      : "#/ckan/github/KSP-RO/RP-1",
 	"$vref"      : "#/ckan/ksp-avc",
 	"x_netkan_force_v": true,
 	"release_status" : "stable",
@@ -17,7 +17,7 @@
 		{ "name" : "ModuleManager" },
 		{
 			"name" : "RealismOverhaul",
-			"max_version" : "v15.99.0.0"
+			"min_version" : "v16.0.0.0"
 		},
 		{ "name" : "SXTContinued" },
 		{ "name" : "ContractConfigurator" },
@@ -39,16 +39,16 @@
 		] },
 		{
 			"name" : "ROEngines",
-			"max_version" : "v1.99.0.0"
+			"min_version" : "v2.0.0.0"
 		},
 		{ "name" : "ROTanks" },
 		{
 			"name" : "ROCapsules",
-			"max_version" : "v1.99.0.0"
+			"min_version" : "v2.0.0.0"
 		},
 		{
 			"name" : "ROSolar",
-			"max_version" : "v1.99.0.0"
+			"min_version" : "v2.0.0.0"
 		},
 		{ "name" : "ROHeatshields" },
 		{ "name" : "B9-PWings-Fork" },
@@ -97,7 +97,7 @@
 		{ "name" : "CanaveralPads" }
 	],
 	"conflicts" : [
-		{ "name" : "RP-1" },
+		{ "name" : "RP-0" },
 		{ "name" : "KerbalConstructionTime" },
 		{ "name" : "CrowdSourcedScience" },
 		{ "name" : "HideEmptyTechNodes" },
@@ -106,15 +106,21 @@
 		{ "name" : "KRASH" },
 		{
 			"name": "ROCapsules",
-			"min_version" : "v2.0.0.0"
+			"max_version" : "v1.99.0.0"
 		},
 		{
 			"name": "ROEngines",
-			"min_version" : "v2.0.0.0"
+			"max_version" : "v1.99.0.0"
 		},
 		{
 			"name": "ROSolar",
-			"min_version" : "v2.0.0.0"
+			"max_version" : "v1.99.0.0"
+		}
+	],
+	"install": [
+		{
+			"find": "RP-0",
+			"install_to": "GameData"
 		}
 	]
 }

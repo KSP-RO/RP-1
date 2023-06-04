@@ -2,7 +2,7 @@
     {
         "name": "HexCanDrinkingWater",
         "title": "Life Support Water HexCan, 1.5m",
-        "description": "A 1.5m long resource canister containing Drinking Water. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.5m long resource canister containing Drinking Water. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "175",
         "entry_cost": "500",
@@ -25,7 +25,7 @@
     {
         "name": "HexCanDrinkingWaterLarge",
         "title": "Life Support Water HexCan, 3m",
-        "description": "A 3m long resource canister containing Drinking Water. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 3m long resource canister containing Drinking Water. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "1000",
         "entry_cost": "1000",
@@ -48,7 +48,7 @@
     {
         "name": "HexCanDrinkingWaterSmall",
         "title": "Life Support Water HexCan, 0.75m",
-        "description": "A 0.75m long resource canister containing Drinking Water. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 0.75m long resource canister containing Drinking Water. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "35",
         "entry_cost": "500",
@@ -71,7 +71,7 @@
     {
         "name": "HexCanFood",
         "title": "Life Support Food HexCan, 1.5m",
-        "description": "A 1.5m long resource canister containing Food supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.5m long resource canister containing Food supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "206",
         "entry_cost": "500",
@@ -94,7 +94,7 @@
     {
         "name": "HexCanFoodLarge",
         "title": "Life Support Food HexCan, 3m",
-        "description": "A 3m long resource canister containing Food supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 3m long resource canister containing Food supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "1249",
         "entry_cost": "1000",
@@ -117,7 +117,7 @@
     {
         "name": "HexCanFoodSmall",
         "title": "Life Support Food HexCan, 0.75m",
-        "description": "A 0.75m long resource canister containing Food supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 0.75m long resource canister containing Food supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "39",
         "entry_cost": "500",
@@ -140,7 +140,7 @@
     {
         "name": "HexCanLifeSupport",
         "title": "Life Support Supplies HexCan, 1.5m",
-        "description": "A 1.5m long resource canister containing Life Support supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.5m long resource canister containing Life Support supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "190",
         "entry_cost": "500",
@@ -163,7 +163,7 @@
     {
         "name": "HexCanLifeSupportLarge",
         "title": "Life Support Supplies HexCan, 3m",
-        "description": "A 3m long resource canister containing Life Support supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 3m long resource canister containing Life Support supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "1120",
         "entry_cost": "1000",
@@ -186,7 +186,7 @@
     {
         "name": "HexCanLifeSupportSmall",
         "title": "Life Support Supplies HexCan, 0.75m",
-        "description": "A 0.75m long resource canister containing Life Support supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 0.75m long resource canister containing Life Support supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "37",
         "entry_cost": "500",
@@ -209,7 +209,7 @@
     {
         "name": "HexCanLifeSupportWaste",
         "title": "Life Support Waste HexCan, 1.5m",
-        "description": "A 1.5m long resource canister for holding Life Support waste products. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.5m long resource canister for holding Life Support waste products. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "175",
         "entry_cost": "500",
@@ -232,7 +232,7 @@
     {
         "name": "HexCanLifeSupportWasteLarge",
         "title": "Life Support Waste HexCan, 3m",
-        "description": "A 3m long resource canister for holding Life Support waste products. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 3m long resource canister for holding Life Support waste products. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "1000",
         "entry_cost": "1000",
@@ -255,7 +255,7 @@
     {
         "name": "HexCanLifeSupportWasteSmall",
         "title": "Life Support Waste HexCan, 0.75m",
-        "description": "A 0.75m long resource canister for holding Life Support waste products. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 0.75m long resource canister for holding Life Support waste products. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "35",
         "entry_cost": "500",
@@ -278,7 +278,7 @@
     {
         "name": "HexCanMFTLifeSupport",
         "title": "Life Support Supplies HexCan, 1.5m (MFT)",
-        "description": "Standard hex tank that can be resized to fit your needs. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Standard hex tank that can be resized to fit your needs. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "TACLS",
         "cost": "1",
         "entry_cost": "2800",
@@ -301,7 +301,7 @@
     {
         "name": "HexCanMFTLifeSupportLarge",
         "title": "Life Support Supplies HexCan, 3m (MFT)",
-        "description": "Large hex tank that can be resized to fit your needs. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Large hex tank that can be resized to fit your needs. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "TACLS",
         "cost": "1",
         "entry_cost": "4200",
@@ -324,7 +324,7 @@
     {
         "name": "HexCanMFTLifeSupportSmall",
         "title": "Life Support Supplies HexCan, 0.75m (MFT)",
-        "description": "Small hex tank that can be resized to fit your needs. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Small hex tank that can be resized to fit your needs. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "TACLS",
         "cost": "1",
         "entry_cost": "2800",
@@ -347,7 +347,7 @@
     {
         "name": "HexCanOxygen",
         "title": "Life Support Oxygen HexCan, 1.5m",
-        "description": "A 1.5m long resource canister containing Oxygen supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.5m long resource canister containing Oxygen supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "177",
         "entry_cost": "500",
@@ -370,7 +370,7 @@
     {
         "name": "HexCanOxygenLarge",
         "title": "Life Support Oxygen HexCan, 3m",
-        "description": "A 3m long resource canister containing Oxygen supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 3m long resource canister containing Oxygen supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "1013",
         "entry_cost": "1000",
@@ -393,7 +393,7 @@
     {
         "name": "HexCanOxygenSmall",
         "title": "Life Support Oxygen HexCan, 0.75m",
-        "description": "A 0.75m long resource canister containing Oxygen supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 0.75m long resource canister containing Oxygen supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "35",
         "entry_cost": "500",
@@ -531,7 +531,7 @@
     {
         "name": "TacCarbonExtractorLarge375",
         "title": "TACLS Carbon Extractor, 3.75m",
-        "description": "A life support recycling module that extracts carbon from carbon dioxide, leaving pure breathable oxygen. It works by using the Bosch reaction. Packaged in a larger structure for easier use with massive rockets, with the added advantage of a slightly faster conversion rate. Rated for up to 10 Kerbals, with an efficiency multiplier of about 7.6. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A life support recycling module that extracts carbon from carbon dioxide, leaving pure breathable oxygen. It works by using the Bosch reaction. Packaged in a larger structure for easier use with massive rockets, with the added advantage of a slightly faster conversion rate. Rated for up to 10 Kerbals, with an efficiency multiplier of about 7.6. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "8200",
         "entry_cost": "13500",
@@ -554,7 +554,7 @@
     {
         "name": "TacFoodContainer",
         "title": "Life Support Food Container, 1.25m",
-        "description": "A 1.25-meter container full of Food supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.25-meter container full of Food supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "357",
         "entry_cost": "400",
@@ -577,7 +577,7 @@
     {
         "name": "TacFoodContainerLarge",
         "title": "Life Support Food Container, 2.5m",
-        "description": "A large 2.5-meter container full of Food supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 2.5-meter container full of Food supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "2526",
         "entry_cost": "800",
@@ -600,7 +600,7 @@
     {
         "name": "TacFoodContainerLarge375",
         "title": "Life Support Food Container, 3.75m",
-        "description": "A large 3.75-meter container full of Food supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 3.75-meter container full of Food supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "3788",
         "entry_cost": "1600",
@@ -623,7 +623,7 @@
     {
         "name": "TacFoodContainerSmall",
         "title": "Life Support Food Container, 0.625m",
-        "description": "A small 0.625-meter container full of Food supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A small 0.625-meter container full of Food supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "56",
         "entry_cost": "400",
@@ -646,7 +646,7 @@
     {
         "name": "TacLifeSupportContainer",
         "title": "Life Support Supplies Container, 1.25m",
-        "description": "A 1.25-meter container full of Life Support supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.25-meter container full of Life Support supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "328",
         "entry_cost": "400",
@@ -669,7 +669,7 @@
     {
         "name": "TacLifeSupportContainerLarge",
         "title": "Life Support Supplies Container, 2.5m",
-        "description": "A large 2.5-meter container full of Life Support supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 2.5-meter container full of Life Support supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "2255",
         "entry_cost": "800",
@@ -692,7 +692,7 @@
     {
         "name": "TacLifeSupportContainerLarge375",
         "title": "Life Support Supplies Container, 3.75m",
-        "description": "A large 3.75-meter container full of Life Support supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 3.75-meter container full of Life Support supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "3382",
         "entry_cost": "1600",
@@ -715,7 +715,7 @@
     {
         "name": "TacLifeSupportContainerSmall",
         "title": "Life Support Supplies Container, 0.625m",
-        "description": "A small 0.625-meter container full of Life Support supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A small 0.625-meter container full of Life Support supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "53",
         "entry_cost": "400",
@@ -738,7 +738,7 @@
     {
         "name": "TacLifeSupportMFTContainer",
         "title": "Life Support Supplies Container, 1.25m (MFT)",
-        "description": "Standard size tank that can be resized to fit your needs. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Standard size tank that can be resized to fit your needs. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "TACLS",
         "cost": "1",
         "entry_cost": "1800",
@@ -761,7 +761,7 @@
     {
         "name": "TacLifeSupportMFTContainerLarge",
         "title": "Life Support Supplies Container, 2.5m (MFT)",
-        "description": "Large size tank that can be resized to fit your needs. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Large size tank that can be resized to fit your needs. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "TACLS",
         "cost": "1",
         "entry_cost": "3600",
@@ -784,7 +784,7 @@
     {
         "name": "TacLifeSupportMFTContainerLarge375",
         "title": "Life Support Supplies Container, 3.75m (MFT)",
-        "description": "A large 3.75-meter container full of Life Support supplies. Can be configured to hold any ratio of supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 3.75-meter container full of Life Support supplies. Can be configured to hold any ratio of supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "1",
         "entry_cost": "5400",
@@ -807,7 +807,7 @@
     {
         "name": "TacLifeSupportMFTContainerSmall",
         "title": "Life Support Supplies Container, 0.625m (MFT)",
-        "description": "Small size tank that can be resized to fit your needs. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Small size tank that can be resized to fit your needs. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "TACLS",
         "cost": "1",
         "entry_cost": "1800",
@@ -830,7 +830,7 @@
     {
         "name": "TacOxygenContainer",
         "title": "Life Support Oxygen Container, 1.25m",
-        "description": "A 1.25-meter container full of Breathing Oxygen supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.25-meter container full of Breathing Oxygen supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "303",
         "entry_cost": "400",
@@ -853,7 +853,7 @@
     {
         "name": "TacOxygenContainerLarge",
         "title": "Life Support Oxygen Container, 2.5m",
-        "description": "A large 2.5-meter container full of Breathing Oxygen supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 2.5-meter container full of Breathing Oxygen supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "2027",
         "entry_cost": "800",
@@ -876,7 +876,7 @@
     {
         "name": "TacOxygenContainerLarge375",
         "title": "Life Support Oxygen Container, 3.75m",
-        "description": "A large 3.75-meter container full of Breathing Oxygen supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 3.75-meter container full of Breathing Oxygen supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "3108",
         "entry_cost": "1600",
@@ -899,7 +899,7 @@
     {
         "name": "TacOxygenContainerSmall",
         "title": "Life Support Oxygen Container, 0.625m",
-        "description": "A small 0.625-meter container full of Breathing Oxygen supplies. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A small 0.625-meter container full of Breathing Oxygen supplies. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "50",
         "entry_cost": "400",
@@ -968,7 +968,7 @@
     {
         "name": "TacSabatierRecyclerLarge375",
         "title": "TACLS Sabatier Recycler, 3.75m",
-        "description": "A life support recycling module that uses the Sabatier reaction to recycle oxygen from carbon dioxide. It requires water as an additional input. Packaged in a larger structure for easier use with massive rockets, with the added advantage of a slightly faster conversion rate. Rated for up to 10 Kerbals, with an efficiency multiplier of about 5. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A life support recycling module that uses the Sabatier reaction to recycle oxygen from carbon dioxide. It requires water as an additional input. Packaged in a larger structure for easier use with massive rockets, with the added advantage of a slightly faster conversion rate. Rated for up to 10 Kerbals, with an efficiency multiplier of about 5. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "8888",
         "entry_cost": "13500",
@@ -991,7 +991,7 @@
     {
         "name": "TacWasteContainer",
         "title": "Life Support Waste Container, 1.25m",
-        "description": "A 1.25-meter container for holding Life Support waste products. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.25-meter container for holding Life Support waste products. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "300",
         "entry_cost": "400",
@@ -1014,7 +1014,7 @@
     {
         "name": "TacWasteContainerLarge",
         "title": "Life Support Waste Container, 2.5m",
-        "description": "A large 2.5-meter container for holding Life Support waste products. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 2.5-meter container for holding Life Support waste products. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "2000",
         "entry_cost": "800",
@@ -1037,7 +1037,7 @@
     {
         "name": "TacWasteContainerLarge375",
         "title": "Life Support Waste Container, 3.75m",
-        "description": "A large 3.75-meter container for holding Life Support waste products. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 3.75-meter container for holding Life Support waste products. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "3000",
         "entry_cost": "1600",
@@ -1060,7 +1060,7 @@
     {
         "name": "TacWasteContainerSmall",
         "title": "Life Support Waste Container, 0.625m",
-        "description": "A small 0.625-meter container for holding Life Support waste products. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A small 0.625-meter container for holding Life Support waste products. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "50",
         "entry_cost": "400",
@@ -1083,7 +1083,7 @@
     {
         "name": "TacWaterContainer",
         "title": "Life Support Water Container, 1.25m",
-        "description": "A 1.25-meter container full of Drinking Water. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A 1.25-meter container full of Drinking Water. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "300",
         "entry_cost": "400",
@@ -1106,7 +1106,7 @@
     {
         "name": "TacWaterContainerLarge",
         "title": "Life Support Water Container, 2.5m",
-        "description": "A large 2.5-meter container full of Drinking Water. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 2.5-meter container full of Drinking Water. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "2002",
         "entry_cost": "800",
@@ -1129,7 +1129,7 @@
     {
         "name": "TacWaterContainerLarge375",
         "title": "Life Support Water Container, 3.75m",
-        "description": "A large 3.75-meter container full of Drinking Water. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A large 3.75-meter container full of Drinking Water. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "3003",
         "entry_cost": "1600",
@@ -1152,7 +1152,7 @@
     {
         "name": "TacWaterContainerSmall",
         "title": "Life Support Water Container, 0.625m",
-        "description": "A small 0.625-meter container full of Drinking Water. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A small 0.625-meter container full of Drinking Water. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "50",
         "entry_cost": "400",
@@ -1221,7 +1221,7 @@
     {
         "name": "TacWaterPurifierLarge375",
         "title": "TACLS Water Purifier, 3.75m",
-        "description": "A life support recycling module that filters and purifies water, leaving pure drinkable water. Packaged in a larger structure for easier use with massive rockets, with the added advantage of a slightly faster conversion rate. Rated for up to 10 Kerbals, with an efficiency multiplier of about 10.0. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A life support recycling module that filters and purifies water, leaving pure drinkable water. Packaged in a larger structure for easier use with massive rockets, with the added advantage of a slightly faster conversion rate. Rated for up to 10 Kerbals, with an efficiency multiplier of about 10.0. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "TACLS",
         "cost": "5832",
         "entry_cost": "10500",

@@ -2,7 +2,7 @@
     {
         "name": "KK_KK_SPX_ITS_booster_gridfin",
         "title": "ITS Booster Gridfin",
-        "description": "(PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "(PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "400",
         "entry_cost": "3200",
@@ -163,7 +163,7 @@
     {
         "name": "KK_SPX_F912_Interstage_RCS",
         "title": "Falcon 9 Interstage RCS Unit",
-        "description": "A small Reaction Control System block, featuring 4 small thrusters combined into a single body. This RCS unit gets attached in a pair to the Falcon 9 1.1/1.1 FT interstage, to reorient the first stage of the Falcon 9 rocket after its seperation. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A small Reaction Control System block, featuring 4 small thrusters combined into a single body. This RCS unit gets attached in a pair to the Falcon 9 1.1/1.1 FT interstage, to reorient the first stage of the Falcon 9 rocket after its seperation. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "280",
         "entry_cost": "4200",
@@ -188,7 +188,7 @@
     {
         "name": "KK_SPX_F9FT_Interstage_RCS",
         "title": "Falcon 9 Full Thrust Interstage RCS Unit",
-        "description": "An improved version of the Falcon 9 1.1 Interstage RCS unit. Its thrusters are a little more powerful, the weight was slightly reduced, as was the drag. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "An improved version of the Falcon 9 1.1 Interstage RCS unit. Its thrusters are a little more powerful, the weight was slightly reduced, as was the drag. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "280",
         "entry_cost": "4200",
@@ -213,7 +213,7 @@
     {
         "name": "KK_SPX_Falcon9_FC",
         "title": "SpaceX Falcon 9 Flight Control System",
-        "description": "Flight Control unit for SpaceX Falcon 9. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Flight Control unit for SpaceX Falcon 9. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "900",
         "entry_cost": "3500",
@@ -239,7 +239,7 @@
     {
         "name": "KK_SPX_FalconGridfin",
         "title": "SpaceX Gridfin",
-        "description": "These fins help SpaceX to steer their Falcon 9 first stage back to the ground using the atmosphere. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "These fins help SpaceX to steer their Falcon 9 first stage back to the ground using the atmosphere. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "400",
         "entry_cost": "3200",
@@ -262,7 +262,7 @@
     {
         "name": "KK_SPX_FalconGridfin_FT",
         "title": "SpaceX Gridfin (Full Thrust)",
-        "description": "These fins help SpaceX to steer their Falcon 9 first stage back to the ground using the atmosphere. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "These fins help SpaceX to steer their Falcon 9 first stage back to the ground using the atmosphere. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "400",
         "entry_cost": "3200",
@@ -285,7 +285,7 @@
     {
         "name": "KK_SPX_ITS_booster_RCS",
         "title": "SpaceX ITS Booster RCS Thruster",
-        "description": "(PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "(PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "1400",
         "entry_cost": "4200",
@@ -310,7 +310,7 @@
     {
         "name": "KK_SPX_ITS_ship_flapL",
         "title": "SpaceX ITS Ship Body Flap (Left)",
-        "description": "(PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "(PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "400",
         "entry_cost": "3200",
@@ -333,7 +333,7 @@
     {
         "name": "KK_SPX_ITS_ship_flapR",
         "title": "SpaceX ITS Ship Body Flap (Right)",
-        "description": "(PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "(PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "KK Launchers SpaceX",
         "cost": "400",
         "entry_cost": "3200",

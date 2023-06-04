@@ -1119,7 +1119,7 @@
     {
         "name": "SSTU-SC-ENG-RD-180",
         "title": "RD-180 Series Engine",
-        "description": "SSTU - ShipCore: Engines - RD-180.  The most powerful single-combustion chamber engine ever produced*, the RD-180 is often a good choice when you need to land skyscrapers on the Mun.  Even more impressive(ly insane) when used in engine clusters.  While its efficiency might be lacking by modern standards it more than compensates for it with its incredible thrust output.  Due to this it is most useful in the lowest stage of a rocket where the most thrust is needed.  (* SSTU engineers are currently prototyping an upgraded and modified RD-180 engine with even more power, however it is not yet in full production; see the F1B for more info). Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "SSTU - ShipCore: Engines - RD-180.  The most powerful single-combustion chamber engine ever produced*, the RD-180 is often a good choice when you need to land skyscrapers on the Mun.  Even more impressive(ly insane) when used in engine clusters.  While its efficiency might be lacking by modern standards it more than compensates for it with its incredible thrust output.  Due to this it is most useful in the lowest stage of a rocket where the most thrust is needed.  (* SSTU engineers are currently prototyping an upgraded and modified RD-180 engine with even more power, however it is not yet in full production; see the F1B for more info). Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SSTU",
         "cost": "1240",
         "entry_cost": "0",
@@ -1440,7 +1440,7 @@
     {
         "name": "SSTU-SC-GEN-HGA",
         "title": "High Gain Antenna",
-        "description": "SSTU - ShipCore: General - High Gain Antenna. Stand alone antenna version of the SC-B-SM (Apollo Service Module) HGA. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - ShipCore: General - High Gain Antenna. Stand alone antenna version of the SC-B-SM (Apollo Service Module) HGA. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": 500,
         "entry_cost": 17500,
@@ -1678,7 +1678,7 @@
     {
         "name": "SSTU-SC-GEN-RCS-6A-T",
         "title": "RCS 6-port, 3-directional (275/445 N class)",
-        "description": "SSTU - ShipCore: General - RCS-6A-T. Six port, three directional upper-stage RCS thruster block. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - ShipCore: General - RCS-6A-T. Six port, three directional upper-stage RCS thruster block. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": 56,
         "entry_cost": "2000",
@@ -1703,7 +1703,7 @@
     {
         "name": "SSTU-SC-GEN-RCS-8A-T",
         "title": "RCS 8-port, 4-directional (275/445 N class)",
-        "description": "SSTU - ShipCore: General - RCS-8A-T. Eight port, four directional upper-stage RCS thruster block. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - ShipCore: General - RCS-8A-T. Eight port, four directional upper-stage RCS thruster block. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": 72,
         "entry_cost": "2000",
@@ -1943,7 +1943,7 @@
     {
         "name": "SSTU-ST-GEN-DSP-DOS-L",
         "title": "SSTU - ST-GEN - DSP-DOS-L",
-        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-L - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-L - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": "6000",
         "entry_cost": "21000",
@@ -1966,7 +1966,7 @@
     {
         "name": "SSTU-ST-GEN-DSP-DOS-M",
         "title": "SSTU - ST-GEN - DSP-DOS-M",
-        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-M - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-M - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": "4600",
         "entry_cost": "16100",
@@ -1989,7 +1989,7 @@
     {
         "name": "SSTU-ST-GEN-DSP-DOS-MF",
         "title": "SSTU - ST-GEN - DSP-DOS-MF",
-        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-MF - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-MF - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": "3600",
         "entry_cost": "12600",
@@ -2012,7 +2012,7 @@
     {
         "name": "SSTU-ST-GEN-DSP-DOS-S",
         "title": "SSTU - ST-GEN - DSP-DOS-S",
-        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-S - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-S - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": "3200",
         "entry_cost": "11200",
@@ -2035,7 +2035,7 @@
     {
         "name": "SSTU-ST-GEN-DSP-DOS-SF",
         "title": "SSTU - ST-GEN - DSP-DOS-SF",
-        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-SF - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - StationCore - Deployable Solar Panel - DOS-SF - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": "2800",
         "entry_cost": "9800",
@@ -2058,7 +2058,7 @@
     {
         "name": "SSTU-ST-GEN-DSP-DOS-T",
         "title": "SSTU - ST-GEN - DSP-DOS-T",
-        "description": "SSTU - StationCore: Deployable Solar Panel - DOS-T - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation.  This model features multiple-axis solar tracking for a more consistent energy output regardless of vessel orientation. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "SSTU - StationCore: Deployable Solar Panel - DOS-T - Originally developed for the DOS station modules, these solar panels have since found uses in other spacecraft and station designs.  Compact when folded up, and with a decent energy density, the Station Core line of solar panels are an effective means of long term energy generation.  This model features multiple-axis solar tracking for a more consistent energy output regardless of vessel orientation. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "SSTU",
         "cost": "19600",
         "entry_cost": "68600",

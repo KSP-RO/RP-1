@@ -130,7 +130,7 @@ class PartData:
             "technology": self.get_value(row, "Tech"),
             "era": self.get_value(row, "ERA"),
             "ro": self.get_boolean(row, "RO"),
-            "rp0": self.get_boolean(row, "RP-0"),
+            "rp0": self.get_boolean(row, "RP-1"),
             "orphan": self.get_boolean(row, "ORPHAN"),
             "rp0_conf": self.get_boolean(row, "RP0conf"),
             "spacecraft": self.get_value(row, "SPACECRAFT"),

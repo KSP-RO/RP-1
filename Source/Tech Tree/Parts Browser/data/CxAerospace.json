@@ -370,7 +370,7 @@
     {
         "name": "CXA_P5",
         "title": "Solar Array Wing Spacer Truss (ITS)",
-        "description": "A rigid,lightweight truss segment developed as part of the Integrated Truss System (ITS). This truss section allows you to extend trusswork over deployed solar array wings. It is recommended to install truss segment using a robotic arm. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A rigid,lightweight truss segment developed as part of the Integrated Truss System (ITS). This truss section allows you to extend trusswork over deployed solar array wings. It is recommended to install truss segment using a robotic arm. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "CxAerospace",
         "cost": "1000",
         "entry_cost": "2500",

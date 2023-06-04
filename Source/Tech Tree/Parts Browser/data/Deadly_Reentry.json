@@ -371,7 +371,7 @@
     {
         "name": "decoupler_ftr_smaller",
         "title": "UP0625 Decoupler",
-        "description": "This decoupler is designed for use with the 0.625m heat shield. (PART NOT SUPPORTED BY RP-0, RO IN PROGRESS)",
+        "description": "This decoupler is designed for use with the 0.625m heat shield. (PART NOT SUPPORTED BY RP-1, RO IN PROGRESS)",
         "mod": "Deadly Reentry",
         "cost": "5",
         "entry_cost": "100",

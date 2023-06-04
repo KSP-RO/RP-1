@@ -2,7 +2,7 @@
     {
         "name": "RD0120CAP",
         "title": "RD-0120 Engine Mount",
-        "description": "A generic engine mount and turbopump shroud for the RD-0120 engine. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A generic engine mount and turbopump shroud for the RD-0120 engine. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
         "cost": "120",
         "entry_cost": "350",
@@ -25,7 +25,7 @@
     {
         "name": "RD120attachment_styleZenit2st",
         "title": "Zenit Vernier Assembly",
-        "description": "The RD-8 vernier engine and propellant tank assembly of the Zenit second stage. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "The RD-8 vernier engine and propellant tank assembly of the Zenit second stage. Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
         "cost": "120",
         "entry_cost": "350",
@@ -602,7 +602,7 @@
     {
         "name": "RO-RealEngines-RD-0212",
         "title": "RD-0212",
-        "description": "A gas generator, hypergolic vacuum rocket engine. Used as the power plant on the third stage of Proton launch vehicle family. Features four integrated vernier engines for three-axis attitude control. Diameter: 1.47 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A gas generator, hypergolic vacuum rocket engine. Used as the power plant on the third stage of Proton launch vehicle family. Features four integrated vernier engines for three-axis attitude control. Diameter: 1.47 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
         "cost": "300",
         "entry_cost": "0",
@@ -703,7 +703,7 @@
     {
         "name": "RO-RealEngines-RD-120",
         "title": "RD-120 Series",
-        "description": "The RD-120 is a staged combustion vacuum kerolox engine, used as the main power plant on the Zenit launch vehicle family second stage. Diameter: 2.0 m Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "The RD-120 is a staged combustion vacuum kerolox engine, used as the main power plant on the Zenit launch vehicle family second stage. Diameter: 2.0 m Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
         "cost": 750,
         "entry_cost": "3500",
@@ -853,7 +853,7 @@
     {
         "name": "RO-RealEngines-RD-8",
         "title": "RD-8",
-        "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
         "cost": 0,
         "entry_cost": "3500",
@@ -1001,7 +1001,7 @@
     {
         "name": "RO-RealEngines-S5-92",
         "title": "S5.92",
-        "description": "A gas generator cycle hypergolic vacuum engine. Used on the Fregat upper stage series. Diameter: 0.85 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A gas generator cycle hypergolic vacuum engine. Used on the Fregat upper stage series. Diameter: 0.85 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
         "cost": "600",
         "entry_cost": "20000",
@@ -1024,7 +1024,7 @@
     {
         "name": "RO-RealEngines-S5-98",
         "title": "S5.98M",
-        "description": "A staged combustion cycle hypergolic vacuum engine. Used on the Briz upper stage series. Diameter: 0.95 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A staged combustion cycle hypergolic vacuum engine. Used on the Briz upper stage series. Diameter: 0.95 m. Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RealEngines",
         "cost": "500",
         "entry_cost": "50000",

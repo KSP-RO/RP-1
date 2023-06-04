@@ -1721,7 +1721,7 @@
     {
         "name": "XstrutOctoX",
         "title": "Engine Mount Basket",
-        "description": "A generic engine mount. (PART NOT SUPPORTED BY RP-0, RO IN PROGRESS)",
+        "description": "A generic engine mount. (PART NOT SUPPORTED BY RP-1, RO IN PROGRESS)",
         "mod": "Chaka Monkey",
         "cost": "20",
         "entry_cost": "6400",

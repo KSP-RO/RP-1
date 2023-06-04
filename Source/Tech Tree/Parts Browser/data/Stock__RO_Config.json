@@ -48,7 +48,7 @@
     {
         "name": "ATV_RCS_back",
         "title": "ATV RCS aft",
-        "description": "Intended to represent the ATVs aft RCS thrusters. Place four near the aft end of ATVs sides. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Intended to represent the ATVs aft RCS thrusters. Place four near the aft end of ATVs sides. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "620",
         "entry_cost": "3400",
@@ -3237,7 +3237,7 @@
     {
         "name": "SmallStripLight",
         "title": "MK 5 Strip Light",
-        "description": "A small Strip light ideally used as aircraft navigation lights, but we can't stop you from trying to light up your house with em', because you will fail. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "A small Strip light ideally used as aircraft navigation lights, but we can't stop you from trying to light up your house with em', because you will fail. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "1",
@@ -3375,7 +3375,7 @@
     {
         "name": "adapterEngines",
         "title": "Mk3 Engine Mount",
-        "description": "A structural mounting plate for rocket engines. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A structural mounting plate for rocket engines. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "2500",
         "entry_cost": "42000",
@@ -3467,7 +3467,7 @@
     {
         "name": "adapterMk3-Mk2",
         "title": "Mk3 to Mk2 Adapter",
-        "description": "Our engineers insisted on a way to reuse Mk2 parts on the new Fuselage system. Manufacturing a streamlined adapter despite the considerable difference of the two cross sections required quite a radical design. It is often used as a slide on Take Your Kids to Work Day. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Our engineers insisted on a way to reuse Mk2 parts on the new Fuselage system. Manufacturing a streamlined adapter despite the considerable difference of the two cross sections required quite a radical design. It is often used as a slide on Take Your Kids to Work Day. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "42000",
@@ -3490,7 +3490,7 @@
     {
         "name": "adapterMk3-Size2",
         "title": "Mk3 to 4.3m Adapter",
-        "description": "Perfectly pointy, carefully curved and devastatingly destructive, this Mk3 to 2.5m adapter can satisfy your wildest of dreams. Or it'll let you bridge the gaps between parts on your craft while giving you a bit of fuel... Your choice. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Perfectly pointy, carefully curved and devastatingly destructive, this Mk3 to 2.5m adapter can satisfy your wildest of dreams. Or it'll let you bridge the gaps between parts on your craft while giving you a bit of fuel... Your choice. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "42000",
@@ -3513,7 +3513,7 @@
     {
         "name": "adapterMk3-Size2Slant",
         "title": "Mk3 to 4.3m Adapter Slanted",
-        "description": "Makes your craft hang in the air like bricks don't! (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Makes your craft hang in the air like bricks don't! (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "42000",
@@ -3536,7 +3536,7 @@
     {
         "name": "adapterSize2-Mk2",
         "title": "4.3m to Mk2 Adapter",
-        "description": "When you can't decide between a rocket and a spaceplane, why not both? (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "When you can't decide between a rocket and a spaceplane, why not both? (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "18000",
@@ -3605,7 +3605,7 @@
     {
         "name": "adapterSize3-Mk3",
         "title": "Mk3 to 6.5m Adapter",
-        "description": "An adapter for when your craft turns from a massive rocket into a gargantuan plane! (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "An adapter for when your craft turns from a massive rocket into a gargantuan plane! (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "42000",
@@ -5527,7 +5527,7 @@
     {
         "name": "mk2Fuselage",
         "title": "Mk2 Fuselage (Long)",
-        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Only carries Liquid Fuel. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Only carries Liquid Fuel. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "18500",
@@ -5550,7 +5550,7 @@
     {
         "name": "mk2FuselageLongLFO",
         "title": "Mk2 Fuselage (Long) (Pressurized)",
-        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Now comes with at least 100% more Oxidiser. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Now comes with at least 100% more Oxidiser. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "18500",
@@ -5573,7 +5573,7 @@
     {
         "name": "mk2FuselageShortLFO",
         "title": "Mk2 Fuselage (Short) (Pressurized)",
-        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Now comes with at least 100% more Oxidiser. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Now comes with at least 100% more Oxidiser. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "18500",
@@ -5596,7 +5596,7 @@
     {
         "name": "mk2FuselageShortLiquid",
         "title": "Mk2 Fuselage (Short)",
-        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Only carries Liquid Fuel. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Only carries Liquid Fuel. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "18500",
@@ -5619,7 +5619,7 @@
     {
         "name": "mk2FuselageShortMono",
         "title": "Mk2 Fuselage (Short) (Pres, low volume)",
-        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Bursting to the brim with Monopropellant for all your attitude control needs! (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This airframe fuselage features the latest in lifting technology. Not only does it stay together during flight, it's sleek design makes your plane just that much speedier! Bursting to the brim with Monopropellant for all your attitude control needs! (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "18500",
@@ -5688,7 +5688,7 @@
     {
         "name": "mk2SpacePlaneAdapter",
         "title": "Mk2 Adapter (Short) [2.0m]",
-        "description": "Generic Mk2 to 2m adapter. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Generic Mk2 to 2m adapter. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "14600",
@@ -5711,7 +5711,7 @@
     {
         "name": "mk2_1m_AdapterLong",
         "title": "Mk2 Adapter (Long) [2.0m]",
-        "description": "Generic Mk2 to 2m adapter. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Generic Mk2 to 2m adapter. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "17500",
@@ -5734,7 +5734,7 @@
     {
         "name": "mk2_1m_Bicoupler",
         "title": "Mk2 Bicoupler",
-        "description": "One engine is not enough? We got you covered! (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "One engine is not enough? We got you covered! (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "19800",
@@ -5901,7 +5901,7 @@
     {
         "name": "mk3FuselageLFO_100",
         "title": "Mk3 Fuselage (Long) (Pressurized)",
-        "description": "Filled to the brim with Rocket Fuel, C7 Aerospace's supplier Ekson-Kobil have assured us that this tank is absolutely airtight. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Filled to the brim with Rocket Fuel, C7 Aerospace's supplier Ekson-Kobil have assured us that this tank is absolutely airtight. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "12",
         "entry_cost": "84000",
@@ -5924,7 +5924,7 @@
     {
         "name": "mk3FuselageLFO_25",
         "title": "Mk3 Fuselage (Short) (Pressurized)",
-        "description": "A compact fuel tank for when the rest of your craft is taken up by cargo bays! (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A compact fuel tank for when the rest of your craft is taken up by cargo bays! (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "3",
         "entry_cost": "21000",
@@ -5947,7 +5947,7 @@
     {
         "name": "mk3FuselageLFO_50",
         "title": "Mk3 Fuselage (Medium) (Pressurized)",
-        "description": "For that rare moment when your fuel needs are less than ludicrous. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "For that rare moment when your fuel needs are less than ludicrous. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "6",
         "entry_cost": "42000",
@@ -5970,7 +5970,7 @@
     {
         "name": "mk3FuselageLF_100",
         "title": "Mk3 Fuselage (Long)",
-        "description": "C7 Aerospace Division had issues piping the fuel from the refinery, so they brought the refinery tanks to us! It sounded like they muttered \"Good luck..\" as they dropped off these parts. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "C7 Aerospace Division had issues piping the fuel from the refinery, so they brought the refinery tanks to us! It sounded like they muttered \"Good luck..\" as they dropped off these parts. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "84000",
@@ -5993,7 +5993,7 @@
     {
         "name": "mk3FuselageLF_25",
         "title": "Mk3 Fuselage (Short)",
-        "description": "For the economically minded aerospace designer, who is building a massive plane... (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "For the economically minded aerospace designer, who is building a massive plane... (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "21000",
@@ -6016,7 +6016,7 @@
     {
         "name": "mk3FuselageLF_50",
         "title": "Mk3 Fuselage (Medium)",
-        "description": "For when your fuel needs are only 1/4 as enormous. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "For when your fuel needs are only 1/4 as enormous. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "42000",
@@ -6039,7 +6039,7 @@
     {
         "name": "mk3FuselageMONO",
         "title": "Mk3 Fuselage (Short) (Pres, low volume)",
-        "description": "The reaction to when the reaction control system doesn't have enough control in the system; more monopropellant! (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "The reaction to when the reaction control system doesn't have enough control in the system; more monopropellant! (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "2",
         "entry_cost": "21000",
@@ -6062,7 +6062,7 @@
     {
         "name": "nacelleBody",
         "title": "Engine Nacelle",
-        "description": "The Engine Nacelle is a self-contained solution for powering air-breathing engines. It includes some reserve fuel, making it a very practical option. C7 Engineers assure us that these units are quite safe, and that the dents and burn marks will give yours a more unique look. Optimized for subsonic flight; includes very powerful static suction. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "The Engine Nacelle is a self-contained solution for powering air-breathing engines. It includes some reserve fuel, making it a very practical option. C7 Engineers assure us that these units are quite safe, and that the dents and burn marks will give yours a more unique look. Optimized for subsonic flight; includes very powerful static suction. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "180",
         "entry_cost": "1400",
@@ -6108,7 +6108,7 @@
     {
         "name": "noseConeAdapter",
         "title": "NCS Adapter",
-        "description": "The base of C7 Aerospace's Nose Cone system (NCS) (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "The base of C7 Aerospace's Nose Cone system (NCS) (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "6500",
@@ -6608,7 +6608,7 @@
     {
         "name": "radialEngineBody",
         "title": "Engine Pre-cooler",
-        "description": "Advanced materials allow this cooler to wick away the heat from attached engines. In addition, it features additional intake area optimized for supersonic flight and powerful static suction. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Advanced materials allow this cooler to wick away the heat from attached engines. In addition, it features additional intake area optimized for supersonic flight and powerful static suction. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "150",
         "entry_cost": "1200",
@@ -6681,7 +6681,7 @@
     {
         "name": "radialRCSTank",
         "title": "Stratus-V Roundified MonoPropellant Tank",
-        "description": "Despite its fanciful name, the Stratus-V is quite simple - a small, radially attachable RCS tank. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Despite its fanciful name, the Stratus-V is quite simple - a small, radially attachable RCS tank. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "20",
@@ -6750,7 +6750,7 @@
     {
         "name": "rcsTankRadialLong",
         "title": "Stratus-V Cylindrified MonoPropellant Tank",
-        "description": "After years of research and development, the Stratus corporation has developed a revolutionary upgrade to their Stratus-V fuel tank line. Cylinders. This tank holds a moderate supply of monopropellant for RCS thrusters. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "After years of research and development, the Stratus corporation has developed a revolutionary upgrade to their Stratus-V fuel tank line. Cylinders. This tank holds a moderate supply of monopropellant for RCS thrusters. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "Stock (RO Config)",
         "cost": "1",
         "entry_cost": "20",

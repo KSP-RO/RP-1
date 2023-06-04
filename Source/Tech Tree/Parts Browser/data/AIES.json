@@ -249,7 +249,7 @@
     {
         "name": "RCS125ra",
         "title": "AIES RA-125 RCS Fuel",
-        "description": "This 2.5m RCS tank has the size and capacity to carry out most of the missions you throw it into. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This 2.5m RCS tank has the size and capacity to carry out most of the missions you throw it into. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "1",
@@ -272,7 +272,7 @@
     {
         "name": "RCSTanka5a",
         "title": "AIES A5A RCS Fuel",
-        "description": "While developing the smaller line of RCS fuel tanks <CLASSIFIED> had brought up a topic of transportation safety. Because it was 'The Invention Day' this idea was not scrapped and the storage devices were redesigned. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "While developing the smaller line of RCS fuel tanks <CLASSIFIED> had brought up a topic of transportation safety. Because it was 'The Invention Day' this idea was not scrapped and the storage devices were redesigned. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "1",
@@ -343,7 +343,7 @@
     {
         "name": "Separatormultifs",
         "title": "AIES Multi-FS Separator",
-        "description": "Multi-FS system allows a nice, clean separation of two parts. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Multi-FS system allows a nice, clean separation of two parts. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "150",
         "entry_cost": "6200",
@@ -443,7 +443,7 @@
     {
         "name": "adapterrads",
         "title": "AIES RAD-S Adapter",
-        "description": "Light fuselage adapter. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Light fuselage adapter. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "3300",
@@ -604,7 +604,7 @@
     {
         "name": "decouplersv05",
         "title": "AIES SV-5 Base Decoupler",
-        "description": "Narrow version of Vector-B, probably fits only the AIES Engines. Base is installed first, engine should come in it, not the other way around. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Narrow version of Vector-B, probably fits only the AIES Engines. Base is installed first, engine should come in it, not the other way around. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "400",
         "entry_cost": "1200",
@@ -627,7 +627,7 @@
     {
         "name": "decouplersvblack",
         "title": "AIES SV-5 Black Base Decoupler",
-        "description": "Narrow version of Vector-B, probably fits only the AIES Engines. Base is installed first, engine should come in it, not vice versa. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Narrow version of Vector-B, probably fits only the AIES Engines. Base is installed first, engine should come in it, not vice versa. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "400",
         "entry_cost": "1500",
@@ -650,7 +650,7 @@
     {
         "name": "decoupvector",
         "title": "AIES Vector-B Base Decoupler",
-        "description": "Will probably only fit the AIES Engines. Base is installed first, engine should come in it, not vice versa. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Will probably only fit the AIES Engines. Base is installed first, engine should come in it, not vice versa. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "800",
         "entry_cost": "9000",
@@ -673,7 +673,7 @@
     {
         "name": "desacopladorsat1",
         "title": "AIES SAT-1 Decoupler",
-        "description": "Small decoupler for use in A1-RU5 Fairing Base. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Small decoupler for use in A1-RU5 Fairing Base. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "200",
         "entry_cost": "5200",
@@ -696,7 +696,7 @@
     {
         "name": "desacopladorsat2",
         "title": "AIES SAT-2 Decoupler",
-        "description": "Standard decoupler for use in V2-10R Fairing Base. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Standard decoupler for use in V2-10R Fairing Base. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "400",
         "entry_cost": "5200",
@@ -719,7 +719,7 @@
     {
         "name": "desacopladorsat3",
         "title": "AIES SAT-3 Decoupler",
-        "description": "This ultra-thin decoupler is used to save the precious space so important in some crafts. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This ultra-thin decoupler is used to save the precious space so important in some crafts. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "400",
         "entry_cost": "5200",
@@ -913,7 +913,7 @@
     {
         "name": "fuelTank7k",
         "title": "AIES K7 Fuel Tank",
-        "description": "A large tank with lots of fuel. Features \"1mm Steel Plate\"\u00c3\u00a2\u00e2\u20ac\u017e\u00c2\u00a2 to protect it from environmental hazards. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A large tank with lots of fuel. Features \"1mm Steel Plate\"\u00c3\u00a2\u00e2\u20ac\u017e\u00c2\u00a2 to protect it from environmental hazards. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "10",
         "entry_cost": "1",
@@ -936,7 +936,7 @@
     {
         "name": "fuelTanklunderl",
         "title": "AIES Lunder-L Fuel Tank",
-        "description": "This tank (actually a set of tanks) was created to meet the requirements of lunar and interplanetary missions. It is lightweight and efficient. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This tank (actually a set of tanks) was created to meet the requirements of lunar and interplanetary missions. It is lightweight and efficient. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "1",
@@ -959,7 +959,7 @@
     {
         "name": "fuelTankmr1",
         "title": "AIES MR1 vr2 Fuel Tank",
-        "description": "The half sized cousin of the K7 tank. Thickness of the protective steel plate was increased to astonishing 1.4mm! (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "The half sized cousin of the K7 tank. Thickness of the protective steel plate was increased to astonishing 1.4mm! (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "5",
         "entry_cost": "1",
@@ -982,7 +982,7 @@
     {
         "name": "fuelTanksul",
         "title": "AIES SUL-V1 Fuel Tank",
-        "description": "A little cousin to the Superior-V3 continues the 'strategic' line of fuel tank design. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A little cousin to the Superior-V3 continues the 'strategic' line of fuel tank design. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "1",
@@ -1005,7 +1005,7 @@
     {
         "name": "fuelTanksuperior3",
         "title": "AIES Superior-V3 Fuel Tank",
-        "description": "This enhanced version of \"Superior-R2\" gave birth to the new 'strategic' line of fuel tank designs. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This enhanced version of \"Superior-R2\" gave birth to the new 'strategic' line of fuel tank designs. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "2",
         "entry_cost": "1",
@@ -1328,7 +1328,7 @@
     {
         "name": "ms1RCSTank",
         "title": "AIES MS-1 RCS Fuel",
-        "description": "This fairly small and efficient RCS tank was designed for use with the SN-1 Micro RCS Thruster Block. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This fairly small and efficient RCS tank was designed for use with the SN-1 Micro RCS Thruster Block. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "1",
@@ -1739,7 +1739,7 @@
     {
         "name": "tank1300cl",
         "title": "AIES CL-1300 B Fuel Tank",
-        "description": "This is the upgrade CL1300, with the same characteristics of the old model will remain a cornerstone for the program AIES (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This is the upgrade CL1300, with the same characteristics of the old model will remain a cornerstone for the program AIES (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "2",
         "entry_cost": "1",
@@ -1762,7 +1762,7 @@
     {
         "name": "tankMER1",
         "title": "AIES MER-1 Fuel Tank",
-        "description": "This elegant fuel tank will benefit any final stage from both the aesthetic and performance perspectives. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "This elegant fuel tank will benefit any final stage from both the aesthetic and performance perspectives. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "1",
@@ -1785,7 +1785,7 @@
     {
         "name": "tankMER6",
         "title": "AIES MER-6 Fuel Tank",
-        "description": "The MER-6 - think for it as a stripped down of its elegance version of the MER-1. It sees active service again even despite the fact of its imminent replacement. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "The MER-6 - think for it as a stripped down of its elegance version of the MER-1. It sees active service again even despite the fact of its imminent replacement. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "1",
@@ -1831,7 +1831,7 @@
     {
         "name": "tankorb1",
         "title": "AIES ORB-1 Fuel Tank",
-        "description": "A small experimental tank made to boost the payload of any space mission. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A small experimental tank made to boost the payload of any space mission. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "AIES",
         "cost": "1",
         "entry_cost": "1",

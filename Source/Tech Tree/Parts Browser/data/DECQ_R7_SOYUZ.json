@@ -403,7 +403,7 @@
     {
         "name": "SPUTNIK_1",
         "title": "Sputnik 1",
-        "description": "The first satellite ever launched by mankind, this is little more than a metal sphere with a radio transmitter inside and four antennas on the outside. It goes \"beep\" on the radio to allow tracking and showing that it really is out there. It's not much, but you have to start small. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "The first satellite ever launched by mankind, this is little more than a metal sphere with a radio transmitter inside and four antennas on the outside. It goes \"beep\" on the radio to allow tracking and showing that it really is out there. It's not much, but you have to start small. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "DECQ R7/SOYUZ",
         "cost": "280",
         "entry_cost": "6400",

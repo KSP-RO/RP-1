@@ -299,7 +299,7 @@
     {
         "name": "rn_7k_astp_lsolar",
         "title": "Soyuz 19 ASTP Left Solar Array",
-        "description": "Soyuz ASTP series LEFT solar panels. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Soyuz ASTP series LEFT solar panels. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soyuz",
         "cost": "300",
         "entry_cost": "0",
@@ -322,7 +322,7 @@
     {
         "name": "rn_7k_astp_rsolar",
         "title": "Soyuz 19 ASTP Right Solar Array",
-        "description": "Soyuz ASTP series RIGHT solar panels. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Soyuz ASTP series RIGHT solar panels. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soyuz",
         "cost": "300",
         "entry_cost": "0",
@@ -391,7 +391,7 @@
     {
         "name": "rn_astp_bo",
         "title": "Soyuz ASTP (7K-TM) Orbital Module",
-        "description": "Orbital module for the ASTP. (Missing entryCost field) (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Orbital module for the ASTP. (Missing entryCost field) (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soyuz",
         "cost": "1100",
         "entry_cost": 0,
@@ -735,7 +735,7 @@
     {
         "name": "rn_uda",
         "title": "ASTP Universal Docking Adapter",
-        "description": "Docking adapter for Apollo-Soyuz Test Project. Attach an APAS075 to one side and either the FASA LEM docking cone or the Skylab one. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Docking adapter for Apollo-Soyuz Test Project. Attach an APAS075 to one side and either the FASA LEM docking cone or the Skylab one. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soyuz",
         "cost": "1975",
         "entry_cost": "0",
@@ -882,7 +882,7 @@
     {
         "name": "rn_voskhod_para",
         "title": "Voskhod Main Parachute",
-        "description": "Parachute for Vostok spacecraft, attach on top side of descent module (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Parachute for Vostok spacecraft, attach on top side of descent module (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soyuz",
         "cost": "0",
         "entry_cost": "1",

@@ -887,7 +887,7 @@
     {
         "name": "ca_fom_drogue",
         "title": "Venera Lander Drogue Parachute",
-        "description": "Some Fomalhaut atmospheric entry profiles call for earlier and/or more gentle braking. For those, we've designed this massive and resilient drogue chute. Warning: This chute is not rated for low touch-down velocities. Prepare for harsh, bumpy landings (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Some Fomalhaut atmospheric entry profiles call for earlier and/or more gentle braking. For those, we've designed this massive and resilient drogue chute. Warning: This chute is not rated for low touch-down velocities. Prepare for harsh, bumpy landings (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": "0",
         "entry_cost": "1",
@@ -910,7 +910,7 @@
     {
         "name": "ca_fom_heatS",
         "title": "CAE-HS100 Fomalhaut Heat Shield",
-        "description": "This is the bottom piece of the Fomalhaut spherical atmospheric entry shell. It is coated with a very heat-resistant ablative material to keep the stuff inside from getting cooked. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "This is the bottom piece of the Fomalhaut spherical atmospheric entry shell. It is coated with a very heat-resistant ablative material to keep the stuff inside from getting cooked. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": "500",
         "entry_cost": "2000",
@@ -933,7 +933,7 @@
     {
         "name": "ca_fom_lander",
         "title": "Venera Lander Bus",
-        "description": "The CAE Planetary Science Division has produced this rugged 'metal tank', and crammed it with batteries, radiation lining, a thermometer, a camera to image the landing site, and an antenna wrapped around the top. It is designed to survive rough landings in extreme environments (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "The CAE Planetary Science Division has produced this rugged 'metal tank', and crammed it with batteries, radiation lining, a thermometer, a camera to image the landing site, and an antenna wrapped around the top. It is designed to survive rough landings in extreme environments (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": 4600,
         "entry_cost": 92000,
@@ -959,7 +959,7 @@
     {
         "name": "ca_fom_parachute",
         "title": "Venera Lander Main Parachute",
-        "description": "This part is the top cover of the Fomalhaut atmospheric entry capsule. This parachute attaches directly to the Fomalhaut lander for deployment after re-entry. It does so successfully most of the time. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "This part is the top cover of the Fomalhaut atmospheric entry capsule. This parachute attaches directly to the Fomalhaut lander for deployment after re-entry. It does so successfully most of the time. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": "0",
         "entry_cost": "1",
@@ -982,7 +982,7 @@
     {
         "name": "ca_fom_sp",
         "title": "Venera Lander Bus Solar Array",
-        "description": "A small and basic solar panel angled for mounting on the Fomalhaut lander collar to provide electric recharge of the batteries (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "A small and basic solar panel angled for mounting on the Fomalhaut lander collar to provide electric recharge of the batteries (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": 500,
         "entry_cost": 0,
@@ -1957,7 +1957,7 @@
     {
         "name": "ca_vor_comm",
         "title": "CAE-A03 Vorona Communication Array",
-        "description": "Vorona's Comm Array mounts dual conic antennae for short range, low-gain communication. The system also has a mount for a high-gain dish, designed for the Vorona CAE-102 dish (Sold separately). (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Vorona's Comm Array mounts dual conic antennae for short range, low-gain communication. The system also has a mount for a high-gain dish, designed for the Vorona CAE-102 dish (Sold separately). (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": "300",
         "entry_cost": "1000",
@@ -1980,7 +1980,7 @@
     {
         "name": "ca_vor_core",
         "title": "4MV Spacecraft Bus",
-        "description": "The Vorona probe system is designed to work in tandem with a Fomalhaut lander to conduct simultaneous orbital/surface science. It packs batteries, avionics, and monopropellant in a very rugged case. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "The Vorona probe system is designed to work in tandem with a Fomalhaut lander to conduct simultaneous orbital/surface science. It packs batteries, avionics, and monopropellant in a very rugged case. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": 13800,
         "entry_cost": 200000,
@@ -2006,7 +2006,7 @@
     {
         "name": "ca_vor_dish",
         "title": "CAE-102 Vorona Dish Antenna",
-        "description": "The Vorona dish has a powerful transmitter for its size, that should allow a fair bit of range in communication in the inner solar system; whether you want it to or not. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "The Vorona dish has a powerful transmitter for its size, that should allow a fair bit of range in communication in the inner solar system; whether you want it to or not. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": "500",
         "entry_cost": "1000",
@@ -2100,7 +2100,7 @@
     {
         "name": "ca_vor_sep1",
         "title": "CAE-D13-F Stack Decoupler",
-        "description": "Takes two pieces for connect together and after not when you want to not have together more. Many quality part made in Kaiwan! (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Takes two pieces for connect together and after not when you want to not have together more. Many quality part made in Kaiwan! (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": "375",
         "entry_cost": "500",

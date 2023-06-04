@@ -1,5 +1,5 @@
-# RP-0-Parts-Browser
-This is a browser/editor application for the RP-0 parts list (converted to json files per mod)  that can also generate the needed configs from it, created by [@mattwrobel](https://github.com/mattwrobel)
+# RP-1-Parts-Browser
+This is a browser/editor application for the RP-1 parts list (converted to json files per mod)  that can also generate the needed configs from it, created by [@mattwrobel](https://github.com/mattwrobel)
 
 To get it working:
    1. It uses Python 3, so that needs to be installed.
@@ -8,9 +8,9 @@ To get it working:
    4. Then you should be able to hit:  python app.py
    5. Point your browser at:  http://localhost:5000/dashboard
    
-# RP-0 Needs
+# RP-1 Needs
 
-For RP-0, every part used in the game must be configured in a few ways to be used in the career mode game.
+For RP-1, every part used in the game must be configured in a few ways to be used in the career mode game.
    1.  Need to define where it goes in the tech tree as well as an entry cost and a part cost.
    2.  Need to declare any parts from any mods that represent the same part. (Identical Parts)
    3.  Need to declare any entry cost modifiers (ECMs) that affect the entry cost of linked parts (for example, unlocking the LR-79 drastically reduces the entry cost of unlocking the LR-89)
@@ -30,7 +30,7 @@ In the past the files that govern these configs (TREE-Parts.cfg, TREE-Engines.cf
   
 ### Browser
     
-1.  The Part Browser allows you to view all of the currently known parts in RP-0. Some of these parts have been configured, but by no means all of them.  Some are partially configured.  Some are 'orphaned' which is kind of a Work in Progress flag.
+1.  The Part Browser allows you to view all of the currently known parts in RP-1. Some of these parts have been configured, but by no means all of them.  Some are partially configured.  Some are 'orphaned' which is kind of a Work in Progress flag.
 2. The browser allows for filtering by any of the columns.
 3. Easy way to visualize and inspect the currently known parts.
     

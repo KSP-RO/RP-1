@@ -169,7 +169,7 @@
     {
         "name": "WBI_BuffaloSAS",
         "title": "Buffalo SAS Module",
-        "description": "The Buffalo SAS Module has an array of reaction wheels. These spin very quickly to create torque without wasting propellant. These large wheels are driven by proportionally larger electric motors, so keep an eye on your ElectricCharge levels. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "The Buffalo SAS Module has an array of reaction wheels. These spin very quickly to create torque without wasting propellant. These large wheels are driven by proportionally larger electric motors, so keep an eye on your ElectricCharge levels. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "WildBlue Buffalo Rover",
         "cost": "3600",
         "entry_cost": "6000",

@@ -1234,7 +1234,7 @@
     {
         "name": "FASAAtlasSLV3C",
         "title": "Atlas SLV-3C/D Fuel Tank",
-        "description": "The fuel tank for the Atlas SLV-3C/D. Historically used with the Centaur D1 to send 1.75T (3C) or 1.80T (3D) to GTO.  Reduce fuel by 3t to setup the earlier 3C. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "The fuel tank for the Atlas SLV-3C/D. Historically used with the Centaur D1 to send 1.75T (3C) or 1.80T (3D) to GTO.  Reduce fuel by 3t to setup the earlier 3C. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "FASA",
         "cost": "500",
         "entry_cost": "10000",
@@ -2505,7 +2505,7 @@
     {
         "name": "FASAGeminiLFTCentarCSM_D2",
         "title": "Centaur D2",
-        "description": "Tank and thrust structure for the Centaur II and IIAS models. Used on the Atlas II and IIIA. Add one or two RL10A series engines to complete the stage. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Tank and thrust structure for the Centaur II and IIAS models. Used on the Atlas II and IIIA. Add one or two RL10A series engines to complete the stage. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "FASA",
         "cost": "950",
         "entry_cost": "4800",
@@ -2528,7 +2528,7 @@
     {
         "name": "FASAGeminiLFTCentarCSM_D5",
         "title": "Centaur D3",
-        "description": "Tank and thrust structure for the Centaur III used on the Atlas V. Add one or two RL10A series engines to complete the stage.  Includes integrated avionics for the full Atlas V launch vehicle. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Tank and thrust structure for the Centaur III used on the Atlas V. Add one or two RL10A series engines to complete the stage.  Includes integrated avionics for the full Atlas V launch vehicle. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "FASA",
         "cost": "950",
         "entry_cost": "4800",
@@ -2551,7 +2551,7 @@
     {
         "name": "FASAGeminiLFTCentarCSM_T",
         "title": "Centaur T",
-        "description": "4.32m Tank and thrust structure for the Centaur T used on the Titan IV. Add a single RL10A series engines to complete the stage. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "4.32m Tank and thrust structure for the Centaur T used on the Titan IV. Add a single RL10A series engines to complete the stage. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "FASA",
         "cost": "950",
         "entry_cost": "4800",

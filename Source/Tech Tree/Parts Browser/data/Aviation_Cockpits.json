@@ -31,7 +31,7 @@
     {
         "name": "F8f?Bearcat?Cockpit",
         "title": "F8F Bearcat Cockpit",
-        "description": "Vroom vroom vroom ^_^ (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Vroom vroom vroom ^_^ (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Aviation Cockpits",
         "cost": "1100",
         "entry_cost": "1",
@@ -60,7 +60,7 @@
     {
         "name": "Focke-Wulf?Bearcat?Cockpit",
         "title": "FW-190 Cockpit",
-        "description": "Take to the skies! (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Take to the skies! (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Aviation Cockpits",
         "cost": "1100",
         "entry_cost": "1",
@@ -118,7 +118,7 @@
     {
         "name": "Mk1?Mirage?Cockpit",
         "title": "Mk1 Mirage 2000B",
-        "description": "Twin-seat fighter cockpit. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Twin-seat fighter cockpit. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Aviation Cockpits",
         "cost": "2000",
         "entry_cost": "2600",
@@ -175,7 +175,7 @@
     {
         "name": "Mk1?Su30?Cockpit",
         "title": "Su-30 Cockpit",
-        "description": "Sometimes you need to install stuff on the nose and have two crew. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Sometimes you need to install stuff on the nose and have two crew. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Aviation Cockpits",
         "cost": "1800",
         "entry_cost": "2600",
@@ -232,7 +232,7 @@
     {
         "name": "Typhoon?Cockpit",
         "title": "Mk1 Typhoon Cockpit",
-        "description": "Check your orbital trajectory and the name of the pilot while dodging missiles. Features air intakes under the nose for more compact design. (PART NOT SUPPORTED BY RP-0 OR RO)",
+        "description": "Check your orbital trajectory and the name of the pilot while dodging missiles. Features air intakes under the nose for more compact design. (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Aviation Cockpits",
         "cost": "1000",
         "entry_cost": "2600",

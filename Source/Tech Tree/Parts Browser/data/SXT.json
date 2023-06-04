@@ -1088,7 +1088,7 @@
     {
         "name": "SXTFuel625m",
         "title": "Mk1 LFO Barrel",
-        "description": "Less 'High tech spaceship part', more 'We spent the budget on food and this was the only thing we could find lying around'. The designers did manage to add a smaller sub-tank for oxidiser, although the words 'plastic bag - Oxidiser goes here' can be seen on the blueprints. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "Less 'High tech spaceship part', more 'We spent the budget on food and this was the only thing we could find lying around'. The designers did manage to add a smaller sub-tank for oxidiser, although the words 'plastic bag - Oxidiser goes here' can be seen on the blueprints. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": "30",
         "entry_cost": "1",
@@ -1233,7 +1233,7 @@
     {
         "name": "SXTK1BaseLarge",
         "title": "N1 Block A",
-        "description": "N1 Block A is first stage of N1. Block A has 30x NK-15 or NK-33 engines. Diameter: [17.0 m]. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "N1 Block A is first stage of N1. Block A has 30x NK-15 or NK-33 engines. Diameter: [17.0 m]. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "SXT",
         "cost": "22050",
         "entry_cost": "20000",
@@ -1704,7 +1704,7 @@
     {
         "name": "SXTNK12M",
         "title": "KO-TP12M \"Bear\" Turboprop",
-        "description": "Requires 100 units Liquid Fuel per hour at maximum throttle. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "Requires 100 units Liquid Fuel per hour at maximum throttle. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": "400",
         "entry_cost": "8000",
@@ -2234,7 +2234,7 @@
     {
         "name": "SXTWingSmall",
         "title": "Mk0B Small Modular Wing",
-        "description": "A tiny wing, for tiny aeroplanes. A spare '0' was later discovered in the design specification. It had not been carried. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "A tiny wing, for tiny aeroplanes. A spare '0' was later discovered in the design specification. It had not been carried. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": "40",
         "entry_cost": "1",
@@ -2305,7 +2305,7 @@
     {
         "name": "SXTelevonLarge",
         "title": "Elevon Mk2",
-        "description": "Made from the finest materials at hand, these flight surfaces are guaranteed to operate while attached to the craft. However studies have shown that a lack of atmosphere *may* slightly impede function. No refunds. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "Made from the finest materials at hand, these flight surfaces are guaranteed to operate while attached to the craft. However studies have shown that a lack of atmosphere *may* slightly impede function. No refunds. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": "115",
         "entry_cost": "1",
@@ -2328,7 +2328,7 @@
     {
         "name": "SXTelevonSmall",
         "title": "Elevon 0-A",
-        "description": "Made from the finest materials at hand, these flight surfaces are guaranteed to operate while attached to the craft. However studies have shown that a lack of atmosphere *may* slightly impede function. No refunds. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "Made from the finest materials at hand, these flight surfaces are guaranteed to operate while attached to the craft. However studies have shown that a lack of atmosphere *may* slightly impede function. No refunds. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": "25",
         "entry_cost": "1",
@@ -2351,7 +2351,7 @@
     {
         "name": "SXTelevonSmallHalf",
         "title": "Elevon 0-B",
-        "description": "Made from the finest materials at hand, these flight surfaces are guaranteed to operate while attached to the craft. However studies have shown that a lack of atmosphere *may* slightly impede function. No refunds. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "Made from the finest materials at hand, these flight surfaces are guaranteed to operate while attached to the craft. However studies have shown that a lack of atmosphere *may* slightly impede function. No refunds. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": "15",
         "entry_cost": "1",
@@ -2374,7 +2374,7 @@
     {
         "name": "SXTelevonVeryLarge",
         "title": "Elevon Mk3",
-        "description": "Made from the finest materials at hand, these flight surfaces are guaranteed to operate while attached to the craft. However studies have shown that a lack of atmosphere *may* slightly impede function. No refunds. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-0)",
+        "description": "Made from the finest materials at hand, these flight surfaces are guaranteed to operate while attached to the craft. However studies have shown that a lack of atmosphere *may* slightly impede function. No refunds. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": "185",
         "entry_cost": "1",

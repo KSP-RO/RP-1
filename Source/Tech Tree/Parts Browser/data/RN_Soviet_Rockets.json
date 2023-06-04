@@ -1234,7 +1234,7 @@
     {
         "name": "rn_proton_blockd_v",
         "title": "Block D Vernier",
-        "description": "A vernier engine cluster found on the Block D stage of the Proton series launcher. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A vernier engine cluster found on the Block D stage of the Proton series launcher. Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soviet Rockets",
         "cost": "20",
         "entry_cost": "70",
@@ -1382,7 +1382,7 @@
     {
         "name": "rn_proton_stg1_adapt",
         "title": "Proton 1/2 Interstage Adapter",
-        "description": "Adapter for use between Proton first and second stages. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Adapter for use between Proton first and second stages. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soviet Rockets",
         "cost": "200",
         "entry_cost": "500",
@@ -1405,7 +1405,7 @@
     {
         "name": "rn_proton_stg2_adapt",
         "title": "Proton 2/3 Interstage Adapter",
-        "description": "Adapter for use between Proton second and third stages. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Adapter for use between Proton second and third stages. Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soviet Rockets",
         "cost": "1500",
         "entry_cost": "3000",
@@ -1428,7 +1428,7 @@
     {
         "name": "rn_proton_stg3_adapt",
         "title": "Proton 3/4 Salyut Interstage Adapter",
-        "description": "Adapter for use between Proton third stage and Salyut 1/4/6 stations. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Adapter for use between Proton third stage and Salyut 1/4/6 stations. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soviet Rockets",
         "cost": "200",
         "entry_cost": "500",
@@ -1451,7 +1451,7 @@
     {
         "name": "rn_proton_vernier",
         "title": "RD-0214 8D811",
-        "description": "A vernier engine cluster found on the third stage of the Proton series launcher. Plume configured by RealPlume. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "A vernier engine cluster found on the third stage of the Proton series launcher. Plume configured by RealPlume. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soviet Rockets",
         "cost": "600",
         "entry_cost": "0",
@@ -1543,7 +1543,7 @@
     {
         "name": "rn_protonk_stg3_decoupler",
         "title": "Proton-K Third Stage Payload Decoupler",
-        "description": "Decoupler for payload of proton 3rd stage. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Decoupler for payload of proton 3rd stage. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soviet Rockets",
         "cost": "1500",
         "entry_cost": "2000",
@@ -1566,7 +1566,7 @@
     {
         "name": "rn_protonk_stg3_decoupler_extended",
         "title": "Proton-K Third Stage Extended Payload Decoupler",
-        "description": "Extended decoupler for payload of proton 3rd stage. (PART NOT COSTED BY RP-0 BUT IN CORRECT NODE)",
+        "description": "Extended decoupler for payload of proton 3rd stage. (PART NOT COSTED BY RP-1 BUT IN CORRECT NODE)",
         "mod": "RN Soviet Rockets",
         "cost": "2000",
         "entry_cost": "3000",

@@ -5721,27 +5721,6 @@
         "module_tags": []
     },
     {
-        "name": "RP-1+O2",
-        "title": "",
-        "description": "",
-        "mod": "Engine_Config",
-        "cost": "50",
-        "entry_cost": "0",
-        "category": "RCS",
-        "info": "",
-        "year": "1988",
-        "technology": "standardDockingPorts",
-        "ro": false,
-        "orphan": false,
-        "rp0_conf": false,
-        "spacecraft": "",
-        "engine_config": "RCS",
-        "upgrade": true,
-        "entry_cost_mods": "15000,PumpReignition",
-        "identical_part_name": "",
-        "module_tags": []
-    },
-    {
         "name": "Kestrel",
         "title": "Kestrel",
         "description": "",
@@ -10896,8 +10875,8 @@
         "module_tags": []
     },
     {
-        "name": "RD-107-11D511",
-        "title": "RD-107-11D511",
+        "name": "RD-107-11D512",
+        "title": "RD-107-11D512",
         "description": "Used on Soyuz-U 11A511U (also known as RD-117)",
         "mod": "Engine_Config",
         "cost": "70",
@@ -10919,8 +10898,8 @@
         "module_tags": []
     },
     {
-        "name": "RD-107-11D511P",
-        "title": "RD-107-11D511P",
+        "name": "RD-107-11D512P",
+        "title": "RD-107-11D512P",
         "description": "Used on Soyuz-U2 11A511U2 (also known as RD-117)",
         "mod": "Engine_Config",
         "cost": "80",
@@ -10937,7 +10916,7 @@
         "spacecraft": "Soyuz-U2",
         "engine_config": "RD107-117",
         "upgrade": true,
-        "entry_cost_mods": "2000, R7-TP-1981, RD-107-11D511",
+        "entry_cost_mods": "2000, R7-TP-1981, RD-107-11D512",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -11121,13 +11100,13 @@
         "spacecraft": "Soyuz-FG",
         "engine_config": "RD107-117",
         "upgrade": true,
-        "entry_cost_mods": "2000, R7-TP-1998, RD-107-11D511P",
+        "entry_cost_mods": "2000, R7-TP-1998, RD-107-11D512P",
         "identical_part_name": "",
         "module_tags": []
     },
     {
-        "name": "RD-108-11D512",
-        "title": "RD-108-11D512",
+        "name": "RD-108-11D511",
+        "title": "RD-108-11D511",
         "description": "Used on Soyuz-U 11A511U (also known as RD-118)",
         "mod": "Engine_Config",
         "cost": "70",
@@ -11149,8 +11128,8 @@
         "module_tags": []
     },
     {
-        "name": "RD-108-11D512P",
-        "title": "RD-108-11D512P",
+        "name": "RD-108-11D511P",
+        "title": "RD-108-11D511P",
         "description": "Used on Soyuz-U2 11A511U2 (also known as RD-118)",
         "mod": "Engine_Config",
         "cost": "80",
@@ -11167,7 +11146,7 @@
         "spacecraft": "Soyuz-U2",
         "engine_config": "RD108-118",
         "upgrade": true,
-        "entry_cost_mods": "2000, R7-TP-1981, RD-108-11D512",
+        "entry_cost_mods": "2000, R7-TP-1981, RD-108-11D511",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -11351,7 +11330,7 @@
         "spacecraft": "Soyuz-FG",
         "engine_config": "RD108-118",
         "upgrade": true,
-        "entry_cost_mods": "2000, R7-TP-1998, RD-108-11D512P",
+        "entry_cost_mods": "2000, R7-TP-1998, RD-108-11D511P",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -13125,9 +13104,7 @@
         "upgrade": true,
         "entry_cost_mods": "50000,RL10A-3-3,throttlingTP",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "RL10A-3-9",
@@ -13579,6 +13556,27 @@
         "engine_config": "F404",
         "upgrade": true,
         "entry_cost_mods": "7500,F404-GE-402",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RP-1+O2",
+        "title": "",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "RCS",
+        "info": "",
+        "year": "1988",
+        "technology": "standardDockingPorts",
+        "ro": false,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "RCS",
+        "upgrade": true,
+        "entry_cost_mods": "15000,PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },

@@ -960,9 +960,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, solarTL4",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "LongLadder",
@@ -2164,7 +2162,7 @@
     },
     {
         "name": "RO-RangerRetro",
-        "title": "Ranger/Mariner Propulsion System",
+        "title": "MC-4-610",
         "description": "",
         "mod": "Stock (RO Config)",
         "cost": "30",
@@ -2179,7 +2177,7 @@
         "spacecraft": "Ranger",
         "engine_config": "RangerRetro",
         "upgrade": false,
-        "entry_cost_mods": "RangerRetro",
+        "entry_cost_mods": "MC-4-610",
         "identical_part_name": "Ranger/Mariner Propulsion System",
         "module_tags": [
             "EngineLiquidPF"
@@ -4859,9 +4857,7 @@
         "upgrade": false,
         "entry_cost_mods": "7000, solarTL7, solarFolding, solarTracking",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "largeTrussMount",
@@ -7250,9 +7246,7 @@
         "upgrade": false,
         "entry_cost_mods": "1200, solarTL6, solarFolding, solarTracking, solarShielding",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "solarPanels2",
@@ -7275,9 +7269,7 @@
         "upgrade": false,
         "entry_cost_mods": "600, solarTL4, solarFolding, solarShielding",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "solarPanels3",
@@ -7300,9 +7292,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, solarTL6, solarFolding, solarTracking",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "solarPanels4",

@@ -6317,7 +6317,7 @@
     },
     {
         "name": "ROE-RangerRetro",
-        "title": "Ranger/Mariner Propulsion System",
+        "title": "MC-4-610",
         "description": "",
         "mod": "ROEngines",
         "cost": "30",
@@ -6332,7 +6332,7 @@
         "spacecraft": "Ranger",
         "engine_config": "RangerRetro",
         "upgrade": false,
-        "entry_cost_mods": "RangerRetro",
+        "entry_cost_mods": "MC-4-610",
         "identical_part_name": "Ranger/Mariner Propulsion System",
         "module_tags": [
             "EngineLiquidPF"

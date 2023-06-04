@@ -57,5 +57,11 @@
 			"name": "ROSolar",
 			"max_version" : "v1.99.0.0"
 		}
+	],
+	"install": [
+		{
+			"find": "RP-0",
+			"install_to": "GameData"
+		}
 	]
 }

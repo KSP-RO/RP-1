@@ -25,16 +25,6 @@ namespace KerbalConstructionTime
         public override void Load(ConfigNode node)
         {
             base.Load(node);
-
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 12)
-                {
-                    lcData.Name = KCTGameStates.FindLCFromID(lcID)?.Name ?? lcData.Name;
-                    if (string.IsNullOrEmpty(name))
-                        name = lcData.Name;
-                }
-            }
         }
 
         protected override void ProcessComplete()

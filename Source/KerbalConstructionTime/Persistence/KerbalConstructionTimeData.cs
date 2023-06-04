@@ -153,51 +153,13 @@ namespace KerbalConstructionTime
 
                 TechList.Updated += techListUpdated;
 
-                // Special check
-                if (LoadedSaveVersion == 0)
-                {
-                    // Keep this around another few versions for back-compat.
-                    var kctVS = new KCT_DataStorage();
-                    if (node.GetNode(kctVS.GetType().Name) is ConfigNode cn)
-                    {
-                        ConfigNode.LoadObjectFromConfig(kctVS, cn);
-                        kctVS.ReadFields();
-                    }
-                    // This could also be because we started a new game.
-                    if (LoadedSaveVersion == 0)
-                    {
-                        KCTGameStates.IsFirstStart = true;
-                        LoadedSaveVersion = KCTGameStates.VERSION;
-                    }
-                }
-
                 bool foundStockKSC = false;
-                // Special back-compat check, before everything else
-                if (LoadedSaveVersion < 20)
+                foreach (var ksc in KSCs)
                 {
-                    foreach (ConfigNode ksc in node.GetNodes("KSC"))
+                    if (ksc.KSCName.Length > 0 && string.Equals(ksc.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase))
                     {
-                        string name = ksc.GetValue("KSCName");
-                        var loaded_KSC = new KSCItem(name);
-                        loaded_KSC.Load(ksc);
-                        if (loaded_KSC.KSCName?.Length > 0)
-                        {
-                            if (KSCs.Find(k => k.KSCName == loaded_KSC.KSCName) == null)
-                                KSCs.Add(loaded_KSC);
-                            foundStockKSC |= string.Equals(loaded_KSC.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase);
-                        }
-                    }
-                }
-                else
-                {
-                    // Normal loading: we've already loaded all KSCs.
-                    foreach (var ksc in KSCs)
-                    {
-                        if (ksc.KSCName.Length > 0 && string.Equals(ksc.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase))
-                        {
-                            foundStockKSC = true;
-                            break;
-                        }
+                        foundStockKSC = true;
+                        break;
                     }
                 }
 
@@ -211,20 +173,6 @@ namespace KerbalConstructionTime
                     KSCItem ksc = KSCs[i];
                     if (ksc.KSCName == null || ksc.KSCName.Length == 0 || (ksc.IsEmpty && ksc != ActiveKSC))
                         KSCs.RemoveAt(i);
-                }
-
-                if (LoadedSaveVersion < KCTGameStates.VERSION)
-                {
-                    if (LoadedSaveVersion < 14 && node.GetNode("Plans") is ConfigNode planNode)
-                    {
-                        foreach (ConfigNode cnV in planNode.GetNodes("KCTVessel"))
-                        {
-                            var blv = new BuildListVessel();
-                            blv.Load(cnV);
-                            BuildPlans.Remove(blv.shipName);
-                            BuildPlans.Add(blv.shipName, blv);
-                        }
-                    }
                 }
 
                 foreach (var blv in BuildPlans.Values)

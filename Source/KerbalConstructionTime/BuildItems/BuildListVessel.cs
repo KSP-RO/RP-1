@@ -1281,88 +1281,6 @@ namespace KerbalConstructionTime
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            var sNode = node.GetNode("ShipNode");
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 10)
-                {
-                    ShipNodeCompressed.Node = sNode;
-                    RecalculateFromNode(false);
-                }
-
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 14)
-                {
-                    node.TryGetValue("LaunchPadID", ref launchSiteIndex);
-                    emptyCost = Utilities.GetTotalVesselCost(sNode, false);
-                }
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 19)
-                {
-                    ShipNodeCompressed.Node = sNode;
-                    tanksFull = true;
-                    isCrewable = false;
-                    bool checkMass = mass == 0 || emptyMass == 0;
-                    if (checkMass)
-                    {
-                        mass = 0;
-                        emptyMass = 0;
-                    }
-
-                    foreach (ConfigNode p in sNode.GetNodes("PART"))
-                    {
-                        var partName = Utilities.GetPartNameFromNode(p);
-                        partNames.Add(partName);
-
-                        if (tanksFull)
-                        {
-                            foreach (var res in p.GetNodes("RESOURCE"))
-                            {
-                                if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")) &&
-                                    bool.Parse(res.GetValue("flowState")))
-                                {
-                                    var maxAmt = float.Parse(res.GetValue("maxAmount"));
-                                    var amt = float.Parse(res.GetValue("amount"));
-                                    if (Math.Abs(amt - maxAmt) >= 1)
-                                    {
-                                        tanksFull = false;
-                                        break;
-                                    }
-                                }
-                            }
-                        }
-
-                        if (clampState == ClampsState.Untested)
-                        {
-                            AvailablePart aPart = Utilities.GetAvailablePartByName(partName);
-                            if (aPart != null && Utilities.IsClamp(aPart.partPrefab))
-                                clampState = ClampsState.HasClamps;
-                        }
-
-                        if (checkMass)
-                        {
-                            mass += Utilities.GetPartMassFromNode(p, includeFuel: true, includeClamps: false);
-                            emptyMass += Utilities.GetPartMassFromNode(p, includeFuel: false, includeClamps: false);
-                        }
-                    }
-
-                    if (clampState == ClampsState.Untested)
-                        clampState = ClampsState.NoClamps;
-
-                    foreach (var s in partNames)
-                    {
-                        Part p = Utilities.GetAvailablePartByName(s)?.partPrefab;
-                        if (p != null && p.CrewCapacity > 0)
-                        {
-                            isCrewable = true;
-                            break;
-                        }
-                    }
-
-                    mass = Math.Max(mass, 0);
-                    emptyMass = Math.Max(emptyMass, 0);
-
-                    ShipNodeCompressed.CompressAndRelease();
-                }
-            }
         }
 
         public void Save(ConfigNode node)
@@ -1377,27 +1295,6 @@ namespace KerbalConstructionTime
             {
                 _buildRate = 0d;
                 return;
-            }
-
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 11)
-                {
-                    HashSet<string> ignoredRes = LC.Stats.lcType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
-
-                    foreach (var kvp in resourceAmounts)
-                    {
-                        if (ignoredRes.Contains(kvp.Key)
-                            || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
-                            continue;
-
-                        double mass = PartResourceLibrary.Instance.GetDefinition(kvp.Key).density * kvp.Value;
-                        if (mass <= Formula.ResourceValidationRatioOfVesselMassMin * this.mass)
-                            continue;
-
-                        LC.Stats.resourcesHandled[kvp.Key] = kvp.Value * 1.1d;
-                    }
-                }
             }
         }
     }

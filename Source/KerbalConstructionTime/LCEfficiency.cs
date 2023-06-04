@@ -50,16 +50,6 @@ namespace KerbalConstructionTime
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 17)
-                {
-                    HashSet<Guid> temp = new HashSet<Guid>(_lcIDs);
-                    _lcIDs.Clear();
-                    if (_lcStats.lcType != LaunchComplexType.Hangar)
-                        _lcIDs.AddRange(temp);
-                }
-            }
         }
 
         public void Save(ConfigNode node)

@@ -362,36 +362,6 @@ namespace KerbalConstructionTime
             foreach (var al in Airlaunch_Prep)
                 al.LC = this;
 
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 12)
-                {
-                    _lcData.Name = Name;
-                }
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 13)
-                {
-                    ConfigNode tmp = node.GetNode("Plans");
-
-                    if (tmp != null)
-                    {
-                        foreach (ConfigNode cnV in tmp.GetNodes("KCTVessel"))
-                        {
-                            var blv = new BuildListVessel();
-                            blv.Load(cnV);
-                            blv.LCID = Guid.Empty;
-                            KerbalConstructionTimeData.Instance.BuildPlans.Remove(blv.shipName);
-                            KerbalConstructionTimeData.Instance.BuildPlans.Add(blv.shipName, blv);
-                        }
-                    }
-                    if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 18)
-                    {
-                        node.TryGetValue("ActiveLPID", ref ActiveLaunchPadIndex);
-                        if (ActiveLaunchPadIndex < 0)
-                            ActiveLaunchPadIndex = 0;
-                    }
-                }
-            }
-
             foreach (var blv in BuildList)
                 blv.LinkToLC(this);
             foreach (var blv in Warehouse)

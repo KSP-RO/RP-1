@@ -38,24 +38,6 @@ namespace KerbalConstructionTime
             KerbalConstructionTimeData.Instance.HiredStarterApplicants = HiredStarterApplicants;
             KerbalConstructionTimeData.Instance.StartedProgram = StartedProgram;
             KerbalConstructionTimeData.Instance.AcceptedContract = AcceptedContract;
-
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (saveVersion < 1)
-                {
-                    KerbalConstructionTimeData.Instance.Applicants *= 2;
-                    KerbalConstructionTimeData.Instance.Researchers *= 2;
-                }
-                if (saveVersion < 3)
-                {
-                    KerbalConstructionTimeData.Instance.HiredStarterApplicants = true;
-                    KerbalConstructionTimeData.Instance.StartedProgram = true;
-                }
-                if (saveVersion < 5)
-                {
-                    KerbalConstructionTimeData.Instance.AcceptedContract = true;
-                }
-            }
         }
     }
 }

@@ -171,12 +171,6 @@ namespace KerbalConstructionTime
         public override void Load(ConfigNode node)
         {
             base.Load(node);
-
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 15)
-            {
-                string n = node.GetValue("name");
-                RRType = RRDict.ContainsKey(n) ? RRDict[n] : RolloutReconType.None;
-            }
         }
     }
 }

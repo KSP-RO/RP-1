@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         private static readonly List<KSCItem> _EmptyKSCs = new List<KSCItem>();
         public static List<KSCItem> KSCs => KerbalConstructionTimeData.Instance?.KSCs ?? _EmptyKSCs;
         
-        public const int VERSION = 20;
+        public const int VERSION = 0;
 
         public static ToolbarControl ToolbarControl;
 

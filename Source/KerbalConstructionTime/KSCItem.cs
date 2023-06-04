@@ -205,15 +205,6 @@ namespace KerbalConstructionTime
                 lc.PostLoad(this);
             }
             _allowRecalcConstructions = true;
-
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KCTGameStates.VERSION)
-            {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 18)
-                {
-                    if (!int.TryParse(node.GetValue("ActiveLCID"), out ActiveLaunchComplexIndex))
-                        ActiveLaunchComplexIndex = 0;
-                }
-            }
         }
     }
 }

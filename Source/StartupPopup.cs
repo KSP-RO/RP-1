@@ -16,8 +16,6 @@ namespace RP0
 
         public void Start()
         {
-            return;
-
             if (File.Exists(PreferenceFilePath)) return;
 
             

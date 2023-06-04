@@ -256,7 +256,6 @@
     <Compile Include="KerbalConstructionTime\KCTDataLoader.cs" />
     <Compile Include="KerbalConstructionTime\KCTGameStates.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_Main.cs" />
-    <Compile Include="KerbalConstructionTime\Persistence\KCT_DataStorage.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_BuildList.cs" />
     <Compile Include="KerbalConstructionTime\GUI\GUI_Presets.cs" />
     <Compile Include="KerbalConstructionTime\KSCItem.cs" />

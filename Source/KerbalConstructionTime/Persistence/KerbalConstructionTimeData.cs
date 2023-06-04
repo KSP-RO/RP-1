@@ -30,7 +30,7 @@ namespace KerbalConstructionTime
         [KSPField(isPersistant = true)] public bool AcceptedContract = false;
         public bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
 
-        [KSPField(isPersistant = true)] public int LoadedSaveVersion;
+        [KSPField(isPersistant = true)] public int LoadedSaveVersion = -1;
 
         [KSPField(isPersistant = true)] public SimulationParams SimulationParams = new SimulationParams();
 
@@ -152,6 +152,13 @@ namespace KerbalConstructionTime
                 KCTDebug.Log("Reading from persistence.");
 
                 TechList.Updated += techListUpdated;
+
+                // Check for stating a new game
+                if (LoadedSaveVersion == -1)
+                {
+                    KCTGameStates.IsFirstStart = true;
+                    LoadedSaveVersion = KCTGameStates.VERSION;
+                }
 
                 bool foundStockKSC = false;
                 foreach (var ksc in KSCs)

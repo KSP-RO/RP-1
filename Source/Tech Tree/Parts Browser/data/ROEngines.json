@@ -2217,7 +2217,7 @@
         "spacecraft": "",
         "engine_config": "F1",
         "upgrade": false,
-        "entry_cost_mods": "F-1",
+        "entry_cost_mods": "F-1-1-5M",
         "identical_part_name": "F-1",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -2242,7 +2242,7 @@
         "spacecraft": "",
         "engine_config": "F1",
         "upgrade": false,
-        "entry_cost_mods": "F-1",
+        "entry_cost_mods": "F-1-1-5M",
         "identical_part_name": "F-1",
         "module_tags": [
             "EngineLiquidTurbo"

@@ -3095,7 +3095,7 @@
         "spacecraft": "",
         "engine_config": "F1",
         "upgrade": true,
-        "entry_cost_mods": "10000,F-1-1.5M",
+        "entry_cost_mods": "10000,F-1-1-5M",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3141,7 +3141,7 @@
         "spacecraft": "",
         "engine_config": "F1",
         "upgrade": true,
-        "entry_cost_mods": "150000, F-1-1.52M",
+        "entry_cost_mods": "150000, F-1-1-52M",
         "identical_part_name": "",
         "module_tags": []
     },

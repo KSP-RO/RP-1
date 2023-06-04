@@ -1126,14 +1126,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-SM-II
-			upgrade = RFTech-SM-III
-			upgrade = RFTech-SM-IV
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
@@ -3411,17 +3403,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
@@ -6578,11 +6559,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
@@ -6902,11 +6878,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
@@ -7226,11 +7197,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
@@ -7550,11 +7516,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE

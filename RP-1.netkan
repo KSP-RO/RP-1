@@ -7,7 +7,6 @@
 	"author"     : "RP-1 Group",
 	"$kref"      : "#/ckan/github/KSP-RO/RP-1",
 	"$vref"      : "#/ckan/ksp-avc",
-	"download"   : "https://github.com/KSP-RO/RP-0/releases/download/v1.13.2.0/RP-1-v1.13.2.0.zip",
 	"x_netkan_force_v": true,
 	"release_status" : "stable",
 	"resources": {

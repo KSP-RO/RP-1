@@ -45,17 +45,17 @@
 		{ "name" : "MechJebForAll" },
 		{ "name" : "NearFutureElectrical-DecayingRTGs" },
 		{ "name" : "KRASH" },
-        {
-            "name": "ROCapsules",
+		{
+			"name": "ROCapsules",
 			"max_version" : "v1.99.0.0"
-        },
-        {
-            "name": "ROEngines",
+		},
+		{
+			"name": "ROEngines",
 			"max_version" : "v1.99.0.0"
-        },
-        {
-            "name": "ROSolar",
+		},
+		{
+			"name": "ROSolar",
 			"max_version" : "v1.99.0.0"
-        }
+		}
 	]
 }

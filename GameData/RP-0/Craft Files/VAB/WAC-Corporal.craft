@@ -3540,7 +3540,7 @@ PART
 		}
 		TANK
 		{
-			name = Aniline22
+			name = ANFA22
 			note = 
 			utilization = 1
 			mass = 0.000159999996
@@ -3639,7 +3639,7 @@ PART
 	}
 	RESOURCE
 	{
-		name = Aniline22
+		name = ANFA22
 		amount = 50.652167124068264
 		maxAmount = 50.652167124068264
 		flowState = True

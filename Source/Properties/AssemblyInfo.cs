@@ -38,14 +38,14 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("@ASSEMBLYINFORMATIONALVERSION@")]
 [assembly: KSPAssembly("RP-0", @MAJOR@, @MINOR@)]
 #else
-[assembly: AssemblyFileVersion("1.11.2.0")]
-[assembly: AssemblyInformationalVersion("1.11.2.0")]
+[assembly: AssemblyFileVersion("2.0.0.0")]
+[assembly: AssemblyInformationalVersion("2.0.0.0")]
 [assembly: KSPAssembly("RP-0", 2, 0)]
 #endif
 
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]
-[assembly: KSPAssemblyDependency("RealFuels", 15, 2)]
+[assembly: KSPAssemblyDependency("RealFuels", 15, 4)]
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]
-[assembly: KSPAssemblyDependency("ContractConfigurator", 2, 0)]
+[assembly: KSPAssemblyDependency("ContractConfigurator", 2, 6)]
 [assembly: KSPAssemblyDependency("ToolbarController", 1, 0)]
 [assembly: KSPAssemblyDependency("KSPCommunityFixes", 1, 22, 1)]

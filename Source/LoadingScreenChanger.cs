@@ -263,7 +263,7 @@ namespace RP0
 
                 texture.LoadRawTextureData(dxtBytes);
 
-                texture.name = path.Substring(path.IndexOf("RP-0"));
+                texture.name = path.Substring(path.IndexOf("RP-1"));
 
                 texture.Apply(false, true);
 

@@ -118,7 +118,7 @@ namespace KerbalConstructionTime
         {
             PresetPaths.Clear();
 
-            var dir = new DirectoryInfo(KSPUtil.ApplicationRootPath + "GameData/RP-0/KCT_Presets");
+            var dir = new DirectoryInfo(KSPUtil.ApplicationRootPath + "GameData/RP-1/KCT_Presets");
             if (dir.Exists)
             {
                 //Add all the files in the folder

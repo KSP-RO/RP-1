@@ -14,7 +14,7 @@ namespace RP0.Crew
         private Vector2 _courseSelectorScroll = new Vector2();
         private GUIStyle _courseBtnStyle = null;
         private GUIStyle _tempCourseLblStyle = null;
-        private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/KACIcon15", false), "Add alarm");
+        private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/KACIcon15", false), "Add alarm");
 
         protected void RenderNautListHeading()
         {

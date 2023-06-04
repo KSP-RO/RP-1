@@ -44,10 +44,10 @@ namespace KerbalConstructionTime
                     _offset += 46;
                 var btn = new GUI_DevPartsButton(_offset)
                 {
-                    DefaultTexturePath = "GameData/RP-0/PluginData/Icons/KCT_dev_parts_off",
-                    DefaultHovTexturePath = "GameData/RP-0/PluginData/Icons/KCT_dev_parts_off",
-                    OnTexturePath = "GameData/RP-0/PluginData/Icons/KCT_dev_parts_on",
-                    OnHovTexturePath = "GameData/RP-0/PluginData/Icons/KCT_dev_parts_on",
+                    DefaultTexturePath = "GameData/RP-1/PluginData/Icons/KCT_dev_parts_off",
+                    DefaultHovTexturePath = "GameData/RP-1/PluginData/Icons/KCT_dev_parts_off",
+                    OnTexturePath = "GameData/RP-1/PluginData/Icons/KCT_dev_parts_on",
+                    OnHovTexturePath = "GameData/RP-1/PluginData/Icons/KCT_dev_parts_on",
                     TooltipDefaultText = "Show Experimental parts",
                     TooltipOnText = "Hide Experimental parts",
                     IsOn = KerbalConstructionTimeData.Instance.ExperimentalPartsEnabled
@@ -61,10 +61,10 @@ namespace KerbalConstructionTime
                 {
                     TooltipDefaultText = "Switch to Administration Building",
                     TooltipOnText = "Switch to Mission Control",
-                    DefaultTexturePath = "GameData/RP-0/PluginData/Icons/adm",
-                    DefaultHovTexturePath = "GameData/RP-0/PluginData/Icons/adm_hov",
-                    OnTexturePath = "GameData/RP-0/PluginData/Icons/mc",
-                    OnHovTexturePath = "GameData/RP-0/PluginData/Icons/mc_hov"
+                    DefaultTexturePath = "GameData/RP-1/PluginData/Icons/adm",
+                    DefaultHovTexturePath = "GameData/RP-1/PluginData/Icons/adm_hov",
+                    OnTexturePath = "GameData/RP-1/PluginData/Icons/mc",
+                    OnHovTexturePath = "GameData/RP-1/PluginData/Icons/mc_hov"
                 };
                 btn.Init();
                 _buttons.Add(btn);

@@ -45,7 +45,7 @@ namespace RP0.UI
             GameObject.Destroy(confidenceWidgetObj.GetComponent<ReputationWidget>());
 
             var frameImage = (Image)confidenceWidgetObj.GetComponentInChildren(typeof(Image));
-            frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-0/Resources/confidence_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
+            frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-1/Resources/confidence_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
 
             var img = GameObject.Instantiate(new GameObject("Background"), confidenceWidgetObj.transform, worldPositionStays: false).AddComponent<Image>();
             img.color = new Color32(58, 58, 63, 255);

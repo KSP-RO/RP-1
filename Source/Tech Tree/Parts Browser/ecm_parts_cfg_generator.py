@@ -16,7 +16,7 @@ tree_ecm_parts_header = """
 {
 """
 
-output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-0/Tree/")
+output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-1/Tree/")
 module_part_config_template = Template("    ${name} = ${ecm}\n")
 tree_ecm_parts_footer = "}"
 

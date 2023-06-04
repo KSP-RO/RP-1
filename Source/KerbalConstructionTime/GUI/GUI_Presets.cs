@@ -265,7 +265,7 @@ namespace KerbalConstructionTime
 
                 _toSave.AllowDeletion = true;
 
-                _toSave.SaveToFile(KSPUtil.ApplicationRootPath + "/GameData/RP-0/KCT_Presets/" + _toSave.ShortName+".cfg");
+                _toSave.SaveToFile(KSPUtil.ApplicationRootPath + "/GameData/RP-1/KCT_Presets/" + _toSave.ShortName+".cfg");
                 GUIStates.ShowPresetSaver = false;
                 PresetManager.Instance.FindPresetFiles();
                 PresetManager.Instance.LoadPresets();

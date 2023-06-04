@@ -13,7 +13,7 @@ identical_parts_header = """
 //*********************************************************************************************
 """
 
-output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-0/Tree/")
+output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-1/Tree/")
 identical_part_template = Template("@PART[${name}]:FOR[xxxRP0] { %identicalParts = ${identical_parts} }\n")
 
 def generate_identical_parts(parts):

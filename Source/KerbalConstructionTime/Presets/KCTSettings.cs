@@ -6,7 +6,7 @@ namespace KerbalConstructionTime
     public class KCTSettings
     {
         private const string _fileName = "KCT_Config.txt";
-        private readonly string _directory = KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/";
+        private readonly string _directory = KSPUtil.ApplicationRootPath + "GameData/RP-1/PluginData/";
 
         [Persistent]
         public int MaxTimeWarp;

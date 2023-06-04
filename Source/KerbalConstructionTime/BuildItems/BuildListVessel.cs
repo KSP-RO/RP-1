@@ -408,7 +408,7 @@ namespace KerbalConstructionTime
         private ConfigNode SanitizeShipNode(ConfigNode node)
         {
             //PART, MODULE -> clean experiments, repack chutes, disable engines
-            string filePath = $"{KSPUtil.ApplicationRootPath}GameData/RP-0/KCT/KCT_ModuleTemplates.cfg";
+            string filePath = $"{KSPUtil.ApplicationRootPath}GameData/RP-1/KCT/KCT_ModuleTemplates.cfg";
             ConfigNode ModuleTemplates = ConfigNode.Load(filePath);
             ConfigNode[] templates = ModuleTemplates.GetNodes("MODULE");
 

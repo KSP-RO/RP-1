@@ -137,7 +137,7 @@ namespace RP0
             {
                 if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IncludeCraftFiles)
                 {
-                    string rp1ShipsPath = $"{KSPUtil.ApplicationRootPath}GameData/RP-0/Craft Files/";
+                    string rp1ShipsPath = $"{KSPUtil.ApplicationRootPath}GameData/RP-1/Craft Files/";
                     string saveShipsPath = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/";
                     var subfolders = new[] { "SPH/", "VAB/" };
                     foreach (string sf in subfolders)

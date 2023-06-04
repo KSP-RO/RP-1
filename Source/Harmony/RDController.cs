@@ -120,9 +120,9 @@ namespace RP0.Harmony
                 if (state.name != "purchase")
                     continue;
 
-                state.normal = ReplaceSprite(state.normal, "RP-0/Resources/research_cancel_normal", SpriteMeshType.FullRect);
-                state.pressed = ReplaceSprite(state.pressed, "RP-0/Resources/research_cancel_pressed", SpriteMeshType.FullRect);
-                state.highlight = ReplaceSprite(state.highlight, "RP-0/Resources/research_cancel_highlight", SpriteMeshType.FullRect);
+                state.normal = ReplaceSprite(state.normal, "RP-1/Resources/research_cancel_normal", SpriteMeshType.FullRect);
+                state.pressed = ReplaceSprite(state.pressed, "RP-1/Resources/research_cancel_pressed", SpriteMeshType.FullRect);
+                state.highlight = ReplaceSprite(state.highlight, "RP-1/Resources/research_cancel_highlight", SpriteMeshType.FullRect);
             }
         }
     }

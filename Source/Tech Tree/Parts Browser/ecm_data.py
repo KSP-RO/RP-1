@@ -5,7 +5,7 @@ from os import listdir
 from os.path import isfile, join
 import os
 
-output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-0/Tree/")
+output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-1/Tree/")
 
 class ECMNodeEncoder(json.JSONEncoder):
      def default(self, obj):

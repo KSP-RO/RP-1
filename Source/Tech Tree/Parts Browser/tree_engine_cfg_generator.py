@@ -2,7 +2,7 @@ import os
 import part_data
 from string import Template
 
-output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-0/Tree/")
+output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-1/Tree/")
 
 tree_engine_header = """
 //*********************************************************************************************

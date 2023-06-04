@@ -24,7 +24,7 @@ namespace KerbalConstructionTime
         private static FieldInfo _fiTLSettingsDisabled;
 
         private static DateTime _startedFlashing;
-        internal const string _iconPath = "RP-0/PluginData/Icons/";
+        internal const string _iconPath = "RP-1/PluginData/Icons/";
         internal const string _icon_KCT_Off_24 = _iconPath + "KCT_off-24";
         internal const string _icon_KCT_Off_38 = _iconPath + "KCT_off-38";
         internal const string _icon_KCT_On_24 = _iconPath + "KCT_on-24";

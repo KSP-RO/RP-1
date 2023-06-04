@@ -61,7 +61,7 @@ namespace RP0.Harmony
                 }
                 else
                 {
-                    string tName = $"RP-0/Programs/{p.name}";
+                    string tName = $"RP-1/Programs/{p.name}";
                     if (GameDatabase.Instance.ExistsTexture(tName))
                         node.AddValue("icon", tName);
                 }

@@ -23,7 +23,7 @@ namespace KerbalConstructionTime
 
     public class GUIDataSaver
     {
-        protected string filePath = KSPUtil.ApplicationRootPath + "GameData/RP-0/PluginData/KCT_Windows.txt";
+        protected string filePath = KSPUtil.ApplicationRootPath + "GameData/RP-1/PluginData/KCT_Windows.txt";
         [Persistent] GUIPosition editorPositionSaved, buildListPositionSaved, editorBuildListPositionSaved;
 
         public void Save()

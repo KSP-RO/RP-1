@@ -91,7 +91,7 @@ namespace RP0
                 null,
                 null,
                 ApplicationLauncher.AppScenes.ALWAYS & ~ApplicationLauncher.AppScenes.MAINMENU,
-                GameDatabase.Instance.GetTexture("RP-0/maintecost", false));
+                GameDatabase.Instance.GetTexture("RP-1/maintecost", false));
         }
     }
 }

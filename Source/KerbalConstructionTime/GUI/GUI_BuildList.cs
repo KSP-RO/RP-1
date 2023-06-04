@@ -101,17 +101,17 @@ namespace KerbalConstructionTime
             _greenButton.hover.textColor = Color.green;
             _greenButton.active.textColor = Color.green;
 
-            _airlaunchTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_airlaunch16", false));
-            _constructTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_construct16", false));
-            _planeTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_flight16", false));
-            _hangarTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_hangar16", false));
-            _recoveryTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_landing16", false));
-            _reconTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_recon16", false));
-            _rocketTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rocket16", false));
-            _rollbackTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rollback16", false));
-            _rolloutTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_rollout16", false));
-            _settingsTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_settings16", false));
-            _techTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-0/Resources/KCT_tech16", false));
+            _airlaunchTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_airlaunch16", false));
+            _constructTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_construct16", false));
+            _planeTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_flight16", false));
+            _hangarTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_hangar16", false));
+            _recoveryTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_landing16", false));
+            _reconTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_recon16", false));
+            _rocketTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_rocket16", false));
+            _rollbackTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_rollback16", false));
+            _rolloutTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_rollout16", false));
+            _settingsTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_settings16", false));
+            _techTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_tech16", false));
         }
 
         public static void DrawBuildListWindow(int windowID)

@@ -9,8 +9,8 @@ namespace RP0
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     class LoadingScreenChanger : MonoBehaviour
     {
-        public const string TipFilePath = @"GameData/RP-0/PluginData/LoadingScreenTips.txt";
-        public const string ScreenshotsFolderPath = @"GameData/RP-0/PluginData/Screens";
+        public const string TipFilePath = @"GameData/RP-1/PluginData/LoadingScreenTips.txt";
+        public const string ScreenshotsFolderPath = @"GameData/RP-1/PluginData/Screens";
 
         protected bool done = false;
 
@@ -76,7 +76,7 @@ namespace RP0
                 }
                 else
                 {
-                    Debug.LogError("[RP-0] No screens found in RP-0/PluginData/Screens!");
+                    Debug.LogError("[RP-0] No screens found in RP-1/PluginData/Screens!");
                 }
             }
             catch (Exception ex)

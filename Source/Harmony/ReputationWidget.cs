@@ -38,7 +38,7 @@ namespace RP0.Harmony
             ConfidenceWidget.CreateConfidenceWidget(GameObject.Instantiate(__instance.gameObject, __instance.transform.parent, worldPositionStays: false));
 
             var frameImage = (Image)__instance.gameObject.GetComponentInChildren(typeof(Image));
-            frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-0/Resources/rep_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
+            frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-1/Resources/rep_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
 
             var img = GameObject.Instantiate(new GameObject("repBackground"), __instance.transform, worldPositionStays: false).AddComponent<Image>();
             img.color = new Color32(58, 58, 63, 255);

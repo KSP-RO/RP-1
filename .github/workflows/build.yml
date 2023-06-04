@@ -70,7 +70,7 @@ jobs:
       - name: Build metadata
         uses: KSP-RO/BuildTools/update-version-file@master
         with:
-          path: ${GITHUB_WORKSPACE}/GameData/RP-0/RP-1.version
+          path: ${GITHUB_WORKSPACE}/GameData/RP-1/RP-1.version
           tag: "v2.0.0.0"
 
       - name: Assemble release
@@ -81,7 +81,7 @@ jobs:
           mkdir -v "${RELEASE_DIR}"
           echo "::set-output name=release-dir::${RELEASE_DIR}"
           cp -v -R "${GITHUB_WORKSPACE}/GameData" "${RELEASE_DIR}"
-          cp -v -R "${GITHUB_WORKSPACE}/LICENSE.md" "${RELEASE_DIR}/GameData/RP-0/LICENSE.md"
+          cp -v -R "${GITHUB_WORKSPACE}/LICENSE.md" "${RELEASE_DIR}/GameData/RP-1/LICENSE.md"
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v1

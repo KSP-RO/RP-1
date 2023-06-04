@@ -17,7 +17,7 @@
 		{ "name" : "ModuleManager" },
 		{
 			"name" : "RealismOverhaul",
-			"min_version" : "v16.0.0.0"
+			"min_version" : "v15.0.0.0"
 		},
 		{ "name" : "SXTContinued" },
 		{ "name" : "ContractConfigurator" },
@@ -47,15 +47,15 @@
 		{ "name" : "KRASH" },
 		{
 			"name": "ROCapsules",
-			"max_version" : "v1.99.0.0"
+			"max_version" : "v0.99.0.0"
 		},
 		{
 			"name": "ROEngines",
-			"max_version" : "v1.99.0.0"
+			"max_version" : "v0.99.0.0"
 		},
 		{
 			"name": "ROSolar",
-			"max_version" : "v1.99.0.0"
+			"max_version" : "v0.99.0.0"
 		}
 	],
 	"install": [

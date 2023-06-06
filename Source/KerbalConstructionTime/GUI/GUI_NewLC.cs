@@ -80,9 +80,14 @@ namespace KerbalConstructionTime
             else
             {
                 _newLCData.Name = _newName = lc.Name;
-                if (lc.LCType == LaunchComplexType.Pad)
+                _newLCData.massOrig = lc.Stats.massOrig;
+                _newLCData.lcType = lc.LCType;
+                if (_newLCData.lcType != LaunchComplexType.Pad)
                 {
-                    _newLCData.massOrig = lc.MassOrig;
+                    _newLCData.massMax = lc.Stats.massMax;
+                }
+                else
+                {
                     _newLCData.massMax = Mathf.Ceil(blv.mass * 1.1f);
 
                     if (_newLCData.massMax > _newLCData.MaxPossibleMass)

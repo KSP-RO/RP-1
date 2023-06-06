@@ -433,7 +433,7 @@ namespace RP0.ProceduralAvionics
         [KSPEvent]
         public void OnPartVolumeChanged(BaseEventDetails eventData)
         {
-            if (!HighLogic.LoadedSceneIsEditor) return;
+            if (!HighLogic.LoadedSceneIsEditor || !_started) return;
 
             Profiler.BeginSample("RP0ProcAvi OnPartVolumeChanged");
             float volume = (float)eventData.Get<double>("newTotalVolume");

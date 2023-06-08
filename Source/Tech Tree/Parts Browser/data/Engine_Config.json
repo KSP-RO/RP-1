@@ -16637,7 +16637,7 @@
         "description": "",
         "mod": "Engine_Config",
         "cost": "0",
-        "entry_cost": "0",
+        "entry_cost": "1",
         "category": "ORBITAL",
         "info": "",
         "year": "0",
@@ -16650,7 +16650,7 @@
         "spacecraft": "WAC-Corporal",
         "engine_config": "Aerobee",
         "upgrade": false,
-        "entry_cost_mods": "0",
+        "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": []
     },

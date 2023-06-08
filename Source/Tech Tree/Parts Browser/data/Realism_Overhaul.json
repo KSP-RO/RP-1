@@ -547,9 +547,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, solarTL0, solarDeployable",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "ROAdvCapsule",
@@ -1179,9 +1177,7 @@
         "upgrade": false,
         "entry_cost_mods": "5000, solarTL6, solarFolding, solarTracking",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "sepMotorLarge",
@@ -1252,8 +1248,6 @@
         "upgrade": false,
         "entry_cost_mods": "500, solarTL4",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     }
 ]

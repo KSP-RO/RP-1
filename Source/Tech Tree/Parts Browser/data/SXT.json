@@ -2613,9 +2613,7 @@
         "upgrade": false,
         "entry_cost_mods": "3000, solarTL6, solarFolding",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "SXTsolarPanelhex",
@@ -2638,8 +2636,6 @@
         "upgrade": false,
         "entry_cost_mods": "500, solarTL6",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     }
 ]

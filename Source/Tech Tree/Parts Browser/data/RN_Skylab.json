@@ -135,8 +135,7 @@
         "upgrade": false,
         "entry_cost_mods": "25000, solarTL6, solarFolding",
         "identical_part_name": "",
-        "module_tags":
-        [
+        "module_tags": [
             "Instruments"
         ]
     },
@@ -260,9 +259,7 @@
         "upgrade": false,
         "entry_cost_mods": "8000, solarTL6, solarFolding, solarShielding",
         "identical_part_name": "Skylab Solarpanel",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "sl_right_panel",
@@ -285,8 +282,6 @@
         "upgrade": false,
         "entry_cost_mods": "8000, solarTL6, solarFolding, solarShielding",
         "identical_part_name": "Skylab Solarpanel",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     }
 ]

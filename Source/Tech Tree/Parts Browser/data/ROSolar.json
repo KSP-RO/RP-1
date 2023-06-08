@@ -18,9 +18,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, solarTL5",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "ROS-FoldingSolarPanel",
@@ -43,9 +41,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, solarTL4, solarFolding, solarTracking",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "ROS-HingedSolarPanel",
@@ -68,9 +64,7 @@
         "upgrade": false,
         "entry_cost_mods": "1000, solarTL0, solarDeployable",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     },
     {
         "name": "ROS-StaticSolarPanel",
@@ -93,8 +87,6 @@
         "upgrade": false,
         "entry_cost_mods": "100, solarTL0",
         "identical_part_name": "",
-        "module_tags":
-        [
-        ]
+        "module_tags": []
     }
 ]

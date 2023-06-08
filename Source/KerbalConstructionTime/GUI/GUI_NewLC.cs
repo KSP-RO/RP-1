@@ -499,7 +499,15 @@ namespace KerbalConstructionTime
                             lc = activeLC;
                             Utilities.ChangeEngineers(lc, -lc.Engineers);
                             KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
-                            
+                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                             new Vector2(0.5f, 0.5f),
+                                             "LCModifyStart",
+                                             "Renovation Begun",
+                                             $"All engineers at {_newLCData.Name} have been unassigned. Remember to reassign engineers to {_newLCData.Name} when it finishes renovation.",
+                                             KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
+                                             true,
+                                             HighLogic.UISkin);
+
                             // We have to update any ongoing pad constructions too
                             foreach (var pc in lc.PadConstructions)
                             {

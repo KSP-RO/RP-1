@@ -304,13 +304,7 @@ namespace KerbalConstructionTime
             {
                 stages.Add(p.inverseStageIndex);
 
-                if (p.partPrefab != null)
-                {
-                    if (Utilities.IsClamp(p.partPrefab))
-                        continue;
-                }
-
-                if (p.parent != null && p.parent.partPrefab != null && p.parent.partPrefab.HasTag("PadInfrastructure"))
+                if (p.IsClampOrChild())
                     continue;
 
                 mass += p.mass;

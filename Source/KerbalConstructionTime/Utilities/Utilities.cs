@@ -110,6 +110,16 @@ namespace KerbalConstructionTime
             return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag("PadInfrastructure");
         }
 
+        public static bool IsClampOrChild(this ProtoPartSnapshot p)
+        {
+            return IsClamp(p.partPrefab) || (p.parent != null && IsClampOrChild(p.parent));
+        }
+
+        public static bool IsClampOrChild(this Part p)
+        {
+            return IsClamp(p) || (p.parent != null && IsClampOrChild(p.parent));
+        }
+
         public static float GetTotalVesselCost(ProtoVessel vessel, bool includeFuel = true)
         {
             float total = 0, totalDry = 0;
@@ -196,9 +206,7 @@ namespace KerbalConstructionTime
 
                 if (excludeClamps)
                 {
-                    if (IsClamp(part))
-                        continue;
-                    if (part.parent != null && part.parent.HasTag("PadInfrastructure"))
+                    if (part.IsClampOrChild())
                         continue;
                 }
 
@@ -237,9 +245,7 @@ namespace KerbalConstructionTime
                 p = ship.parts[i];
                 if (excludeClamps)
                 {
-                    if (IsClamp(p))
-                        continue;
-                    if (p.parent != null && p.parent.HasTag("PadInfrastructure"))
+                    if (p.IsClampOrChild())
                         continue;
                 }
 

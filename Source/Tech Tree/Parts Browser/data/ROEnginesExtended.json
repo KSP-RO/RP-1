@@ -299,7 +299,7 @@
         "spacecraft": "",
         "engine_config": "ISE100",
         "upgrade": false,
-        "entry_cost_mods": "ISE-100 (445N)",
+        "entry_cost_mods": "ISE-100",
         "identical_part_name": "ISE100",
         "module_tags": [
             "EngineLiquidPF",

@@ -93,6 +93,11 @@ namespace RP0.DataTypes
             {
                 TKey key = (TKey)FieldData.ReadValue(v.name, _KeyDataType, _KeyType);
                 TValue value = (TValue)FieldData.ReadValue(v.value, _ValueDataType, _ValueType);
+                if (ContainsKey(key))
+                {
+                    UnityEngine.Debug.LogError($"PersistentDictionary: Contains key {key}");
+                    Remove(key);
+                }
                 Add(key, value);
             }
         }

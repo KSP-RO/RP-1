@@ -86,7 +86,7 @@ namespace KerbalConstructionTime
             }
 
             KerbalConstructionTime.NodeTypes.Clear();
-            ConfigNode typeNode = GameDatabase.Instance.GetConfigNode("KCT_TECH_NODE_TYPES");
+            ConfigNode typeNode = GameDatabase.Instance.GetConfigNodes("KCT_TECH_NODE_TYPES")?.FirstOrDefault();
             if (typeNode != null)
                 KerbalConstructionTime.NodeTypes.Load(typeNode);
         }

@@ -31,24 +31,26 @@ namespace KerbalConstructionTime
         Hydrolox = 1 << 9,
         RocketEngines = 1 << 10,
         Staged = 1 << 11,
-        LiquidEngines = Hydrolox | RocketEngines | Staged,
+        FRSC = 1 << 12,
+        AllStaged = Staged | FRSC,
+        LiquidEngines = Hydrolox | RocketEngines | AllStaged,
 
-        Solid = 1 << 12,
+        Solid = 1 << 13,
         NTR = 1 << 14,
-        Ion = 1 << 13,
+        Ion = 1 << 15,
         Propulsion = LiquidEngines | NTR | Ion,
         
-        LifeSupport = 1 << 15,
+        LifeSupport = 1 << 16,
 
-        Nuclear = 1 << 16,
-        Power = 1 << 17,
+        Nuclear = 1 << 17,
+        Power = 1 << 18,
         Electricity = Nuclear | Power,
 
-        Comms = 1 << 18,
+        Comms = 1 << 19,
 
-        Avionics = 1 << 19,
+        Avionics = 1 << 20,
 
-        Science = 1 << 20,
+        Science = 1 << 21,
 
         Any = ~0,
     }

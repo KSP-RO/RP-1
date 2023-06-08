@@ -5563,7 +5563,7 @@
         "spacecraft": "",
         "engine_config": "RD270",
         "upgrade": false,
-        "entry_cost_mods": "RD-270",
+        "entry_cost_mods": "RD-270-8D420",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -5577,7 +5577,7 @@
         "cost": "4500",
         "entry_cost": "0",
         "category": "STAGED",
-        "info": "",
+        "info": "Deprecated",
         "year": "1974",
         "technology": "stagedCombustion1972",
         "ro": true,
@@ -5586,7 +5586,7 @@
         "spacecraft": "",
         "engine_config": "RD270M",
         "upgrade": false,
-        "entry_cost_mods": "RD-270M",
+        "entry_cost_mods": "RD-270M-8D420M",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

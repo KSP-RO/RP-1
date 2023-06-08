@@ -59,7 +59,6 @@
     <Content Include="..\GameData\RP-1\ProgramHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-1\RealFuelsSettings.cfg" />
     <Content Include="..\GameData\RP-1\ResourceCosts.cfg" />
-    <Content Include="..\GameData\RP-1\TestFlightInterop.cfg" />
     <Content Include="..\GameData\RP-1\TestFlightRnD.cfg" />
     <Content Include="..\GameData\RP-1\ToolingDefinitions.cfg" />
     <Content Include="..\GameData\RP-1\zFinal.cfg" />
@@ -624,9 +623,6 @@
     </Content>
     <Content Include="..\GameData\RP-1\Parts\HumanRatedFlag.cfg">
       <Link>Parts\HumanRatedFlag.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Parts\ProcFairingFix.cfg">
-      <Link>Parts\ProcFairingFix.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Parts\RFProcTanks.cfg">
       <Link>Parts\RFProcTanks.cfg</Link>

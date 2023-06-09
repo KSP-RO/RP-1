@@ -27,7 +27,7 @@ namespace RP0.Harmony
         {
             return Localizer.Format("#rp0_Widgets_Science_Tooltip",
                                     System.Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal).ToString("N1"),
-                                    UnlockSubsidyHandler.Instance.TotalSubsidy.ToString("N0"));
+                                    UnlockSubsidyHandler.Instance.TotalCredit.ToString("N0"));
         }
     }
 }

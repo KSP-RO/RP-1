@@ -169,17 +169,17 @@ namespace KerbalConstructionTime
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds);
 
-            double subsidy = UnlockSubsidyHandler.Instance.GetSubsidyAmount(partList);
+            double credit = UnlockSubsidyHandler.Instance.GetCreditAmount(partList);
 
-            double spentSubsidy = Math.Min(postCMQUnlockCost, subsidy);
-            double postSubsidyTotal = postCMQUnlockCost - spentSubsidy;
-            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentSubsidy);
+            double spentCredit = Math.Min(postCMQUnlockCost, credit);
+            double postCreditTotal = postCMQUnlockCost - spentCredit;
+            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentCredit);
 
             int partCount = purchasableParts.Count();
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{postSubsidyTotal:N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentSubsidy:N0} subsidy)", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{postCreditTotal:N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} credit)", () =>
                 {
                     if (cmq.CanAfford())
                     {
@@ -375,9 +375,9 @@ namespace KerbalConstructionTime
                         string costStr = cmq.GetCostLineOverride(true, false, false, true);
                         double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds);
                         double invertCMQOp = error.CostToResolve / trueTotal;
-                        double subsidyAmtToUse = Math.Min(trueTotal, UnlockSubsidyHandler.Instance.GetSubsidyAmount(error.TechToResolve));
-                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidyAmtToUse);
-                        string costAfterSubsidyStr = $"{cmq.GetCostLine(true, false, true, true)} after subsidy";
+                        double creditAmtToUse = Math.Min(trueTotal, UnlockSubsidyHandler.Instance.GetCreditAmount(error.TechToResolve));
+                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, creditAmtToUse);
+                        string costAfterCreditStr = $"{cmq.GetCostLine(true, false, true, true)} after credit";
                         var button = new DialogGUIButtonWithTooltip($"Unlock ({costStr})",
                                                          () =>
                                                          {
@@ -386,7 +386,7 @@ namespace KerbalConstructionTime
                                                          },
                                                          () => cmq.CanAfford(),
                                                          100, -1, true)
-                                                            { tooltipText = costAfterSubsidyStr };
+                                                            { tooltipText = costAfterCreditStr };
                         list.Add(new DialogGUIHorizontalLayout(TextAnchor.MiddleLeft,
                                      new DialogGUILabel("<color=green><size=20>•</size></color>", 7),
                                      new DialogGUILabel(txt, expandW: true),

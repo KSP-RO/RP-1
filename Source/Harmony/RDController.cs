@@ -23,16 +23,16 @@ namespace RP0.Harmony
         internal static void Postfix_ShowNodePanel(RDController __instance, RDNode node)
         {
             string techID = node.tech.techID;
-            bool showSubsidy = node.tech.state == RDTech.State.Available;
+            bool showCredit = node.tech.state == RDTech.State.Available;
             int techItemIndex = -1;
-            bool showProgress = !showSubsidy && (techItemIndex = KerbalConstructionTimeData.Instance.TechListIndex(techID)) != -1;
-            showSubsidy |= showProgress;
+            bool showProgress = !showCredit && (techItemIndex = KerbalConstructionTimeData.Instance.TechListIndex(techID)) != -1;
+            showCredit |= showProgress;
             string extraText;
-            if (showSubsidy)
+            if (showCredit)
             {
-                extraText = Localizer.Format("#rp0_UnlockSubsidy_NodeInfo",
-                    UnlockSubsidyHandler.Instance.GetLocalSubsidyAmount(node.tech.techID).ToString("N0"),
-                    UnlockSubsidyHandler.Instance.GetSubsidyAmount(node.tech.techID).ToString("N0")) + "\n";
+                extraText = Localizer.Format("#rp0_UnlockCredit_NodeInfo",
+                    UnlockSubsidyHandler.Instance.GetLocalCreditAmount(node.tech.techID).ToString("N0"),
+                    UnlockSubsidyHandler.Instance.GetCreditAmount(node.tech.techID).ToString("N0")) + "\n";
             }
             else
             {
@@ -52,7 +52,7 @@ namespace RP0.Harmony
                     (item.GetFractionComplete() * 100d).ToString("N0"),
                     KerbalConstructionTime.Utilities.GetColonFormattedTime(item.GetTimeLeftEst(prevTime), prevTime, false)) + "\n";
             }
-            if (showSubsidy || showProgress)
+            if (showCredit || showProgress)
                 extraText += "\n";
 
             __instance.node_description.text = extraText + __instance.node_description.text;

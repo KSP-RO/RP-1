@@ -8,7 +8,7 @@ namespace RP0
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class UnlockSubsidyHandler : ScenarioModule
     {
-        public class UnlockSubsidyNode
+        public class UnlockCreditNode
         {
             [Persistent]
             public string tech;
@@ -16,9 +16,9 @@ namespace RP0
             [Persistent]
             public double funds;
 
-            public UnlockSubsidyNode() { }
+            public UnlockCreditNode() { }
 
-            public UnlockSubsidyNode(UnlockSubsidyNode src)
+            public UnlockCreditNode(UnlockCreditNode src)
             {
                 tech = src.tech;
                 funds = src.funds;
@@ -27,15 +27,15 @@ namespace RP0
 
         public static UnlockSubsidyHandler Instance { get; private set; }
 
-        private readonly Dictionary<string, UnlockSubsidyNode> _subsidyStorage = new Dictionary<string, UnlockSubsidyNode>();
+        private readonly Dictionary<string, UnlockCreditNode> _creditStorage = new Dictionary<string, UnlockCreditNode>();
         private static readonly Dictionary<string, double> _cacheDict = new Dictionary<string, double>();
 
-        public double TotalSubsidy
+        public double TotalCredit
         {
             get
             {
                 double amt = 0;
-                foreach (var node in _subsidyStorage.Values)
+                foreach (var node in _creditStorage.Values)
                     amt += node.funds;
 
                 return amt;
@@ -47,32 +47,32 @@ namespace RP0
         /// </summary>
         /// <param name="tech"></param>
         /// <param name="UT"></param>
-        public void IncrementSubsidyTime(string tech, double UT) => IncrementSubsidy(tech, UT * MaintenanceHandler.Instance.ResearchSalaryPerDay / 86400d * MaintenanceHandler.Settings.researcherSalaryToUnlockSubsidy);
+        public void IncrementCreditTime(string tech, double UT) => IncrementCredit(tech, UT * MaintenanceHandler.Instance.ResearchSalaryPerDay / 86400d * MaintenanceHandler.Settings.researcherSalaryToUnlockCredit);
 
         /// <summary>
         /// Note this is CMQ-neutral.
         /// </summary>
         /// <param name="tech"></param>
         /// <param name="amount"></param>
-        public void IncrementSubsidy(string tech, double amount)
+        public void IncrementCredit(string tech, double amount)
         {
             // Will also catch NaN
             if (!(amount > 0))
                 return;
 
-            if (!_subsidyStorage.TryGetValue(tech, out var sNode))
+            if (!_creditStorage.TryGetValue(tech, out var sNode))
             {
-                sNode = new UnlockSubsidyNode() { tech = tech };
-                _subsidyStorage[tech] = sNode;
+                sNode = new UnlockCreditNode() { tech = tech };
+                _creditStorage[tech] = sNode;
             }
 
             sNode.funds += amount;
         }
 
-        public double GetLocalSubsidyAmount(string tech, Dictionary<string, UnlockSubsidyNode> dict = null)
+        public double GetLocalCreditAmount(string tech, Dictionary<string, UnlockCreditNode> dict = null)
         {
             if (dict == null)
-                dict = _subsidyStorage;
+                dict = _creditStorage;
 
             if (!dict.TryGetValue(tech, out var sNode))
                 return 0d;
@@ -80,15 +80,15 @@ namespace RP0
             return sNode.funds;
         }
 
-        public double GetSubsidyAmount(string tech, Dictionary<string, UnlockSubsidyNode> dict = null)
+        public double GetCreditAmount(string tech, Dictionary<string, UnlockCreditNode> dict = null)
         {
             if (tech == null)
                 return 0d;
 
             if (dict == null)
-                dict = _subsidyStorage;
+                dict = _creditStorage;
 
-            double amount = GetLocalSubsidyAmount(tech, dict);
+            double amount = GetLocalCreditAmount(tech, dict);
 
             List<string> parentList;
             if (!KerbalConstructionTimeData.techNameToParents.TryGetValue(tech, out parentList))
@@ -97,19 +97,19 @@ namespace RP0
                 return amount;
             }
             foreach (var parent in parentList)
-                amount += GetSubsidyAmount(parent, dict);
+                amount += GetCreditAmount(parent, dict);
 
             _cacheDict[tech] = amount;
             return amount;
         }
 
         // This is not optimal, but it's better than naive unsorted.
-        public double GetSubsidyAmount(List<AvailablePart> parts)
+        public double GetCreditAmount(List<AvailablePart> parts)
         {
-            double subsidyAmount = 0d;
-            var cloneDict = new Dictionary<string, UnlockSubsidyNode>();
-            foreach (var kvp in _subsidyStorage)
-                cloneDict.Add(kvp.Key, new UnlockSubsidyNode(kvp.Value));
+            double creditAmount = 0d;
+            var cloneDict = new Dictionary<string, UnlockCreditNode>();
+            foreach (var kvp in _creditStorage)
+                cloneDict.Add(kvp.Key, new UnlockCreditNode(kvp.Value));
 
 
             var partCostDict = new Dictionary<AvailablePart, double>();
@@ -124,18 +124,18 @@ namespace RP0
                         local = cost;
                     cost -= local;
                     sNode.funds -= local;
-                    subsidyAmount += local;
+                    creditAmount += local;
                 }
                 partCostDict[p] = cost;
             }
             foreach (var p in parts)
             {
                 double cost = partCostDict[p];
-                double excess = SpendSubsidy(p.TechRequired, cost, cloneDict);
-                subsidyAmount += (cost - excess);
+                double excess = SpendCredit(p.TechRequired, cost, cloneDict);
+                creditAmount += (cost - excess);
             }
 
-            return subsidyAmount;
+            return creditAmount;
         }
 
         private void FillECMs(string techID, string ecmName, Dictionary<string, double> ecmToCost, Dictionary<string, HashSet<string>> ecmToTech)
@@ -193,7 +193,7 @@ namespace RP0
             }
         }
 
-        public void SpendSubsidyAndCost(List<AvailablePart> parts)
+        public void SpendCreditAndCost(List<AvailablePart> parts)
         {
             // This is going to be expensive, because we have to chase down all the ECMs.
             double cmqMultiplier = -CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -1d);
@@ -211,12 +211,12 @@ namespace RP0
             foreach (var kvp in ecmToTech)
                 ecmToCost[kvp.Key] = ecmToCost[kvp.Key] * cmqMultiplier;
 
-            // first try to spend local subsidy in each case
+            // first try to spend local credit in each case
             foreach (var kvp in ecmToTech)
             {
                 foreach (string tech in kvp.Value)
                 {
-                    if (!_subsidyStorage.TryGetValue(tech, out var sNode))
+                    if (!_creditStorage.TryGetValue(tech, out var sNode))
                         continue;
 
                     double cost = ecmToCost[kvp.Key];
@@ -235,7 +235,7 @@ namespace RP0
                 }
             }
 
-            // Now pull full subsidy
+            // Now pull full credit
             foreach (var kvp in ecmToTech)
             {
                 foreach (string tech in kvp.Value)
@@ -246,7 +246,7 @@ namespace RP0
                     if (cost == 0d)
                         continue;
 
-                    ecmToCost[kvp.Key] = SpendSubsidy(tech, cost);
+                    ecmToCost[kvp.Key] = SpendCredit(tech, cost);
                 }
             }
 
@@ -259,14 +259,14 @@ namespace RP0
                 Funding.Instance.AddFunds(-totalCost * recipCMQMult, TransactionReasonsRP0.PartOrUpgradeUnlock.Stock());
         }
 
-        public double SpendSubsidy(string tech, double cost, Dictionary<string, UnlockSubsidyNode> dict = null)
+        public double SpendCredit(string tech, double cost, Dictionary<string, UnlockCreditNode> dict = null)
         {
-            double amount = GetSubsidyAmount(tech, dict);
+            double amount = GetCreditAmount(tech, dict);
             if (amount == 0d)
                 return cost;
 
             if (dict == null)
-                dict = _subsidyStorage;
+                dict = _creditStorage;
 
             double excessCost;
             if (amount < cost)
@@ -279,14 +279,14 @@ namespace RP0
                 excessCost = 0d;
             }
 
-            _SpendSubsidy(tech, cost, excessCost > 0d, dict);
+            _SpendCredit(tech, cost, excessCost > 0d, dict);
             return excessCost;
         }
 
-        private void _SpendSubsidy(string tech, double cost, bool spendAll, Dictionary<string, UnlockSubsidyNode> dict)
+        private void _SpendCredit(string tech, double cost, bool spendAll, Dictionary<string, UnlockCreditNode> dict)
         {
             if (dict == null)
-                dict = _subsidyStorage;
+                dict = _creditStorage;
 
             if (dict.TryGetValue(tech, out var sNode))
             {
@@ -324,41 +324,41 @@ namespace RP0
             {
                 foreach (var parent in parentList)
                 {
-                    _SpendSubsidy(parent, cost, true, dict);
+                    _SpendCredit(parent, cost, true, dict);
                 }
                 return;
             }
 
-            double parentSubsidyTotal = 0d;
+            double parentCreditTotal = 0d;
             foreach (var parent in parentList)
             {
                 double amount;
                 if (!_cacheDict.TryGetValue(parent, out amount))
                 {
-                    amount = GetSubsidyAmount(parent, dict);
+                    amount = GetCreditAmount(parent, dict);
                     _cacheDict[parent] = amount;
                 }
-                parentSubsidyTotal += amount;
+                parentCreditTotal += amount;
             }
 
-            if (parentSubsidyTotal > 0d)
+            if (parentCreditTotal > 0d)
             {
                 foreach (var parent in parentList)
                 {
-                    double portion = _cacheDict[parent] / parentSubsidyTotal * cost;
-                    _SpendSubsidy(parent, portion, false, dict);
+                    double portion = _cacheDict[parent] / parentCreditTotal * cost;
+                    _SpendCredit(parent, portion, false, dict);
                 }
             }
         }
 
         /// <summary>
-        /// Transforms entrycost to post-strategy entrycost, spends subsidy,
+        /// Transforms entrycost to post-strategy entrycost, spends credit,
         /// and returns remaining (unsubsidized) cost
         /// </summary>
         /// <param name="entryCost"></param>
         /// <param name="tech"></param>
         /// <returns></returns>
-        private float ProcessSubsidy(float entryCost, string tech)
+        private float ProcessCredit(float entryCost, string tech)
         {
             if (entryCost == 0f)
                 return 0f;
@@ -366,19 +366,19 @@ namespace RP0
             double postCMQCost = -CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -entryCost);
             if (double.IsNaN(postCMQCost))
             {
-                Debug.LogError("[RP-0] CMQ for a subsidy unlock returned NaN, ignoring and going back to regular cost.");
+                Debug.LogError("[RP-0] CMQ for a credit unlock returned NaN, ignoring and going back to regular cost.");
                 postCMQCost = entryCost;
             }
             else if (postCMQCost == 0d)
             {
-                Debug.LogError("[RP-0] CMQ for a subsidy unlock returned 0, not spending any subsidy.");
+                Debug.LogError("[RP-0] CMQ for a credit unlock returned 0, not spending any credit.");
                 return 0f;
             }
 
-            // Actually spend subsidy and get (post-effect) remainder
-            double remainingCost = SpendSubsidy(tech, postCMQCost);
+            // Actually spend credit and get (post-effect) remainder
+            double remainingCost = SpendCredit(tech, postCMQCost);
 
-            // Refresh description to show new subsidy remaining
+            // Refresh description to show new credit remaining
             if (KSP.UI.Screens.RDController.Instance != null)
                 KSP.UI.Screens.RDController.Instance.ShowNodePanel(KSP.UI.Screens.RDController.Instance.node_selected);
 
@@ -388,35 +388,35 @@ namespace RP0
 
         private void OnPartPurchased(AvailablePart ap)
         {
-            UnlockSubsidyUtility.StoredPartEntryCost = ap.entryCost;
+            UnlockCreditUtility.StoredPartEntryCost = ap.entryCost;
             if (ap.costsFunds)
             {
-                int remainingCost = (int)ProcessSubsidy(ap.entryCost, ap.TechRequired);
+                int remainingCost = (int)ProcessCredit(ap.entryCost, ap.TechRequired);
                 ap.SetEntryCost(remainingCost);
             }
         }
 
         private void OnPartUpgradePurchased(PartUpgradeHandler.Upgrade up)
         {
-            UnlockSubsidyUtility.StoredUpgradeEntryCost = up.entryCost;
-            float remainingCost = ProcessSubsidy(up.entryCost, up.techRequired);
+            UnlockCreditUtility.StoredUpgradeEntryCost = up.entryCost;
+            float remainingCost = ProcessCredit(up.entryCost, up.techRequired);
             up.entryCost = remainingCost;
         }
 
         public override void OnLoad(ConfigNode node)
         {
-            _subsidyStorage.Clear();
+            _creditStorage.Clear();
             foreach (var cn in node.GetNodes("UnlockSubsidyNode"))
             {
-                var sNode = new UnlockSubsidyNode();
+                var sNode = new UnlockCreditNode();
                 ConfigNode.LoadObjectFromConfig(sNode, cn);
-                _subsidyStorage[sNode.tech] = sNode;
+                _creditStorage[sNode.tech] = sNode;
             }
         }
 
         public override void OnSave(ConfigNode node)
         {
-            foreach (var sNode in _subsidyStorage.Values)
+            foreach (var sNode in _creditStorage.Values)
             {
                 var cn = node.AddNode("UnlockSubsidyNode");
                 ConfigNode.CreateConfigFromObject(sNode, cn);
@@ -451,7 +451,7 @@ namespace RP0
     }
 
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
-    public class UnlockSubsidyUtility : MonoBehaviour
+    public class UnlockCreditUtility : MonoBehaviour
     {
         public static float StoredUpgradeEntryCost = -1f;
         public static int StoredPartEntryCost = -1;

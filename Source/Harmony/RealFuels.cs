@@ -71,14 +71,14 @@ namespace RP0.Harmony
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -cfgCost, 0d, 0d);
                 double postCMQcost = -cmq.GetTotal(CurrencyRP0.Funds);
                 double invertCMQop = cfgCost / postCMQcost;
-                double subsidy = UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode);
-                cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidy);
+                double credit = UnlockSubsidyHandler.Instance.GetCreditAmount(techNode);
+                cmq.AddDeltaAuthorized(CurrencyRP0.Funds, credit);
                 if (!cmq.CanAfford())
                 {
                     return false;
                 }
 
-                double excessCost = UnlockSubsidyHandler.Instance.SpendSubsidy(techNode, postCMQcost);
+                double excessCost = UnlockSubsidyHandler.Instance.SpendCredit(techNode, postCMQcost);
                 if (excessCost > 0d)
                 {
                     Funding.Instance.AddFunds(-excessCost * invertCMQop, TransactionReasonsRP0.PartOrUpgradeUnlock.Stock());

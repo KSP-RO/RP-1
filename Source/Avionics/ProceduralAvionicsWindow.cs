@@ -306,12 +306,12 @@ namespace RP0.ProceduralAvionics
             if (unlockCost <= 0) return switchedConfig;
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double trueCost = -cmq.GetTotal(CurrencyRP0.Funds);
-            double subsidyToUse = Math.Min(trueCost, UnlockSubsidyHandler.Instance.GetSubsidyAmount(techNode.TechNodeName));
-            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, subsidyToUse);
+            double creditToUse = Math.Min(trueCost, UnlockSubsidyHandler.Instance.GetCreditAmount(techNode.TechNodeName));
+            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, creditToUse);
             GUI.enabled = techNode.IsAvailable && cmq.CanAfford();
-            _gc.text = $"Unlock ({BuildCostString(Math.Max(0d, trueCost - subsidyToUse), trueCost)})";
+            _gc.text = $"Unlock ({BuildCostString(Math.Max(0d, trueCost - creditToUse), trueCost)})";
             string tooltip = string.Empty;
-            if (trueCost > 0) tooltip = $"Base cost: {BuildCostString(trueCost, trueCost)}\nSubsidy Applied: {BuildCostString(subsidyToUse, -1)}";
+            if (trueCost > 0) tooltip = $"Base cost: {BuildCostString(trueCost, trueCost)}\nCredit Applied: {BuildCostString(creditToUse, -1)}";
             if(techNode.IsAvailable) tooltip += (tooltip != string.Empty ? "\n" : string.Empty) + $"Needs tech: {techNode.TechNodeTitle}";
             _gc.tooltip = tooltip;
             if (GUILayout.Button(_gc, HighLogic.Skin.button, GUILayout.Width(120)))

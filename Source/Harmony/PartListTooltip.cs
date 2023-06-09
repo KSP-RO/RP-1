@@ -56,7 +56,7 @@ namespace RP0.Harmony
                 else if (__instance.buttonPurchase.gameObject.activeSelf || __instance.buttonPurchaseRed.gameObject.activeSelf)
                 {
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -eCost, 0d, 0d);
-                    cmq.AddDeltaAuthorized(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(techID)));
+                    cmq.AddDeltaAuthorized(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetCreditAmount(techID)));
                     // If we still can't afford, bail without setting tooltip
                     if (!cmq.CanAfford())
                         return;
@@ -76,9 +76,9 @@ namespace RP0.Harmony
 
         private static void SetTooltip(UnityEngine.UI.Button button, CurrencyModifierQuery cmq)
         {
-            UnlockSubsidyUtility.Button = button;
+            UnlockCreditUtility.Button = button;
             if(button != null)
-                UnlockSubsidyUtility.TooltipText = Localizer.Format("#rp0_UnlockSubsidy_CostAfterSubsidy", -cmq.GetTotal(Currency.Funds));
+                UnlockCreditUtility.TooltipText = Localizer.Format("#rp0_UnlockCredit_CostAfterCredit", -cmq.GetTotal(Currency.Funds));
         }
     }
 }

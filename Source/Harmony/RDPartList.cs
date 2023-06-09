@@ -28,8 +28,8 @@ namespace RP0.Harmony
 
                     if (!cmq.CanAfford())
                     {
-                        // try again, with subsidy
-                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(part.TechRequired)));
+                        // try again, with credit
+                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetCreditAmount(part.TechRequired)));
                         if (!cmq.CanAfford())
                         {
                             // still can't afford, so use the can't afford color
@@ -72,10 +72,10 @@ namespace RP0.Harmony
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0d, 0d);
                     text = cmq.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: false, includePercentage: true);
 
-                    // BUT if we can't afford normally, but can with subsidy, let's fix the coloring.
+                    // BUT if we can't afford normally, but can with credit let's fix the coloring.
                     if (!cmq.CanAfford())
                     {
-                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetSubsidyAmount(upgrade.techRequired)));
+                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), UnlockSubsidyHandler.Instance.GetCreditAmount(upgrade.techRequired)));
                         if (!cmq.CanAfford())
                         {
                             cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0d, 0d);

@@ -15,7 +15,7 @@
         public int salaryResearchers = 1000;
 
         [Persistent]
-        public double researcherSalaryToUnlockSubsidy = 0.75d;
+        public double researcherSalaryToUnlockCredit = 0.75d;
 
         [Persistent]
         public double hangarCostForMaintenanceOffset = 240000d;

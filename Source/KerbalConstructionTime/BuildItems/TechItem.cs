@@ -276,11 +276,11 @@ namespace KerbalConstructionTime
                 KCTGameStates.RecalculateBuildRates(); // this might change other rates
 
                 double portion = toGo / increment;
-                RP0.UnlockSubsidyHandler.Instance.IncrementSubsidyTime(techID, portion * UTDiff);
+                RP0.UnlockSubsidyHandler.Instance.IncrementCreditTime(techID, portion * UTDiff);
                 return (1d - portion) * UTDiff;
             }
 
-            RP0.UnlockSubsidyHandler.Instance.IncrementSubsidyTime(techID, UTDiff);
+            RP0.UnlockSubsidyHandler.Instance.IncrementCreditTime(techID, UTDiff);
             return 0d;
         }
 

@@ -153,7 +153,7 @@ namespace KerbalConstructionTime
             if (_lcData.lcType == LaunchComplexType.Pad)
             {
                 float fracLevel = _lcData.GetPadFracLevel();
-                var pad = new KCT_LaunchPad(Guid.NewGuid(), Name, fracLevel);
+                var pad = new KCT_LaunchPad(Guid.NewGuid(), Name + "-A", fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }

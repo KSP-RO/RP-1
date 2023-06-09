@@ -90,6 +90,7 @@ namespace RP0
         // The following values are persisted to the savegame but are not shown in the difficulty settings UI
         public int CommsPayload = ContractGUI.MinPayload;
         public int WeatherPayload = ContractGUI.MinPayload;
+        public string NewspaperTitle = "Space Gazette";
 
         public bool AirlaunchTipShown = false;
         public bool RealChuteTipShown = false;

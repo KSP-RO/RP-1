@@ -16,6 +16,8 @@ namespace RP0
         private static string[] _comSatContracts = new[] { "GEORepeatComSats", "TundraRepeatComSats", "MolniyaRepeatComSats" };
         private static string[] _weatherSatContracts = new[] { "GEOWeather" };
 
+        private static string NewspaperTitle = "Space Gazette";
+
         private RP0Settings _settings;
 
         protected override void OnStart()
@@ -23,6 +25,7 @@ namespace RP0
             _settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
             CommsPayload = _settings.CommsPayload;
             WeatherPayload = _settings.WeatherPayload;
+            NewspaperTitle = _settings.NewspaperTitle;
         }
 
         public void RenderContractsTab()
@@ -59,6 +62,24 @@ namespace RP0
 
                 _settings.CommsPayload = CommsPayload;
                 _settings.WeatherPayload = WeatherPayload;
+            }
+            finally
+            {
+                GUILayout.EndVertical();
+            }
+
+            GUILayout.BeginVertical();
+            try
+            {
+                GUILayout.Space(10f);
+                GUILayout.Space(10f);
+                GUILayout.Label($"Use this area to change the name of the Newspaper Title.", BoldLabel);
+                GUILayout.Space(10f);
+
+                GUILayout.Label($"Newspaper Title: (18 characters max)", HighLogic.Skin.label, GUILayout.Width(250));
+                NewspaperTitle = GUILayout.TextField(NewspaperTitle, HighLogic.Skin.textField);
+
+                _settings.NewspaperTitle = NewspaperTitle;
             }
             finally
             {

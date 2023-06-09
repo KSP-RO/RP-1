@@ -18,10 +18,13 @@ namespace RP0.Milestones
         private static Vector2 dragStart;
         private static Vector2 altStart;
 
+        private static RP0Settings _settings;
+
         public static bool IsOpen => NewspaperCanvas != null;
 
         public static void ShowGUI(Milestone m, List<string> data)
         {
+            _settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
             // Load the UI and show it
             NewspaperCanvas = (GameObject)Instantiate(NewspaperLoader.PanelPrefab);
 
@@ -89,7 +92,7 @@ namespace RP0.Milestones
 
         private static string GetTitle()
         {
-            string title = "Space Gazette";
+            string title = _settings.NewspaperTitle;
             return title;
         }
 

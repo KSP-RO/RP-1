@@ -40,7 +40,7 @@ namespace KerbalConstructionTime
             if (!KerbalConstructionTimeData.Instance.StartedProgram)
             {
                 GUILayout.Label($"{step++}) Choose your starting Programs.");
-                GUILayout.Label("These provide you with funds over time, and allow you to select relevant contracts in Mission Control. Go to the Admin Building to select them.");
+                GUILayout.Label("These provide you with funds over time, and allow you to select relevant contracts in Mission Control. Go to the Admin Building to select them. Note that if you're selecting a crewed program like X-Planes, you'll need to hire some nauts!");
                 if (GUILayout.Button($"Go to Administration", HighLogic.Skin.button))
                 {
                     EnterAdmin();
@@ -62,7 +62,7 @@ namespace KerbalConstructionTime
             if (!KerbalConstructionTimeData.Instance.StarterLCBuilding)
             {
                 GUILayout.Label($"{step++}) Build a starting Launch Complex.");
-                GUILayout.Label("With a contract accepted, now it's time to build a vessel to complete it. If it's a rocket, you'll need a launch complex to launch it. Go to the VAB and make your rocket, then click New the Integration Info (was KCT) window. The LC properties will be set to support that vessel. Once you have LCs built you can also modify them the same way, either a simple Upgrade or a bigger Reconstruction");
+                GUILayout.Label("With a contract accepted, now it's time to build a vessel to complete it. If it's a rocket, you'll need a launch complex to launch it. Go to the VAB and make your rocket, then click New the Integration Info (was KCT) window. The LC properties will be set to support that vessel. Once you have LCs built you can also modify them the same way, either a simple Upgrade or a bigger Reconstruction. Reconstructions remove support for any vessel but the current, but lead to lower maintenance over time.");
                 if (GUILayout.Button($"Go to VAB", HighLogic.Skin.button))
                 {
                     EnterVAB();

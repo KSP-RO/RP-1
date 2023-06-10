@@ -247,8 +247,8 @@ namespace RP0
                             text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveOn"), KSPUtil.PrintDate(LeastDuration + KSPUtils.GetUT(), false, false));
                         else
                             text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveIn"),
-                                extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
-                                : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
+                                extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration - KSPUtils.GetUT() + DateActivated, false, false)
+                                : KSPUtil.PrintDateDeltaCompact(LeastDuration - KSPUtils.GetUT() + DateActivated, false, false));
                     }
                 }
                 if (LongestDuration > 0)
@@ -257,8 +257,8 @@ namespace RP0
                         text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresOn"), KSPUtil.PrintDate(LongestDuration + KSPUtils.GetUT(), false, false));
                     else
                         text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresIn"), 
-                            extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration + KSPUtils.GetUT() - DateActivated, false, false)
-                            : KSPUtil.PrintDateDeltaCompact(LongestDuration + KSPUtils.GetUT() - DateActivated, false, false));
+                            extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration - KSPUtils.GetUT() + DateActivated, false, false)
+                            : KSPUtil.PrintDateDeltaCompact(LongestDuration - KSPUtils.GetUT() + DateActivated, false, false));
                 }
             }
             else

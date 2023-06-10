@@ -36,8 +36,8 @@ namespace RP0.Crew
         public static CrewHandlerSettings Settings { get; private set; } = null;
 
         [KSPField(isPersistant = true)]
-        public int saveVersion;
-        public const int VERSION = 3;
+        public int LoadedSaveVersion = -1;
+        public const int VERSION = 1;
 
         [KSPField(isPersistant = true)]
         private PersistentDictionaryValueTypes<string, double> _retireTimes = new PersistentDictionaryValueTypes<string, double>();
@@ -169,63 +169,7 @@ namespace RP0.Crew
         {
             base.OnLoad(node);
 
-            if (saveVersion < 1)
-            {
-                _retireTimes.Clear();
-                ConfigNode n = node.GetNode("RETIRETIMES");
-                if (n != null)
-                {
-                    _isFirstLoad = false;
-                    foreach (ConfigNode.Value v in n.values)
-                        _retireTimes[v.name] = double.Parse(v.value);
-                }
-
-                _retireIncreases.Clear();
-                n = node.GetNode("RETIREINCREASES");
-                if (n != null)
-                {
-                    foreach (ConfigNode.Value v in n.values)
-                        _retireIncreases[v.name] = double.Parse(v.value);
-                }
-
-                _retirees.Clear();
-                n = node.GetNode("RETIREES");
-                if (n != null)
-                {
-                    foreach (ConfigNode.Value v in n.values)
-                        _retirees.Add(v.value);
-                }
-
-                _expireTimes.Clear();
-                n = node.GetNode("EXPIRATIONS");
-                if (n != null)
-                {
-                    foreach (ConfigNode eN in n.nodes)
-                    {
-                        _expireTimes.Add(new TrainingExpiration(eN));
-                    }
-                }
-
-                ConfigNode FSData = node.GetNode("FlightSchoolData");
-                if (FSData != null)
-                {
-                    //load all the active courses
-                    TrainingCourses.Clear();
-                    foreach (ConfigNode courseNode in FSData.GetNodes("ACTIVE_COURSE"))
-                    {
-                        try
-                        {
-                            TrainingCourses.Add(new TrainingCourse(courseNode));
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.LogException(ex);
-                        }
-                    }
-                }
-            }
-
-            saveVersion = VERSION;
+            LoadedSaveVersion = VERSION;
 
             KACWrapper.InitKACWrapper();
         }

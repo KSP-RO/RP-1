@@ -40,16 +40,6 @@ namespace RP0.Crew
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-
-            if (CrewHandler.Instance.saveVersion < 2)
-            {
-                string entry = node.GetValue("entry");
-                if (entry != null)
-                {
-                    var split = entry.Split(',');
-                    training = new TrainingFlightEntry(split[0], split[1]);
-                }
-            }
         }
 
         public void Save(ConfigNode node)

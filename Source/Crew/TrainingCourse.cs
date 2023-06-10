@@ -54,32 +54,16 @@ namespace RP0.Crew
         public TrainingCourse(ConfigNode node)
         {
             Load(node);
-            if (CrewHandler.Instance.saveVersion < 3)
-            {
-                node.TryGetValue("elapsedTime", ref progress);
-            }
         }
 
         public void Load(ConfigNode node)
         {
             ConfigNode.LoadObjectFromConfig(this, node);
-            if (CrewHandler.Instance.saveVersion < 1)
-            {
-                Students.Load(node.GetNode("STUDENTS"));
-            }
         }
 
         public void Save(ConfigNode node)
         {
             ConfigNode.CreateConfigFromObject(this, node);
-            // TEMP until KSPCF releases
-            ConfigNode n = node.GetNode("Students");
-            if (n == null)
-            {
-                n = new ConfigNode("Students");
-                Students.Save(n);
-                node.AddNode(n);
-            }
         }
 
         public void LinkTemplate()

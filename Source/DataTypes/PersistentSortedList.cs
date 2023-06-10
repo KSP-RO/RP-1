@@ -13,18 +13,6 @@ namespace RP0.DataTypes
         public void Load(ConfigNode node)
         {
             Clear();
-            if (node.values.Count == 0 || node.nodes.Count == 0 || node.values[0].name != "version")
-            {
-                foreach (ConfigNode n in node.nodes)
-                {
-                    TKey key = ParseKey(n.name);
-                    TValue value = System.Activator.CreateInstance<TValue>();
-                    value.Load(n);
-                    Add(key, value);
-                }
-                return;
-            }
-
             ConfigNode keyNode = node.nodes[0];
             ConfigNode valueNode = node.nodes[1];
             for (int i = 0; i < keyNode.values.Count; ++i)

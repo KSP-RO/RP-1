@@ -121,16 +121,23 @@ namespace RP0.Harmony
             for (int i = 0; i < __instance.scrollListKerbals.Count; ++i)
             {
                 var dep = StrategySystem.Instance.Departments[i];
+                var kerbal = __instance.scrollListKerbals.GetUilistItemAt(i).GetComponent<KerbalListItem>();
+
                 // Hardcoded check for Programs department -- not a leader.
                 if (dep.Name == "Programs")
+                {
+                    kerbal.kerbalImage.texture = GameDatabase.Instance.GetTexture(HighLogic.CurrentGame.flagURL, false);
+                    kerbal.kerbalImage.rectTransform.anchorMin = new Vector2(0f, 0.1875f);
+                    kerbal.kerbalImage.rectTransform.anchorMax = new Vector2(1f, 0.8125f);
+
                     continue;
+                }
 
                 var leader = FindActiveStrategyForDepartment(dep);
                 if (leader == null)
                     continue;
 
                 // We found a leader. Replace the image (and its tooltip).
-                var kerbal = __instance.scrollListKerbals.GetUilistItemAt(i).GetComponent<KerbalListItem>();
                 string headName = $"<color=#{RUIutils.ColorToHex(dep.Color)}>{leader.Title}\n({dep.Title})</color>";
                 kerbal.Initialize(headName, dep.Description, null);
                 kerbal.tooltip.textString = dep.Description + "\n\n" + leader.Effect;

@@ -185,9 +185,13 @@ namespace RP0
         /// <returns></returns>
         public virtual double DeactivateCost()
         {
+            double duration = KSPUtils.GetUT() - DateActivated;
+            if (duration >= LongestDuration)
+                return 0d;
+
             return UtilMath.LerpUnclamped(Reputation.Instance.reputation * ConfigRP0.RemovalCostRepPercent,
                                           0d,
-                                          Math.Pow(UtilMath.InverseLerp(LeastDuration, LongestDuration, KSPUtils.GetUT() - DateActivated), ConfigRP0.RemovalCostLerpPower));
+                                          Math.Pow(UtilMath.InverseLerp(LeastDuration, LongestDuration, duration), ConfigRP0.RemovalCostLerpPower));
         }
 
         public virtual string DeactivateCostString()

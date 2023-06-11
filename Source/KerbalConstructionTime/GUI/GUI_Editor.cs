@@ -212,9 +212,9 @@ namespace KerbalConstructionTime
             {
                 bool canModify = activeLC.CanModify;
 
-                const string modifyFailTooltip = "Currently in use! Only modifications that leave any in-progress vessels capable of being serviced by this complex will be permitted.";
+                const string modifyFailTooltip = "\n\nCurrently in use! Only modifications that leave any in-progress vessels capable of being serviced by this complex will be permitted.";
                 if (GUILayout.Button(new GUIContent("Reconstruct",
-                    canModify ? $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants." : modifyFailTooltip),
+                    $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants.{(canModify ? string.Empty : modifyFailTooltip)}"),
                     canModify ? GUI.skin.button : _yellowButton))
                 {
                     SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel, activeLC);
@@ -228,7 +228,7 @@ namespace KerbalConstructionTime
                     _centralWindowPosition.width = 300;
                 }
                 if (GUILayout.Button(new GUIContent("Upgrade",
-                    canModify ? $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible." : modifyFailTooltip),
+                    $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible.{(canModify ? string.Empty : modifyFailTooltip)}"),
                     canModify ? GUI.skin.button : _yellowButton))
                 {
                     SetFieldsFromVesselKeepOld(KerbalConstructionTime.Instance.EditorVessel, activeLC);

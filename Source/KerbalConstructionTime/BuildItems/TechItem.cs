@@ -203,6 +203,7 @@ namespace KerbalConstructionTime
         public double GetBuildRate() => BuildRate;
 
         public double GetTimeLeft() => TimeLeft;
+
         public double GetTimeLeftEst(double offset)
         {
             if (BuildRate > 0)
@@ -216,6 +217,10 @@ namespace KerbalConstructionTime
                     rate *= YearBasedRateMult;
                 else
                     rate *= CalculateYearBasedRateMult(offset);
+
+                rate *= RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.RateResearch);
+                rate *= RP0.Leaders.LeaderUtils.GetResearchRateEffect(nodeType, techID);
+
                 return (scienceCost - progress) / rate;
             }
         }

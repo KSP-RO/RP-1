@@ -581,7 +581,9 @@ namespace KerbalConstructionTime
 
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
-            CenterWindow(ref _centralWindowPosition);
+            //CenterWindow(ref _centralWindowPosition);
+            if (!Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
+                GUI.DragWindow();
         }
 
         public static void DrawLCResourcesWindow(int windowID)
@@ -691,6 +693,7 @@ namespace KerbalConstructionTime
                 }
             }
             GUILayout.EndHorizontal();
+            GUI.DragWindow();
         }
 
         private static bool ModifyFailure(out string failedVessels)

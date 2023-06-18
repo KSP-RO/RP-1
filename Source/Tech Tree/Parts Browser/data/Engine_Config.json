@@ -14614,7 +14614,7 @@
         "title": "S-3FH",
         "description": "",
         "mod": "Engine_Config",
-        "cost": "5",
+        "cost": 45,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",

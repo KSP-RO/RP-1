@@ -37,7 +37,7 @@ namespace RP0.Crew
 
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = -1;
-        public const int VERSION = 1;
+        public const int VERSION = 2;
 
         [KSPField(isPersistant = true)]
         private PersistentDictionaryValueTypes<string, double> _retireTimes = new PersistentDictionaryValueTypes<string, double>();

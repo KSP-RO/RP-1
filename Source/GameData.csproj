@@ -627,6 +627,9 @@
     <Content Include="..\GameData\RP-1\Localization\ru.cfg">
       <Link>Localization\ru.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Localization\zh-cn.cfg">
+      <Link>Localization\zh-cn.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Parts\HumanRatedFlag.cfg">
       <Link>Parts\HumanRatedFlag.cfg</Link>
     </Content>

@@ -203,6 +203,7 @@ namespace RP0
                     techs = new HashSet<string>();
 
                 techs.Add(ap.TechRequired);
+                ecmToTech[sanitizedName] = techs;
             }
         }
 

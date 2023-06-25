@@ -172,14 +172,13 @@ namespace KerbalConstructionTime
             double credit = UnlockSubsidyHandler.Instance.GetCreditAmount(partList);
 
             double spentCredit = Math.Min(postCMQUnlockCost, credit);
-            double postCreditTotal = postCMQUnlockCost - spentCredit;
             cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentCredit);
 
-            int partCount = purchasableParts.Count();
+            int partCount = partList.Count;
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{postCreditTotal:N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} credit)", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0d, -cmq.GetTotal(CurrencyRP0.Funds)):N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} credit)", () =>
                 {
                     if (cmq.CanAfford())
                     {

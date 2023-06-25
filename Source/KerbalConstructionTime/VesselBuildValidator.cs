@@ -376,8 +376,10 @@ namespace KerbalConstructionTime
                         double invertCMQOp = error.CostToResolve / trueTotal;
                         double creditAmtToUse = Math.Min(trueTotal, UnlockSubsidyHandler.Instance.GetCreditAmount(error.TechToResolve));
                         cmq.AddDeltaAuthorized(CurrencyRP0.Funds, creditAmtToUse);
-                        string costAfterCreditStr = $"{cmq.GetCostLine(true, false, true, true)} after credit";
-                        var button = new DialogGUIButtonWithTooltip($"Unlock ({costStr})",
+                        string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true);
+                        if (string.IsNullOrEmpty(afterCreditLine))
+                            afterCreditLine = "free";
+                        var button = new DialogGUIButtonWithTooltip($"Unlock ({afterCreditLine})",
                                                          () =>
                                                          {
                                                              PurchaseConfig(error.PM, error.TechToResolve);
@@ -385,7 +387,7 @@ namespace KerbalConstructionTime
                                                          },
                                                          () => cmq.CanAfford(),
                                                          100, -1, true)
-                                                            { tooltipText = costAfterCreditStr };
+                                                            { tooltipText = $"Spending {creditAmtToUse:N0} credit\n(Base cost {costStr})" };
                         list.Add(new DialogGUIHorizontalLayout(TextAnchor.MiddleLeft,
                                      new DialogGUILabel("<color=green><size=20>•</size></color>", 7),
                                      new DialogGUILabel(txt, expandW: true),

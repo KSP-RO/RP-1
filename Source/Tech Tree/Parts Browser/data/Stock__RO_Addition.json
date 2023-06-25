@@ -67,6 +67,29 @@
         "module_tags": []
     },
     {
+        "name": "RO-ionSPT60",
+        "title": "SPT-60 Hall Effect Thruster",
+        "description": "",
+        "mod": "Stock (RO Addition)",
+        "cost": 226,
+        "entry_cost": "0",
+        "category": "ION",
+        "info": "Electric Engine",
+        "year": "1971",
+        "technology": "earlyElecPropulsion",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Meteor",
+        "engine_config": "SPT60",
+        "upgrade": false,
+        "entry_cost_mods": "SPT-60",
+        "identical_part_name": "SPT-60",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "RO-shockConeIntake125",
         "title": "1.25m Shock Cone Intake",
         "description": "",

@@ -172,14 +172,13 @@ namespace KerbalConstructionTime
             double credit = UnlockSubsidyHandler.Instance.GetCreditAmount(partList);
 
             double spentCredit = Math.Min(postCMQUnlockCost, credit);
-            double postCreditTotal = postCMQUnlockCost - spentCredit;
             cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentCredit);
 
-            int partCount = purchasableParts.Count();
+            int partCount = partList.Count;
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{postCreditTotal:N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} credit)", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0d, -cmq.GetTotal(CurrencyRP0.Funds)):N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} credit)", () =>
                 {
                     if (cmq.CanAfford())
                     {
@@ -377,8 +376,10 @@ namespace KerbalConstructionTime
                         double invertCMQOp = error.CostToResolve / trueTotal;
                         double creditAmtToUse = Math.Min(trueTotal, UnlockSubsidyHandler.Instance.GetCreditAmount(error.TechToResolve));
                         cmq.AddDeltaAuthorized(CurrencyRP0.Funds, creditAmtToUse);
-                        string costAfterCreditStr = $"{cmq.GetCostLine(true, false, true, true)} after credit";
-                        var button = new DialogGUIButtonWithTooltip($"Unlock ({costStr})",
+                        string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true);
+                        if (string.IsNullOrEmpty(afterCreditLine))
+                            afterCreditLine = "free";
+                        var button = new DialogGUIButtonWithTooltip($"Unlock ({afterCreditLine})",
                                                          () =>
                                                          {
                                                              PurchaseConfig(error.PM, error.TechToResolve);
@@ -386,7 +387,7 @@ namespace KerbalConstructionTime
                                                          },
                                                          () => cmq.CanAfford(),
                                                          100, -1, true)
-                                                            { tooltipText = costAfterCreditStr };
+                                                            { tooltipText = $"Spending {creditAmtToUse:N0} credit\n(Base cost {costStr})" };
                         list.Add(new DialogGUIHorizontalLayout(TextAnchor.MiddleLeft,
                                      new DialogGUILabel("<color=green><size=20>•</size></color>", 7),
                                      new DialogGUILabel(txt, expandW: true),

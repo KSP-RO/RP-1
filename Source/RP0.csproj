@@ -68,7 +68,6 @@
     <Compile Include="Harmony\EditorPartIcon.cs" />
     <Compile Include="Harmony\KerbalRoster.cs" />
     <Compile Include="Harmony\KSCSwitcher.cs" />
-    <Compile Include="Harmony\EditorExtensionsRedux.cs" />
     <Compile Include="Harmony\EngineersReport.cs" />
     <Compile Include="Harmony\CostWidget.cs" />
     <Compile Include="Harmony\AstronautComplex.cs" />

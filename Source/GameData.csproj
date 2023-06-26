@@ -582,6 +582,9 @@
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHighAltitude.cfg">
       <Link>Contracts\X-Plane Research\XPlanesHighAltitude.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHighAltitudeOptional.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesHighAltitudeOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesKarman.cfg">
       <Link>Contracts\X-Plane Research\XPlanesKarman.cfg</Link>
     </Content>
@@ -620,6 +623,12 @@
     </Content>
     <Content Include="..\GameData\RP-1\Localization\en-us.cfg">
       <Link>Localization\en-us.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Localization\ru.cfg">
+      <Link>Localization\ru.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Localization\zh-cn.cfg">
+      <Link>Localization\zh-cn.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Parts\HumanRatedFlag.cfg">
       <Link>Parts\HumanRatedFlag.cfg</Link>

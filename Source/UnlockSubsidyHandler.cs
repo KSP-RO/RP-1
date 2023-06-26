@@ -29,6 +29,7 @@ namespace RP0
 
         private readonly Dictionary<string, UnlockCreditNode> _creditStorage = new Dictionary<string, UnlockCreditNode>();
         private static readonly Dictionary<string, double> _cacheDict = new Dictionary<string, double>();
+        private static readonly HashSet<string> _seenNodes = new HashSet<string>();
 
         public double TotalCredit
         {
@@ -82,6 +83,12 @@ namespace RP0
 
         public double GetCreditAmount(string tech, Dictionary<string, UnlockCreditNode> dict = null)
         {
+            _seenNodes.Clear();
+            return _GetCreditAmount(tech, dict);
+        }
+
+        private double _GetCreditAmount(string tech, Dictionary<string, UnlockCreditNode> dict = null)
+        {
             if (tech == null)
                 return 0d;
 
@@ -97,7 +104,13 @@ namespace RP0
                 return amount;
             }
             foreach (var parent in parentList)
-                amount += GetCreditAmount(parent, dict);
+            {
+                if (_seenNodes.Contains(parent))
+                    continue;
+
+                _seenNodes.Add(parent);
+                amount += _GetCreditAmount(parent, dict);
+            }
 
             _cacheDict[tech] = amount;
             return amount;
@@ -190,6 +203,7 @@ namespace RP0
                     techs = new HashSet<string>();
 
                 techs.Add(ap.TechRequired);
+                ecmToTech[sanitizedName] = techs;
             }
         }
 

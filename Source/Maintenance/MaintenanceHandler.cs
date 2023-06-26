@@ -112,7 +112,7 @@ namespace RP0
             float years = (float)(KSPUtils.GetUT() / secsPerYear);
             details.minSubsidy = Settings.subsidyCurve.Evaluate(years);
             details.maxSubsidy = details.minSubsidy * Settings.subsidyMultiplierForMax;
-            details.maxRep = details.maxSubsidy / Settings.repToSubsidyConversion;
+            details.maxRep = (details.maxSubsidy - details.minSubsidy) / Settings.repToSubsidyConversion;
             double invLerp = UtilMath.InverseLerp(0, details.maxRep, UtilMath.Clamp(Reputation.Instance.reputation, 0, details.maxRep));
             details.subsidy = UtilMath.LerpUnclamped(details.minSubsidy, details.maxSubsidy, invLerp);
             //Debug.Log($"$$$$ years {years}: minSub: {details.minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, maxRep {details.maxRep}, invLerp {invLerp}, subsidy {details.subsidy}=>{(details.subsidy * (1d / 365.25d))}");

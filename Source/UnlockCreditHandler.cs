@@ -36,7 +36,7 @@ namespace RP0
             if (!(amount > 0))
                 return;
 
-            amount *= CurrencyUtils.Rate(TransactionReasonsRP0.UnlockCreditIncrease);
+            amount *= CurrencyUtils.Rate(TransactionReasonsRP0.RateUnlockCreditIncrease);
 
             _totalCredit += amount;
         }

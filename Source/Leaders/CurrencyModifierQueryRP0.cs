@@ -524,7 +524,7 @@ namespace RP0
         TimeInactive = 1 << 46,
         CrewTimes = RateTraining | TimeRetirement | TimeInactive,
 
-        UnlockCreditIncrease = 1 << 47,
+        RateUnlockCreditIncrease = 1 << 47,
 
         Any = ~0
     }

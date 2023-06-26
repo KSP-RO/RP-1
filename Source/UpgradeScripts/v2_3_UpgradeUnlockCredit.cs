@@ -6,7 +6,7 @@ using UnityEngine;
 namespace RP0.UpgradeScripts
 {
     [UpgradeModule(LoadContext.SFS, sfsNodeUrl = "GAME/SCENARIO")]
-    public class UpgradeUnlockCredit : UpgradeScript
+    public class v2_3_UpgradeUnlockCredit : UpgradeScript
     {
         public override string Name { get => "RP-1 Unlock Credit Upgrader"; }
         public override string Description { get => "Updates Unlock Credit from per-node to global"; }

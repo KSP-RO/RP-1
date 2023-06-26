@@ -169,7 +169,7 @@ namespace KerbalConstructionTime
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds);
 
-            double credit = UnlockSubsidyHandler.Instance.GetCreditAmount(partList);
+            double credit = UnlockCreditHandler.Instance.GetCreditAmount(partList);
 
             double spentCredit = Math.Min(postCMQUnlockCost, credit);
             cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentCredit);
@@ -374,7 +374,7 @@ namespace KerbalConstructionTime
                         string costStr = cmq.GetCostLineOverride(true, false, false, true);
                         double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds);
                         double invertCMQOp = error.CostToResolve / trueTotal;
-                        double creditAmtToUse = Math.Min(trueTotal, UnlockSubsidyHandler.Instance.GetCreditAmount(error.TechToResolve));
+                        double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.GetCreditAmount(error.TechToResolve));
                         cmq.AddDeltaAuthorized(CurrencyRP0.Funds, creditAmtToUse);
                         string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true);
                         if (string.IsNullOrEmpty(afterCreditLine))

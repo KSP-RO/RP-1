@@ -31,8 +31,7 @@ namespace RP0.Harmony
             if (showCredit)
             {
                 extraText = Localizer.Format("#rp0_UnlockCredit_NodeInfo",
-                    UnlockSubsidyHandler.Instance.GetLocalCreditAmount(node.tech.techID).ToString("N0"),
-                    UnlockSubsidyHandler.Instance.GetCreditAmount(node.tech.techID).ToString("N0")) + "\n";
+                    UnlockCreditHandler.Instance.GetCreditAmount(node.tech.techID).ToString("N0")) + "\n";
             }
             else
             {

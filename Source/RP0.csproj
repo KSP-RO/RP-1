@@ -127,7 +127,7 @@
     <Compile Include="Harmony\RealFuels.cs" />
     <Compile Include="Harmony\Strategy.cs" />
     <Compile Include="Harmony\StrategySystemConfig.cs" />
-    <Compile Include="UnlockSubsidyHandler.cs" />
+    <Compile Include="UnlockCreditHandler.cs" />
     <Compile Include="LocalizationHandler.cs" />
     <Compile Include="EntryCostStorage.cs" />
     <Compile Include="FirstStart.cs" />
@@ -191,6 +191,7 @@
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />
     <Compile Include="UI\TooltipController_TextFunc.cs" />
+    <Compile Include="UpgradeScripts\UpgradeUnlockCredit.cs" />
     <Compile Include="Utilities\BypassCertificateHandler.cs" />
     <Compile Include="Utilities\CSV\CsvWriter.cs" />
     <Compile Include="Utilities\ContinuousLogger.cs" />
@@ -392,6 +393,7 @@
     <Publicize Include="Assembly-CSharp" />
     <DoNotPublicize Include="Assembly-CSharp:BaseField`1.OnValueModified" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
   </PropertyGroup>

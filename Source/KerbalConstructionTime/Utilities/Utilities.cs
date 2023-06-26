@@ -675,7 +675,7 @@ namespace KerbalConstructionTime
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
         {
             // this will spend the funds, which is why we set costsFunds=false below.
-            RP0.UnlockSubsidyHandler.Instance.SpendCreditAndCost(availableParts);
+            RP0.UnlockCreditHandler.Instance.SpendCreditAndCost(availableParts);
 
             foreach (var ap in availableParts)
             {

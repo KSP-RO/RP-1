@@ -38,9 +38,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyInformationalVersion("@ASSEMBLYINFORMATIONALVERSION@")]
 [assembly: KSPAssembly("RP-0", @MAJOR@, @MINOR@)]
 #else
-[assembly: AssemblyFileVersion("2.0.0.0")]
-[assembly: AssemblyInformationalVersion("2.0.0.0")]
-[assembly: KSPAssembly("RP-0", 2, 0)]
+[assembly: AssemblyFileVersion("2.3.0.0")]
+[assembly: AssemblyInformationalVersion("2.3.0.0")]
+[assembly: KSPAssembly("RP-0", 2, 3)]
 #endif
 
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]

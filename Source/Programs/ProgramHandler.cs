@@ -40,7 +40,19 @@ namespace RP0.Programs
 
         public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
 
-        public int ActiveProgramLimit => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
+        public int MaxProgramSlots => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
+
+        public int ActiveProgramSlots
+        {
+            get
+            {
+                int pts = 0;
+                foreach (var p in ActivePrograms)
+                    pts += p.Slots;
+
+                return pts;
+            }
+        }
 
         public static void EnsurePrograms()
         {
@@ -280,7 +292,7 @@ namespace RP0.Programs
                 _scrollPos = scrollScope.scrollPosition;
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label($"Active programs: {ActivePrograms.Count}/{ActiveProgramLimit}", HighLogic.Skin.label);
+                GUILayout.Label($"Program Points: {ActiveProgramSlots}/{MaxProgramSlots}", HighLogic.Skin.label);
                 GUILayout.EndHorizontal();
 
                 foreach (Program p in ActivePrograms)
@@ -330,7 +342,7 @@ namespace RP0.Programs
             }
             else if (!isActive)
             {
-                GUI.enabled = ActivePrograms.Count < ActiveProgramLimit;
+                GUI.enabled = ActiveProgramSlots < MaxProgramSlots;
                 if (GUILayout.Button(canAccept ? "Accept" : "CHTAccept", HighLogic.Skin.button))
                 {
                     ActivateProgram(p);

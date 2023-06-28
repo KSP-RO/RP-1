@@ -130,8 +130,7 @@ namespace RP0.Programs
         public float RepToConfidence => repToConfidence >= 0f ? repToConfidence : ProgramHandler.Settings.repToConfidence;
 
         [Persistent(isPersistant = false)]
-        private int slots = 5;
-        public int Slots => slots;
+        public int slots = 2;
 
         public List<string> programsToDisableOnAccept = new List<string>();
 

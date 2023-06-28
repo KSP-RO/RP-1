@@ -48,7 +48,7 @@ namespace RP0.Programs
             {
                 int pts = 0;
                 foreach (var p in ActivePrograms)
-                    pts += p.Slots;
+                    pts += p.slots;
 
                 return pts;
             }

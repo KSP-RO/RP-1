@@ -351,7 +351,7 @@ namespace KerbalConstructionTime
                 BuildRateForDisplay = rateWithCurEngis.ToString();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Integration Time at ");
+            GUILayout.Label("Integration at");
 
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");

@@ -496,7 +496,7 @@ namespace KerbalConstructionTime
                     if (KCTGameStates.ActiveKSC.IsAnyLCOperational)
                         dialogStr = $"a launch complex. Please switch to a launch complex and try again.";
                     else
-                        dialogStr = $"a launch complex. You must build a launch complex (or wait for a launch complex to finish building or renovating) before you can build this vessel.";
+                        dialogStr = $"a launch complex. You must build a launch complex (or wait for a launch complex to finish building or renovating) before you can integrate this vessel.";
 
                 }
                 else
@@ -504,7 +504,7 @@ namespace KerbalConstructionTime
                     if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
                         dialogStr = $"the Hangar. Please switch to the Hangar as active launch complex and try again.";
                     else
-                        dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can build this vessel.";
+                        dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can integrate this vessel.";
                 }
 
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
@@ -569,7 +569,7 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"Added {blv.shipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
             KCTDebug.Log("Launch site is " + blv.launchSite);
-            string text = $"Added {blv.shipName} to build list at {lc.Name}.";
+            string text = $"Added {blv.shipName} to integration list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
         }

@@ -110,7 +110,7 @@ namespace KerbalConstructionTime
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
                         "Failed editor checks!",
                         "Warning! This vessel did not pass the editor checks! " 
-                            + (BypassFacilityRequirements ? "It will still be added to plans, but you cannot build it without rectifying these issues." : string.Empty)
+                            + (BypassFacilityRequirements ? "It will still be added to plans, but you cannot integrate it without rectifying these issues." : string.Empty)
                             + "\nListed below are the failed checks:\n"
                         + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()),
                         "Acknowledged",
@@ -175,7 +175,7 @@ namespace KerbalConstructionTime
             cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentCredit);
 
             int partCount = partList.Count;
-            string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
+            string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "integrate vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
                 new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0d, -cmq.GetTotal(CurrencyRP0.Funds)):N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} credit)", () =>
@@ -242,9 +242,9 @@ namespace KerbalConstructionTime
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, -totalCost, 0d, 0d);
                 if (!cmq.CanAfford())
                 {
-                    KCTDebug.Log($"Tried to add {blv.shipName} to build list but not enough funds.");
+                    KCTDebug.Log($"Tried to add {blv.shipName} to integration list but not enough funds.");
                     KCTDebug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds)}, Current funds: {Funding.Instance.Funds}");
-                    var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
+                    var msg = new ScreenMessage("Not Enough Funds To Integrate!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
 
                     return ValidationResult.Fail;

@@ -12,8 +12,8 @@ namespace KerbalConstructionTime
 
         private static bool _isEditorLocked = false;
         private static bool _wasShowBuildList = false;
-        private static readonly GUIContent _gcMaxBuildRate = new GUIContent("M", "Display build rate for max engineers");
-        private static readonly GUIContent _gcCurBuildRate = new GUIContent("C", "Display build rate for current engineers");
+        private static readonly GUIContent _gcMaxBuildRate = new GUIContent("M", "Display integration rate for max engineers");
+        private static readonly GUIContent _gcCurBuildRate = new GUIContent("C", "Display integration rate for current engineers");
         private static readonly GUIContent _gcSwitchToLC = new GUIContent("Switch to LC", "The Hangar is currently selected; this will switch to a launch complex, needed for rockets.");
         private static readonly GUIContent _gcNoLCAvailable = new GUIContent("No LC Available", "Build a new one.");
         private static readonly GUIContent _gcNoLCAvailableSomeConstructing = new GUIContent("No LC Available Now", "There is no operational launch complex. Build a new one or wait for an existing one to finish construction.");
@@ -71,7 +71,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                GUILayout.Label("Invalid Build Rate");
+                GUILayout.Label("Invalid Integration Rate");
             }
 
             if (EditorDriver.editorFacility == EditorFacility.SPH || (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated && !KerbalConstructionTime.Instance.EditorVessel.humanRated))
@@ -108,7 +108,7 @@ namespace KerbalConstructionTime
 
             if (KerbalConstructionTime.Instance.EditorVessel.humanRated && !KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
             {
-                GUILayout.Label("WARNING: Cannot build vessel!");
+                GUILayout.Label("WARNING: Cannot integrate vessel!");
                 GUILayout.Label("Select a human-rated Launch Complex.");
             }
 
@@ -119,7 +119,7 @@ namespace KerbalConstructionTime
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
             }
-            if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Build"))
+            if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {
                 Utilities.TryAddVesselToBuildList();
                 Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
@@ -270,7 +270,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                GUILayout.Label("Invalid Build Rate");
+                GUILayout.Label("Invalid Integration Rate");
             }
 
             GUILayout.BeginHorizontal();
@@ -351,7 +351,7 @@ namespace KerbalConstructionTime
                 BuildRateForDisplay = rateWithCurEngis.ToString();
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Build Time at ");
+            GUILayout.Label("Integration Time at ");
 
             BuildRateForDisplay = GUILayout.TextField(BuildRateForDisplay, GUILayout.Width(75));
             GUILayout.Label(" BP/s:");

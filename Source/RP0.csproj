@@ -191,6 +191,7 @@
     <Compile Include="Tooling\ToolingScenario.cs" />
     <Compile Include="Tooling\ModuleToolingPTank.cs" />
     <Compile Include="UI\TooltipController_TextFunc.cs" />
+    <Compile Include="UpgradeScripts\v2_4_AdminLevels.cs" />
     <Compile Include="UpgradeScripts\v2_3_UpgradeUnlockCredit.cs" />
     <Compile Include="Utilities\BypassCertificateHandler.cs" />
     <Compile Include="Utilities\CSV\CsvWriter.cs" />

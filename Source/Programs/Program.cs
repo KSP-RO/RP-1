@@ -126,8 +126,11 @@ namespace RP0.Programs
         }
 
         [Persistent(isPersistant = false)]
-        public float repToConfidence = -1f;
+        private float repToConfidence = -1f;
         public float RepToConfidence => repToConfidence >= 0f ? repToConfidence : ProgramHandler.Settings.repToConfidence;
+
+        [Persistent(isPersistant = false)]
+        public int slots = 2;
 
         public List<string> programsToDisableOnAccept = new List<string>();
 
@@ -191,6 +194,7 @@ namespace RP0.Programs
             speed = toCopy.speed;
             confidenceCosts = toCopy.confidenceCosts;
             repToConfidence = toCopy.repToConfidence;
+            slots = toCopy.slots;
         }
 
         public override string ToString() => $"{name} ({(IsComplete ? "Complete" : IsActive ? "Active" : "Inactive")})";
@@ -463,6 +467,8 @@ namespace RP0.Programs
 
                     text += $"\n\n{Localizer.Format("#rp0_Admin_Program_ConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
                 }
+
+                text = $"Slots Taken: {slots}\n\n{text}";
 
                 var leadersUnlockedByThis = StrategySystem.Instance.SystemConfig.Strategies
                     .OfType<StrategyConfigRP0>()

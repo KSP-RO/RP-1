@@ -82,7 +82,7 @@ namespace RP0.Harmony
         [HarmonyPatch("CanBeActivated")]
         internal static void Postfix_CanBeActivated()
         {
-            KSP.UI.Screens.Administration.Instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
+            KSP.UI.Screens.Administration.Instance.activeStrategyCount = ProgramHandler.Instance.ActiveProgramSlots;
         }
 
         // For our Strategy class, replace the basic Activate with a virtual one.

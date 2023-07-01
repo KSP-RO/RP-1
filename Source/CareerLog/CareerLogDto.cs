@@ -19,12 +19,21 @@ namespace RP0
         public double currentSci;
         public int rndQueueLength;
         public double scienceEarned;
+        public double salaryEngineers;
+        public double salaryResearchers;
+        public double salaryCrew;
         public double programFunds;
         public double otherFundsEarned;
         public double launchFees;
+        public double vesselPurchase;
+        public double vesselRecovery;
+        public double lcMaintenance;
+        public double facilityMaintenance;
         public double maintenanceFees;
+        public double trainingFees;
         public double toolingFees;
         public double entryCosts;
+        public double spentUnlockCredit;
         public double constructionFees;
         public double otherFees;
         public double subsidySize;
@@ -49,12 +58,21 @@ namespace RP0
                 $"{nameof(currentSci)}: {currentSci}, " +
                 $"{nameof(rndQueueLength)}: {rndQueueLength}, " +
                 $"{nameof(scienceEarned)}: {scienceEarned}, " +
+                $"{nameof(salaryEngineers)}: {salaryEngineers}, " +
+                $"{nameof(salaryResearchers)}: {salaryResearchers}, " +
+                $"{nameof(salaryCrew)}: {salaryCrew}, " +
                 $"{nameof(programFunds)}: {programFunds}, " +
                 $"{nameof(otherFundsEarned)}: {otherFundsEarned}, " +
                 $"{nameof(launchFees)}: {launchFees}, " +
+                $"{nameof(vesselPurchase)}: {vesselPurchase}, " +
+                $"{nameof(vesselRecovery)}: {vesselRecovery}, " +
+                $"{nameof(lcMaintenance)}: {lcMaintenance}, " +
+                $"{nameof(facilityMaintenance)}: {facilityMaintenance}, " +
                 $"{nameof(maintenanceFees)}: {maintenanceFees}, " +
+                $"{nameof(trainingFees)}: {trainingFees}, " +
                 $"{nameof(toolingFees)}: {toolingFees}, " +
                 $"{nameof(entryCosts)}: {entryCosts}, " +
+                $"{nameof(spentUnlockCredit)}: {spentUnlockCredit}, " +
                 $"{nameof(constructionFees)}: {constructionFees}, " +
                 $"{nameof(otherFees)}: {otherFees}, " +
                 $"{nameof(subsidySize)}: {subsidySize}, " +

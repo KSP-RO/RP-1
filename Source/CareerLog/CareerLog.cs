@@ -68,6 +68,8 @@ namespace RP0
         { 
             get
             {
+                if (!IsEnabled) return null;
+
                 double time = KSPUtils.GetUT();
                 while (time > NextPeriodStart)
                 {
@@ -598,12 +600,21 @@ namespace RP0
                 currentSci = logPeriod.CurrentSci,
                 rndQueueLength = logPeriod.RnDQueueLength,
                 scienceEarned = logPeriod.ScienceEarned,
+                salaryEngineers = logPeriod.SalaryEngineers,
+                salaryResearchers = logPeriod.SalaryResearchers,
+                salaryCrew = logPeriod.SalaryCrew,
                 programFunds = logPeriod.ProgramFunds,
                 otherFundsEarned = logPeriod.OtherFundsEarned,
                 launchFees = logPeriod.LaunchFees,
+                vesselPurchase = logPeriod.VesselPurchase,
+                vesselRecovery = logPeriod.VesselRecovery,
+                lcMaintenance = logPeriod.LCMaintenance,
+                facilityMaintenance = logPeriod.FacilityMaintenance,
                 maintenanceFees = logPeriod.MaintenanceFees,
+                trainingFees = logPeriod.TrainingFees,
                 toolingFees = logPeriod.ToolingFees,
                 entryCosts = logPeriod.EntryCosts,
+                spentUnlockCredit = logPeriod.SpentUnlockCredit,
                 constructionFees = logPeriod.ConstructionFees,
                 otherFees = logPeriod.OtherFees,
                 subsidySize = logPeriod.SubsidySize,
@@ -677,7 +688,7 @@ namespace RP0
 
         private void CurrenciesModified(CurrencyModifierQuery query)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             float fundsDelta = query.GetTotal(Currency.Funds);
             if (fundsDelta != 0f)
@@ -694,15 +705,10 @@ namespace RP0
 
         private void FundsChanged(float changeDelta, TransactionReasons reason)
         {
+            TransactionReasonsRP0 reasonRP0 = reason.RP0();
+
             _prevFundsChangeAmount = changeDelta;
             _prevFundsChangeReason = reason;
-
-            if (reason == TransactionReasons.ContractPenalty || reason == TransactionReasons.ContractDecline ||
-                reason == TransactionReasons.ContractAdvance || reason == TransactionReasons.ContractReward)
-            {
-                CurrentPeriod.ContractRewards += changeDelta;
-                return;
-            }
 
             if (reason == TransactionReasons.Mission)
             {
@@ -722,19 +728,31 @@ namespace RP0
                 return;
             }
 
-            if (reason == TransactionReasons.VesselRollout || reason == TransactionReasons.VesselRecovery)
+            if (reasonRP0 == TransactionReasonsRP0.VesselPurchase)
+            {
+                CurrentPeriod.VesselPurchase -= changeDelta;
+                return;
+            }
+
+            if ((reasonRP0 & TransactionReasonsRP0.Rollouts) != 0)
             {
                 CurrentPeriod.LaunchFees -= changeDelta;
                 return;
             }
 
-            if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock.Stock())
+            if (reasonRP0 == TransactionReasonsRP0.VesselRecovery)
+            {
+                CurrentPeriod.VesselRecovery += changeDelta;
+                return;
+            }
+
+            if (reasonRP0 == TransactionReasonsRP0.PartOrUpgradeUnlock)
             {
                 CurrentPeriod.EntryCosts -= changeDelta;
                 return;
             }
 
-            if (reason == TransactionReasons.StructureConstruction)
+            if (reasonRP0 == TransactionReasonsRP0.StructureConstruction)
             {
                 CurrentPeriod.ConstructionFees -= changeDelta;
                 return;
@@ -761,7 +779,7 @@ namespace RP0
 
         private void ContractAccepted(Contract c)
         {
-            if (CareerEventScope.ShouldIgnore || c.AutoAccept) return;   // Do not record the Accept event for record contracts
+            if (CareerEventScope.ShouldIgnore || !IsEnabled || c.AutoAccept) return;   // Do not record the Accept event for record contracts
 
             _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
@@ -775,7 +793,7 @@ namespace RP0
 
         private void ContractCompleted(Contract c)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
@@ -789,7 +807,7 @@ namespace RP0
 
         private void ContractCancelled(Contract c)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             // KSP first takes the contract penalty and then fires the contract events
             double fundsChange = 0;
@@ -811,7 +829,7 @@ namespace RP0
 
         private void ContractFailed(Contract c)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             string internalName = GetContractInternalName(c);
             double ut = KSPUtils.GetUT();
@@ -848,7 +866,7 @@ namespace RP0
 
         private void VesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> ev)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             // KJR can clobber the vessel back to prelaunch state in case of clamp wobble. Need to exclude such events.
             if (!_launched && ev.from == Vessel.Situations.PRELAUNCH && ev.host == FlightGlobals.ActiveVessel)
@@ -870,7 +888,7 @@ namespace RP0
 
         private void CrewKilled(EventReport data)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             if (!HighLogic.CurrentGame.CrewRoster.Tourist.Any(c => c.name == data.sender))    // Do not count tourist/test animal deaths
             {
@@ -902,8 +920,6 @@ namespace RP0
 
         private void OnKctTechCompleted(TechItem tech)
         {
-            if (CareerEventScope.ShouldIgnore) return;
-
             AddTechEvent(tech);
         }
 
@@ -987,7 +1003,7 @@ namespace RP0
 
         private void AddLCConstructionEvent(LCConstruction data, LCItem lc, ConstructionState state)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             Guid modId = data?.modId ?? lc.ModID;    // Should only happen when LCs are created through code and thus do not have Construction items
             if (!_lcs.Any(logLC => logLC.ModID == modId))
@@ -1007,7 +1023,7 @@ namespace RP0
 
         private void AddPadConstructionEvent(PadConstruction data, KCT_LaunchPad lp, ConstructionState state)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             Guid id = data?.id ?? lp.id;
             LCItem lc = data?.LC ?? lp.LC;

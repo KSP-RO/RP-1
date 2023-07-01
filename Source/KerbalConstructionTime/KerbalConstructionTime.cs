@@ -824,7 +824,7 @@ namespace KerbalConstructionTime
                 foreach (BuildListVessel blv in errored)
                 {
                     blv.RemoveFromBuildList(out _);
-                    Utilities.AddFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
+                    Utilities.AddFunds(blv.GetTotalCost(), RP0.TransactionReasonsRP0.VesselPurchase);
                     //remove any associated recon_rollout
                 }
             });

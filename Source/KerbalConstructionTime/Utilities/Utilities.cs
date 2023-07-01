@@ -397,11 +397,7 @@ namespace KerbalConstructionTime
 
         public static double SpendFunds(double toSpend, TransactionReasonsRP0 reason)
         {
-            if (!CurrentGameIsCareer())
-                return 0;
-            KCTDebug.Log($"Removing funds: {toSpend}, New total: {Funding.Instance.Funds - toSpend}");
-            Funding.Instance.AddFunds(-toSpend, reason.Stock());
-            return Funding.Instance.Funds;
+            return SpendFunds(toSpend, reason.Stock());
         }
 
         public static double AddFunds(double toAdd, TransactionReasons reason)
@@ -411,6 +407,11 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Adding funds: {toAdd}, New total: {Funding.Instance.Funds + toAdd}");
             Funding.Instance.AddFunds(toAdd, reason);
             return Funding.Instance.Funds;
+        }
+
+        public static double AddFunds(double toAdd, TransactionReasonsRP0 reason)
+        {
+            return AddFunds(toAdd, reason.Stock());
         }
 
         public static void ProcessSciPointTotalChange(float changeDelta)
@@ -540,7 +541,7 @@ namespace KerbalConstructionTime
 
         public static void AddVesselToBuildList(BuildListVessel blv)
         {
-            SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
+            SpendFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
 
             if (blv.Type == BuildListVessel.ListType.SPH)
                 blv.launchSite = "Runway";
@@ -596,11 +597,11 @@ namespace KerbalConstructionTime
                 usedShipsCost += v.GetTotalCost();
                 v.RemoveFromBuildList(out _);
             }
-            AddFunds(usedShipsCost, TransactionReasons.VesselRollout);
+            AddFunds(usedShipsCost, TransactionReasonsRP0.VesselPurchase);
 
             var validator = new VesselBuildValidator();
             validator.SuccessAction = (postEditShip2) => SaveShipEdits(editableShip, postEditShip2);
-            validator.FailureAction = () => SpendFunds(usedShipsCost, TransactionReasons.VesselRollout);
+            validator.FailureAction = () => SpendFunds(usedShipsCost, TransactionReasonsRP0.VesselPurchase);
 
             validator.ProcessVessel(postEditShip);
         }
@@ -1604,7 +1605,7 @@ namespace KerbalConstructionTime
             {
                 b.RemoveFromBuildList(out _);
             }
-            AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
+            AddFunds(b.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
         }
 
         public static void ChangeEngineers(LCItem currentLC, int delta)

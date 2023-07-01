@@ -110,12 +110,16 @@ namespace RP0
             if (_totalCredit < cost)
             {
                 excessCost = cost - _totalCredit;
+                if (CareerLog.Instance?.CurrentPeriod != null)
+                    CareerLog.Instance.CurrentPeriod.SpentUnlockCredit += _totalCredit;
                 _totalCredit = 0;
             }
             else
             {
                 excessCost = 0d;
                 _totalCredit -= cost;
+                if (CareerLog.Instance?.CurrentPeriod != null)
+                    CareerLog.Instance.CurrentPeriod.SpentUnlockCredit += cost;
             }
             return excessCost;
         }

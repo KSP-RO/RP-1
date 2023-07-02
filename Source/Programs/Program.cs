@@ -472,7 +472,7 @@ namespace RP0.Programs
                     text += $"\n\n{Localizer.Format("#rp0_Admin_Program_ConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
                 }
 
-                text = $"Slots Taken: {slots}\n\n{text}";
+                text = $"<b>Slots Taken: {slots}</b>\n\n{text}";
 
                 var leadersUnlockedByThis = StrategySystem.Instance.SystemConfig.Strategies
                     .OfType<StrategyConfigRP0>()

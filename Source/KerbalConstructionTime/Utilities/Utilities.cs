@@ -894,19 +894,21 @@ namespace KerbalConstructionTime
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
-                KCTGameStates.EditorRolloutCosts = Formula.GetRolloutCost(KerbalConstructionTime.Instance.EditorVessel);
-                KCTGameStates.EditorRolloutTime = Formula.GetRolloutBP(KerbalConstructionTime.Instance.EditorVessel);
+                KCTGameStates.EditorRolloutCost = Formula.GetRolloutCost(KerbalConstructionTime.Instance.EditorVessel);
+                KCTGameStates.EditorRolloutBP = Formula.GetRolloutBP(KerbalConstructionTime.Instance.EditorVessel);
             }
             else
             {
                 // SPH lacks rollout times and costs
-                KCTGameStates.EditorRolloutCosts = 0;
-                KCTGameStates.EditorRolloutTime = 0;
+                KCTGameStates.EditorRolloutCost = 0;
+                KCTGameStates.EditorRolloutBP = 0;
             }
 
             Tuple<float, List<string>> unlockInfo = GetVesselUnlockInfo(ship);
             KCTGameStates.EditorUnlockCosts = unlockInfo.Item1;
             KCTGameStates.EditorRequiredTechs = unlockInfo.Item2;
+            RP0.ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
+            KCTGameStates.EditorToolingCosts = toolingCost;
 
             // It would be better to only do this if necessary, but eh.
             // It's not easy to know if various buried fields in the blv changed.

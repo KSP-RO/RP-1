@@ -22,9 +22,10 @@ namespace KerbalConstructionTime
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
-        public static double EditorRolloutCosts = 0;
-        public static double EditorRolloutTime = 0;
+        public static double EditorRolloutCost = 0;
+        public static double EditorRolloutBP = 0;
         public static double EditorUnlockCosts = 0;
+        public static double EditorToolingCosts = 0;
         public static List<string> EditorRequiredTechs = new List<string>();
 
         public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();

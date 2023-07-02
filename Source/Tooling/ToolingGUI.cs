@@ -181,7 +181,7 @@ namespace RP0
             }
         }
 
-        private static void GetUntooledPartsAndCost(out List<ModuleTooling> parts, out float toolingCost)
+        public static void GetUntooledPartsAndCost(out List<ModuleTooling> parts, out float toolingCost)
         {
             parts = EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq())
                                                         .Where(mt => !mt.IsUnlocked())

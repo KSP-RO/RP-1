@@ -62,11 +62,12 @@ namespace KerbalConstructionTime
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                GUILayout.Label(Utilities.GetFormattedTime(buildPoints / bR, 0, false));
+                double buildTime = buildPoints / bR;
+                GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")}");
 
-                if (KCTGameStates.EditorRolloutTime > 0)
+                if (KCTGameStates.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR, 0, false)}");
+                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(KCTGameStates.EditorRolloutBP / bR, true, false) : "infinity")}");
                 }
             }
             else
@@ -85,11 +86,32 @@ namespace KerbalConstructionTime
             if (KerbalConstructionTime.Instance.EditorVessel.integrationCost > 0)
                 GUILayout.Label($"Integration Cost: √{KerbalConstructionTime.Instance.EditorVessel.integrationCost:N1}");
 
-            if (KCTGameStates.EditorRolloutCosts > 0)
-                GUILayout.Label($"Rollout Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCosts):N1}");
+            if (bR > 0d && rateWithCurEngis > 0d)
+            {
+                double effectiveEngCount = bR / rateWithCurEngis * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Engineers;
+                double salaryPerDayAboveIdle = RP0.MaintenanceHandler.Settings.salaryEngineers * (1d / 365.25d) * (1d - PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult);
+                double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
+                GUILayout.Label($"Effective Salary: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryEngineers, -cost):N1}");
+            }
 
+            if (KCTGameStates.EditorRolloutCost > 0)
+                GUILayout.Label($"Rollout Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCost):N1}");
+
+            bool showCredit = false;
             if (KCTGameStates.EditorUnlockCosts > 0)
+            {
+                showCredit = true;
                 GUILayout.Label($"Unlock Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.PartOrUpgradeUnlock, -KCTGameStates.EditorUnlockCosts):N1}");
+            }
+
+            if (KCTGameStates.EditorToolingCosts > 0)
+            {
+                showCredit = true;
+                GUILayout.Label($"Tooling Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.ToolingPurchase, -KCTGameStates.EditorToolingCosts):N1}");
+            }
+
+            if (showCredit)
+                GUILayout.Label($"Unlock Credit: √{RP0.UnlockCreditHandler.Instance.TotalCredit:N1}");
 
             if (KCTGameStates.EditorRequiredTechs.Count > 0)
             {
@@ -263,9 +285,9 @@ namespace KerbalConstructionTime
             {
                 GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(fullVesselBP - newProgressBP) / bR, 0, false));
 
-                if (KCTGameStates.EditorRolloutTime > 0)
+                if (KCTGameStates.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutTime / bR, 0, false)}");
+                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutBP / bR, 0, false)}");
                 }
             }
             else

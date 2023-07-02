@@ -90,7 +90,6 @@ namespace RP0
     {
         public string internalName;
         public string date;
-        public double fundsChange;
         public double repChange;
         public ContractEventType type;
 
@@ -102,7 +101,6 @@ namespace RP0
         {
             internalName = ce.InternalName;
             date = CareerLog.UTToDate(ce.UT).ToString("o");
-            fundsChange = ce.FundsChange;
             repChange = ce.RepChange;
             type = ce.Type;
         }
@@ -112,7 +110,6 @@ namespace RP0
             return
                 $"{nameof(internalName)}: {internalName}, " +
                 $"{nameof(date)}: {date}, " +
-                $"{nameof(fundsChange)}: {fundsChange}, " +
                 $"{nameof(repChange)}: {repChange}, " +
                 $"{nameof(type)}: {type}";
         }

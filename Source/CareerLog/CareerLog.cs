@@ -54,8 +54,6 @@ namespace RP0
         private readonly List<LeaderEvent> _leaderEvents = new List<LeaderEvent>();
         private bool _eventsBound = false;
         private bool _launched = false;
-        private double _prevFundsChangeAmount;
-        private TransactionReasons _prevFundsChangeReason;
         private LogPeriod _currentPeriod;
 
         public static CareerLog Instance { get; private set; }
@@ -418,17 +416,9 @@ namespace RP0
             var rows = _periodDict.Select(p => p.Value)
                                   .Select(p => 
             {
-                double advanceFunds = _contractDict.Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(p))
-                                                   .Select(c => c.FundsChange)
-                                                   .Sum();
-
-                double rewardFunds = _contractDict.Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(p))
-                                                  .Select(c => c.FundsChange)
-                                                  .Sum();
-
-                double failureFunds = -_contractDict.Where(c => (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(p))
-                                                    .Select(c => c.FundsChange)
-                                                    .Sum();
+                double rewardRep = _contractDict.Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(p))
+                                                .Select(c => c.RepChange)
+                                                .Sum();
                 return new[]
                 {
                     UTToDate(p.StartUT).ToString("yyyy-MM"),
@@ -437,9 +427,7 @@ namespace RP0
                     p.CurrentFunds.ToString("F0"),
                     p.CurrentSci.ToString("F1"),
                     p.ScienceEarned.ToString("F1"),
-                    advanceFunds.ToString("F0"),
-                    rewardFunds.ToString("F0"),
-                    failureFunds.ToString("F0"),
+                    rewardRep.ToString("F0"),
                     p.OtherFundsEarned.ToString("F0"),
                     p.LaunchFees.ToString("F0"),
                     p.MaintenanceFees.ToString("F0"),
@@ -472,7 +460,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
+            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract rep rewards", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -747,9 +735,6 @@ namespace RP0
         {
             TransactionReasonsRP0 reasonRP0 = reason.RP0();
 
-            _prevFundsChangeAmount = changeDelta;
-            _prevFundsChangeReason = reason;
-
             if (reason == TransactionReasons.Mission)
             {
                 CurrentPeriod.ProgramFunds += changeDelta;
@@ -824,7 +809,6 @@ namespace RP0
             _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Accept,
-                FundsChange = c.FundsAdvance,
                 RepChange = 0,
                 DisplayName = c.Title,
                 InternalName = GetContractInternalName(c)
@@ -838,7 +822,6 @@ namespace RP0
             _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Complete,
-                FundsChange = c.FundsCompletion,
                 RepChange = c.ReputationCompletion,
                 DisplayName = c.Title,
                 InternalName = GetContractInternalName(c)
@@ -849,18 +832,9 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
-            // KSP first takes the contract penalty and then fires the contract events
-            double fundsChange = 0;
-            if (_prevFundsChangeReason == TransactionReasons.ContractPenalty)
-            {
-                Debug.Log($"[RP-0] Found that {_prevFundsChangeAmount} was given as contract penalty");
-                fundsChange = _prevFundsChangeAmount;
-            }
-
             _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Cancel,
-                FundsChange = fundsChange,
                 RepChange = 0,
                 DisplayName = c.Title,
                 InternalName = GetContractInternalName(c)
@@ -882,7 +856,6 @@ namespace RP0
             _contractDict.Add(new ContractEvent(ut)
             {
                 Type = ContractEventType.Fail,
-                FundsChange = c.FundsFailure,
                 RepChange = c.ReputationFailure,
                 DisplayName = c.Title,
                 InternalName = internalName

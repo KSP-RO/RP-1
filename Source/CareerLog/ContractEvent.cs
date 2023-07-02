@@ -13,9 +13,6 @@ namespace RP0
         public string DisplayName;
 
         [Persistent]
-        public double FundsChange;
-
-        [Persistent]
         public double RepChange;
 
         [Persistent]

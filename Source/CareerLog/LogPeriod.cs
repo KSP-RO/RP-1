@@ -21,9 +21,6 @@
         public double ProgramFunds;
 
         [Persistent]
-        public double ContractRewards;
-
-        [Persistent]
         public double OtherFundsEarned;
 
         [Persistent]

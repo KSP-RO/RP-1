@@ -224,7 +224,7 @@ namespace KerbalConstructionTime
         }
 
         // Reimplemented from stock so we ignore tags.
-        public static Vector3 GetShipSize(ShipConstruct ship, bool excludeClamps)
+        public static Vector3 GetShipSize(ShipConstruct ship, bool excludeClamps, bool excludeChutes)
         {
             if (ship.parts.Count == 0)
                 return Vector3.zero;
@@ -246,6 +246,11 @@ namespace KerbalConstructionTime
                 if (excludeClamps)
                 {
                     if (p.IsClampOrChild())
+                        continue;
+                }
+                if (excludeChutes)
+                {
+                    if (p.Modules["RealChuteModule"] != null)
                         continue;
                 }
 

@@ -51,6 +51,7 @@ namespace RP0
         private readonly List<LPConstruction> _lpConstructions = new List<LPConstruction>();
         private readonly List<FacilityConstructionEvent> _facilityConstructionEvents = new List<FacilityConstructionEvent>();
         private readonly List<TechResearchEvent> _techEvents = new List<TechResearchEvent>();
+        private readonly List<LeaderEvent> _leaderEvents = new List<LeaderEvent>();
         private bool _eventsBound = false;
         private bool _launched = false;
         private double _prevFundsChangeAmount;
@@ -294,6 +295,15 @@ namespace RP0
                     _techEvents.Add(te);
                 }
             }
+
+            foreach (ConfigNode n in node.GetNodes("LEADEREVENTS"))
+            {
+                foreach (ConfigNode ln in n.GetNodes("LEADEREVENT"))
+                {
+                    var le = new LeaderEvent(ln);
+                    _leaderEvents.Add(le);
+                }
+            }
         }
 
         public override void OnSave(ConfigNode node)
@@ -353,6 +363,12 @@ namespace RP0
             {
                 tr.Save(n.AddNode("TECH"));
             }
+
+            n = node.AddNode("LEADEREVENTS");
+            foreach (LeaderEvent le in _leaderEvents)
+            {
+                le.Save(n.AddNode("LEADEREVENT"));
+            }
         }
 
         public static DateTime UTToDate(double ut)
@@ -369,6 +385,18 @@ namespace RP0
                 NodeName = tech.ProtoNode.techID,
                 YearMult = tech.YearBasedRateMult,
                 ResearchRate = tech.BuildRate
+            });
+        }
+
+        public void AddLeaderEvent(string leaderName, bool isAdd, double cost)
+        {
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
+
+            _leaderEvents.Add(new LeaderEvent(KSPUtils.GetUT())
+            {
+                LeaderName = leaderName,
+                IsAdd = isAdd,
+                Cost = cost
             });
         }
 
@@ -437,11 +465,14 @@ namespace RP0
                     // TODO: LCs and LPs
                     string.Join(", ", _facilityConstructionEvents.Where(f => f.IsInPeriod(p))
                                                                  .Select(f => $"{f.Facility} ({(_facilityConstructions.FirstOrDefault(fc => fc.FacilityID == f.FacilityID)?.NewLevel ?? -1) + 1}) - {f.State}")
-                                                                 .ToArray())
+                                                                 .ToArray()),
+                    string.Join(", ", _leaderEvents.Where(l => l.IsInPeriod(p))
+                                                 .Select(l => l.LeaderName + ": " + (l.IsAdd ? "add" : "remove"))
+                                                 .ToArray()),
                 };
             });
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
+            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -551,6 +582,15 @@ namespace RP0
             {
                 var dto = new ProgramDto(allPrograms[i]);
                 if (i < allPrograms.Length - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
+            jsonToSend += "], \"leaderEvents\": [";
+
+            for (var i = 0; i < _leaderEvents.Count; i++)
+            {
+                var dto = new LeaderEventDto(_leaderEvents[i]);
+                if (i < _leaderEvents.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
                 else jsonToSend += JsonUtility.ToJson(dto);
             }
 

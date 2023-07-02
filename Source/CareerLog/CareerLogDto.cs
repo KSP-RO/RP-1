@@ -402,4 +402,34 @@ namespace RP0
                 $"{nameof(speed)}: {speed}";
         }
     }
+
+    [Serializable]
+    internal class LeaderEventDto
+    {
+        public string date;
+        public string leaderName;
+        public double cost;
+        public bool isAdd;
+
+        public LeaderEventDto()
+        {
+        }
+
+        public LeaderEventDto(LeaderEvent evt)
+        {
+            date = CareerLog.UTToDate(evt.UT).ToString("o");
+            leaderName = evt.LeaderName;
+            cost = evt.Cost;
+            isAdd = evt.IsAdd;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(date)}: {date}, " +
+                $"{nameof(leaderName)}: {leaderName}, " +
+                $"{nameof(cost)}: {cost}, " +
+                $"{nameof(isAdd)}: {isAdd}";
+        }
+    }
 }

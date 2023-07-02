@@ -215,9 +215,20 @@ namespace RP0.Programs
             }
         }
 
-        public float RepToConfidenceForContract(ConfiguredContract cc)
+        public float RepToConfidenceForContract(ConfiguredContract cc, bool isAwarding)
         {
             foreach (Program p in ActivePrograms)
+            {
+                if (p.optionalContracts.Contains(cc.contractType.name))
+                {
+                    return p.RepToConfidence;
+                }
+            }
+            if (isAwarding || cc.ContractState != Contract.State.Completed)
+                return 0f;
+
+            // Since it's completed (and this is not part of the awarding step), check completed programs too.
+            foreach (Program p in CompletedPrograms)
             {
                 if (p.optionalContracts.Contains(cc.contractType.name))
                 {
@@ -263,7 +274,7 @@ namespace RP0.Programs
                     KerbalConstructionTime.KerbalConstructionTimeData.Instance.Applicants += applicants;
 
                 // Handle Confidence
-                float repToConf = RepToConfidenceForContract(cc);
+                float repToConf = RepToConfidenceForContract(cc, true);
                 if (repToConf > 0f)
                 {
                     float rep = 0;

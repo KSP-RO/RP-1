@@ -123,8 +123,8 @@ namespace RP0
             }
 
             // For some reason need to set here, not in ctor.
-            removalCostRepPercent = 0.1d;
-            removalCostLerpPower = 3d;
+            removalCostRepPercent = 0.2d;
+            removalCostLerpPower = 2.5d;
 
 
             ConfigNode.LoadObjectFromConfig(this, node);

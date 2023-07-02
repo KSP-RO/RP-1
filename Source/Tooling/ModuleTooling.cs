@@ -51,13 +51,16 @@ namespace RP0
 
             bool bypass = HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch;
             float toolingCost = bypass ? 0f : GetToolingCost();
-            bool canAfford = CurrencyModifierQuery.RunQuery(TransactionReasonsRP0.ToolingPurchase.Stock(), -toolingCost, 0f, 0f).CanAfford();
+            var cmq = UnlockCreditHandler.Instance.GetPrePostCostAndAffordability(toolingCost, string.Empty, TransactionReasonsRP0.ToolingPurchase, out double preCost, out double postCost, out double credit, out bool canAfford);
+            string costline = cmq.GetCostLineOverride(true, false, true, true);
+            if (string.IsNullOrEmpty(costline))
+                costline = "nothing";
 
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(
                             "ConfirmToolingPurchase",
-                            $"Tooling has not yet been set up for this part. It will cost { toolingCost:N0} funds.",
+                            $"Tooling has not yet been set up for this part. It will cost {costline} (spending {credit:N0} credit).",
                             "Tooling Purchase",
                             HighLogic.UISkin,
                             new Rect(0.5f, 0.5f, 150f, 60f),
@@ -71,7 +74,7 @@ namespace RP0
                                         {
                                             using (new CareerEventScope(CareerEventType.Tooling)) 
                                             {
-                                                Funding.Instance.AddFunds(-toolingCost, TransactionReasonsRP0.ToolingPurchase.Stock());
+                                                UnlockCreditHandler.Instance.ProcessCredit(toolingCost, string.Empty, TransactionReasonsRP0.ToolingPurchase);
                                             }
                                             PurchaseTooling();
                                             GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
@@ -229,7 +232,7 @@ namespace RP0
                 {
                     using (new CareerEventScope(CareerEventType.Tooling))
                     {
-                        Funding.Instance.AddFunds(-totalCost, TransactionReasonsRP0.ToolingPurchase.Stock());
+                        UnlockCreditHandler.Instance.ProcessCredit(totalCost, string.Empty, TransactionReasonsRP0.ToolingPurchase);
                     }
                 }
             }

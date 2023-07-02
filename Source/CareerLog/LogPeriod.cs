@@ -21,25 +21,52 @@
         public double ProgramFunds;
 
         [Persistent]
-        public double ContractRewards;
-
-        [Persistent]
         public double OtherFundsEarned;
 
         [Persistent]
         public double ScienceEarned;
 
         [Persistent]
+        public double SalaryEngineers;
+
+        [Persistent]
+        public double SalaryResearchers;
+
+        [Persistent]
+        public double SalaryCrew;
+
+        [Persistent]
         public double LaunchFees;
 
         [Persistent]
+        public double VesselPurchase;
+
+        [Persistent]
+        public double VesselRecovery;
+
+        [Persistent]
+        public double LCMaintenance;
+
+        [Persistent]
+        public double FacilityMaintenance;
+
+        /// <summary>
+        /// All maintenance minus subsidy
+        /// </summary>
+        [Persistent]
         public double MaintenanceFees;
+
+        [Persistent]
+        public double TrainingFees;
 
         [Persistent]
         public double ToolingFees;
 
         [Persistent]
         public double EntryCosts;
+
+        [Persistent]
+        public double SpentUnlockCredit;
 
         [Persistent]
         public double ConstructionFees;

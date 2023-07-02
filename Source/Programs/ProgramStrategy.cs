@@ -114,7 +114,7 @@ namespace RP0.Programs
             }
 
             // Handled by base in the Admin screen.
-            //if (ProgramHandler.Instance.ActivePrograms.Count >= ProgramHandler.Instance.ActiveProgramLimit)
+            //if (ProgramHandler.Instance.ProgramPoints >= ProgramHandler.Instance.ActiveProgramLimit)
             //    return false;
 
             return true;

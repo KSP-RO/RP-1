@@ -1053,24 +1053,6 @@ namespace KerbalConstructionTime
             }
 
             
-            //C=cost, c=dry cost, M=wet mass, m=dry mass, U=part tracker, O=overall multiplier, I=inventory effect (0 if not in inv), B=build effect
-            //double effectiveCost = MathParser.GetStandardFormulaValue("EffectivePart",
-            //    new Dictionary<string, string>()
-            //    {
-            //            {"C", cost.ToString()},
-            //            {"c", dryCost.ToString()},
-            //            {"M", wetMass.ToString()},
-            //            {"m", dryMass.ToString()},
-            //            {"U", builds.ToString()},
-            //            {"u", used.ToString()},
-            //            {"O", PresetManager.Instance.ActivePreset.TimeSettings.OverallMultiplier.ToString()},
-            //            {"I", InvEff.ToString()},
-            //            {"B", PresetManager.Instance.ActivePreset.TimeSettings.BuildEffect.ToString()},
-            //            {"PV", partMultiplier.ToString()},
-            //            {"RV", resourceMultiplier.ToString()},
-            //            {"MV", moduleMultiplier.ToString()}
-            //    });
-            // [PV]*[RV]*[MV]*[C]
             double effectiveCost = partMultiplier * resourceMultiplier * moduleMultiplier * cost;
             effectiveCost *= RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(_tags, _resourceAmounts, name);
 

@@ -499,29 +499,47 @@ namespace RP0
             // Best to deduct maintenance fees and add program funding at the same time
             ProgramHandler.Instance.ProcessFunding();
 
-            using (new CareerEventScope(CareerEventType.Maintenance))
+            double timeFactor = UTDiff * (1d / 86400d);
+            double subsidyForPassedTime = timeFactor * MaintenanceSubsidyPerDay;
+
+            // We have to do some weird logic here. We have to get the resultant upkeep first,
+            // then add the subsidy, then actually subtract the upkeep.
+            // This is because we have to subtract piecemeal.
+
+            double facilityMaintenance = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay) * timeFactor;
+            double lcMaintenance = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay) * timeFactor;
+            double salaryEngineers = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay) * timeFactor;
+            double salaryResearchers = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay) * timeFactor;
+            double salaryCrew = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay) * timeFactor;
+            double crewTraining = CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay) * timeFactor;
+            double totalUpkeep = facilityMaintenance + lcMaintenance + salaryEngineers + salaryResearchers + salaryCrew + crewTraining;
+
+            LogPeriod logPeriod = CareerLog.Instance?.CurrentPeriod;
+            if (logPeriod != null)
             {
-                double timeFactor = UTDiff * (1d / 86400d);
-                double subsidyForPassedTime = timeFactor * MaintenanceSubsidyPerDay;
-                // We have to do some weird logic here. We have to get the resultant upkeep first,
-                // then add the subsidy, then actually subtract the upkeep.
-                // This is because we have to subtract piecemeal.
+                logPeriod.FacilityMaintenance -= facilityMaintenance;
+                logPeriod.LCMaintenance -= lcMaintenance;
+                logPeriod.SalaryEngineers -= salaryEngineers;
+                logPeriod.SalaryResearchers -= salaryResearchers;
+                logPeriod.SalaryCrew -= salaryCrew;
+                logPeriod.TrainingFees -= crewTraining;
+            }
+
+            using (new CareerEventScope(CareerEventType.Maintenance))   // TODO: remove this scope at a later date since all the components are now logged separately
+            {
                 double fundsOld = Funding.Instance.Funds;
-                double totalUpkeep = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -FacilityUpkeepPerDay)
-                    + CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -LCsCostPerDay)
-                    + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -IntegrationSalaryPerDay)
-                    + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -ResearchSalaryPerDay)
-                    + CurrencyUtils.Funds(TransactionReasonsRP0.SalaryCrew, -NautBaseUpkeepPerDay - NautInFlightUpkeepPerDay)
-                    + CurrencyUtils.Funds(TransactionReasonsRP0.CrewTraining, -TrainingUpkeepPerDay);
                 // We have to add subsidy first, to be sure we have enough funds.
-                double netSubsidy = Math.Min(CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, subsidyForPassedTime), -totalUpkeep * timeFactor);
+                double netSubsidy = Math.Min(CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, subsidyForPassedTime), -totalUpkeep);
                 if (netSubsidy > 0)
                 {
                     Funding.Instance.AddFunds(subsidyForPassedTime, TransactionReasonsRP0.Subsidy.Stock());
+                    if (logPeriod != null)
+                        logPeriod.SubsidyPaidOut += netSubsidy;
                     double overshoot = (Funding.Instance.Funds - fundsOld) - netSubsidy;
                     if (overshoot > 0)
                         Funding.Instance.AddFunds(-overshoot, TransactionReasons.None);
                 }
+
                 double preMaint = Funding.Instance.Funds;
                 Funding.Instance.AddFunds(-FacilityUpkeepPerDay * timeFactor, TransactionReasons.StructureRepair);
                 Funding.Instance.AddFunds(-LCsCostPerDay * timeFactor, TransactionReasonsRP0.StructureRepairLC.Stock());
@@ -529,11 +547,10 @@ namespace RP0
                 Funding.Instance.AddFunds(-ResearchSalaryPerDay * timeFactor, TransactionReasonsRP0.SalaryResearchers.Stock());
                 Funding.Instance.AddFunds(-(NautBaseUpkeepPerDay + NautInFlightUpkeepPerDay) * timeFactor, TransactionReasonsRP0.SalaryCrew.Stock());
                 Funding.Instance.AddFunds(-TrainingUpkeepPerDay * timeFactor, TransactionReasonsRP0.CrewTraining.Stock());
-                RP0Debug.Log($"[RP-0] MaintenanceHandler removing {(-totalUpkeep * timeFactor - netSubsidy)} funds where upkeep is {-totalUpkeep} ({(preMaint - Funding.Instance.Funds)} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
-                double delta = fundsOld + totalUpkeep * timeFactor + netSubsidy - Funding.Instance.Funds;
-                if (Math.Abs(delta) > 0.1)
-                    Debug.LogError($"[RP-0] $$$$ Error! Fund mismatch from prediction in maintenance! Prediction:\nMaintenance: {totalUpkeep * timeFactor}\n Subsidy: {netSubsidy} subsidy\nTotal: {totalUpkeep * timeFactor + netSubsidy}\nbut real delta: {Funding.Instance.Funds - fundsOld} (diff {delta})");
-                CareerLog.Instance.CurrentPeriod.SubsidyPaidOut += netSubsidy;
+                //RP0Debug.Log($"[RP-0] MaintenanceHandler removing {(-totalUpkeep - netSubsidy)} funds where upkeep is {-totalUpkeep / timeFactor} ({(preMaint - Funding.Instance.Funds)} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
+                //double delta = fundsOld + totalUpkeep + netSubsidy - Funding.Instance.Funds;
+                //if (Math.Abs(delta) > 0.1)
+                //    Debug.LogError($"[RP-0] $$$$ Error! Fund mismatch from prediction in maintenance! Prediction:\nMaintenance: {totalUpkeep}\n Subsidy: {netSubsidy} subsidy\nTotal: {totalUpkeep + netSubsidy}\nbut real delta: {Funding.Instance.Funds - fundsOld} (diff {delta})");
             }
 
             // Finally, update all builds

@@ -51,10 +51,9 @@ namespace RP0
         private readonly List<LPConstruction> _lpConstructions = new List<LPConstruction>();
         private readonly List<FacilityConstructionEvent> _facilityConstructionEvents = new List<FacilityConstructionEvent>();
         private readonly List<TechResearchEvent> _techEvents = new List<TechResearchEvent>();
+        private readonly List<LeaderEvent> _leaderEvents = new List<LeaderEvent>();
         private bool _eventsBound = false;
         private bool _launched = false;
-        private double _prevFundsChangeAmount;
-        private TransactionReasons _prevFundsChangeReason;
         private LogPeriod _currentPeriod;
 
         public static CareerLog Instance { get; private set; }
@@ -68,6 +67,8 @@ namespace RP0
         { 
             get
             {
+                if (!IsEnabled) return null;
+
                 double time = KSPUtils.GetUT();
                 while (time > NextPeriodStart)
                 {
@@ -292,6 +293,15 @@ namespace RP0
                     _techEvents.Add(te);
                 }
             }
+
+            foreach (ConfigNode n in node.GetNodes("LEADEREVENTS"))
+            {
+                foreach (ConfigNode ln in n.GetNodes("LEADEREVENT"))
+                {
+                    var le = new LeaderEvent(ln);
+                    _leaderEvents.Add(le);
+                }
+            }
         }
 
         public override void OnSave(ConfigNode node)
@@ -351,6 +361,12 @@ namespace RP0
             {
                 tr.Save(n.AddNode("TECH"));
             }
+
+            n = node.AddNode("LEADEREVENTS");
+            foreach (LeaderEvent le in _leaderEvents)
+            {
+                le.Save(n.AddNode("LEADEREVENT"));
+            }
         }
 
         public static DateTime UTToDate(double ut)
@@ -367,6 +383,18 @@ namespace RP0
                 NodeName = tech.ProtoNode.techID,
                 YearMult = tech.YearBasedRateMult,
                 ResearchRate = tech.BuildRate
+            });
+        }
+
+        public void AddLeaderEvent(string leaderName, bool isAdd, double cost)
+        {
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
+
+            _leaderEvents.Add(new LeaderEvent(KSPUtils.GetUT())
+            {
+                LeaderName = leaderName,
+                IsAdd = isAdd,
+                Cost = cost
             });
         }
 
@@ -388,17 +416,9 @@ namespace RP0
             var rows = _periodDict.Select(p => p.Value)
                                   .Select(p => 
             {
-                double advanceFunds = _contractDict.Where(c => c.Type == ContractEventType.Accept && c.IsInPeriod(p))
-                                                   .Select(c => c.FundsChange)
-                                                   .Sum();
-
-                double rewardFunds = _contractDict.Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(p))
-                                                  .Select(c => c.FundsChange)
-                                                  .Sum();
-
-                double failureFunds = -_contractDict.Where(c => (c.Type == ContractEventType.Cancel || c.Type == ContractEventType.Fail) && c.IsInPeriod(p))
-                                                    .Select(c => c.FundsChange)
-                                                    .Sum();
+                double rewardRep = _contractDict.Where(c => c.Type == ContractEventType.Complete && c.IsInPeriod(p))
+                                                .Select(c => c.RepChange)
+                                                .Sum();
                 return new[]
                 {
                     UTToDate(p.StartUT).ToString("yyyy-MM"),
@@ -407,9 +427,7 @@ namespace RP0
                     p.CurrentFunds.ToString("F0"),
                     p.CurrentSci.ToString("F1"),
                     p.ScienceEarned.ToString("F1"),
-                    advanceFunds.ToString("F0"),
-                    rewardFunds.ToString("F0"),
-                    failureFunds.ToString("F0"),
+                    rewardRep.ToString("F0"),
                     p.OtherFundsEarned.ToString("F0"),
                     p.LaunchFees.ToString("F0"),
                     p.MaintenanceFees.ToString("F0"),
@@ -435,11 +453,14 @@ namespace RP0
                     // TODO: LCs and LPs
                     string.Join(", ", _facilityConstructionEvents.Where(f => f.IsInPeriod(p))
                                                                  .Select(f => $"{f.Facility} ({(_facilityConstructions.FirstOrDefault(fc => fc.FacilityID == f.FacilityID)?.NewLevel ?? -1) + 1}) - {f.State}")
-                                                                 .ToArray())
+                                                                 .ToArray()),
+                    string.Join(", ", _leaderEvents.Where(l => l.IsInPeriod(p))
+                                                 .Select(l => l.LeaderName + ": " + (l.IsAdd ? "add" : "remove"))
+                                                 .ToArray()),
                 };
             });
 
-            var columnNames = new[] { "Month", "VAB", "SPH", "RnD", "Current Funds", "Current Sci", "Total sci earned", "Contract advances", "Contract rewards", "Contract penalties", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities" };
+            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract rep rewards", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -552,6 +573,15 @@ namespace RP0
                 else jsonToSend += JsonUtility.ToJson(dto);
             }
 
+            jsonToSend += "], \"leaderEvents\": [";
+
+            for (var i = 0; i < _leaderEvents.Count; i++)
+            {
+                var dto = new LeaderEventDto(_leaderEvents[i]);
+                if (i < _leaderEvents.Count - 1) jsonToSend += JsonUtility.ToJson(dto) + ",";
+                else jsonToSend += JsonUtility.ToJson(dto);
+            }
+
             jsonToSend += "] }";
 
             Debug.Log("[RP-0] Request payload: " + jsonToSend);
@@ -598,12 +628,21 @@ namespace RP0
                 currentSci = logPeriod.CurrentSci,
                 rndQueueLength = logPeriod.RnDQueueLength,
                 scienceEarned = logPeriod.ScienceEarned,
+                salaryEngineers = logPeriod.SalaryEngineers,
+                salaryResearchers = logPeriod.SalaryResearchers,
+                salaryCrew = logPeriod.SalaryCrew,
                 programFunds = logPeriod.ProgramFunds,
                 otherFundsEarned = logPeriod.OtherFundsEarned,
                 launchFees = logPeriod.LaunchFees,
+                vesselPurchase = logPeriod.VesselPurchase,
+                vesselRecovery = logPeriod.VesselRecovery,
+                lcMaintenance = logPeriod.LCMaintenance,
+                facilityMaintenance = logPeriod.FacilityMaintenance,
                 maintenanceFees = logPeriod.MaintenanceFees,
+                trainingFees = logPeriod.TrainingFees,
                 toolingFees = logPeriod.ToolingFees,
                 entryCosts = logPeriod.EntryCosts,
+                spentUnlockCredit = logPeriod.SpentUnlockCredit,
                 constructionFees = logPeriod.ConstructionFees,
                 otherFees = logPeriod.OtherFees,
                 subsidySize = logPeriod.SubsidySize,
@@ -677,7 +716,7 @@ namespace RP0
 
         private void CurrenciesModified(CurrencyModifierQuery query)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             float fundsDelta = query.GetTotal(Currency.Funds);
             if (fundsDelta != 0f)
@@ -694,15 +733,7 @@ namespace RP0
 
         private void FundsChanged(float changeDelta, TransactionReasons reason)
         {
-            _prevFundsChangeAmount = changeDelta;
-            _prevFundsChangeReason = reason;
-
-            if (reason == TransactionReasons.ContractPenalty || reason == TransactionReasons.ContractDecline ||
-                reason == TransactionReasons.ContractAdvance || reason == TransactionReasons.ContractReward)
-            {
-                CurrentPeriod.ContractRewards += changeDelta;
-                return;
-            }
+            TransactionReasonsRP0 reasonRP0 = reason.RP0();
 
             if (reason == TransactionReasons.Mission)
             {
@@ -722,19 +753,31 @@ namespace RP0
                 return;
             }
 
-            if (reason == TransactionReasons.VesselRollout || reason == TransactionReasons.VesselRecovery)
+            if (reasonRP0 == TransactionReasonsRP0.VesselPurchase)
+            {
+                CurrentPeriod.VesselPurchase -= changeDelta;
+                return;
+            }
+
+            if ((reasonRP0 & TransactionReasonsRP0.Rollouts) != 0)
             {
                 CurrentPeriod.LaunchFees -= changeDelta;
                 return;
             }
 
-            if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock.Stock())
+            if (reasonRP0 == TransactionReasonsRP0.VesselRecovery)
+            {
+                CurrentPeriod.VesselRecovery += changeDelta;
+                return;
+            }
+
+            if (reasonRP0 == TransactionReasonsRP0.PartOrUpgradeUnlock)
             {
                 CurrentPeriod.EntryCosts -= changeDelta;
                 return;
             }
 
-            if (reason == TransactionReasons.StructureConstruction)
+            if (reasonRP0 == TransactionReasonsRP0.StructureConstruction)
             {
                 CurrentPeriod.ConstructionFees -= changeDelta;
                 return;
@@ -761,12 +804,11 @@ namespace RP0
 
         private void ContractAccepted(Contract c)
         {
-            if (CareerEventScope.ShouldIgnore || c.AutoAccept) return;   // Do not record the Accept event for record contracts
+            if (CareerEventScope.ShouldIgnore || !IsEnabled || c.AutoAccept) return;   // Do not record the Accept event for record contracts
 
             _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Accept,
-                FundsChange = c.FundsAdvance,
                 RepChange = 0,
                 DisplayName = c.Title,
                 InternalName = GetContractInternalName(c)
@@ -775,12 +817,11 @@ namespace RP0
 
         private void ContractCompleted(Contract c)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Complete,
-                FundsChange = c.FundsCompletion,
                 RepChange = c.ReputationCompletion,
                 DisplayName = c.Title,
                 InternalName = GetContractInternalName(c)
@@ -789,20 +830,11 @@ namespace RP0
 
         private void ContractCancelled(Contract c)
         {
-            if (CareerEventScope.ShouldIgnore) return;
-
-            // KSP first takes the contract penalty and then fires the contract events
-            double fundsChange = 0;
-            if (_prevFundsChangeReason == TransactionReasons.ContractPenalty)
-            {
-                Debug.Log($"[RP-0] Found that {_prevFundsChangeAmount} was given as contract penalty");
-                fundsChange = _prevFundsChangeAmount;
-            }
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
             {
                 Type = ContractEventType.Cancel,
-                FundsChange = fundsChange,
                 RepChange = 0,
                 DisplayName = c.Title,
                 InternalName = GetContractInternalName(c)
@@ -811,7 +843,7 @@ namespace RP0
 
         private void ContractFailed(Contract c)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             string internalName = GetContractInternalName(c);
             double ut = KSPUtils.GetUT();
@@ -824,7 +856,6 @@ namespace RP0
             _contractDict.Add(new ContractEvent(ut)
             {
                 Type = ContractEventType.Fail,
-                FundsChange = c.FundsFailure,
                 RepChange = c.ReputationFailure,
                 DisplayName = c.Title,
                 InternalName = internalName
@@ -848,7 +879,7 @@ namespace RP0
 
         private void VesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> ev)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             // KJR can clobber the vessel back to prelaunch state in case of clamp wobble. Need to exclude such events.
             if (!_launched && ev.from == Vessel.Situations.PRELAUNCH && ev.host == FlightGlobals.ActiveVessel)
@@ -870,7 +901,7 @@ namespace RP0
 
         private void CrewKilled(EventReport data)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             if (!HighLogic.CurrentGame.CrewRoster.Tourist.Any(c => c.name == data.sender))    // Do not count tourist/test animal deaths
             {
@@ -902,8 +933,6 @@ namespace RP0
 
         private void OnKctTechCompleted(TechItem tech)
         {
-            if (CareerEventScope.ShouldIgnore) return;
-
             AddTechEvent(tech);
         }
 
@@ -987,7 +1016,7 @@ namespace RP0
 
         private void AddLCConstructionEvent(LCConstruction data, LCItem lc, ConstructionState state)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             Guid modId = data?.modId ?? lc.ModID;    // Should only happen when LCs are created through code and thus do not have Construction items
             if (!_lcs.Any(logLC => logLC.ModID == modId))
@@ -1007,7 +1036,7 @@ namespace RP0
 
         private void AddPadConstructionEvent(PadConstruction data, KCT_LaunchPad lp, ConstructionState state)
         {
-            if (CareerEventScope.ShouldIgnore) return;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             Guid id = data?.id ?? lp.id;
             LCItem lc = data?.LC ?? lp.LC;

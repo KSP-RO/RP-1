@@ -16,15 +16,16 @@ namespace KerbalConstructionTime
         private static readonly List<KSCItem> _EmptyKSCs = new List<KSCItem>();
         public static List<KSCItem> KSCs => KerbalConstructionTimeData.Instance?.KSCs ?? _EmptyKSCs;
         
-        public const int VERSION = 2;
+        public const int VERSION = 3;
 
         public static ToolbarControl ToolbarControl;
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;
-        public static double EditorRolloutCosts = 0;
-        public static double EditorRolloutTime = 0;
+        public static double EditorRolloutCost = 0;
+        public static double EditorRolloutBP = 0;
         public static double EditorUnlockCosts = 0;
+        public static double EditorToolingCosts = 0;
         public static List<string> EditorRequiredTechs = new List<string>();
 
         public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();

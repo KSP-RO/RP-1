@@ -11,6 +11,10 @@ namespace RP0
     {
         public static Dictionary<string, double> ActivatedStrategies = new Dictionary<string, double>();
 
+        [Persistent]
+        protected bool isDisabled;
+        public bool IsDisabled => isDisabled;
+
         /// <summary>
         /// Some leaders (Contractors, e.g.) can appear in two departments at once. If this is set,
         /// the strategy will appear in both the main department and this one.
@@ -123,8 +127,8 @@ namespace RP0
             }
 
             // For some reason need to set here, not in ctor.
-            removalCostRepPercent = 0.1d;
-            removalCostLerpPower = 3d;
+            removalCostRepPercent = 0.2d;
+            removalCostLerpPower = 2.5d;
 
 
             ConfigNode.LoadObjectFromConfig(this, node);

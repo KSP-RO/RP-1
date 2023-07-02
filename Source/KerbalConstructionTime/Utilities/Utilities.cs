@@ -397,11 +397,7 @@ namespace KerbalConstructionTime
 
         public static double SpendFunds(double toSpend, TransactionReasonsRP0 reason)
         {
-            if (!CurrentGameIsCareer())
-                return 0;
-            KCTDebug.Log($"Removing funds: {toSpend}, New total: {Funding.Instance.Funds - toSpend}");
-            Funding.Instance.AddFunds(-toSpend, reason.Stock());
-            return Funding.Instance.Funds;
+            return SpendFunds(toSpend, reason.Stock());
         }
 
         public static double AddFunds(double toAdd, TransactionReasons reason)
@@ -411,6 +407,11 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Adding funds: {toAdd}, New total: {Funding.Instance.Funds + toAdd}");
             Funding.Instance.AddFunds(toAdd, reason);
             return Funding.Instance.Funds;
+        }
+
+        public static double AddFunds(double toAdd, TransactionReasonsRP0 reason)
+        {
+            return AddFunds(toAdd, reason.Stock());
         }
 
         public static void ProcessSciPointTotalChange(float changeDelta)
@@ -496,7 +497,7 @@ namespace KerbalConstructionTime
                     if (KCTGameStates.ActiveKSC.IsAnyLCOperational)
                         dialogStr = $"a launch complex. Please switch to a launch complex and try again.";
                     else
-                        dialogStr = $"a launch complex. You must build a launch complex (or wait for a launch complex to finish building or renovating) before you can build this vessel.";
+                        dialogStr = $"a launch complex. You must build a launch complex (or wait for a launch complex to finish building or renovating) before you can integrate this vessel.";
 
                 }
                 else
@@ -504,7 +505,7 @@ namespace KerbalConstructionTime
                     if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
                         dialogStr = $"the Hangar. Please switch to the Hangar as active launch complex and try again.";
                     else
-                        dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can build this vessel.";
+                        dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can integrate this vessel.";
                 }
 
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
@@ -540,7 +541,7 @@ namespace KerbalConstructionTime
 
         public static void AddVesselToBuildList(BuildListVessel blv)
         {
-            SpendFunds(blv.GetTotalCost(), TransactionReasons.VesselRollout);
+            SpendFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
 
             if (blv.Type == BuildListVessel.ListType.SPH)
                 blv.launchSite = "Runway";
@@ -569,7 +570,7 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"Added {blv.shipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
             KCTDebug.Log("Launch site is " + blv.launchSite);
-            string text = $"Added {blv.shipName} to build list at {lc.Name}.";
+            string text = $"Added {blv.shipName} to integration list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
         }
@@ -596,11 +597,11 @@ namespace KerbalConstructionTime
                 usedShipsCost += v.GetTotalCost();
                 v.RemoveFromBuildList(out _);
             }
-            AddFunds(usedShipsCost, TransactionReasons.VesselRollout);
+            AddFunds(usedShipsCost, TransactionReasonsRP0.VesselPurchase);
 
             var validator = new VesselBuildValidator();
             validator.SuccessAction = (postEditShip2) => SaveShipEdits(editableShip, postEditShip2);
-            validator.FailureAction = () => SpendFunds(usedShipsCost, TransactionReasons.VesselRollout);
+            validator.FailureAction = () => SpendFunds(usedShipsCost, TransactionReasonsRP0.VesselPurchase);
 
             validator.ProcessVessel(postEditShip);
         }
@@ -675,7 +676,7 @@ namespace KerbalConstructionTime
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
         {
             // this will spend the funds, which is why we set costsFunds=false below.
-            RP0.UnlockSubsidyHandler.Instance.SpendCreditAndCost(availableParts);
+            RP0.UnlockCreditHandler.Instance.SpendCreditAndCost(availableParts);
 
             foreach (var ap in availableParts)
             {
@@ -893,19 +894,21 @@ namespace KerbalConstructionTime
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
-                KCTGameStates.EditorRolloutCosts = Formula.GetRolloutCost(KerbalConstructionTime.Instance.EditorVessel);
-                KCTGameStates.EditorRolloutTime = Formula.GetRolloutBP(KerbalConstructionTime.Instance.EditorVessel);
+                KCTGameStates.EditorRolloutCost = Formula.GetRolloutCost(KerbalConstructionTime.Instance.EditorVessel);
+                KCTGameStates.EditorRolloutBP = Formula.GetRolloutBP(KerbalConstructionTime.Instance.EditorVessel);
             }
             else
             {
                 // SPH lacks rollout times and costs
-                KCTGameStates.EditorRolloutCosts = 0;
-                KCTGameStates.EditorRolloutTime = 0;
+                KCTGameStates.EditorRolloutCost = 0;
+                KCTGameStates.EditorRolloutBP = 0;
             }
 
             Tuple<float, List<string>> unlockInfo = GetVesselUnlockInfo(ship);
             KCTGameStates.EditorUnlockCosts = unlockInfo.Item1;
             KCTGameStates.EditorRequiredTechs = unlockInfo.Item2;
+            RP0.ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
+            KCTGameStates.EditorToolingCosts = toolingCost;
 
             // It would be better to only do this if necessary, but eh.
             // It's not easy to know if various buried fields in the blv changed.
@@ -1604,7 +1607,7 @@ namespace KerbalConstructionTime
             {
                 b.RemoveFromBuildList(out _);
             }
-            AddFunds(b.GetTotalCost(), TransactionReasons.VesselRollout);
+            AddFunds(b.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
         }
 
         public static void ChangeEngineers(LCItem currentLC, int delta)

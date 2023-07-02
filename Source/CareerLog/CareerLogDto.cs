@@ -19,12 +19,21 @@ namespace RP0
         public double currentSci;
         public int rndQueueLength;
         public double scienceEarned;
+        public double salaryEngineers;
+        public double salaryResearchers;
+        public double salaryCrew;
         public double programFunds;
         public double otherFundsEarned;
         public double launchFees;
+        public double vesselPurchase;
+        public double vesselRecovery;
+        public double lcMaintenance;
+        public double facilityMaintenance;
         public double maintenanceFees;
+        public double trainingFees;
         public double toolingFees;
         public double entryCosts;
+        public double spentUnlockCredit;
         public double constructionFees;
         public double otherFees;
         public double subsidySize;
@@ -49,12 +58,21 @@ namespace RP0
                 $"{nameof(currentSci)}: {currentSci}, " +
                 $"{nameof(rndQueueLength)}: {rndQueueLength}, " +
                 $"{nameof(scienceEarned)}: {scienceEarned}, " +
+                $"{nameof(salaryEngineers)}: {salaryEngineers}, " +
+                $"{nameof(salaryResearchers)}: {salaryResearchers}, " +
+                $"{nameof(salaryCrew)}: {salaryCrew}, " +
                 $"{nameof(programFunds)}: {programFunds}, " +
                 $"{nameof(otherFundsEarned)}: {otherFundsEarned}, " +
                 $"{nameof(launchFees)}: {launchFees}, " +
+                $"{nameof(vesselPurchase)}: {vesselPurchase}, " +
+                $"{nameof(vesselRecovery)}: {vesselRecovery}, " +
+                $"{nameof(lcMaintenance)}: {lcMaintenance}, " +
+                $"{nameof(facilityMaintenance)}: {facilityMaintenance}, " +
                 $"{nameof(maintenanceFees)}: {maintenanceFees}, " +
+                $"{nameof(trainingFees)}: {trainingFees}, " +
                 $"{nameof(toolingFees)}: {toolingFees}, " +
                 $"{nameof(entryCosts)}: {entryCosts}, " +
+                $"{nameof(spentUnlockCredit)}: {spentUnlockCredit}, " +
                 $"{nameof(constructionFees)}: {constructionFees}, " +
                 $"{nameof(otherFees)}: {otherFees}, " +
                 $"{nameof(subsidySize)}: {subsidySize}, " +
@@ -72,7 +90,6 @@ namespace RP0
     {
         public string internalName;
         public string date;
-        public double fundsChange;
         public double repChange;
         public ContractEventType type;
 
@@ -84,7 +101,6 @@ namespace RP0
         {
             internalName = ce.InternalName;
             date = CareerLog.UTToDate(ce.UT).ToString("o");
-            fundsChange = ce.FundsChange;
             repChange = ce.RepChange;
             type = ce.Type;
         }
@@ -94,7 +110,6 @@ namespace RP0
             return
                 $"{nameof(internalName)}: {internalName}, " +
                 $"{nameof(date)}: {date}, " +
-                $"{nameof(fundsChange)}: {fundsChange}, " +
                 $"{nameof(repChange)}: {repChange}, " +
                 $"{nameof(type)}: {type}";
         }
@@ -382,6 +397,36 @@ namespace RP0
                 $"{nameof(fundsPaidOut)}: {fundsPaidOut}, " +
                 $"{nameof(repPenaltyAssessed)}: {repPenaltyAssessed}, " +
                 $"{nameof(speed)}: {speed}";
+        }
+    }
+
+    [Serializable]
+    internal class LeaderEventDto
+    {
+        public string date;
+        public string leaderName;
+        public double cost;
+        public bool isAdd;
+
+        public LeaderEventDto()
+        {
+        }
+
+        public LeaderEventDto(LeaderEvent evt)
+        {
+            date = CareerLog.UTToDate(evt.UT).ToString("o");
+            leaderName = evt.LeaderName;
+            cost = evt.Cost;
+            isAdd = evt.IsAdd;
+        }
+
+        public override string ToString()
+        {
+            return
+                $"{nameof(date)}: {date}, " +
+                $"{nameof(leaderName)}: {leaderName}, " +
+                $"{nameof(cost)}: {cost}, " +
+                $"{nameof(isAdd)}: {isAdd}";
         }
     }
 }

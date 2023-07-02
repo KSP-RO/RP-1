@@ -88,7 +88,99 @@
         "engine_config": "SPT100",
         "upgrade": false,
         "entry_cost_mods": "SPT-100",
-        "identical_part_name": "",
+        "identical_part_name": "SPT-100",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "RO-SPT140",
+        "title": "SPT-140 Hall Effect Thruster",
+        "description": "",
+        "mod": "Near Future Propulsion",
+        "cost": 520,
+        "entry_cost": "0",
+        "category": "ION",
+        "info": "Electric Engine",
+        "year": "1998",
+        "technology": "elecPropulsion1998",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SPT140",
+        "upgrade": false,
+        "entry_cost_mods": "SPT-140",
+        "identical_part_name": "SPT-140",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "RO-SPT50",
+        "title": "SPT-50 Hall Effect Thruster",
+        "description": "",
+        "mod": "Near Future Propulsion",
+        "cost": 140,
+        "entry_cost": "0",
+        "category": "ION",
+        "info": "Electric Engine",
+        "year": "1976",
+        "technology": "earlyElecPropulsion",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Meteor",
+        "engine_config": "SPT50",
+        "upgrade": false,
+        "entry_cost_mods": "SPT-50",
+        "identical_part_name": "SPT-50",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "RO-SPT60",
+        "title": "SPT-60  Hall Effect Thruster",
+        "description": "",
+        "mod": "Near Future Propulsion",
+        "cost": 226,
+        "entry_cost": "0",
+        "category": "ION",
+        "info": "Electric Engine",
+        "year": "1971",
+        "technology": "earlyElecPropulsion",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Meteor",
+        "engine_config": "SPT60",
+        "upgrade": false,
+        "entry_cost_mods": "SPT-60",
+        "identical_part_name": "SPT-60",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "RO-SPT70",
+        "title": "SPT-70 Hall Effect Thruster",
+        "description": "",
+        "mod": "Near Future Propulsion",
+        "cost": 242,
+        "entry_cost": "0",
+        "category": "ION",
+        "info": "Electric Engine",
+        "year": "1982",
+        "technology": "elecPropulsion1981",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SPT70",
+        "upgrade": false,
+        "entry_cost_mods": "SPT-70",
+        "identical_part_name": "SPT-70",
         "module_tags": [
             "EngineLiquidPF"
         ]

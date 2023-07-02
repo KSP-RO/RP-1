@@ -110,7 +110,7 @@ namespace KerbalConstructionTime
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
                         "Failed editor checks!",
                         "Warning! This vessel did not pass the editor checks! " 
-                            + (BypassFacilityRequirements ? "It will still be added to plans, but you cannot build it without rectifying these issues." : string.Empty)
+                            + (BypassFacilityRequirements ? "It will still be added to plans, but you cannot integrate it without rectifying these issues." : string.Empty)
                             + "\nListed below are the failed checks:\n"
                         + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()),
                         "Acknowledged",
@@ -169,17 +169,16 @@ namespace KerbalConstructionTime
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds);
 
-            double credit = UnlockSubsidyHandler.Instance.GetCreditAmount(partList);
+            double credit = UnlockCreditHandler.Instance.GetCreditAmount(partList);
 
             double spentCredit = Math.Min(postCMQUnlockCost, credit);
-            double postCreditTotal = postCMQUnlockCost - spentCredit;
             cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentCredit);
 
-            int partCount = purchasableParts.Count();
-            string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "build vessel";
+            int partCount = partList.Count;
+            string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "integrate vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{postCreditTotal:N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} credit)", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0d, -cmq.GetTotal(CurrencyRP0.Funds)):N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} credit)", () =>
                 {
                     if (cmq.CanAfford())
                     {
@@ -243,9 +242,9 @@ namespace KerbalConstructionTime
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, -totalCost, 0d, 0d);
                 if (!cmq.CanAfford())
                 {
-                    KCTDebug.Log($"Tried to add {blv.shipName} to build list but not enough funds.");
+                    KCTDebug.Log($"Tried to add {blv.shipName} to integration list but not enough funds.");
                     KCTDebug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds)}, Current funds: {Funding.Instance.Funds}");
-                    var msg = new ScreenMessage("Not Enough Funds To Build!", 4f, ScreenMessageStyle.UPPER_CENTER);
+                    var msg = new ScreenMessage("Not Enough Funds To Integrate!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
 
                     return ValidationResult.Fail;
@@ -375,10 +374,12 @@ namespace KerbalConstructionTime
                         string costStr = cmq.GetCostLineOverride(true, false, false, true);
                         double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds);
                         double invertCMQOp = error.CostToResolve / trueTotal;
-                        double creditAmtToUse = Math.Min(trueTotal, UnlockSubsidyHandler.Instance.GetCreditAmount(error.TechToResolve));
+                        double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.GetCreditAmount(error.TechToResolve));
                         cmq.AddDeltaAuthorized(CurrencyRP0.Funds, creditAmtToUse);
-                        string costAfterCreditStr = $"{cmq.GetCostLine(true, false, true, true)} after credit";
-                        var button = new DialogGUIButtonWithTooltip($"Unlock ({costStr})",
+                        string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true);
+                        if (string.IsNullOrEmpty(afterCreditLine))
+                            afterCreditLine = "free";
+                        var button = new DialogGUIButtonWithTooltip($"Unlock ({afterCreditLine})",
                                                          () =>
                                                          {
                                                              PurchaseConfig(error.PM, error.TechToResolve);
@@ -386,7 +387,7 @@ namespace KerbalConstructionTime
                                                          },
                                                          () => cmq.CanAfford(),
                                                          100, -1, true)
-                                                            { tooltipText = costAfterCreditStr };
+                                                            { tooltipText = $"Spending {creditAmtToUse:N0} credit\n(Base cost {costStr})" };
                         list.Add(new DialogGUIHorizontalLayout(TextAnchor.MiddleLeft,
                                      new DialogGUILabel("<color=green><size=20>•</size></color>", 7),
                                      new DialogGUILabel(txt, expandW: true),

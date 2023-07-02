@@ -139,13 +139,15 @@ namespace RP0
             if (GUILayout.Button("Tool All", HighLogic.Skin.button))
             {
                 GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ToolingPurchase, -toolingCost, 0d, 0d);
-                bool canAfford = cmq.CanAfford();
+                var cmq = UnlockCreditHandler.Instance.GetPrePostCostAndAffordability(toolingCost, string.Empty, TransactionReasonsRP0.ToolingPurchase, out double preCost, out double postCost, out double credit, out bool canAfford);
                 string buttonText = canAfford ? "Purchase All Toolings" : "Can't Afford";
+                string costline = cmq.GetCostLineOverride(true, false, true, true);
+                if (string.IsNullOrEmpty(costline))
+                    costline = "nothing";
 
                 var dialog = new MultiOptionDialog(
                         "ConfirmAllToolingsPurchase",
-                        $"Tooling for all untooled parts will cost {-cmq.GetTotal(CurrencyRP0.Funds):N0} funds.",
+                        $"Tooling for all untooled parts will cost {costline} (spending {credit:N0} credit).",
                         "Tooling Purchase",
                         HighLogic.UISkin,
                         new Rect(0.5f, 0.5f, 150f, 60f),
@@ -167,7 +169,7 @@ namespace RP0
         {
             GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
 
-            bool canAfford = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ToolingPurchase, -toolingCost, 0d, 0d).CanAfford();
+            UnlockCreditHandler.Instance.GetPrePostCostAndAffordability(toolingCost, string.Empty, TransactionReasonsRP0.ToolingPurchase, out _, out _, out _, out bool canAfford);
             if (canAfford)
             {
                 ModuleTooling.PurchaseToolingBatch(untooledParts);
@@ -179,7 +181,7 @@ namespace RP0
             }
         }
 
-        private static void GetUntooledPartsAndCost(out List<ModuleTooling> parts, out float toolingCost)
+        public static void GetUntooledPartsAndCost(out List<ModuleTooling> parts, out float toolingCost)
         {
             parts = EditorLogic.fetch.ship.Parts.Slinq().SelectMany(p => p.FindModulesImplementing<ModuleTooling>().Slinq())
                                                         .Where(mt => !mt.IsUnlocked())
@@ -189,7 +191,7 @@ namespace RP0
 
         private void RenderToolingPreviewButton()
         {
-            var c = new GUIContent("Press to preview fully tooled build time & cost", "Hold the button pressed and watch the cost & time values change in the Integration Info window");
+            var c = new GUIContent("Press to preview fully tooled integration time & cost", "Hold the button pressed and watch the cost & time values change in the Integration Info window");
             if (GUILayout.RepeatButton(c, HighLogic.Skin.button))
             {
                 if (!_isToolingTempDisabled)

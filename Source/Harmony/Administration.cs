@@ -19,8 +19,8 @@ namespace RP0.Harmony
         internal static void FixProgramCounts(Administration __instance)
         {
             // We need to reset the strategy count because we only want to track programs, not leaders too.
-            __instance.activeStrategyCount = ProgramHandler.Instance.ActivePrograms.Count;
-            __instance.maxActiveStrategies = ProgramHandler.Instance.ActiveProgramLimit;
+            __instance.activeStrategyCount = ProgramHandler.Instance.ActiveProgramSlots;
+            __instance.maxActiveStrategies = ProgramHandler.Instance.MaxProgramSlots;
         }
 
         [HarmonyPrefix]
@@ -252,7 +252,7 @@ namespace RP0.Harmony
             _strategies.Clear();
 
             FixProgramCounts(__instance);
-            __instance.activeStratCount.text = Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
+            __instance.UpdateStrategyCount();
 
             return false;
         }
@@ -386,8 +386,10 @@ namespace RP0.Harmony
             {
                 var newActiveStrat = Administration.Instance.SelectedWrapper.strategy;
                 AdminExtender.Instance.SetTabView(AdministrationActiveTabView.Active);
-                Administration.StrategyWrapper selectedStrategy = Administration.Instance.AddActiveStratItem(Administration.Instance.SelectedWrapper.strategy);
-                Administration.Instance.SetSelectedStrategy(selectedStrategy);
+                Administration.Instance.scrollListActive.AddItem(Administration.Instance.CreateActiveStratItem(Administration.Instance.SelectedWrapper.strategy, out var wrapper));
+                Administration.Instance.SetSelectedStrategy(wrapper);
+                FixProgramCounts(Administration.Instance);
+                Administration.Instance.UpdateStrategyCount();
                 // Reset program speeds - safe because we early-out if a program is active or complete.
                 foreach (var strat in StrategySystem.Instance.Strategies)
                 {
@@ -531,7 +533,7 @@ namespace RP0.Harmony
         [HarmonyPatch("UpdateStrategyCount")]
         internal static bool Prefix_UpdateStrategyCount(Administration __instance)
         {
-            __instance.activeStratCount.text = Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActivePrograms.Count, ProgramHandler.Instance.ActiveProgramLimit);
+            __instance.activeStratCount.text = Localizer.Format("#autoLOC_439627", ProgramHandler.Instance.ActiveProgramSlots, ProgramHandler.Instance.MaxProgramSlots);
             return false;
         }
     }

@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         private static List<string> _launchSites = new List<string>();
         private static int _mouseOnRolloutButton = -1;
         private static int _mouseOnAirlaunchButton = -1;
-        private static bool _isOperationsSelected, _isConstructionSelected, _isResearchSelected, _isCombinedSelected;
+        private static bool _isIntegrationSelected, _isConstructionSelected, _isResearchSelected, _isCombinedSelected;
         private static Vector2 _launchSiteScrollView;
         private static Guid _selectedVesselId = new Guid();
         private static bool _isSelectingLaunchSiteForVessel = true;
@@ -35,32 +35,32 @@ namespace KerbalConstructionTime
             BuildListWindowPosition.height = EditorBuildListWindowPosition.height = 1;
             switch (list)
             {
-                case "Operations":
-                    _isOperationsSelected = !_isOperationsSelected;
+                case "Integration":
+                    _isIntegrationSelected = !_isIntegrationSelected;
                     _isConstructionSelected = false;
                     _isResearchSelected = false;
                     _isCombinedSelected = false;
                     break;
                 case "Construction":
-                    _isOperationsSelected = false;
+                    _isIntegrationSelected = false;
                     _isConstructionSelected = !_isConstructionSelected;
                     _isResearchSelected = false;
                     _isCombinedSelected = false;
                     break;
                 case "Research":
-                    _isOperationsSelected = false;
+                    _isIntegrationSelected = false;
                     _isConstructionSelected = false;
                     _isResearchSelected = !_isResearchSelected;
                     _isCombinedSelected = false;
                     break;
                 case "Combined":
                     _isCombinedSelected = !_isCombinedSelected;
-                    _isOperationsSelected = false;
+                    _isIntegrationSelected = false;
                     _isConstructionSelected = false;
                     _isResearchSelected = false;
                     break;
                 default:
-                    _isOperationsSelected = _isConstructionSelected = _isResearchSelected = _isCombinedSelected = false;
+                    _isIntegrationSelected = _isConstructionSelected = _isResearchSelected = _isCombinedSelected = false;
                     break;
             }
         }
@@ -260,9 +260,9 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
 
 
-            bool operationsSelectedNew = GUILayout.Toggle(_isOperationsSelected, "Operations", GUI.skin.button);
-            if (operationsSelectedNew != _isOperationsSelected)
-                SelectList("Operations");
+            bool integrationSelectedNew = GUILayout.Toggle(_isIntegrationSelected, "Integration", GUI.skin.button);
+            if (integrationSelectedNew != _isIntegrationSelected)
+                SelectList("Integration");
 
             bool constructionSelectedNew = false;
             if (Utilities.CurrentGameIsCareer())
@@ -330,7 +330,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            if (_isOperationsSelected)
+            if (_isIntegrationSelected)
             {
                 RenderBuildList();
             }
@@ -870,9 +870,9 @@ namespace KerbalConstructionTime
             if (buildList.Count == 0)
             {
                 if (HighLogic.LoadedSceneIsEditor)
-                    GUILayout.Label("No vessels under construction!");
+                    GUILayout.Label("No vessels integrating!");
                 else
-                    GUILayout.Label($"No vessels under construction! Go to the {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad ? "VAB" : "SPH")} to build more.");
+                    GUILayout.Label($"No vessels integrating! Go to the {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad ? "VAB" : "SPH")} to add more.");
             }
             bool recalc = false;
             for (int i = 0; i < buildList.Count; i++)
@@ -1437,7 +1437,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
             activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
-                $"Enable rush building.\nRate: {PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult:N1}x\nSalary cost: {PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult:N1}x{(activeLC.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"));
+                $"Enable rush integration.\nRate: {PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult:N1}x\nSalary cost: {PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult:N1}x{(activeLC.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"));
             if (oldRushing != activeLC.IsRushing)
                 Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
 
@@ -1698,7 +1698,7 @@ namespace KerbalConstructionTime
 
             if (!b.IsFinished && GUILayout.Button("Move to Top"))
             {
-                if (_isOperationsSelected)
+                if (_isIntegrationSelected)
                 {
                     LCItem lc = b.LC;
                     if (lc.BuildList.Remove(b))

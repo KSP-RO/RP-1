@@ -444,6 +444,16 @@ namespace RP0.ProceduralAvionics
             Profiler.EndSample();
         }
 
+        [KSPEvent]
+        public void OnTankDefinitionChanged(BaseEventDetails eventData)
+        {
+            if (!HighLogic.LoadedSceneIsEditor || !_started) return;
+
+            // RF will regenerate all the FuelTank instances if Tank Definition is changed.
+            // Thus need to refetch EC tank.
+            _ecTank = _tanksDict["ElectricCharge"];
+        }
+
         private void UpdateMassLimitsAndVolume()
         {
             if (ClampControllableMass())

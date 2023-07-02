@@ -30,6 +30,9 @@ namespace RP0.Harmony
 
                     StrategyConfigRP0 cfg = stratR.ConfigRP0;
 
+                    if (cfg == null || cfg.IsDisabled)
+                        continue;
+
                     if (stratR.DepartmentName != department && (string.IsNullOrEmpty(cfg.DepartmentNameAlt) || cfg.DepartmentNameAlt != department))
                         continue;
 
@@ -72,7 +75,7 @@ namespace RP0.Harmony
                     continue;
 
                 string name = strat.Config.Name;
-                if (!acceptablePrograms.Contains(name) && !completedPrograms.Contains(name) && !ProgramHandler.Instance.DisabledPrograms.Contains(name))
+                if (!acceptablePrograms.Contains(name) && !completedPrograms.Contains(name) && !ProgramHandler.Instance.DisabledPrograms.Contains(name) && strat is ProgramStrategy p && !p.Program.isDisabled)
                     list.Add(strat);
             }
 

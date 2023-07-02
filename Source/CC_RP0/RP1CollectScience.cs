@@ -2,8 +2,10 @@
 using ContractConfigurator.Util;
 using Contracts;
 using KSP.Localization;
+using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using UniLinq;
 
 namespace ContractConfigurator.RP0
 {
@@ -14,11 +16,17 @@ namespace ContractConfigurator.RP0
         protected BodyLocation? location { get; set; }
         protected List<string> experiment { get; set; }
         protected double fractionComplete { get; set; }
+        protected int? minSubjectsToComplete { get; set; }
 
+        protected bool _expandedBiomes = false;
         protected List<ScienceSubject> subjects;
+        protected Dictionary<string, string> paramIdToTitleDict = new Dictionary<string, string>();
+        protected Dictionary<string, float> paramIdProgressDict = new Dictionary<string, float>();
 
         private float lastUpdate = 0.0f;
         private const float UPDATE_FREQUENCY = 2.5f;
+        private const float FractionErrorMargin = 0.00025f;
+        private const double MinFractionDiffForTitleUpdate = 0.001;
 
         public RP1CollectScience()
             : base(null)
@@ -27,7 +35,7 @@ namespace ContractConfigurator.RP0
         }
 
         public RP1CollectScience(CelestialBody targetBody, string biome, ExperimentSituations? situation,
-            BodyLocation? location, List<string> experiment, double fractionComplete, string title)
+            BodyLocation? location, List<string> experiment, double fractionComplete, int? minSubjectsToComplete, string title)
             : base(title)
         {
             lastUpdate = UnityEngine.Time.fixedTime;
@@ -38,10 +46,12 @@ namespace ContractConfigurator.RP0
             this.location = location;
             this.experiment = experiment;
             this.fractionComplete = fractionComplete;
+            this.minSubjectsToComplete = minSubjectsToComplete;
 
             disableOnStateChange = true;
 
             LoadScienceSubjects();
+            CreateDelegates();
         }
 
         protected override void OnParameterSave(ConfigNode node)
@@ -68,6 +78,11 @@ namespace ContractConfigurator.RP0
 
             node.AddValue("fractionComplete", fractionComplete);
 
+            if (minSubjectsToComplete.HasValue)
+            {
+                node.AddValue("minSubjectsToComplete", minSubjectsToComplete);
+            }
+
             foreach (string exp in experiment)
             {
                 if (!string.IsNullOrEmpty(exp))
@@ -79,16 +94,25 @@ namespace ContractConfigurator.RP0
 
         protected override void OnParameterLoad(ConfigNode node)
         {
-            targetBody = ConfigNodeUtil.ParseValue(node, "targetBody", (CelestialBody)null);
-            biome = ConfigNodeUtil.ParseValue(node, "biome", "").Replace(" ", "");
-            situation = ConfigNodeUtil.ParseValue(node, "situation", (ExperimentSituations?)null);
-            location = ConfigNodeUtil.ParseValue(node, "location", (BodyLocation?)null);
-            experiment = ConfigNodeUtil.ParseValue(node, "experiment", new List<string>(0));
-            fractionComplete = ConfigNodeUtil.ParseValue(node, "fractionComplete", 1d);
-
-            if (State == ParameterState.Incomplete)
+            try
             {
-                LoadScienceSubjects();
+                targetBody = ConfigNodeUtil.ParseValue(node, "targetBody", (CelestialBody)null);
+                biome = ConfigNodeUtil.ParseValue(node, "biome", "").Replace(" ", "");
+                situation = ConfigNodeUtil.ParseValue(node, "situation", (ExperimentSituations?)null);
+                location = ConfigNodeUtil.ParseValue(node, "location", (BodyLocation?)null);
+                experiment = ConfigNodeUtil.ParseValue(node, "experiment", new List<string>(0));
+                fractionComplete = ConfigNodeUtil.ParseValue(node, "fractionComplete", 1d);
+                minSubjectsToComplete = ConfigNodeUtil.ParseValue(node, "minSubjectsToComplete", (int?)null);
+
+                if (State == ParameterState.Incomplete)
+                {
+                    LoadScienceSubjects();
+                    CreateDelegates();
+                }
+            }
+            finally
+            {
+                ParameterDelegate<Vessel>.OnDelegateContainerLoad(node);
             }
         }
 
@@ -107,18 +131,33 @@ namespace ContractConfigurator.RP0
                     string biomeStr = string.IsNullOrEmpty(biome) ? (targetBody?.displayName) : new Biome(targetBody, biome).ToString();
                     string situationStr = situation != null ? situation.Value.Print().ToLower() :
                         location != null ? Localizer.GetStringByTag(location.Value == BodyLocation.Surface ? "#cc.science.location.Surface" : "#cc.science.location.Space") : null;
+                    string fractionStr = $"{Math.Round(fractionComplete):P0} ";
 
-                    if (biomeStr == null)
+                    if (_expandedBiomes)
                     {
-                        output = Localizer.Format("#cc.param.CollectScience.1", experimentStr);
-                    }
-                    else if (situationStr == null)
-                    {
-                        output = Localizer.Format("#cc.param.CollectScience.2", experimentStr, biomeStr);
+                        if (minSubjectsToComplete > 1)
+                        {
+                            output = $"Collect science: {fractionStr} of {experimentStr} from at least {minSubjectsToComplete} biomes while {situationStr}";
+                        }
+                        else
+                        {
+                            output = $"Collect science: {fractionStr} of {experimentStr} from any biome while {situationStr}";
+                        }
                     }
                     else
                     {
-                        output = Localizer.Format("#cc.param.CollectScience.3", experimentStr, biomeStr, situationStr);
+                        if (biomeStr == null)
+                        {
+                            output = $"Collect science: {fractionStr} of {experimentStr}";
+                        }
+                        else if (situationStr == null)
+                        {
+                            output = $"Collect science: {fractionStr} of {experimentStr} from {biomeStr}";
+                        }
+                        else
+                        {
+                            output = $"Collect science: {fractionStr} of {experimentStr} from {biomeStr} while {situationStr}";
+                        }
                     }
                 }
             }
@@ -136,15 +175,79 @@ namespace ContractConfigurator.RP0
             if (UnityEngine.Time.fixedTime - lastUpdate > UPDATE_FREQUENCY)
             {
                 lastUpdate = UnityEngine.Time.fixedTime;
+                int numToComplete = minSubjectsToComplete ?? 1;
+                int completeSubjCount = 0;
                 foreach (ScienceSubject subj in subjects)
                 {
                     float curFraction = subj.science / subj.scienceCap;
-                    if (curFraction >= fractionComplete)
+                    if (curFraction >= fractionComplete && ++completeSubjCount >= numToComplete)
                     {
                         SetState(ParameterState.Complete);
                     }
                 }
+
+                UpdateDelegates();
             }
+        }
+
+        protected void CreateDelegates()
+        {
+            if (subjects.Count > 1)
+            {
+                foreach (var subj in subjects)
+                {
+                    float curFraction = GetCompletedFraction(subj);
+                    string title = ConstructDelegateTitle(subj, curFraction);
+                    AddParameter(new ParameterDelegate<ScienceSubject>(title, s => false), id: subj.id);
+                    paramIdProgressDict[subj.id] = curFraction;
+                }
+            }
+        }
+
+        protected void UpdateDelegates()
+        {
+            if (subjects.Count < 2) return;
+
+            foreach (ContractParameter genericParam in this.GetAllDescendents())
+            {
+                var param = genericParam as ParameterDelegate<ScienceSubject>;
+                if (param == null || param.State == ParameterState.Complete)
+                {
+                    continue;
+                }
+
+                string oldTitle = param.Title;
+                ScienceSubject subj = subjects.FirstOrDefault(s => s.id == param.ID);
+                if (subj != null)
+                {
+                    float curFraction = GetCompletedFraction(subj);
+                    float prevFraction = paramIdProgressDict[subj.id];
+                    if (curFraction - prevFraction > MinFractionDiffForTitleUpdate)
+                    {
+                        paramIdProgressDict[subj.id] = curFraction;
+                        param.SetTitle(ConstructDelegateTitle(subj, curFraction));
+                        ContractsWindow.SetParameterTitle(param, param.Title);
+                    }
+
+                    if (curFraction >= fractionComplete)
+                    {
+                        param.SetState(ParameterState.Complete);
+                    }
+                }
+            }
+        }
+
+        protected string ConstructDelegateTitle(ScienceSubject subj, float curFraction)
+        {
+            string title = paramIdToTitleDict[subj.id];
+            return $"{title}: {curFraction:P1}";
+        }
+
+        protected static float GetCompletedFraction(ScienceSubject subj)
+        {
+            float curFraction = subj.science / subj.scienceCap;
+            curFraction += FractionErrorMargin;
+            return curFraction;
         }
 
         protected void LoadScienceSubjects()
@@ -156,35 +259,52 @@ namespace ContractConfigurator.RP0
 
                 if (situation.HasValue)
                 {
-                    subjects.Add(GetSubjectForSituation(se, situation.Value));
+                    AddSubjectsForSituation(subjects, se, situation.Value);
                 }
                 else
                 {
                     if (location.Value == BodyLocation.Surface)
                     {
-                        subjects.Add(GetSubjectForSituation(se, ExperimentSituations.SrfLanded));
-                        subjects.Add(GetSubjectForSituation(se,ExperimentSituations.SrfSplashed));
+                        AddSubjectsForSituation(subjects, se, ExperimentSituations.SrfLanded);
+                        AddSubjectsForSituation(subjects, se, ExperimentSituations.SrfSplashed);
                     }
                     else
                     {
-                        subjects.Add(GetSubjectForSituation(se, ExperimentSituations.InSpaceLow));
-                        subjects.Add(GetSubjectForSituation(se, ExperimentSituations.InSpaceHigh));
+                        AddSubjectsForSituation(subjects, se, ExperimentSituations.InSpaceLow);
+                        AddSubjectsForSituation(subjects, se, ExperimentSituations.InSpaceHigh);
                     }
                 }
             }
         }
 
-        protected ScienceSubject GetSubjectForSituation(ScienceExperiment se, ExperimentSituations situation)
+        protected void AddSubjectsForSituation(List<ScienceSubject> subjects, ScienceExperiment se, ExperimentSituations situation)
         {
             string biomeName = string.Empty;
             string biomeTitle = string.Empty;
-            if (se.BiomeIsRelevantWhile(situation))
+            bool hasBiomes = se.BiomeIsRelevantWhile(situation);
+            if (hasBiomes && string.IsNullOrEmpty(biome))
+            {
+                List<string> allBiomes = ResearchAndDevelopment.GetBiomeTags(targetBody, false);
+                foreach (string biomeName2 in allBiomes)
+                {
+                    string biomeTitle2 = ScienceUtil.GetBiomedisplayName(targetBody, biomeName2);
+                    var subj2 = ResearchAndDevelopment.GetExperimentSubject(se, situation, targetBody, biomeName2, biomeTitle2);
+                    paramIdToTitleDict[subj2.id] = biomeTitle2;
+                    subjects.Add(subj2);
+                }
+                _expandedBiomes = true;
+                return;
+            }
+
+            if (hasBiomes)
             {
                 biomeName = biome;
                 biomeTitle = ScienceUtil.GetBiomedisplayName(targetBody, biome);
             }
 
-            return ResearchAndDevelopment.GetExperimentSubject(se, situation, targetBody, biomeName, biomeTitle);
+            var subj = ResearchAndDevelopment.GetExperimentSubject(se, situation, targetBody, biomeName, biomeTitle);
+            paramIdToTitleDict[subj.id] = biomeTitle;
+            subjects.Add(subj);
         }
 
         protected string ExperimentName(string experiment)

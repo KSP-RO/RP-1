@@ -135,7 +135,7 @@ namespace RP0
 
         private static void ShowUntooledPartsReminder()
         {
-            string msg = $"Tool them in the RP-1 menu to reduce vessel cost and build time.";
+            string msg = $"Tool them in the RP-1 menu to reduce vessel cost and integration time.";
             DialogGUIBase[] options = new DialogGUIBase[2];
             options[0] = new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { });
             options[1] = new DialogGUIButton("Never remind me again", () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders = true; });

@@ -95,7 +95,7 @@ namespace KerbalConstructionTime
                 // Only show plans if we don't have a popup
                 // or allow overriding if New/ModifyLC is up
                 if (_overrideShowBuildPlans || (GUIStates.ShowBuildPlansWindow && !_isKSCLocked))
-                    _buildPlansWindowPosition = DrawWindowWithTooltipSupport(_buildPlansWindowPosition, "DrawBuildPlansWindow", "Building Plans & Construction", DrawBuildPlansWindow);
+                    _buildPlansWindowPosition = DrawWindowWithTooltipSupport(_buildPlansWindowPosition, "DrawBuildPlansWindow", "Plans", DrawBuildPlansWindow);
 
                 // both flags can be true when it's necessary to first show ClearLaunch and then Airlaunch right after that
                 if (GUIStates.ShowAirlaunch && !GUIStates.ShowClearLaunch)

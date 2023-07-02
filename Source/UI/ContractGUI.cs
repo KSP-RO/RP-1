@@ -17,6 +17,7 @@ namespace RP0
         private static string[] _weatherSatContracts = new[] { "GEOWeather" };
 
         private static string NewspaperTitle = "Space Gazette";
+        private static bool _useLastScreenshot = false;
 
         private RP0Settings _settings;
 
@@ -80,6 +81,21 @@ namespace RP0
                 NewspaperTitle = GUILayout.TextField(NewspaperTitle, HighLogic.Skin.textField);
 
                 _settings.NewspaperTitle = NewspaperTitle;
+            }
+            finally
+            {
+                GUILayout.EndVertical();
+            }
+
+            GUILayout.BeginVertical();
+            try
+            {
+                GUILayout.Space(10f);
+                GUILayout.Space(10f);
+                GUILayout.Label($"Use this area to set how the automatic newspaper images are created. Not selected will take an automatic screenshot.", BoldLabel);
+                GUILayout.Space(10f);
+                _useLastScreenshot = GUILayout.Toggle(_useLastScreenshot, "Use last screenshot instead of auto screenshot for Newspaper");
+                _settings.UseLastScreenshot = _useLastScreenshot;
             }
             finally
             {

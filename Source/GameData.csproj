@@ -597,8 +597,14 @@
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg">
       <Link>Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptional.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptional.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalHigh.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalHigh.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalLow.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalLow.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalMid.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalMid.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>
@@ -891,9 +897,6 @@
     <Content Include="..\GameData\RP-1\Strategies\Leaders\LeadersAdmin.cfg">
       <Link>Strategies\Leaders\LeadersAdmin.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Strategies\Leaders\LeadersAstronauts.cfg">
-      <Link>Strategies\Leaders\LeadersAstronauts.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Strategies\Leaders\LeadersContractors.cfg">
       <Link>Strategies\Leaders\LeadersContractors.cfg</Link>
     </Content>
@@ -986,6 +989,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Tree\TREE-Parts.cfg">
       <Link>Tree\TREE-Parts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Tree\UpgradeCleanup.cfg">
+      <Link>Tree\UpgradeCleanup.cfg</Link>
     </Content>
 
   </ItemGroup>

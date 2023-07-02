@@ -91,7 +91,7 @@ namespace KerbalConstructionTime
 
                 foreach (var rr in LC.Recon_Rollout)
                 {
-                    if (rr.launchPadID == launchSiteName)
+                    if (rr.launchPadID == name)
                     {
                         switch (rr.RRType)
                         {

@@ -8,6 +8,7 @@ using UniLinq;
 using System.Collections.Generic;
 using KSP.Localization;
 using System.Text.RegularExpressions;
+using System.IO;
 
 namespace RP0.Milestones
 {
@@ -125,10 +126,17 @@ namespace RP0.Milestones
         {
             Texture2D tex = null;
             string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{m.name}.png";
-            if (System.IO.File.Exists(filePath))
+            if (System.IO.File.Exists(filePath) & !_settings.UseLastScreenshot)
             {
                 tex = new Texture2D(2, 2);
                 tex.LoadImage(System.IO.File.ReadAllBytes(filePath));
+            }
+            if (_settings.UseLastScreenshot)
+            {
+                var directory = new DirectoryInfo($"{KSPUtil.ApplicationRootPath}/Screenshots/");
+                tex = new Texture2D(2, 2);
+                var latestFile = directory.GetFiles("*.png").OrderByDescending(f => f.LastWriteTime).First().FullName;
+                tex.LoadImage(System.IO.File.ReadAllBytes(latestFile));
             }
             if (tex == null)
                 tex = GameDatabase.Instance.GetTexture(m.image, asNormalMap: false);

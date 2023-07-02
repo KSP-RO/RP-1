@@ -72,8 +72,8 @@ namespace RP0
         [GameParameters.CustomFloatParameterUI("Starting Confidence", minValue = 0f, maxValue = 1000f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
         public float StartingConfidence = 500f;
 
-        [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 200f, maxValue = 1000f, stepCount = 33, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
-        public float RepLossNautDeathFixed = 500f;
+        [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 20f, maxValue = 200f, stepCount = 31, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
+        public float RepLossNautDeathFixed = 50f;
 
         [GameParameters.CustomFloatParameterUI("Kerbal Death Percent Rep Loss", minValue = 0.05f, maxValue = 0.5f, stepCount = 46, displayFormat = "P0", gameMode = GameParameters.GameMode.CAREER)]
         public float RepLossNautDeathPercent = 0.1f;
@@ -91,6 +91,7 @@ namespace RP0
         public int CommsPayload = ContractGUI.MinPayload;
         public int WeatherPayload = ContractGUI.MinPayload;
         public string NewspaperTitle = "Space Gazette";
+        public bool UseLastScreenshot = false;
 
         public bool AirlaunchTipShown = false;
         public bool RealChuteTipShown = false;
@@ -117,7 +118,7 @@ namespace RP0
                     IsTrainingEnabled = false;
                     IsMissionTrainingEnabled = false;
                     IsRetirementEnabled = false;
-                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 750f;
                     break;
@@ -126,7 +127,7 @@ namespace RP0
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
                     break;
@@ -135,7 +136,7 @@ namespace RP0
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
                     break;
@@ -144,7 +145,7 @@ namespace RP0
                     IsTrainingEnabled = isCareer;
                     IsMissionTrainingEnabled = isCareer;
                     IsRetirementEnabled = isCareer;
-                    RepLossNautDeathFixed = 500f;
+                    RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.2f;
                     StartingConfidence = 350f;
                     break;

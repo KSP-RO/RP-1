@@ -51,7 +51,7 @@ namespace KerbalConstructionTime
                         else
                         {
                             GUILayout.BeginHorizontal();
-                            if (GUILayout.Button("Add To Building Plans", GUILayout.Height(2 * 22)))
+                            if (GUILayout.Button("Add To Plans", GUILayout.Height(2 * 22)))
                             {
                                 AddVesselToPlansList();
                             }
@@ -66,7 +66,7 @@ namespace KerbalConstructionTime
                 GUILayout.Space(10);
                 GUILayout.BeginHorizontal();
                 GUILayout.FlexibleSpace();
-                GUILayout.Label("Available Building Plans");
+                GUILayout.Label("Available Vessels");
                 GUILayout.FlexibleSpace();
                 GUILayout.EndHorizontal();
             }
@@ -168,7 +168,7 @@ namespace KerbalConstructionTime
             if (KerbalConstructionTimeData.Instance.BuildPlans.ContainsKey(blv.shipName))
             {
                 KerbalConstructionTimeData.Instance.BuildPlans.Remove(blv.shipName);
-                message = new ScreenMessage($"Replacing previous plan for {blv.shipName} in the {blv.LC.Name} Building Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
+                message = new ScreenMessage($"Replacing previous plan for {blv.shipName} in the Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
             }
             KerbalConstructionTimeData.Instance.BuildPlans.Add(blv.shipName, blv);

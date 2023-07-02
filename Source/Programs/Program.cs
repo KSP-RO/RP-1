@@ -38,6 +38,9 @@ namespace RP0.Programs
         public string objectivesPrettyText;
 
         [Persistent(isPersistant = false)]
+        public bool isDisabled;
+
+        [Persistent(isPersistant = false)]
         public double nominalDurationYears;
         public double DurationYears => DurationYearsCalc(speed, nominalDurationYears);
 
@@ -153,7 +156,7 @@ namespace RP0.Programs
 
         public bool IsActive => !IsComplete && acceptedUT != 0;
 
-        public bool CanAccept => !IsComplete && !IsActive && AllRequirementsMet;
+        public bool CanAccept => !IsComplete && !IsActive && !isDisabled && AllRequirementsMet;
 
         public bool CanComplete => !IsComplete && IsActive && objectivesCompletedUT != 0;
 
@@ -181,6 +184,7 @@ namespace RP0.Programs
             requirementsPrettyText = toCopy.requirementsPrettyText;
             objectivesPrettyText = toCopy.objectivesPrettyText;
             nominalDurationYears = toCopy.nominalDurationYears;
+            isDisabled = toCopy.isDisabled;
             baseFunding = toCopy.baseFunding;
             fundingCurve = toCopy.fundingCurve;
             repDeltaOnCompletePerYearEarly = toCopy.repDeltaOnCompletePerYearEarly;

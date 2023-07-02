@@ -11,6 +11,10 @@ namespace RP0
     {
         public static Dictionary<string, double> ActivatedStrategies = new Dictionary<string, double>();
 
+        [Persistent]
+        protected bool isDisabled;
+        public bool IsDisabled => isDisabled;
+
         /// <summary>
         /// Some leaders (Contractors, e.g.) can appear in two departments at once. If this is set,
         /// the strategy will appear in both the main department and this one.

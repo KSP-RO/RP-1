@@ -124,6 +124,33 @@ namespace RP0
             return excessCost;
         }
 
+        public CurrencyModifierQueryRP0 GetCMQ(double cost, string tech, TransactionReasonsRP0 reason)
+        {
+            var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
+            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), GetCreditAmount(tech)));
+            return cmq;
+        }
+
+        public CurrencyModifierQueryRP0 GetPrePostCostAndAffordability(double cost, string tech, TransactionReasonsRP0 reason, out double preCreditCost, out double postCreditCost, out double credit, out bool canAfford)
+        {
+            var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
+            preCreditCost = -cmq.GetTotal(CurrencyRP0.Funds);
+            credit = Math.Min(preCreditCost, GetCreditAmount(tech));
+            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, credit);
+            postCreditCost = -cmq.GetTotal(CurrencyRP0.Funds);
+            canAfford = cmq.CanAfford();
+
+            return cmq;
+        }
+
+        public void ProcessCredit(double cost, string tech, TransactionReasonsRP0 reason)
+        {
+            var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
+            double postCMQCost = -cmq.GetTotal(CurrencyRP0.Funds);
+            double remainingCost = SpendCredit(postCMQCost);
+            Funding.Instance.AddFunds(-(float)(remainingCost * (cost / postCMQCost)), reason.Stock());
+        }
+
         /// <summary>
         /// Transforms entrycost to post-strategy entrycost, spends credit,
         /// and returns remaining (unsubsidized) cost

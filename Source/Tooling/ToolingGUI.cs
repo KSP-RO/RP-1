@@ -139,13 +139,15 @@ namespace RP0
             if (GUILayout.Button("Tool All", HighLogic.Skin.button))
             {
                 GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
-                var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ToolingPurchase, -toolingCost, 0d, 0d);
-                bool canAfford = cmq.CanAfford();
+                var cmq = UnlockCreditHandler.Instance.GetPrePostCostAndAffordability(toolingCost, string.Empty, TransactionReasonsRP0.ToolingPurchase, out double preCost, out double postCost, out double credit, out bool canAfford);
                 string buttonText = canAfford ? "Purchase All Toolings" : "Can't Afford";
+                string costline = cmq.GetCostLineOverride(true, false, true, true);
+                if (string.IsNullOrEmpty(costline))
+                    costline = "nothing";
 
                 var dialog = new MultiOptionDialog(
                         "ConfirmAllToolingsPurchase",
-                        $"Tooling for all untooled parts will cost {-cmq.GetTotal(CurrencyRP0.Funds):N0} funds.",
+                        $"Tooling for all untooled parts will cost {costline} (spending {credit:N0} credit).",
                         "Tooling Purchase",
                         HighLogic.UISkin,
                         new Rect(0.5f, 0.5f, 150f, 60f),
@@ -167,7 +169,7 @@ namespace RP0
         {
             GetUntooledPartsAndCost(out List<ModuleTooling> untooledParts, out float toolingCost);
 
-            bool canAfford = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ToolingPurchase, -toolingCost, 0d, 0d).CanAfford();
+            UnlockCreditHandler.Instance.GetPrePostCostAndAffordability(toolingCost, string.Empty, TransactionReasonsRP0.ToolingPurchase, out _, out _, out _, out bool canAfford);
             if (canAfford)
             {
                 ModuleTooling.PurchaseToolingBatch(untooledParts);

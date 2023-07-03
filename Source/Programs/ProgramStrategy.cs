@@ -113,9 +113,12 @@ namespace RP0.Programs
                 return false;
             }
 
-            // Handled by base in the Admin screen.
-            //if (ProgramHandler.Instance.ProgramPoints >= ProgramHandler.Instance.ActiveProgramLimit)
-            //    return false;
+            int freeSlots = ProgramHandler.Instance.MaxProgramSlots - ProgramHandler.Instance.ActiveProgramSlots;
+            if (_program.slots > freeSlots)
+            {
+                reason = $"This program requires {_program.slots} free slots but only {freeSlots} slots are available.";
+                return false;
+            }
 
             return true;
         }

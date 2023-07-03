@@ -71,10 +71,8 @@ namespace RP0.Harmony
         [HarmonyPatch("CanBeActivated")]
         internal static void Prefix_CanBeActivated(Strategies.Strategy __instance)
         {
-            if (__instance is ProgramStrategy)
-                return;
-
-            KSP.UI.Screens.Administration.Instance.activeStrategyCount = 0;
+            if (KSP.UI.Screens.Administration.Instance != null)
+                KSP.UI.Screens.Administration.Instance.activeStrategyCount = 0;
         }
 
         // Now that we're done, reset the active strategy count.
@@ -82,7 +80,8 @@ namespace RP0.Harmony
         [HarmonyPatch("CanBeActivated")]
         internal static void Postfix_CanBeActivated()
         {
-            KSP.UI.Screens.Administration.Instance.activeStrategyCount = ProgramHandler.Instance.ActiveProgramSlots;
+            if (KSP.UI.Screens.Administration.Instance != null)
+                KSP.UI.Screens.Administration.Instance.activeStrategyCount = ProgramHandler.Instance.ActiveProgramSlots;
         }
 
         // For our Strategy class, replace the basic Activate with a virtual one.

@@ -1,14 +1,13 @@
 ﻿using Contracts;
 using Csv;
 using KerbalConstructionTime;
+using RP0.DataTypes;
 using RP0.Programs;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.IO;
-using UniLinq;
-using System.Reflection;
 using System.Text;
+using UniLinq;
 using UnityEngine;
 using UnityEngine.Networking;
 
@@ -26,7 +25,12 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public double NextPeriodStart = 0;
 
+        [KSPField(isPersistant = true)]
+        public int LoadedSaveVersion = 0;
+
         public bool IsEnabled = false;
+
+        private const int CurrentVersion = 1;
 
         private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -42,16 +46,28 @@ namespace RP0
         private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCancelEvent;
         private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCompletedEvent;
         private EventData<KCT_LaunchPad> onKctPadDismantledEvent;
-        private readonly Dictionary<double, LogPeriod> _periodDict = new Dictionary<double, LogPeriod>();
-        private readonly List<ContractEvent> _contractDict = new List<ContractEvent>();
-        private readonly List<LaunchEvent> _launchedVessels = new List<LaunchEvent>();
-        private readonly List<FailureEvent> _failures = new List<FailureEvent>();
-        private readonly List<LCLogItem> _lcs = new List<LCLogItem>();
-        private readonly List<FacilityConstruction> _facilityConstructions = new List<FacilityConstruction>();
-        private readonly List<LPConstruction> _lpConstructions = new List<LPConstruction>();
-        private readonly List<FacilityConstructionEvent> _facilityConstructionEvents = new List<FacilityConstructionEvent>();
-        private readonly List<TechResearchEvent> _techEvents = new List<TechResearchEvent>();
-        private readonly List<LeaderEvent> _leaderEvents = new List<LeaderEvent>();
+
+        [KSPField(isPersistant = true)]
+        private readonly PersistentDictionary<double, LogPeriod> _periodDict = new PersistentDictionaryValueTypeKey<double, LogPeriod>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<ContractEvent> _contractDict = new PersistentList<ContractEvent>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<LaunchEvent> _launchedVessels = new PersistentList<LaunchEvent>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<FailureEvent> _failures = new PersistentList<FailureEvent>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<LCLogItem> _lcs = new PersistentList<LCLogItem>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<FacilityConstruction> _facilityConstructions = new PersistentList<FacilityConstruction>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<LPConstruction> _lpConstructions = new PersistentList<LPConstruction>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<FacilityConstructionEvent> _facilityConstructionEvents = new PersistentList<FacilityConstructionEvent>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<TechResearchEvent> _techEvents = new PersistentList<TechResearchEvent>();
+        [KSPField(isPersistant = true)]
+        private readonly PersistentList<LeaderEvent> _leaderEvents = new PersistentList<LeaderEvent>();
+
         private bool _eventsBound = false;
         private bool _launched = false;
         private LogPeriod _currentPeriod;
@@ -205,167 +221,110 @@ namespace RP0
         {
             base.OnLoad(node);
 
-            foreach (ConfigNode n in node.GetNodes("LOGPERIODS"))
+            if (LoadedSaveVersion < CurrentVersion)
             {
-                foreach (ConfigNode pn in n.GetNodes("LOGPERIOD"))
+                if (LoadedSaveVersion < 1)
                 {
-                    var lp = new LogPeriod(pn);
-                    double periodStart = lp.StartUT;
-                    try
+                    foreach (ConfigNode n in node.GetNodes("LOGPERIODS"))
                     {
-                        _periodDict.Add(periodStart, lp);
+                        foreach (ConfigNode pn in n.GetNodes("LOGPERIOD"))
+                        {
+                            var lp = new LogPeriod(pn);
+                            double periodStart = lp.StartUT;
+                            try
+                            {
+                                _periodDict.Add(periodStart, lp);
+                            }
+                            catch
+                            {
+                                Debug.LogError($"[RP-0] LOGPERIOD for {periodStart} already exists, skipping...");
+                            }
+                        }
                     }
-                    catch
+
+                    foreach (ConfigNode n in node.GetNodes("CONTRACTS"))
                     {
-                        Debug.LogError($"[RP-0] LOGPERIOD for {periodStart} already exists, skipping...");
+                        foreach (ConfigNode cn in n.GetNodes("CONTRACT"))
+                        {
+                            var c = new ContractEvent(cn);
+                            _contractDict.Add(c);
+                        }
+                    }
+
+                    foreach (ConfigNode n in node.GetNodes("LAUNCHEVENTS"))
+                    {
+                        foreach (ConfigNode ln in n.GetNodes("LAUNCHEVENT"))
+                        {
+                            var l = new LaunchEvent(ln);
+                            _launchedVessels.Add(l);
+                        }
+                    }
+
+                    foreach (ConfigNode n in node.GetNodes("FAILUREEVENTS"))
+                    {
+                        foreach (ConfigNode fn in n.GetNodes("FAILUREEVENT"))
+                        {
+                            var f = new FailureEvent(fn);
+                            _failures.Add(f);
+                        }
+                    }
+
+                    foreach (ConfigNode n in node.GetNodes("LCS"))
+                    {
+                        foreach (ConfigNode fn in n.GetNodes("LC"))
+                        {
+                            var lc = new LCLogItem(fn);
+                            _lcs.Add(lc);
+                        }
+                    }
+
+                    foreach (ConfigNode n in node.GetNodes("FACILITYCONSTRUCTIONS"))
+                    {
+                        foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTRUCTION"))
+                        {
+                            var fc = new FacilityConstruction(fn);
+                            _facilityConstructions.Add(fc);
+                        }
+                    }
+
+                    foreach (ConfigNode n in node.GetNodes("LPCONSTRUCTIONS"))
+                    {
+                        foreach (ConfigNode fn in n.GetNodes("LPCONSTRUCTION"))
+                        {
+                            var fc = new LPConstruction(fn);
+                            _lpConstructions.Add(fc);
+                        }
+                    }
+
+                    foreach (ConfigNode n in node.GetNodes("FACILITYCONSTREVENTS"))
+                    {
+                        foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTREVENT"))
+                        {
+                            var fc = new FacilityConstructionEvent(fn);
+                            _facilityConstructionEvents.Add(fc);
+                        }
+                    }
+
+                    foreach (ConfigNode n in node.GetNodes("TECHS"))
+                    {
+                        foreach (ConfigNode tn in n.GetNodes("TECH"))
+                        {
+                            var te = new TechResearchEvent(tn);
+                            _techEvents.Add(te);
+                        }
+                    }
+
+                    foreach (ConfigNode n in node.GetNodes("LEADEREVENTS"))
+                    {
+                        foreach (ConfigNode ln in n.GetNodes("LEADEREVENT"))
+                        {
+                            var le = new LeaderEvent(ln);
+                            _leaderEvents.Add(le);
+                        }
                     }
                 }
-            }
 
-            foreach (ConfigNode n in node.GetNodes("CONTRACTS"))
-            {
-                foreach (ConfigNode cn in n.GetNodes("CONTRACT"))
-                {
-                    var c = new ContractEvent(cn);
-                    _contractDict.Add(c);
-                }
-            }
-
-            foreach (ConfigNode n in node.GetNodes("LAUNCHEVENTS"))
-            {
-                foreach (ConfigNode ln in n.GetNodes("LAUNCHEVENT"))
-                {
-                    var l = new LaunchEvent(ln);
-                    _launchedVessels.Add(l);
-                }
-            }
-
-            foreach (ConfigNode n in node.GetNodes("FAILUREEVENTS"))
-            {
-                foreach (ConfigNode fn in n.GetNodes("FAILUREEVENT"))
-                {
-                    var f = new FailureEvent(fn);
-                    _failures.Add(f);
-                }
-            }
-
-            foreach (ConfigNode n in node.GetNodes("LCS"))
-            {
-                foreach (ConfigNode fn in n.GetNodes("LC"))
-                {
-                    var lc = new LCLogItem(fn);
-                    _lcs.Add(lc);
-                }
-            }
-
-            foreach (ConfigNode n in node.GetNodes("FACILITYCONSTRUCTIONS"))
-            {
-                foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTRUCTION"))
-                {
-                    var fc = new FacilityConstruction(fn);
-                    _facilityConstructions.Add(fc);
-                }
-            }
-
-            foreach (ConfigNode n in node.GetNodes("LPCONSTRUCTIONS"))
-            {
-                foreach (ConfigNode fn in n.GetNodes("LPCONSTRUCTION"))
-                {
-                    var fc = new LPConstruction(fn);
-                    _lpConstructions.Add(fc);
-                }
-            }
-
-            foreach (ConfigNode n in node.GetNodes("FACILITYCONSTREVENTS"))
-            {
-                foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTREVENT"))
-                {
-                    var fc = new FacilityConstructionEvent(fn);
-                    _facilityConstructionEvents.Add(fc);
-                }
-            }
-
-            foreach (ConfigNode n in node.GetNodes("TECHS"))
-            {
-                foreach (ConfigNode tn in n.GetNodes("TECH"))
-                {
-                    var te = new TechResearchEvent(tn);
-                    _techEvents.Add(te);
-                }
-            }
-
-            foreach (ConfigNode n in node.GetNodes("LEADEREVENTS"))
-            {
-                foreach (ConfigNode ln in n.GetNodes("LEADEREVENT"))
-                {
-                    var le = new LeaderEvent(ln);
-                    _leaderEvents.Add(le);
-                }
-            }
-        }
-
-        public override void OnSave(ConfigNode node)
-        {
-            base.OnSave(node);
-
-            var n = node.AddNode("LOGPERIODS");
-            foreach (LogPeriod e in _periodDict.Values)
-            {
-                e.Save(n.AddNode("LOGPERIOD"));
-            }
-
-            n = node.AddNode("CONTRACTS");
-            foreach (ContractEvent c in _contractDict)
-            {
-                c.Save(n.AddNode("CONTRACT"));
-            }
-
-            n = node.AddNode("LAUNCHEVENTS");
-            foreach (LaunchEvent l in _launchedVessels)
-            {
-                l.Save(n.AddNode("LAUNCHEVENT"));
-            }
-
-            n = node.AddNode("FAILUREEVENTS");
-            foreach (FailureEvent f in _failures)
-            {
-                f.Save(n.AddNode("FAILUREEVENT"));
-            }
-
-            n = node.AddNode("LCS");
-            foreach (LCLogItem lc in _lcs)
-            {
-                lc.Save(n.AddNode("LC"));
-            }
-
-            n = node.AddNode("FACILITYCONSTRUCTIONS");
-            foreach (FacilityConstruction fc in _facilityConstructions)
-            {
-                fc.Save(n.AddNode("FACILITYCONSTRUCTION"));
-            }
-
-            n = node.AddNode("LPCONSTRUCTIONS");
-            foreach (LPConstruction lp in _lpConstructions)
-            {
-                lp.Save(n.AddNode("LPCONSTRUCTION"));
-            }
-
-            n = node.AddNode("FACILITYCONSTREVENTS");
-            foreach (FacilityConstructionEvent fc in _facilityConstructionEvents)
-            {
-                fc.Save(n.AddNode("FACILITYCONSTREVENT"));
-            }
-
-            n = node.AddNode("TECHS");
-            foreach (TechResearchEvent tr in _techEvents)
-            {
-                tr.Save(n.AddNode("TECH"));
-            }
-
-            n = node.AddNode("LEADEREVENTS");
-            foreach (LeaderEvent le in _leaderEvents)
-            {
-                le.Save(n.AddNode("LEADEREVENT"));
+                LoadedSaveVersion = CurrentVersion;
             }
         }
 

@@ -157,7 +157,7 @@ namespace RP0.Crew
             //assign rewards to all kerbals and set them to free
             if (Completed && _template != null)
             {
-                double length = KSPUtils.GetUT() - startTime;
+                double length = Planetarium.GetUniversalTime() - startTime;
                 List<string> retirementChanges = new List<string>();
                 foreach (ProtoCrewMember student in Students)
                 {
@@ -190,7 +190,7 @@ namespace RP0.Crew
                             expireTime *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
                                 CrewHandler.Settings.trainingProficiencyStupidMax,
                                 student.stupidity);
-                        expireTime += KSPUtils.GetUT();
+                        expireTime += Planetarium.GetUniversalTime();
 
                         CrewHandler.Instance.AddExpiration(new TrainingExpiration(student.name, expireTime, new TrainingFlightEntry(_template.training.type, _template.training.target)));
                     }
@@ -243,7 +243,7 @@ namespace RP0.Crew
                 return false;
 
             Started = true;
-            startTime = KSPUtils.GetUT();
+            startTime = Planetarium.GetUniversalTime();
 
             foreach (ProtoCrewMember student in Students)
                 student.SetInactive(_template.GetBaseTime(Students) * 1.2d);

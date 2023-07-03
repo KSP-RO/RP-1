@@ -329,7 +329,7 @@ namespace RP0.Harmony
                     // Use the "deactivate" tooltip for the accept button
                     var state = tooltip.tooltipStates.First(s => s.name == "accept");
 
-                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(Planetarium.GetUniversalTime()), 0d, 0d);
                     string rewardStr = cmq.GetCostLine(false, true, false, true);
                     if (string.IsNullOrEmpty(rewardStr))
                         state.tooltipText = Localizer.Format("#rp0_Admin_CompleteProgram");
@@ -439,7 +439,7 @@ namespace RP0.Harmony
                         return false;
 
                     // Calculate the reward for display in the popup
-                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(KSPUtils.GetUT()), 0d, 0d);
+                    var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(Planetarium.GetUniversalTime()), 0d, 0d);
                     string rewardStr = cmq.GetCostLine(false, true, false, true);
                     if (!string.IsNullOrEmpty(rewardStr))
                         rewardStr = $"\n\n{Localizer.Format("#rp0_Generic_Reward", rewardStr)}";

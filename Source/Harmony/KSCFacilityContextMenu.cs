@@ -86,7 +86,7 @@ namespace RP0.Harmony
                         var cmqUpgrade = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StructureConstruction, -cost / days, 0d, 0d);
                         string costLine = cmqUpgrade.GetCostLineOverride(true, false, false, true);
                         if (KCTGameStates.Settings.UseDates)
-                            tooltip = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + KSPUtils.GetUT(), false));
+                            tooltip = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + Planetarium.GetUniversalTime(), false));
                         else
                             tooltip = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, KSPUtil.PrintDateDelta(time, false));
                     }

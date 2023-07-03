@@ -179,7 +179,7 @@ namespace RP0
             double lastActive = System.Math.Max(nameDeactivate, tagDeactivate);
             if (lastActive > 0d)
             {
-                if (reactivateCooldown == 0d || lastActive + reactivateCooldown > KSPUtils.GetUT())
+                if (reactivateCooldown == 0d || lastActive + reactivateCooldown > Planetarium.GetUniversalTime())
                     return false;
             }
 

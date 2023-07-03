@@ -196,7 +196,7 @@ namespace RP0.Programs
             double programBudget = 0d;
             foreach (Program p in ActivePrograms)
             {
-                programBudget += p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + utOffset) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
+                programBudget += p.GetFundsForFutureTimestamp(Planetarium.GetUniversalTime() + utOffset) - p.GetFundsForFutureTimestamp(Planetarium.GetUniversalTime());
             }
             return programBudget;
         }

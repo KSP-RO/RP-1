@@ -50,7 +50,7 @@ namespace RP0
             int pC;
             if (HighLogic.LoadedSceneIsFlight && part.CrewCapacity > 0 && (pC = part.protoModuleCrew.Count) > 0)
             {
-                double UT = KSPUtils.GetUT();
+                double UT = Planetarium.GetUniversalTime();
                 if (lastCheck < 0d)
                     lastCheck = UT;
 

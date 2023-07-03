@@ -109,7 +109,7 @@ namespace RP0
         {
             var details = new SubsidyDetails();
             const double secsPerYear = 3600 * 24 * 365.25;
-            float years = (float)(KSPUtils.GetUT() / secsPerYear);
+            float years = (float)(Planetarium.GetUniversalTime() / secsPerYear);
             details.minSubsidy = Settings.subsidyCurve.Evaluate(years);
             details.maxSubsidy = details.minSubsidy * Settings.subsidyMultiplierForMax;
             details.maxRep = (details.maxSubsidy - details.minSubsidy) / Settings.repToSubsidyConversion;
@@ -132,7 +132,7 @@ namespace RP0
         public static double GetSubsidyAtTimeDelta(double deltaTime, double rep)
         {
             const double secsPerYear = 3600 * 24 * 365.25;
-            float years = (float)((KSPUtils.GetUT() + deltaTime) / secsPerYear);
+            float years = (float)((Planetarium.GetUniversalTime() + deltaTime) / secsPerYear);
             double minSubsidy = Settings.subsidyCurve.Evaluate(years);
             
             double maxSubsidy = minSubsidy * Settings.subsidyMultiplierForMax;
@@ -441,7 +441,7 @@ namespace RP0
                 return;
             }
 
-            double time = KSPUtils.GetUT();
+            double time = Planetarium.GetUniversalTime();
             if (nextUpdate > time && !_isFirstLoad)
             {
                 if (_wasWarpingHigh && TimeWarp.CurrentRate <= 100f)
@@ -478,7 +478,7 @@ namespace RP0
 
         public void FixedUpdate()
         {
-            double UT = KSPUtils.GetUT();
+            double UT = Planetarium.GetUniversalTime();
             if (_lastUpdateFixed == 0)
                 _lastUpdateFixed = UT;
 

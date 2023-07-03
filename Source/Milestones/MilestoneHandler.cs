@@ -88,7 +88,7 @@ namespace RP0.Milestones
             {
                 list = new PersistentListValueType<string>();
                 milestoneData.Add(name, list);
-                list.Add(KSPUtil.PrintDate(KSPUtils.GetUT(), false));
+                list.Add(KSPUtil.PrintDate(Planetarium.GetUniversalTime(), false));
             }
         }
 

@@ -184,7 +184,7 @@ namespace RP0.Crew
             if (_isFirstLoad)
                 return;
 
-            double time = KSPUtils.GetUT();
+            double time = Planetarium.GetUniversalTime();
             ProcessRetirements(time);
             ProcessCourses(UTDiff);
             ProcessExpirations(time);
@@ -305,7 +305,7 @@ namespace RP0.Crew
                     if (e.type == TrainingType_Mission && e.target == partName)
                     {
                         double exp = GetExpiration(pcm.name, e);
-                        lacksMission = exp == 0d || exp < KSPUtils.GetUT();
+                        lacksMission = exp == 0d || exp < Planetarium.GetUniversalTime();
                     }
                 }
                 else
@@ -441,7 +441,7 @@ namespace RP0.Crew
             double retireCMQmult = CurrencyUtils.Time(TransactionReasonsRP0.TimeRetirement, 1d);
             double inactiveCMQmult = -CurrencyUtils.Time(TransactionReasonsRP0.TimeInactive, -1d); // how we signal this is a cost not a reward
 
-            double UT = KSPUtils.GetUT();
+            double UT = Planetarium.GetUniversalTime();
 
             // normally we would use v.missionTime, but that doesn't seem to update
             // when you're not actually controlling the vessel
@@ -485,7 +485,7 @@ namespace RP0.Crew
                     if (e.type == "Nationality")
                         continue;
                     if (e.type == TrainingType_Mission)
-                        SetExpiration(pcm.name, e, KSPUtils.GetUT());
+                        SetExpiration(pcm.name, e, Planetarium.GetUniversalTime());
 
                     if (validStatuses.Contains(e.type))
                     {
@@ -605,7 +605,7 @@ namespace RP0.Crew
             }
             else
             {
-                retireTime = KSPUtils.GetUT() + GetServiceTime(pcm);
+                retireTime = Planetarium.GetUniversalTime() + GetServiceTime(pcm);
                 _retireTimes[pcm.name] = retireTime;
             }
 
@@ -684,7 +684,7 @@ namespace RP0.Crew
                             _retirees.Add(kvp.Key);
                             pcm.rosterStatus = ProtoCrewMember.RosterStatus.Dead;
                             if (pcm.type == ProtoCrewMember.KerbalType.Applicant)
-                                pcm.UTaR = KSPUtils.GetUT();
+                                pcm.UTaR = Planetarium.GetUniversalTime();
                         }
                     }
                 }
@@ -777,7 +777,7 @@ namespace RP0.Crew
             for (int i = TrainingCourses.Count; i-- > 0;)
             {
                 if (TrainingCourses[i].Students.Contains(pcm))
-                    return TrainingCourses[i].GetTimeLeft() + KSPUtils.GetUT();
+                    return TrainingCourses[i].GetTimeLeft() + Planetarium.GetUniversalTime();
             }
 
             return -1d;

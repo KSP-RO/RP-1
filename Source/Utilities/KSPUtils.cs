@@ -7,16 +7,6 @@ namespace RP0
     public static class KSPUtils
     {
         /// <summary>
-        /// Use this method instead of Planetarium.GetUniversalTime().
-        /// Fixes the KSP stupidity where wrong UT can be returned when reverting back to the Editor.
-        /// </summary>
-        /// <returns></returns>
-        public static double GetUT()
-        {
-            return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
-        }
-
-        /// <summary>
         /// Adds a way for a PopupDialog to perform actions on spawn/despawn, like locking input for a true modal.
         /// </summary>
         /// <param name="dialog"></param>

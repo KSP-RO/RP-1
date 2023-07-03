@@ -290,7 +290,7 @@ namespace RP0
                             InputLockManager.RemoveControlLock("warptofunds");
                         })
                     };
-                    var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Estimated to take {KSPUtil.PrintDateDelta(time, false, false)} and finish on {KSPUtil.PrintDate(KSPUtils.GetUT() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
+                    var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Estimated to take {KSPUtil.PrintDateDelta(time, false, false)} and finish on {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
                     PopupDialog.SpawnPopupDialog(dialog, false, HighLogic.UISkin);
                 }
             }
@@ -495,7 +495,7 @@ namespace RP0
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" Funding:", HighLogic.Skin.label, GUILayout.Width(160));
-                double amt = p.GetFundsForFutureTimestamp(KSPUtils.GetUT() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(KSPUtils.GetUT());
+                double amt = p.GetFundsForFutureTimestamp(Planetarium.GetUniversalTime() + PeriodFactor * 86400d) - p.GetFundsForFutureTimestamp(Planetarium.GetUniversalTime());
                 amt = CurrencyUtils.Funds(TransactionReasonsRP0.ProgramFunding, amt);
                 total += amt;
                 GUILayout.Label(FormatCost(amt), RightLabel, GUILayout.Width(160));

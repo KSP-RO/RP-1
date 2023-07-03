@@ -44,7 +44,7 @@ namespace RP0.Programs
         public double nominalDurationYears;
         public double DurationYears => DurationYearsCalc(speed, nominalDurationYears);
 
-        public double ElapsedYears => (KSPUtils.GetUT() - acceptedUT) / secsPerYear;
+        public double ElapsedYears => (Planetarium.GetUniversalTime() - acceptedUT) / secsPerYear;
 
         public static double DurationYearsCalc(Speed spd, double years)
         {
@@ -285,8 +285,8 @@ namespace RP0.Programs
 
             var p = new Program(this)
             {
-                acceptedUT = KSPUtils.GetUT(),
-                lastPaymentUT = KSPUtils.GetUT(),
+                acceptedUT = Planetarium.GetUniversalTime(),
+                lastPaymentUT = Planetarium.GetUniversalTime(),
                 totalFunding = TotalFunding,
                 fundsPaidOut = 0,
                 repPenaltyAssessed = 0
@@ -318,7 +318,7 @@ namespace RP0.Programs
         {
             if (TotalFunding < 1) return;
 
-            double nowUT = KSPUtils.GetUT();
+            double nowUT = Planetarium.GetUniversalTime();
             double time2 = nowUT - acceptedUT;
             double funds2 = GetFundsAtTime(time2);
             double fundsToAdd = Math.Max(0d, funds2 - fundsPaidOut);
@@ -351,7 +351,7 @@ namespace RP0.Programs
 
         public void MarkObjectivesComplete()
         {
-            objectivesCompletedUT = KSPUtils.GetUT();
+            objectivesCompletedUT = Planetarium.GetUniversalTime();
             CareerLog.Instance?.ProgramObjectivesMet(this);
             if (KSP.UI.Screens.MessageSystem.Instance != null)
             {
@@ -374,7 +374,7 @@ namespace RP0.Programs
 
         public void Complete()
         {
-            completedUT = KSPUtils.GetUT();
+            completedUT = Planetarium.GetUniversalTime();
             float repDelta = (float)RepForComplete(completedUT);
             if (repDelta > 0)
             {
@@ -451,7 +451,7 @@ namespace RP0.Programs
             }
             else
             {
-                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years\nDeadline if accepted now: {KSPUtil.dateTimeFormatter.PrintDate(KSPUtils.GetUT() + duration * 365.25d * 86400d, false, false)}";
+                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years\nDeadline if accepted now: {KSPUtil.dateTimeFormatter.PrintDate(Planetarium.GetUniversalTime() + duration * 365.25d * 86400d, false, false)}";
             }
 
             if (extendedInfo)
@@ -498,7 +498,7 @@ namespace RP0.Programs
                     int lastYear = (int)Math.Ceiling(duration) + 1;
                     if (IsActive)
                     {
-                        double relativeUT = KSPUtils.GetUT() - acceptedUT;
+                        double relativeUT = Planetarium.GetUniversalTime() - acceptedUT;
                         startYear = (int)(relativeUT / (86400d * 365.25d)) + 1;
                         totalPaid = GetFundsAtTime(relativeUT);
                     }

@@ -69,7 +69,7 @@ namespace RP0
             {
                 if (!IsEnabled) return null;
 
-                double time = KSPUtils.GetUT();
+                double time = Planetarium.GetUniversalTime();
                 while (time > NextPeriodStart)
                 {
                     SwitchToNextPeriod();
@@ -378,7 +378,7 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
-            _techEvents.Add(new TechResearchEvent(KSPUtils.GetUT())
+            _techEvents.Add(new TechResearchEvent(Planetarium.GetUniversalTime())
             {
                 NodeName = tech.ProtoNode.techID,
                 YearMult = tech.YearBasedRateMult,
@@ -390,7 +390,7 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
-            _leaderEvents.Add(new LeaderEvent(KSPUtils.GetUT())
+            _leaderEvents.Add(new LeaderEvent(Planetarium.GetUniversalTime())
             {
                 LeaderName = leaderName,
                 IsAdd = isAdd,
@@ -402,7 +402,7 @@ namespace RP0
         {
             if (!IsEnabled) return;
 
-            _failures.Add(new FailureEvent(KSPUtils.GetUT())
+            _failures.Add(new FailureEvent(Planetarium.GetUniversalTime())
             {
                 VesselUID = v.GetKCTVesselId(),
                 LaunchID = v.GetVesselLaunchId(),
@@ -806,7 +806,7 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled || c.AutoAccept) return;   // Do not record the Accept event for record contracts
 
-            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
+            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
             {
                 Type = ContractEventType.Accept,
                 RepChange = 0,
@@ -819,7 +819,7 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
-            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
+            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
             {
                 Type = ContractEventType.Complete,
                 RepChange = c.ReputationCompletion,
@@ -832,7 +832,7 @@ namespace RP0
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
-            _contractDict.Add(new ContractEvent(KSPUtils.GetUT())
+            _contractDict.Add(new ContractEvent(Planetarium.GetUniversalTime())
             {
                 Type = ContractEventType.Cancel,
                 RepChange = 0,
@@ -846,7 +846,7 @@ namespace RP0
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             string internalName = GetContractInternalName(c);
-            double ut = KSPUtils.GetUT();
+            double ut = Planetarium.GetUniversalTime();
             if (_contractDict.Any(c2 => c2.UT == ut && c2.InternalName == internalName))
             {
                 // This contract was actually cancelled, not failed
@@ -887,7 +887,7 @@ namespace RP0
                 Debug.Log($"[RP-0] Launching {FlightGlobals.ActiveVessel?.vesselName}");
 
                 _launched = true;
-                _launchedVessels.Add(new LaunchEvent(KSPUtils.GetUT())
+                _launchedVessels.Add(new LaunchEvent(Planetarium.GetUniversalTime())
                 {
                     VesselName = FlightGlobals.ActiveVessel?.vesselName,
                     VesselUID = ev.host.GetKCTVesselId(),
@@ -1006,7 +1006,7 @@ namespace RP0
                 });
             }
 
-            _facilityConstructionEvents.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
+            _facilityConstructionEvents.Add(new FacilityConstructionEvent(Planetarium.GetUniversalTime())
             {
                 Facility = FacilityConstructionEvent.ParseFacilityType(data.FacilityType),
                 FacilityID = data.uid,
@@ -1026,7 +1026,7 @@ namespace RP0
                 _lcs.Add(logItem);
             }
 
-            _facilityConstructionEvents.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
+            _facilityConstructionEvents.Add(new FacilityConstructionEvent(Planetarium.GetUniversalTime())
             {
                 Facility = FacilityType.LaunchComplex,
                 State = state,
@@ -1051,7 +1051,7 @@ namespace RP0
                 });
             }
 
-            _facilityConstructionEvents.Add(new FacilityConstructionEvent(KSPUtils.GetUT())
+            _facilityConstructionEvents.Add(new FacilityConstructionEvent(Planetarium.GetUniversalTime())
             {
                 Facility = FacilityType.LaunchPad,
                 State = state,

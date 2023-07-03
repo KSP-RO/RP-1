@@ -357,16 +357,6 @@ namespace KerbalConstructionTime
             return HighLogic.CurrentGame.Mode == Game.Modes.MISSION || HighLogic.CurrentGame.Mode == Game.Modes.MISSION_BUILDER;
         }
 
-        /// <summary>
-        /// Use this method instead of Planetarium.GetUniversalTime().
-        /// Fixes the KSP stupidity where wrong UT can be returned when reverting back to the Editor.
-        /// </summary>
-        /// <returns></returns>
-        public static double GetUT()
-        {
-            return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
-        }
-
         public static void MoveVesselToWarehouse(BuildListVessel ship)
         {
             KCTEvents.Instance.KCTButtonStockImportant = true;
@@ -1651,7 +1641,7 @@ namespace KerbalConstructionTime
                 return "(infinity)";
 
             if (shouldUseDate ^ flip)
-                return KSPUtil.dateTimeFormatter.PrintDateCompact(GetUT() + extraTime + t, false, false);
+                return KSPUtil.dateTimeFormatter.PrintDateCompact(Planetarium.GetUniversalTime() + extraTime + t, false, false);
 
             return MagiCore.Utilities.GetColonFormattedTime(t);
         }
@@ -1667,7 +1657,7 @@ namespace KerbalConstructionTime
                 return "(infinity)";
 
             if (shouldUseDate)
-                return KSPUtil.dateTimeFormatter.PrintDate(GetUT() + extraTime + t, false, false);
+                return KSPUtil.dateTimeFormatter.PrintDate(Planetarium.GetUniversalTime() + extraTime + t, false, false);
 
             return MagiCore.Utilities.GetFormattedTime(t);
         }

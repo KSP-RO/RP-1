@@ -690,7 +690,7 @@ namespace KerbalConstructionTime
                         if (module.HasValue("timestamp"))
                         {
                             KCTDebug.Log("Updating RF timestamp on a part");
-                            module.SetValue("timestamp", Utilities.GetUT().ToString());
+                            module.SetValue("timestamp", Planetarium.GetUniversalTime().ToString());
                         }
                     }
                 }

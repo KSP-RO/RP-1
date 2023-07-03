@@ -170,7 +170,7 @@ namespace KerbalConstructionTime
             if (double.IsNaN(offset) || double.IsInfinity(offset) || offset * (1d / (86400d * 365.25d)) > 500d)
                 return PresetManager.Instance.ActivePreset.GeneralSettings.YearBasedRateMult.Evaluate(PresetManager.Instance.ActivePreset.GeneralSettings.YearBasedRateMult.maxTime);
 
-            DateTime curDate = _epoch.AddSeconds(Utilities.GetUT() + offset);
+            DateTime curDate = _epoch.AddSeconds(Planetarium.GetUniversalTime() + offset);
 
             double diffYears = (curDate - new DateTime(startYear, 1, 1)).TotalDays / 365.25;
             if (diffYears > 0)

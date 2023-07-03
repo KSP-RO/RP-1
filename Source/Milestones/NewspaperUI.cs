@@ -126,7 +126,7 @@ namespace RP0.Milestones
         {
             Texture2D tex = null;
             string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{m.name}.png";
-            if (System.IO.File.Exists(filePath) & !_settings.UseLastScreenshot)
+            if (System.IO.File.Exists(filePath) && !_settings.UseLastScreenshot)
             {
                 tex = new Texture2D(2, 2);
                 tex.LoadImage(System.IO.File.ReadAllBytes(filePath));

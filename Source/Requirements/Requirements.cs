@@ -1,6 +1,7 @@
 ﻿using ContractConfigurator;
 using RP0.Programs;
 using UniLinq;
+using System.Collections.Generic;
 using static ConfigNode;
 
 namespace RP0.Requirements
@@ -104,11 +105,14 @@ namespace RP0.Requirements
 
         public string ProgramTitle => ProgramHandler.PrettyPrintProgramName(ProgramName);
 
+        public bool IsActiveRequirement { get; set; }
+
         public override bool IsMet
         {
             get
             {
-                bool b = ProgramHandler.Instance.CompletedPrograms.Any(p => p.name == ProgramName);
+                List<Program> pList = IsActiveRequirement ? ProgramHandler.Instance.ActivePrograms : ProgramHandler.Instance.CompletedPrograms;
+                bool b = pList.Any(p => p.name == ProgramName);
                 return IsInverted ? !b : b;
             }
         }
@@ -121,7 +125,8 @@ namespace RP0.Requirements
         {
 
             ProgramName = cnVal.value;
-            IsInverted = cnVal.name == "not_complete_program";
+            IsInverted = cnVal.name == "not_complete_program" || cnVal.name == "not_active_program";
+            IsActiveRequirement = cnVal.name == "active_program" || cnVal.name == "not_active_program";
         }
 
         public override string ToString()
@@ -131,8 +136,11 @@ namespace RP0.Requirements
 
         public override string ToString(bool doColoring = false, string prefix = null)
         {
-            string s = IsInverted ? $"Haven't completed program {ProgramTitle}" :
-                                    $"Complete program {ProgramTitle}";
+            string s = IsActiveRequirement ?
+                        (IsInverted ? $"Program {ProgramTitle} is not active" :
+                                    $"Program {ProgramTitle} is active") :
+                        (IsInverted ? $"Haven't completed program {ProgramTitle}" :
+                                    $"Complete program {ProgramTitle}");
             if (prefix != null) s = prefix + s;
             return doColoring ? SurroundWithConditionalColorTags(s, IsMet) : s;
         }

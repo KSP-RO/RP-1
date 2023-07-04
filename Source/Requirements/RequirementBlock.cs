@@ -131,6 +131,8 @@ namespace RP0.Requirements
             {
                 case "complete_program":
                 case "not_complete_program":
+                case "active_program":
+                case "not_active_program":
                     req = new ProgramRequirement(cnVal);
                     break;
                 case "complete_contract":

@@ -206,7 +206,7 @@ namespace KerbalConstructionTime
 
                 if (KCTGameStates.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
-                    double UT = Utilities.GetUT();
+                    double UT = Planetarium.GetUniversalTime();
                     if (!Utilities.IsApproximatelyEqual(KCTGameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
                     {
                         KCTDebug.Log("KAC Alarm being created!");

@@ -85,7 +85,7 @@ namespace RP0
         /// <returns></returns>
         public override bool CanDeactivate(ref string reason)
         {
-            if (KSPUtils.GetUT() - DateActivated < LongestDuration &&    // Leader retirement is free
+            if (Planetarium.GetUniversalTime() - DateActivated < LongestDuration &&    // Leader retirement is free
                 !CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost()).CanAfford())
             {
                 reason = Localizer.GetStringByTag("#rp0_Leaders_Remove_CannotAfford");
@@ -124,7 +124,7 @@ namespace RP0
         {
             isActive = true;
             Register();
-            dateActivated = KSPUtils.GetUT();
+            dateActivated = Planetarium.GetUniversalTime();
 
             // Update ActivatedStrategies to show that this strategy is currently active (and clobber
             // the UT it was last deactivated, if any).
@@ -168,7 +168,7 @@ namespace RP0
             isActive = false;
 
             // Update the UT at which this strategy (and this strategy group) was deactivated
-            dateDeactivated = KSPUtils.GetUT();
+            dateDeactivated = Planetarium.GetUniversalTime();
             StrategyConfigRP0.ActivatedStrategies[ConfigRP0.Name] = dateDeactivated;
             if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
                 StrategyConfigRP0.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = dateDeactivated; // will stomp the previous one.
@@ -192,7 +192,7 @@ namespace RP0
         /// <returns></returns>
         public virtual double DeactivateCost()
         {
-            double duration = KSPUtils.GetUT() - DateActivated;
+            double duration = Planetarium.GetUniversalTime() - DateActivated;
             if (duration >= LongestDuration)
                 return 0d;
 
@@ -248,28 +248,28 @@ namespace RP0
                 string costStr = DeactivateCostString();
                 if (LeastDuration > 0 || !string.IsNullOrEmpty(costStr))
                 {
-                    if (DateActivated + LeastDuration <= KSPUtils.GetUT())
+                    if (DateActivated + LeastDuration <= Planetarium.GetUniversalTime())
                     {
                         text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemove"), string.IsNullOrEmpty(costStr) ? Localizer.Format("#autoLOC_6002417") : Localizer.Format("#rp0_Generic_Cost", costStr));
                     }
                     else
                     {
                         if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                            text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveOn"), KSPUtil.PrintDate(LeastDuration + KSPUtils.GetUT(), false, false));
+                            text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveOn"), KSPUtil.PrintDate(LeastDuration + Planetarium.GetUniversalTime(), false, false));
                         else
                             text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveIn"),
-                                extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration - KSPUtils.GetUT() + DateActivated, false, false)
-                                : KSPUtil.PrintDateDeltaCompact(LeastDuration - KSPUtils.GetUT() + DateActivated, false, false));
+                                extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration - Planetarium.GetUniversalTime() + DateActivated, false, false)
+                                : KSPUtil.PrintDateDeltaCompact(LeastDuration - Planetarium.GetUniversalTime() + DateActivated, false, false));
                     }
                 }
                 if (LongestDuration > 0)
                 {
                     if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                        text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresOn"), KSPUtil.PrintDate(LongestDuration + KSPUtils.GetUT(), false, false));
+                        text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresOn"), KSPUtil.PrintDate(LongestDuration + Planetarium.GetUniversalTime(), false, false));
                     else
                         text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresIn"), 
-                            extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration - KSPUtils.GetUT() + DateActivated, false, false)
-                            : KSPUtil.PrintDateDeltaCompact(LongestDuration - KSPUtils.GetUT() + DateActivated, false, false));
+                            extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration - Planetarium.GetUniversalTime() + DateActivated, false, false)
+                            : KSPUtil.PrintDateDeltaCompact(LongestDuration - Planetarium.GetUniversalTime() + DateActivated, false, false));
                 }
             }
             else

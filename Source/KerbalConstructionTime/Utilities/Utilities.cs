@@ -224,7 +224,7 @@ namespace KerbalConstructionTime
         }
 
         // Reimplemented from stock so we ignore tags.
-        public static Vector3 GetShipSize(ShipConstruct ship, bool excludeClamps)
+        public static Vector3 GetShipSize(ShipConstruct ship, bool excludeClamps, bool excludeChutes)
         {
             if (ship.parts.Count == 0)
                 return Vector3.zero;
@@ -246,6 +246,11 @@ namespace KerbalConstructionTime
                 if (excludeClamps)
                 {
                     if (p.IsClampOrChild())
+                        continue;
+                }
+                if (excludeChutes)
+                {
+                    if (p.Modules["RealChuteModule"] != null)
                         continue;
                 }
 
@@ -350,16 +355,6 @@ namespace KerbalConstructionTime
         public static bool CurrentGameIsMission()
         {
             return HighLogic.CurrentGame.Mode == Game.Modes.MISSION || HighLogic.CurrentGame.Mode == Game.Modes.MISSION_BUILDER;
-        }
-
-        /// <summary>
-        /// Use this method instead of Planetarium.GetUniversalTime().
-        /// Fixes the KSP stupidity where wrong UT can be returned when reverting back to the Editor.
-        /// </summary>
-        /// <returns></returns>
-        public static double GetUT()
-        {
-            return HighLogic.LoadedSceneIsEditor ? HighLogic.CurrentGame.UniversalTime : Planetarium.GetUniversalTime();
         }
 
         public static void MoveVesselToWarehouse(BuildListVessel ship)
@@ -1646,7 +1641,7 @@ namespace KerbalConstructionTime
                 return "(infinity)";
 
             if (shouldUseDate ^ flip)
-                return KSPUtil.dateTimeFormatter.PrintDateCompact(GetUT() + extraTime + t, false, false);
+                return KSPUtil.dateTimeFormatter.PrintDateCompact(Planetarium.GetUniversalTime() + extraTime + t, false, false);
 
             return MagiCore.Utilities.GetColonFormattedTime(t);
         }
@@ -1662,7 +1657,7 @@ namespace KerbalConstructionTime
                 return "(infinity)";
 
             if (shouldUseDate)
-                return KSPUtil.dateTimeFormatter.PrintDate(GetUT() + extraTime + t, false, false);
+                return KSPUtil.dateTimeFormatter.PrintDate(Planetarium.GetUniversalTime() + extraTime + t, false, false);
 
             return MagiCore.Utilities.GetFormattedTime(t);
         }

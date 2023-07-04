@@ -9,6 +9,13 @@ namespace RP0
         [Persistent]
         public double UT;
 
+        /// <summary>
+        /// Used only for deserialization.
+        /// </summary>
+        public CareerEvent()
+        {
+        }
+
         public CareerEvent(double ut)
         {
             UT = ut;

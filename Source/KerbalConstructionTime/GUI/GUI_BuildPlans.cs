@@ -108,7 +108,7 @@ namespace KerbalConstructionTime
                             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
                         }
 
-                        if (GUILayout.Button(b.shipName))
+                        if (GUILayout.Button(new GUIContent(b.shipName, $"Cost: √{b.cost:N0}")))
                         {
                             if (lcMode)
                             {

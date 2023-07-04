@@ -18,6 +18,13 @@ namespace RP0
         [Persistent]
         public ContractEventType Type;
 
+        /// <summary>
+        /// Used only for deserialization.
+        /// </summary>
+        public ContractEvent()
+        {
+        }
+
         public ContractEvent(double UT) : base(UT)
         {
         }

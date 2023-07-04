@@ -13,6 +13,13 @@ namespace RP0
         [Persistent]
         public Guid FacilityID;
 
+        /// <summary>
+        /// Used only for deserialization.
+        /// </summary>
+        public FacilityConstructionEvent()
+        {
+        }
+
         public FacilityConstructionEvent(double UT) : base(UT)
         {
         }

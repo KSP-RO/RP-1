@@ -18,6 +18,13 @@ namespace RP0
         [Persistent]
         public string Type;
 
+        /// <summary>
+        /// Used only for deserialization.
+        /// </summary>
+        public FailureEvent()
+        {
+        }
+
         public FailureEvent(double UT) : base(UT)
         {
         }

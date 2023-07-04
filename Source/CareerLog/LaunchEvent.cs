@@ -24,6 +24,13 @@ namespace RP0
         [Persistent]
         public string LCModID;
 
+        /// <summary>
+        /// Used only for deserialization.
+        /// </summary>
+        public LaunchEvent()
+        {
+        }
+
         public LaunchEvent(double UT) : base(UT)
         {
         }

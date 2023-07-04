@@ -59,7 +59,7 @@ namespace KerbalConstructionTime
 
         public void Start()
         {
-            lastUT = Utilities.GetUT();
+            lastUT = Planetarium.GetUniversalTime();
             if (warpTarget == null || warpTarget.IsComplete())
             {
                 StopWarp();
@@ -111,7 +111,7 @@ namespace KerbalConstructionTime
 
             Profiler.BeginSample("KCT.WarpController");
             double remaining = warpTarget.GetTimeLeft();
-            double UT = Utilities.GetUT();
+            double UT = Planetarium.GetUniversalTime();
             double dT = UT - lastUT;
             if (dT > 0)
             {

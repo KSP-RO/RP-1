@@ -38,7 +38,7 @@ namespace RP0.Harmony
             float stormRad = 100.0f;
             foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("Kerbalism"))
             {
-                if (n.GetValue("name") == "RealismOverhaul")
+                if (n.GetValue("Profile") == "RealismOverhaul")
                 {
                     n.TryGetValue("ShieldingEfficiency", ref shieldingEffic);
                     n.TryGetValue("StormFrequency", ref stormFreq);

@@ -35,7 +35,7 @@ namespace KerbalConstructionTime
 
         public KCTSettings()
         {
-            DisableAllMessages = false;
+            DisableAllMessages = true;
             ShowSimWatermark = true;
             Debug = false;
             OverrideLaunchButton = true;

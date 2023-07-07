@@ -15,6 +15,13 @@ namespace RP0
         [Persistent]
         public double ResearchRate;
 
+        /// <summary>
+        /// Used only for deserialization.
+        /// </summary>
+        public TechResearchEvent()
+        {
+        }
+
         public TechResearchEvent(double UT) : base(UT)
         {
         }

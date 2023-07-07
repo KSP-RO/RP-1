@@ -184,7 +184,7 @@ namespace KerbalConstructionTime
 
             StorePartNames(s.parts);
             // Override KSP sizing of the ship construct
-            ShipSize = Utilities.GetShipSize(s, true);
+            ShipSize = Utilities.GetShipSize(s, true, false);
 
             if (storeConstruct)
                 StoreShipConstruct(s);
@@ -361,7 +361,7 @@ namespace KerbalConstructionTime
             ConfigNode cn = ConstructToSave.SaveShip();
             SanitizeShipNode(cn);
             // override KSP sizing of the ship construct
-            cn.SetValue("size", KSPUtil.WriteVector(Utilities.GetShipSize(ConstructToSave, true)));
+            cn.SetValue("size", KSPUtil.WriteVector(Utilities.GetShipSize(ConstructToSave, true, true)));
             // These are actually needed, do not comment them out
             VesselToSave.SetRotation(OriginalRotation);
             VesselToSave.SetPosition(OriginalPosition);
@@ -690,7 +690,7 @@ namespace KerbalConstructionTime
                         if (module.HasValue("timestamp"))
                         {
                             KCTDebug.Log("Updating RF timestamp on a part");
-                            module.SetValue("timestamp", Utilities.GetUT().ToString());
+                            module.SetValue("timestamp", Planetarium.GetUniversalTime().ToString());
                         }
                     }
                 }

@@ -189,7 +189,7 @@ namespace KerbalConstructionTime
                     simParams.SimInclination %= 360;
             }
 
-            double currentUT = Utilities.GetUT();
+            double currentUT = Planetarium.GetUniversalTime();
             simParams.DelayMoveSeconds = 0;
             if (_fromCurrentUT)
             {

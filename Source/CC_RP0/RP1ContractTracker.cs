@@ -89,7 +89,7 @@ namespace ContractConfigurator.RP0
             ContractInfo item = new ContractInfo
             {
                 Name = contract,
-                CompletionTime = KSPUtils.GetUT()
+                CompletionTime = Planetarium.GetUniversalTime()
             };
 
             if (ContractTracker.TryGetValue(vesselID,out contracts))

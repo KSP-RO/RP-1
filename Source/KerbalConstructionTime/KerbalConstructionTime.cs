@@ -395,7 +395,7 @@ namespace KerbalConstructionTime
             if (Utilities.CurrentGameIsMission()) return;
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
-            double UT = Utilities.GetUT();
+            double UT = Planetarium.GetUniversalTime();
             if (_lastRateUpdateUT == 0d)
                 _lastRateUpdateUT = UT;
             double UTDiff = UT - _lastRateUpdateUT;
@@ -756,7 +756,7 @@ namespace KerbalConstructionTime
                     FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
                 {
                     // Advance building construction
-                    double UToffset = KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT - Utilities.GetUT();
+                    double UToffset = KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT - Planetarium.GetUniversalTime();
                     if (UToffset > 0)
                     {
                         foreach (var ksc in KCTGameStates.KSCs)

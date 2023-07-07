@@ -15,6 +15,13 @@ namespace RP0
         [Persistent]
         public bool IsAdd;
 
+        /// <summary>
+        /// Used only for deserialization.
+        /// </summary>
+        public LeaderEvent()
+        {
+        }
+
         public LeaderEvent(double UT) : base(UT)
         {
         }

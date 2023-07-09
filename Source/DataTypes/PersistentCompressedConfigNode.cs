@@ -73,7 +73,7 @@ namespace RP0.DataTypes
 
         public void CompressAndRelease()
         {
-            if (_node == null)
+            if (_node == null || (Programs.ProgramHandler.Settings != null && Programs.ProgramHandler.Settings.doNotCompressData))
                 return;
 
             Compress();
@@ -182,6 +182,16 @@ namespace RP0.DataTypes
 
         public void Save(ConfigNode node)
         {
+            // Special handling: allow storing the node as uncompressed
+            if (Programs.ProgramHandler.Settings != null && Programs.ProgramHandler.Settings.doNotCompressData)
+            {
+                if (_node != null || Decompress())
+                {
+                    node.AddNode(_node);
+                    return;
+                }
+            }
+
             // will early-out if we're already in the compressed state.
             CompressAndRelease();
 

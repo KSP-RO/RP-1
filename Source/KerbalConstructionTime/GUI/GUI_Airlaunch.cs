@@ -5,7 +5,7 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
-        private static Rect _airlaunchWindowPosition = new Rect(Screen.width - 300, 40, 300, 1);
+        private static Rect _airlaunchWindowPosition = new Rect(Screen.width / 2 - 150, Screen.height / 2 - 300, 300, 1);
         private static string _sKscDistance = "500";
         private static string _sKscAzimuth = "90";
         private static string _sAltitude = "10000";

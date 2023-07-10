@@ -119,20 +119,25 @@ namespace RP0
             return details;
         }
 
-        public static double GetSubsidyAtTimeDelta(double deltaTime)
+        public static double GetYearlySubsidyAtTimeDelta(double deltaTime)
         {
             double days;
             double rep = Reputation.CurrentRep;
             if (deltaTime > 0 && (days = Math.Floor(deltaTime / 86400d)) > 0)
                 rep *= Math.Pow(1d - Settings.repPortionLostPerDay, days);
             
-            return GetSubsidyAtTimeDelta(deltaTime, rep);
+            return GetYearlySubsidyAtTimeDelta(deltaTime, rep);
         }
 
-        public static double GetSubsidyAtTimeDelta(double deltaTime, double rep)
+        public static double GetYearlySubsidyAtTimeDelta(double deltaTime, double rep)
+        {
+            return GetYearlySubsidyAtTime(Planetarium.GetUniversalTime() + deltaTime, rep);
+        }
+
+        public static double GetYearlySubsidyAtTime(double ut, double rep)
         {
             const double secsPerYear = 3600 * 24 * 365.25;
-            float years = (float)((Planetarium.GetUniversalTime() + deltaTime) / secsPerYear);
+            float years = (float)(ut / secsPerYear);
             double minSubsidy = Settings.subsidyCurve.Evaluate(years);
             
             double maxSubsidy = minSubsidy * Settings.subsidyMultiplierForMax;
@@ -154,7 +159,7 @@ namespace RP0
             if (steps == 0)
                 steps = 1 + (int)(deltaTime / (86400d * 29.999d));
 
-            double subsidy = GetSubsidyAtTimeDelta(0d);
+            double subsidy = GetYearlySubsidyAtTimeDelta(0d);
             if (steps <= 1)
                 return subsidy;
 
@@ -163,17 +168,9 @@ namespace RP0
             for (int i = 1; i < steps; ++i)
             {
                 ut += deltaPerStep;
-                subsidy += GetSubsidyAtTimeDelta(ut);
+                subsidy += GetYearlySubsidyAtTimeDelta(ut);
             }
             return subsidy / steps;
-        }
-
-        public double MaintenanceSubsidyPerDay
-        {
-            get
-            {
-                return GetSubsidyAtTimeDelta(0) * (1d / 365.25d);
-            }
         }
 
         #endregion
@@ -496,11 +493,15 @@ namespace RP0
             // First process crew
             CrewHandler.Instance.Process(UTDiff);
 
-            // Best to deduct maintenance fees and add program funding at the same time
+            // Best to deduct maintenance fees and add program funding at the same time.
+            // First, increment funds from programs.
             ProgramHandler.Instance.ProcessFunding();
 
+            // Now, handle maintenance.
             double timeFactor = UTDiff * (1d / 86400d);
-            double subsidyForPassedTime = timeFactor * MaintenanceSubsidyPerDay;
+
+            // for now, RSS max timewarp means only 1.4 days per fixed frame, so it's not worth doing the above.
+            double subsidyForPassedTime = timeFactor * GetYearlySubsidyAtTimeDelta(0d) * (1d / 365.25d);
 
             // We have to do some weird logic here. We have to get the resultant upkeep first,
             // then add the subsidy, then actually subtract the upkeep.
@@ -598,9 +599,16 @@ namespace RP0
             return true;
         }
 
-        public double GetSubsidyAmountForSeconds(double seconds)
+        public double GetSubsidyAmount(double startUT, double endUT)
         {
-            return MaintenanceSubsidyPerDay * seconds / 86400d;
+            double delta = endUT - startUT;
+            if (delta == 0d)
+                return 0d;
+
+            double startSubsidy = GetYearlySubsidyAtTime(startUT, Reputation.CurrentRep);
+            double endSubsidy = GetYearlySubsidyAtTime(endUT, Reputation.CurrentRep);
+
+            return (endUT - startUT) * ((startSubsidy + endSubsidy) * 0.5d) / 365.25d / 86400d;
         }
 
         private void onVesselRecoveryProcessingComplete(ProtoVessel pv, KSP.UI.Screens.MissionRecoveryDialog mrd, float x)

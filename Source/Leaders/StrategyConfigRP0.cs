@@ -15,6 +15,10 @@ namespace RP0
         protected bool isDisabled;
         public bool IsDisabled => isDisabled;
 
+        [Persistent]
+        protected bool cannotActivative;
+        public bool CannotActivative => cannotActivative;
+
         /// <summary>
         /// Some leaders (Contractors, e.g.) can appear in two departments at once. If this is set,
         /// the strategy will appear in both the main department and this one.

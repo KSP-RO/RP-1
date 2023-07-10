@@ -75,6 +75,13 @@ namespace RP0
                 reason = Localizer.Format("#rp0_Leaders_HiringRequirements_Unmet");
                 return false;
             }
+
+            if (ConfigRP0.CannotActivative)
+            {
+                reason = string.Empty;
+                return false;
+            }
+
             return true;
         }
 

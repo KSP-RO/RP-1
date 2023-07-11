@@ -6,7 +6,6 @@ namespace KerbalConstructionTime
     {
         private double targetFunds;
         private const int MaxIterations = 256;
-        private const double EpsilonFunds = 0.1d;
         private const double EpsilonTime = 60d;
         private const double MinTime = 0d;
         public const double MaxTime = 2d * 365.25d * 86400d;
@@ -46,15 +45,13 @@ namespace KerbalConstructionTime
             double timeLower = MinTime;
             double timeUpper = MaxTime;
             
-            double totalFunds = 0d; // outside the loop since we'll error-check this value.
-            double time = -1; // outside the loop, this is what we'll return.
             double bestTime = -1;
             for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > EpsilonTime;)
             {
-                time = (timeUpper + timeLower) * 0.5d;
+                double time = (timeUpper + timeLower) * 0.5d;
                 // This is the post-CMQ delta.
                 double fundDelta = KCTGameStates.GetBudgetDelta(time);
-                totalFunds = baseFunds + fundDelta;
+                double totalFunds = baseFunds + fundDelta;
 
                 if (totalFunds >= targetFunds)
                 {

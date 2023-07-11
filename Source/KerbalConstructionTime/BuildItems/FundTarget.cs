@@ -11,7 +11,7 @@ namespace KerbalConstructionTime
         private double origFunds;
 
         private const int MaxIterations = 256;
-        private const double EpsilonTime = 60d;
+        private const double EpsilonTime = 1d;
         private const double MinTime = 0d;
         public const double MaxTime = 2d * 365.25d * 86400d;
 
@@ -67,13 +67,13 @@ namespace KerbalConstructionTime
         {
             double baseFunds = Funding.Instance.Funds;
 
-            if (System.Math.Abs(targetFunds - baseFunds) <= 0d)
+            if (System.Math.Abs(targetFunds - baseFunds) <= 0.001d)
                 return 0d;
 
             double timeLower = MinTime;
             double timeUpper = MaxTime;
             
-            double bestTime = -1;
+            double bestTime = -1d;
             for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > EpsilonTime;)
             {
                 double time = (timeUpper + timeLower) * 0.5d;
@@ -92,7 +92,7 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (bestTime > 0)
+            if (bestTime > 0d)
                 return bestTime;
 
             return -1d;

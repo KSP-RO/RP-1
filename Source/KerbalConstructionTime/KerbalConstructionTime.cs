@@ -635,7 +635,7 @@ namespace KerbalConstructionTime
                 }
 
                 if (KerbalConstructionTimeData.Instance.fundTarget.IsValid && KerbalConstructionTimeData.Instance.fundTarget.GetTimeLeft() <= 0d)
-                    KerbalConstructionTimeData.Instance.fundTarget = new FundTarget();
+                    KerbalConstructionTimeData.Instance.fundTarget.Clear();
             }
             Profiler.EndSample();
         }

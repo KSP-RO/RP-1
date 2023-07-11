@@ -123,7 +123,11 @@ namespace KerbalConstructionTime
             if (buildItem != null)
             {
                 string txt = buildItem.GetItemName(), locTxt = "VAB";
-                if (buildItem.GetListType() == BuildListVessel.ListType.Reconditioning)
+                if (buildItem.GetListType() == BuildListVessel.ListType.None)
+                {
+                    locTxt = string.Empty;
+                }
+                else if (buildItem.GetListType() == BuildListVessel.ListType.Reconditioning)
                 {
                     ReconRollout reconRoll = buildItem as ReconRollout;
                     if (reconRoll.RRType == ReconRollout.RolloutReconType.Reconditioning)

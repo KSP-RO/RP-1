@@ -230,7 +230,7 @@ namespace RP0
                         warpToFundsString = n;
                         return warpToFundsString;
                     }, 24f),
-                    new DialogGUIButton("Warp", () => { ConfirmWarpDialog(); }),
+                    new DialogGUIButton("Estimate Time", () => { ConfirmWarpDialog(); }),
                     new DialogGUIButton("Cancel", () => { 
                         UIHolder.Instance.ShowWindow();
                         InputLockManager.RemoveControlLock("warptofunds");
@@ -257,7 +257,17 @@ namespace RP0
             {
                 if (fundTarget <= Funding.Instance.Funds)
                 {
-                    UIHolder.Instance.ShowWindow();
+                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmAtFunds",
+                    "Already at this funding!",
+                    "No Warp Needed",
+                    HighLogic.UISkin,
+                    300,
+                    new DialogGUIButton("Understood", () =>
+                    {
+                        UIHolder.Instance.ShowWindow();
+                        InputLockManager.RemoveControlLock("warptofunds");
+                        KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                    })), false, HighLogic.UISkin);
                     return;
                 }
 
@@ -273,19 +283,28 @@ namespace RP0
                         new DialogGUIButton("Understood", () => {
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
+                            KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget.Clear();
                         })), false, HighLogic.UISkin);
                 }
                 else
                 {
                     var options = new DialogGUIBase[] {
-                        new DialogGUIButton("Yes", () => 
+                        new DialogGUIButton("Yes, Warp", () => 
                         {
+                            KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget.Clear();
                             KerbalConstructionTime.KCTWarpController.Create(target);
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         }),
-                        new DialogGUIButton("No", () => 
-                        { 
+                        new DialogGUIButton("Add Warp Target", () =>
+                        {
+                            KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget = target;
+                            UIHolder.Instance.ShowWindow();
+                            InputLockManager.RemoveControlLock("warptofunds");
+                        }),
+                        new DialogGUIButton("Cancel", () => 
+                        {
+                            KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget.Clear();
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         })

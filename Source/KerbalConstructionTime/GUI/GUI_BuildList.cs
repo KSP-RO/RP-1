@@ -646,6 +646,10 @@ namespace KerbalConstructionTime
                 _allItems.Add(t);
             }
             _allItems.AddRange(RP0.Crew.CrewHandler.Instance.TrainingCourses);
+            
+            if (KerbalConstructionTimeData.Instance.fundTarget.IsValid)
+                _allItems.Add(KerbalConstructionTimeData.Instance.fundTarget);
+
             _allItems.Sort(CompareBuildItems);
 
             GUILayout.BeginHorizontal();

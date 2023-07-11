@@ -69,6 +69,9 @@ namespace KerbalConstructionTime
         [KSPField(isPersistant = true)]
         public AirlaunchParams AirlaunchParams = new AirlaunchParams();
 
+        [KSPField(isPersistant = true)]
+        public FundTarget fundTarget = new FundTarget();
+
         public bool MergingAvailable;
         public List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 

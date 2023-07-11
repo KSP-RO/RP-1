@@ -2,32 +2,60 @@
 
 namespace KerbalConstructionTime
 {
-    public class FundTarget : IKCTBuildItem
+    public class FundTarget : IKCTBuildItem, IConfigNode
     {
+        [Persistent]
         private double targetFunds;
+
+        [Persistent]
+        private double origFunds;
+
         private const int MaxIterations = 256;
         private const double EpsilonTime = 60d;
         private const double MinTime = 0d;
         public const double MaxTime = 2d * 365.25d * 86400d;
 
+        public bool IsValid => targetFunds != origFunds && targetFunds > 0d;
+
+        public FundTarget() { }
+
         public FundTarget(double funds)
         {
             targetFunds = funds;
+            origFunds = Funding.Instance?.Funds ?? 0d;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            ConfigNode.LoadObjectFromConfig(this, node);
+        }
+
+        public void Save(ConfigNode node)
+        {
+            ConfigNode.CreateConfigFromObject(this, node);
+        }
+
+        public void Clear()
+        {
+            origFunds = targetFunds = 0d;
         }
 
         public double GetBuildRate()
         {
-            return 0d;
+            return 1d;
         }
 
         public double GetFractionComplete()
         {
+            if (Funding.Instance != null && targetFunds != origFunds)
+                return (Funding.Instance.Funds - origFunds) / (targetFunds - origFunds);
+
             return 0d;
         }
 
         public string GetItemName()
         {
-            return "Fund Target";
+            return $"Fund Target: {targetFunds:N0}";
         }
 
         public BuildListVessel.ListType GetListType()

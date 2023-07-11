@@ -818,6 +818,9 @@ namespace KerbalConstructionTime
             }
             foreach (IKCTBuildItem course in RP0.Crew.CrewHandler.Instance.TrainingCourses)
                 _checkTime(course, ref shortestTime, ref thing);
+            if (KerbalConstructionTimeData.Instance.fundTarget.IsValid)
+                _checkTime(KerbalConstructionTimeData.Instance.fundTarget, ref shortestTime, ref thing);
+
             return thing;
         }
 

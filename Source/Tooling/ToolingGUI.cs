@@ -147,7 +147,7 @@ namespace RP0
 
                 var dialog = new MultiOptionDialog(
                         "ConfirmAllToolingsPurchase",
-                        $"Tooling for all untooled parts will cost {costline} (spending {credit:N0} credit).",
+                        $"Tooling for all untooled parts will cost {costline} (spending {credit:N0} unlock credit).",
                         "Tooling Purchase",
                         HighLogic.UISkin,
                         new Rect(0.5f, 0.5f, 150f, 60f),

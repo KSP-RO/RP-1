@@ -60,7 +60,7 @@ namespace RP0
                         new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(
                             "ConfirmToolingPurchase",
-                            $"Tooling has not yet been set up for this part. It will cost {costline} (spending {credit:N0} credit).",
+                            $"Tooling has not yet been set up for this part. It will cost {costline} (spending {credit:N0} unlock credit).",
                             "Tooling Purchase",
                             HighLogic.UISkin,
                             new Rect(0.5f, 0.5f, 150f, 60f),

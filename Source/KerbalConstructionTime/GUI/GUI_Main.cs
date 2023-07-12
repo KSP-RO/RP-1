@@ -36,7 +36,7 @@ namespace KerbalConstructionTime
                 _windowSkin = GUI.skin;
             GUI.skin = _windowSkin;
 
-            if (_validScenes.Contains(HighLogic.LoadedScene))
+            if (_validScenes.Contains(HighLogic.LoadedScene) && KerbalConstructionTimeData.Instance != null)
             {
                 if (GUIStates.ShowSettings)
                     _presetPosition = DrawWindowWithTooltipSupport(_presetPosition, "DrawPresetWindow", "Settings", DrawPresetWindow);
@@ -109,26 +109,26 @@ namespace KerbalConstructionTime
 
                 if (_inSCSubscene && HighLogic.LoadedScene != GameScenes.SPACECENTER)
                 {
-                        _inSCSubscene = false;
+                    _inSCSubscene = false;
                 }
-
-                //Disable KSC things when certain windows are shown.
-                if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowLCResources || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
-                {
-                    if (!_isKSCLocked)
-                    {
-                        InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, KerbalConstructionTime.KCTKSCLock);
-                        _isKSCLocked = true;
-                    }
-                }
-                else if (_isKSCLocked)
-                {
-                    InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
-                    _isKSCLocked = false;
-                }
-
-                GUI.skin = oldSkin;
             }
+
+            //Disable KSC things when certain windows are shown.
+            if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowLCResources || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
+            {
+                if (!_isKSCLocked)
+                {
+                    InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, KerbalConstructionTime.KCTKSCLock);
+                    _isKSCLocked = true;
+                }
+            }
+            else if (_isKSCLocked)
+            {
+                InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
+                _isKSCLocked = false;
+            }
+
+            GUI.skin = oldSkin;
         }
 
         public static void ClickToggle()

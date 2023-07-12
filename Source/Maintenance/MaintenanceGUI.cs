@@ -83,6 +83,9 @@ namespace RP0
 
         public void RenderSummaryTab()
         {
+            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance == null)
+                return;
+
             double totalCost = 0d;
             double cost;
             GUILayout.BeginHorizontal();
@@ -317,6 +320,9 @@ namespace RP0
 
         public void RenderFacilitiesTab()
         {
+            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance == null)
+                return;
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Facilities costs (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
@@ -388,6 +394,9 @@ namespace RP0
 
         public void RenderIntegrationTab()
         {
+            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance == null)
+                return;
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Integration Teams Cost (per ", HighLogic.Skin.label);
             RenderPeriodSelector();
@@ -433,6 +442,9 @@ namespace RP0
 
         public void RenderConstructionTab()
         {
+            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance == null)
+                return;
+
             double totalCost = 0d;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Construction Cost (per ", HighLogic.Skin.label);
@@ -493,6 +505,9 @@ namespace RP0
 
         public void RenderProgramTab()
         {
+            if (Programs.ProgramHandler.Instance == null)
+                return;
+
             GUILayout.BeginHorizontal();
             GUILayout.Label("Active Programs (per ", HighLogic.Skin.label);
             RenderPeriodSelector();

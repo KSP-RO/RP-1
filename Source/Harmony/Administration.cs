@@ -318,7 +318,7 @@ namespace RP0.Harmony
                     var stateAccept = tooltip.tooltipStates.First(s => s.name == "accept");
 
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -ps.Program.ConfidenceCost, 0d);
-                    string costStr = cmq.GetCostLine(true, true, true, true);
+                    string costStr = cmq.GetCostLineOverride(true, true, true, true);
                     if (string.IsNullOrEmpty(costStr))
                         stateAccept.tooltipText = Localizer.Format("#rp0_Admin_AcceptProgram");
                     else
@@ -330,7 +330,7 @@ namespace RP0.Harmony
                     var state = tooltip.tooltipStates.First(s => s.name == "accept");
 
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(Planetarium.GetUniversalTime()), 0d, 0d);
-                    string rewardStr = cmq.GetCostLine(false, true, false, true);
+                    string rewardStr = cmq.GetCostLineOverride(false, true, false, true);
                     if (string.IsNullOrEmpty(rewardStr))
                         state.tooltipText = Localizer.Format("#rp0_Admin_CompleteProgram");
                     else
@@ -440,7 +440,7 @@ namespace RP0.Harmony
 
                     // Calculate the reward for display in the popup
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramCompletion, 0d, 0d, ps.Program.RepForComplete(Planetarium.GetUniversalTime()), 0d, 0d);
-                    string rewardStr = cmq.GetCostLine(false, true, false, true);
+                    string rewardStr = cmq.GetCostLineOverride(false, true, false, true);
                     if (!string.IsNullOrEmpty(rewardStr))
                         rewardStr = $"\n\n{Localizer.Format("#rp0_Generic_Reward", rewardStr)}";
 
@@ -466,7 +466,7 @@ namespace RP0.Harmony
 
                     // Create the activation cost string
                     var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramActivation, 0d, 0d, 0d, -ps.Program.ConfidenceCost, 0d);
-                    string costStr = cmq.GetCostLine(true, true, true, true);
+                    string costStr = cmq.GetCostLineOverride(true, true, true, true);
                     if (!string.IsNullOrEmpty(costStr))
                         costStr = $"\n\n{Localizer.Format("#rp0_Generic_Cost", costStr)}";
 

@@ -127,7 +127,7 @@ namespace RP0
         public CurrencyModifierQueryRP0 GetCMQ(double cost, string tech, TransactionReasonsRP0 reason)
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
-            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), GetCreditAmount(tech)));
+            cmq.AddPostDelta(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), GetCreditAmount(tech)), true);
             return cmq;
         }
 
@@ -136,7 +136,7 @@ namespace RP0
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
             preCreditCost = -cmq.GetTotal(CurrencyRP0.Funds);
             credit = Math.Min(preCreditCost, GetCreditAmount(tech));
-            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, credit);
+            cmq.AddPostDelta(CurrencyRP0.Funds, credit, true);
             postCreditCost = -cmq.GetTotal(CurrencyRP0.Funds);
             canAfford = cmq.CanAfford();
 

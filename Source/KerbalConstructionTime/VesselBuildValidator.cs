@@ -172,7 +172,7 @@ namespace KerbalConstructionTime
             double credit = UnlockCreditHandler.Instance.GetCreditAmount(partList);
 
             double spentCredit = Math.Min(postCMQUnlockCost, credit);
-            cmq.AddDeltaAuthorized(CurrencyRP0.Funds, spentCredit);
+            cmq.AddPostDelta(CurrencyRP0.Funds, spentCredit, true);
 
             int partCount = partList.Count;
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "integrate vessel";
@@ -375,7 +375,7 @@ namespace KerbalConstructionTime
                         double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds);
                         double invertCMQOp = error.CostToResolve / trueTotal;
                         double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.GetCreditAmount(error.TechToResolve));
-                        cmq.AddDeltaAuthorized(CurrencyRP0.Funds, creditAmtToUse);
+                        cmq.AddPostDelta(CurrencyRP0.Funds, creditAmtToUse, true);
                         string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true);
                         if (string.IsNullOrEmpty(afterCreditLine))
                             afterCreditLine = "free";

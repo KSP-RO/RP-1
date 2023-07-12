@@ -72,7 +72,7 @@ namespace RP0.Harmony
                 double postCMQcost = -cmq.GetTotal(CurrencyRP0.Funds);
                 double invertCMQop = cfgCost / postCMQcost;
                 double credit = UnlockCreditHandler.Instance.GetCreditAmount(techNode);
-                cmq.AddDeltaAuthorized(CurrencyRP0.Funds, credit);
+                cmq.AddPostDelta(CurrencyRP0.Funds, credit, true);
                 if (!cmq.CanAfford())
                 {
                     return false;

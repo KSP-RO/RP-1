@@ -73,6 +73,9 @@ namespace RP0
 
         CurrencyArray multipliers = new CurrencyArray(1d);
 
+        CurrencyArray postMultiplierDeltas = new CurrencyArray(0d);
+        CurrencyArray postMultiplierDeltasHidden = new CurrencyArray(0d);
+
         public CurrencyModifierQueryRP0(TransactionReasons reason, double f0, float s0, float r0)
             : base(reason, (float)f0, s0, r0)
         {
@@ -112,6 +115,11 @@ namespace RP0
             multipliers[c] = (multipliers[c] * inputs[c] + val) / inputs[c];
         }
 
+        public void AddPostDelta(CurrencyRP0 c, double val, bool hidden)
+        {
+            (hidden ? postMultiplierDeltasHidden : postMultiplierDeltas)[c] += val;
+        }
+
         public void Multiply(CurrencyRP0 c, double mult)
         {
             multipliers[c] = multipliers[c] * mult;
@@ -123,24 +131,19 @@ namespace RP0
                 multipliers[i] = multipliers[i] * mult;
         }
 
+        /// <summary>
+        /// This ignores hidden deltas
+        /// </summary>
+        /// <param name="c"></param>
+        /// <returns></returns>
         public double GetEffectDelta(CurrencyRP0 c)
         {
-            //return c switch
-            //{
-            //    CurrencyRP0.Funds => deltaFunds,
-            //    CurrencyRP0.Science => deltaScience,
-            //    CurrencyRP0.Reputation => deltaRep,
-            //    CurrencyRP0.Confidence => deltaConf,
-            //    CurrencyRP0.Time => deltaTime,
-            //    CurrencyRP0.Rate => deltaRate,
-            //    _ => 0f,
-            //};
-            return inputs[c] * (multipliers[c] - 1d);
+            return inputs[c] * (multipliers[c] - 1d) + postMultiplierDeltas[c];
         }
 
         public double GetTotal(CurrencyRP0 c)
         {
-            return inputs[c] * multipliers[c];
+            return inputs[c] * multipliers[c] + postMultiplierDeltas[c] + postMultiplierDeltasHidden[c];
         }
 
         public static bool ApproximatelyZero(double a)
@@ -184,7 +187,7 @@ namespace RP0
             int rateIndex = (int)CurrencyRP0.Rate;
             for (int i = 0; i < outputs.Length; ++i)
             {
-                double amount = inputs[i] * multipliers[i];
+                double amount = inputs[i] * multipliers[i] + postMultiplierDeltas[i] + postMultiplierDeltasHidden[i];
                 if (i > LastCurrencyForAffordChecks)
                 {
                     canAffords[i] = true;
@@ -205,10 +208,10 @@ namespace RP0
             {
                 if (i == rateIndex)
                 {
-                    if (multipliers[i] == 1d)
+                    if (multipliers[i] + postMultiplierDeltas[i] + postMultiplierDeltasHidden[i] == 1d)
                         continue;
                 }
-                else if (ApproximatelyZero(outputs[i]))
+                else if (ApproximatelyZero(inputs[i]) && ApproximatelyZero(outputs[i]))
                     continue;
 
                 if (!string.IsNullOrEmpty(resultText))
@@ -247,13 +250,14 @@ namespace RP0
 
                 resultText += amountText;
 
-                if (includePercentage && multipliers[i] != 1d)
+                double effectiveMult = postMultiplierDeltas[i] != 0d && inputs[i] != 0d ? amount / inputs[i] : multipliers[i];
+                if (includePercentage && effectiveMult != 1d)
                 {
                     // Normally, for a currency less is good if it's a cost.
                     // For time, use same positive/negative logic
                     // for rate, more is good unless we're flipping.
                     bool lessGood = c == CurrencyRP0.Rate ? flipRateDeltaColoring : inputs[i] < 0;
-                    resultText += $" <color={TextStylingColor(multipliers[i] < 1, lessGood)}>({LocalizationHandler.FormatRatioAsPercent(multipliers[i])})</color>";
+                    resultText += $" <color={TextStylingColor(effectiveMult < 1, lessGood)}>({LocalizationHandler.FormatRatioAsPercent(effectiveMult)})</color>";
                 }
             }
 
@@ -316,7 +320,7 @@ namespace RP0
 
         public bool CanAfford(CurrencyRP0 c)
         {
-            double amount = -inputs[c] * multipliers[c];
+            double amount = -(inputs[c] * multipliers[c] + postMultiplierDeltas[c] + postMultiplierDeltasHidden[c]);
             if (ApproximatelyZero(amount))
                 return true;
 
@@ -356,7 +360,7 @@ namespace RP0
         public string GetEffectDeltaText(CurrencyRP0 c, string format, TextStyling textStyle = TextStyling.None)
         {
             string text = "";
-            double delta = inputs[c] * (multipliers[c] - 1d);
+            double delta = inputs[c] * (multipliers[c] - 1d) + postMultiplierDeltas[c];
             
             if (delta == 0d)
             {
@@ -378,7 +382,8 @@ namespace RP0
             
             if (inputs[c] != 0d)
             {
-                double percent = (multipliers[c] - 1d) * 100d;
+                double mult = postMultiplierDeltas[c] == 0d ? multipliers[c] : (inputs[c] * multipliers[c] + postMultiplierDeltas[c]) / inputs[c];
+                double percent = (mult - 1d) * 100d;
                 string text = percent.ToString(format);
                 return textStyle switch
                 {

@@ -14,6 +14,8 @@ namespace RP0
 
         protected bool done = false;
 
+        private const int _numTips = 80;
+
         protected void Awake()
         {
             DontDestroyOnLoad(this);
@@ -31,6 +33,8 @@ namespace RP0
             try
             {
                 const int loadingScreenIdx = 3;
+                for (int i = 0; i < loadingScreenIdx; ++i)
+                    LoadingScreen.Instance.Screens[i].tips = new string[1] { "#autoLOC_7001100" };
 #if DEBUG
                 LoadingScreen.LoadingScreenState lss = LoadingScreen.Instance.Screens[loadingScreenIdx];
                 lss.screens = new Texture2D[0];
@@ -65,12 +69,11 @@ namespace RP0
                     sc.screens = textures.ToArray();
                     sc.displayTime = 8;    // Default value is 4 which causes the images to switch too quickly
 
-                    var newTips = LoadTips();
-                    if (newTips?.Length > 0)
-                    {
-                        sc.tips = newTips;
-                        sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
-                    }
+                    var newTips = new string[_numTips];
+                    for (int i = _numTips; i > 0; --i)
+                        newTips[i-1] = $"#rp0_loading_tip_{(i < 10 ? "00" : (i < 100 ? "0" : string.Empty))}{i}";
+                    sc.tips = newTips;
+                    sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
 
                     Debug.Log($"[RP-0] Loading screens replaced in {sw.ElapsedMilliseconds} ms.");
                 }
@@ -87,14 +90,6 @@ namespace RP0
             GameObject.Destroy(this);
 
             done = true;
-        }
-
-        private string[] LoadTips()
-        {
-            string fullPath = KSPUtil.ApplicationRootPath + TipFilePath;
-            if (!File.Exists(fullPath)) return null;
-
-            return File.ReadAllLines(fullPath);
         }
 
         // DDS Loader by Sarbian

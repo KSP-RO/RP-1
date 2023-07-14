@@ -22,7 +22,7 @@ namespace RP0.Crew
         public bool expirationUseStupid = false;
 
         public int seatMax = -1; //maximum number of kerbals allowed in the course at once
-        public int seatMin = 0; //minimum number of kerbals required to start the course
+        public int seatMin = 1; //minimum number of kerbals required to start the course
 
         public TrainingFlightEntry training;
         

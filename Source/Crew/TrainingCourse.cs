@@ -31,7 +31,7 @@ namespace RP0.Crew
 
         private TrainingTemplate _template;
 
-        public int SeatMin => _template?.seatMin ?? 0;
+        public int SeatMin => _template?.seatMin ?? 1;
         public int SeatMax => _template?.seatMax ?? 0;
         public string Description => _template?.description;
         public bool IsTemporary => _template?.isTemporary ?? false;

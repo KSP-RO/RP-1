@@ -32,34 +32,40 @@ namespace RP0
 
             bool hasLoadingImages = AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals("ROLoadingImages", StringComparison.OrdinalIgnoreCase));
 
+            LoadingScreen.LoadingScreenState sc = LoadingScreen.Instance.Screens[MainLoadingScreen];
+
+            var newTips = new string[NumTips];
+            for (int i = NumTips; i > 0; --i)
+                newTips[i - 1] = $"#rp0_loading_tip_{(i < 10 ? "00" : (i < 100 ? "0" : string.Empty))}{i}";
+            sc.tips = newTips;
+            sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
+
             try
             {
-                LoadingScreen.LoadingScreenState sc;
                 
                 Texture2D tex = LoadDDS(KSPUtil.ApplicationRootPath + LogoPath);
 
                 for (int i = 0; i < MainLoadingScreen; ++i)
                 {
                     sc = LoadingScreen.Instance.Screens[i];
+                    // Set the tip to just be "Loading" -- we don't want to show our own tips
+                    // because the images change too fast here.
                     sc.tips = new string[1] { "#autoLOC_7001100" };
+
+                    // Replace the KSP logo with our logo
+                    // and increase display time just enough so it's visible.
                     if (i > 1 && hasLoadingImages)
                     {
                         sc.screens = new Texture2D[1] { tex };
-                        sc.displayTime = 5f;
+                        sc.displayTime = 4f;
                     }
                 }
 
-
-                sc = LoadingScreen.Instance.Screens[MainLoadingScreen];
-                
-                var newTips = new string[NumTips];
-                for (int i = NumTips; i > 0; --i)
-                    newTips[i-1] = $"#rp0_loading_tip_{(i < 10 ? "00" : (i < 100 ? "0" : string.Empty))}{i}";
-                sc.tips = newTips;
-                sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
-
+                // If we don't have ROLoadingImages, then replace the main loading image
+                // with the logo, and make the tips advance while not changing the (single) screen
                 if (!hasLoadingImages)
                 {
+                    sc = LoadingScreen.Instance.Screens[MainLoadingScreen];
                     sc.screens = new Texture2D[1] { tex };
                     sc.displayTime = float.MaxValue;
                     sc.tipTime = 8f; // if we're using only 1 image, use a tiptime.

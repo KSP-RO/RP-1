@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Linq;
 using UnityEngine;
 
 namespace RP0
@@ -9,12 +10,11 @@ namespace RP0
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     class LoadingScreenChanger : MonoBehaviour
     {
-        public const string TipFilePath = @"GameData/RP-1/PluginData/LoadingScreenTips.txt";
-        public const string ScreenshotsFolderPath = @"GameData/RP-1/PluginData/Screens";
+        protected bool _done = false;
 
-        protected bool done = false;
-
-        private const int _numTips = 80;
+        private const int NumTips = 80;
+        private const string LogoPath = @"GameData/RP-1/PluginData/Screens/Logo.dds";
+        private const int MainLoadingScreen = 3;
 
         protected void Awake()
         {
@@ -24,62 +24,45 @@ namespace RP0
 
         protected void Update()
         {
-            if (done || LoadingScreen.Instance == null)
+            if (_done || LoadingScreen.Instance == null)
                 return;
 
             if (LoadingScreen.Instance.Screens.Count < 1)
                 return;
 
+            bool hasLoadingImages = AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals("ROLoadingImages", StringComparison.OrdinalIgnoreCase));
+
             try
             {
-                const int loadingScreenIdx = 3;
-                for (int i = 0; i < loadingScreenIdx; ++i)
-                    LoadingScreen.Instance.Screens[i].tips = new string[1] { "#autoLOC_7001100" };
-#if DEBUG
-                LoadingScreen.LoadingScreenState lss = LoadingScreen.Instance.Screens[loadingScreenIdx];
-                lss.screens = new Texture2D[0];
-                return;
-#endif
-                var sw = System.Diagnostics.Stopwatch.StartNew();
-                Debug.Log("[RP-0] Replacing loading screens.");
+                LoadingScreen.LoadingScreenState sc;
+                
+                Texture2D tex = LoadDDS(KSPUtil.ApplicationRootPath + LogoPath);
 
-                List<Texture2D> textures = new List<Texture2D>();
-
-                DirectoryInfo di = new DirectoryInfo(KSPUtil.ApplicationRootPath + ScreenshotsFolderPath);
-                foreach (FileInfo fi in di.GetFiles())
+                for (int i = 0; i < MainLoadingScreen; ++i)
                 {
-                    if (fi.FullName.EndsWith(".dds", StringComparison.OrdinalIgnoreCase))
+                    sc = LoadingScreen.Instance.Screens[i];
+                    sc.tips = new string[1] { "#autoLOC_7001100" };
+                    if (i > 1 && hasLoadingImages)
                     {
-                        try
-                        {
-                            Texture2D t = LoadDDS(fi.FullName);
-                            if (t != null)
-                                textures.Add(t);
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.LogError($"[RP-0] Exception loading {fi.FullName}:\n{ex}");
-                        }
+                        sc.screens = new Texture2D[1] { tex };
+                        sc.displayTime = 5f;
                     }
                 }
-                int tC = textures.Count;
-                if (tC > 0)
-                {
-                    LoadingScreen.LoadingScreenState sc = LoadingScreen.Instance.Screens[loadingScreenIdx];
-                    sc.screens = textures.ToArray();
-                    sc.displayTime = 8;    // Default value is 4 which causes the images to switch too quickly
 
-                    var newTips = new string[_numTips];
-                    for (int i = _numTips; i > 0; --i)
-                        newTips[i-1] = $"#rp0_loading_tip_{(i < 10 ? "00" : (i < 100 ? "0" : string.Empty))}{i}";
-                    sc.tips = newTips;
-                    sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
 
-                    Debug.Log($"[RP-0] Loading screens replaced in {sw.ElapsedMilliseconds} ms.");
-                }
-                else
+                sc = LoadingScreen.Instance.Screens[MainLoadingScreen];
+                
+                var newTips = new string[NumTips];
+                for (int i = NumTips; i > 0; --i)
+                    newTips[i-1] = $"#rp0_loading_tip_{(i < 10 ? "00" : (i < 100 ? "0" : string.Empty))}{i}";
+                sc.tips = newTips;
+                sc.tipTime = float.MaxValue;    // Change only when the loading screen image is switched
+
+                if (!hasLoadingImages)
                 {
-                    Debug.LogError("[RP-0] No screens found in RP-1/PluginData/Screens!");
+                    sc.screens = new Texture2D[1] { tex };
+                    sc.displayTime = float.MaxValue;
+                    sc.tipTime = 8f; // if we're using only 1 image, use a tiptime.
                 }
             }
             catch (Exception ex)
@@ -89,7 +72,7 @@ namespace RP0
 
             GameObject.Destroy(this);
 
-            done = true;
+            _done = true;
         }
 
         // DDS Loader by Sarbian

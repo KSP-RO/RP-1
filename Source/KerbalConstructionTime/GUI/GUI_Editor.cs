@@ -156,6 +156,18 @@ namespace KerbalConstructionTime
             RenderEditorLaunchComplexControls();
         }
 
+        private static void ShowBuildVesselFirstDialog()
+        {
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         "ShowBuildLVFirstDialog",
+                                         "#rp0_Editor_LC_BuildVesselFirst_Title",
+                                         "#rp0_Editor_LC_BuildVesselFirst",
+                                         "#autoLOC_190905",
+                                         false,
+                                         HighLogic.UISkin);
+        }
+
         private static void RenderEditorLaunchComplexControls()
         {
             LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
@@ -219,16 +231,23 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(_gcNewLC))
             {
-                SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel);
+                if (EditorLogic.fetch.ship.parts.Count == 0)
+                {
+                    ShowBuildVesselFirstDialog();
+                }
+                else
+                {
+                    SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel);
 
-                _wasShowBuildList = GUIStates.ShowBuildList;
-                GUIStates.ShowNewLC = true;
-                GUIStates.ShowLCResources = false;
-                GUIStates.ShowModifyLC = false;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-                _centralWindowPosition.width = 300;
-                _centralWindowPosition.height = 1;
+                    _wasShowBuildList = GUIStates.ShowBuildList;
+                    GUIStates.ShowNewLC = true;
+                    GUIStates.ShowLCResources = false;
+                    GUIStates.ShowModifyLC = false;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                    _centralWindowPosition.width = 300;
+                    _centralWindowPosition.height = 1;
+                }
             }
             if (rightLC)
             {
@@ -239,29 +258,43 @@ namespace KerbalConstructionTime
                     $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants.{(canModify ? string.Empty : modifyFailTooltip)}"),
                     canModify ? GUI.skin.button : _yellowButton))
                 {
-                    SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel, activeLC);
+                    if (EditorLogic.fetch.ship.parts.Count == 0)
+                    {
+                        ShowBuildVesselFirstDialog();
+                    }
+                    else
+                    {
+                        SetFieldsFromVessel(KerbalConstructionTime.Instance.EditorVessel, activeLC);
 
-                    _wasShowBuildList = GUIStates.ShowBuildList;
-                    GUIStates.ShowModifyLC = true;
-                    GUIStates.ShowBuildList = false;
-                    GUIStates.ShowBLPlus = false;
-                    GUIStates.ShowNewLC = false;
-                    GUIStates.ShowLCResources = false;
-                    _centralWindowPosition.width = 300;
+                        _wasShowBuildList = GUIStates.ShowBuildList;
+                        GUIStates.ShowModifyLC = true;
+                        GUIStates.ShowBuildList = false;
+                        GUIStates.ShowBLPlus = false;
+                        GUIStates.ShowNewLC = false;
+                        GUIStates.ShowLCResources = false;
+                        _centralWindowPosition.width = 300;
+                    }
                 }
                 if (GUILayout.Button(new GUIContent("Upgrade",
                     $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible.{(canModify ? string.Empty : modifyFailTooltip)}"),
                     canModify ? GUI.skin.button : _yellowButton))
                 {
-                    SetFieldsFromVesselKeepOld(KerbalConstructionTime.Instance.EditorVessel, activeLC);
+                    if (EditorLogic.fetch.ship.parts.Count == 0)
+                    {
+                        ShowBuildVesselFirstDialog();
+                    }
+                    else
+                    {
+                        SetFieldsFromVesselKeepOld(KerbalConstructionTime.Instance.EditorVessel, activeLC);
 
-                    _wasShowBuildList = GUIStates.ShowBuildList;
-                    GUIStates.ShowModifyLC = true;
-                    GUIStates.ShowBuildList = false;
-                    GUIStates.ShowBLPlus = false;
-                    GUIStates.ShowNewLC = false;
-                    GUIStates.ShowLCResources = false;
-                    _centralWindowPosition.width = 300;
+                        _wasShowBuildList = GUIStates.ShowBuildList;
+                        GUIStates.ShowModifyLC = true;
+                        GUIStates.ShowBuildList = false;
+                        GUIStates.ShowBLPlus = false;
+                        GUIStates.ShowNewLC = false;
+                        GUIStates.ShowLCResources = false;
+                        _centralWindowPosition.width = 300;
+                    }
                 }
             }
             GUILayout.EndHorizontal();

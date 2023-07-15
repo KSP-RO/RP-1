@@ -107,7 +107,7 @@ namespace RP0
         public override void SetDifficultyPreset(GameParameters.Preset preset)
         {
             bool isCareer = MainMenu.newGameMode == Game.Modes.CAREER;
-            IsCrewRnREnabled = isCareer;
+            IsTrainingEnabled = IsMissionTrainingEnabled = IsCrewRnREnabled = IsRetirementEnabled = isCareer;
             CareerLogEnabled = isCareer;
             NeverShowToolingReminders = !isCareer;
 
@@ -115,36 +115,24 @@ namespace RP0
             {
                 case GameParameters.Preset.Easy:
                     IncludeCraftFiles = true;
-                    IsTrainingEnabled = isCareer;
-                    IsMissionTrainingEnabled = isCareer;
-                    IsRetirementEnabled = isCareer;
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 750f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
-                    IsTrainingEnabled = isCareer;
-                    IsMissionTrainingEnabled = isCareer;
-                    IsRetirementEnabled = isCareer;
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
-                    IsTrainingEnabled = isCareer;
-                    IsMissionTrainingEnabled = isCareer;
-                    IsRetirementEnabled = isCareer;
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
-                    IsTrainingEnabled = isCareer;
-                    IsMissionTrainingEnabled = isCareer;
-                    IsRetirementEnabled = isCareer;
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.2f;
                     StartingConfidence = 350f;

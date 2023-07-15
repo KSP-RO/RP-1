@@ -399,6 +399,19 @@ namespace RP0.Harmony
                 // Reset the strategy UI (as stock does)
                 Administration.Instance.CreateStrategiesList(StrategySystem.Instance.SystemConfig.Departments);
                 Administration.Instance.SelectedWrapper.ButtonInUse.Value = true;
+
+                // Special handling if you have accepted your first program and don't realize you can select another.
+                if (ProgramHandler.Instance.ActivePrograms.Count < 2 && ProgramHandler.Instance.CompletedPrograms.Count == 0)
+                {
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         "ShowAcceptAdditionalProgramDialog",
+                                         "#rp0_Admin_AcceptAdditional_Program_Title",
+                                         "#rp0_Admin_AcceptAdditional_Program",
+                                         "#autoLOC_190905",
+                                         false,
+                                         HighLogic.UISkin);
+                }
             }
             StrategySystem.Instance.StartCoroutine(CallbackUtil.DelayedCallback(2, delegate
             {

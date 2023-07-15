@@ -115,9 +115,9 @@ namespace RP0
             {
                 case GameParameters.Preset.Easy:
                     IncludeCraftFiles = true;
-                    IsTrainingEnabled = false;
-                    IsMissionTrainingEnabled = false;
-                    IsRetirementEnabled = false;
+                    IsTrainingEnabled = isCareer;
+                    IsMissionTrainingEnabled = isCareer;
+                    IsRetirementEnabled = isCareer;
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 750f;

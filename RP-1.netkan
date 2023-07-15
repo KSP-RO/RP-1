@@ -32,6 +32,7 @@
 		{ "name" : "KerbalChangelog" }
 	],
 	"recommends" : [
+        { "name" : "ROLoadingImages" },
 		{ "name" : "RSSDateTimeFormatter" },
 		{ "any_of": [
 			{ "name" : "ReStock" },

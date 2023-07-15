@@ -634,7 +634,7 @@ namespace KerbalConstructionTime
                     researchTime = KerbalConstructionTimeData.Instance.TechList[0].IncrementProgress(UTDiff);
                 }
 
-                if (KerbalConstructionTimeData.Instance.fundTarget.IsValid && KerbalConstructionTimeData.Instance.fundTarget.GetTimeLeft() <= 0d)
+                if (KerbalConstructionTimeData.Instance.fundTarget.IsValid && KerbalConstructionTimeData.Instance.fundTarget.GetTimeLeft() < 0.5d)
                     KerbalConstructionTimeData.Instance.fundTarget.Clear();
             }
             Profiler.EndSample();

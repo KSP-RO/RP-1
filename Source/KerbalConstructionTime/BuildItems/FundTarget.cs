@@ -5,10 +5,10 @@ namespace KerbalConstructionTime
     public class FundTarget : IKCTBuildItem, IConfigNode
     {
         [Persistent]
-        private double targetFunds;
+        private double targetFunds = 0d;
 
         [Persistent]
-        private double origFunds;
+        private double origFunds = 0d;
 
         private const int MaxIterations = 256;
         private const double EpsilonTime = 1d;

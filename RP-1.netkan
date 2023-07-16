@@ -65,7 +65,6 @@
 		{ "name" : "RCSBuildAid" },
 		{ "name" : "RCSBuildAidCont" },
 		{ "name" : "RealAntennas" },
-		{ "name" : "ShipManifest" },
 		{ "any_of": [
 			{ "name" : "TestFlight" },
 			{ "name" : "TestLite" }

@@ -203,7 +203,9 @@ namespace KerbalConstructionTime
         public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Airlaunch_Prep.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
 
         public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0 || Airlaunch_Prep.Count > 0;
-        public bool CanModify => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRollout.RolloutReconType.Reconditioning) && Airlaunch_Prep.Count == 0;
+        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRollout.RolloutReconType.Reconditioning) && Airlaunch_Prep.Count == 0;
+        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0 && Airlaunch_Prep.Count == 0;
+        public bool CanModifyReal => Recon_Rollout.Count == 0 && Airlaunch_Prep.Count == 0;
         public bool IsIdle => !IsActive;
 
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>

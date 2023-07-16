@@ -1405,7 +1405,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
                 _centralWindowPosition.width = 300;
             }
-            bool canModify = activeLC.CanModify && !GUIStates.ShowPersonnelWindow;
+            bool canModify = activeLC.CanDismantle && !GUIStates.ShowPersonnelWindow;
             const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
             const string staffWindowFailTooltip = "Staff window open";
             if (!HighLogic.LoadedSceneIsEditor && activeLC.LCType == LaunchComplexType.Pad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip),

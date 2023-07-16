@@ -46,7 +46,7 @@ namespace KerbalConstructionTime
                     ScreenMessages.PostScreenMessage("Dismantle failed: can't dismantle the Hangar", 5f, ScreenMessageStyle.UPPER_CENTER);
                     return;
                 }
-                if (!activeLC.CanModify)
+                if (!activeLC.CanDismantle)
                 {
                     ScreenMessages.PostScreenMessage("Dismantle failed: Launch Complex in use", 5f, ScreenMessageStyle.UPPER_CENTER);
                     return;

@@ -251,7 +251,7 @@ namespace KerbalConstructionTime
             }
             if (rightLC)
             {
-                bool canModify = activeLC.CanModify;
+                bool canModify = activeLC.CanModifyButton;
 
                 const string modifyFailTooltip = "\n\nCurrently in use! Only modifications that leave any in-progress vessels capable of being serviced by this complex will be permitted.";
                 if (GUILayout.Button(new GUIContent("Reconstruct",

@@ -732,6 +732,13 @@ namespace KerbalConstructionTime
                 return false;
             }
 
+            if (lc != null && !lc.CanModifyReal)
+            {
+                ScreenMessages.PostScreenMessage("Please wait for any reconditioning, rollout, rollback, or recovery to complete");
+                Debug.Log($"[RP-0] Can't modify LC, recon_rollout in progress");
+                return false;
+            }
+
             // Don't bother with name if it's a modify.
             if (lc != null)
                 return true;

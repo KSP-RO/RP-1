@@ -88,6 +88,7 @@ namespace KerbalConstructionTime
                     KerbalConstructionTimeData.Instance.StarterLCBuilding = true;
                     KerbalConstructionTimeData.Instance.HiredStarterApplicants = true;
                     KerbalConstructionTimeData.Instance.StartedProgram = true;
+                    KerbalConstructionTimeData.Instance.AcceptedContract = true;
                 }
                 GUIStates.ShowFirstRun = false;
             }

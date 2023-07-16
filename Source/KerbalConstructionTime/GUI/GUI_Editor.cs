@@ -60,6 +60,9 @@ namespace KerbalConstructionTime
 
             RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
 
+            if (KSP.UI.Screens.DebugToolbar.DebugScreenSpawner.Instance?.screen?.isShown ?? false)
+                GUILayout.Label($"BP Cost: {buildPoints:N0}");
+
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
                 double buildTime = buildPoints / bR;

@@ -1126,19 +1126,19 @@ namespace KerbalConstructionTime
 
         public static double ApplyModuleCostModifiers(Part p, out bool useResourceMult)
         {
-            double res = 1;
+            double mult = 1;
             useResourceMult = true;
             if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
             {
                 foreach (var x in pm.tags)
                 {
                     if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
-                        res *= mod.partMult;
+                        mult *= mod.partMult;
 
                     useResourceMult &= !x.Equals("NoResourceCostMult", StringComparison.OrdinalIgnoreCase);
                 }
             }
-            return res;
+            return mult;
         }
 
         public static double GetPartCosts(Part part, bool includeFuel = true)

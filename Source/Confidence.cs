@@ -47,23 +47,19 @@ namespace RP0
         public void AddConfidence(float delta, TransactionReasons reason)
         {
             float oldConfidence = confidence;
-            confidence = Mathf.Max(0f, confidence + delta);
-            if (confidence != oldConfidence)
+            confidence += delta;
+            CurrencyModifierQueryRP0 data = new CurrencyModifierQueryRP0(reason.RP0(), 0d, 0d, 0d, delta, 0d);
+            GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(data);
+            GameEvents.Modifiers.OnCurrencyModified.Fire(data);
+            if (confidence < 0f)
+                confidence = 0f;
+
+            if (confidence != oldConfidence && delta != 0f)
             {
+                delta = confidence - oldConfidence;
                 OnConfidenceChanged.Fire(confidence, reason);
                 if (delta > 0f)
                     confidenceEarned += delta;
-            }
-        }
-
-        public void SetConfidence(float newConfidence, TransactionReasons reason)
-        {
-            float oldConfidence = confidence;
-            confidence = Mathf.Max(0f, newConfidence);
-            if (confidence != oldConfidence)
-            {
-                OnConfidenceChanged.Fire(confidence, reason);
-                confidenceEarned += (confidence - oldConfidence);
             }
         }
 
@@ -80,6 +76,23 @@ namespace RP0
                     conf = changeDelta * 2f;
 
                 AddConfidence(conf, query.reason);
+            }
+            if (query is CurrencyModifierQueryRP0 cmq)
+            {
+                changeDelta = (float)cmq.GetEffectDelta(CurrencyRP0.Confidence);
+                if (changeDelta != 0)
+                {
+                    float oldConfidence = confidence;
+                    confidence += changeDelta;
+                    if (confidence < 0f)
+                        confidence = 0f;
+                    OnConfidenceChanged.Fire(confidence, query.reason);
+                    // We have to check the input to see if this is a source or sink of confidence
+                    // If it's a source, change confidenceEarned even if delta is negative, because this might
+                    // be a "-15% confidence from contracts" leader
+                    if (cmq.GetInput(CurrencyRP0.Confidence) > 0d)
+                        confidenceEarned += changeDelta;
+                }
             }
         }
     }

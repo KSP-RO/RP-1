@@ -427,109 +427,109 @@ namespace RP0
     public enum TransactionReasonsRP0 : long
     {
         None = 0,
-        //ContractAdvance = 1 << 1,
-        ContractReward = 1 << 2,
-        ContractPenalty = 1 << 3,
+        //ContractAdvance = 1L << 1,
+        ContractReward = 1L << 2,
+        ContractPenalty = 1L << 3,
         Contracts = ContractPenalty | ContractReward | ContractDecline,
 
-        VesselPurchase = 1 << 4, // VesselRollout
-        VesselRecovery = 1 << 5,
+        VesselPurchase = 1L << 4, // VesselRollout
+        VesselRecovery = 1L << 5,
         //used by ModuleExperienceManagement only - Vessels = VesselRollout | VesselRecovery,
 
-        //StrategyInput = 1 << 7,
-        //StrategyOutput = 1 << 8,
-        StrategySetup = 1 << 9,
+        //StrategyInput = 1L << 7,
+        //StrategyOutput = 1L << 8,
+        StrategySetup = 1L << 9,
         //Strategies = StrategyInput | StrategyOutput | StrategySetup,
 
-        ScienceTransmission = 1 << 10,
+        ScienceTransmission = 1L << 10,
 
-        StructureRepair = 1 << 11, // will be used for maintenance too
+        StructureRepair = 1L << 11, // will be used for maintenance too
         //StructureCollapse = 1 << 12,
-        StructureConstruction = 1 << 13,
+        StructureConstruction = 1L << 13,
         Structures = StructureRepair /*| StructureCollapse*/ | StructureConstruction,
 
-        RnDTechResearch = 1 << 14,
+        RnDTechResearch = 1L << 14,
 
-        Cheating = 1 << 16,
+        Cheating = 1L << 16,
         
-        CrewRecruited = 1 << 17,
-        LossOfCrew = 1 << 6,
+        CrewRecruited = 1L << 17,
+        LossOfCrew = 1L << 6,
 
-        ContractDecline = 1 << 18,
-        //Progression = 1 << 19,
+        ContractDecline = 1L << 18,
+        //Progression = 1L << 19,
 
-        // Mission = 1 << 20,
+        // Mission = 1L << 20,
 
-        ProgramFunding = 1 << 20,
-        ProgramActivation = 1 << 21,
-        ProgramCompletion = 1 << 22,
+        ProgramFunding = 1L << 20,
+        ProgramActivation = 1L << 21,
+        ProgramCompletion = 1L << 22,
         Programs = ProgramFunding | ProgramActivation | ProgramCompletion,
 
-        RocketRollout = 1 << 23,
-        AirLaunchRollout = 1 << 24,
+        RocketRollout = 1L << 23,
+        AirLaunchRollout = 1L << 24,
         Rollouts = RocketRollout | AirLaunchRollout,
 
-        LeaderRemove = 1 << 25,
+        LeaderRemove = 1L << 25,
 
-        SalaryEngineers = 1 << 26,
-        SalaryResearchers = 1 << 27,
-        SalaryCrew = 1 << 28,
+        SalaryEngineers = 1L << 26,
+        SalaryResearchers = 1L << 27,
+        SalaryCrew = 1L << 28,
         Salary = SalaryEngineers | SalaryResearchers | SalaryCrew,
 
-        CrewTraining = 1 << 29,
+        CrewTraining = 1L << 29,
         Crew = CrewRecruited | SalaryCrew | CrewTraining,
 
-        HiringEngineers = 1 << 30,
-        HiringResearchers = 1 << 31,
+        HiringEngineers = 1L << 30,
+        HiringResearchers = 1L << 31,
         Hiring = HiringEngineers | HiringResearchers,
 
         Personnel = Salary | Crew | Hiring,
 
         // unused bits: 0,1,7,8,12,19
 
-        StructureConstructionLC = 1 << 0,
-        StructureRepairLC = 1 << 1,
+        StructureConstructionLC = 1L << 0,
+        StructureRepairLC = 1L << 1,
         StructureConstructionAll = StructureConstruction | StructureConstructionLC,
         StructureRepairAll = StructureRepair | StructureRepairLC,
 
-        Subsidy = 1 << 7,
-        DailyRepDecline = 1 << 8, // RepDecline
+        Subsidy = 1L << 7,
+        DailyRepDecline = 1L << 8, // RepDecline
 
-        PartOrUpgradeUnlock = 1 << 15, // RnDPartPurchase
-        ToolingPurchase = 1 << 12,
-        ToolingUpkeep = 1 << 19,
+        PartOrUpgradeUnlock = 1L << 15, // RnDPartPurchase
+        ToolingPurchase = 1L << 12,
+        ToolingUpkeep = 1L << 19,
         Tooling = ToolingPurchase | ToolingUpkeep,
 
         // Time
 
-        TimeProgramDeadline = 1 << 33,
+        TimeProgramDeadline = 1L << 33,
 
-        RateIntegrationVAB = 1 << 34,
-        RateIntegrationSPH = 1 << 35,
+        RateIntegrationVAB = 1L << 34,
+        RateIntegrationSPH = 1L << 35,
         RateIntegration = RateIntegrationVAB | RateIntegrationSPH,
 
-        RateRollout = 1 << 36,
-        RateAirlaunch = 1 << 37,
+        RateRollout = 1L << 36,
+        RateAirlaunch = 1L << 37,
         RateVesselPrep = RateRollout | RateAirlaunch,
-        RateReconditioning = 1 << 38,
-        RateRecovery = 1 << 39,
+        RateReconditioning = 1L << 38,
+        RateRecovery = 1L << 39,
 
-        RateManufacturing = 1 << 40,
+        RateManufacturing = 1L << 40,
 
         RateVessel = RateIntegration | RateVesselPrep | RateRecovery | RateManufacturing,
 
-        EfficiencyGainLC = 1 << 41,
+        EfficiencyGainLC = 1L << 41,
 
-        MaxEfficiencyLC = 1 << 42,
+        MaxEfficiencyLC = 1L << 42,
 
-        RateResearch = 1 << 43,
+        RateResearch = 1L << 43,
 
-        RateTraining = 1 << 44,
-        TimeRetirement = 1 << 45,
-        TimeInactive = 1 << 46,
+        RateTraining = 1L << 44,
+        TimeRetirement = 1L << 45,
+        TimeInactive = 1L << 46,
         CrewTimes = RateTraining | TimeRetirement | TimeInactive,
 
-        RateUnlockCreditIncrease = 1 << 47,
+        RateUnlockCreditIncrease = 1L << 47,
 
         Any = ~0
     }

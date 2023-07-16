@@ -208,7 +208,7 @@ namespace RP0
             {
                 if (i == rateIndex)
                 {
-                    if (multipliers[i] + postMultiplierDeltas[i] + postMultiplierDeltasHidden[i] == 1d)
+                    if (ApproximatelyZero(multipliers[i] + postMultiplierDeltas[i] + postMultiplierDeltasHidden[i] - 1d))
                         continue;
                 }
                 else if (ApproximatelyZero(inputs[i]) && ApproximatelyZero(outputs[i]))

@@ -302,6 +302,7 @@ namespace RP0
                         new DialogGUIButton("Add Warp Target", () =>
                         {
                             KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget = target;
+                            target.SetAutoWarp(false);
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         }),

@@ -10,10 +10,14 @@ namespace KerbalConstructionTime
         [Persistent]
         private double origFunds = 0d;
 
+        [Persistent]
+        double epsilonTime = 1d;
+
         private const int MaxIterations = 256;
-        private const double EpsilonTime = 1d;
         private const double MinTime = 0d;
         public const double MaxTime = 2d * 365.25d * 86400d;
+        public const double EpsilonTimeAutoWarp = 60d;
+        public const double EpsilonTimeTarget = 1d;
 
         public bool IsValid => targetFunds != origFunds && targetFunds > 0d;
 
@@ -23,6 +27,7 @@ namespace KerbalConstructionTime
         {
             targetFunds = funds;
             origFunds = Funding.Instance?.Funds ?? 0d;
+            SetAutoWarp(true);
         }
 
         public void Load(ConfigNode node)
@@ -38,6 +43,12 @@ namespace KerbalConstructionTime
         public void Clear()
         {
             origFunds = targetFunds = 0d;
+            SetAutoWarp(true);
+        }
+
+        public void SetAutoWarp(bool val)
+        {
+            epsilonTime = val ? EpsilonTimeAutoWarp : EpsilonTimeTarget;
         }
 
         public double GetBuildRate()
@@ -74,7 +85,7 @@ namespace KerbalConstructionTime
             double timeUpper = MaxTime;
             
             double bestTime = -1d;
-            for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > EpsilonTime;)
+            for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > epsilonTime;)
             {
                 double time = (timeUpper + timeLower) * 0.5d;
                 // This is the post-CMQ delta.

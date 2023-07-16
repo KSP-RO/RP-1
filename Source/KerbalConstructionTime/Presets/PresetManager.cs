@@ -496,8 +496,20 @@ namespace KerbalConstructionTime
 
         }
 
+        public double GetValueModifierMax(Dictionary<string, double> dict, IEnumerable<string> tags)
+        {
+            double value = 1.0;
+            foreach (var name in tags)
+            {
+                if (dict?.ContainsKey(name) == true)
+                    value = System.Math.Max(value, dict[name]);
+            }
+            return value;
+
+        }
+
         //These are all multiplied in case multiple variables exist on one part
-        public double GetResourceVariable(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
+        public double GetResourceVariable(List<string> resourceNames) => GetValueModifierMax(Resource_Variables, resourceNames);
 
         public double GetGlobalVariable(IEnumerable<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
 
@@ -507,7 +519,7 @@ namespace KerbalConstructionTime
             foreach (PartResource r in resources)
             {
                 if (Resource_Variables.ContainsKey(r.resourceName))
-                    value *= Resource_Variables[r.resourceName];
+                    value = System.Math.Max(value, Resource_Variables[r.resourceName]);
             }
             return value;
         }

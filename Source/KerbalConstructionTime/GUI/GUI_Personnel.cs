@@ -77,6 +77,8 @@ namespace KerbalConstructionTime
                 RenderResearchersSection(isCostCacheInvalid);
             }
 
+            GUILayout.Label($"Hold Shift for x10, Ctrl for x100, and Alt for Max Possible", GetLabelCenterAlignStyle());
+
             if (GUILayout.Button("Close"))
             {
                 GUIStates.ShowPersonnelWindow = false;

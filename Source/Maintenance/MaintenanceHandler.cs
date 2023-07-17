@@ -121,9 +121,16 @@ namespace RP0
         {
             double days;
             double rep = Reputation.CurrentRep;
-            if (deltaTime > 0 && (days = Math.Floor(deltaTime / 86400d)) > 0)
-                rep *= Math.Pow(1d - Settings.repPortionLostPerDay, days);
-            
+            if (deltaTime > 0)
+            {
+                days = Math.Floor(deltaTime / 86400d);
+                if (days > 0)
+                {
+                    double loss = rep * (1d - Math.Pow(1d - Settings.repPortionLostPerDay, days));
+                    rep += CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -loss);
+                }
+            }
+
             return GetYearlySubsidyAtTimeDelta(deltaTime, rep);
         }
 

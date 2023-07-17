@@ -70,13 +70,22 @@ namespace RP0.Harmony
             MaintenanceHandler.FillSubsidyDetails(ref details, Planetarium.GetUniversalTime(), Reputation.Instance.reputation);
 
             double repLostPerDay = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -Reputation.Instance.reputation * MaintenanceHandler.Settings.repPortionLostPerDay);
+            double repLostPerYear = repLostPerDay * 5.25d;
+            double runningRep = Reputation.Instance.reputation - repLostPerYear;
+            for (int i = 0; i < 12; ++i)
+            {
+                double lossAmt = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -runningRep * MaintenanceHandler.Settings.repPortionLostPerDay) * 30d;
+                runningRep -= lossAmt;
+                repLostPerYear += lossAmt;
+            }
+
             return Localizer.Format("#rp0_Widgets_Reputation_Tooltip",
-                                    CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, details.minSubsidy).ToString("N0"),
-                                    CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, details.maxSubsidy).ToString("N0"),
-                                    details.maxRep.ToString("N0"),
-                                    CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, details.subsidy).ToString("N0"),
-                                    repLostPerDay.ToString("N1"),
-                                    (repLostPerDay * 365.25d).ToString("N0"));
+                                CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, details.minSubsidy).ToString("N0"),
+                                CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, details.maxSubsidy).ToString("N0"),
+                                details.maxRep.ToString("N0"),
+                                CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, details.subsidy).ToString("N0"),
+                                repLostPerDay.ToString("N1"),
+                                repLostPerYear.ToString("N0"));
         }
     }
 }

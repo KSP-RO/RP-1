@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using static RP0.MiscUtils;
 
 namespace KerbalConstructionTime
 {
@@ -609,14 +610,12 @@ namespace KerbalConstructionTime
 
         private static int CompareBuildItems(IKCTBuildItem a, IKCTBuildItem b)
         {
-            double offA, offB;
-            _timeBeforeItem.TryGetValue(a, out offA);
-            _timeBeforeItem.TryGetValue(b, out offB);
-            return (offA + a.GetTimeLeftEst(offA)).CompareTo(offB + b.GetTimeLeftEst(offB));
+            return (_timeBeforeItem.ValueOrDefault(a) + _estTimeForItem[a]).CompareTo(_timeBeforeItem.ValueOrDefault(b) + _estTimeForItem[b]);
         }
 
         private static List<IKCTBuildItem> _allItems = new List<IKCTBuildItem>();
         private static Dictionary<IKCTBuildItem, double> _timeBeforeItem = new Dictionary<IKCTBuildItem, double>();
+        private static Dictionary<IKCTBuildItem, double> _estTimeForItem = new Dictionary<IKCTBuildItem, double>();
         private static void RenderCombinedList()
         {
             double accTime;
@@ -654,6 +653,9 @@ namespace KerbalConstructionTime
             if (KerbalConstructionTimeData.Instance.fundTarget.IsValid)
                 _allItems.Add(KerbalConstructionTimeData.Instance.fundTarget);
 
+            // Precalc times and then sort
+            foreach (var b in _allItems)
+                _estTimeForItem[b] = b.GetTimeLeftEst(_timeBeforeItem.ValueOrDefault(b));
             _allItems.Sort(CompareBuildItems);
 
             GUILayout.BeginHorizontal();
@@ -709,8 +711,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
 
-                double timeBeforeItem;
-                _timeBeforeItem.TryGetValue(t, out timeBeforeItem);
+                double timeBeforeItem = _timeBeforeItem.ValueOrDefault(t);
                 if (t is TechItem tech)
                     DrawYearBasedMult(tech, timeBeforeItem);
                 else
@@ -721,7 +722,7 @@ namespace KerbalConstructionTime
                 else if (t is BuildListVessel b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeftEst(timeBeforeItem), "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
 
@@ -746,6 +747,7 @@ namespace KerbalConstructionTime
             GUILayout.EndScrollView();
             _allItems.Clear();
             _timeBeforeItem.Clear();
+            _estTimeForItem.Clear();
         }
 
         private static void DrawYearBasedMult(TechItem t, double offset)

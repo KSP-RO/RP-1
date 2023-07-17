@@ -81,6 +81,7 @@ CONTRACT_TYPE
 			minCapacity = 4
 			title = Space for at least 4 crew
 			hideChildren = true
+			disableOnStateChange = false
 		}
 		PARAMETER
 		{

@@ -401,7 +401,7 @@ namespace KerbalConstructionTime
         [Persistent]
         public int HireCost = 200, UpgradeCost = 2000;
         [Persistent]
-        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, InventoryEffect = 100d, MergingTimePenalty = 0.05d;
+        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, InventoryEffect = 100d, MergingTimePenalty = 0.05d, EffectiveCostPerLiterPerResourceMult = 0.1d;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
@@ -509,19 +509,26 @@ namespace KerbalConstructionTime
         }
 
         //These are all multiplied in case multiple variables exist on one part
-        public double GetResourceVariable(List<string> resourceNames) => GetValueModifierMax(Resource_Variables, resourceNames);
+        public double GetResourceVariablesMult(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
 
-        public double GetGlobalVariable(IEnumerable<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
+        public double GetGlobalVariablesMult(IEnumerable<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
 
-        public double GetResourceVariable(PartResourceList resources)
+        public double GetResourceVariablesMult(PartResourceList resources)
         {
             double value = 1.0;
             foreach (PartResource r in resources)
             {
                 if (Resource_Variables.ContainsKey(r.resourceName))
-                    value = System.Math.Max(value, Resource_Variables[r.resourceName]);
+                    value *= Resource_Variables[r.resourceName];
             }
             return value;
+        }
+
+        public double GetResourceVariableMult(string resName)
+        {
+            if (Resource_Variables.TryGetValue(resName, out double m))
+                return m;
+            return 1d;
         }
 
         public void SetGlobalVariables(HashSet<string> variables, PartModuleList modules)

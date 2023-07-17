@@ -940,6 +940,20 @@ namespace KerbalConstructionTime
             return res;
         }
 
+        private double GetResourceEffectiveCost()
+        {
+            double total = 0d;
+            foreach (var kvp in resourceAmounts)
+            {
+                double mult = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariableMult(kvp.Key) - 1d;
+                if (mult == 0d)
+                    continue;
+
+                total += PresetManager.Instance.ActivePreset.GeneralSettings.EffectiveCostPerLiterPerResourceMult * mult * kvp.Value;
+            }
+            return total;
+        }
+
         public double GetEffectiveCost(List<Part> parts)
         {
             Profiler.BeginSample("GetEffectiveCost");
@@ -950,6 +964,7 @@ namespace KerbalConstructionTime
             {
                 totalEffectiveCost += GetEffectiveCostInternal(p);
             }
+            totalEffectiveCost += GetResourceEffectiveCost();
 
             double globalMultiplier = ApplyGlobalCostModifiers() * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
@@ -968,6 +983,7 @@ namespace KerbalConstructionTime
             {
                 totalEffectiveCost += GetEffectiveCostInternal(p);
             }
+            totalEffectiveCost += GetResourceEffectiveCost();
 
             double globalMultiplier = ApplyGlobalCostModifiers() * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
@@ -994,8 +1010,8 @@ namespace KerbalConstructionTime
             fuelMass = (float)fMass;
         }
 
-        private static Dictionary<string, double> _resourceAmounts = new Dictionary<string, double>();
-        private static HashSet<string> _tags = new HashSet<string>();
+        private static Dictionary<string, double> _tempResourceAmounts = new Dictionary<string, double>();
+        private static HashSet<string> _tempTags = new HashSet<string>();
 
         private double GetEffectiveCostInternal(object o)
         {
@@ -1014,38 +1030,32 @@ namespace KerbalConstructionTime
                 ShipConstruction.GetPartCostsAndMass(o as ConfigNode, Utilities.GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
             else
             {
-                GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass, _resourceAmounts);
+                GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass, _tempResourceAmounts);
             }
 
             float wetMass = dryMass + fuelMass;
             float cost = dryCost + fuelCost;
 
             double partMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
-            double moduleMultiplier = ApplyModuleCostModifiers(partRef, out bool applyResourceMods);
+            double moduleMultiplier = ApplyModuleCostModifiers(partRef);
 
             // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
             double resourceMultiplier = 1d;
 
             if (o is ConfigNode)
             {
-                var resourceNames = applyResourceMods ? new List<string>() : null;
                 foreach (ConfigNode rNode in (o as ConfigNode).GetNodes("RESOURCE"))
                 {
                     string rName = rNode.GetValue("name");
-                    _resourceAmounts[rName] = double.Parse(rNode.GetValue("maxAmount"));
-                    resourceNames?.Add(rName);
+                    _tempResourceAmounts[rName] = double.Parse(rNode.GetValue("maxAmount"));
                 }
-                if (applyResourceMods)
-                    resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(resourceNames);
             }
-            else if (applyResourceMods)
-                resourceMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariable(partRef.Resources);
 
-            GatherGlobalModifiers(_tags, partRef);
-            foreach (var s in _tags)
+            GatherGlobalModifiers(_tempTags, partRef);
+            foreach (var s in _tempTags)
                 globalTags.Add(s);
 
-            foreach (var kvp in _resourceAmounts)
+            foreach (var kvp in _tempResourceAmounts)
             {
                 resourceAmounts.TryGetValue(kvp.Key, out double amt);
                 amt += kvp.Value;
@@ -1054,7 +1064,7 @@ namespace KerbalConstructionTime
 
             
             double effectiveCost = partMultiplier * resourceMultiplier * moduleMultiplier * cost;
-            effectiveCost *= RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(_tags, _resourceAmounts, name);
+            effectiveCost *= RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(_tempTags, _tempResourceAmounts, name);
 
             if (HighLogic.LoadedSceneIsEditor)
             {
@@ -1094,8 +1104,8 @@ namespace KerbalConstructionTime
 
             KCTDebug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
 
-            _tags.Clear();
-            _resourceAmounts.Clear();
+            _tempTags.Clear();
+            _tempResourceAmounts.Clear();
 
             return effectiveCost;
         }
@@ -1112,7 +1122,7 @@ namespace KerbalConstructionTime
         public double ApplyGlobalCostModifiers()
         {
             humanRated = false;
-            double costMod = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariable(globalTags);
+            double costMod = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariablesMult(globalTags);
             foreach (var x in globalTags)
             {
                 if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
@@ -1124,18 +1134,15 @@ namespace KerbalConstructionTime
             return costMod;
         }
 
-        public static double ApplyModuleCostModifiers(Part p, out bool useResourceMult)
+        public static double ApplyModuleCostModifiers(Part p)
         {
             double mult = 1;
-            useResourceMult = true;
             if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
             {
                 foreach (var x in pm.tags)
                 {
                     if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
                         mult *= mod.partMult;
-
-                    useResourceMult &= !x.Equals("NoResourceCostMult", StringComparison.OrdinalIgnoreCase);
                 }
             }
             return mult;

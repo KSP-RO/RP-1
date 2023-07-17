@@ -11,13 +11,13 @@ namespace KerbalConstructionTime
         private double origFunds = 0d;
 
         [Persistent]
-        double epsilonTime = 1d;
+        double epsilonTime = 0.25d;
 
         private const int MaxIterations = 256;
         private const double MinTime = 0d;
         public const double MaxTime = 2d * 365.25d * 86400d;
         public const double EpsilonTimeAutoWarp = 60d;
-        public const double EpsilonTimeTarget = 1d;
+        public const double EpsilonTimeTarget = 0.25d;
 
         public bool IsValid => targetFunds != origFunds && targetFunds > 0d;
 
@@ -78,7 +78,7 @@ namespace KerbalConstructionTime
         {
             double baseFunds = Funding.Instance.Funds;
 
-            if (System.Math.Abs(targetFunds - baseFunds) <= 0.001d)
+            if (targetFunds - baseFunds <= 0.001d)
                 return 0d;
 
             double timeLower = MinTime;

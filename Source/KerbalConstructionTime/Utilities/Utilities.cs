@@ -692,6 +692,8 @@ namespace KerbalConstructionTime
 
             EditorPartList.Instance?.Refresh();
             EditorPartList.Instance?.Refresh(EditorPartList.State.PartsList);
+            if (HighLogic.LoadedSceneIsEditor)
+                KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
         }
 

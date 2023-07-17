@@ -417,7 +417,13 @@ namespace KerbalConstructionTime
             object retVal = mi?.Invoke(pm, new object[] { });
             RP0.Harmony.RFECMPatcher.techNode = null;
 
-            return (retVal is bool b) && b;
+            bool ret = (retVal is bool b) && b;
+            if (ret)
+            {
+                if (HighLogic.LoadedSceneIsEditor)
+                    KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            }
+            return ret;
         }
 
         private class PartConfigValidationError

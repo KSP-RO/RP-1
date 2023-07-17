@@ -89,6 +89,9 @@ namespace RP0.Harmony
             updateAll.Invoke(null, new object[] { });
             techNode = null;
 
+            if (HighLogic.LoadedSceneIsEditor)
+                KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+
             return true;
         }
 

@@ -193,6 +193,8 @@ namespace RP0
             {
                 int remainingCost = (int)ProcessCredit(ap.entryCost, ap.TechRequired);
                 ap.SetEntryCost(remainingCost);
+                if(HighLogic.LoadedSceneIsEditor)
+                    KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             }
         }
 
@@ -201,6 +203,8 @@ namespace RP0
             UnlockCreditUtility.StoredUpgradeEntryCost = up.entryCost;
             float remainingCost = ProcessCredit(up.entryCost, up.techRequired);
             up.entryCost = remainingCost;
+            if (HighLogic.LoadedSceneIsEditor)
+                KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
         }
 
         public override void OnLoad(ConfigNode node)

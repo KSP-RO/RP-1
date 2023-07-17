@@ -105,18 +105,16 @@ namespace RP0
             public double minSubsidy, maxSubsidy, maxRep, subsidy;
         }
 
-        public static SubsidyDetails GetSubsidyDetails()
+        public static void FillSubsidyDetails(ref SubsidyDetails details, double ut, double rep)
         {
-            var details = new SubsidyDetails();
             const double secsPerYear = 3600 * 24 * 365.25;
-            float years = (float)(Planetarium.GetUniversalTime() / secsPerYear);
+            float years = (float)(ut / secsPerYear);
             details.minSubsidy = Settings.subsidyCurve.Evaluate(years);
             details.maxSubsidy = details.minSubsidy * Settings.subsidyMultiplierForMax;
             details.maxRep = (details.maxSubsidy - details.minSubsidy) / Settings.repToSubsidyConversion;
-            double invLerp = UtilMath.InverseLerp(0, details.maxRep, UtilMath.Clamp(Reputation.Instance.reputation, 0, details.maxRep));
+            double invLerp = UtilMath.InverseLerp(0, details.maxRep, UtilMath.Clamp(rep, 0, details.maxRep));
             details.subsidy = UtilMath.LerpUnclamped(details.minSubsidy, details.maxSubsidy, invLerp);
             //Debug.Log($"$$$$ years {years}: minSub: {details.minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, maxRep {details.maxRep}, invLerp {invLerp}, subsidy {details.subsidy}=>{(details.subsidy * (1d / 365.25d))}");
-            return details;
         }
 
         public static double GetYearlySubsidyAtTimeDelta(double deltaTime)
@@ -136,21 +134,9 @@ namespace RP0
 
         public static double GetYearlySubsidyAtTime(double ut, double rep)
         {
-            const double secsPerYear = 3600 * 24 * 365.25;
-            float years = (float)(ut / secsPerYear);
-            double minSubsidy = Settings.subsidyCurve.Evaluate(years);
-            
-            double maxSubsidy = minSubsidy * Settings.subsidyMultiplierForMax;
-            double maxRep = maxSubsidy / Settings.repToSubsidyConversion;
-            double t;
-            if (rep < 0)
-                t = 0;
-            else if (rep > maxRep)
-                t = 1;
-            else
-                t = UtilMath.InverseLerp(0, maxRep, rep);
-
-            return UtilMath.LerpUnclamped(minSubsidy, maxSubsidy, t);
+            SubsidyDetails details = new SubsidyDetails();
+            FillSubsidyDetails(ref details, ut, rep);
+            return details.subsidy;
         }
 
         public static double GetAverageSubsidyForPeriod(double deltaTime, int steps = 0)

@@ -214,6 +214,7 @@ namespace KerbalConstructionTime
         {
             if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.situation != Vessel.Situations.PRELAUNCH) return;
 
+            BuildListVessel blv = KerbalConstructionTimeData.Instance.LaunchedVessel;
             var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
             if (dataModule != null)
             {
@@ -224,13 +225,13 @@ namespace KerbalConstructionTime
                 }
 
                 // This will only fire the first time, because we make it invalid afterwards by clearing the BLV
-                if (KerbalConstructionTimeData.Instance.LaunchedVessel.IsValid)
+                if (blv.IsValid)
                 {
-                    dataModule.Data.FacilityBuiltIn = KerbalConstructionTimeData.Instance.LaunchedVessel.FacilityBuiltIn;
-                    dataModule.Data.VesselID = KerbalConstructionTimeData.Instance.LaunchedVessel.KCTPersistentID;
-                    dataModule.Data.LCID = KerbalConstructionTimeData.Instance.LaunchedVessel.LCID;
+                    dataModule.Data.FacilityBuiltIn = blv.FacilityBuiltIn;
+                    dataModule.Data.VesselID = blv.KCTPersistentID;
+                    dataModule.Data.LCID = blv.LCID;
                     if (dataModule.Data.LCID != Guid.Empty)
-                        dataModule.Data.LCModID = KerbalConstructionTimeData.Instance.LaunchedVessel.LC.ModID;
+                        dataModule.Data.LCModID = blv.LC.ModID;
                 }
             }
 
@@ -239,34 +240,37 @@ namespace KerbalConstructionTime
             AssignCrewToCurrentVessel();
 
             // This only fires the first time because we clear the BLV afterwards.
-            if (KerbalConstructionTimeData.Instance.LaunchedVessel.IsValid)
+            if (blv.IsValid)
             {
-                LCItem vesselLC = KerbalConstructionTimeData.Instance.LaunchedVessel.LC;
+                LCItem vesselLC = blv.LC;
                 KCTDebug.Log("Attempting to remove launched vessel from build list");
-                if (KerbalConstructionTimeData.Instance.LaunchedVessel.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
+                if (blv.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
                 {
                     //Add the cost of the ship to the funds so it can be removed again by KSP
-                    FlightGlobals.ActiveVessel.vesselName = KerbalConstructionTimeData.Instance.LaunchedVessel.shipName;
+                    FlightGlobals.ActiveVessel.vesselName = blv.shipName;
                 }
                 if (vesselLC == null) vesselLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID.ToString()) is ReconRollout rollout)
+                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is ReconRollout rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
 
-                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID.ToString()) is AirlaunchPrep alPrep)
+                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is AirlaunchPrep alPrep)
                     vesselLC.Airlaunch_Prep.Remove(alPrep);
 
-                var alParams = KerbalConstructionTimeData.Instance.AirlaunchParams;
-                if (alParams.KCTVesselId == KerbalConstructionTimeData.Instance.LaunchedVessel.shipID &&
-                    (alParams.KSPVesselId == Guid.Empty || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
-                {
-                    if (alParams.KSPVesselId == Guid.Empty)
-                        alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
-                    StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
-
-                    // This clears the guids (and changes the pointer, so the object is distinct from what we passed above) but keeps the rest
-                    KerbalConstructionTimeData.Instance.AirlaunchParams = new AirlaunchParams(KerbalConstructionTimeData.Instance.AirlaunchParams);
-                }
                 KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();
+            }
+
+            var alParams = KerbalConstructionTimeData.Instance.AirlaunchParams;
+            if (alParams.KCTVesselId == blv.shipID &&
+                (alParams.KSPVesselId == Guid.Empty || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
+            {
+                if (alParams.KSPVesselId == Guid.Empty)
+                    alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
+                StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
+
+                // Clear the KCT vessel ID but keep KSP's own ID.
+                // 'Revert To Launch' state is saved some frames after the scene got loaded so KerbalConstructionTimeData.Instance.LaunchedVessel is no longer there.
+                // In this case we use KSP's own id to figure out if airlaunch should be done.
+                KerbalConstructionTimeData.Instance.AirlaunchParams.KCTVesselId = Guid.Empty;
             }
         }
 

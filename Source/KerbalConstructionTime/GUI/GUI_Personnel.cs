@@ -371,7 +371,7 @@ namespace KerbalConstructionTime
                 style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
                 if (GUILayout.Button($"Hire {workers:N0}: √{_fundsCost:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
-                    Utilities.SpendFunds(_fundsCost, TransactionReasons.None);
+                    Utilities.SpendFunds(_fundsCost, research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers);
                     if (research)
                     {
                         Utilities.ChangeResearchers(workers);

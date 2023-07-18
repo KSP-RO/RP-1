@@ -35,6 +35,8 @@ namespace RP0
         public double entryCosts;
         public double spentUnlockCredit;
         public double constructionFees;
+        public double hiringResearchers;
+        public double hiringEngineers;
         public double otherFees;
         public double subsidySize;
         public double subsidyPaidOut;
@@ -74,6 +76,8 @@ namespace RP0
                 $"{nameof(entryCosts)}: {entryCosts}, " +
                 $"{nameof(spentUnlockCredit)}: {spentUnlockCredit}, " +
                 $"{nameof(constructionFees)}: {constructionFees}, " +
+                $"{nameof(hiringResearchers)}: {hiringResearchers}, " +
+                $"{nameof(hiringEngineers)}: {hiringEngineers}, " +
                 $"{nameof(otherFees)}: {otherFees}, " +
                 $"{nameof(subsidySize)}: {subsidySize}, " +
                 $"{nameof(subsidyPaidOut)}: {subsidyPaidOut}, " +

@@ -393,6 +393,8 @@ namespace RP0
                     p.ToolingFees.ToString("F0"),
                     p.EntryCosts.ToString("F0"),
                     p.ConstructionFees.ToString("F0"),
+                    p.HiringResearchers.ToString("F0"),
+                    p.HiringEngineers.ToString("F0"),
                     p.OtherFees.ToString("F0"),
                     p.Confidence.ToString("F1"),
                     p.Reputation.ToString("F1"),
@@ -419,7 +421,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract rep rewards", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
+            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract rep rewards", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Hiring researchers", "Hiring engineers", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -603,6 +605,8 @@ namespace RP0
                 entryCosts = logPeriod.EntryCosts,
                 spentUnlockCredit = logPeriod.SpentUnlockCredit,
                 constructionFees = logPeriod.ConstructionFees,
+                hiringResearchers = logPeriod.HiringResearchers,
+                hiringEngineers = logPeriod.HiringEngineers,
                 otherFees = logPeriod.OtherFees,
                 subsidySize = logPeriod.SubsidySize,
                 subsidyPaidOut = logPeriod.SubsidyPaidOut,
@@ -739,6 +743,18 @@ namespace RP0
             if (reasonRP0 == TransactionReasonsRP0.StructureConstruction)
             {
                 CurrentPeriod.ConstructionFees -= changeDelta;
+                return;
+            }
+
+            if (reasonRP0 == TransactionReasonsRP0.HiringResearchers)
+            {
+                CurrentPeriod.HiringResearchers -= changeDelta;
+                return;
+            }
+
+            if (reasonRP0 == TransactionReasonsRP0.HiringEngineers)
+            {
+                CurrentPeriod.HiringEngineers -= changeDelta;
                 return;
             }
 

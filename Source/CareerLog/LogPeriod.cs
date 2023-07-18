@@ -72,6 +72,12 @@
         public double ConstructionFees;
 
         [Persistent]
+        public double HiringResearchers;
+
+        [Persistent]
+        public double HiringEngineers;
+
+        [Persistent]
         public double OtherFees;
 
         [Persistent]

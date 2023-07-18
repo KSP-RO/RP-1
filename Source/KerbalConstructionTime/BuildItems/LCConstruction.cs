@@ -74,7 +74,7 @@ namespace KerbalConstructionTime
                 padCost *= PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
                 foreach (var pc in lc.PadConstructions)
                 {
-                    pc.SetBP(padCost);
+                    pc.SetBP(padCost, 0d);
                     pc.cost = padCost;
                 }
             }

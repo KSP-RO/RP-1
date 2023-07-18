@@ -351,6 +351,8 @@ namespace KerbalConstructionTime
                     totalCost *= 1d + (lpMult - 1d) * PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
             }
 
+            double oldTotalCost;
+            
             if (isModify)
             {
                 // Enforce a min cost for pad size changes
@@ -376,10 +378,12 @@ namespace KerbalConstructionTime
                     renovateCost = curVABCost;
 
                 totalCost += renovateCost + _newLCData.ResModifyCost(activeLC.Stats);
+                oldTotalCost = activeLC.Stats.GetCostStats(out _, out _, out _);
             }
             else
             {
                 totalCost += curVABCost + curResCost;
+                oldTotalCost = 0d;
             }
 
             if (totalCost > 0)
@@ -398,7 +402,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label(" ");
 
-                double buildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, SpaceCenterFacility.LaunchPad, null);
+                double buildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
                 double buildCost = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -totalCost);
                 string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
@@ -511,7 +515,7 @@ namespace KerbalConstructionTime
                             // We have to update any ongoing pad constructions too
                             foreach (var pc in lc.PadConstructions)
                             {
-                                pc.SetBP(curPadCost);
+                                pc.SetBP(curPadCost, 0d);
                                 pc.cost = curPadCost;
                             }
                             lc.IsOperational = false;
@@ -535,7 +539,7 @@ namespace KerbalConstructionTime
                             modId = isModify ? Guid.NewGuid() : lc.ModID,
                             lcData = modData
                         };
-                        lcConstr.SetBP(totalCost);
+                        lcConstr.SetBP(totalCost, oldTotalCost);
                         KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
 
                         try

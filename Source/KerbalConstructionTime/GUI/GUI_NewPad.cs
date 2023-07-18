@@ -45,7 +45,7 @@ namespace KerbalConstructionTime
 
             if (curPadCost > 0)
             {
-                double curPadBuildTime = ConstructionBuildItem.CalculateBuildTime(curPadCost, SpaceCenterFacility.LaunchPad);
+                double curPadBuildTime = ConstructionBuildItem.CalculateBuildTime(curPadCost, 0d, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
 
                 GUILayout.BeginHorizontal();
@@ -90,7 +90,7 @@ namespace KerbalConstructionTime
                         cost = curPadCost,
                         name = _newName
                     };
-                    padConstr.SetBP(curPadCost);
+                    padConstr.SetBP(curPadCost, 0d);
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.PadConstructions.Add(padConstr);
 
                     try

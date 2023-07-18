@@ -47,7 +47,7 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Upgrade of {name} requested from {oldLevel} to {newLevel}");
         }
 
-        public void Downgrade()
+        public void Abort()
         {
             KCTDebug.Log($"Downgrading {name} to level {currentLevel}");
             foreach (UpgradeableFacility facility in GetFacilityReferencesById(id))
@@ -56,7 +56,7 @@ namespace KerbalConstructionTime
             }
         }
 
-        public void Upgrade()
+        public void Apply()
         {
             KCTDebug.Log($"Upgrading {name} to level {upgradeLevel}");
 
@@ -120,7 +120,7 @@ namespace KerbalConstructionTime
 
             if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
             {
-                Upgrade();
+                Apply();
 
                 try
                 {

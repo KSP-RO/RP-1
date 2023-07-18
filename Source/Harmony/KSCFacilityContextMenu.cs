@@ -59,36 +59,60 @@ namespace RP0.Harmony
             bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes;
             bool upgradeable = !kctActive || IsUpgradeable(__instance.host.Facility);
             bool kctUpgradeBlocked = false;
-            string tooltip = null;
+            string tooltipUp = null;
+            string tooltipDown = null;
             if (kctActive && __instance.hasFacility)
             {
                 if (FacilityUpgrade.AlreadyInProgressByID(__instance.host.Facility.id))
                 {
                     kctUpgradeBlocked = true;
-                    tooltip = Localizer.GetStringByTag("#rp0_FacilityContextMenu_AlreadyUpgrading");
+                    tooltipDown = tooltipUp = Localizer.GetStringByTag("#rp0_FacilityContextMenu_AlreadyUpgrading");
                 }
-                else if ((float)__instance.host.Facility.FacilityLevel != __instance.host.Facility.MaxLevel)
+                else
                 {
-                    string gate = GetTechGate(__instance.host.Facility.id, __instance.host.Facility.FacilityLevel + 1);
-                    kctUpgradeBlocked = gate != null && ResearchAndDevelopment.GetTechnologyState(gate) != RDTech.State.Available;
-                    if (kctUpgradeBlocked)
+                    double oldCost = 0d;
+                    for (int i = __instance.host.Facility.facilityLevel; i >= 0; --i)
+                        oldCost += __instance.host.Facility.upgradeLevels[i].levelCost;
+                    if (HighLogic.LoadedSceneIsGame)
+                        oldCost *= HighLogic.CurrentGame.Parameters.Career.FundsLossMultiplier;
+                    var facilityType = GetFacilityType(__instance.host);
+                    double rate = KerbalConstructionTime.Utilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, facilityType);
+
+                    if ((float)__instance.host.Facility.FacilityLevel != __instance.host.Facility.MaxLevel)
                     {
-                        tooltip = Localizer.Format("#rp0_FacilityContextMenu_TechGate", KerbalConstructionTimeData.techNameToTitle[gate]);
+                        string gate = GetTechGate(__instance.host.Facility.id, __instance.host.Facility.FacilityLevel + 1);
+                        kctUpgradeBlocked = gate != null && ResearchAndDevelopment.GetTechnologyState(gate) != RDTech.State.Available;
+                        if (kctUpgradeBlocked)
+                        {
+                            tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_TechGate", KerbalConstructionTimeData.techNameToTitle[gate]);
+                        }
+                        else
+                        {
+                            double cost = __instance.host.Facility.GetUpgradeCost();
+                            double bp = Formula.GetConstructionBP(cost, oldCost, facilityType);
+                            double time = bp / rate;
+                            double days = time / 86400d;
+                            var cmqUpgrade = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StructureConstruction, -cost / days, 0d, 0d);
+                            string costLine = cmqUpgrade.GetCostLineOverride(true, false, false, true);
+                            if (KCTGameStates.Settings.UseDates)
+                                tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + Planetarium.GetUniversalTime(), false));
+                            else
+                                tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, KSPUtil.PrintDateDelta(time, false));
+                        }
                     }
-                    else
+
+                    if (__instance.host.Facility.FacilityLevel != 0)
                     {
-                        double cost = __instance.host.Facility.GetUpgradeCost();
-                        var facilityType = GetFacilityType(__instance.host);
-                        double bp = Formula.GetConstructionBP(cost, facilityType);
-                        double rate = KerbalConstructionTime.Utilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, facilityType);
+                        double cost = __instance.host.Facility.GetDowngradeCost();
+                        double bp = Formula.GetConstructionBP(-cost, oldCost, facilityType);
                         double time = bp / rate;
                         double days = time / 86400d;
                         var cmqUpgrade = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StructureConstruction, -cost / days, 0d, 0d);
                         string costLine = cmqUpgrade.GetCostLineOverride(true, false, false, true);
                         if (KCTGameStates.Settings.UseDates)
-                            tooltip = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + Planetarium.GetUniversalTime(), false));
+                            tooltipDown = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + Planetarium.GetUniversalTime(), false));
                         else
-                            tooltip = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, KSPUtil.PrintDateDelta(time, false));
+                            tooltipDown = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, KSPUtil.PrintDateDelta(time, false));
                     }
                 }
             }
@@ -102,13 +126,23 @@ namespace RP0.Harmony
                 UIOnHover uIOnHover = __instance.UpgradeButton.gameObject.AddComponent<UIOnHover>();
                 uIOnHover.onEnter.AddListener(__instance.OnUpgradeButtonHoverIn);
                 uIOnHover.onExit.AddListener(__instance.OnUpgradeButtonHoverOut);
-                if (tooltip != null)
+                if (tooltipUp != null)
                 {
                     var tooltipController = __instance.UpgradeButton.gameObject.AddComponent<TooltipController_Text>();
                     var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
                     tooltipController.prefab = prefab;
                     tooltipController.RequireInteractable = false;
-                    tooltipController.textString = tooltip;
+                    tooltipController.textString = tooltipUp;
+                    tooltipController.continuousUpdate = false;
+                }
+
+                if (tooltipDown != null)
+                {
+                    var tooltipController = __instance.DowngradeButton.gameObject.AddComponent<TooltipController_Text>();
+                    var prefab = AssetBase.GetPrefab<Tooltip_Text>("Tooltip_Text");
+                    tooltipController.prefab = prefab;
+                    tooltipController.RequireInteractable = false;
+                    tooltipController.textString = tooltipDown;
                     tooltipController.continuousUpdate = false;
                 }
             }
@@ -124,10 +158,11 @@ namespace RP0.Harmony
         internal static bool Prefix_Dismiss(KSCFacilityContextMenu __instance, KSCFacilityContextMenu.DismissAction dma)
         {
             GameEvents.onFacilityContextMenuDespawn.Fire(__instance);
-            if (dma == KSCFacilityContextMenu.DismissAction.Upgrade && HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
+            if (HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes
+                && (dma == KSCFacilityContextMenu.DismissAction.Upgrade || dma == KSCFacilityContextMenu.DismissAction.Downgrade))
             {
+                ProcessUpgrade(__instance.host, dma == KSCFacilityContextMenu.DismissAction.Upgrade);
                 dma = KSCFacilityContextMenu.DismissAction.None;
-                ProcessUpgrade(__instance.host);
             }
 
             __instance.OnMenuDismiss(dma);
@@ -321,30 +356,38 @@ namespace RP0.Harmony
             }
         }
 
-        private static void ProcessUpgrade(SpaceCenterBuilding host)
+        private static void ProcessUpgrade(SpaceCenterBuilding host, bool isUpgrade)
         {
             if (host == null)
                 return;
 
             int oldLevel = host.Facility.FacilityLevel;
-            KCTDebug.Log($"Upgrading from level {oldLevel}");
+            int newLevel = oldLevel + (isUpgrade ? 1 : -1);
+            KCTDebug.Log($"Upgrading from level {oldLevel} to {newLevel}");
 
             string facilityID = host.Facility.id;
             SpaceCenterFacility facilityType = GetFacilityType(host);
 
-            string gate = GetTechGate(facilityID, oldLevel + 1);
+            string gate = GetTechGate(facilityID, newLevel);
             if (gate != null && ResearchAndDevelopment.GetTechnologyState(gate) != RDTech.State.Available)
             {
                 return;
             }
 
             var split = facilityID.Split('/');
-            var upgrading = new FacilityUpgrade(facilityType, facilityID, oldLevel + 1, oldLevel, split[split.Length - 1]);
+            var upgrading = new FacilityUpgrade(facilityType, facilityID, newLevel, oldLevel, split[split.Length - 1]);
 
             if (!upgrading.AlreadyInProgress())
             {
-                double cost = host.Facility.GetUpgradeCost();
-                upgrading.SetBP(cost);
+                double cost = isUpgrade ? host.Facility.GetUpgradeCost() : -host.Facility.GetDowngradeCost();
+                double oldCost = 0d;
+                for (int i = host.Facility.facilityLevel; i >= 0; --i)
+                    oldCost += host.Facility.upgradeLevels[i].levelCost;
+                if (HighLogic.LoadedSceneIsGame)
+                    oldCost *= HighLogic.CurrentGame.Parameters.Career.FundsLossMultiplier;
+                upgrading.SetBP(cost, oldCost);
+                if (cost < 0d)
+                    cost = -cost;
                 upgrading.cost = cost;
 
                 KCTGameStates.ActiveKSC.FacilityUpgrades.Add(upgrading);
@@ -359,12 +402,12 @@ namespace RP0.Harmony
                 }
 
                 ScreenMessages.PostScreenMessage(Localizer.GetStringByTag("#rp0_FacilityContextMenu_UpgradeStart"), 4f, ScreenMessageStyle.UPPER_CENTER);
-                KCTDebug.Log($"Facility {facilityID} upgrade requested to lvl {oldLevel + 1}, BP {upgrading.BP}");
+                KCTDebug.Log($"Facility {facilityID} upgrade requested from lvl {oldLevel} to lvl {newLevel}, BP {upgrading.BP}");
             }
-            else if (oldLevel + 1 != upgrading.currentLevel)
+            else if (newLevel != upgrading.currentLevel)
             {
                 ScreenMessages.PostScreenMessage(Localizer.GetStringByTag("#rp0_FacilityContextMenu_UpgradeInProgress"), 4f, ScreenMessageStyle.UPPER_CENTER);
-                KCTDebug.Log($"Facility {facilityID} tried to upgrade to lvl {oldLevel + 1} but already in list!");
+                KCTDebug.Log($"Facility {facilityID} tried to upgrade from lvl {oldLevel} to lvl {newLevel} but already in list!");
             }
         }
 

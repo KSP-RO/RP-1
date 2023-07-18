@@ -25,9 +25,12 @@ namespace KerbalConstructionTime
             }
         }
 
-        public static double GetConstructionBP(double cost, SpaceCenterFacility facilityType)
+        public static double GetConstructionBP(double cost, double oldCost, SpaceCenterFacility facilityType)
         {
-            double bp = Math.Sqrt(cost);
+            double bp = Math.Sqrt(cost + oldCost) - Math.Sqrt(oldCost);
+            // Facility downgrades are handled here. LC reconstructions use their own logic.
+            if (bp < 0)
+                bp *= -0.5d;
 
             const double minDays = 3d;
             return Math.Max(bp, minDays);

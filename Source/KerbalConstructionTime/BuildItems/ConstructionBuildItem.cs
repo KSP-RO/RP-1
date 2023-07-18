@@ -123,14 +123,14 @@ namespace KerbalConstructionTime
         }
         protected abstract void ProcessCancel();
 
-        public void SetBP(double cost)
+        public void SetBP(double cost, double oldCost)
         {
-            BP = Formula.GetConstructionBP(cost, FacilityType);
+            BP = Formula.GetConstructionBP(cost, oldCost, FacilityType);
         }
 
-        public static double CalculateBuildTime(double cost, SpaceCenterFacility facilityType, KSCItem KSC = null)
+        public static double CalculateBuildTime(double cost, double oldCost, SpaceCenterFacility facilityType, KSCItem KSC = null)
         {
-            double bp = Formula.GetConstructionBP(cost, facilityType);
+            double bp = Formula.GetConstructionBP(cost, oldCost, facilityType);
             double rateTotal = Utilities.GetConstructionRate(0, KSC, facilityType);
 
             return bp / rateTotal;

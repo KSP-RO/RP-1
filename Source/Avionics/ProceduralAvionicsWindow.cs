@@ -3,7 +3,6 @@ using RealFuels.Tanks;
 using RP0.Utilities;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
 
@@ -354,23 +353,11 @@ namespace RP0.ProceduralAvionics
                 // Store and sum together the volume of all resources other than EC on this part
                 double otherFuelVolume = 0;
                 var otherTanks = new List<KeyValuePair<FuelTank, double>>();
-                if (_tanksDict != null)
+                foreach (FuelTank t in _tanksDict.Values)
                 {
-                    foreach (FuelTank t in _tanksDict.Values)
-                    {
-                        if (t == _ecTank || t.maxAmount == 0) continue;
-                        otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
-                        otherFuelVolume += t.maxAmount / t.utilization;
-                    }
-                }
-                else
-                {
-                    foreach (FuelTank t in _tankList)
-                    {
-                        if (t == _ecTank || t.maxAmount == 0) continue;
-                        otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
-                        otherFuelVolume += t.maxAmount / t.utilization;
-                    }
+                    if (t == _ecTank || t.maxAmount == 0) continue;
+                    otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
+                    otherFuelVolume += t.maxAmount / t.utilization;
                 }
 
                 SetProcPartVolumeLimit();
@@ -409,8 +396,7 @@ namespace RP0.ProceduralAvionics
 
         private void ApplyCorrectProcTankVolume(float extraVolumeLiters, float ecAmount)
         {
-            var fiUtil = typeof(ModuleFuelTanks).GetField("utilization", BindingFlags.Instance | BindingFlags.Public | BindingFlags.FlattenHierarchy);
-            float utilizationPercent = (float)fiUtil.GetValue(_rfPM);
+            float utilizationPercent = _rfPM.utilization;
             float utilization = utilizationPercent / 100;
             float avVolume = GetAvionicsVolume();
 

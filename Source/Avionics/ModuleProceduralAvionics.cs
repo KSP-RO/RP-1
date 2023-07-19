@@ -58,7 +58,6 @@ namespace RP0.ProceduralAvionics
         private PartModule _procPartPM;
         private PartModule _roTankPM;
         private ModuleFuelTanks _rfPM;
-        private System.Collections.ObjectModel.KeyedCollection<string, FuelTank> _tankList = null;
         private Dictionary<string, FuelTank> _tanksDict = null;
         private FuelTank _ecTank;
         private MethodInfo _seekVolumeMethod;

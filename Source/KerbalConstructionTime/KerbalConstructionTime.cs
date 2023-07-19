@@ -260,8 +260,8 @@ namespace KerbalConstructionTime
             }
 
             var alParams = KerbalConstructionTimeData.Instance.AirlaunchParams;
-            if (alParams.KCTVesselId == blv.shipID &&
-                (alParams.KSPVesselId == Guid.Empty || alParams.KSPVesselId == FlightGlobals.ActiveVessel.id))
+            if ((blv.IsValid && alParams.KCTVesselId == blv.shipID) ||
+                alParams.KSPVesselId == FlightGlobals.ActiveVessel.id)
             {
                 if (alParams.KSPVesselId == Guid.Empty)
                     alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;

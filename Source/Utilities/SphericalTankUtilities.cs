@@ -16,6 +16,8 @@ namespace RP0.Utilities
 
         public static float GetRequiredVolumeFromSphericalTankVolume(float desiredVolume)
         {
+            if (desiredVolume == 0)
+                return 0;
             float radius = GetSphericalTankRadius(desiredVolume);
             float sphereVolume = GetSphereVolume(radius);
             float numSpheres = Mathf.Ceil(desiredVolume / sphereVolume);

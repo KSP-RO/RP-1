@@ -22,7 +22,7 @@ namespace RP0.Crew
             GUILayout.Label("", GUILayout.Width(24));
             GUILayout.Label("Name", BoldLabel, GUILayout.Width(144));
             GUILayout.Label("Training", BoldLabel, GUILayout.Width(96));
-            GUILayout.Label("Complete", BoldLabel, GUILayout.Width(80));
+            GUILayout.Label("Completes", BoldLabel, GUILayout.Width(80));
             GUILayout.Label("Retires NET", BoldLabel, GUILayout.Width(80));
             GUILayout.EndHorizontal();
         }

@@ -363,7 +363,8 @@ namespace KerbalConstructionTime
                 if (research)
                     workers = Math.Max(0, Math.Min(workers, PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)] - KerbalConstructionTimeData.Instance.Researchers));
 
-                _fundsCost = modifiedHireCost * Math.Max(0, workers - KerbalConstructionTimeData.Instance.Applicants);
+                double workersToHire = Math.Max(0, workers - KerbalConstructionTimeData.Instance.Applicants);
+                _fundsCost = modifiedHireCost * workersToHire;
                 // Show the result for whatever you're asking for, even if you can't afford it.
                 hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost) + KerbalConstructionTimeData.Instance.UnassignedPersonnel);
 
@@ -371,7 +372,8 @@ namespace KerbalConstructionTime
                 style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
                 if (GUILayout.Button($"Hire {workers:N0}: √{_fundsCost:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
-                    Utilities.SpendFunds(_fundsCost, research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers);
+                    // Note: have to pass base, not modified, cost here, since the CMQ reruns
+                    Utilities.SpendFunds(workersToHire * PresetManager.Instance.ActivePreset.GeneralSettings.HireCost, research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers);
                     if (research)
                     {
                         Utilities.ChangeResearchers(workers);

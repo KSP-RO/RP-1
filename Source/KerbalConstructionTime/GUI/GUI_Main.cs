@@ -23,6 +23,8 @@ namespace KerbalConstructionTime
         public static bool InSCSubscene => _inSCSubscene;
         private static readonly List<GameScenes> _validScenes = new List<GameScenes> { GameScenes.FLIGHT, GameScenes.EDITOR, GameScenes.SPACECENTER, GameScenes.TRACKSTATION };
         private static GUIStyle _styleLabelRightAlign;
+        private static GUIStyle _styleLabelRightAlignYellow;
+        private static GUIStyle _styleLabelYellow;
         private static GUIStyle _styleLabelCenterAlign;
         private static GUIStyle _styleTextFieldRightAlign;
 
@@ -317,6 +319,33 @@ namespace KerbalConstructionTime
                 _styleLabelRightAlign.alignment = TextAnchor.LowerRight;
             }
             return _styleLabelRightAlign;
+        }
+
+        private static GUIStyle GetLabelRightAlignStyleYellow()
+        {
+            if (_styleLabelRightAlignYellow == null)
+            {
+                _styleLabelRightAlignYellow = new GUIStyle(GUI.skin.label);
+                _styleLabelRightAlignYellow.normal.textColor = XKCDColors.KSPMellowYellow;
+                _styleLabelRightAlignYellow.hover.textColor = XKCDColors.KSPMellowYellow;
+                _styleLabelRightAlignYellow.active.textColor = XKCDColors.KSPMellowYellow;
+                _styleLabelRightAlignYellow.focused.textColor = XKCDColors.KSPMellowYellow;
+                _styleLabelRightAlignYellow.alignment = TextAnchor.LowerRight;
+            }
+            return _styleLabelRightAlignYellow;
+        }
+
+        private static GUIStyle GetLabelStyleYellow()
+        {
+            if (_styleLabelYellow == null)
+            {
+                _styleLabelYellow = new GUIStyle(GUI.skin.label);
+                _styleLabelYellow.normal.textColor = XKCDColors.KSPMellowYellow;
+                _styleLabelYellow.hover.textColor = XKCDColors.KSPMellowYellow;
+                _styleLabelYellow.active.textColor = XKCDColors.KSPMellowYellow;
+                _styleLabelYellow.focused.textColor = XKCDColors.KSPMellowYellow;
+            }
+            return _styleLabelYellow;
         }
 
         private static GUIStyle GetLabelCenterAlignStyle()

@@ -206,9 +206,10 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
+            double utDelta = PeriodFactor * 86400d;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Program Budget", HighLogic.Skin.label, GUILayout.Width(160));
-            double programBudget = Programs.ProgramHandler.Instance.GetDisplayProgramFunding(PeriodFactor * 86400d);
+            double programBudget = Programs.ProgramHandler.Instance.GetDisplayProgramFunding(utDelta);
             GUILayout.Label(FormatCost(programBudget), RightLabel, GUILayout.Width(160));
             if (GUILayout.Button(_infoBtnContent, InfoButton))
             {
@@ -220,6 +221,25 @@ namespace RP0
             GUILayout.Label("Balance", BoldLabel, GUILayout.Width(160));
             double delta = programBudget + totalCost + constrMaterials + rolloutCost;
             GUILayout.Label(FormatCost(delta), BoldRightLabel, GUILayout.Width(160));
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Unlock Credit", HighLogic.Skin.label, GUILayout.Width(160));
+            double unlockCredit = 0d;
+            double accumTime = 0d;
+            for (int i = 0; i < KerbalConstructionTime.KerbalConstructionTimeData.Instance.TechList.Count && accumTime < utDelta; ++i)
+            {
+                var tech = KerbalConstructionTime.KerbalConstructionTimeData.Instance.TechList[i];
+                double buildTime = tech.BuildRate > 0d ? tech.TimeLeft : tech.GetTimeLeftEst(accumTime);
+                double timeLeft = utDelta - accumTime;
+                if (buildTime > timeLeft)
+                    buildTime = timeLeft;
+                if (buildTime <= 0d) // failsafe, but we might somehow have a 0 build time from a completed tech
+                    continue;
+                unlockCredit += UnlockCreditHandler.Instance.CreditForTime(buildTime);
+                accumTime += buildTime;
+            }
+            GUILayout.Label(FormatCost(CurrencyUtils.Funds(TransactionReasonsRP0.RateUnlockCreditIncrease, unlockCredit)), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER && GUILayout.Button(new GUIContent("Warp to Fund Target", "Warps to the fund target you specify in the resulting dialog"), HighLogic.Skin.button))

@@ -15,6 +15,8 @@ namespace RP0
 
         public double TotalCredit => _totalCredit;
 
+        public double CreditForTime(double UT) => UT * MaintenanceHandler.Instance.ResearchSalaryPerDay * (1d / 86400d) * MaintenanceHandler.Settings.researcherSalaryToUnlockCredit;
+
         public double GetCreditAmount(string tech) => _totalCredit;
         public double GetCreditAmount(List<AvailablePart> partList) => _totalCredit;
 
@@ -23,7 +25,7 @@ namespace RP0
         /// </summary>
         /// <param name="tech"></param>
         /// <param name="UT"></param>
-        public void IncrementCreditTime(string tech, double UT) => IncrementCredit(tech, UT * MaintenanceHandler.Instance.ResearchSalaryPerDay / 86400d * MaintenanceHandler.Settings.researcherSalaryToUnlockCredit);
+        public void IncrementCreditTime(string tech, double UT) => IncrementCredit(tech, CreditForTime(UT));
 
         /// <summary>
         /// Note this is CMQ-neutral.

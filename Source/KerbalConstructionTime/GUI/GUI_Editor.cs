@@ -165,7 +165,7 @@ namespace KerbalConstructionTime
                                          new Vector2(0.5f, 0.5f),
                                          "ShowBuildLVFirstDialog",
                                          "#rp0_Editor_LC_BuildVesselFirst_Title",
-                                         "#rp0_Editor_LC_BuildVesselFirst",
+                                         "#rp0_Editor_LC_BuildVesselFirst_Text",
                                          "#autoLOC_190905",
                                          false,
                                          HighLogic.UISkin);

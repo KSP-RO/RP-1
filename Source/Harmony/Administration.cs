@@ -407,7 +407,7 @@ namespace RP0.Harmony
                                          new Vector2(0.5f, 0.5f),
                                          "ShowAcceptAdditionalProgramDialog",
                                          "#rp0_Admin_AcceptAdditional_Program_Title",
-                                         "#rp0_Admin_AcceptAdditional_Program",
+                                         "#rp0_Admin_AcceptAdditional_Program_Text",
                                          "#autoLOC_190905",
                                          false,
                                          HighLogic.UISkin);

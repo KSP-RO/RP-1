@@ -239,7 +239,7 @@ namespace RP0
                 unlockCredit += UnlockCreditHandler.Instance.CreditForTime(buildTime);
                 accumTime += buildTime;
             }
-            GUILayout.Label(FormatCost(CurrencyUtils.Funds(TransactionReasonsRP0.RateUnlockCreditIncrease, unlockCredit)), RightLabel, GUILayout.Width(160));
+            GUILayout.Label(FormatCost(CurrencyUtils.Rate(TransactionReasonsRP0.RateUnlockCreditIncrease) * unlockCredit), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER && GUILayout.Button(new GUIContent("Warp to Fund Target", "Warps to the fund target you specify in the resulting dialog"), HighLogic.Skin.button))

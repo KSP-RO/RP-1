@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using UnityEngine;
-using System.Reflection;
-using ContractConfigurator;
+﻿using ContractConfigurator;
+using ContractConfigurator.Parameters;
 using Contracts;
+using KerbalConstructionTime;
 using RP0.DataTypes;
 using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
 
 namespace RP0.Milestones
 {
@@ -17,8 +16,10 @@ namespace RP0.Milestones
         public static MilestoneHandler Instance { get; private set; }
         public static Dictionary<string, Milestone> ProgramToMilestone { get; private set; }
         public static Dictionary<string, Milestone> ContractToMilestone { get; private set; }
+        public static Dictionary<string, Milestone> ContractParamToMilestone { get; private set; }
         public static Dictionary<string, Milestone> Milestones { get; private set; }
 
+        private HashSet<string> _contractParamsCompletedThisFrame = new HashSet<string>();
         private int _tickCount = 0;
         private const int _TicksToStart = 3;
 
@@ -40,22 +41,26 @@ namespace RP0.Milestones
             Instance = this;
 
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
+            GameEvents.Contract.onParameterChange.Add(OnContractParamChange);
             GameEvents.onCrewKilled.Add(OnCrewKilled);
 
             if (ContractToMilestone == null)
             {
                 ContractToMilestone = new Dictionary<string, Milestone>();
+                ContractParamToMilestone = new Dictionary<string, Milestone>();
                 ProgramToMilestone = new Dictionary<string, Milestone>();
                 Milestones = new Dictionary<string, Milestone>();
 
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_MILESTONE"))
                 {
-                    Milestone m = new Milestone(n);
+                    var m = new Milestone(n);
                     Milestones.Add(m.name, m);
                     if (!string.IsNullOrEmpty(m.contractName))
                         ContractToMilestone.Add(m.contractName, m);
                     if (!string.IsNullOrEmpty(m.programName))
                         ProgramToMilestone.Add(m.programName, m);
+                    if (!string.IsNullOrEmpty(m.screenshotContractParamName))
+                        ContractParamToMilestone.Add(m.screenshotContractParamName, m);
                 }
             }
         }
@@ -69,8 +74,11 @@ namespace RP0.Milestones
                 return;
             }
 
+            _contractParamsCompletedThisFrame.Clear();
+
             // If we have queued milestones, and we're not in a subscene, and there isn't one showing, try showing
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && queuedMilestones.Count > 0 && !KerbalConstructionTime.KCT_GUI.InSCSubscene && !NewspaperUI.IsOpen)
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && queuedMilestones.Count > 0 &&
+                !KerbalConstructionTime.KCT_GUI.InSCSubscene && !NewspaperUI.IsOpen)
             {
                 TryCreateNewspaper();
             }
@@ -79,14 +87,15 @@ namespace RP0.Milestones
         public void OnDestroy()
         {
             GameEvents.Contract.onCompleted.Remove(OnContractComplete);
+            GameEvents.Contract.onParameterChange.Remove(OnContractParamChange);
             GameEvents.onCrewKilled.Remove(OnCrewKilled);
         }
 
         private void TryAddDate(string name)
         {
-            if (!milestoneData.TryGetValue(name, out var list))
+            if (!milestoneData.ContainsKey(name))
             {
-                list = new PersistentListValueType<string>();
+                var list = new PersistentListValueType<string>();
                 milestoneData.Add(name, list);
                 list.Add(KSPUtil.PrintDate(Planetarium.GetUniversalTime(), false));
             }
@@ -100,7 +109,8 @@ namespace RP0.Milestones
                 AddData(milestone, string.Empty);
                 return;
             }
-                var crew = v.GetVesselCrew();
+
+            var crew = v.GetVesselCrew();
             if (crew.Count > 0)
                 AddData(milestone, crew[0].displayName);
             else
@@ -156,8 +166,19 @@ namespace RP0.Milestones
 
         private void OnContractComplete(Contract data)
         {
-            if(data is ConfiguredContract cc)
+            if (data is ConfiguredContract cc)
                 StartCoroutine(ContractCompleteRoutine(cc));
+        }
+
+        private void OnContractParamChange(Contract c, ContractParameter cp)
+        {
+            // Contract param can get the state changed to the same value more than once during a single frame
+            if (cp.State == ParameterState.Complete && cp is ContractConfiguratorParameter ccp &&
+                !_contractParamsCompletedThisFrame.Contains(ccp.ID))
+            {
+                _contractParamsCompletedThisFrame.Add(ccp.ID);
+                StartCoroutine(ContractParamCompleteRoutine(ccp));
+            }
         }
 
         private IEnumerator ContractCompleteRoutine(ConfiguredContract cc)
@@ -175,52 +196,69 @@ namespace RP0.Milestones
                 AddVesselCrewData(milestone.name, FlightGlobals.ActiveVessel);
                 // Add extra data here if desired
 
-                if (!HighLogic.LoadedSceneIsFlight)
+                if (!HighLogic.LoadedSceneIsFlight || KerbalConstructionTimeData.Instance.IsSimulatedFlight)
                     yield break;
 
-                bool wasShowing = KSP.UI.UIMasterController.Instance.mainCanvas.enabled;
-                if (wasShowing)
-                    GameEvents.onHideUI.Fire();
+                yield return CaptureScreenshot(milestone, overwrite: false);
+            }
+        }
 
-                string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{milestone.name}.png";
-
-                float oldDist = FlightCamera.fetch.distance;
-                float oldMin = FlightCamera.fetch.minDistance;
-                
-                FlightCamera.fetch.minDistance = 1f;
-                Vector3 size = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
-                float newDist = KSPCameraUtil.GetDistanceToFit(size, FlightCamera.fetch.FieldOfView) * 1.1f + 1f;
-                FlightCamera.fetch.SetDistanceImmediate(newDist);
-
-                yield return new WaitForEndOfFrame();
-
-                int width = Screen.width;
-                int height = Screen.height;
-                int desiredHeight = Mathf.CeilToInt(height / (float)width * 512f);
-
-                // This works around a Unity 2019.3+ bug. See http://answers.unity.com/answers/1914706/view.html
-                // Normally we'd use ScreenCapture.CaptureScreenAsTexture
-                Texture2D tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
-                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-                tex.Apply();
-
-                RenderTexture rt = new RenderTexture(512, desiredHeight, 0);
-                RenderTexture.active = rt;
-                Graphics.Blit(tex, rt);
-                Texture2D result = new Texture2D(512, desiredHeight);
-                result.ReadPixels(new Rect(0, 0, 512, desiredHeight), 0, 0);
-                result.Apply();
-
-                var bytes = ImageConversion.EncodeToPNG(result);
-                System.IO.File.WriteAllBytes(filePath, bytes);
-
-                FlightCamera.fetch.minDistance = oldMin;
-                FlightCamera.fetch.SetDistanceImmediate(oldDist);
-
-                if (wasShowing)
-                    GameEvents.onShowUI.Fire();
+        private IEnumerator ContractParamCompleteRoutine(ContractConfiguratorParameter ccp)
+        {
+            if (!HighLogic.LoadedSceneIsFlight || KerbalConstructionTimeData.Instance.IsSimulatedFlight ||
+                !ContractParamToMilestone.TryGetValue(ccp.ID, out Milestone milestone))
+            {
+                yield break;
             }
 
+            yield return CaptureScreenshot(milestone, overwrite: true);
+        }
+
+        private IEnumerator CaptureScreenshot(Milestone milestone, bool overwrite)
+        {
+            string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{milestone.name}.png";
+            if (!overwrite && File.Exists(filePath))
+                yield break;
+
+            bool wasShowing = KSP.UI.UIMasterController.Instance.mainCanvas.enabled;
+            if (wasShowing)
+                GameEvents.onHideUI.Fire();
+
+            float oldDist = FlightCamera.fetch.distance;
+            float oldMin = FlightCamera.fetch.minDistance;
+
+            FlightCamera.fetch.minDistance = 1f;
+            Vector3 size = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
+            float newDist = KSPCameraUtil.GetDistanceToFit(size, FlightCamera.fetch.FieldOfView) * 1.1f + 1f;
+            FlightCamera.fetch.SetDistanceImmediate(newDist);
+
+            yield return new WaitForEndOfFrame();
+
+            int width = Screen.width;
+            int height = Screen.height;
+            int desiredHeight = Mathf.CeilToInt(height / (float)width * 512f);
+
+            // This works around a Unity 2019.3+ bug. See http://answers.unity.com/answers/1914706/view.html
+            // Normally we'd use ScreenCapture.CaptureScreenAsTexture
+            Texture2D tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
+            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+            tex.Apply();
+
+            RenderTexture rt = new RenderTexture(512, desiredHeight, 0);
+            RenderTexture.active = rt;
+            Graphics.Blit(tex, rt);
+            Texture2D result = new Texture2D(512, desiredHeight);
+            result.ReadPixels(new Rect(0, 0, 512, desiredHeight), 0, 0);
+            result.Apply();
+
+            var bytes = ImageConversion.EncodeToPNG(result);
+            File.WriteAllBytes(filePath, bytes);
+
+            FlightCamera.fetch.minDistance = oldMin;
+            FlightCamera.fetch.SetDistanceImmediate(oldDist);
+
+            if (wasShowing)
+                GameEvents.onShowUI.Fire();
         }
 
         public void TryCreateNewspaper()

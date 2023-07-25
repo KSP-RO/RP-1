@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using UnityEngine;
-using static ConfigNode;
+﻿using static ConfigNode;
 
 namespace RP0.Milestones
 {
@@ -11,6 +7,7 @@ namespace RP0.Milestones
         [Persistent] public string name;
         [Persistent] public string contractName;
         [Persistent] public string programName;
+        [Persistent] public string screenshotContractParamName;
         [Persistent] public string headline;
         [Persistent] public string article;
         [Persistent] public string image;

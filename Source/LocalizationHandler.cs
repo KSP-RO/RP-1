@@ -138,6 +138,10 @@ namespace RP0
                 if (trainingTimeMult != 1d)
                     lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_Training", FormatRatioAsPercent(trainingTimeMult))}";
             }
+            else if (facilityType == SpaceCenterFacility.TrackingStation)
+            {
+                lvl.levelStats.textBase = $"[MapMode]\n[ManeuverTool]\n[#autoLOC_rp0_FacilityContextMenu_TS_lvl{lvlIdx}]\n[UnownedObjects]";
+            }
         }
 
         public static string FormatRatioAsPercent(double ratio)

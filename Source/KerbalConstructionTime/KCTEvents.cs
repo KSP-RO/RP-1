@@ -272,8 +272,11 @@ namespace KerbalConstructionTime
                         LCItem lc = KCTGameStates.FindLCFromID(dataModule.Data.LCID);
                         if (lc != null)
                         {
-                            if (launchSite == "LaunchPad")
+                            if (lc.LCType == LaunchComplexType.Pad && lc.ActiveLPInstance != null
+                                && (launchSite == "LaunchPad" || lc.LaunchPads.Find(p => p.name == launchSite) == null))
+                            {
                                 launchSite = lc.ActiveLPInstance.name;
+                            }
                             lc.Recon_Rollout.Add(new ReconRollout(ev.host, ReconRollout.RolloutReconType.Reconditioning, ev.host.id.ToString(), launchSite, lc));
                             dataModule.Data.HasStartedReconditioning = true;
                         }

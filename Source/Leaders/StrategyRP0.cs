@@ -149,6 +149,7 @@ namespace RP0
             {
                 KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
                 Programs.ProgramHandler.Instance.ClampFunding();
+                MaintenanceHandler.Instance?.UpdateUpkeep();
             }
 
             if(!(this is Programs.ProgramStrategy))

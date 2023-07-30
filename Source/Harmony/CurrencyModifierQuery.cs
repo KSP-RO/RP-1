@@ -59,7 +59,7 @@ namespace RP0.Harmony
         {
             if (__instance is CurrencyModifierQueryRP0 cmq)
             {
-                __result = cmq.GetCostLineOverride(displayInverted, useCurrencyColors, useInsufficientCurrencyColors, includePercentage, seperator);
+                __result = cmq.GetCostLineOverride(displayInverted, useCurrencyColors, useInsufficientCurrencyColors, includePercentage, false, seperator);
                 return false;
             }
             return true;

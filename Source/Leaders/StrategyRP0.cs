@@ -295,12 +295,12 @@ namespace RP0
                             : KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
                 }
 
-                string costString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).GetCostLineOverride(true, true, true, false, "   ");
+                string costString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).GetCostLineOverride(true, true, true, false, false, "   ");
                 if (costString != string.Empty)
                 {
                     text += RichTextUtil.TextAdvance(Localizer.Format("#autoLOC_304612"), costString);
                 }
-                string requireString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).GetCostLineOverride(true, true, true, false, "   ");
+                string requireString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupRequirements, true).GetCostLineOverride(true, true, true, false, false, "   ");
                 if (requireString != string.Empty)
                 {
                     text += RichTextUtil.TextAdvance(Localizer.Format("#rp0_Leaders_HiringRequirements"), requireString);

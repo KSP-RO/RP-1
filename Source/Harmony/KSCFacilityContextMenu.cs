@@ -232,11 +232,11 @@ namespace RP0.Harmony
                 CurrencyModifierQueryRP0 cmqDowngrade = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StructureConstruction, -__instance.downgradeCost, 0d, 0d);
                 __instance.downgradeCost = -(float)cmqDowngrade.GetTotal(CurrencyRP0.Funds);
                 if (kctUpgradeBlocked)
-                    __instance.upgradeString = $"<color={XKCDColors.HexFormat.BrightOrange}>{cmqUpgrade.GetCostLineOverride(displayInverted: true, useCurrencyColors: false, useInsufficientCurrencyColors: false, includePercentage: false, "\n")}</color>";
+                    __instance.upgradeString = $"<color={XKCDColors.HexFormat.BrightOrange}>{cmqUpgrade.GetCostLineOverride(true, false, false, false, false, "\n")}</color>";
                 else
-                    __instance.upgradeString = cmqUpgrade.GetCostLineOverride(displayInverted: true, useCurrencyColors: true, useInsufficientCurrencyColors: !kctActive, includePercentage: false, "\n");
+                    __instance.upgradeString = cmqUpgrade.GetCostLineOverride(true, true, !kctActive, false, false, "\n");
 
-                __instance.downgradeString = cmqDowngrade.GetCostLineOverride(displayInverted: true, useCurrencyColors: true, useInsufficientCurrencyColors: true, includePercentage: false, "\n");
+                __instance.downgradeString = cmqDowngrade.GetCostLineOverride(true, true, true, false, false, "\n");
 
                 if ((float)__instance.level != __instance.maxLevel && upgradeable)
                 {
@@ -347,7 +347,7 @@ namespace RP0.Harmony
                 __instance.RepairButtonText.color = __instance.btnTextBaseColor.A(1f);
                 if (Funding.Instance != null)
                 {
-                    __instance.RepairButtonText.text = Localizer.Format("#autoLOC_475433", __instance.repairCostColor, cmqRepair.GetCostLineOverride(displayInverted: true, useCurrencyColors: true, useInsufficientCurrencyColors: true, includePercentage: false, "\n"));
+                    __instance.RepairButtonText.text = Localizer.Format("#autoLOC_475433", __instance.repairCostColor, cmqRepair.GetCostLineOverride(true, true, true, false, false, "\n"));
                 }
                 else
                 {

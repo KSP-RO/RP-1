@@ -69,9 +69,10 @@ namespace RP0.Harmony
             if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
             {
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -cfgCost, 0d, 0d);
-                double postCMQcost = -cmq.GetTotal(CurrencyRP0.Funds);
+                double postCMQcost = -cmq.GetTotal(CurrencyRP0.Funds, false);
                 double invertCMQop = cfgCost / postCMQcost;
                 double credit = UnlockCreditHandler.Instance.GetCreditAmount(techNode);
+                // we don't bother with Min() because we're never touching this cmq again.
                 cmq.AddPostDelta(CurrencyRP0.Funds, credit, true);
                 if (!cmq.CanAfford())
                 {

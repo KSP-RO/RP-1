@@ -10,12 +10,12 @@ namespace RP0
         public static Currency Stock(this CurrencyRP0 c) => (Currency)c;
         public static CurrencyRP0 RP0(this Currency c) => (CurrencyRP0)c;
 
-        public static double Funds(TransactionReasonsRP0 reason, double funds) => CurrencyModifierQueryRP0.RunQuery(reason, funds, 0d, 0d, 0d, 0d).GetTotal(CurrencyRP0.Funds);
-        public static double Science(TransactionReasonsRP0 reason, double sci) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, sci, 0d, 0d, 0d).GetTotal(CurrencyRP0.Science);
-        public static double Rep(TransactionReasonsRP0 reason, double rep) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, rep, 0d, 0d).GetTotal(CurrencyRP0.Reputation);
-        public static double Conf(TransactionReasonsRP0 reason, double conf) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, conf, 0d).GetTotal(CurrencyRP0.Confidence);
-        public static double Rate(TransactionReasonsRP0 reason) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, 0d).GetTotal(CurrencyRP0.Rate);
-        public static double Time(TransactionReasonsRP0 reason, double time) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, time).GetTotal(CurrencyRP0.Time);
+        public static double Funds(TransactionReasonsRP0 reason, double funds, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, funds, 0d, 0d, 0d, 0d).GetTotal(CurrencyRP0.Funds, includeHidden);
+        public static double Science(TransactionReasonsRP0 reason, double sci, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, sci, 0d, 0d, 0d).GetTotal(CurrencyRP0.Science, includeHidden);
+        public static double Rep(TransactionReasonsRP0 reason, double rep, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, rep, 0d, 0d).GetTotal(CurrencyRP0.Reputation, includeHidden);
+        public static double Conf(TransactionReasonsRP0 reason, double conf, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, conf, 0d).GetTotal(CurrencyRP0.Confidence, includeHidden);
+        public static double Rate(TransactionReasonsRP0 reason, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, 0d).GetTotal(CurrencyRP0.Rate, includeHidden);
+        public static double Time(TransactionReasonsRP0 reason, double time, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, time).GetTotal(CurrencyRP0.Time, includeHidden);
 
         public static void ProcessCurrency(TransactionReasonsRP0 reason, Dictionary<CurrencyRP0, double> dict, bool invert = false)
         {

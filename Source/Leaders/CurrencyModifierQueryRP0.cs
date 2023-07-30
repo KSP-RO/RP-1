@@ -141,9 +141,13 @@ namespace RP0
             return inputs[c] * (multipliers[c] - 1d) + postMultiplierDeltas[c];
         }
 
-        public double GetTotal(CurrencyRP0 c)
+        public double GetTotal(CurrencyRP0 c, bool includeHidden = false)
         {
-            return inputs[c] * multipliers[c] + postMultiplierDeltas[c] + postMultiplierDeltasHidden[c];
+            double total = inputs[c] * multipliers[c] + postMultiplierDeltas[c];
+            if(includeHidden)
+                total += postMultiplierDeltasHidden[c];
+
+            return total;
         }
 
         public static bool ApproximatelyZero(double a)
@@ -179,7 +183,7 @@ namespace RP0
             "N1"
         };
 
-        public string GetCostLineOverride(bool displayInverted = true, bool useCurrencyColors = false, bool useInsufficientCurrencyColors = true, bool includePercentage = false, string seperator = ", ", bool flipRateDeltaColoring = false)
+        public string GetCostLineOverride(bool displayInverted = true, bool useCurrencyColors = false, bool useInsufficientCurrencyColors = true, bool includePercentage = false, bool showHidden = false, string seperator = ", ", bool flipRateDeltaColoring = false)
         {
             CurrencyArray outputs = new CurrencyArray();
             bool[] canAffords = new bool[outputs.Length];
@@ -187,7 +191,9 @@ namespace RP0
             int rateIndex = (int)CurrencyRP0.Rate;
             for (int i = 0; i < outputs.Length; ++i)
             {
-                double amount = inputs[i] * multipliers[i] + postMultiplierDeltas[i] + postMultiplierDeltasHidden[i];
+                double amount = inputs[i] * multipliers[i] + postMultiplierDeltas[i];
+                if(showHidden)
+                    amount += postMultiplierDeltasHidden[i];
                 if (i > LastCurrencyForAffordChecks)
                 {
                     canAffords[i] = true;

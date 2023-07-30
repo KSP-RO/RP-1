@@ -129,17 +129,17 @@ namespace RP0
         public CurrencyModifierQueryRP0 GetCMQ(double cost, string tech, TransactionReasonsRP0 reason)
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
-            cmq.AddPostDelta(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds), GetCreditAmount(tech)), true);
+            cmq.AddPostDelta(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, false), GetCreditAmount(tech)), true);
             return cmq;
         }
 
         public CurrencyModifierQueryRP0 GetPrePostCostAndAffordability(double cost, string tech, TransactionReasonsRP0 reason, out double preCreditCost, out double postCreditCost, out double credit, out bool canAfford)
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
-            preCreditCost = -cmq.GetTotal(CurrencyRP0.Funds);
+            preCreditCost = -cmq.GetTotal(CurrencyRP0.Funds, false);
             credit = Math.Min(preCreditCost, GetCreditAmount(tech));
             cmq.AddPostDelta(CurrencyRP0.Funds, credit, true);
-            postCreditCost = -cmq.GetTotal(CurrencyRP0.Funds);
+            postCreditCost = -cmq.GetTotal(CurrencyRP0.Funds, true);
             canAfford = cmq.CanAfford();
 
             return cmq;
@@ -148,7 +148,7 @@ namespace RP0
         public void ProcessCredit(double cost, string tech, TransactionReasonsRP0 reason)
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
-            double postCMQCost = -cmq.GetTotal(CurrencyRP0.Funds);
+            double postCMQCost = -cmq.GetTotal(CurrencyRP0.Funds, true);
             double remainingCost = SpendCredit(postCMQCost);
             Funding.Instance.AddFunds(-(float)(remainingCost * (cost / postCMQCost)), reason.Stock());
         }

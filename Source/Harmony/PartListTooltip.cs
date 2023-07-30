@@ -73,11 +73,11 @@ namespace RP0.Harmony
             }
         }
 
-        private static void SetTooltip(UnityEngine.UI.Button button, CurrencyModifierQuery cmq)
+        private static void SetTooltip(UnityEngine.UI.Button button, CurrencyModifierQueryRP0 cmq)
         {
             UnlockCreditUtility.Button = button;
             if(button != null)
-                UnlockCreditUtility.TooltipText = Localizer.Format("#rp0_UnlockCredit_CostAfterCredit", -cmq.GetTotal(Currency.Funds));
+                UnlockCreditUtility.TooltipText = Localizer.Format("#rp0_UnlockCredit_CostAfterCredit", -cmq.GetTotal(CurrencyRP0.Funds, true));
         }
     }
 }

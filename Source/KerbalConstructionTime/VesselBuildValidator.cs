@@ -167,7 +167,7 @@ namespace KerbalConstructionTime
             
             double unlockCost = Utilities.FindUnlockCost(partList);
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
-            double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds);
+            double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds, false);
 
             double credit = UnlockCreditHandler.Instance.GetCreditAmount(partList);
 
@@ -178,7 +178,7 @@ namespace KerbalConstructionTime
             string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "integrate vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
-                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0d, -cmq.GetTotal(CurrencyRP0.Funds)):N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} unlock credit)", () =>
+                new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0d, -cmq.GetTotal(CurrencyRP0.Funds, true)):N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} unlock credit)", () =>
                 {
                     if (cmq.CanAfford())
                     {
@@ -243,7 +243,7 @@ namespace KerbalConstructionTime
                 if (!cmq.CanAfford())
                 {
                     KCTDebug.Log($"Tried to add {blv.shipName} to integration list but not enough funds.");
-                    KCTDebug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds)}, Current funds: {Funding.Instance.Funds}");
+                    KCTDebug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds, true)}, Current funds: {Funding.Instance.Funds}");
                     var msg = new ScreenMessage("Not Enough Funds To Integrate!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
 
@@ -372,11 +372,11 @@ namespace KerbalConstructionTime
                         string txt = $"<color=green><b>{p.partInfo.title}: {error.Error}</b></color>\n";
                         var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -error.CostToResolve, 0f, 0f);
                         string costStr = cmq.GetCostLineOverride(true, false, false, true);
-                        double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds);
+                        double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds, false);
                         double invertCMQOp = error.CostToResolve / trueTotal;
                         double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.GetCreditAmount(error.TechToResolve));
                         cmq.AddPostDelta(CurrencyRP0.Funds, creditAmtToUse, true);
-                        string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true);
+                        string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true, true);
                         if (string.IsNullOrEmpty(afterCreditLine))
                             afterCreditLine = "free";
                         var button = new DialogGUIButtonWithTooltip($"Unlock ({afterCreditLine})",

@@ -1037,7 +1037,6 @@ namespace KerbalConstructionTime
             float cost = dryCost + fuelCost;
 
             double partMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
-            double moduleMultiplier = ApplyModuleCostModifiers(partRef);
 
             // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
             double resourceMultiplier = 1d;
@@ -1054,6 +1053,8 @@ namespace KerbalConstructionTime
             GatherGlobalModifiers(_tempTags, partRef);
             foreach (var s in _tempTags)
                 globalTags.Add(s);
+
+            double moduleMultiplier = ApplyModuleCostModifiers(_tempTags, partRef);
 
             foreach (var kvp in _tempResourceAmounts)
             {
@@ -1134,13 +1135,14 @@ namespace KerbalConstructionTime
             return costMod;
         }
 
-        public static double ApplyModuleCostModifiers(Part p)
+        public static double ApplyModuleCostModifiers(HashSet<string> modifiers, Part p)
         {
             double mult = 1;
             if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
             {
                 foreach (var x in pm.tags)
                 {
+                    modifiers.Add(x);
                     if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
                         mult *= mod.partMult;
                 }

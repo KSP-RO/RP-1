@@ -1,6 +1,6 @@
-ship = MR-1 Meteo
+ship = #rp1CraftsMR1Title
 version = 1.12.3
-description = Soviet MR-1 "Meteo" sounding rocket. Two-stage with booster and sustainer, with a unique hollow booster allowing the sustainer engine to fire through the center. Maximum altitude 95 km, with room for extra payload in the payload fairing.
+description = #rp1CraftsMR1Desc
 type = VAB
 size = 1.24396825,8.24987221,1.24396825
 steamPublishedFileId = 0

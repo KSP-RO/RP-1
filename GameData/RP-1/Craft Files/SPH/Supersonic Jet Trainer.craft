@@ -1,6 +1,6 @@
-ship = Supersonic Jet Trainer
+ship = #rp1CraftsSSJetTrainerTitle
 version = 1.12.3
-description = Supersonic jet trainer based on a classic fighter jet. AG 1 to lower flaps, AG 2 to raise flaps. Rotate at 70 m/s, liftoff speed 90 m/s, landing speed 80 m/s, Max Speed Mach 1.6, G limit 8 Gs. Watch out for tailstrikes!
+description = #rp1CraftsSSJetTrainerDesc
 type = SPH
 size = 7.25775957,4.26809883,14.1500263
 steamPublishedFileId = 0

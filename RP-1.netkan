@@ -2,7 +2,7 @@
 	"spec_version" : "v1.26",
 	"identifier" : "RP-1",
 	"name"       : "Realistic Progression One (RP-1)",
-	"abstract"   : "Career for Realism Overhaul. Don't install this directly without the Express Install unless you know what you're doing.",
+	"abstract"   : "Career for Realism Overhaul. Use the Express Install and leave this as it is unless you know what you're doing.",
 	"license"    : "CC-BY-4.0",
 	"author"     : "RP-1 Group",
 	"$kref"      : "#/ckan/github/KSP-RO/RP-1",

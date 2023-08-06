@@ -79,7 +79,7 @@ namespace RP0
             }
             if (query is CurrencyModifierQueryRP0 cmq)
             {
-                changeDelta = (float)cmq.GetEffectDelta(CurrencyRP0.Confidence);
+                changeDelta = (float)cmq.GetEffectDelta(CurrencyRP0.Confidence, true);
                 if (changeDelta != 0)
                 {
                     float oldConfidence = confidence;

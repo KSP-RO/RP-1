@@ -132,13 +132,17 @@ namespace RP0
         }
 
         /// <summary>
-        /// This ignores hidden deltas
+        /// This ignores hidden deltas unless specified
         /// </summary>
         /// <param name="c"></param>
         /// <returns></returns>
-        public double GetEffectDelta(CurrencyRP0 c)
+        public double GetEffectDelta(CurrencyRP0 c, bool includeHidden = true)
         {
-            return inputs[c] * (multipliers[c] - 1d) + postMultiplierDeltas[c];
+            double total = inputs[c] * (multipliers[c] - 1d) + postMultiplierDeltas[c];
+            if(includeHidden)
+                total += postMultiplierDeltasHidden[c];
+
+            return total;
         }
 
         public double GetTotal(CurrencyRP0 c, bool includeHidden = false)

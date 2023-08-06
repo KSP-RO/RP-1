@@ -131,7 +131,7 @@ namespace RP0
         public CurrencyModifierQueryRP0 GetCMQ(double cost, string tech, TransactionReasonsRP0 reason)
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
-            cmq.AddPostDelta(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, false), GetCreditAmount(tech)), true);
+            cmq.AddPostDelta(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, true), GetCreditAmount(tech)), true);
             return cmq;
         }
 

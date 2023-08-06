@@ -12,7 +12,7 @@ namespace RP0.Harmony
         {
             CurrencyModifierQueryRP0 cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, -vCost, 0f, 0f);
 
-            double delta = cmq.GetEffectDelta(CurrencyRP0.Funds);
+            double delta = cmq.GetEffectDelta(CurrencyRP0.Funds, false);
             if (delta == 0d)
             {
                 __instance.text.transform.localScale = __instance.textSizeDefault;

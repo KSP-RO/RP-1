@@ -71,7 +71,7 @@ namespace RP0.Harmony
         {
             if (__instance is CurrencyModifierQueryRP0 cmq)
             {
-                __result = (float)cmq.GetEffectDelta((CurrencyRP0)c);
+                __result = (float)cmq.GetEffectDelta((CurrencyRP0)c, true);
                 return false;
             }
             return true;

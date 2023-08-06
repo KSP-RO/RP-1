@@ -72,6 +72,9 @@ namespace RP0
         [GameParameters.CustomFloatParameterUI("Starting Confidence", minValue = 0f, maxValue = 1000f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
         public float StartingConfidence = 500f;
 
+        [GameParameters.CustomFloatParameterUI("Starting Unlock Credit", minValue = 0f, maxValue = 100000f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
+        public float StartingUnlockCredit = 25000f;
+
         [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 20f, maxValue = 200f, stepCount = 31, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
         public float RepLossNautDeathFixed = 50f;
 
@@ -118,24 +121,28 @@ namespace RP0
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 750f;
+                    StartingUnlockCredit = 75000f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
+                    StartingUnlockCredit = 50000f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
+                    StartingUnlockCredit = 25000f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
                     RepLossNautDeathFixed = 50f;
                     RepLossNautDeathPercent = 0.2f;
                     StartingConfidence = 350f;
+                    StartingUnlockCredit = 15000f;
                     break;
             }
         }

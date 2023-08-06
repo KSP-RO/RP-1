@@ -33,6 +33,7 @@ namespace RP0
                 MarkExperimentsAsDone();
                 ClobberRealChuteDefaultSettings();
                 CopyCraftFiles();
+                UnlockCreditHandler.Instance.IncrementCredit("start", HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().StartingUnlockCredit);
             }
         }
 

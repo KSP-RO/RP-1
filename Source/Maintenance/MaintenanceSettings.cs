@@ -15,7 +15,7 @@
         public int salaryResearchers = 1000;
 
         [Persistent]
-        public double researcherSalaryToUnlockCredit = 0.75d;
+        public FloatCurve researchersToUnlockCreditSalaryMultiplier = new FloatCurve();
 
         [Persistent]
         public double hangarCostForMaintenanceOffset = 240000d;

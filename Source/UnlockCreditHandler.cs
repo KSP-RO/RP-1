@@ -15,7 +15,9 @@ namespace RP0
 
         public double TotalCredit => _totalCredit;
 
-        public double CreditForTime(double UT) => UT * MaintenanceHandler.Instance.ResearchSalaryPerDay * (1d / 86400d) * MaintenanceHandler.Settings.researcherSalaryToUnlockCredit;
+        public double CreditForTime(double UT) => UT 
+            * MaintenanceHandler.Instance.ResearchSalaryPerDay * (1d / 86400d) 
+            * MaintenanceHandler.Settings.researchersToUnlockCreditSalaryMultiplier.Evaluate((float)MaintenanceHandler.Instance.Researchers);
 
         public double GetCreditAmount(string tech) => _totalCredit;
         public double GetCreditAmount(List<AvailablePart> partList) => _totalCredit;

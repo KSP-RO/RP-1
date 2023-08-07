@@ -23,7 +23,7 @@ namespace RP0
             int res = KerbalConstructionTimeData.Instance.Researchers;
             int totalCounted = 0;
             
-            foreach (var kvp in MaintenanceHandler.Settings.researchersToUnlockCreditSalaryMultiplier)
+            foreach (var kvp in MaintenanceHandler.Settings.researchersToUnlockCreditSalaryMultipliers)
             {
                 if (totalCounted >= res)
                     break;

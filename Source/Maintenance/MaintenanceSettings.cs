@@ -17,7 +17,7 @@ namespace RP0
         public int salaryResearchers = 1000;
 
         [Persistent]
-        public PersistentSortedListValueTypes<int, double> researchersToUnlockCreditSalaryMultiplier = new PersistentSortedListValueTypes<int, double>();
+        public PersistentSortedListValueTypes<int, double> researchersToUnlockCreditSalaryMultipliers = new PersistentSortedListValueTypes<int, double>();
 
         [Persistent]
         public double hangarCostForMaintenanceOffset = 240000d;

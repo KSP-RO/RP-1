@@ -1,4 +1,6 @@
-﻿namespace RP0
+﻿using RP0.DataTypes;
+
+namespace RP0
 {
     public class MaintenanceSettings
     {
@@ -15,7 +17,7 @@
         public int salaryResearchers = 1000;
 
         [Persistent]
-        public FloatCurve researchersToUnlockCreditSalaryMultiplier = new FloatCurve();
+        public PersistentSortedListValueTypes<int, double> researchersToUnlockCreditSalaryMultiplier = new PersistentSortedListValueTypes<int, double>();
 
         [Persistent]
         public double hangarCostForMaintenanceOffset = 240000d;

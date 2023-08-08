@@ -440,7 +440,7 @@ namespace RP0
         //ContractAdvance = 1L << 1,
         ContractReward = 1L << 2,
         //ContractPenalty = 1L << 3,
-        Contracts = ContractPenalty | ContractReward | ContractDecline,
+        Contracts = ContractReward | ContractDecline,
 
         VesselPurchase = 1L << 4, // VesselRollout
         VesselRecovery = 1L << 5,

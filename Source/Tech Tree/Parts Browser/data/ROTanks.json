@@ -598,8 +598,8 @@
         "entry_cost": "1",
         "category": "MATERIALS",
         "info": "",
-        "year": "0",
-        "technology": "unlockParts",
+        "year": "1951",
+        "technology": "postWarMaterialsScience",
         "era": "",
         "ro": true,
         "rp0": true,
@@ -608,7 +608,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SM-LevelI",
         "identical_part_name": "",
         "module_tags": [
             "TankServiceModule"
@@ -732,15 +732,15 @@
         "entry_cost": "1",
         "category": "MATERIALS",
         "info": "",
-        "year": "0",
-        "technology": "unlockParts",
+        "year": "1951",
+        "technology": "postWarMaterialsScience",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SM-LevelI",
         "identical_part_name": "",
         "module_tags": [
             "TankServiceModule"
@@ -896,8 +896,8 @@
         "entry_cost": "1",
         "category": "MATERIALS",
         "info": "",
-        "year": "0",
-        "technology": "unlockParts",
+        "year": "1951",
+        "technology": "postWarMaterialsScience",
         "era": "",
         "ro": true,
         "rp0": true,
@@ -906,7 +906,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SM-LevelI",
         "identical_part_name": "",
         "module_tags": [
             "TankServiceModule"

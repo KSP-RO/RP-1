@@ -534,9 +534,12 @@ namespace KerbalConstructionTime
             v.ProcessVessel(blv);
         }
 
-        public static void AddVesselToBuildList(BuildListVessel blv)
+        public static void AddVesselToBuildList(BuildListVessel blv) => AddVesselToBuildList(blv, true);
+
+        public static void AddVesselToBuildList(BuildListVessel blv, bool spendFunds)
         {
-            SpendFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
+            if (spendFunds)
+                SpendFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
 
             if (blv.Type == BuildListVessel.ListType.SPH)
                 blv.launchSite = "Runway";
@@ -592,18 +595,24 @@ namespace KerbalConstructionTime
                 usedShipsCost += v.GetTotalCost();
                 v.RemoveFromBuildList(out _);
             }
-            AddFunds(usedShipsCost, TransactionReasonsRP0.VesselPurchase);
 
             var validator = new VesselBuildValidator();
-            validator.SuccessAction = (postEditShip2) => SaveShipEdits(editableShip, postEditShip2);
-            validator.FailureAction = () => SpendFunds(usedShipsCost, TransactionReasonsRP0.VesselPurchase);
+            validator.CostOffset = usedShipsCost;
+            validator.SuccessAction = (postEditShip2) => SaveShipEdits(usedShipsCost, editableShip, postEditShip2);
+            validator.FailureAction = () => {; };
 
             validator.ProcessVessel(postEditShip);
         }
 
-        private static void SaveShipEdits(BuildListVessel editableShip, BuildListVessel newShip)
+        private static void SaveShipEdits(double oldCost, BuildListVessel editableShip, BuildListVessel newShip)
         {
-            AddVesselToBuildList(newShip);
+            double costDelta;
+            if (CurrentGameIsCareer() && (costDelta = oldCost - newShip.cost) != 0d)
+            {
+                Funding.Instance.AddFunds((float)costDelta, TransactionReasonsRP0.VesselPurchase.Stock());
+            }
+
+            AddVesselToBuildList(newShip, false);
 
             int oldIdx;
             editableShip.RemoveFromBuildList(out oldIdx);

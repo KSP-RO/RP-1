@@ -199,9 +199,10 @@ namespace KerbalConstructionTime
         public static void DrawNewLCWindow(int windowID)
         {
             LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
-            double oldVABCost = 0, oldPadCost = 0, lpMult = 1;
+            double oldVABCost = 0, oldPadCost = 0, oldResCost = 0, lpMult = 1;
 
             bool isModify = GUIStates.ShowModifyLC;
+            bool isHangar = isModify && activeLC.LCType == LaunchComplexType.Hangar;
 
             GUILayout.BeginVertical();
             if (isModify)
@@ -222,8 +223,21 @@ namespace KerbalConstructionTime
                 GUILayout.Label(activeLC.IsHumanRated ? "Yes" : "No", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                 GUILayout.EndHorizontal();
 
-                activeLC.Stats.GetCostStats(out oldPadCost, out oldVABCost, out _); // we'll compute resource cost delta ourselves
-                lpMult = activeLC.LaunchPadCount; // i.e. skip pads that are building, since we'll change their PadConstructions
+                activeLC.Stats.GetCostStats(out oldPadCost, out oldVABCost, out oldResCost); // we'll compute resource cost delta ourselves
+                lpMult = isHangar ? 0d : activeLC.LaunchPadCount; // i.e. skip pads that are building, since we'll change their PadConstructions
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Max Engineers:", GUILayout.ExpandWidth(false));
+                GUILayout.Label($"{activeLC.MaxEngineers:N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+
+                double oldMaintenance = Math.Max(0d, RP0.MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(oldVABCost + oldResCost + oldPadCost * lpMult, isHangar ? RP0.FacilityMaintenanceType.Hangar : RP0.FacilityMaintenanceType.LC));
+
+                oldMaintenance = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureRepairLC, -oldMaintenance);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Yearly Upkeep:", GUILayout.ExpandWidth(false));
+                GUILayout.Label(new GUIContent($"√{(oldMaintenance * 365.25d):N0}", $"Daily: √{oldMaintenance:N1}"), GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
             }
             else
             {
@@ -235,7 +249,7 @@ namespace KerbalConstructionTime
 
             GUILayout.Label(isModify ? "New Limits" : "Launch Complex Limits:");
 
-            bool isHangar = isModify && activeLC.LCType == LaunchComplexType.Hangar;
+            
             if (isHangar)
                 _newLCData.isHumanRated = true;
 
@@ -508,7 +522,10 @@ namespace KerbalConstructionTime
                     _overrideShowBuildPlans = !_overrideShowBuildPlans;
                 }
             }
-
+            if (isModify && GUILayout.Button("Existing"))
+            {
+                SetFieldsFromLC(activeLC);
+            }
             if (GUILayout.Button("Cancel"))
             {
                 _overrideShowBuildPlans = false;

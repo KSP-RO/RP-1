@@ -297,6 +297,9 @@
     <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg">
       <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\FirstMoonLandingCrewedDirect.cfg">
+      <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewedDirect.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonLanding.cfg">
       <Link>Contracts\Lunar Surface Probes\MoonLanding.cfg</Link>
     </Content>

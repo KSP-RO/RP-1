@@ -14,9 +14,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Pioneer 1",
-        "engine_config": "",
+        "engine_config": "Pioneer-JPL-532A",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Pioneer-JPL-532A",
         "identical_part_name": "",
         "module_tags": [
             "EngineSolid"

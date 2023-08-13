@@ -1216,7 +1216,7 @@ namespace KerbalConstructionTime
 
         public static KCTVesselData GetKCTVesselData(this Vessel v)
         {
-            var kctvm = (KCTVesselTracker)v.vesselModules.FirstOrDefault(vm => vm is KCTVesselTracker);
+            var kctvm = v.FindVesselModuleImplementing<KCTVesselTracker>();
             return kctvm?.Data;
         }
 

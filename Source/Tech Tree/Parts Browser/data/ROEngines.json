@@ -1,5 +1,28 @@
 [
     {
+        "name": "PioneerVernier",
+        "title": "Pioneer Vernier",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "4",
+        "entry_cost": "500",
+        "category": "SOLID",
+        "info": "",
+        "year": "1958",
+        "technology": "solids1958",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Pioneer 1",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-1204sepMotor",
         "title": "UA1204 Nosecone & Separation Motor",
         "description": "",

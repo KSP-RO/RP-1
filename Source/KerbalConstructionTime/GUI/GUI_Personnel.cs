@@ -21,15 +21,15 @@ namespace KerbalConstructionTime
         private static void DrawPersonnelWindow(int windowID)
         {
             int oldByModifier = _buyModifier;
-            if (Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
                 _buyModifier = _buyModifierMultsPersonnel[1];
             }
-            else if (Input.GetKey(KeyCode.LeftControl) || Input.GetKey(KeyCode.RightControl))
+            else if (Input.GetKey(KeyCode.LeftControl))
             {
                 _buyModifier = _buyModifierMultsPersonnel[2];
             }
-            else if (Input.GetKey(KeyCode.LeftAlt) || Input.GetKey(KeyCode.RightAlt))
+            else if (GameSettings.MODIFIER_KEY.GetKey())
             {
                 _buyModifier = _buyModifierMultsPersonnel[3];
             }
@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
                 RenderResearchersSection(isCostCacheInvalid);
             }
 
-            GUILayout.Label($"Hold Shift for x10, Ctrl for x100, and Alt for Max Possible", GetLabelCenterAlignStyle());
+            GUILayout.Label($"Hold LeftShift for x10, LeftCtrl for x100, and {GameSettings.MODIFIER_KEY.primary} for Max Possible", GetLabelCenterAlignStyle());
 
             if (GUILayout.Button("Close"))
             {

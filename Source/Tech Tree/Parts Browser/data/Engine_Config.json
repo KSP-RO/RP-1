@@ -13269,7 +13269,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "RL10",
-        "upgrade": false,
+        "upgrade": true,
         "entry_cost_mods": "25000,RL10A-3-9,throttlingTP",
         "identical_part_name": "",
         "module_tags": []

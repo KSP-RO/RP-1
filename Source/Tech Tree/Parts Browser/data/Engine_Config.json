@@ -9532,6 +9532,27 @@
         "module_tags": []
     },
     {
+        "name": "Pioneer-JPL-532A",
+        "title": "Pioneer-JPL-532A",
+        "description": "Tiny solid rocket motor developed for final velocity adjustment of the early Pioneer probes",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1958",
+        "technology": "solids1958",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Pioneer 0",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1000, SolidsHollow, SolidsComposite",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "PrincetonLNTR-WCH",
         "title": "PrincetonLNTR-WCH",
         "description": "",
@@ -13542,7 +13563,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "RL10",
-        "upgrade": false,
+        "upgrade": true,
         "entry_cost_mods": "25000,RL10A-3-9,throttlingTP",
         "identical_part_name": "",
         "module_tags": []

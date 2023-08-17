@@ -439,8 +439,8 @@ namespace RP0
         None = 0,
         //ContractAdvance = 1L << 1,
         ContractReward = 1L << 2,
-        ContractPenalty = 1L << 3,
-        Contracts = ContractPenalty | ContractReward | ContractDecline,
+        //ContractPenalty = 1L << 3,
+        Contracts = ContractReward | ContractDecline,
 
         VesselPurchase = 1L << 4, // VesselRollout
         VesselRecovery = 1L << 5,
@@ -490,7 +490,7 @@ namespace RP0
         Crew = CrewRecruited | SalaryCrew | CrewTraining,
 
         HiringEngineers = 1L << 30,
-        HiringResearchers = 1L << 31,
+        HiringResearchers = 1L << 3,
         Hiring = HiringEngineers | HiringResearchers,
 
         Personnel = Salary | Crew | Hiring,

@@ -15,9 +15,30 @@ namespace RP0
 
         public double TotalCredit => _totalCredit;
 
-        public double CreditForTime(double UT) => UT 
-            * MaintenanceHandler.Instance.ResearchSalaryPerDay * (1d / 86400d) 
-            * MaintenanceHandler.Settings.researchersToUnlockCreditSalaryMultiplier.Evaluate((float)MaintenanceHandler.Instance.Researchers);
+        public double CreditForTime(double UT)
+        {
+            double sum = 0d;
+            double mult = UT * MaintenanceHandler.Settings.salaryResearchers * (1d / (86400d * 365.25d));
+            
+            int res = KerbalConstructionTimeData.Instance.Researchers;
+            int totalCounted = 0;
+            
+            foreach (var kvp in MaintenanceHandler.Settings.researchersToUnlockCreditSalaryMultipliers)
+            {
+                if (totalCounted >= res)
+                    break;
+
+                int amountToCount = kvp.Key - totalCounted;
+                int remaining = res - totalCounted;
+                if (amountToCount > remaining)
+                    amountToCount = remaining;
+
+                sum += amountToCount * kvp.Value;
+                totalCounted += amountToCount;
+            }
+
+            return sum * mult;
+        }
 
         public double GetCreditAmount(string tech) => _totalCredit;
         public double GetCreditAmount(List<AvailablePart> partList) => _totalCredit;

@@ -16,12 +16,27 @@ namespace RP0
         private Dictionary<RDNode, RDNodeData> nodeData = new Dictionary<RDNode, RDNodeData>();
         private HashSet<RDNode> nonEmptyNodes = new HashSet<RDNode>();
         private HashSet<RDNode> deleteNodes = new HashSet<RDNode>();
+        // This is filled during Awake rather than each run
+        private HashSet<string> nodeNamesFromKerbalism = new HashSet<string>();
 
         public void Awake()
         {
             DontDestroyOnLoad(this);
 
             RDTechTree.OnTechTreeSpawn.Add(OnUpdateRnD);
+            foreach (var node in GameDatabase.Instance.GetConfigNodes("PART"))
+            {
+                foreach (var mod in node.GetNodes("MODULE"))
+                {
+                    foreach (var setup in mod.GetNodes("SETUP"))
+                    {
+                        string tech = setup.GetValue("tech");
+                        if (!string.IsNullOrEmpty(tech))
+                            nodeNamesFromKerbalism.Add(tech);
+                    }
+
+                }
+            }
         }
 
         public void OnDestroy()
@@ -50,7 +65,7 @@ namespace RP0
                     Debug.LogError($"[RP-0]: Error, can't find RDTech component on {node.name} with description {node.description}");
                     return;
                 }
-                if (tech.partsAssigned.Any(ap => !ap.TechHidden) || PartUpgradeManager.Handler.GetUpgradesForTech(tech.techID).Count > 0)
+                if (nodeNamesFromKerbalism.Contains(tech.techID) || tech.partsAssigned.Any(ap => !ap.TechHidden) || PartUpgradeManager.Handler.GetUpgradesForTech(tech.techID).Count > 0)
                     nonEmptyNodes.Add(node);
             }
 

@@ -23,6 +23,7 @@ namespace KerbalConstructionTime
         public bool CheckPartAvailability { get; set; } = true;
         public bool CheckPartConfigs { get; set; } = true;
         public bool CheckAvailableFunds { get; set; } = true;
+        public double? CostOffset { get; set; } = null;
         public Action<BuildListVessel> SuccessAction { get; set; }
         public Action FailureAction { get; set; }
 
@@ -239,6 +240,8 @@ namespace KerbalConstructionTime
             if (CheckAvailableFunds)
             {
                 double totalCost = blv.GetTotalCost();
+                if (CostOffset != null)
+                    totalCost -= CostOffset.Value;
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, -totalCost, 0d, 0d);
                 if (!cmq.CanAfford())
                 {

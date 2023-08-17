@@ -84,11 +84,17 @@
     <Content Include="..\GameData\RP-1\Contracts\TestSubjectRemove.cfg">
       <Link>Contracts\TestSubjectRemove.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Ceres Landing.cfg">
+      <Link>Contracts\Asteroid Exploration\Ceres Landing.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Ceres Orbit.cfg">
       <Link>Contracts\Asteroid Exploration\Ceres Orbit.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Ceres Orbit_Rep.cfg">
       <Link>Contracts\Asteroid Exploration\Ceres Orbit_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Vesta Landing.cfg">
+      <Link>Contracts\Asteroid Exploration\Vesta Landing.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Vesta Orbit.cfg">
       <Link>Contracts\Asteroid Exploration\Vesta Orbit.cfg</Link>
@@ -120,6 +126,9 @@
     <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\FirstBioSat-Heavy.cfg">
       <Link>Contracts\Early Satellites (Heavy)\FirstBioSat-Heavy.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\FirstPolarSat-Heavy.cfg">
+      <Link>Contracts\Early Satellites (Heavy)\FirstPolarSat-Heavy.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\FirstSatellite-Heavy.cfg">
       <Link>Contracts\Early Satellites (Heavy)\FirstSatellite-Heavy.cfg</Link>
     </Content>
@@ -149,6 +158,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\FirstSunSyncSat.cfg">
       <Link>Contracts\Early Satellites (Light)\FirstSunSyncSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\CrewedScienceBasic.cfg">
+      <Link>Contracts\Earth Crewed\CrewedScienceBasic.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\Docking.cfg">
       <Link>Contracts\Earth Crewed\Docking.cfg</Link>
@@ -236,6 +248,18 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Human Records\CrewedSpeedRecord.cfg">
       <Link>Contracts\Human Records\CrewedSpeedRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Jovian Moon Landings\Callisto Landing.cfg">
+      <Link>Contracts\Jovian Moon Landings\Callisto Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Jovian Moon Landings\Europa Landing.cfg">
+      <Link>Contracts\Jovian Moon Landings\Europa Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Jovian Moon Landings\Ganymede Landing.cfg">
+      <Link>Contracts\Jovian Moon Landings\Ganymede Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Jovian Moon Landings\Io Landing.cfg">
+      <Link>Contracts\Jovian Moon Landings\Io Landing.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Jupiter Observation\Callisto Flyby.cfg">
       <Link>Contracts\Jupiter Observation\Callisto Flyby.cfg</Link>
@@ -456,6 +480,27 @@
     <Content Include="..\GameData\RP-1\Contracts\Saturn Observation\Titan Rover.cfg">
       <Link>Contracts\Saturn Observation\Titan Rover.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Dione Landing.cfg">
+      <Link>Contracts\Saturnine Moon Landings\Dione Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Enceladus Landing.cfg">
+      <Link>Contracts\Saturnine Moon Landings\Enceladus Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Iapetus Landing.cfg">
+      <Link>Contracts\Saturnine Moon Landings\Iapetus Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Mimas Landing.cfg">
+      <Link>Contracts\Saturnine Moon Landings\Mimas Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Rhea Landing.cfg">
+      <Link>Contracts\Saturnine Moon Landings\Rhea Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Tethys Landing.cfg">
+      <Link>Contracts\Saturnine Moon Landings\Tethys Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Titan Landing.cfg">
+      <Link>Contracts\Saturnine Moon Landings\Titan Landing.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Small Bodies Flyby\Ceres Flyby.cfg">
       <Link>Contracts\Small Bodies Flyby\Ceres Flyby.cfg</Link>
     </Content>
@@ -629,6 +674,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Localization\en-us.cfg">
       <Link>Localization\en-us.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Localization\LocPatches.cfg">
+      <Link>Localization\LocPatches.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Localization\ru.cfg">
       <Link>Localization\ru.cfg</Link>
@@ -881,9 +929,6 @@
     </Content>
     <Content Include="..\GameData\RP-1\Strategies\Departments.cfg">
       <Link>Strategies\Departments.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Strategies\LocPatches.cfg">
-      <Link>Strategies\LocPatches.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Strategies\Milestones.cfg">
       <Link>Strategies\Milestones.cfg</Link>

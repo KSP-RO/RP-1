@@ -139,7 +139,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LEM Ascent",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NonReentryRated"
+        ]
     },
     {
         "name": "SSTU-RO-Separator",
@@ -2099,7 +2102,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NonReentryRated"
+        ]
     },
     {
         "name": "SSTU_LanderCore_LC5-POD",
@@ -2122,6 +2128,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NonReentryRated"
+        ]
     }
 ]

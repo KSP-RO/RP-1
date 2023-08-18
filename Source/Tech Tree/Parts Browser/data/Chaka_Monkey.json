@@ -1808,7 +1808,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NonReentryRated"
+        ]
     },
     {
         "name": "nervaII_kerbscalexx",
@@ -1999,7 +2002,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NonReentryRated"
+        ]
     },
     {
         "name": "xCXA_SAWx",

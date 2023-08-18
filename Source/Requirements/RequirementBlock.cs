@@ -9,6 +9,7 @@ namespace RP0.Requirements
     public class RequirementBlock
     {
         private const string CN_CompleteContract = "COMPLETE_CONTRACT";
+        private const string CN_FacilityLevel = "FACILITY_LEVEL";
 
         public Expression<Func<bool>> Expression { get; set; }
 
@@ -108,6 +109,10 @@ namespace RP0.Requirements
             if (cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))
             {
                 reqs.Add(new ContractRequirement(cn));
+            }
+            else if (cn.name.Equals(CN_FacilityLevel, StringComparison.OrdinalIgnoreCase))
+            {
+                reqs.Add(new FacilityRequirement(cn));
             }
             else
             {

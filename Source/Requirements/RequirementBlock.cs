@@ -102,7 +102,9 @@ namespace RP0.Requirements
 
         private static List<Requirement> ParseRequirements(ConfigNode cn)
         {
-            if (cn == null || (cn.values.Count == 0 && !cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))) return null;
+            if (cn == null || (cn.values.Count == 0 
+                && !cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase)
+                && !cn.name.Equals(CN_FacilityLevel, StringComparison.OrdinalIgnoreCase))) return null;
 
             var reqs = new List<Requirement>();
 

@@ -6,6 +6,15 @@ namespace RP0
     public class ModuleToolingPFSide : ModuleToolingDiamLen
     {
         [KSPField]
+        public string toolingTypeHinged = null;
+
+        [KSPField]
+        public float untooledMultiplierHinged = 0f;
+
+        [KSPField]
+        public float finalToolingCostMultiplierHinged = 0f;
+
+        [KSPField]
         public string toolingTypeNonDecoupled = null;
 
         [KSPField]
@@ -17,7 +26,30 @@ namespace RP0
         protected PartModule pmFairing;
         protected PartModule pmDecoupler;
 
-        protected BaseField baseRad, maxRad, cylEnd, sideThickness, inlineHeight, noseHeightRatio;
+        protected BaseField baseRad, maxRad, cylEnd, sideThickness, inlineHeight, noseHeightRatio, hingeEnabled, fairingStaged;
+
+        protected bool EnsureFields()
+        {
+            if (baseRad == null)
+            {
+                baseRad = pmFairing.Fields["baseRad"];
+                maxRad = pmFairing.Fields["maxRad"];
+                cylEnd = pmFairing.Fields["cylEnd"];
+                sideThickness = pmFairing.Fields["sideThickness"];
+                inlineHeight = pmFairing.Fields["inlineHeight"];
+                noseHeightRatio = pmFairing.Fields["noseHeightRatio"];
+                hingeEnabled = pmFairing.Fields["hingeEnabled"];
+                fairingStaged = pmDecoupler.Fields["fairingStaged"];
+
+                if (baseRad == null)
+                {
+                    Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide fields on {part}");
+                    return false;
+                }
+            }
+
+            return true;
+        }
 
         protected override void LoadPartModules()
         {
@@ -29,10 +61,14 @@ namespace RP0
         public override void OnStart(StartState state)
         {
             base.OnStart(state);
-            if (state == StartState.Editor && pmDecoupler?.Fields["fairingStaged"] is BaseField bf && pmFairing is PartModule)
+            if (!EnsureFields())
+                return;
+
+            if (state == StartState.Editor)
             {
-                bf.uiControlEditor.onFieldChanged += OnFairingStagedChanged;
-                UpdateToolingAndCosts(bf.GetValue<bool>(pmDecoupler));
+                fairingStaged.uiControlEditor.onFieldChanged += OnStateUpdated;
+                hingeEnabled.uiControlEditor.onFieldChanged += OnStateUpdated;
+                UpdateToolingAndCosts();
             }
         }
 
@@ -46,22 +82,9 @@ namespace RP0
                 Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide module on {part}");
                 return;
             }
+            if (!EnsureFields())
+                return;
 
-            if (baseRad == null)
-            {
-                baseRad = pmFairing.Fields["baseRad"];
-                maxRad = pmFairing.Fields["maxRad"];
-                cylEnd = pmFairing.Fields["cylEnd"];
-                sideThickness = pmFairing.Fields["sideThickness"];
-                inlineHeight = pmFairing.Fields["inlineHeight"];
-                noseHeightRatio = pmFairing.Fields["noseHeightRatio"];
-
-                if (baseRad == null)
-                {
-                    Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide fields on {part}");
-                    return;
-                }
-            }
             float baseRadF, maxRadF, cylEndF, sideThicknessF, inlineHeightF, noseHeightRatioF;
             baseRadF = baseRad.GetValue<float>(pmFairing);
             maxRadF = maxRad.GetValue<float>(pmFairing);
@@ -74,25 +97,45 @@ namespace RP0
             len = (inlineHeightF > 0) ? inlineHeightF : (noseHeightRatioF * diam / 2) + cylEndF;
         }
 
-        public void UpdateToolingAndCosts(bool isDecoupled)
+        public void UpdateToolingAndCosts()
         {
             if (toolingTypeNonDecoupled == null || part?.partInfo?.partPrefab == null || untooledMultiplierNonDecoupled == 0f || finalToolingCostMultiplierNonDecoupled == 0f)
                 return;
 
-            var toolingPrefabModule = part.partInfo.partPrefab.FindModuleImplementing<ModuleToolingPFSide>();
+            if (!EnsureFields())
+                return;
 
-            toolingType = isDecoupled ? toolingPrefabModule.toolingType : toolingTypeNonDecoupled;
-            untooledMultiplier = isDecoupled ? toolingPrefabModule.untooledMultiplier : untooledMultiplierNonDecoupled;
-            finalToolingCostMultiplier = isDecoupled ? toolingPrefabModule.finalToolingCostMultiplier : finalToolingCostMultiplierNonDecoupled;
+            bool isDecoupled = fairingStaged.GetValue<bool>(pmDecoupler);
+            bool isHinged = hingeEnabled.GetValue<bool>(pmFairing);
+
+            var toolingPrefabModule = part.partInfo.partPrefab.FindModuleImplementing<ModuleToolingPFSide>();
+            if (isDecoupled)
+            {
+                toolingType = toolingPrefabModule.toolingType;
+                untooledMultiplier = toolingPrefabModule.untooledMultiplier;
+                finalToolingCostMultiplier = toolingPrefabModule.finalToolingCostMultiplier;
+            }
+            else if (isHinged)
+            {
+                toolingType = toolingTypeHinged;
+                untooledMultiplier = untooledMultiplierHinged;
+                finalToolingCostMultiplier = finalToolingCostMultiplierHinged;
+            }
+            else
+            {
+                toolingType = toolingTypeNonDecoupled;
+                untooledMultiplier = untooledMultiplierNonDecoupled;
+                finalToolingCostMultiplier = finalToolingCostMultiplierNonDecoupled;
+            }
         }
 
-        private void OnFairingStagedChanged(BaseField bf, object obj)
+        private void OnStateUpdated(BaseField bf, object obj)
         {
-            var isDecoupled = bf.GetValue<bool>(pmDecoupler);
-            UpdateToolingAndCosts(isDecoupled);
+            UpdateToolingAndCosts();
+
             foreach (Part p in part.symmetryCounterparts)
             {
-                p.Modules.GetModule<ModuleToolingPFSide>().UpdateToolingAndCosts(isDecoupled);
+                p.Modules.GetModule<ModuleToolingPFSide>().UpdateToolingAndCosts();
             }
         }
     }

@@ -225,22 +225,26 @@ namespace RP0.Crew
                 AvailablePart ap = tech.partsAssigned[i];
                 if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0)
                 {
-                    // KSP thinks that the node is actually unlocked at this point. Use a flag to indicate that KCT will override it later on.
-                    AddPartCourses(ap, isKCTExperimentalNode: true);
+                    AddPartCourses(ap);
                 }
             }
         }
 
-        public void AddPartCourses(AvailablePart ap, bool isKCTExperimentalNode = false)
+        public void AddPartCourses(AvailablePart ap)
         {
             if (ap.partPrefab.isVesselEVA || ap.name.StartsWith("kerbalEVA", StringComparison.OrdinalIgnoreCase) ||
                 ap.partPrefab.Modules.Contains<KerbalSeat>() || KCTUtils.IsClamp(ap.partPrefab)) return;
 
+            bool hasTech = !string.IsNullOrEmpty(ap.TechRequired);
+            bool isKCTExperimentalNode = hasTech && KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired);
+            bool isPartUnlocked = !hasTech || (!isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available && ResearchAndDevelopment.PartModelPurchased(ap));
+
+            if (!isKCTExperimentalNode && !isPartUnlocked)
+                return;
+
             TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.TryGetValue(name, out var coursePair))
             {
-                bool isPartUnlocked = string.IsNullOrEmpty(ap.TechRequired) || (!isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available);
-
                 TrainingTemplate profCourse = GenerateCourseProf(ap, !isPartUnlocked);
                 profCourse.partsCovered.Add(ap);
                 AppendToPartTooltip(ap, profCourse);
@@ -879,12 +883,8 @@ namespace RP0.Crew
 
             foreach (AvailablePart ap in PartLoader.LoadedPartsList)
             {
-                if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0
-                    && (ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available
-                        || KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired)))
-                {
+                if (!ap.TechHidden && ap.partPrefab.CrewCapacity > 0)
                     AddPartCourses(ap);
-                }
             }
 
             foreach (var c in TrainingCourses)

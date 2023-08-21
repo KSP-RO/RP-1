@@ -28,6 +28,7 @@ namespace KerbalConstructionTime
 
             Altitude = src.Altitude;
             KscAzimuth = src.KscAzimuth;
+            LaunchAzimuth = src.LaunchAzimuth;
             KscDistance = src.KscDistance;
             Velocity = src.Velocity;
         }

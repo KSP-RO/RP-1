@@ -6,9 +6,16 @@ namespace RP0.Crew
 {
     public class TrainingTemplate
     {
+        public enum TrainingType
+        {
+            Proficiency,
+            Mission
+        }
+
         public string id;
         public string name;
         public string description;
+        public TrainingType type;
 
         public List<AvailablePart> partsCovered = new List<AvailablePart>();
 
@@ -23,6 +30,7 @@ namespace RP0.Crew
 
         public int seatMax = -1; //maximum number of kerbals allowed in the course at once
         public int seatMin = 1; //minimum number of kerbals required to start the course
+        public const int SeatMultiplier = 2; // multiplier to crew capacity for max seats
 
         public TrainingFlightEntry training;
         
@@ -67,6 +75,12 @@ namespace RP0.Crew
                 return expiration;
 
             return expiration * (1.5d - pcm.stupidity);
+        }
+
+        public void UpdateFromPart(AvailablePart ap)
+        {
+            if (seatMax > 0)
+                seatMax = Math.Max(seatMax, ap.partPrefab.CrewCapacity * SeatMultiplier);
         }
     }
 }

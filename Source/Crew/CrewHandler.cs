@@ -258,12 +258,14 @@ namespace RP0.Crew
                 TrainingTemplate pc = coursePair.Item1;
                 TrainingTemplate mc = coursePair.Item2;
                 pc.partsCovered.Add(ap);
+                pc.UpdateFromPart(ap);
                 AppendToPartTooltip(ap, pc);
 
                 if (mc != null)
                 {
-                    AppendToPartTooltip(ap, mc);
                     mc.partsCovered.Add(ap);
+                    mc.UpdateFromPart(ap);
+                    AppendToPartTooltip(ap, mc);
                 }
             }
         }
@@ -900,6 +902,7 @@ namespace RP0.Crew
 
             c.id = "prof_" + name;
             c.name = "Proficiency: " + (found ? name : ap.title);
+            c.type = TrainingTemplate.TrainingType.Proficiency;
             c.time = 1d + (TrainingDatabase.GetTime(name) * 86400);
             c.isTemporary = isTemporary;
             c.conflict = new TrainingFlightEntry(TrainingType_Proficiency, name);
@@ -917,10 +920,11 @@ namespace RP0.Crew
 
             c.id = "msn_" + name;
             c.name = "Mission: " + (found ? name : ap.title);
+            c.type = TrainingTemplate.TrainingType.Mission;
             c.time = 1 + TrainingDatabase.GetTime(name + "-Mission") * 86400d;
             c.isTemporary = false;
             c.timeUseStupid = true;
-            c.seatMax = ap.partPrefab.CrewCapacity * 2;
+            c.seatMax = ap.partPrefab.CrewCapacity * TrainingTemplate.SeatMultiplier;
             c.expiration = Settings.trainingMissionExpirationDays * 86400d;
             c.prereq = new TrainingFlightEntry(TrainingType_Proficiency, name);
             c.training = new TrainingFlightEntry(TrainingType_Mission, name);

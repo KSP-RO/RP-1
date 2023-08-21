@@ -84,33 +84,21 @@ namespace RP0.Harmony
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("PartTechAvailable")]
-        internal static bool Prefix_PartTechAvailable(AvailablePart ap, out bool __result)
+        [HarmonyPatch("partTechAvailable")]
+        internal static bool Prefix_partTechAvailable(ResearchAndDevelopment __instance, AvailablePart ap, out bool __result)
         {
-            if (ResearchAndDevelopment.Instance == null)
-            {
-                __result = true;
-                return false;
-            }
-
-            __result = PartTechAvailable(ap);
+            __result = PartTechAvailable(__instance, ap);
 
             return false;
         }
 
         [HarmonyPrefix]
-        [HarmonyPatch("PartModelPurchased")]
-        internal static bool Prefix_PartModelPurchased(AvailablePart ap, out bool __result)
+        [HarmonyPatch("partModelPurchased")]
+        internal static bool Prefix_partModelPurchased(ResearchAndDevelopment __instance, AvailablePart ap, out bool __result)
         {
-            if (ResearchAndDevelopment.Instance == null)
+            if (PartTechAvailable(__instance, ap))
             {
-                __result = true;
-                return false;
-            }
-
-            if (PartTechAvailable(ap))
-            {
-                if (ResearchAndDevelopment.Instance.protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn) &&
+                if (__instance.protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn) &&
                     ptn.partsPurchased.Contains(ap))
                 {
                     __result = true;
@@ -125,14 +113,14 @@ namespace RP0.Harmony
             return false;
         }
 
-        private static bool PartTechAvailable(AvailablePart ap)
+        private static bool PartTechAvailable(ResearchAndDevelopment __instance, AvailablePart ap)
         {
             if (string.IsNullOrEmpty(ap.TechRequired))
             {
                 return false;
             }
 
-            if (ResearchAndDevelopment.Instance.protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn))
+            if (__instance.protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn))
             {
                 return ptn.state == RDTech.State.Available;
             }

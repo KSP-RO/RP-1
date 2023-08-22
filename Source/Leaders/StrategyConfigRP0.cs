@@ -85,23 +85,6 @@ namespace RP0
         protected double reactivateCooldown;
         public double ReactivateCooldown => reactivateCooldown;
 
-        /// <summary>
-        /// The cost (as a multiplier, i.e. 0.1 = 10%) to rep when instantly deactivating a strategy.
-        /// This cost lerps downward over time.
-        /// See Load() for default value.
-        /// </summary>
-        [Persistent]
-        protected double removalCostRepPercent;
-        public double RemovalCostRepPercent => removalCostRepPercent;
-
-        /// <summary>
-        /// The power to use when lerping down rep cost on deactivating early
-        /// See Load() for default value.
-        /// </summary>
-        [Persistent]
-        protected double removalCostLerpPower;
-        public double RemovalCostLerpPower => removalCostLerpPower;
-
         // Will be called by transpiler of stock StrategyConfig.Create()
         // This is needed due to how transpilers work.
         protected static StrategyConfig NewBaseConfig() { return new StrategyConfigRP0(); }
@@ -130,9 +113,8 @@ namespace RP0
                 }
             }
 
-            // For some reason need to set here, not in ctor.
-            removalCostRepPercent = 0.2d;
-            removalCostLerpPower = 2.5d;
+            // For some reason members need to be set here, not in ctor.
+            //removalCostRepPercent = 0.15d;
 
 
             ConfigNode.LoadObjectFromConfig(this, node);

@@ -204,9 +204,14 @@ namespace RP0
             if (duration >= LongestDuration)
                 return 0d;
 
-            return UtilMath.LerpUnclamped(Reputation.Instance.reputation * ConfigRP0.RemovalCostRepPercent,
-                                          0d,
-                                          Math.Pow(UtilMath.InverseLerp(LeastDuration, LongestDuration, duration), ConfigRP0.RemovalCostLerpPower));
+            double repMult = 0.2d;
+            if (duration > LeastDuration)
+            {
+                double frac = duration / (LongestDuration - LeastDuration);
+                repMult *= 0.1d / (frac * 0.5d + 0.1d) - 0.15d * frac;
+            }
+
+            return Reputation.Instance.reputation * repMult;
         }
 
         public virtual string DeactivateCostString()

@@ -36,6 +36,23 @@ namespace RP0.Crew
         
         public bool isTemporary = false;
 
+        public bool IsUnlocked
+        {
+            get
+            {
+                foreach (var ap in partsCovered)
+                {
+                    if (string.IsNullOrEmpty(ap.TechRequired))
+                        return true;
+
+                    if (!KerbalConstructionTime.KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired) && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available)
+                        return true;
+                }
+
+                return false;
+            }
+        }
+
         internal string PartsTooltip;
 
         public TrainingTemplate()

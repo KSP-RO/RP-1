@@ -30,6 +30,7 @@ namespace RP0.Crew
         public bool Completed = false;
 
         private TrainingTemplate _template;
+        public bool FromTemplate(TrainingTemplate t) => t == _template;
 
         public int SeatMin => _template?.seatMin ?? 1;
         public int SeatMax => _template?.seatMax ?? 0;

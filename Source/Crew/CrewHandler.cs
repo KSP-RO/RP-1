@@ -237,21 +237,26 @@ namespace RP0.Crew
 
             bool hasTech = !string.IsNullOrEmpty(ap.TechRequired);
             bool isKCTExperimentalNode = hasTech && KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired);
-            bool isPartUnlocked = !hasTech || (!isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available && ResearchAndDevelopment.PartModelPurchased(ap));
+            bool isPartUnlocked = !hasTech || (!isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available);
 
             if (!isKCTExperimentalNode && !isPartUnlocked)
                 return;
 
+            bool isPartPurchased = ResearchAndDevelopment.PartModelPurchased(ap);
+
             TrainingDatabase.SynonymReplace(ap.name, out string name);
             if (!_partSynsHandled.TryGetValue(name, out var coursePair))
             {
-                TrainingTemplate profCourse = GenerateCourseProf(ap, !isPartUnlocked);
+                TrainingTemplate profCourse = GenerateCourseProf(ap, !isPartPurchased);
                 profCourse.partsCovered.Add(ap);
                 AppendToPartTooltip(ap, profCourse);
                 TrainingTemplate missionCourse = null;
-                if (isPartUnlocked && IsMissionTrainingEnabled)
+
+                // We have to generate the mission training now
+                // though we will hide it unless the part is purchased
+                if (IsMissionTrainingEnabled)
                 {
-                    missionCourse = GenerateCourseMission(ap);
+                    missionCourse = GenerateCourseMission(ap, !isPartPurchased);
                     missionCourse.partsCovered.Add(ap);
                     AppendToPartTooltip(ap, missionCourse);
                 }
@@ -261,15 +266,26 @@ namespace RP0.Crew
             {
                 TrainingTemplate pc = coursePair.Item1;
                 TrainingTemplate mc = coursePair.Item2;
-                pc.partsCovered.Add(ap);
-                pc.UpdateFromPart(ap);
-                AppendToPartTooltip(ap, pc);
+
+                // We might have generated as an experimental part
+                // And now the node's completing.
+                pc.isTemporary &= !isPartPurchased;
+                if (!pc.partsCovered.Contains(ap))
+                {
+                    pc.partsCovered.Add(ap);
+                    pc.UpdateFromPart(ap);
+                    AppendToPartTooltip(ap, pc);
+                }
 
                 if (mc != null)
                 {
-                    mc.partsCovered.Add(ap);
-                    mc.UpdateFromPart(ap);
-                    AppendToPartTooltip(ap, mc);
+                    mc.isTemporary &= !isPartPurchased;
+                    if (!mc.partsCovered.Contains(ap))
+                    {
+                        mc.partsCovered.Add(ap);
+                        mc.UpdateFromPart(ap);
+                        AppendToPartTooltip(ap, mc);
+                    }
                 }
             }
         }
@@ -824,12 +840,12 @@ namespace RP0.Crew
             bool anyFound = false;
             foreach(var course in TrainingCourses)
             {
-                bool found = false;
+                bool found = true;
                 foreach (var ap in course.PartsCovered)
                 {
-                    if (ap.TechRequired == techID)
+                    if (ap.TechRequired != techID)
                     {
-                        found = true;
+                        found = false;
                         break;
                     }
                 }
@@ -855,22 +871,37 @@ namespace RP0.Crew
 
         public void OnTechCanceled(string techID)
         {
-            for(int i = TrainingCourses.Count; i-- > 0;)
+            for(int j = TrainingTemplates.Count; j-- > 0;)
             {
-                var course = TrainingCourses[i];
-                bool found = false;
-                foreach (var ap in course.PartsCovered)
+                var t = TrainingTemplates[j];
+                bool removeTemplate = true;
+                foreach (var ap in t.partsCovered)
                 {
-                    if (ap.TechRequired == techID)
+                    if (ap.TechRequired != techID)
                     {
-                        found = true;
+                        removeTemplate = false;
                         break;
                     }
                 }
-                if (found)
+                if (removeTemplate)
                 {
-                    course.AbortCourse();
-                    TrainingCourses.RemoveAt(i);
+                    TrainingTemplates.RemoveAt(j);
+                    foreach (var ap in t.partsCovered)
+                    {
+                        TrainingDatabase.SynonymReplace(ap.name, out string name);
+                        _partSynsHandled.Remove(name);
+                    }
+
+                    // Clean up active courses
+                    for (int i = TrainingCourses.Count; i-- > 0;)
+                    {
+                        var course = TrainingCourses[i];
+                        if (course.FromTemplate(t))
+                        {
+                            course.AbortCourse();
+                            TrainingCourses.RemoveAt(i);
+                        }
+                    }
                 }
             }
         }
@@ -912,7 +943,7 @@ namespace RP0.Crew
             return c;
         }
 
-        private TrainingTemplate GenerateCourseMission(AvailablePart ap)
+        private TrainingTemplate GenerateCourseMission(AvailablePart ap, bool isTemporary)
         {
             bool found = TrainingDatabase.SynonymReplace(ap.name, out string name);
 
@@ -922,7 +953,7 @@ namespace RP0.Crew
             c.name = "Mission: " + (found ? name : ap.title);
             c.type = TrainingTemplate.TrainingType.Mission;
             c.time = 1 + TrainingDatabase.GetTime(name + "-Mission") * 86400d;
-            c.isTemporary = false;
+            c.isTemporary = isTemporary;
             c.timeUseStupid = true;
             c.seatMax = ap.partPrefab.CrewCapacity * TrainingTemplate.SeatMultiplier;
             c.expiration = Settings.trainingMissionExpirationDays * 86400d;

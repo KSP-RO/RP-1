@@ -15,6 +15,7 @@ namespace RP0.Crew
         private GUIStyle _courseBtnStyle = null;
         private GUIStyle _tempCourseLblStyle = null;
         private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/KACIcon15", false), "Add alarm");
+        private bool _showAllTrainings = false;
 
         protected void RenderNautListHeading()
         {
@@ -177,6 +178,13 @@ namespace RP0.Crew
             {
                 foreach (TrainingTemplate course in CrewHandler.Instance.TrainingTemplates)
                 {
+                    // Mission trainings are only available for purchased parts
+                    if (course.type == TrainingTemplate.TrainingType.Mission && course.isTemporary)
+                        continue;
+
+                    if (!_showAllTrainings && course.isTemporary && course.IsUnlocked)
+                        continue;
+
                     var style = course.isTemporary ? _courseBtnStyle : HighLogic.Skin.button;
                     var c = new GUIContent(course.name, course.PartsTooltip);
                     if (GUILayout.Button(c, style))
@@ -194,6 +202,9 @@ namespace RP0.Crew
         {
             _selectedCourse = null;
             RenderCourseSelector();
+            GUILayout.BeginHorizontal();
+            _showAllTrainings = GUILayout.Toggle(_showAllTrainings, "Show all possible trainings");
+            GUILayout.EndHorizontal();
             return _selectedCourse == null ? UITab.Training : UITab.NewCourse;
         }
 

@@ -197,7 +197,7 @@ namespace RP0.Crew
             result = Sanitize(name);
             if (holders.TryGetValue(result, out TrainingHolder h))
             {
-                if (h.children.Count == 1)
+                if (h.days == 0 && h.children.Count == 1)
                 {
                     result = h.children[0];
                     return true;

@@ -14420,7 +14420,7 @@
         "rp0_conf": false,
         "spacecraft": "",
         "engine_config": "RZ20",
-        "upgrade": false,
+        "upgrade": true,
         "entry_cost_mods": "5000, RZ20-Mk1",
         "identical_part_name": "",
         "module_tags": []

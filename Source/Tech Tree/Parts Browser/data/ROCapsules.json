@@ -3170,7 +3170,8 @@
         "identical_part_name": "Apollo LEM Ascent",
         "module_tags": [
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "NonReentryRated"
         ]
     },
     {
@@ -3194,7 +3195,8 @@
         "identical_part_name": "Apollo LEM Ascent",
         "module_tags": [
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "NonReentryRated"
         ]
     },
     {

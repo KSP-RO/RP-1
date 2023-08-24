@@ -1779,6 +1779,26 @@ namespace KerbalConstructionTime
 
             return true;
         }
+
+        public static int GetFacilityLevel(SpaceCenterFacility facility)
+        {
+            if (ScenarioUpgradeableFacilities.facilityStrings.TryGetValue(facility, out string str))
+                return GetFacilityLevel(str);
+
+            return GetFacilityLevel(facility.ToString());
+        }
+
+        public static int GetFacilityLevel(string facilityId)
+        {
+            facilityId = ScenarioUpgradeableFacilities.SlashSanitize(facilityId);
+            if (!ScenarioUpgradeableFacilities.protoUpgradeables.TryGetValue(facilityId, out var value))
+                return 0;
+
+            if (value.facilityRefs.Count < 1)
+                return 0;
+
+            return value.facilityRefs[0].facilityLevel;
+        }
     }
 }
 

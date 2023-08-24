@@ -222,13 +222,8 @@ namespace KerbalConstructionTime
                     string[] caps = GeneralSettings.ResearcherCaps.Split(new char[] { ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
                     _researcherCaps = new int[caps.Length];
                     for (int i = 0; i < caps.Length; ++i)
-                        if (int.TryParse(caps[i], out _researcherCaps[i]))
-                        {
-                            if (_researcherCaps[i] == -1)
-                                _researcherCaps[i] = int.MaxValue;
-                        }
-                        else
-                            _researcherCaps[i] = 5;
+                        if (!int.TryParse(caps[i], out _researcherCaps[i]))
+                            _researcherCaps[i] = 1;
                 }
                 return _researcherCaps;
             }

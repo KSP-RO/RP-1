@@ -9,6 +9,7 @@ namespace RP0.Requirements
     public class RequirementBlock
     {
         private const string CN_CompleteContract = "COMPLETE_CONTRACT";
+        private const string CN_FacilityLevel = "FACILITY_LEVEL";
 
         public Expression<Func<bool>> Expression { get; set; }
 
@@ -101,13 +102,19 @@ namespace RP0.Requirements
 
         private static List<Requirement> ParseRequirements(ConfigNode cn)
         {
-            if (cn == null || (cn.values.Count == 0 && !cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))) return null;
+            if (cn == null || (cn.values.Count == 0 
+                && !cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase)
+                && !cn.name.Equals(CN_FacilityLevel, StringComparison.OrdinalIgnoreCase))) return null;
 
             var reqs = new List<Requirement>();
 
             if (cn.name.Equals(CN_CompleteContract, StringComparison.OrdinalIgnoreCase))
             {
                 reqs.Add(new ContractRequirement(cn));
+            }
+            else if (cn.name.Equals(CN_FacilityLevel, StringComparison.OrdinalIgnoreCase))
+            {
+                reqs.Add(new FacilityRequirement(cn));
             }
             else
             {

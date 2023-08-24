@@ -584,7 +584,7 @@ namespace KerbalConstructionTime
                     return false;
 
                 pass = false;
-                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify LC.");
+                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Renovate or Upgrade {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
             }
 
             return pass;

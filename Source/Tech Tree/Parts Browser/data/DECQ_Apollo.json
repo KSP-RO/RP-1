@@ -273,8 +273,9 @@
         "entry_cost_mods": "LMAE",
         "identical_part_name": "Apollo LEM Ascent",
         "module_tags": [
-            "EngineLiquidPF",
-            "NoResourceCostMult"
+            "HumanRated",
+            "NoResourceCostMult",
+            "NonReentryRated"
         ]
     },
     {

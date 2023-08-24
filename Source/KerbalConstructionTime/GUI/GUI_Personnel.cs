@@ -259,7 +259,9 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Max:", GUILayout.Width(90));
-            GUILayout.Label(PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)].ToString("N0"), GetLabelRightAlignStyle());
+            int resLimit = PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)];
+            string resLimitStr = resLimit >= 0 ? resLimit.ToString("N0") : "Unlimited";
+            GUILayout.Label(resLimitStr, GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             RenderHireFire(true, out int fireAmount, out int hireAmount);
@@ -361,7 +363,13 @@ namespace KerbalConstructionTime
                     workers = Math.Max(_buyModifierMultsPersonnel[0], KerbalConstructionTimeData.Instance.Applicants + (int)(Funding.Instance.Funds / modifiedHireCost));
 
                 if (research)
-                    workers = Math.Max(0, Math.Min(workers, PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)] - KerbalConstructionTimeData.Instance.Researchers));
+                {
+                    int maxRes = PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)];
+                    if (maxRes < 0)
+                        maxRes = int.MaxValue;
+
+                    workers = Math.Max(0, Math.Min(workers, maxRes - KerbalConstructionTimeData.Instance.Researchers));
+                }
 
                 double workersToHire = Math.Max(0, workers - KerbalConstructionTimeData.Instance.Applicants);
                 _fundsCost = modifiedHireCost * workersToHire;

@@ -15,6 +15,7 @@ namespace RP0.Crew
         private GUIStyle _courseBtnStyle = null;
         private GUIStyle _tempCourseLblStyle = null;
         private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/KACIcon15", false), "Add alarm");
+        private bool _showAllTrainings = false;
 
         protected void RenderNautListHeading()
         {
@@ -177,6 +178,13 @@ namespace RP0.Crew
             {
                 foreach (TrainingTemplate course in CrewHandler.Instance.TrainingTemplates)
                 {
+                    // Mission trainings are only available for purchased parts
+                    if (course.type == TrainingTemplate.TrainingType.Mission && course.isTemporary)
+                        continue;
+
+                    if (!_showAllTrainings && course.isTemporary && course.IsUnlocked)
+                        continue;
+
                     var style = course.isTemporary ? _courseBtnStyle : HighLogic.Skin.button;
                     var c = new GUIContent(course.name, course.PartsTooltip);
                     if (GUILayout.Button(c, style))
@@ -194,6 +202,9 @@ namespace RP0.Crew
         {
             _selectedCourse = null;
             RenderCourseSelector();
+            GUILayout.BeginHorizontal();
+            _showAllTrainings = GUILayout.Toggle(_showAllTrainings, "Show all possible trainings");
+            GUILayout.EndHorizontal();
             return _selectedCourse == null ? UITab.Training : UITab.NewCourse;
         }
 
@@ -219,7 +230,8 @@ namespace RP0.Crew
             RenderSummaryBody(UITab.NewCourse);
             if (_selectedCourse.SeatMax > 0)
                 GUILayout.Label($"{_selectedCourse.SeatMax - _selectedCourse.Students.Count} remaining seat(s).");
-            if (_selectedCourse.SeatMin > _selectedCourse.Students.Count)
+            bool underMin = _selectedCourse.SeatMin > _selectedCourse.Students.Count;
+            if (underMin)
                 GUILayout.Label($"{_selectedCourse.SeatMin - _selectedCourse.Students.Count} more naut(s) required.");
             const string tooltip = "Time for Proficiency training varies\nbased on nauts' prior proficiencies";
             GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTimeLeft(), true, false)}", tooltip));
@@ -228,7 +240,7 @@ namespace RP0.Crew
             {
                 GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.AverageRetireExtension(), true, false)}");
             }
-            if (GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+            if (!underMin && GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
             {
                 if (_selectedCourse.StartCourse())
                 {

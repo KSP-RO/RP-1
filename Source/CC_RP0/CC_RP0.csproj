@@ -71,6 +71,8 @@
     <Compile Include="HorizontalLandingVesselParam.cs" />
     <Compile Include="ProgramActiveRequirement.cs" />
     <Compile Include="RP1ContractTracker.cs" />
+    <Compile Include="RP1NoDocking.cs" />
+    <Compile Include="RP1NoDockingFactory.cs" />
     <Compile Include="RP1RendezvousFactory.cs" />
     <Compile Include="RP1RendezvousVesselParam.cs" />
     <Compile Include="ImpactCBFactory.cs" />

@@ -185,4 +185,55 @@ namespace RP0.Requirements
             return doColoring ? SurroundWithConditionalColorTags(s, IsMet) : s;
         }
     }
+
+    public class FacilityRequirement : Requirement
+    {
+        public SpaceCenterFacility Facility { get; set; }
+
+        public string FacilityTitle => ScenarioUpgradeableFacilities.GetFacilityName(Facility);
+
+        public uint Level { get; set; }
+
+        public override bool IsMet
+        {
+            get
+            {
+                bool b = KerbalConstructionTime.Utilities.GetFacilityLevel(Facility) >= Level;
+                return IsInverted ? !b : b;
+            }
+        }
+
+        public FacilityRequirement()
+        {
+        }
+
+        public FacilityRequirement(ConfigNode cn)
+        {
+            System.Enum.TryParse<SpaceCenterFacility>(cn.GetValue("facility"), out var fac);
+            Facility = fac;
+            bool b = false;
+            IsInverted = cn.TryGetValue("inverted", ref b) && b;
+            // 1-based in cfg
+            uint i = 1;
+            cn.TryGetValue("level", ref i);
+            if (i > 0)
+                --i;
+            Level = i;
+        }
+
+        public override string ToString()
+        {
+            return ToString(doColoring: false, prefix: null);
+        }
+
+        public override string ToString(bool doColoring = false, string prefix = null)
+        {
+            string s = IsInverted ? $"{FacilityTitle} must be less than level {Level + 1}" :
+                    $"Upgrade {FacilityTitle} to at least level {Level + 1}";
+
+            if (prefix != null) s = prefix + s;
+
+            return doColoring ? SurroundWithConditionalColorTags(s, IsMet) : s;
+        }
+    }
 }

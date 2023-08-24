@@ -4741,7 +4741,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "NonReentryRated"
         ]
     },
     {
@@ -5660,7 +5661,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NonReentryRated"
+        ]
     },
     {
         "name": "mk2LanderCabin_v2",
@@ -5683,7 +5687,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NonReentryRated"
+        ]
     },
     {
         "name": "mk2SpacePlaneAdapter",

@@ -818,7 +818,10 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NonReentryRated"
+        ]
     },
     {
         "name": "rn_lk_lander_858",
@@ -842,7 +845,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidPF"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -867,7 +870,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidPF"
+            "EngineLiquidTurbo"
         ]
     },
     {

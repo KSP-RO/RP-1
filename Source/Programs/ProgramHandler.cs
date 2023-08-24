@@ -16,6 +16,10 @@ namespace RP0.Programs
     [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class ProgramHandler : ScenarioModule
     {
+        private static int VERSION = 1;
+        [KSPField(isPersistant = true)]
+        public int LoadedSaveVersion = 0;
+
         private static readonly int _windowId = "RP0ProgramsWindow".GetHashCode();
 
         private Rect _windowRect = new Rect(3, 40, 425, 600);
@@ -146,6 +150,28 @@ namespace RP0.Programs
                 program.Load(cn);
                 CompletedPrograms.Add(program);
             }
+
+            if (LoadedSaveVersion < VERSION)
+            {
+                if (LoadedSaveVersion < 1)
+                {
+                    List<Program> progs = new List<Program>();
+                    progs.AddRange(ActivePrograms);
+                    progs.AddRange(CompletedPrograms);
+                    foreach (var p in progs)
+                    {
+                        if (p.name == "CrewedOrbit")
+                        {
+                            DisabledPrograms.Add("CrewedOrbitEarly");
+                            DisabledPrograms.Add("CrewedOrbitAdv");
+
+                            break;
+                        }
+                    }
+                }
+            }
+
+            LoadedSaveVersion = VERSION;
         }
 
         public override void OnSave(ConfigNode node)

@@ -162,12 +162,6 @@
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\CrewedScienceBasic.cfg">
       <Link>Contracts\Earth Crewed\CrewedScienceBasic.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\Docking.cfg">
-      <Link>Contracts\Earth Crewed\Docking.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\FirstEVA.cfg">
-      <Link>Contracts\Earth Crewed\FirstEVA.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\FirstOrbitCrewed.cfg">
       <Link>Contracts\Earth Crewed\FirstOrbitCrewed.cfg</Link>
     </Content>
@@ -176,12 +170,6 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\OrbitalFlight1.cfg">
       <Link>Contracts\Earth Crewed\OrbitalFlight1.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\OrbitalFlight2.cfg">
-      <Link>Contracts\Earth Crewed\OrbitalFlight2.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\OrbitalFlight3.cfg">
-      <Link>Contracts\Earth Crewed\OrbitalFlight3.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\OrbitalTestFlight.cfg">
       <Link>Contracts\Earth Crewed\OrbitalTestFlight.cfg</Link>
@@ -192,14 +180,26 @@
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\OrbitRecovery.cfg">
       <Link>Contracts\Earth Crewed\OrbitRecovery.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\Rendezvous.cfg">
-      <Link>Contracts\Earth Crewed\Rendezvous.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\SuborbitalCrewed.cfg">
       <Link>Contracts\Earth Crewed\SuborbitalCrewed.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\SuborbitalTestFlight.cfg">
       <Link>Contracts\Earth Crewed\SuborbitalTestFlight.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed Adv\Docking.cfg">
+      <Link>Contracts\Earth Crewed Adv\Docking.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed Adv\FirstEVA.cfg">
+      <Link>Contracts\Earth Crewed Adv\FirstEVA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed Adv\OrbitalFlight2.cfg">
+      <Link>Contracts\Earth Crewed Adv\OrbitalFlight2.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed Adv\OrbitalFlight3.cfg">
+      <Link>Contracts\Earth Crewed Adv\OrbitalFlight3.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Crewed Adv\Rendezvous.cfg">
+      <Link>Contracts\Earth Crewed Adv\Rendezvous.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Satellites\ComTestSat.cfg">
       <Link>Contracts\Earth Satellites\ComTestSat.cfg</Link>
@@ -296,6 +296,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg">
       <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\FirstMoonLandingCrewedDirect.cfg">
+      <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewedDirect.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonLanding.cfg">
       <Link>Contracts\Lunar Surface Probes\MoonLanding.cfg</Link>

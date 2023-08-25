@@ -19,6 +19,7 @@ namespace KerbalConstructionTime
         private static Vector2 _resourceListScroll = new Vector2();
         private static bool _overrideShowBuildPlans = false;
         private static float _requiredTonnage = 0;
+        private static bool _assignEngOnComplete = true;
 
         private const double _MinResourceVolume = 250d;
 
@@ -486,6 +487,11 @@ namespace KerbalConstructionTime
             }
 
             GUILayout.BeginHorizontal();
+            _assignEngOnComplete = GUILayout.Toggle(_assignEngOnComplete, new GUIContent((isModify ? "Reassign free engineers on complete" : "Assign free engineers on complete"),
+                (isModify ? $"If selected, any unassigned engineers will be reassigned to this facility when reconstruction completes, up to a maximum of {activeLC.Engineers}"
+                : "If selected, unassigned engineers will be assigned to this facility when construction completes, up to the facility's maximum capacity")));
+
+            GUILayout.BeginHorizontal();
             if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
                 if (HighLogic.LoadedSceneIsEditor && !KerbalConstructionTime.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
@@ -581,16 +587,19 @@ namespace KerbalConstructionTime
                 {
                     KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
                     LCItem lc;
+                    int engineers = isModify ? activeLC.Engineers : LCItem.MaxEngineersCalc(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated);
                     if (isModify)
                     {
                         lc = activeLC;
-                        Utilities.ChangeEngineers(lc, -lc.Engineers);
+                        Utilities.ChangeEngineers(lc, -engineers);
                         KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                          new Vector2(0.5f, 0.5f),
                                          "LCModifyStart",
                                          "Renovation Begun",
-                                         $"All engineers at {_newLCData.Name} have been unassigned. Remember to reassign engineers to {_newLCData.Name} when it finishes renovation.",
+                                         $"All engineers at {_newLCData.Name} have been unassigned. "
+                                         + (_assignEngOnComplete ? "They will be reassigned if available when renovation completes."
+                                         : $"Remember to reassign engineers to {_newLCData.Name} when it finishes renovation."),
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          true,
                                          HighLogic.UISkin);
@@ -623,6 +632,8 @@ namespace KerbalConstructionTime
                         lcData = modData
                     };
                     lcConstr.SetBP(totalCost, oldTotalCost);
+                    if (_assignEngOnComplete)
+                        lcConstr.engineersToReadd = engineers;
                     KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
 
                     try

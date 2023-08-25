@@ -487,9 +487,19 @@ namespace KerbalConstructionTime
             }
 
             GUILayout.BeginHorizontal();
-            _assignEngOnComplete = GUILayout.Toggle(_assignEngOnComplete, new GUIContent((isModify ? "Reassign free engineers on complete" : "Assign free engineers on complete"),
-                (isModify ? $"If selected, any unassigned engineers will be reassigned to this facility when reconstruction completes, up to a maximum of {activeLC.Engineers}"
-                : "If selected, unassigned engineers will be assigned to this facility when construction completes, up to the facility's maximum capacity")));
+            string toggleMainStr, toggleTipStr;
+            if (isModify)
+            {
+                toggleMainStr = "Reassign free engineers on complete";
+                toggleTipStr = $"If selected, any unassigned engineers will be reassigned to this facility when reconstruction completes, up to a maximum of {activeLC.Engineers}";
+            }
+            else
+            {
+                toggleMainStr = "Assign free engineers on complete";
+                toggleTipStr = "If selected, unassigned engineers will be assigned to this facility when construction completes, up to the facility's maximum capacity";
+            }
+            _assignEngOnComplete = GUILayout.Toggle(_assignEngOnComplete, new GUIContent(toggleMainStr, toggleTipStr));
+            GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))

@@ -106,7 +106,10 @@ namespace KerbalConstructionTime
 
         private void ReassignEngineers(LCItem lc)
         {
-            int engToAssign = Math.Min(engineersToReadd, lc.KSC.UnassignedEngineers);
+            if (engineersToReadd == 0)
+                return;
+
+            int engToAssign = Math.Min(engineersToReadd, Math.Min(lc.MaxEngineers, lc.KSC.UnassignedEngineers));
             if (engToAssign > 0)
             {
                 Utilities.ChangeEngineers(lc, engToAssign);

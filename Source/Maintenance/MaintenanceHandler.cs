@@ -380,17 +380,15 @@ namespace RP0
             {
                 float lvl = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
                 int lvlInt = (int)(lvl * (costs.Length - 0.95f));
-                FacilityMaintenanceCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out double AcCost);
                 if (CrewHandler.Instance?.TrainingCourses != null)
                 {
-                    double courses = CrewHandler.Instance.TrainingCourses.Count(c => c.Started);
-                    if (courses > 0)
+                    double mult = 1d + Math.Pow((double)lvlInt, Settings.nautTrainingACLevelPow) * Settings.nautTrainingACLevelMult;
+                    foreach (var course in CrewHandler.Instance.TrainingCourses)
                     {
-                        courses -= lvlInt * Settings.freeCoursesPerLevel;
-                        if (courses > 0d)
-                        {
-                            TrainingUpkeepPerDay = Settings.nautTrainingCostMultiplier * AcCost * (courses * (Settings.courseMultiplierDivisor / (Settings.courseMultiplierDivisor + lvlInt)));
-                        }
+                        if (!course.Started)
+                            continue;
+
+                        TrainingUpkeepPerDay += course.Students.Count * Settings.nautTrainingCostMultiplier * mult;
                     }
                 }
             }

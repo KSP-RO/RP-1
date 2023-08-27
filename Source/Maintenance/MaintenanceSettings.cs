@@ -46,10 +46,11 @@ namespace RP0
         [Persistent]
         public double nautSubOrbitProficiencyUpkeepAdd = 20d;
         [Persistent]
-        public double nautTrainingCostMultiplier = 100d;
-
+        public double nautTrainingCostMultiplier = 0.8d;
         [Persistent]
-        public double freeCoursesPerLevel = 0.5d;
+        public double nautTrainingACLevelMult = 3d;
+        [Persistent]
+        public double nautTrainingACLevelPow = 0.5d;
 
         [Persistent]
         public double courseMultiplierDivisor = 3d;

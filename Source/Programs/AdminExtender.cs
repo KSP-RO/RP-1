@@ -34,6 +34,8 @@ namespace RP0.Programs
     {
         public static AdminExtender Instance;
 
+        private float _uiWidth;
+
         /// <summary>
         /// This controls the tabs at the bottom of the screen (swapping between active and complete programs, and active leaders)
         /// </summary>
@@ -171,9 +173,9 @@ namespace RP0.Programs
                 // Determine the ideal size
                 // was -4, using -3 since programs is double-wide
                 int count = Math.Max(StrategySystem.Instance.SystemConfig.Departments.Count - 3, 0);
-                float size = Math.Min(944f + (count * 232.0f), Screen.width);
+                _uiWidth = Math.Min(944f + (count * 232.0f), Screen.width);
 
-                rect.sizeDelta = new Vector2(size, rect.sizeDelta.y);
+                rect.sizeDelta = new Vector2(_uiWidth, rect.sizeDelta.y);
             }
         }
 
@@ -344,7 +346,7 @@ namespace RP0.Programs
             scroll.horizontalScrollbar = newScrollbar.GetComponent<Scrollbar>();
             scroll.viewport = scroll.GetComponent<RectTransform>();
             var panelRT = scroll.transform.parent.GetComponent<RectTransform>();
-            panelRT.sizeDelta = new Vector2(Screen.width - 8f, panelRT.sizeDelta.y - 16f);
+            panelRT.sizeDelta = new Vector2(_uiWidth - 8f, panelRT.sizeDelta.y - 16f);
         }
 
         public void BindAndFixUI()

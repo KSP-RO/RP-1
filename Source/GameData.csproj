@@ -606,9 +606,6 @@
     <Content Include="..\GameData\RP-1\Contracts\Venus\Venus Probe.cfg">
       <Link>Contracts\Venus\Venus Probe.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Venus\Venus Rover.cfg">
-      <Link>Contracts\Venus\Venus Rover.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Venus\VenusFlyby.cfg">
       <Link>Contracts\Venus\VenusFlyby.cfg</Link>
     </Content>

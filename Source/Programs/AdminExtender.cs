@@ -346,7 +346,7 @@ namespace RP0.Programs
             scroll.horizontalScrollbar = newScrollbar.GetComponent<Scrollbar>();
             scroll.viewport = scroll.GetComponent<RectTransform>();
             var panelRT = scroll.transform.parent.GetComponent<RectTransform>();
-            panelRT.sizeDelta = new Vector2(_uiWidth - 8f, panelRT.sizeDelta.y - 16f);
+            panelRT.sizeDelta = new Vector2(_uiWidth - 12f, panelRT.sizeDelta.y - 16f);
         }
 
         public void BindAndFixUI()

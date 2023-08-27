@@ -333,6 +333,20 @@ namespace RP0.Programs
             _fundingGraphPanel.gameObject.SetActive(true);
         }
 
+        private void AddBottomScrollbar()
+        {
+            Transform scrollbarOld = transform.FindDeepChild("Scrollbar H");
+            Transform bottomArea = transform.FindDeepChild("Panel_bottom").FindDeepChild("ListAndScrollbar");
+            GameObject.Destroy(bottomArea.gameObject.GetComponent<HorizontalLayoutGroup>());
+            RectTransform newScrollbar = GameObject.Instantiate(scrollbarOld.gameObject, bottomArea).GetComponent<RectTransform>();
+            ScrollRect scroll = bottomArea.FindDeepChild("ScrollRect").GetComponent<ScrollRect>();
+            scroll.horizontal = true;
+            scroll.horizontalScrollbar = newScrollbar.GetComponent<Scrollbar>();
+            scroll.viewport = scroll.GetComponent<RectTransform>();
+            var panelRT = scroll.transform.parent.GetComponent<RectTransform>();
+            panelRT.sizeDelta = new Vector2(Screen.width - 8f, panelRT.sizeDelta.y - 16f);
+        }
+
         public void BindAndFixUI()
         {
             _buttonTooltip = Administration.Instance.btnAcceptCancel.GetComponent<KSP.UI.TooltipTypes.UIStateButtonTooltip>();
@@ -355,6 +369,7 @@ namespace RP0.Programs
             AddTabs();
             AddSpeedButtons();
             AddProgramFundingOverview();
+            AddBottomScrollbar();
         }
 
         public void Awake()

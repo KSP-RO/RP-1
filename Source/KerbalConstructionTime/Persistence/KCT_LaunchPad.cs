@@ -135,11 +135,16 @@ namespace KerbalConstructionTime
                     int idx = currentLC.LaunchPads.IndexOf(this);
                     if (idx < 0) continue;
 
-                    var rr = currentLC.Recon_Rollout.FirstOrDefault(r => r.launchPadID == name);
-                    if (rr != null)
+                    foreach (var rr in currentLC.Recon_Rollout)
                     {
-                        failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout or reconditioning";
-                        return false;
+                        if (rr.launchPadID != name)
+                            continue;
+
+                        if (rr.RRType != ReconRollout.RolloutReconType.Reconditioning)
+                        {
+                            failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout";
+                            return false;
+                        }
                     }
 
                     foreach (BuildListVessel vessel in currentLC.Warehouse)

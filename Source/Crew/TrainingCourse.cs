@@ -36,6 +36,7 @@ namespace RP0.Crew
         public int SeatMax => _template?.seatMax ?? 0;
         public string Description => _template?.description;
         public bool IsTemporary => _template?.isTemporary ?? false;
+        public TrainingTemplate.TrainingType Type => _template?.type ?? TrainingTemplate.TrainingType.Proficiency;
 
         public List<AvailablePart> PartsCovered => _template?.partsCovered;
 

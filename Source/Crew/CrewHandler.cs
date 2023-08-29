@@ -1110,5 +1110,11 @@ namespace RP0.Crew
         }
 
         public static double RnRMultiplierFromACLevel(double fracLevel) => 1d - fracLevel * 0.5d;
+
+        public void RecalculateBuildRates()
+        {
+            foreach (var c in TrainingCourses)
+                c.RecalculateBuildRate();
+        }
     }
 }

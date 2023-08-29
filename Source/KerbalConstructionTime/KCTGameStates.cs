@@ -85,6 +85,10 @@ namespace KerbalConstructionTime
                 TechItem tech = KerbalConstructionTimeData.Instance.TechList[i];
                 tech.UpdateBuildRate(i);
             }
+
+            RP0.Crew.CrewHandler.Instance?.RecalculateBuildRates();
+
+            KCTEvents.OnRecalculateBuildRates.Fire();
         }
 
         public static double GetEffectiveIntegrationEngineersForSalary(KSCItem ksc)

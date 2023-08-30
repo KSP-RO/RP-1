@@ -550,7 +550,7 @@ namespace KerbalConstructionTime
 
         public void ProgressBuildTime(double UTDiff)
         {
-            Profiler.BeginSample("KCT ProgressBuildTime");
+            Profiler.BeginSample("RP0ProgressBuildTime");
 
             if (UTDiff > 0)
             {
@@ -600,7 +600,7 @@ namespace KerbalConstructionTime
                             var rr = currentLC.Recon_Rollout[i];
                             rr.IncrementProgress(UTDiff);
                             //Reset the associated launchpad id when rollback completes
-                            Profiler.BeginSample("KCT ProgressBuildTime.ReconRollout.FindBLVesselByID");
+                            Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindBLVesselByID");
                             if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
                                 && Utilities.FindBLVesselByID(rr.LC, new Guid(rr.associatedID)) is BuildListVessel blv)
                             {

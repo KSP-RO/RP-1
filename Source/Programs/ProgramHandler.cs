@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using UnityEngine.Profiling;
 using System.Reflection;
 using System.Reflection.Emit;
 using KSP.UI.Screens.DebugToolbar;
@@ -209,12 +210,14 @@ namespace RP0.Programs
 
         public void ProcessFunding()
         {
+            Profiler.BeginSample("RP0ProcessFunding");
             double fundsOld = Funding.Instance.Funds;
             foreach (Program p in ActivePrograms)
             {
                 p.ProcessFunding();
             }
-            RP0Debug.Log($"[RP-0] ProgramHandler added {(Funding.Instance.Funds - fundsOld)} funds.");
+            RP0Debug.Log($"[RP-0] ProgramHandler added {Funding.Instance.Funds - fundsOld} funds.");
+            Profiler.EndSample();
         }
 
         public double GetProgramFunding(double utOffset)

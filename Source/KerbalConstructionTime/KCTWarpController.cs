@@ -109,7 +109,7 @@ namespace KerbalConstructionTime
                 }
             }
 
-            Profiler.BeginSample("KCT.WarpController");
+            Profiler.BeginSample("RP0WarpController");
             double remaining = warpTarget.GetTimeLeft();
             double UT = Planetarium.GetUniversalTime();
             double dT = UT - lastUT;

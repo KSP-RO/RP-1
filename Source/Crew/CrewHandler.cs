@@ -184,10 +184,12 @@ namespace RP0.Crew
             if (_isFirstLoad)
                 return;
 
+            Profiler.BeginSample("RP0ProcessCrew");
             double time = Planetarium.GetUniversalTime();
             ProcessRetirements(time);
             ProcessCourses(UTDiff);
             ProcessExpirations(time);
+            Profiler.EndSample();
         }
 
         public void Update()

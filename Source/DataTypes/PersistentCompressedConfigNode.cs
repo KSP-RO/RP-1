@@ -51,7 +51,7 @@ namespace RP0.DataTypes
             if (_bytes == null)
                 return false;
 
-            Profiler.BeginSample("Decompress");
+            Profiler.BeginSample("RP0Decompress");
             //UnityEngine.Debug.Log("@@Extracting Shipnode!! Stack: " + Environment.StackTrace);
             string s = ObjectSerializer.UnZip(_bytes);
             _node = ConfigNode.Parse(s);
@@ -66,7 +66,7 @@ namespace RP0.DataTypes
 
         protected void Compress()
         {
-            Profiler.BeginSample("Compress");
+            Profiler.BeginSample("RP0Compress");
             _bytes = ObjectSerializer.Zip(_node.ToString());
             Profiler.EndSample();
         }

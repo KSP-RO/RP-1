@@ -178,7 +178,7 @@ namespace KerbalConstructionTime
 
         public BuildListVessel(ShipConstruct s, string ls, string flagURL, bool storeConstruct)
         {
-            Profiler.BeginSample("BuildListVessel ctor");
+            Profiler.BeginSample("RP0BuildListVessel ctor");
             _ship = s;
             CacheClamps(s.parts);
 
@@ -203,7 +203,7 @@ namespace KerbalConstructionTime
             numStageParts = 0;
             stagePartCost = 0d;
 
-            Profiler.BeginSample("StageCosts");
+            Profiler.BeginSample("RP0StageCosts");
             foreach (Part p in s.Parts)
             {
                 if (p.stagingOn)
@@ -377,7 +377,7 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            Profiler.BeginSample("SaveShip");
+            Profiler.BeginSample("RP0SaveShip");
             ShipNodeCompressed.Node = s.SaveShip();
             Profiler.EndSample();
             ShipNodeCompressed.Node.SetValue("size", KSPUtil.WriteVector(ShipSize));
@@ -665,7 +665,7 @@ namespace KerbalConstructionTime
 
         private void CacheClamps(List<Part> parts)
         {
-            Profiler.BeginSample("CacheClamps");
+            Profiler.BeginSample("RP0CacheClamps");
             clampState = ClampsState.NoClamps;
 
             foreach (var p in parts)
@@ -699,7 +699,7 @@ namespace KerbalConstructionTime
 
         private bool AreTanksFull(List<Part> parts)
         {
-            Profiler.BeginSample("AreTanksFull");
+            Profiler.BeginSample("RP0AreTanksFull");
             foreach (var p in parts)
             {
                 foreach (var r in p.Resources)
@@ -738,7 +738,7 @@ namespace KerbalConstructionTime
 
         private void StorePartNames(List<Part> parts)
         {
-            Profiler.BeginSample("StorePartNames");
+            Profiler.BeginSample("RP0StorePartNames");
             partNames.Clear();
             foreach (var p in parts)
                 partNames.Add(p.partInfo.name);
@@ -956,7 +956,7 @@ namespace KerbalConstructionTime
 
         public double GetEffectiveCost(List<Part> parts)
         {
-            Profiler.BeginSample("GetEffectiveCost");
+            Profiler.BeginSample("RP0GetEffectiveCost");
             resourceAmounts.Clear();
             globalTags.Clear();
             double totalEffectiveCost = 0;

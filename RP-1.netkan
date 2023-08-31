@@ -5,6 +5,7 @@ abstract: >-
   Career for Realism Overhaul. Do not select/install this directly, instead
   select the RP-1 Express Install and let it install this automatically unless
   you know what you're doing and can fix it yourself.
+license: CC-BY-NC-SA-4.0
 author:
   - RP-1 Group
 $kref: '#/ckan/github/KSP-RO/RP-1'

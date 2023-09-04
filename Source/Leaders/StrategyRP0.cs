@@ -148,7 +148,6 @@ namespace RP0
             if (recalcRates)
             {
                 KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
-                Programs.ProgramHandler.Instance.ClampFunding();
                 MaintenanceHandler.Instance?.UpdateUpkeep();
             }
 
@@ -185,7 +184,6 @@ namespace RP0
             Unregister();
 
             KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
-            Programs.ProgramHandler.Instance.ClampFunding();
             
             if (!(this is Programs.ProgramStrategy))
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, false, deactivateRep);

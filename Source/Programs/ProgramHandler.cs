@@ -17,7 +17,7 @@ namespace RP0.Programs
     [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class ProgramHandler : ScenarioModule
     {
-        private static int VERSION = 1;
+        private static int VERSION = 2;
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = 0;
 
@@ -168,6 +168,16 @@ namespace RP0.Programs
 
                             break;
                         }
+                    }
+                }
+            }
+            if (LoadedSaveVersion < 2)
+            {
+                foreach (var p in ActivePrograms)
+                {
+                    if (p.fracElapsed < 0d)
+                    {
+                        p.fracElapsed = (p.lastPaymentUT - p.acceptedUT) / (p.DurationYears * (365.25d * 86400d));
                     }
                 }
             }

@@ -194,7 +194,23 @@ namespace KerbalConstructionTime
 
                 LCEfficiency.RelinkAll();
 
-                LoadedSaveVersion = KCTGameStates.VERSION;
+                if (LoadedSaveVersion < KCTGameStates.VERSION)
+                {
+                    if (LoadedSaveVersion < 4)
+                    {
+                        foreach (var ksc in KSCs)
+                        {
+                            foreach (var lc in ksc.LaunchComplexes)
+                            {
+                                foreach (var blv in lc.BuildList)
+                                    blv.RecalculateFromNode(true);
+                                foreach (var blv in lc.Warehouse)
+                                    blv.RecalculateFromNode(true);
+                            }
+                        }
+                    }
+                    LoadedSaveVersion = KCTGameStates.VERSION;
+                }
             }
             catch (Exception ex)
             {

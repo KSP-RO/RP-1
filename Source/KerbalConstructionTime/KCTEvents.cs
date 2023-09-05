@@ -41,7 +41,7 @@ namespace KerbalConstructionTime
         /// <summary>
         /// Rate, tags, resource amounts, part name
         /// </summary>
-        public static EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>, string> ApplyPartEffectiveCostMultiplier;
+        public static EventData<Boxed<double>, IEnumerable<string>> ApplyPartEffectiveCostMultiplier;
 
         /// <summary>
         /// Rate, tags, resource amounts
@@ -122,7 +122,7 @@ namespace KerbalConstructionTime
             OnRecalculateBuildRates = new EventVoid("OnKctRecalculateBuildRates");
 
             ApplyResearchRateMultiplier = new EventData<Boxed<double>, NodeType, string>("ApplyResearchRateMultiplier");
-            ApplyPartEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>, string>("ApplyPartEffectiveCostMultiplier");
+            ApplyPartEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>>("ApplyPartEffectiveCostMultiplier");
             ApplyGlobalEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>>("ApplyGlobalEffectiveCostMultiplier");
 
             CreatedEvents = true;

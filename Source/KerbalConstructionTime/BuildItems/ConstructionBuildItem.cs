@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public abstract class ConstructionBuildItem : IKCTBuildItem, IConfigNode
+    public abstract class ConstructionBuildItem : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
     {
         [Persistent]
         public double progress = 0;
@@ -169,16 +169,6 @@ namespace KerbalConstructionTime
             }
             progress = newProgress;
             return extraProgress;
-        }
-
-        public virtual void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public virtual void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

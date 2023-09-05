@@ -1,8 +1,9 @@
 ﻿using System.Collections.Generic;
+using RP0.DataTypes;
 
 namespace RP0.Crew
 {
-    public class TrainingExpiration : IConfigNode
+    public class TrainingExpiration : ConfigNodePersistenceBase, IConfigNode
     {
         [Persistent]
         public string pcmName;
@@ -35,16 +36,6 @@ namespace RP0.Crew
         public bool Compare(string pcmName, FlightLog.Entry e)
         {
             return this.pcmName == pcmName && Compare(e);
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

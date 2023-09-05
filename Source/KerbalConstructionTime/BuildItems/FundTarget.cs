@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public class FundTarget : IKCTBuildItem, IConfigNode
+    public class FundTarget : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
     {
         [Persistent]
         private double targetFunds = 0d;
@@ -28,16 +28,6 @@ namespace KerbalConstructionTime
             targetFunds = funds;
             origFunds = Funding.Instance?.Funds ?? 0d;
             SetAutoWarp(true);
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
 
         public void Clear()

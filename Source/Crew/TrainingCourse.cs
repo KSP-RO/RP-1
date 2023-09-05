@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RP0.Crew
 {
-    public class TrainingCourse : IKCTBuildItem, IConfigNode
+    public class TrainingCourse : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
     {
         [Persistent]
         public string id;
@@ -56,16 +56,6 @@ namespace RP0.Crew
         public TrainingCourse(ConfigNode node)
         {
             Load(node);
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
 
         public void LinkTemplate()

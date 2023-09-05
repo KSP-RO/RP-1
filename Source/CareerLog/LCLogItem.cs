@@ -1,10 +1,11 @@
 ﻿using KerbalConstructionTime;
 using System;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace RP0
 {
-    public class LCLogItem : IConfigNode
+    public class LCLogItem : ConfigNodePersistenceBase, IConfigNode
     {
         [Persistent]
         public string Name;
@@ -65,16 +66,6 @@ namespace RP0
             ID = data.lcID;
             ModID = data.modId;
             ModCost = data.cost;
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

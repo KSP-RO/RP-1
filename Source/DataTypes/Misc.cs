@@ -12,4 +12,17 @@ namespace RP0.DataTypes
         public Boxed(T val) { value = val; }
         public Boxed() { }
     }
+
+    public abstract class ConfigNodePersistenceBase : IConfigNode
+    {
+        public virtual void Load(ConfigNode node)
+        {
+            ConfigNode.LoadObjectFromConfig(this, node);
+        }
+
+        public virtual void Save(ConfigNode node)
+        {
+            ConfigNode.CreateConfigFromObject(this, node);
+        }
+    }
 }

@@ -1215,10 +1215,11 @@ namespace KerbalConstructionTime
         public double UpdateLeaderEffect()
         {
             double modifiedEC = effectiveCost;
+            double globalMult = ApplyGlobalCostModifiers();
             foreach (var t in tagEffectiveCosts)
             {
                 double ec = t.ec * RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(t.tags);
-                modifiedEC += (ec - t.ec);
+                modifiedEC += (ec - t.ec) * globalMult;
             }
             modifiedEC *= RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
             double modifiedBP = Formula.GetVesselBuildPoints(modifiedEC);

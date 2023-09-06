@@ -1,6 +1,6 @@
-ship = WAC-Corporal
+ship = #rp1_crafts_wac
 version = 1.12.3
-description = American WAC-Corporal sounding rocket. Two-stage with booster and sustainer. Maximum altitude 80 km, no payload capacity.
+description = #rp1_crafts_wac_desc
 type = VAB
 size = 1.07140982,7.56459427,0.927868187
 steamPublishedFileId = 0

@@ -47,6 +47,16 @@ namespace RP0
             _logUI.Start();
         }
 
+        protected override void OnDestroy()
+        {
+            _maintUI.Destroy();
+            _toolUI.Destroy();
+            _fsUI.Destroy();
+            _avUI.Destroy();
+            _contractUI.Destroy();
+            _logUI.Destroy();
+        }
+
         public static void SwitchTabTo(UITab newTab)
         {
             if (newTab == _currentTab)

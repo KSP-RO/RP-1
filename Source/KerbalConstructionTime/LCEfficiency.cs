@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class LCEfficiency : IConfigNode
+    public class LCEfficiency : ConfigNodePersistenceBase, IConfigNode
     {
         [Persistent]
         protected double _efficiency = 0.5d;
@@ -45,16 +45,6 @@ namespace KerbalConstructionTime
             _lcs.Removed += removed;
 
             _lcs.Add(lc);
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
 
         protected void Relink()

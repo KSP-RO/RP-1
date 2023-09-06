@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public class AirlaunchTechLevel : IConfigNode
+    public class AirlaunchTechLevel : ConfigNodePersistenceBase, IConfigNode
     {
         [Persistent]
         public string TechRequired;
@@ -42,16 +43,6 @@ namespace KerbalConstructionTime
         public override string ToString()
         {
             return $"{TechRequired};Alt:{MaxAltitude};Vel:{MaxVelocity}";
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
 
         public bool CanLaunchVessel(BuildListVessel vessel, out string reason)

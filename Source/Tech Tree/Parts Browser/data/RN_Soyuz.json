@@ -85,7 +85,7 @@
         "spacecraft": "Soyuz 7K-OK",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "50000, ok-sa, dockingProbeDrogue",
+        "entry_cost_mods": "50000, ok-sa, dockingProbeDrogue, dockingCrew",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",

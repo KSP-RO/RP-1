@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UniLinq;
 using RP0;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public abstract class LCProject : IKCTBuildItem, IConfigNode
+    public abstract class LCProject : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
     {
         public virtual string Name => "Null";
         [Persistent]
@@ -166,16 +167,6 @@ namespace KerbalConstructionTime
             }
 
             return 0d;
-        }
-
-        public virtual void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

@@ -51,13 +51,7 @@ namespace KerbalConstructionTime
                     ScreenMessages.PostScreenMessage("Dismantle failed: Launch Complex in use", 5f, ScreenMessageStyle.UPPER_CENTER);
                     return;
                 }
-                KSCItem ksc = activeLC.KSC;
-                ksc.SwitchToPrevLaunchComplex();
 
-                for (int i = activeLC.Warehouse.Count; i-- > 0;)
-                {
-                    Utilities.ScrapVessel(activeLC.Warehouse[i]);
-                }
                 for (int i = activeLC.LaunchPads.Count - 1; i >= 0; --i)
                 {
                     KCT_LaunchPad lpToDel = activeLC.LaunchPads[i];
@@ -67,6 +61,12 @@ namespace KerbalConstructionTime
                         return;
                     }
                 }
+                for (int i = activeLC.Warehouse.Count; i-- > 0;)
+                {
+                    Utilities.ScrapVessel(activeLC.Warehouse[i]);
+                }
+                KSCItem ksc = activeLC.KSC;
+                ksc.SwitchToPrevLaunchComplex();
                 activeLC.Delete();
 
                 try

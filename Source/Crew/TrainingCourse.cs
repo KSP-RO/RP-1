@@ -6,7 +6,7 @@ using UnityEngine;
 
 namespace RP0.Crew
 {
-    public class TrainingCourse : IKCTBuildItem, IConfigNode
+    public class TrainingCourse : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
     {
         [Persistent]
         public string id;
@@ -36,6 +36,7 @@ namespace RP0.Crew
         public int SeatMax => _template?.seatMax ?? 0;
         public string Description => _template?.description;
         public bool IsTemporary => _template?.isTemporary ?? false;
+        public TrainingTemplate.TrainingType Type => _template?.type ?? TrainingTemplate.TrainingType.Proficiency;
 
         public List<AvailablePart> PartsCovered => _template?.partsCovered;
 
@@ -55,16 +56,6 @@ namespace RP0.Crew
         public TrainingCourse(ConfigNode node)
         {
             Load(node);
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
 
         public void LinkTemplate()

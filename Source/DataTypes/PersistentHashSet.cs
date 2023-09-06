@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using KSPCommunityFixes.Modding;
 
 namespace RP0.DataTypes
@@ -33,7 +34,7 @@ namespace RP0.DataTypes
     /// NOTE: This does not have constraints because string is supported
     /// but string is not a valuetype
     /// </summary>
-    public class PersistentHashSetValueType<T> : HashSet<T>, IConfigNode
+    public class PersistentHashSetValueType<T> : HashSet<T>, ICloneable, IConfigNode
     {
         private readonly static System.Type _Type = typeof(T);
         private readonly static DataType _DataType = FieldData.ValueDataType(_Type);
@@ -56,7 +57,7 @@ namespace RP0.DataTypes
             }
         }
 
-        public PersistentHashSetValueType<T> Clone()
+        public object Clone()
         {
             var clone = new PersistentHashSetValueType<T>();
             foreach (var key in this)

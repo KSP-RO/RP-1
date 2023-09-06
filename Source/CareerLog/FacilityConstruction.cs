@@ -1,8 +1,9 @@
 ﻿using System;
+using RP0.DataTypes;
 
 namespace RP0
 {
-    public class FacilityConstruction : IConfigNode
+    public class FacilityConstruction : ConfigNodePersistenceBase, IConfigNode
     {
         [Persistent]
         public SpaceCenterFacility Facility;
@@ -23,16 +24,6 @@ namespace RP0
         public FacilityConstruction(ConfigNode n)
         {
             Load(n);
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

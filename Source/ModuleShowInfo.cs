@@ -123,7 +123,8 @@ namespace RP0
         [KSPField(guiName = "Z-", groupName = dragCubeGroup)] private string ZN;
         [KSPField] public float updateInterval = 0.25f;
 
-        private bool showCubeInfo = false;
+        private bool _showCubeInfo = false;
+        private WaitForSeconds _waitInstruction;
 
         public override string GetModuleDisplayName() => "Unlock Requirements";
 
@@ -149,26 +150,29 @@ namespace RP0
         public override void OnStart(StartState state)
         {
             if (HighLogic.LoadedSceneIsFlight)
+            {
+                _waitInstruction = new WaitForSeconds(updateInterval);
                 StartCoroutine(DragCubeDisplay());
+            }
         }
 
         private IEnumerator DragCubeDisplay()
         {
             while (HighLogic.LoadedSceneIsFlight)
             {
-                if (showCubeInfo != PhysicsGlobals.AeroDataDisplay)
+                if (_showCubeInfo != PhysicsGlobals.AeroDataDisplay)
                 {
-                    showCubeInfo = PhysicsGlobals.AeroDataDisplay;
-                    Fields[nameof(XP)].guiActive = showCubeInfo;
-                    Fields[nameof(XN)].guiActive = showCubeInfo;
-                    Fields[nameof(YP)].guiActive = showCubeInfo;
-                    Fields[nameof(YN)].guiActive = showCubeInfo;
-                    Fields[nameof(ZP)].guiActive = showCubeInfo;
-                    Fields[nameof(ZN)].guiActive = showCubeInfo;
+                    _showCubeInfo = PhysicsGlobals.AeroDataDisplay;
+                    Fields[nameof(XP)].guiActive = _showCubeInfo;
+                    Fields[nameof(XN)].guiActive = _showCubeInfo;
+                    Fields[nameof(YP)].guiActive = _showCubeInfo;
+                    Fields[nameof(YN)].guiActive = _showCubeInfo;
+                    Fields[nameof(ZP)].guiActive = _showCubeInfo;
+                    Fields[nameof(ZN)].guiActive = _showCubeInfo;
                 }
-                if (showCubeInfo)
+                if (_showCubeInfo)
                     BuildCubeData();
-                yield return new WaitForSeconds(updateInterval);
+                yield return _waitInstruction;
             }
         }
 

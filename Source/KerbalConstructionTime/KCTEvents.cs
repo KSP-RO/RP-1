@@ -29,6 +29,7 @@ namespace KerbalConstructionTime
         public static EventData<LCConstruction, LCItem> OnLCConstructionComplete;
         public static EventData<LCItem> OnLCDismantled;
         public static EventVoid OnPersonnelChange;
+        public static EventVoid OnRecalculateBuildRates;
 
         // Multiplier events
         // Using the first arg as a shared return value since these are voids.
@@ -40,7 +41,7 @@ namespace KerbalConstructionTime
         /// <summary>
         /// Rate, tags, resource amounts, part name
         /// </summary>
-        public static EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>, string> ApplyPartEffectiveCostMultiplier;
+        public static EventData<Boxed<double>, IEnumerable<string>> ApplyPartEffectiveCostMultiplier;
 
         /// <summary>
         /// Rate, tags, resource amounts
@@ -118,9 +119,10 @@ namespace KerbalConstructionTime
             OnLCConstructionComplete = new EventData<LCConstruction, LCItem>("OnKctLCConstructionComplete");
             OnLCDismantled = new EventData<LCItem>("OnKctLCDismantled");
             OnPersonnelChange = new EventVoid("OnKctPesonnelChange");
+            OnRecalculateBuildRates = new EventVoid("OnKctRecalculateBuildRates");
 
             ApplyResearchRateMultiplier = new EventData<Boxed<double>, NodeType, string>("ApplyResearchRateMultiplier");
-            ApplyPartEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>, string>("ApplyPartEffectiveCostMultiplier");
+            ApplyPartEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>>("ApplyPartEffectiveCostMultiplier");
             ApplyGlobalEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>>("ApplyGlobalEffectiveCostMultiplier");
 
             CreatedEvents = true;

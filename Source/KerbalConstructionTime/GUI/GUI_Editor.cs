@@ -53,7 +53,7 @@ namespace KerbalConstructionTime
         private static void RenderBuildMode()
         {
             double buildPoints = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
-            BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            double bpLeaderEffect = KerbalConstructionTime.Instance.EditorVessel.LeaderEffect;
             double rateWithCurEngis = Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
@@ -65,7 +65,7 @@ namespace KerbalConstructionTime
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                double buildTime = buildPoints / bR;
+                double buildTime = buildPoints / (bR * bpLeaderEffect);
                 GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")}");
 
                 if (KCTGameStates.EditorRolloutBP > 0)
@@ -307,7 +307,7 @@ namespace KerbalConstructionTime
         {
             BuildListVessel editedVessel = KerbalConstructionTimeData.Instance.EditedVessel;
             double fullVesselBP = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
-
+            double bpLeaderEffect = KerbalConstructionTime.Instance.EditorVessel.LeaderEffect;
             Utilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
@@ -319,7 +319,7 @@ namespace KerbalConstructionTime
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(fullVesselBP - newProgressBP) / bR, 0, false));
+                GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(fullVesselBP - newProgressBP) / (bR * bpLeaderEffect), 0, false));
 
                 if (KCTGameStates.EditorRolloutBP > 0)
                 {

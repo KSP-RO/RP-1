@@ -424,8 +424,6 @@ namespace KerbalConstructionTime
         public Dictionary<string, double> Part_Variables = new Dictionary<string, double>();
         public Dictionary<string, double> Resource_Variables = new Dictionary<string, double>();
 
-        public Dictionary<string, double> Global_Variables = new Dictionary<string, double>();
-
         private ConfigNode DictionaryToNode(Dictionary<string, double> theDict, string nodeName)
         {
             var node = new ConfigNode(nodeName);
@@ -453,7 +451,6 @@ namespace KerbalConstructionTime
             var node = new ConfigNode("KCT_Preset_Part_Variables");
             node.AddNode(DictionaryToNode(Part_Variables, "Part_Variables"));
             node.AddNode(DictionaryToNode(Resource_Variables, "Resource_Variables"));
-            node.AddNode(DictionaryToNode(Global_Variables, "Global_Variables"));
 
             return node;
         }
@@ -462,14 +459,11 @@ namespace KerbalConstructionTime
         {
             Part_Variables.Clear();
             Resource_Variables.Clear();
-            Global_Variables.Clear();
 
             if (node.HasNode("Part_Variables"))
                 Part_Variables = NodeToDictionary(node.GetNode("Part_Variables"));
             if (node.HasNode("Resource_Variables"))
                 Resource_Variables = NodeToDictionary(node.GetNode("Resource_Variables"));
-            if (node.HasNode("Global_Variables"))
-                Global_Variables = NodeToDictionary(node.GetNode("Global_Variables"));
         }
 
         public double GetPartVariable(string partName)
@@ -506,8 +500,6 @@ namespace KerbalConstructionTime
         //These are all multiplied in case multiple variables exist on one part
         public double GetResourceVariablesMult(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
 
-        public double GetGlobalVariablesMult(IEnumerable<string> moduleNames) => GetValueModifier(Global_Variables, moduleNames);
-
         public double GetResourceVariablesMult(PartResourceList resources)
         {
             double value = 1.0;
@@ -524,24 +516,6 @@ namespace KerbalConstructionTime
             if (Resource_Variables.TryGetValue(resName, out double m))
                 return m;
             return 1d;
-        }
-
-        public void SetGlobalVariables(HashSet<string> variables, PartModuleList modules)
-        {
-            foreach (PartModule mod in modules)
-            {
-                if (Global_Variables.ContainsKey(mod.moduleName))
-                    variables.Add(mod.moduleName);
-            }
-        }
-
-        public void SetGlobalVariables(HashSet<string> variables, List<string> moduleNames)
-        {
-            foreach (var name in moduleNames)
-            {
-                if (Global_Variables.ContainsKey(name))
-                    variables.Add(name);
-            }
         }
     }
 }

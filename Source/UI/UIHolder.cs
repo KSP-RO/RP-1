@@ -35,6 +35,8 @@ namespace RP0
 
         protected void OnDestroy()
         {
+            _tw.Destroy();
+            _tw = null;
             GameEvents.onGUIApplicationLauncherReady.Remove(OnGuiAppLauncherReady);
             GameEvents.onGameSceneLoadRequested.Remove(OnSceneChange);
             if (_button != null)

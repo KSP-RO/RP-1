@@ -54,7 +54,7 @@ namespace RP0.Harmony
                 node.AddValue("name", p.name);
                 node.AddValue("department", "Programs");
                 node.AddValue("title", p.title);
-                node.AddValue("desc", p.description);
+                node.AddValue("desc", p.description ?? string.Empty);
                 if (!string.IsNullOrEmpty(p.icon))
                 {
                     node.AddValue("icon", p.icon);

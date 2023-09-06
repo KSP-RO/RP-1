@@ -50,5 +50,23 @@ namespace RP0.Harmony
             ___stormFrequency = stormFreq;
             ___stormRadiation = stormRad;
         }
+
+        [HarmonyPatch]
+        internal class PatchKerbalism_CrewSpecs
+        {
+            static MethodBase TargetMethod() => AccessTools.TypeByName("KERBALISM.CrewSpecs").GetMethod("Check", new Type[] { typeof(ProtoCrewMember) });
+
+            [HarmonyPrefix]
+            internal static bool Prefix_Check(ProtoCrewMember c, ref bool __result)
+            {
+                if (c.type == ProtoCrewMember.KerbalType.Tourist)
+                {
+                    __result = false;
+                    return false;
+                }
+
+                return true;
+            }
+        }
     }
 }

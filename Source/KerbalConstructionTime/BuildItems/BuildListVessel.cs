@@ -1,5 +1,4 @@
 ﻿using KSP.UI;
-using PreFlightTests;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -9,13 +8,39 @@ using UnityEngine.Profiling;
 
 namespace KerbalConstructionTime
 {
-    public class BuildListVessel : IKCTBuildItem, IConfigNode
+    public class BuildListVessel : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
     {
         public enum ClampsState
         {
             Untested,
             NoClamps,
             HasClamps,
+        }
+
+        public class TagsToEC: ConfigNodePersistenceBase, ICloneable
+        {
+            [Persistent] public PersistentListValueType<string> tags = new PersistentListValueType<string>();
+            [Persistent] public double ec;
+
+            public bool SameTags(List<string> b)
+            {
+                int iC = tags.Count;
+                if (b.Count != iC)
+                    return false;
+                for (int i = iC; i-- > 0;)
+                    if (tags[i] != b[i])
+                        return false;
+
+                return true;
+            }
+
+            public object Clone()
+            {
+                var ret = new TagsToEC();
+                ret.tags.AddRange(tags);
+                ret.ec = ec;
+                return ret;
+            }
         }
 
         public enum ListType { None, VAB, SPH, TechNode, Reconditioning, KSC, AirLaunch, Crew };
@@ -75,6 +100,8 @@ namespace KerbalConstructionTime
         [Persistent]
         public PersistentHashSetValueType<string> globalTags = new PersistentHashSetValueType<string>();
         [Persistent]
+        public PersistentList<TagsToEC> tagEffectiveCosts = new PersistentList<TagsToEC>();
+        [Persistent]
         private bool tanksFull = true;
         [Persistent]
         private bool isCrewable = false;
@@ -85,6 +112,8 @@ namespace KerbalConstructionTime
 
         public string LandedAt = "";
         private double _buildRate = -1d;
+        private double _leaderEffect = -1d;
+        public double LeaderEffect => _leaderEffect < 0 ? UpdateLeaderEffect() : _leaderEffect;
 
         internal ShipConstruct _ship;
 
@@ -178,7 +207,7 @@ namespace KerbalConstructionTime
 
         public BuildListVessel(ShipConstruct s, string ls, string flagURL, bool storeConstruct)
         {
-            Profiler.BeginSample("BuildListVessel ctor");
+            Profiler.BeginSample("RP0BuildListVessel ctor");
             _ship = s;
             CacheClamps(s.parts);
 
@@ -203,7 +232,7 @@ namespace KerbalConstructionTime
             numStageParts = 0;
             stagePartCost = 0d;
 
-            Profiler.BeginSample("StageCosts");
+            Profiler.BeginSample("RP0StageCosts");
             foreach (Part p in s.Parts)
             {
                 if (p.stagingOn)
@@ -377,7 +406,7 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            Profiler.BeginSample("SaveShip");
+            Profiler.BeginSample("RP0SaveShip");
             ShipNodeCompressed.Node = s.SaveShip();
             Profiler.EndSample();
             ShipNodeCompressed.Node.SetValue("size", KSPUtil.WriteVector(ShipSize));
@@ -466,9 +495,10 @@ namespace KerbalConstructionTime
             BuildListVessel ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated);
             ret._lc = _lc;
             ret._lcID = _lcID;
-            ret.globalTags = globalTags.Clone();
-            ret.partNames = partNames.Clone();
-            ret.resourceAmounts = resourceAmounts.Clone();
+            ret.globalTags = globalTags.Clone() as PersistentHashSetValueType<string>;
+            ret.tagEffectiveCosts = tagEffectiveCosts.Clone() as PersistentList<TagsToEC>;
+            ret.partNames = partNames.Clone() as PersistentHashSetValueType<string>;
+            ret.resourceAmounts = resourceAmounts.Clone() as PersistentDictionaryValueTypes<string, double>;
             if (ShipNodeCompressed.IsEmpty)
                 ret.StoreShipConstruct(EditorLogic.fetch?.ship);
             else
@@ -665,7 +695,7 @@ namespace KerbalConstructionTime
 
         private void CacheClamps(List<Part> parts)
         {
-            Profiler.BeginSample("CacheClamps");
+            Profiler.BeginSample("RP0CacheClamps");
             clampState = ClampsState.NoClamps;
 
             foreach (var p in parts)
@@ -699,7 +729,7 @@ namespace KerbalConstructionTime
 
         private bool AreTanksFull(List<Part> parts)
         {
-            Profiler.BeginSample("AreTanksFull");
+            Profiler.BeginSample("RP0AreTanksFull");
             foreach (var p in parts)
             {
                 foreach (var r in p.Resources)
@@ -738,7 +768,7 @@ namespace KerbalConstructionTime
 
         private void StorePartNames(List<Part> parts)
         {
-            Profiler.BeginSample("StorePartNames");
+            Profiler.BeginSample("RP0StorePartNames");
             partNames.Clear();
             foreach (var p in parts)
                 partNames.Add(p.partInfo.name);
@@ -956,9 +986,10 @@ namespace KerbalConstructionTime
 
         public double GetEffectiveCost(List<Part> parts)
         {
-            Profiler.BeginSample("GetEffectiveCost");
+            Profiler.BeginSample("RP0GetEffectiveCost");
             resourceAmounts.Clear();
             globalTags.Clear();
+            tagEffectiveCosts.Clear();
             double totalEffectiveCost = 0;
             foreach (Part p in parts)
             {
@@ -966,7 +997,7 @@ namespace KerbalConstructionTime
             }
             totalEffectiveCost += GetResourceEffectiveCost();
 
-            double globalMultiplier = ApplyGlobalCostModifiers() * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
+            double globalMultiplier = ApplyGlobalCostModifiers();
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
@@ -978,6 +1009,7 @@ namespace KerbalConstructionTime
         {
             resourceAmounts.Clear();
             globalTags.Clear();
+            tagEffectiveCosts.Clear();
             double totalEffectiveCost = 0;
             foreach (ConfigNode p in parts)
             {
@@ -985,7 +1017,7 @@ namespace KerbalConstructionTime
             }
             totalEffectiveCost += GetResourceEffectiveCost();
 
-            double globalMultiplier = ApplyGlobalCostModifiers() * RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
+            double globalMultiplier = ApplyGlobalCostModifiers();
             double multipliedCost = totalEffectiveCost * globalMultiplier;
             KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
@@ -1011,7 +1043,7 @@ namespace KerbalConstructionTime
         }
 
         private static Dictionary<string, double> _tempResourceAmounts = new Dictionary<string, double>();
-        private static HashSet<string> _tempTags = new HashSet<string>();
+        private static List<string> _tempTags = null;
 
         private double GetEffectiveCostInternal(object o)
         {
@@ -1050,11 +1082,8 @@ namespace KerbalConstructionTime
                 }
             }
 
-            GatherGlobalModifiers(_tempTags, partRef);
-            foreach (var s in _tempTags)
-                globalTags.Add(s);
-
-            double moduleMultiplier = ApplyModuleCostModifiers(_tempTags, partRef);
+            // TODO: Add support for upgraded tags here
+            double moduleMultiplier = FindApplyTags(partRef);
 
             foreach (var kvp in _tempResourceAmounts)
             {
@@ -1062,10 +1091,8 @@ namespace KerbalConstructionTime
                 amt += kvp.Value;
                 resourceAmounts[kvp.Key] = amt;
             }
-
             
             double effectiveCost = partMultiplier * resourceMultiplier * moduleMultiplier * cost;
-            effectiveCost *= RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(_tempTags, _tempResourceAmounts, name);
 
             if (HighLogic.LoadedSceneIsEditor)
             {
@@ -1103,27 +1130,40 @@ namespace KerbalConstructionTime
             if (effectiveCost < 0)
                 effectiveCost = 0;
 
+            UpdateTagECs(effectiveCost);
+
             KCTDebug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
 
-            _tempTags.Clear();
+            _tempTags = null;
             _tempResourceAmounts.Clear();
 
             return effectiveCost;
         }
 
-        public static void GatherGlobalModifiers(HashSet<string> modifiers, Part p)
+        private void UpdateTagECs(double ec)
         {
-            PresetManager.Instance.ActivePreset.PartVariables.SetGlobalVariables(modifiers, p.Modules);
-            if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
-                foreach (var x in pm.tags)
-                    if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod) && mod.globalMult != 1)
-                        modifiers.Add(mod.name);
+            if (_tempTags == null)
+                return;
+
+            foreach (var t in tagEffectiveCosts)
+            {
+                if (!t.SameTags(_tempTags))
+                    continue;
+
+                t.ec += ec;
+                return;
+            }
+
+            var holder = new TagsToEC();
+            holder.tags.AddRange(_tempTags);
+            holder.ec = ec;
+            tagEffectiveCosts.Add(holder);
         }
 
         public double ApplyGlobalCostModifiers()
         {
             humanRated = false;
-            double costMod = PresetManager.Instance.ActivePreset.PartVariables.GetGlobalVariablesMult(globalTags);
+            double costMod = 1d;
             foreach (var x in globalTags)
             {
                 if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
@@ -1135,16 +1175,20 @@ namespace KerbalConstructionTime
             return costMod;
         }
 
-        public static double ApplyModuleCostModifiers(HashSet<string> modifiers, Part p)
+        private double FindApplyTags(Part p)
         {
             double mult = 1;
             if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
             {
+                _tempTags = pm.tags;
                 foreach (var x in pm.tags)
                 {
-                    modifiers.Add(x);
                     if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                    {
                         mult *= mod.partMult;
+                        if (mod.globalMult != 1d)
+                            globalTags.Add(mod.name);
+                    }
                 }
             }
             return mult;
@@ -1168,12 +1212,30 @@ namespace KerbalConstructionTime
 
         public double GetBuildRate() => BuildRate;
 
+        public double UpdateLeaderEffect()
+        {
+            double modifiedEC = effectiveCost;
+            double globalMult = ApplyGlobalCostModifiers();
+            foreach (var t in tagEffectiveCosts)
+            {
+                double ec = t.ec * RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(t.tags);
+                modifiedEC += (ec - t.ec) * globalMult;
+            }
+            modifiedEC *= RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
+            double modifiedBP = Formula.GetVesselBuildPoints(modifiedEC);
+            if (modifiedBP < 1d)
+                modifiedBP = 1d;
+
+            _leaderEffect = buildPoints / modifiedBP;
+            return _leaderEffect;
+        }
+
         public double UpdateBuildRate()
         {
             if (LC == null)
                 return 0d;
 
-            _buildRate = Utilities.GetBuildRate(this) * LC.StrategyRateMultiplier;
+            _buildRate = Utilities.GetBuildRate(this) * LC.StrategyRateMultiplier * UpdateLeaderEffect();
             if (_buildRate < 0d)
                 _buildRate = 0d;
 
@@ -1261,16 +1323,6 @@ namespace KerbalConstructionTime
             ReleaseShipNode();
 
             return sc;
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
 
         public void LinkToLC(LCItem lc)

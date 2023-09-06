@@ -23,7 +23,8 @@ namespace RP0.Leaders
         [Persistent]
         private PersistentDictionaryValueTypes<string, double> resources = new PersistentDictionaryValueTypes<string, double>();
 
-        // DO NOT set both of these.
+        // DO NOT set both of these!
+        // And resources can be used only in the Vessel case!
 
         [Persistent]
         private bool appliesToParts = false;
@@ -34,6 +35,16 @@ namespace RP0.Leaders
         public IntegrationRateModifier(Strategy parent)
             : base(parent)
         {
+        }
+
+        public override void OnLoad(ConfigNode node)
+        {
+            base.OnLoad(node);
+            if (appliesToParts && appliesToVessel)
+                Debug.LogError("[RP-0] Tried to load IntegrationRateModifier but it applies to both parts and the vessel. Node:\n" + node.ToString());
+
+            if(appliesToParts && resources.Count > 0)
+                Debug.LogError("[RP-0] Tried to load IntegrationRateModifier but it applies to parts and has resources defined. Node:\n" + node.ToString());
         }
 
         protected override string DescriptionString()
@@ -59,7 +70,7 @@ namespace RP0.Leaders
                 KCTEvents.ApplyGlobalEffectiveCostMultiplier.Remove(OnEffectQuery);
         }
 
-        protected void OnEffectQueryParts(Boxed<double> rate, IEnumerable<string> tags, Dictionary<string, double> resources, string partName) => OnEffectQuery(rate, tags, resources);
+        protected void OnEffectQueryParts(Boxed<double> rate, IEnumerable<string> tags) => OnEffectQuery(rate, tags, null);
 
         protected void OnEffectQuery(Boxed<double> rate, IEnumerable<string> tags, Dictionary<string, double> resources)
         {
@@ -73,7 +84,7 @@ namespace RP0.Leaders
                 }
             }
 
-            if (!found)
+            if (!found && resources != null)
             {
                 foreach (var kvp in resources)
                 {

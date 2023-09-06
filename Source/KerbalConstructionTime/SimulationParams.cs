@@ -1,8 +1,9 @@
 ﻿using UniLinq;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public class SimulationParams : IConfigNode
+    public class SimulationParams : ConfigNodePersistenceBase, IConfigNode
     {
         public CelestialBody SimulationBody
         {
@@ -38,16 +39,6 @@ namespace KerbalConstructionTime
         public void Reset()
         {
             IsVesselMoved = false;
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

@@ -47,6 +47,13 @@ namespace RP0
 
         protected virtual void OnStart() { }
 
+        internal void Destroy()
+        {
+            OnDestroy();
+        }
+
+        protected virtual void OnDestroy() { }
+
         protected bool ShouldShowTab(UITab tab)
         {
             switch (tab)

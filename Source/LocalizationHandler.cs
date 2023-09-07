@@ -121,22 +121,33 @@ namespace RP0
             }
             else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
             {
-                if (PresetManager.Instance != null)
+                /*if (PresetManager.Instance != null)
                 {
-                    int limit = PresetManager.Instance.ActivePreset.ResearcherCaps[lvlIdx];
+                    int limit = PresetManager.Instance.ActivePreset.GetResearcherCap(lvlIdx);
                     lvl.levelStats.textBase += $"\n{Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit", (limit == -1 ? Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited") : limit.ToString("N0")))}";
-                }
+                }*/
+                lvl.levelStats.textBase = $"{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_RnD")}\n{Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit", Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited"))}";
             }
             else if (facilityType == SpaceCenterFacility.AstronautComplex)
             {
-                double rrMult = Crew.CrewHandler.RnRMultiplierFromACLevel(fracLevel);
-                double trainingTimeMult = 1d / Crew.TrainingCourse.FacilityTrainingRate(fracLevel);
-
+                double rrMult = Crew.CrewHandler.Settings.ACRnRMults[lvlIdx];
+                double trainingRate = Crew.CrewHandler.Settings.ACTrainingRates[lvlIdx];
+                lvl.levelStats.textBase = "[EVA]\n[EVAFlags]";
                 if (rrMult != 1d)
                     lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_RnR", FormatRatioAsPercent(rrMult))}";
 
-                if (trainingTimeMult != 1d)
-                    lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_Training", FormatRatioAsPercent(trainingTimeMult))}";
+                if (trainingRate != 1d)
+                    lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_TrainingRate", FormatRatioAsPercent(trainingRate))}";
+
+                foreach (var kvp in Crew.CrewHandler.Settings.ACLevelsForTraining)
+                {
+                    if (kvp.Value == lvlIdx)
+                    {
+                        lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_TrainingAvailable", Localizer.Format($"#rp0_TrainingType_{kvp.Key}"))}";
+                        break;
+                    }
+                }
+                lvl.levelStats.textBase += "\n[#autoLOC_6002236] [CrewCount] [#autoLOC_6002237]";
             }
             else if (facilityType == SpaceCenterFacility.TrackingStation)
             {

@@ -260,7 +260,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Max:", GUILayout.Width(90));
-            int resLimit = PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)];
+            int resLimit = PresetManager.Instance.ActivePreset.GetResearcherCap();
             string resLimitStr = resLimit >= 0 ? resLimit.ToString("N0") : "Unlimited";
             GUILayout.Label(resLimitStr, GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -298,7 +298,7 @@ namespace KerbalConstructionTime
 
             
             GUILayout.BeginHorizontal();
-            const string researcherEfficTooltip = "Researching new Electronics Research nodes will increase this";
+            const string researcherEfficTooltip = "Researching new Electronics Research nodes and gathering more science will increase this";
             GUILayout.Label(new GUIContent("Efficiency:", researcherEfficTooltip));
             GUILayout.Label(new GUIContent($"{efficiency:P1}", researcherEfficTooltip), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -365,7 +365,7 @@ namespace KerbalConstructionTime
 
                 if (research)
                 {
-                    int maxRes = PresetManager.Instance.ActivePreset.ResearcherCaps[Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment)];
+                    int maxRes = PresetManager.Instance.ActivePreset.GetResearcherCap();
                     if (maxRes < 0)
                         maxRes = int.MaxValue;
 

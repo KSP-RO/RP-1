@@ -119,14 +119,14 @@ namespace KerbalConstructionTime
             HashSet<string> ignoredRes;
             if (lcType == LaunchComplexType.Pad)
             {
-                ignoredRes = GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+                ignoredRes = Database.PadIgnoreRes;
 
                 double mass = massMax;
                 costPad = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2500d) + 500d;
             }
             else
             {
-                ignoredRes = GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes;
+                ignoredRes = Database.HangarIgnoreRes;
 
                 costPad = 0f;
                 padSize.y *= 5f;

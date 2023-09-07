@@ -192,7 +192,7 @@ namespace KerbalConstructionTime
                         KCT_GUI.ToggleVisibility(KCT_GUI.GUIStates.ShowBuildList);
                     }
                     KCT_GUI.GUIStates.ShowFirstRun = shouldStart;
-                    StartCoroutine(UpdateActiveLPLevel());
+                    StartCoroutine(UpdateFacilityLevels());
                     break;
                 case GameScenes.TRACKSTATION:
                     KCTGameStates.ClearVesselEditMode();
@@ -432,7 +432,9 @@ namespace KerbalConstructionTime
         }
 
         // Ran every 30 FixedUpdates, which we will treat as 0.5 seconds for now.
-        private IEnumerator UpdateActiveLPLevel()
+        // First we update locked buildings, then we loop on pad.
+        // FIXME we could do this on event, but sometimes things get hinky.
+        private IEnumerator UpdateFacilityLevels()
         {
             // Only run during Space Center in career mode
             // Also need to wait a bunch of frames until KSP has initialized Upgradable and Destructible facilities
@@ -442,7 +444,12 @@ namespace KerbalConstructionTime
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
 
-            while (HighLogic.LoadedScene == GameScenes.SPACECENTER && Utilities.CurrentGameIsCareer())
+            if (HighLogic.LoadedScene != GameScenes.SPACECENTER || !Utilities.CurrentGameIsCareer())
+                yield break;
+
+            FacilityUpgrade.UpgradeLockedFacilities();
+
+            while (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
                 if (KCTGameStates.ActiveKSC?.ActiveLaunchComplexInstance?.ActiveLPInstance is KCT_LaunchPad pad)
                 {
@@ -756,7 +763,7 @@ namespace KerbalConstructionTime
                     foreach (var ksc in KCTGameStates.KSCs)
                         ksc.EnsureStartingLaunchComplexes();
 
-                    KerbalConstructionTimeData.Instance.Applicants = PresetManager.Instance.StartingPersonnel(HighLogic.CurrentGame.Mode);
+                    KerbalConstructionTimeData.Instance.Applicants = PresetManager.Instance.GetStartingPersonnel(HighLogic.CurrentGame.Mode);
                 }
                 else if (KerbalConstructionTimeData.Instance.FirstRunNotComplete)
                 {

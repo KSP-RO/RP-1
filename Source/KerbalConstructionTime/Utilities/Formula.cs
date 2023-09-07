@@ -216,10 +216,10 @@ namespace KerbalConstructionTime
             const double rfTankCostPerLMultiplier = 10d;
             const double modifyMultiplier = 0.6d;
 
-            HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+            HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? Database.HangarIgnoreRes : Database.PadIgnoreRes;
 
             if (ignoredRes.Contains(res)
-                || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res))
+                || !Database.ValidFuelRes.Contains(res))
                 return 0d;
 
             if (def.tankList.TryGetValue(res, out var tank) && PartResourceLibrary.Instance.GetDefinition(res) is PartResourceDefinition resDef)
@@ -342,8 +342,8 @@ namespace KerbalConstructionTime
             var def = TankDefSMIV;
             foreach (string key in _resourceKeys)
             {
-                if (GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Contains(key)
-                    || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(key))
+                if (Database.PadIgnoreRes.Contains(key)
+                    || !Database.ValidFuelRes.Contains(key))
                     continue;
 
                 ourStats.resourcesHandled.TryGetValue(key, out double ours);

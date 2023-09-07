@@ -33,7 +33,20 @@ namespace RP0.Crew
         }
 
         public static CrewHandler Instance { get; private set; } = null;
-        public static CrewHandlerSettings Settings { get; private set; } = null;
+        private static CrewHandlerSettings _settings = null;
+        public static CrewHandlerSettings Settings
+        {
+            get
+            {
+                if (_settings == null)
+                {
+                    _settings = new CrewHandlerSettings();
+                    foreach (ConfigNode stg in GameDatabase.Instance.GetConfigNodes("CREWHANDLERSETTINGS"))
+                        Settings.Load(stg);
+                }
+                return _settings;
+            }
+        }
 
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = -1;
@@ -143,13 +156,6 @@ namespace RP0.Crew
             GameEvents.OnPartPurchased.Add(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
-
-            if (Settings == null)
-            {
-                Settings = new CrewHandlerSettings();
-                foreach (ConfigNode stg in GameDatabase.Instance.GetConfigNodes("CREWHANDLERSETTINGS"))
-                    Settings.Load(stg);
-            }
 
             TrainingDatabase.EnsureInitialized();
         }
@@ -491,7 +497,7 @@ namespace RP0.Crew
             };
 
 
-            double acMult = RnRMultiplierFromACLevel(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex));
+            double acMult = Settings.ACRnRMults[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             var allFlightsDict = new Dictionary<string, int>();
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {
@@ -605,13 +611,13 @@ namespace RP0.Crew
         private bool TryGetBestSituationMatch(string body, string situation, string type, out double situationMult)
         {
             var key = $"{body}-{situation}-{type}";
-            if (Settings.situationValues.TryGetValue(key, out situationMult))
+            if (Settings.SituationValues.TryGetValue(key, out situationMult))
                 return true;
 
             if (body != FlightGlobals.GetHomeBodyName())
             {
                 key = $"Other-{situation}-{type}";
-                if (Settings.situationValues.TryGetValue(key, out situationMult))
+                if (Settings.SituationValues.TryGetValue(key, out situationMult))
                     return true;
             }
 
@@ -1110,8 +1116,6 @@ namespace RP0.Crew
         {
             entry.type = "expired_" + entry.type;
         }
-
-        public static double RnRMultiplierFromACLevel(double fracLevel) => 1d - fracLevel * 0.5d;
 
         public void RecalculateBuildRates()
         {

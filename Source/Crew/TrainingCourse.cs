@@ -274,12 +274,10 @@ namespace RP0.Crew
             return Completed;
         }
 
-        public static double FacilityTrainingRate(double fracLevel) => 1d / (1d - fracLevel * 0.5);
-
         public static double CalculateBuildRate()
         {
             double r = 1d;
-            r *= FacilityTrainingRate(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex));
+            r *= CrewHandler.Settings.ACTrainingRates[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             r *= CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
             return r;
         }

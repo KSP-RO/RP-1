@@ -13,6 +13,7 @@ namespace RP0.Crew
         private readonly Dictionary<ProtoCrewMember, TrainingCourse> _activeMap = new Dictionary<ProtoCrewMember, TrainingCourse>();
         private Vector2 _courseSelectorScroll = new Vector2();
         private GUIStyle _courseBtnStyle = null;
+        private GUIStyle _courseBtnUnavailStyle = null;
         private GUIStyle _tempCourseLblStyle = null;
         private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/KACIcon15", false), "Add alarm");
         private bool _showAllTrainings = false;
@@ -197,9 +198,16 @@ namespace RP0.Crew
                 _courseBtnStyle.normal.textColor = Color.yellow;
             }
 
+            if (_courseBtnUnavailStyle == null)
+            {
+                _courseBtnUnavailStyle = new GUIStyle(HighLogic.Skin.button);
+                _courseBtnUnavailStyle.normal.textColor = XKCDColors.BrightOrange;
+            }
+
             _courseSelectorScroll = GUILayout.BeginScrollView(_courseSelectorScroll, GUILayout.Width(505), GUILayout.Height(430));
             try
             {
+                int acLevel = KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
                 foreach (TrainingTemplate course in CrewHandler.Instance.TrainingTemplates)
                 {
                     // Mission trainings are only available for purchased parts
@@ -209,10 +217,28 @@ namespace RP0.Crew
                     if (!_showAllTrainings && course.isTemporary && course.IsUnlocked)
                         continue;
 
-                    var style = course.isTemporary ? _courseBtnStyle : HighLogic.Skin.button;
-                    var c = new GUIContent(course.name, course.PartsTooltip);
+                    int reqLevel = course.ACLevelRequirement;
+                    bool isLocked = reqLevel > acLevel;
+                    var style = isLocked ? _courseBtnUnavailStyle : (course.isTemporary ? _courseBtnStyle : HighLogic.Skin.button);
+                    var c = new GUIContent(course.name, isLocked ? $"Requires level {reqLevel + 1} AC.\n{course.PartsTooltip}" : course.PartsTooltip);
                     if (GUILayout.Button(c, style))
-                        _selectedCourse = new TrainingCourse(course);
+                    {
+                        if (isLocked)
+                        {
+                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         "CourseLocked",
+                                         "Upgrade Astronaut Complex",
+                                         $"This training requires an Astronaut Complex of level {reqLevel + 1} or higher. Upgrade the Astronaut Complex.",
+                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
+                                         false,
+                                         HighLogic.UISkin);
+                        }
+                        else
+                        {
+                            _selectedCourse = new TrainingCourse(course);
+                        }
+                    }
                 }
             }
             catch (Exception ex)

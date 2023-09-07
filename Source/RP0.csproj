@@ -194,6 +194,7 @@
     <Compile Include="Tooling\ModuleToolingPTank.cs" />
     <Compile Include="UI\TooltipController_TextFunc.cs" />
     <Compile Include="UpgradeScripts\v2_14_RemovePayload.cs" />
+    <Compile Include="UpgradeScripts\v3_0_ACRnD.cs" />
     <Compile Include="UpgradeScripts\v2_8_1_RP0CrewScience.cs" />
     <Compile Include="UpgradeScripts\v2_4_AdminLevels.cs" />
     <Compile Include="UpgradeScripts\v2_3_UpgradeUnlockCredit.cs" />

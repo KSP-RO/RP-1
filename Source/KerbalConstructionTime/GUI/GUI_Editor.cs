@@ -392,7 +392,7 @@ namespace KerbalConstructionTime
                     {
                         foreach (PartResource rsc in p.Resources)
                         {
-                            if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(rsc.resourceName) && rsc.flowState)
+                            if (Database.ValidFuelRes.Contains(rsc.resourceName) && rsc.flowState)
                             {
                                 rsc.amount = rsc.maxAmount;
                             }
@@ -402,7 +402,7 @@ namespace KerbalConstructionTime
                     {
                         foreach (PartResource rsc in p.Resources)
                         {
-                            if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(rsc.resourceName) && rsc.flowState)
+                            if (Database.ValidFuelRes.Contains(rsc.resourceName) && rsc.flowState)
                             {
                                 PartResource templateRsc = p.partInfo.partPrefab.Resources.FirstOrDefault(r => r.resourceName == rsc.resourceName);
                                 if (templateRsc != null)

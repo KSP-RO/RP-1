@@ -1831,6 +1831,74 @@ namespace KerbalConstructionTime
 
             return value.facilityRefs[0].facilityLevel;
         }
+
+        public static string ToCommaString<T>(this List<T> list)
+        {
+            if (list.Count == 0)
+                return string.Empty;
+
+            var sb = StringBuilderCache.Acquire();
+            sb.Append(list[0].ToString());
+            for(int i = 1, iC = list.Count; i < iC; ++i)
+                sb.Append(", " + list[i].ToString());
+
+            return sb.ToStringAndRelease();
+        }
+
+        /// <summary>
+        /// NOTE: Must be used only on value-type lists
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="list"></param>
+        /// <param name="str"></param>
+        public static void FromCommaString<T>(this List<T> list, string str)
+        {
+            System.Type type = typeof(T);
+            KSPCommunityFixes.Modding.DataType dataType = KSPCommunityFixes.Modding.FieldData.ValueDataType(type);
+            
+            list.Clear();
+            var split = str.Split(',');
+            foreach (var s in split)
+            {
+                string s2 = s.Trim();
+                if (s2.Length == 0)
+                    continue;
+                list.Add((T)KSPCommunityFixes.Modding.FieldData.ReadValue(s2, dataType, type));
+            }
+        }
+
+        public static double SumThrough(this List<double> list, int idx)
+        {
+            double sum = 0d;
+            for (int i = idx + 1; i-- > 0;)
+            {
+                sum += list[i];
+            }
+
+            return sum;
+        }
+
+        public static float SumThrough(this List<float> list, int idx)
+        {
+            float sum = 0f;
+            for (int i = idx + 1; i-- > 0;)
+            {
+                sum += list[i];
+            }
+
+            return sum;
+        }
+
+        public static int SumThrough(this List<int> list, int idx)
+        {
+            int sum = 0;
+            for (int i = idx + 1; i-- > 0;)
+            {
+                sum += list[i];
+            }
+
+            return sum;
+        }
     }
 }
 

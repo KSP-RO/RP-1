@@ -49,8 +49,8 @@ namespace RP0.UpgradeScripts
     [UpgradeModule(LoadContext.SFS, sfsNodeUrl = "GAME/SCENARIO/KSCs/KSCItem/FacilityUpgrades/FacilityUpgrade")]
     public class v2_4_AdminLevelsKCT : UpgradeScript
     {
-        public override string Name { get => "RP-1 Admin Building Levels Upgrader"; }
-        public override string Description { get => "Updates admin building level"; }
+        public override string Name { get => "RP-1 Admin Building Levels Construction Upgrader"; }
+        public override string Description { get => "Updates admin building level in constructions"; }
         public override Version EarliestCompatibleVersion { get => new Version(2, 0, 0); }
         protected static Version _targetVersion = new Version(2, 4, 0);
         public override Version TargetVersion => _targetVersion;

@@ -53,6 +53,17 @@ namespace RP0.Crew
             }
         }
 
+        public int ACLevelRequirement
+        {
+            get
+            {
+                if (type == TrainingType.Mission)
+                    return 0;
+
+                return TrainingDatabase.GetACRequirement(training.target);
+            }
+        }
+
         internal string PartsTooltip;
 
         public TrainingTemplate()

@@ -2,6 +2,7 @@
 using System.IO;
 using UnityEngine;
 using UniLinq;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -167,19 +168,15 @@ namespace KerbalConstructionTime
             LoadPresets();
         }
 
-        public int StartingPersonnel(Game.Modes mode)
+        public int GetStartingPersonnel(Game.Modes mode)
         {
             if (mode == Game.Modes.CAREER)
             {
-                return ActivePreset.StartPersonnel[0];
-            }
-            else if (mode == Game.Modes.SCIENCE_SANDBOX)
-            {
-                return ActivePreset.StartPersonnel[1];
+                return ActivePreset.GeneralSettings.StartingPersonnel[0];
             }
             else
             {
-                return ActivePreset.StartPersonnel[2];
+                return ActivePreset.GeneralSettings.StartingPersonnel[1];
             }
         }
     }
@@ -195,38 +192,13 @@ namespace KerbalConstructionTime
         public bool CareerEnabled = true, ScienceEnabled = true, SandboxEnabled = true;    //These just control whether it should appear during these game types
         public bool AllowDeletion = true;
 
-        private int[] _personnelInternal;
-        public int[] StartPersonnel
+        public int GetResearcherCap(int lvl = -1)
         {
-            get
-            {
-                if (_personnelInternal == null)
-                {
-                    _personnelInternal = new int[3] { 0, 0, 0 }; //career, science, sandbox
-                    string[] personnel = GeneralSettings.StartingPersonnel.Split(new char[] { ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-                    for (int i = 0; i < 3; i++)
-                        if (!int.TryParse(personnel[i], out _personnelInternal[i]))
-                            _personnelInternal[i] = 0;
-                }
-                return _personnelInternal;
-            }
-        }
+            return -1;
 
-        private int[] _researcherCaps = null;
-        public int[] ResearcherCaps
-        {
-            get
-            {
-                if (_researcherCaps == null)
-                {
-                    string[] caps = GeneralSettings.ResearcherCaps.Split(new char[] { ',', ' ' }, System.StringSplitOptions.RemoveEmptyEntries);
-                    _researcherCaps = new int[caps.Length];
-                    for (int i = 0; i < caps.Length; ++i)
-                        if (!int.TryParse(caps[i], out _researcherCaps[i]))
-                            _researcherCaps[i] = 1;
-                }
-                return _researcherCaps;
-            }
+            /*if (lvl == -1)
+                lvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
+            return GeneralSettings.ResearcherCaps[lvl];*/
         }
 
         public KCT_Preset(string filePath)
@@ -361,6 +333,7 @@ namespace KerbalConstructionTime
                 if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
                     mult += kvp.Value;
             }
+
             return mult;
         }
 
@@ -390,13 +363,12 @@ namespace KerbalConstructionTime
         [Persistent]
         public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true;
         [Persistent]
-        public string StartingPersonnel = "20, 50, 10000", //Career, Science, and Sandbox modes
-            VABRecoveryTech = null,
-            ResearcherCaps = "300, 500, 750, 1250, 2000, 3500, -1";
+        public string VABRecoveryTech = null;
         [Persistent]
-        public int HireCost = 200, UpgradeCost = 2000;
+        public int HireCost = 200;
         [Persistent]
-        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, InventoryEffect = 100d, MergingTimePenalty = 0.05d, EffectiveCostPerLiterPerResourceMult = 0.1d;
+        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, MergingTimePenalty = 0.05d, 
+            EffectiveCostPerLiterPerResourceMult = 0.1d, ResearcherSciEfficiencyOffset = -1000d, ResearcherSciEfficiencyMult = 0.0001d;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
@@ -411,11 +383,17 @@ namespace KerbalConstructionTime
         public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
 
         [Persistent]
+        public PersistentListValueType<int> StartingPersonnel = new PersistentListValueType<int>();
+        [Persistent]
+        public PersistentListValueType<int> ResearcherCaps = new PersistentListValueType<int>();
+
+        [Persistent]
         public ApplicantsFromContracts ContractApplicants = new ApplicantsFromContracts();
 
         public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
         public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
-        public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier();
+        public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier()
+            * System.Math.Max(0d, (KerbalConstructionTimeData.Instance.SciPointsTotal + ResearcherSciEfficiencyOffset) * ResearcherSciEfficiencyMult);
     }
 
     public class KCT_Preset_Part_Variables

@@ -168,6 +168,25 @@ namespace RP0.Crew
             return 0d;
         }
 
+        public static int GetACRequirement(string name)
+        {
+            ClearTracker();
+            string sanName = Sanitize(name);
+            if (holders.TryGetValue(sanName, out var h))
+                FillTrackerFromHolder(h);
+            else
+                unlockPathTracker.Add(sanName);
+
+            int maxLevel = 0;
+            foreach (var s in unlockPathTracker)
+            {
+                if (CrewHandler.Settings.ACLevelsForTraining.TryGetValue(s, out var lvl) && lvl > maxLevel)
+                    maxLevel = lvl;
+            }
+
+            return maxLevel;
+        }
+
         public static bool HasName(string training, string name)
         {
             // Don't have to guard against repeats because we're not summing,

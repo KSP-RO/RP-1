@@ -73,7 +73,6 @@ namespace RP0
             SpaceCenterFacility.Administration,
             SpaceCenterFacility.AstronautComplex,
             SpaceCenterFacility.MissionControl,
-            SpaceCenterFacility.ResearchAndDevelopment,
             SpaceCenterFacility.TrackingStation
         };
 
@@ -360,6 +359,9 @@ namespace RP0
 
             foreach (SpaceCenterFacility facility in FacilitiesForMaintenance)
             {
+                if (Database.LockedFacilities.Contains(facility))
+                    continue;
+
                 if (!_facilityLevelCosts.TryGetValue(facility, out float[] facCosts))
                     continue;
 

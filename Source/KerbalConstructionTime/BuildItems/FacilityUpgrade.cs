@@ -61,12 +61,6 @@ namespace KerbalConstructionTime
             KCTDebug.Log($"Upgrading {name} to level {upgradeLevel}");
 
             List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(id);
-            if (sFacilityType == SpaceCenterFacility.VehicleAssemblyBuilding)
-            {
-                // Also upgrade the SPH to the same level as VAB when playing with unified build queue
-                facilityRefs.AddRange(GetFacilityReferencesByType(SpaceCenterFacility.SpaceplaneHangar));
-            }
-
             foreach (UpgradeableFacility facility in facilityRefs)
             {
                 facility.SetLevel(upgradeLevel);
@@ -74,6 +68,10 @@ namespace KerbalConstructionTime
 
             int newLvl = Utilities.GetBuildingUpgradeLevel(id);
             upgradeProcessed = newLvl == upgradeLevel;
+            if (upgradeProcessed)
+            {
+                UpgradeLockedFacilities();
+            }
 
             KCTDebug.Log($"Upgrade processed: {upgradeProcessed} Current: {newLvl} Desired: {upgradeLevel}");
         }
@@ -87,6 +85,38 @@ namespace KerbalConstructionTime
         {
             string internalId = ScenarioUpgradeableFacilities.SlashSanitize(facilityType.ToString());
             return GetFacilityReferencesById(internalId);
+        }
+
+        public static void UpgradeLockedFacilities()
+        {
+            float avgLevel = 0f;
+            int facCount = 0;
+            for (SpaceCenterFacility fac = SpaceCenterFacility.Administration; fac <= SpaceCenterFacility.VehicleAssemblyBuilding; ++fac)
+            {
+                if (fac == SpaceCenterFacility.Runway || fac == SpaceCenterFacility.LaunchPad)
+                    continue;
+                if (Database.LockedFacilities.Contains(fac))
+                    continue;
+
+                ++facCount;
+                avgLevel += ScenarioUpgradeableFacilities.GetFacilityLevel(fac);
+            }
+            
+            avgLevel /= (float)facCount;
+            int desiredLevel = (int)Math.Round(avgLevel * 2d);
+
+            List<UpgradeableFacility> facilityRefs = new List<UpgradeableFacility>();
+            for (SpaceCenterFacility fac = SpaceCenterFacility.Administration; fac <= SpaceCenterFacility.VehicleAssemblyBuilding; ++fac)
+            {
+                if (fac == SpaceCenterFacility.Runway || fac == SpaceCenterFacility.LaunchPad)
+                    continue;
+                if (!Database.LockedFacilities.Contains(fac))
+                    continue;
+
+                facilityRefs.AddRange(GetFacilityReferencesByType(fac));
+            }
+            foreach (var fac in facilityRefs)
+                fac.SetLevel(desiredLevel);
         }
 
         public bool AlreadyInProgress()

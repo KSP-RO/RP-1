@@ -437,7 +437,7 @@ namespace KerbalConstructionTime
                 var resList = part.GetNodes("RESOURCE");
                 foreach (var res in resList)
                 {
-                    if (GuiDataAndWhitelistItemsDatabase.WasteRes.Contains(res.GetValue("name")))
+                    if (Database.WasteRes.Contains(res.GetValue("name")))
                     {
                         res.SetValue("amount", 0);
                     }
@@ -586,13 +586,13 @@ namespace KerbalConstructionTime
         public bool ResourcesOK(LCData stats, List<string> failedReasons = null)
         {
             bool pass = true;
-            HashSet<string> ignoredRes = stats.lcType == LaunchComplexType.Hangar ? GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes : GuiDataAndWhitelistItemsDatabase.PadIgnoreRes;
+            HashSet<string> ignoredRes = stats.lcType == LaunchComplexType.Hangar ? Database.HangarIgnoreRes : Database.PadIgnoreRes;
             double massMin = Math.Max(Formula.ResourceValidationAbsoluteMassMin, Formula.ResourceValidationRatioOfVesselMassMin * mass);
 
             foreach (var kvp in resourceAmounts)
             {
                 if (ignoredRes.Contains(kvp.Key)
-                    || !GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(kvp.Key))
+                    || !Database.ValidFuelRes.Contains(kvp.Key))
                     continue;
 
                 if (stats.resourcesHandled.TryGetValue(kvp.Key, out double lcAmount) && lcAmount >= kvp.Value)
@@ -725,7 +725,7 @@ namespace KerbalConstructionTime
             {
                 foreach (var r in p.Resources)
                 {
-                    if (r.flowState && GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(r.resourceName) &&
+                    if (r.flowState && Database.ValidFuelRes.Contains(r.resourceName) &&
                         Math.Abs(r.amount - r.maxAmount) >= 1)
                     {
                         Profiler.EndSample();
@@ -747,7 +747,7 @@ namespace KerbalConstructionTime
                 var resList = p.GetNodes("RESOURCE");
                 foreach (var res in resList)
                 {
-                    if (GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(res.GetValue("name")) &&
+                    if (Database.ValidFuelRes.Contains(res.GetValue("name")) &&
                         bool.Parse(res.GetValue("flowState")))
                     {
                         var maxAmt = res.GetValue("maxAmount");

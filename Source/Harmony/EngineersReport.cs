@@ -108,9 +108,9 @@ namespace RP0.Harmony
                 {
                     continue;
                 }
-                if (!GuiDataAndWhitelistItemsDatabase.ValidFuelRes.Contains(current.name) 
+                if (!Database.ValidFuelRes.Contains(current.name) 
                     || current.id == hashcodeTEATEB // ignitors have no IResourceConsumer
-                    || GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Contains(current.name)) // to ignore LS resources
+                    || Database.PadIgnoreRes.Contains(current.name)) // to ignore LS resources
                 {
                     continue;
                 }

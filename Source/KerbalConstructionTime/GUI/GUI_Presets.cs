@@ -101,7 +101,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Starting Personnel:");
-            _workingPreset.GeneralSettings.StartingPersonnel = GUILayout.TextField(_workingPreset.GeneralSettings.StartingPersonnel, GUILayout.Width(100));
+            _workingPreset.GeneralSettings.StartingPersonnel.FromCommaString(GUILayout.TextField(_workingPreset.GeneralSettings.StartingPersonnel.ToCommaString(), GUILayout.Width(100)));
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
             GUILayout.EndVertical(); //end Features

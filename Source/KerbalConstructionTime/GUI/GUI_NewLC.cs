@@ -8,6 +8,7 @@ namespace KerbalConstructionTime
 {
     public static partial class KCT_GUI
     {
+        private static readonly GUIContent _extraPadsContent = new GUIContent("Extra Pad Cost:", "Cost to build additional pads past the first once LC is constructed");
         private static string _tonnageLimit = "1";
         private static string _heightLimit = "10";
         private static string _widthLimit = "2";
@@ -186,9 +187,9 @@ namespace KerbalConstructionTime
 
         private static void GetAllResourceKeys()
         {
-            foreach (var res in GuiDataAndWhitelistItemsDatabase.ValidFuelRes)
+            foreach (var res in Database.ValidFuelRes)
             {
-                if (!GuiDataAndWhitelistItemsDatabase.PadIgnoreRes.Contains(res))
+                if (!Database.PadIgnoreRes.Contains(res))
                 {
                     _allResourceKeys.Add(res);
                     _allResourceValues.Add(string.Empty);
@@ -435,7 +436,7 @@ namespace KerbalConstructionTime
                 if (!isModify || _newLCData.lcType == LaunchComplexType.Pad)
                 {
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Extra Pad Cost:", GUILayout.ExpandWidth(false));
+                    GUILayout.Label(_extraPadsContent, GUILayout.ExpandWidth(false));
                     GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -curPadCost):N0}", GetLabelRightAlignStyle());
                     GUILayout.EndHorizontal();
                 }
@@ -681,7 +682,7 @@ namespace KerbalConstructionTime
 
             for (int i = 0; i < _resourceCount; i++)
             {
-                if (_newLCData.lcType == LaunchComplexType.Hangar && GuiDataAndWhitelistItemsDatabase.HangarIgnoreRes.Contains(_allResourceKeys[i]))
+                if (_newLCData.lcType == LaunchComplexType.Hangar && Database.HangarIgnoreRes.Contains(_allResourceKeys[i]))
                     continue;
 
                 GUILayout.BeginHorizontal();

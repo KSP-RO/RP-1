@@ -256,7 +256,7 @@ namespace RP0
         public void GetNautCost(ProtoCrewMember k, out double baseCostPerDay, out double flightCostPerDay)
         {
             flightCostPerDay = 0d;
-            baseCostPerDay = Settings.nautYearlyUpkeepBase + ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex) * Settings.nautYearlyUpkeepAdd;
+            baseCostPerDay = Settings.nautYearlyUpkeepPerFacLevel[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
             {
                 flightCostPerDay = Settings.nautInFlightDailyRate;
@@ -365,11 +365,11 @@ namespace RP0
                 if (!_facilityLevelCosts.TryGetValue(facility, out float[] facCosts))
                     continue;
 
-                double cost = ComputeDailyMaintenanceCost(SumCosts(facCosts, (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(facility) * (facCosts.Length - 0.95f))));
+                double cost = ComputeDailyMaintenanceCost(SumCosts(facCosts, KerbalConstructionTime.Utilities.GetFacilityLevel(facility)));
                 double ratio = GetFacilityUpgradeRatio(facility);
                 if (ratio > 0d)
                 {
-                    double newCost = ComputeDailyMaintenanceCost(SumCosts(facCosts, 1 + (int)(ScenarioUpgradeableFacilities.GetFacilityLevel(facility) * (facCosts.Length - 0.95f))));
+                    double newCost = ComputeDailyMaintenanceCost(SumCosts(facCosts, 1 + KerbalConstructionTime.Utilities.GetFacilityLevel(facility)));
                     cost = UtilMath.LerpUnclamped(cost, newCost, ratio);
                 }
                 FacilityMaintenanceCosts[facility] = cost;
@@ -380,18 +380,16 @@ namespace RP0
             TrainingUpkeepPerDay = 0d;
             if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out float[] costs))
             {
-                float lvl = ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
-                int lvlInt = (int)(lvl * (costs.Length - 0.95f));
                 if (CrewHandler.Instance?.TrainingCourses != null)
                 {
-                    double mult = 1d + Math.Pow((double)lvlInt, Settings.nautTrainingACLevelPow) * Settings.nautTrainingACLevelMult;
                     foreach (var course in CrewHandler.Instance.TrainingCourses)
                     {
                         if (!course.Started)
                             continue;
 
-                        TrainingUpkeepPerDay += course.Students.Count * Settings.nautTrainingCostMultiplier * mult;
+                        TrainingUpkeepPerDay += course.Students.Count;
                     }
+                    TrainingUpkeepPerDay *= Settings.nautTrainingCostPerFacLevel[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
                 }
             }
 

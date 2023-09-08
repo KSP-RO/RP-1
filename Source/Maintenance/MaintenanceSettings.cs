@@ -29,10 +29,7 @@ namespace RP0
         public double lcCostMultiplier = 2d;
 
         [Persistent]
-        public double nautYearlyUpkeepAdd = 5000d;
-
-        [Persistent]
-        public double nautYearlyUpkeepBase = 500d;
+        public PersistentListValueType<double> nautYearlyUpkeepPerFacLevel = new PersistentListValueType<double>();
 
         [Persistent]
         public double nautInFlightDailyRate = 100d;
@@ -45,15 +42,9 @@ namespace RP0
 
         [Persistent]
         public double nautSubOrbitProficiencyUpkeepAdd = 20d;
-        [Persistent]
-        public double nautTrainingCostMultiplier = 0.8d;
-        [Persistent]
-        public double nautTrainingACLevelMult = 3d;
-        [Persistent]
-        public double nautTrainingACLevelPow = 0.5d;
 
         [Persistent]
-        public double courseMultiplierDivisor = 3d;
+        public PersistentListValueType<double> nautTrainingCostPerFacLevel = new PersistentListValueType<double>();
 
         [Persistent]
         public double repToSubsidyConversion = 100d;

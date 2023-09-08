@@ -427,11 +427,11 @@ namespace RP0.Harmony
 
         private static bool IsUpgradeable(UpgradeableFacility facility)
         {
-            if (facility.id.IndexOf("launchpad", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                     facility.id.IndexOf("SpaceplaneHangar", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                     facility.id.IndexOf("VehicleAssemblyBuilding", StringComparison.OrdinalIgnoreCase) >= 0 ||
-                     facility.id.IndexOf("runway", StringComparison.OrdinalIgnoreCase) >= 0)
-                return false;
+            foreach (var fac in Database.LockedFacilities)
+            {
+                if (facility.id.IndexOf(fac.ToString(), StringComparison.OrdinalIgnoreCase) >= 0)
+                    return false;
+            }
 
             return true;
         }

@@ -13,10 +13,10 @@ namespace RP0
 
         public static Func<string, bool> WithdrawContractAction;
 
-        private static string[] _comSatContracts = new[] { "GEORepeatComSats", "TundraRepeatComSats", "MolniyaRepeatComSats" };
-        private static string[] _weatherSatContracts = new[] { "GEOWeather" };
+        private static readonly string[] _comSatContracts = new[] { "GEORepeatComSats", "TundraRepeatComSats", "MolniyaRepeatComSats" };
+        private static readonly string[] _weatherSatContracts = new[] { "GEOWeather" };
 
-        private static string NewspaperTitle = "Space Gazette";
+        private static string _newspaperTitle = "Space Gazette";
         private static bool _useLastScreenshot = false;
 
         private RP0Settings _settings;
@@ -26,7 +26,7 @@ namespace RP0
             _settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
             CommsPayload = _settings.CommsPayload;
             WeatherPayload = _settings.WeatherPayload;
-            NewspaperTitle = _settings.NewspaperTitle;
+            _newspaperTitle = _settings.NewspaperTitle;
         }
 
         public void RenderContractsTab()
@@ -37,11 +37,11 @@ namespace RP0
                 GUILayout.Label($"Use this tab to set the required payload amount for contracts.", BoldLabel);
                 GUILayout.Space(10f);
 
-                GUILayout.Label($"CommSat Payload range: {Math.Max(CommsPayload / 2, 300)} - {CommsPayload}", HighLogic.Skin.label, GUILayout.Width(250));
+                GUILayout.Label($"CommSat Payload: {CommsPayload}", HighLogic.Skin.label, GUILayout.Width(250));
                 float commsAmnt = GUILayout.HorizontalSlider(CommsPayload, MinPayload, MaxPayload, HighLogic.Skin.horizontalSlider, HighLogic.Skin.horizontalSliderThumb);
                 CommsPayload = Mathf.RoundToInt(commsAmnt / 100) * 100;    // slider works in increments of 100
                 GUILayout.Space(5f);
-                GUILayout.Label($"WeatherSat Payload range: {Math.Max(WeatherPayload / 2, 300)} - {WeatherPayload}", HighLogic.Skin.label, GUILayout.Width(250));
+                GUILayout.Label($"WeatherSat Payload: {WeatherPayload}", HighLogic.Skin.label, GUILayout.Width(250));
                 float weatherAmnt = GUILayout.HorizontalSlider(WeatherPayload, MinPayload, MaxPayload, HighLogic.Skin.horizontalSlider, HighLogic.Skin.horizontalSliderThumb);
                 WeatherPayload = Mathf.RoundToInt(weatherAmnt / 100) * 100;
 
@@ -78,9 +78,9 @@ namespace RP0
                 GUILayout.Space(10f);
 
                 GUILayout.Label($"Newspaper Title: (18 characters max)", HighLogic.Skin.label, GUILayout.Width(250));
-                NewspaperTitle = GUILayout.TextField(NewspaperTitle, HighLogic.Skin.textField);
+                _newspaperTitle = GUILayout.TextField(_newspaperTitle, HighLogic.Skin.textField);
 
-                _settings.NewspaperTitle = NewspaperTitle;
+                _settings.NewspaperTitle = _newspaperTitle;
             }
             finally
             {

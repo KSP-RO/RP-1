@@ -393,7 +393,7 @@ namespace KerbalConstructionTime
         public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
         public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
         public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier()
-            * System.Math.Max(0d, (KerbalConstructionTimeData.Instance.SciPointsTotal + ResearcherSciEfficiencyOffset) * ResearcherSciEfficiencyMult);
+            * (1d + System.Math.Max(0d, (KerbalConstructionTimeData.Instance.SciPointsTotal + ResearcherSciEfficiencyOffset) * ResearcherSciEfficiencyMult));
     }
 
     public class KCT_Preset_Part_Variables

@@ -69,12 +69,7 @@ namespace KerbalConstructionTime
 
         public static double GetScienceResearchEfficiencyMult(double totalSci)
         {
-            const double offset = 100d;
-            const double mult = 0.00015d;
-            if (totalSci < offset)
-                return 1d;
-
-            return 1d + (totalSci - offset) * mult;
+            return (double)PresetManager.Instance.ActivePreset.GeneralSettings.ScienceResearchEfficiency.Evaluate((float)totalSci);
         }
 
         public static double GetVesselBuildPoints(double totalEffectiveCost)

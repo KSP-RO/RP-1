@@ -547,7 +547,7 @@ namespace RP0.Programs
                         double fundAtYear = GetFundsAtTime(Math.Min(i, duration) * secPerYear);
                         double paidThisYear = fundAtYear - totalPaid;
                         totalPaid = fundAtYear;
-                        text += $"\nYear {(lastYear > 10 ? " " : string.Empty)}{i}:  {CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, paidThisYear, 0d, 0d).GetCostLineOverride(false, false, false, true)}";
+                        text += $"\nNominal Year {(lastYear > 10 ? " " : string.Empty)}{i}:  {CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, paidThisYear, 0d, 0d).GetCostLineOverride(false, false, false, true)}";
                     }
                 }
             }

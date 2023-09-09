@@ -37,6 +37,7 @@ namespace RP0.Crew
         public string Description => _template?.description;
         public bool IsTemporary => _template?.isTemporary ?? false;
         public TrainingTemplate.TrainingType Type => _template?.type ?? TrainingTemplate.TrainingType.Proficiency;
+        public string Target => _template?.training?.target ?? string.Empty;
 
         public List<AvailablePart> PartsCovered => _template?.partsCovered;
 

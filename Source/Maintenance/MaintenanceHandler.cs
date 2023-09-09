@@ -33,7 +33,9 @@ namespace RP0
                 {
                     _settings = new MaintenanceSettings();
                     foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
-                        ConfigNode.LoadObjectFromConfig(Settings, n);
+                    {
+                        _settings.Load(n);
+                    }
                 }
                 return _settings;
             }
@@ -231,26 +233,47 @@ namespace RP0
             Profiler.EndSample();
         }
 
-        private double GetNautUpkeepFromTraining(FlightLog log)
+        private IEnumerable<FlightLog.Entry> ProficiencyEntries(ProtoCrewMember pcm)
         {
-            bool foundOrbit = false;
-            bool foundSubOrb = false;
-            double baseCostPerDay = 0d;
-            for (int j = log.Count; j-- > 0;)
+            foreach (var e in pcm.flightLog.entries)
             {
-                var e = log[j];
-                if (!foundOrbit && e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Orbital"))
-                {
-                    baseCostPerDay += Settings.nautOrbitProficiencyUpkeepAdd;
-                    foundOrbit = true;
-                }
-                if (!foundSubOrb && e.type == CrewHandler.TrainingType_Proficiency && TrainingDatabase.HasName(e.target, "Suborbital"))
-                {
-                    baseCostPerDay += Settings.nautSubOrbitProficiencyUpkeepAdd;
-                    foundOrbit = true;
-                }
+                if (e.type == CrewHandler.TrainingType_Proficiency)
+                    yield return e;
             }
-            return baseCostPerDay;
+            foreach (var e in pcm.careerLog.entries)
+            {
+                if (e.type == CrewHandler.TrainingType_Proficiency)
+                    yield return e;
+            }
+        }
+
+        private double GetTrainingCostFromBools()
+        {
+            double yearlyCost = 0d;
+            for (int i = Settings.nautUpkeepTrainingBools.Count; i-- > 0;)
+            {
+                if (Settings.nautUpkeepTrainingBools[i])
+                    yearlyCost += Settings.nautYearlyUpkeepPerTraining[Settings.nautUpkeepTrainings[i]];
+            }
+
+            return yearlyCost;
+        }
+
+        private double GetNautUpkeepFromProficiency(ProtoCrewMember pcm)
+        {
+            double yearlyCost = 0d;
+
+            foreach (var e in ProficiencyEntries(pcm))
+            {
+                TrainingDatabase.FillBools(e.target, Settings.nautUpkeepTrainings, Settings.nautUpkeepTrainingBools);
+                // Early-out if we have a lot of proficiency training. Note we process recent-first so this is a good trick.
+                if (Settings.nautUpkeepTrainingBools.AllTrue())
+                    break;
+            }
+
+            yearlyCost = GetTrainingCostFromBools();
+            Settings.ResetBools();
+            return yearlyCost;
         }
 
         public void GetNautCost(ProtoCrewMember k, out double baseCostPerDay, out double flightCostPerDay)
@@ -263,8 +286,9 @@ namespace RP0
             }
             else
             {
-                baseCostPerDay += GetNautUpkeepFromTraining(k.flightLog) + GetNautUpkeepFromTraining(k.careerLog);
+                baseCostPerDay += GetNautUpkeepFromProficiency(k);
 
+                // Note: nauts in training are also inactive, but that's taken care of by the training cost.
                 if (k.inactive)
                 {
                     baseCostPerDay *= Settings.nautInactiveMult;
@@ -387,9 +411,14 @@ namespace RP0
                         if (!course.Started)
                             continue;
 
-                        TrainingUpkeepPerDay += course.Students.Count;
+                        TrainingDatabase.FillBools(course.Target, Settings.nautUpkeepTrainings, Settings.nautUpkeepTrainingBools);
+                        double trainingTypeCost = GetTrainingCostFromBools();
+                        Settings.ResetBools();
+                        TrainingUpkeepPerDay += course.Students.Count *
+                            (Settings.nautTrainingCostPerFacLevel[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)]
+                            + trainingTypeCost * Settings.nautTrainingTypeCostMult);
                     }
-                    TrainingUpkeepPerDay *= Settings.nautTrainingCostPerFacLevel[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
+                    TrainingUpkeepPerDay /= 365.25d;
                 }
             }
 

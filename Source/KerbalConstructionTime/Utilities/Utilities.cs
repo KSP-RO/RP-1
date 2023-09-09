@@ -1899,6 +1899,36 @@ namespace KerbalConstructionTime
 
             return sum;
         }
+
+        public static int SumThrough(this List<bool> list, int idx)
+        {
+            int sum = 0;
+            for (int i = idx + 1; i-- > 0;)
+            {
+                if (list[i])
+                    ++sum;
+            }
+
+            return sum;
+        }
+
+        public static bool AllTrue(this List<bool> list)
+        {
+            for (int i = list.Count; i-- > 0;)
+                if (!list[i])
+                    return false;
+
+            return true;
+        }
+
+        public static bool AllFalse(this List<bool> list)
+        {
+            for (int i = list.Count; i-- > 0;)
+                if (list[i])
+                    return false;
+
+            return true;
+        }
     }
 }
 

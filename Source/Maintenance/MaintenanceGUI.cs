@@ -436,7 +436,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    double cost = -engineers * MaintenanceHandler.Settings.salaryEngineers * PeriodFactor / 365.25d;
+                    double cost = -engineers * KerbalConstructionTime.Database.SettingsSC.salaryEngineers * PeriodFactor / 365.25d;
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, cost);
                     grandTotal += cost;
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));

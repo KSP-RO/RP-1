@@ -44,14 +44,12 @@
   <ItemGroup>
     <Content Include="..\GameData\RP-1\Avionics.cfg" />
     <Content Include="..\GameData\RP-1\changelog.cfg" />
-    <Content Include="..\GameData\RP-1\CrewHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-1\CrewSettings.cfg" />
     <Content Include="..\GameData\RP-1\CrewTrainingTimes.cfg" />
     <Content Include="..\GameData\RP-1\CustomBarnKit.cfg" />
     <Content Include="..\GameData\RP-1\Deprecation.cfg" />
     <Content Include="..\GameData\RP-1\GameParameters.cfg" />
     <Content Include="..\GameData\RP-1\KSPCommunityFixes.cfg" />
-    <Content Include="..\GameData\RP-1\MaintenanceSettings.cfg" />
     <Content Include="..\GameData\RP-1\ModuleStationParts.cfg" />
     <Content Include="..\GameData\RP-1\NonRP0.cfg" />
     <Content Include="..\GameData\RP-1\PartHacks.cfg" />
@@ -59,6 +57,7 @@
     <Content Include="..\GameData\RP-1\ProgramHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-1\RealFuelsSettings.cfg" />
     <Content Include="..\GameData\RP-1\ResourceCosts.cfg" />
+    <Content Include="..\GameData\RP-1\SpaceCenterSettings.cfg" />
     <Content Include="..\GameData\RP-1\TestFlightRnD.cfg" />
     <Content Include="..\GameData\RP-1\ToolingDefinitions.cfg" />
     <Content Include="..\GameData\RP-1\zFinal.cfg" />

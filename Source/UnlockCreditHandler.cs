@@ -18,12 +18,12 @@ namespace RP0
         public double CreditForTime(double UT)
         {
             double sum = 0d;
-            double mult = UT * MaintenanceHandler.Settings.salaryResearchers * (1d / (86400d * 365.25d));
+            double mult = UT * KerbalConstructionTime.Database.SettingsSC.salaryResearchers * (1d / (86400d * 365.25d));
             
             int res = KerbalConstructionTimeData.Instance.Researchers;
             int totalCounted = 0;
             
-            foreach (var kvp in MaintenanceHandler.Settings.researchersToUnlockCreditSalaryMultipliers)
+            foreach (var kvp in KerbalConstructionTime.Database.SettingsSC.researchersToUnlockCreditSalaryMultipliers)
             {
                 if (totalCounted >= res)
                     break;

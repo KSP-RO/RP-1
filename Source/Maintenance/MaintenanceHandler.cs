@@ -24,22 +24,6 @@ namespace RP0
         public const double UpdateInterval = 3600d;
 
         public static MaintenanceHandler Instance { get; private set; } = null;
-        private static MaintenanceSettings _settings = null;
-        public static MaintenanceSettings Settings
-        {
-            get
-            {
-                if (_settings == null)
-                {
-                    _settings = new MaintenanceSettings();
-                    foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("MAINTENANCESETTINGS"))
-                    {
-                        _settings.Load(n);
-                    }
-                }
-                return _settings;
-            }
-        }
 
         private bool _isFirstLoad = true;
         private static readonly Dictionary<SpaceCenterFacility, float[]> _facilityLevelCosts = new Dictionary<SpaceCenterFacility, float[]>();
@@ -95,11 +79,11 @@ namespace RP0
                 foreach (double d in IntegrationSalaries.Values)
                     tmp += d;
 
-                return tmp * Settings.salaryEngineers / 365.25d;
+                return tmp * Database.SettingsSC.salaryEngineers / 365.25d;
             }
         }
 
-        public double ResearchSalaryPerDay => Researchers * Settings.salaryResearchers / 365.25d;
+        public double ResearchSalaryPerDay => Researchers * Database.SettingsSC.salaryResearchers / 365.25d;
 
         public struct SubsidyDetails
         {
@@ -110,12 +94,12 @@ namespace RP0
         {
             const double secsPerYear = 3600 * 24 * 365.25;
             float years = (float)(ut / secsPerYear);
-            details.minSubsidy = Settings.subsidyCurve.Evaluate(years);
-            details.maxSubsidy = details.minSubsidy * Settings.subsidyMultiplierForMax;
-            details.maxRep = (details.maxSubsidy - details.minSubsidy) / Settings.repToSubsidyConversion;
+            details.minSubsidy = Database.SettingsSC.subsidyCurve.Evaluate(years);
+            details.maxSubsidy = details.minSubsidy * Database.SettingsSC.subsidyMultiplierForMax;
+            details.maxRep = (details.maxSubsidy - details.minSubsidy) / Database.SettingsSC.repToSubsidyConversion;
             double invLerp = UtilMath.InverseLerp(0, details.maxRep, UtilMath.Clamp(rep, 0, details.maxRep));
             details.subsidy = UtilMath.LerpUnclamped(details.minSubsidy, details.maxSubsidy, invLerp);
-            //Debug.Log($"$$$$ years {years}: minSub: {details.minSubsidy}, conversion {Settings.repToSubsidyConversion}, maxSub {Settings.subsidyMultiplierForMax}, maxRep {details.maxRep}, invLerp {invLerp}, subsidy {details.subsidy}=>{(details.subsidy * (1d / 365.25d))}");
+            //Debug.Log($"$$$$ years {years}: minSub: {details.minSubsidy}, conversion {Database.SettingsSC.repToSubsidyConversion}, maxSub {Database.SettingsSC.subsidyMultiplierForMax}, maxRep {details.maxRep}, invLerp {invLerp}, subsidy {details.subsidy}=>{(details.subsidy * (1d / 365.25d))}");
         }
 
         public static double GetYearlySubsidyAtTimeDelta(double deltaTime)
@@ -127,7 +111,7 @@ namespace RP0
                 days = Math.Floor(deltaTime / 86400d);
                 if (days > 0)
                 {
-                    double loss = rep * (1d - Math.Pow(1d - Settings.repPortionLostPerDay, days));
+                    double loss = rep * (1d - Math.Pow(1d - Database.SettingsSC.repPortionLostPerDay, days));
                     rep += CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -loss);
                 }
             }
@@ -250,10 +234,10 @@ namespace RP0
         private double GetTrainingCostFromBools()
         {
             double yearlyCost = 0d;
-            for (int i = Settings.nautUpkeepTrainingBools.Count; i-- > 0;)
+            for (int i = Database.SettingsSC.nautUpkeepTrainingBools.Count; i-- > 0;)
             {
-                if (Settings.nautUpkeepTrainingBools[i])
-                    yearlyCost += Settings.nautYearlyUpkeepPerTraining[Settings.nautUpkeepTrainings[i]];
+                if (Database.SettingsSC.nautUpkeepTrainingBools[i])
+                    yearlyCost += Database.SettingsSC.nautYearlyUpkeepPerTraining[Database.SettingsSC.nautUpkeepTrainings[i]];
             }
 
             return yearlyCost;
@@ -265,24 +249,24 @@ namespace RP0
 
             foreach (var e in ProficiencyEntries(pcm))
             {
-                TrainingDatabase.FillBools(e.target, Settings.nautUpkeepTrainings, Settings.nautUpkeepTrainingBools);
+                TrainingDatabase.FillBools(e.target, Database.SettingsSC.nautUpkeepTrainings, Database.SettingsSC.nautUpkeepTrainingBools);
                 // Early-out if we have a lot of proficiency training. Note we process recent-first so this is a good trick.
-                if (Settings.nautUpkeepTrainingBools.AllTrue())
+                if (Database.SettingsSC.nautUpkeepTrainingBools.AllTrue())
                     break;
             }
 
             yearlyCost = GetTrainingCostFromBools();
-            Settings.ResetBools();
+            Database.SettingsSC.ResetBools();
             return yearlyCost;
         }
 
         public void GetNautCost(ProtoCrewMember k, out double baseCostPerDay, out double flightCostPerDay)
         {
             flightCostPerDay = 0d;
-            baseCostPerDay = Settings.nautYearlyUpkeepPerFacLevel[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
+            baseCostPerDay = Database.SettingsSC.nautYearlyUpkeepPerFacLevel[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
             {
-                flightCostPerDay = Settings.nautInFlightDailyRate;
+                flightCostPerDay = Database.SettingsSC.nautInFlightDailyRate;
             }
             else
             {
@@ -291,7 +275,7 @@ namespace RP0
                 // Note: nauts in training are also inactive, but that's taken care of by the training cost.
                 if (k.inactive)
                 {
-                    baseCostPerDay *= Settings.nautInactiveMult;
+                    baseCostPerDay *= Database.SettingsSC.nautInactiveMult;
                 }
             }
 
@@ -301,12 +285,12 @@ namespace RP0
         public double ComputeDailyMaintenanceCost(double cost, FacilityMaintenanceType facilityType = FacilityMaintenanceType.Building)
         {
             if (facilityType == FacilityMaintenanceType.Hangar)
-                cost = Math.Max(Settings.hangarCostForMaintenanceMin, cost - Settings.hangarCostForMaintenanceOffset);
+                cost = Math.Max(Database.SettingsSC.hangarCostForMaintenanceMin, cost - Database.SettingsSC.hangarCostForMaintenanceOffset);
 
-            double upkeep = Settings.facilityLevelCostMult * Math.Pow(cost, Settings.facilityLevelCostPow);
+            double upkeep = Database.SettingsSC.facilityLevelCostMult * Math.Pow(cost, Database.SettingsSC.facilityLevelCostPow);
 
             if (facilityType == FacilityMaintenanceType.LC)
-                upkeep *= Settings.lcCostMultiplier;
+                upkeep *= Database.SettingsSC.lcCostMultiplier;
 
             return upkeep;
         }
@@ -411,12 +395,12 @@ namespace RP0
                         if (!course.Started)
                             continue;
 
-                        TrainingDatabase.FillBools(course.Target, Settings.nautUpkeepTrainings, Settings.nautUpkeepTrainingBools);
+                        TrainingDatabase.FillBools(course.Target, Database.SettingsSC.nautUpkeepTrainings, Database.SettingsSC.nautUpkeepTrainingBools);
                         double trainingTypeCost = GetTrainingCostFromBools();
-                        Settings.ResetBools();
+                        Database.SettingsSC.ResetBools();
                         TrainingUpkeepPerDay += course.Students.Count *
-                            (Settings.nautTrainingCostPerFacLevel[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)]
-                            + trainingTypeCost * Settings.nautTrainingTypeCostMult);
+                            (Database.SettingsSC.nautTrainingCostPerFacLevel[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)]
+                            + trainingTypeCost * Database.SettingsSC.nautTrainingTypeCostMult);
                     }
                     TrainingUpkeepPerDay /= 365.25d;
                 }
@@ -477,7 +461,7 @@ namespace RP0
                     lastRepUpdate = time;
 
                 lastRepUpdate += 3600d * 24d;
-                Reputation.Instance.AddReputation((float)(Reputation.Instance.reputation * -Settings.repPortionLostPerDay), TransactionReasonsRP0.DailyRepDecline.Stock());
+                Reputation.Instance.AddReputation((float)(Reputation.Instance.reputation * -Database.SettingsSC.repPortionLostPerDay), TransactionReasonsRP0.DailyRepDecline.Stock());
             }
 
             if (TimeWarp.CurrentRate <= 100f)

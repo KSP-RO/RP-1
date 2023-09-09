@@ -27,15 +27,18 @@ namespace RP0.Harmony
             int techItemIndex = -1;
             bool showProgress = !showCredit && (techItemIndex = KerbalConstructionTimeData.Instance.TechListIndex(techID)) != -1;
             showCredit |= showProgress;
-            string extraText;
+            if (!KerbalConstructionTime.KerbalConstructionTime.NodeTypes.TryGetValue(node.tech.techID, out NodeType type))
+                type = NodeType.None;
+            string extraText = Localizer.Format("#rp0_RnD_NodeType", Localizer.Format("#rp0_RnD_NodeType_" + type.ToStringCached())) + "\n";
+
             if (showCredit)
             {
-                extraText = Localizer.Format("#rp0_UnlockCredit_NodeInfo",
+                extraText += Localizer.Format("#rp0_UnlockCredit_NodeInfo",
                     UnlockCreditHandler.Instance.GetCreditAmount(node.tech.techID).ToString("N0")) + "\n";
             }
             else
             {
-                extraText = "\n\n";
+                extraText += "\n\n";
             }
 
             if (showProgress)

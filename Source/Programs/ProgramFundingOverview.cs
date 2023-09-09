@@ -129,7 +129,7 @@ namespace RP0.Programs
             };
             data.AddData(yValues, XKCDColors.BrightCyan, "√", false);
 
-            UpdateGraph(data, 0, shownYears, _program.ElapsedYears, _program.DurationYears);
+            UpdateGraph(data, 0, shownYears, _program.FracElapsed * _program.DurationYears, _program.DurationYears);
 
             var fi = typeof(ferramGraph).GetField("graph", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             var obj = fi.GetValue(_graph);

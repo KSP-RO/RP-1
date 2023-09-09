@@ -187,9 +187,10 @@ namespace RP0.Harmony
                         ps.PerformActivate(false, false);
                         ps.dateActivated = p.acceptedUT; // overwrite with correct activation UT
                     }
-                    
                 }
             }
+
+            ProgramHandler.Instance.OnLoadStrategiesComplete();
 
             KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
         }

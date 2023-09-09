@@ -319,6 +319,9 @@ namespace RP0.Programs
             if (TotalFunding < 1)
                 return;
 
+            if (!ProgramHandler.Instance.Ready)
+                return;
+
             double duration = DurationYears;
             double nowUT = Planetarium.GetUniversalTime();
             double frac2 = fracElapsed + (nowUT - lastPaymentUT) / (secsPerYear * duration);

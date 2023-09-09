@@ -17,9 +17,16 @@ namespace RP0.Programs
     [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class ProgramHandler : ScenarioModule
     {
-        private static int VERSION = 2;
+        private const int VERSION = 2;
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = 0;
+
+        private bool _ready = false;
+        public bool Ready => _ready;
+
+        // Back-compat - we have to handle this weirdly
+        // because this relies on leaders being live
+        private bool _upgrade_v02 = false;
 
         private static readonly int _windowId = "RP0ProgramsWindow".GetHashCode();
 
@@ -152,6 +159,8 @@ namespace RP0.Programs
                 CompletedPrograms.Add(program);
             }
 
+            _ready = true; // done BEFORE upgrading because we have to do hijinks there
+
             if (LoadedSaveVersion < VERSION)
             {
                 if (LoadedSaveVersion < 1)
@@ -170,8 +179,20 @@ namespace RP0.Programs
                         }
                     }
                 }
+                if (LoadedSaveVersion < 2)
+                {
+                    _ready = false;
+                    _upgrade_v02 = true;
+                    // handled in OnLoadStrategiesComplete because we need to know what leaders are active
+                }
             }
-            if (LoadedSaveVersion < 2)
+
+            LoadedSaveVersion = VERSION;
+        }
+
+        public void OnLoadStrategiesComplete()
+        {
+            if (_upgrade_v02)
             {
                 foreach (var p in ActivePrograms)
                 {
@@ -180,9 +201,9 @@ namespace RP0.Programs
                         p.fracElapsed = (p.lastPaymentUT - p.acceptedUT) / (p.DurationYears * (365.25d * 86400d));
                     }
                 }
+                _ready = true;
+                _upgrade_v02 = false;
             }
-
-            LoadedSaveVersion = VERSION;
         }
 
         public override void OnSave(ConfigNode node)

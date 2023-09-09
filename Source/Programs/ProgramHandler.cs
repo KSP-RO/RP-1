@@ -230,6 +230,15 @@ namespace RP0.Programs
             node.AddNode(disableds);
         }
 
+        public void OnLeaderChange()
+        {
+            foreach (Program p in ActivePrograms)
+            {
+                p.OnLeaderChange();
+            }
+            RP0Debug.Log($"[RP-0] ProgramHandler clamped active program funding on leader change.");
+        }
+
         public void ProcessFunding()
         {
             Profiler.BeginSample("RP0ProcessFunding");

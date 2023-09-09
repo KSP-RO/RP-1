@@ -314,6 +314,11 @@ namespace RP0.Programs
             return Math.Max(0, funds2 - fundsPaidOut);
         }
 
+        public void OnLeaderChange()
+        {
+            deadlineUT = Planetarium.GetUniversalTime() + (1d - FracElapsed) * DurationYears * secsPerYear;
+        }
+
         public void ProcessFunding()
         {
             if (TotalFunding < 1)

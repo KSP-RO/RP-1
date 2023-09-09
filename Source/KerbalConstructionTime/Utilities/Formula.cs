@@ -69,7 +69,7 @@ namespace KerbalConstructionTime
 
         public static double GetScienceResearchEfficiencyMult(double totalSci)
         {
-            return (double)PresetManager.Instance.ActivePreset.GeneralSettings.ScienceResearchEfficiency.Evaluate((float)totalSci);
+            return (double)Database.SettingsSC.ScienceResearchEfficiency.Evaluate((float)totalSci);
         }
 
         public static double GetVesselBuildPoints(double totalEffectiveCost)
@@ -231,7 +231,7 @@ namespace KerbalConstructionTime
             {
                 double tankVol = amount / tank.utilization;
                 double cost = (baseTankCostPerL + tank.cost * rfTankCostPerLMultiplier) * tankVol * tankMultiplier + amount * resDef.unitCost * amountMultiplier;
-                if (PresetManager.Instance.ActivePreset.PartVariables.Resource_Variables.TryGetValue(res, out double mult))
+                if (Database.SettingsSC.Resource_Variables.TryGetValue(res, out double mult))
                     cost *= mult;
 
                 if (isModify)

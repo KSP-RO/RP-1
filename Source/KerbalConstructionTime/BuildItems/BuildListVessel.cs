@@ -966,11 +966,11 @@ namespace KerbalConstructionTime
             double total = 0d;
             foreach (var kvp in resourceAmounts)
             {
-                double mult = PresetManager.Instance.ActivePreset.PartVariables.GetResourceVariableMult(kvp.Key) - 1d;
+                double mult = Database.SettingsSC.GetResourceVariableMult(kvp.Key) - 1d;
                 if (mult == 0d)
                     continue;
 
-                total += PresetManager.Instance.ActivePreset.GeneralSettings.EffectiveCostPerLiterPerResourceMult * mult * kvp.Value;
+                total += Database.SettingsSC.EffectiveCostPerLiterPerResourceMult * mult * kvp.Value;
             }
             return total;
         }
@@ -1059,7 +1059,7 @@ namespace KerbalConstructionTime
             float wetMass = dryMass + fuelMass;
             float cost = dryCost + fuelCost;
 
-            double partMultiplier = PresetManager.Instance.ActivePreset.PartVariables.GetPartVariable(name);
+            double partMultiplier = Database.SettingsSC.GetPartVariable(name);
 
             // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
             double resourceMultiplier = 1d;

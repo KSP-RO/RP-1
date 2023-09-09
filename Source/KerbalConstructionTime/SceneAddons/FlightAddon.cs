@@ -60,7 +60,7 @@ namespace KerbalConstructionTime
             var options = new List<DialogGUIBase>();
             if (!FlightGlobals.ActiveVessel.isEVA)
             {
-                string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech);
+                string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(Database.SettingsSC.VABRecoveryTech);
                 string techLimitText = string.IsNullOrEmpty(nodeTitle) ? string.Empty :
                                        $"\nAdditionally requires {nodeTitle} tech node to be researched (unless the vessel is in Prelaunch state).";
                 string genericReuseText = "Allows the vessel to be launched again after a short recovery delay.";

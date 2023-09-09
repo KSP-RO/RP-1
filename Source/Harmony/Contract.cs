@@ -63,7 +63,7 @@ namespace RP0.Harmony
             }
             if (KerbalConstructionTime.PresetManager.Instance != null)
             {
-                int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(_contract.contractType.name);
+                int applicants = KerbalConstructionTime.Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(_contract.contractType.name);
                 if (applicants > 0)
                     value += $"\n{KSP.Localization.Localizer.Format("#rp0_ContractRewards_GainApplicants", applicants)}";
             }

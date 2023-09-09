@@ -99,10 +99,7 @@ namespace KerbalConstructionTime
             _workingPreset.GeneralSettings.TechUnlockTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.TechUnlockTimes, "Tech Unlock Times", HighLogic.Skin.button);
             _workingPreset.GeneralSettings.KSCUpgradeTimes = GUILayout.Toggle(_workingPreset.GeneralSettings.KSCUpgradeTimes, "KSC Upgrade Times", HighLogic.Skin.button);
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Starting Personnel:");
-            _workingPreset.GeneralSettings.StartingPersonnel.FromCommaString(GUILayout.TextField(_workingPreset.GeneralSettings.StartingPersonnel.ToCommaString(), GUILayout.Width(100)));
-            GUILayout.EndHorizontal();
+            
             GUILayout.EndVertical();
             GUILayout.EndVertical(); //end Features
 

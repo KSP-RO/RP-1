@@ -96,7 +96,7 @@ namespace KerbalConstructionTime
             double engineers = 0d;
             foreach (var lc in ksc.LaunchComplexes)
                 engineers += GetEffectiveEngineersForSalary(lc);
-            return engineers + ksc.UnassignedEngineers * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;
+            return engineers + ksc.UnassignedEngineers * Database.SettingsSC.IdleSalaryMult;
         }
 
         public static double GetEffectiveEngineersForSalary(KSCItem ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
@@ -106,12 +106,12 @@ namespace KerbalConstructionTime
             if (lc.IsOperational && lc.Engineers > 0)
             {
                 if (lc.IsIdle) // not IsActive because completed rollouts/airlaunches still count
-                    return lc.Engineers * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;
+                    return lc.Engineers * Database.SettingsSC.IdleSalaryMult;
 
                 if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
                 {
                     int num = System.Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
-                    return num * lc.RushSalary + (lc.Engineers - num) * PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult;
+                    return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.IdleSalaryMult;
                 }
 
                 return lc.Engineers * lc.RushSalary;

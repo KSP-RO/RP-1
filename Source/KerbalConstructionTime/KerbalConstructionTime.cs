@@ -763,7 +763,7 @@ namespace KerbalConstructionTime
                     foreach (var ksc in KCTGameStates.KSCs)
                         ksc.EnsureStartingLaunchComplexes();
 
-                    KerbalConstructionTimeData.Instance.Applicants = PresetManager.Instance.GetStartingPersonnel(HighLogic.CurrentGame.Mode);
+                    KerbalConstructionTimeData.Instance.Applicants = Database.SettingsSC.GetStartingPersonnel(HighLogic.CurrentGame.Mode);
                 }
                 else if (KerbalConstructionTimeData.Instance.FirstRunNotComplete)
                 {

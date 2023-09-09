@@ -31,7 +31,7 @@ namespace RP0.Harmony
             return Localizer.Format("#rp0_Widgets_Science_Tooltip",
                                     pts.ToString("N1"),
                                     LocalizationHandler.FormatRatioAsPercent(Formula.GetScienceResearchEfficiencyMult(pts)),
-                                    LocalizationHandler.FormatRatioAsPercent(PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetMultiplier()),
+                                    LocalizationHandler.FormatRatioAsPercent(Database.SettingsSC.ResearcherEfficiencyUpgrades.GetMultiplier()),
                                     UnlockCreditHandler.Instance.TotalCredit.ToString("N0"));
         }
     }

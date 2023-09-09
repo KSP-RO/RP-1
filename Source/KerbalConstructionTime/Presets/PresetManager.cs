@@ -167,18 +167,6 @@ namespace KerbalConstructionTime
             FindPresetFiles();
             LoadPresets();
         }
-
-        public int GetStartingPersonnel(Game.Modes mode)
-        {
-            if (mode == Game.Modes.CAREER)
-            {
-                return ActivePreset.GeneralSettings.StartingPersonnel[0];
-            }
-            else
-            {
-                return ActivePreset.GeneralSettings.StartingPersonnel[1];
-            }
-        }
     }
 
     public class KCT_Preset
@@ -186,20 +174,10 @@ namespace KerbalConstructionTime
         internal string _presetFileLocation = string.Empty;
 
         public KCT_Preset_General GeneralSettings = new KCT_Preset_General();
-        public KCT_Preset_Part_Variables PartVariables = new KCT_Preset_Part_Variables();
 
         public string Name = "UNINIT", ShortName = "UNINIT", Description = "NA", Author = "NA";
         public bool CareerEnabled = true, ScienceEnabled = true, SandboxEnabled = true;    //These just control whether it should appear during these game types
         public bool AllowDeletion = true;
-
-        public int GetResearcherCap(int lvl = -1)
-        {
-            return -1;
-
-            /*if (lvl == -1)
-                lvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
-            return GeneralSettings.ResearcherCaps[lvl];*/
-        }
 
         public KCT_Preset(string filePath)
         {
@@ -227,7 +205,6 @@ namespace KerbalConstructionTime
             SandboxEnabled = Source.SandboxEnabled;
 
             ConfigNode.LoadObjectFromConfig(GeneralSettings, ConfigNode.CreateConfigFromObject(Source.GeneralSettings));
-            PartVariables.FromConfigNode(Source.PartVariables.AsConfigNode());
         }
 
         public ConfigNode AsConfigNode()
@@ -247,7 +224,6 @@ namespace KerbalConstructionTime
             var gs = node.AddNode("KCT_Preset_General");
             ConfigNode.CreateConfigFromObject(GeneralSettings, gs);
 
-            node.AddNode(PartVariables.AsConfigNode());
             return node;
         }
 
@@ -266,9 +242,6 @@ namespace KerbalConstructionTime
 
             ConfigNode gNode = node.GetNode("KCT_Preset_General");
             ConfigNode.LoadObjectFromConfig(GeneralSettings, gNode);
-
-            if (node.HasNode("KCT_Preset_Part_Variables"))
-                PartVariables.FromConfigNode(node.GetNode("KCT_Preset_Part_Variables"));
         }
 
         public void SaveToFile(string filePath)
@@ -300,203 +273,10 @@ namespace KerbalConstructionTime
         }
     }
 
-    public class ApplicantsFromContracts : EfficiencyUpgrades, IConfigNode
-    {
-        public int GetApplicantsFromContract(string contract) => (int)GetValue(contract);
-    }
-
-    public class EfficiencyUpgrades : IConfigNode
-    {
-        private Dictionary<string, double> techMultipliers = new Dictionary<string, double>();
-
-        public void Load(ConfigNode node)
-        {
-            techMultipliers.Clear();
-            foreach (ConfigNode.Value kvp in node.values)
-            {
-                if (double.TryParse(kvp.value, out double val))
-                    techMultipliers[kvp.name] = val;
-            }
-        }
-
-        public void Save(ConfigNode node)
-        {
-            foreach (var kvp in techMultipliers)
-                node.AddValue(kvp.Key, kvp.Value);
-        }
-
-        public double GetMultiplier()
-        {
-            double mult = 1d;
-            foreach (var kvp in techMultipliers)
-            {
-                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
-                    mult += kvp.Value;
-            }
-
-            return mult;
-        }
-
-        public double GetSum()
-        {
-            double sum = 0d;
-            foreach (var kvp in techMultipliers)
-            {
-                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
-                    sum += kvp.Value;
-            }
-            return sum;
-        }
-
-        public double GetValue(string tech)
-        {
-            double val;
-            if (techMultipliers.TryGetValue(tech, out val))
-                return val;
-
-            return 0d;
-        }
-    }
-
     public class KCT_Preset_General
     {
         [Persistent]
         public bool Enabled = true, BuildTimes = true, TechUnlockTimes = true, KSCUpgradeTimes = true;
-        [Persistent]
-        public string VABRecoveryTech = null;
-        [Persistent]
-        public int HireCost = 200;
-        [Persistent]
-        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, MergingTimePenalty = 0.05d, 
-            EffectiveCostPerLiterPerResourceMult = 0.1d;
-        [Persistent]
-        public FloatCurve EngineerSkillupRate = new FloatCurve();
-        [Persistent]
-        public FloatCurve ConstructionRushCost = new FloatCurve();
-        [Persistent]
-        public FloatCurve YearBasedRateMult = new FloatCurve();
-        [Persistent]
-        public EfficiencyUpgrades LCEfficiencyUpgradesMin = new EfficiencyUpgrades();
-        [Persistent]
-        public EfficiencyUpgrades LCEfficiencyUpgradesMax = new EfficiencyUpgrades();
-        [Persistent]
-        public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
-        [Persistent]
-        public FloatCurve ScienceResearchEfficiency = new FloatCurve();
-
-        [Persistent]
-        public PersistentListValueType<int> StartingPersonnel = new PersistentListValueType<int>();
-        [Persistent]
-        public PersistentListValueType<int> ResearcherCaps = new PersistentListValueType<int>();
-
-        [Persistent]
-        public ApplicantsFromContracts ContractApplicants = new ApplicantsFromContracts();
-
-        public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
-        public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
-        public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier()
-            * Formula.GetScienceResearchEfficiencyMult(KerbalConstructionTimeData.Instance.SciPointsTotal);
-    }
-
-    public class KCT_Preset_Part_Variables
-    {
-        //provides the variables [PV] and [RV] to the EffectiveCost functions
-        public Dictionary<string, double> Part_Variables = new Dictionary<string, double>();
-        public Dictionary<string, double> Resource_Variables = new Dictionary<string, double>();
-
-        private ConfigNode DictionaryToNode(Dictionary<string, double> theDict, string nodeName)
-        {
-            var node = new ConfigNode(nodeName);
-            foreach (KeyValuePair<string, double> kvp in theDict)
-                node.AddValue(kvp.Key, kvp.Value);
-
-            return node;
-        }
-
-        private Dictionary<string, double> NodeToDictionary(ConfigNode node)
-        {
-            var dict = new Dictionary<string, double>();
-
-            foreach (ConfigNode.Value val in node.values)
-            {
-                double.TryParse(val.value, out double tmp);
-                dict.Add(val.name, tmp);
-            }
-
-            return dict;
-        }
-
-        public ConfigNode AsConfigNode()
-        {
-            var node = new ConfigNode("KCT_Preset_Part_Variables");
-            node.AddNode(DictionaryToNode(Part_Variables, "Part_Variables"));
-            node.AddNode(DictionaryToNode(Resource_Variables, "Resource_Variables"));
-
-            return node;
-        }
-
-        public void FromConfigNode(ConfigNode node)
-        {
-            Part_Variables.Clear();
-            Resource_Variables.Clear();
-
-            if (node.HasNode("Part_Variables"))
-                Part_Variables = NodeToDictionary(node.GetNode("Part_Variables"));
-            if (node.HasNode("Resource_Variables"))
-                Resource_Variables = NodeToDictionary(node.GetNode("Resource_Variables"));
-        }
-
-        public double GetPartVariable(string partName)
-        {
-            if (Part_Variables.ContainsKey(partName))
-                return Part_Variables[partName];
-            return 1.0;
-        }
-
-        public double GetValueModifier(Dictionary<string, double> dict, IEnumerable<string> tags)
-        {
-            double value = 1.0;
-            foreach (var name in tags)
-            {
-                if (dict?.ContainsKey(name) == true)
-                    value *= dict[name];
-            }
-            return value;
-
-        }
-
-        public double GetValueModifierMax(Dictionary<string, double> dict, IEnumerable<string> tags)
-        {
-            double value = 1.0;
-            foreach (var name in tags)
-            {
-                if (dict?.ContainsKey(name) == true)
-                    value = System.Math.Max(value, dict[name]);
-            }
-            return value;
-
-        }
-
-        //These are all multiplied in case multiple variables exist on one part
-        public double GetResourceVariablesMult(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
-
-        public double GetResourceVariablesMult(PartResourceList resources)
-        {
-            double value = 1.0;
-            foreach (PartResource r in resources)
-            {
-                if (Resource_Variables.ContainsKey(r.resourceName))
-                    value *= Resource_Variables[r.resourceName];
-            }
-            return value;
-        }
-
-        public double GetResourceVariableMult(string resName)
-        {
-            if (Resource_Variables.TryGetValue(resName, out double m))
-                return m;
-            return 1d;
-        }
     }
 }
 

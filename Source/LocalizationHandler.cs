@@ -47,14 +47,14 @@ namespace RP0
                     if (up.name.StartsWith("rp0EngineerUpgrade"))
                     {
                         up.description = Localizer.Format("#rp0_EfficiencyUpgrade_Engineers_Text", 
-                            (PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyUpgradesMin.GetValue(up.techRequired) * 100d).ToString("N0"),
-                            (PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyUpgradesMax.GetValue(up.techRequired) * 100d).ToString("N0"));
+                            (Database.SettingsSC.LCEfficiencyUpgradesMin.GetValue(up.techRequired) * 100d).ToString("N0"),
+                            (Database.SettingsSC.LCEfficiencyUpgradesMax.GetValue(up.techRequired) * 100d).ToString("N0"));
                         continue;
                     }
 
                     if (up.name.StartsWith("rp0ResearcherUpgrade"))
                     {
-                        up.description = Localizer.Format("#rp0_EfficiencyUpgrade_Researchers_Text", (PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
+                        up.description = Localizer.Format("#rp0_EfficiencyUpgrade_Researchers_Text", (Database.SettingsSC.ResearcherEfficiencyUpgrades.GetValue(up.techRequired) * 100d).ToString("N0"));
                         continue;
                     }
                 }

@@ -368,7 +368,7 @@ namespace KerbalConstructionTime
         public int HireCost = 200;
         [Persistent]
         public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, MergingTimePenalty = 0.05d, 
-            EffectiveCostPerLiterPerResourceMult = 0.1d, ResearcherSciEfficiencyOffset = -1000d, ResearcherSciEfficiencyMult = 0.0001d;
+            EffectiveCostPerLiterPerResourceMult = 0.1d;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();
         [Persistent]
@@ -393,7 +393,7 @@ namespace KerbalConstructionTime
         public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
         public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
         public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier()
-            * (1d + System.Math.Max(0d, (KerbalConstructionTimeData.Instance.SciPointsTotal + ResearcherSciEfficiencyOffset) * ResearcherSciEfficiencyMult));
+            * Formula.GetScienceResearchEfficiencyMult(KerbalConstructionTimeData.Instance.SciPointsTotal);
     }
 
     public class KCT_Preset_Part_Variables

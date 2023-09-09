@@ -62,9 +62,19 @@ namespace KerbalConstructionTime
             if (index > 0)
                 return 0d;
 
-            double rate = Personnel > 0 ? 1 + Personnel * 0.075d : 0.001d;
+            double rate = Personnel > 0 ? 0.5 + Personnel * 0.05d : 0.001d;
             const double yearToSec = 1d / (86400d * 365d);
             return rate * yearToSec;
+        }
+
+        public static double GetScienceResearchEfficiencyMult(double totalSci)
+        {
+            const double offset = 100d;
+            const double mult = 0.00015d;
+            if (totalSci < offset)
+                return 1d;
+
+            return 1d + (totalSci - offset) * mult;
         }
 
         public static double GetVesselBuildPoints(double totalEffectiveCost)

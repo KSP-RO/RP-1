@@ -25,8 +25,13 @@ namespace RP0.Harmony
 
         private static string GetTooltipText()
         {
+            double pts = KerbalConstructionTimeData.Instance.SciPointsTotal;
+            if (pts < 0d)
+                pts = 0d;
             return Localizer.Format("#rp0_Widgets_Science_Tooltip",
-                                    System.Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal).ToString("N1"),
+                                    pts.ToString("N1"),
+                                    LocalizationHandler.FormatRatioAsPercent(Formula.GetScienceResearchEfficiencyMult(pts) - 1d),
+                                    LocalizationHandler.FormatRatioAsPercent(PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiencyUpgrades.GetMultiplier() - 1d),
                                     UnlockCreditHandler.Instance.TotalCredit.ToString("N0"));
         }
     }

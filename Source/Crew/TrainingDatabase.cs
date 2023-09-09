@@ -194,7 +194,7 @@ namespace RP0.Crew
             int maxLevel = 0;
             foreach (var s in unlockPathTracker)
             {
-                if (CrewHandler.Settings.ACLevelsForTraining.TryGetValue(s, out var lvl) && lvl > maxLevel)
+                if (KerbalConstructionTime.Database.SettingsCrew.ACLevelsForTraining.TryGetValue(s, out var lvl) && lvl > maxLevel)
                     maxLevel = lvl;
             }
 

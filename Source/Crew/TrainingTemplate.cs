@@ -94,7 +94,7 @@ namespace RP0.Crew
 
             averageStupid /= sC;
 
-            return curTime * UtilMath.Lerp(CrewHandler.Settings.trainingMissionStupidMin, CrewHandler.Settings.trainingMissionStupidMax, averageStupid);
+            return curTime * UtilMath.Lerp(KerbalConstructionTime.Database.SettingsCrew.trainingMissionStupidMin, KerbalConstructionTime.Database.SettingsCrew.trainingMissionStupidMax, averageStupid);
         }
 
         public double GetExpiration(ProtoCrewMember pcm)

@@ -102,7 +102,7 @@ namespace KerbalConstructionTime
             double massToUse = vLC.LCType == LaunchComplexType.Pad ? vLC.MassMax : vessel.GetTotalMass();
             double lcPortion = Math.Pow(massToUse, 0.75d) * 20d * multHR;
             double result = vesselPortion + lcPortion;
-            return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * RP0.MaintenanceHandler.Settings.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
         }
 
         public static double GetIntegrationCost(BuildListVessel vessel)
@@ -131,7 +131,7 @@ namespace KerbalConstructionTime
                 return 0;
 
             double result = vessel.effectiveCost * 0.25d;
-            return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetAirlaunchBP(vessel) * RP0.MaintenanceHandler.Settings.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetAirlaunchBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
         }
 
         public static double GetAirlaunchBP(BuildListVessel vessel)

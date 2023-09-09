@@ -33,20 +33,6 @@ namespace RP0.Crew
         }
 
         public static CrewHandler Instance { get; private set; } = null;
-        private static CrewHandlerSettings _settings = null;
-        public static CrewHandlerSettings Settings
-        {
-            get
-            {
-                if (_settings == null)
-                {
-                    _settings = new CrewHandlerSettings();
-                    foreach (ConfigNode stg in GameDatabase.Instance.GetConfigNodes("CREWHANDLERSETTINGS"))
-                        Settings.Load(stg);
-                }
-                return _settings;
-            }
-        }
 
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = -1;
@@ -407,7 +393,7 @@ namespace RP0.Crew
             double retIncreaseTotal = GetRetireIncreaseTime(pcmName);
             if (retTime > 0d)
             {
-                double retIncreaseLeft = Settings.retireIncreaseCap - retIncreaseTotal;
+                double retIncreaseLeft = Database.SettingsCrew.retireIncreaseCap - retIncreaseTotal;
                 return retTime + retIncreaseLeft;
             }
 
@@ -433,11 +419,11 @@ namespace RP0.Crew
 
             double retIncreaseTotal = GetRetireIncreaseTime(pcmName);
             double newTotal = retIncreaseTotal + retireOffset;
-            if (newTotal > Settings.retireIncreaseCap)
+            if (newTotal > Database.SettingsCrew.retireIncreaseCap)
             {
                 // Cap the total retirement increase at a specific number of years
-                retireOffset = retIncreaseTotal - Settings.retireIncreaseCap;
-                newTotal = Settings.retireIncreaseCap;
+                retireOffset = retIncreaseTotal - Database.SettingsCrew.retireIncreaseCap;
+                newTotal = Database.SettingsCrew.retireIncreaseCap;
             }
             _retireIncreases[pcmName] = newTotal;
 
@@ -483,9 +469,9 @@ namespace RP0.Crew
             // This can happen when an on-the-pad failure occurs and the vessel is recovered.
             // We could perhaps override this if they're not actually in flight
             // (if the user didn't recover right from the pad I think this is a fair assumption)
-            if (elapsedTime < Settings.minFlightDurationSecondsForTrainingExpire)
+            if (elapsedTime < Database.SettingsCrew.minFlightDurationSecondsForTrainingExpire)
             {
-                Debug.Log($"[RP-0] - mission time too short for crew to be inactive (elapsed time was {elapsedTime}, settings set for {Settings.minFlightDurationSecondsForTrainingExpire})");
+                Debug.Log($"[RP-0] - mission time too short for crew to be inactive (elapsed time was {elapsedTime}, settings set for {Database.SettingsCrew.minFlightDurationSecondsForTrainingExpire})");
                 return;
             }
 
@@ -497,7 +483,7 @@ namespace RP0.Crew
             };
 
 
-            double acMult = Settings.ACRnRMults[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
+            double acMult = Database.SettingsCrew.ACRnRMults[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             var allFlightsDict = new Dictionary<string, int>();
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {
@@ -539,7 +525,7 @@ namespace RP0.Crew
 
                         if (TryGetBestSituationMatch(e.target, e.type, "Retire", out double situationMult))
                         {
-                            double countMult = 1 + Math.Pow(situationCount - 1, Settings.retireOffsetFlightNumPow);
+                            double countMult = 1 + Math.Pow(situationCount - 1, Database.SettingsCrew.retireOffsetFlightNumPow);
                             retirementMult += situationMult / countMult;
                         }
 
@@ -554,9 +540,9 @@ namespace RP0.Crew
 
                 if (GetRetireTime(pcm.name) > 0d)
                 {
-                    double stupidityPenalty = UtilMath.Lerp(Settings.retireOffsetStupidMin, Settings.retireOffsetStupidMax, pcm.stupidity);
+                    double stupidityPenalty = UtilMath.Lerp(Database.SettingsCrew.retireOffsetStupidMin, Database.SettingsCrew.retireOffsetStupidMax, pcm.stupidity);
                     Debug.Log($"[RP-0]  stupidityPenalty for {pcm.stupidity}: {stupidityPenalty}");
-                    double retireOffset = retirementMult * 86400 * Settings.retireOffsetBaseMult / stupidityPenalty * retireCMQmult;
+                    double retireOffset = retirementMult * 86400 * Database.SettingsCrew.retireOffsetBaseMult / stupidityPenalty * retireCMQmult;
 
                     retireOffset = IncreaseRetireTime(pcm.name, retireOffset);
                     retirementChanges.Add($"\n{pcm.name}, +{KSPUtil.PrintDateDelta(retireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(GetRetireTime(pcm.name), false)}");
@@ -564,8 +550,8 @@ namespace RP0.Crew
 
                 inactivityMult = Math.Max(1, inactivityMult);
                 double elapsedTimeDays = elapsedTime / 86400;
-                double inactiveTimeDays = Math.Max(Settings.inactivityMinFlightDurationDays, Math.Pow(elapsedTimeDays, Settings.inactivityFlightDurationExponent)) *
-                                          Math.Min(Settings.inactivityMaxSituationMult, inactivityMult) * acMult;
+                double inactiveTimeDays = Math.Max(Database.SettingsCrew.inactivityMinFlightDurationDays, Math.Pow(elapsedTimeDays, Database.SettingsCrew.inactivityFlightDurationExponent)) *
+                                          Math.Min(Database.SettingsCrew.inactivityMaxSituationMult, inactivityMult) * acMult;
                 double inactiveTime = inactiveTimeDays * 86400d * inactiveCMQmult;
                 Debug.Log($"[RP-0] inactive for: {KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
 
@@ -611,13 +597,13 @@ namespace RP0.Crew
         private bool TryGetBestSituationMatch(string body, string situation, string type, out double situationMult)
         {
             var key = $"{body}-{situation}-{type}";
-            if (Settings.SituationValues.TryGetValue(key, out situationMult))
+            if (Database.SettingsCrew.SituationValues.TryGetValue(key, out situationMult))
                 return true;
 
             if (body != FlightGlobals.GetHomeBodyName())
             {
                 key = $"Other-{situation}-{type}";
-                if (Settings.SituationValues.TryGetValue(key, out situationMult))
+                if (Database.SettingsCrew.SituationValues.TryGetValue(key, out situationMult))
                     return true;
             }
 
@@ -677,7 +663,7 @@ namespace RP0.Crew
                 foreach (string s in newHires)
                     sb.Append($"\n{s}, {KSPUtil.PrintDate(GetRetireTime(s), false)}");
 
-                sb.Append($"\n\nInteresting flights and training will delay retirement up to an additional {Math.Round(Settings.retireIncreaseCap / (365.25d * 86400d))} years.");
+                sb.Append($"\n\nInteresting flights and training will delay retirement up to an additional {Math.Round(Database.SettingsCrew.retireIncreaseCap / (365.25d * 86400d))} years.");
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",
@@ -797,9 +783,9 @@ namespace RP0.Crew
         private double GetServiceTime(ProtoCrewMember pcm)
         {
             return CurrencyUtils.Time(TransactionReasonsRP0.TimeRetirement, 86400d * 365.25d *
-                (Settings.retireBaseYears +
-                 UtilMath.Lerp(Settings.retireCourageMin, Settings.retireCourageMax, pcm.courage) +
-                 UtilMath.Lerp(Settings.retireStupidMin, Settings.retireStupidMax, pcm.stupidity)));
+                (Database.SettingsCrew.retireBaseYears +
+                 UtilMath.Lerp(Database.SettingsCrew.retireCourageMin, Database.SettingsCrew.retireCourageMax, pcm.courage) +
+                 UtilMath.Lerp(Database.SettingsCrew.retireStupidMin, Database.SettingsCrew.retireStupidMax, pcm.stupidity)));
         }
 
         public double GetTrainingFinishTime(ProtoCrewMember pcm)
@@ -964,7 +950,7 @@ namespace RP0.Crew
             c.isTemporary = isTemporary;
             c.timeUseStupid = true;
             c.seatMax = ap.partPrefab.CrewCapacity * TrainingTemplate.SeatMultiplier;
-            c.expiration = Settings.trainingMissionExpirationDays * 86400d;
+            c.expiration = Database.SettingsCrew.trainingMissionExpirationDays * 86400d;
             c.prereq = new TrainingFlightEntry(TrainingType_Proficiency, name);
             c.training = new TrainingFlightEntry(TrainingType_Mission, name);
 
@@ -1095,7 +1081,7 @@ namespace RP0.Crew
                             return courseLength;
                     }
 
-                    return courseLength * (1d + Settings.retireIncreaseMultiplierToTrainingLengthMission);
+                    return courseLength * (1d + Database.SettingsCrew.retireIncreaseMultiplierToTrainingLengthMission);
 
                 case TrainingType_Proficiency:
                     if (specificTrainingsSinceFlight > 0)
@@ -1106,7 +1092,7 @@ namespace RP0.Crew
                     if (anyTrainingsCount > 1)
                         return courseLength;
 
-                    return courseLength * (1d + Settings.retireIncreaseMultiplierToTrainingLengthProficiency);
+                    return courseLength * (1d + Database.SettingsCrew.retireIncreaseMultiplierToTrainingLengthProficiency);
             }
 
             return 0d;

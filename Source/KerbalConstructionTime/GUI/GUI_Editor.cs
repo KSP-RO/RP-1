@@ -98,7 +98,7 @@ namespace KerbalConstructionTime
             if (bR > 0d && rateWithCurEngis > 0d)
             {
                 double effectiveEngCount = bR / rateWithCurEngis * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Engineers;
-                double salaryPerDayAboveIdle = RP0.MaintenanceHandler.Settings.salaryEngineers * (1d / 365.25d) * (1d - PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult);
+                double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - PresetManager.Instance.ActivePreset.GeneralSettings.IdleSalaryMult);
                 double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
             }

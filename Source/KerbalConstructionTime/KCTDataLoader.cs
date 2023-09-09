@@ -15,6 +15,9 @@ namespace KerbalConstructionTime
         public static List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
         public static Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
 
+        public static readonly RP0.MaintenanceSettings SettingsSC = new RP0.MaintenanceSettings();
+        public static readonly RP0.Crew.CrewHandlerSettings SettingsCrew = new RP0.Crew.CrewHandlerSettings();
+
         private void Awake()
         {
             if (LoadingScreen.Instance?.loaders is List<LoadingSystem> loaders)
@@ -35,7 +38,7 @@ namespace KerbalConstructionTime
 
     public class KCTDataLoader : LoadingSystem
     {
-        private const float NumLoaders = 4f;
+        private const float NumLoaders = 6f;
 
         private IEnumerator LoadRoutine()
         {
@@ -47,6 +50,10 @@ namespace KerbalConstructionTime
             _progress = 3f;
             yield return StartCoroutine(LoadFacilityData());
             _progress = 4f;
+            yield return StartCoroutine(LoadSpaceCenterSettings());
+            _progress = 5f;
+            yield return StartCoroutine(LoadCrewSettings());
+            _progress = 6f;
             yield return null;
 
             isReady = true;
@@ -64,7 +71,7 @@ namespace KerbalConstructionTime
                 yield break;
 
             int vCount = configNode.values.Count;
-            for(int i = 0; i < vCount; ++i)
+            for (int i = 0; i < vCount; ++i)
             {
                 ConfigNode.Value v = configNode.values[i];
                 if (string.IsNullOrEmpty(v.value))
@@ -86,13 +93,13 @@ namespace KerbalConstructionTime
         {
             KerbalConstructionTime.KCTCostModifiers.Clear();
             var node = GameDatabase.Instance.GetConfigNodes("KCTTAGS")?.FirstOrDefault();
-            if(node == null)
+            if (node == null)
                 yield break;
 
             var nodes = node.GetNodes("TAG");
             int len = nodes.Length;
             float inc = 1f / len;
-            for(int i = 0; i < len; ++i)
+            for (int i = 0; i < len; ++i)
             {
                 _progress += inc;
                 var tagNode = nodes[i];
@@ -179,6 +186,24 @@ namespace KerbalConstructionTime
                     costList.FromCommaString<int>(costs);
                     Database.FacilityLevelCosts[fac] = costList;
                 }
+            }
+        }
+
+        private IEnumerator LoadSpaceCenterSettings()
+        {
+            foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("SPACECENTERSETTINGS"))
+            {
+                Database.SettingsSC.Load(n);
+                yield return null;
+            }
+        }
+
+        private IEnumerator LoadCrewSettings()
+        {
+            foreach (ConfigNode stg in GameDatabase.Instance.GetConfigNodes("CREWSETTINGS"))
+            {
+                Database.SettingsCrew.Load(stg);
+                yield return null;
             }
         }
 

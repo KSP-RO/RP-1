@@ -130,8 +130,8 @@ namespace RP0
             }
             else if (facilityType == SpaceCenterFacility.AstronautComplex)
             {
-                double rrMult = Crew.CrewHandler.Settings.ACRnRMults[lvlIdx];
-                double trainingRate = Crew.CrewHandler.Settings.ACTrainingRates[lvlIdx];
+                double rrMult = Database.SettingsCrew.ACRnRMults[lvlIdx];
+                double trainingRate = Database.SettingsCrew.ACTrainingRates[lvlIdx];
                 lvl.levelStats.textBase = "[EVA]\n[EVAFlags]";
                 if (rrMult != 1d)
                     lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_RnR", FormatRatioAsPercent(rrMult))}";
@@ -139,7 +139,7 @@ namespace RP0
                 if (trainingRate != 1d)
                     lvl.levelStats.textBase += $"\n{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_AC_TrainingRate", FormatRatioAsPercent(trainingRate))}";
 
-                foreach (var kvp in Crew.CrewHandler.Settings.ACLevelsForTraining)
+                foreach (var kvp in Database.SettingsCrew.ACLevelsForTraining)
                 {
                     if (kvp.Value == lvlIdx)
                     {

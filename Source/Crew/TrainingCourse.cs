@@ -180,8 +180,8 @@ namespace RP0.Crew
                     {
                         double expireTime = _template.expiration;
                         if (_template.expirationUseStupid)
-                            expireTime *= UtilMath.Lerp(CrewHandler.Settings.trainingProficiencyStupidMin,
-                                CrewHandler.Settings.trainingProficiencyStupidMax,
+                            expireTime *= UtilMath.Lerp(Database.SettingsCrew.trainingProficiencyStupidMin,
+                                Database.SettingsCrew.trainingProficiencyStupidMax,
                                 student.stupidity);
                         expireTime += Planetarium.GetUniversalTime();
 
@@ -278,7 +278,7 @@ namespace RP0.Crew
         public static double CalculateBuildRate()
         {
             double r = 1d;
-            r *= CrewHandler.Settings.ACTrainingRates[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
+            r *= Database.SettingsCrew.ACTrainingRates[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             r *= CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
             return r;
         }

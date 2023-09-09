@@ -69,12 +69,12 @@ namespace RP0.Harmony
             MaintenanceHandler.SubsidyDetails details = new MaintenanceHandler.SubsidyDetails();
             MaintenanceHandler.FillSubsidyDetails(ref details, Planetarium.GetUniversalTime(), Reputation.Instance.reputation);
 
-            double repLostPerDay = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -Reputation.Instance.reputation * MaintenanceHandler.Settings.repPortionLostPerDay);
+            double repLostPerDay = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -Reputation.Instance.reputation * KerbalConstructionTime.Database.SettingsSC.repPortionLostPerDay);
             double repLostPerYear = repLostPerDay * 5.25d;
             double runningRep = Reputation.Instance.reputation - repLostPerYear;
             for (int i = 0; i < 12; ++i)
             {
-                double lossAmt = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -runningRep * MaintenanceHandler.Settings.repPortionLostPerDay) * 30d;
+                double lossAmt = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -runningRep * KerbalConstructionTime.Database.SettingsSC.repPortionLostPerDay) * 30d;
                 runningRep -= lossAmt;
                 repLostPerYear += lossAmt;
             }

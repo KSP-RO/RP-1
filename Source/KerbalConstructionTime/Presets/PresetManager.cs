@@ -381,6 +381,8 @@ namespace KerbalConstructionTime
         public EfficiencyUpgrades LCEfficiencyUpgradesMax = new EfficiencyUpgrades();
         [Persistent]
         public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
+        [Persistent]
+        public FloatCurve ScienceResearchEfficiency = new FloatCurve();
 
         [Persistent]
         public PersistentListValueType<int> StartingPersonnel = new PersistentListValueType<int>();

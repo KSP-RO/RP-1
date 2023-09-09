@@ -143,7 +143,7 @@ namespace KerbalConstructionTime
             if (_efficiency == _MaxEfficiency)
                 return;
 
-            double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((_efficiency - _MinEfficiency) / _EfficiencyRange));
+            double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((float)((_efficiency - _MinEfficiency) / _EfficiencyRange));
             double delta = _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
             IncreaseEfficiency(delta, true);
         }
@@ -183,7 +183,7 @@ namespace KerbalConstructionTime
             {
                 remainingTime -= timestep;
                 weightedEff += newEff * timestep;
-                double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
+                double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
                 newEff += _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
                 if (newEff >= _MaxEfficiency)
                 {
@@ -223,7 +223,7 @@ namespace KerbalConstructionTime
             }
             for (int i = steps; i-- > 0;)
             {
-                double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
+                double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
                 newEff += _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
                 if (newEff >= _MaxEfficiency)
                 {
@@ -333,8 +333,8 @@ namespace KerbalConstructionTime
         {
             _EfficiencyGainMult = RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.EfficiencyGainLC);
             double efficMult = RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.MaxEfficiencyLC);
-            _MinEfficiency = efficMult * PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyMin;
-            _MaxEfficiency = efficMult * PresetManager.Instance.ActivePreset.GeneralSettings.LCEfficiencyMax;
+            _MinEfficiency = efficMult * Database.SettingsSC.LCEfficiencyMin;
+            _MaxEfficiency = efficMult * Database.SettingsSC.LCEfficiencyMax;
             _EfficiencyRange = _MaxEfficiency - _MinEfficiency;
 
             if (KSP.UI.Screens.MessageSystem.Instance != null)

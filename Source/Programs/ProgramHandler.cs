@@ -331,7 +331,7 @@ namespace RP0.Programs
             if (data is ConfiguredContract cc)
             {
                 // Handle KCT applicants
-                int applicants = KerbalConstructionTime.PresetManager.Instance.ActivePreset.GeneralSettings.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
+                int applicants = KerbalConstructionTime.Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
                 if (applicants > 0)
                     KerbalConstructionTime.KerbalConstructionTimeData.Instance.Applicants += applicants;
 

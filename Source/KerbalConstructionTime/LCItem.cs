@@ -104,8 +104,8 @@ namespace KerbalConstructionTime
             }
         }
 
-        public double RushRate => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult : 1d;
-        public double RushSalary => IsRushing ? PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult : 1d;
+        public double RushRate => IsRushing ? Database.SettingsSC.RushRateMult : 1d;
+        public double RushSalary => IsRushing ? Database.SettingsSC.RushSalaryMult : 1d;
 
         public LaunchComplexType LCType => _lcData.lcType;
         public bool IsHumanRated => _lcData.isHumanRated;

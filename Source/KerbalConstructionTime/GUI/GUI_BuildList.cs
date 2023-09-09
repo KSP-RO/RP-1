@@ -1449,7 +1449,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
             activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
-                $"Enable rush integration.\nRate: {PresetManager.Instance.ActivePreset.GeneralSettings.RushRateMult:N1}x\nSalary cost: {PresetManager.Instance.ActivePreset.GeneralSettings.RushSalaryMult:N1}x{(activeLC.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"));
+                $"Enable rush integration.\nRate: {Database.SettingsSC.RushRateMult:N1}x\nSalary cost: {Database.SettingsSC.RushSalaryMult:N1}x{(activeLC.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"));
             if (oldRushing != activeLC.IsRushing)
                 Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
 

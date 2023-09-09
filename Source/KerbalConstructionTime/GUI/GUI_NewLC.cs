@@ -371,7 +371,7 @@ namespace KerbalConstructionTime
                     totalCost = (oldPadCost - curPadCost) * 0.5d;
                 // Modify case: Additional pads cost less to build, so cost less to modify.
                 if (lpMult > 1)
-                    totalCost *= 1d + (lpMult - 1d) * PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
+                    totalCost *= 1d + (lpMult - 1d) * Database.SettingsSC.AdditionalPadCostMult;
             }
 
             double oldTotalCost;
@@ -416,7 +416,7 @@ namespace KerbalConstructionTime
                     totalCostForMaintenance += curPadCost * lpMult;
 
                 // Additional pads cost less
-                curPadCost *= PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
+                curPadCost *= Database.SettingsSC.AdditionalPadCostMult;
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Max Engineers:", GUILayout.ExpandWidth(false));

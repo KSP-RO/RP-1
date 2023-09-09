@@ -61,6 +61,46 @@ namespace RP0
         [Persistent]
         public FloatCurve subsidyCurve = new FloatCurve();
 
+        [Persistent]
+        public string VABRecoveryTech = null;
+        [Persistent]
+        public int HireCost = 200;
+        [Persistent]
+        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, MergingTimePenalty = 0.05d,
+            EffectiveCostPerLiterPerResourceMult = 0.1d;
+        [Persistent]
+        public FloatCurve EngineerSkillupRate = new FloatCurve();
+        [Persistent]
+        public FloatCurve ConstructionRushCost = new FloatCurve();
+        [Persistent]
+        public FloatCurve YearBasedRateMult = new FloatCurve();
+        [Persistent]
+        public EfficiencyUpgrades LCEfficiencyUpgradesMin = new EfficiencyUpgrades();
+        [Persistent]
+        public EfficiencyUpgrades LCEfficiencyUpgradesMax = new EfficiencyUpgrades();
+        [Persistent]
+        public EfficiencyUpgrades ResearcherEfficiencyUpgrades = new EfficiencyUpgrades();
+        [Persistent]
+        public FloatCurve ScienceResearchEfficiency = new FloatCurve();
+
+        [Persistent]
+        public PersistentListValueType<int> StartingPersonnel = new PersistentListValueType<int>();
+        [Persistent]
+        public PersistentListValueType<int> ResearcherCaps = new PersistentListValueType<int>();
+
+        [Persistent]
+        public ApplicantsFromContracts ContractApplicants = new ApplicantsFromContracts();
+
+        [Persistent]
+        public PersistentDictionaryValueTypes<string, double> Part_Variables = new PersistentDictionaryValueTypes<string, double>();
+        [Persistent]
+        public PersistentDictionaryValueTypes<string, double> Resource_Variables = new PersistentDictionaryValueTypes<string, double>();
+
+        public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
+        public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
+        public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier()
+            * KerbalConstructionTime.Formula.GetScienceResearchEfficiencyMult(KerbalConstructionTime.KerbalConstructionTimeData.Instance.SciPointsTotal);
+
         public override void Load(ConfigNode node)
         {
             base.Load(node);
@@ -75,6 +115,125 @@ namespace RP0
         {
             for (int i = nautUpkeepTrainingBools.Count; i-- > 0;)
                 nautUpkeepTrainingBools[i] = false;
+        }
+
+        public int GetResearcherCap(int lvl = -1)
+        {
+            return -1;
+
+            /*if (lvl == -1)
+                lvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
+            return GeneralSettings.ResearcherCaps[lvl];*/
+        }
+
+        public int GetStartingPersonnel(Game.Modes mode)
+        {
+            if (mode == Game.Modes.CAREER)
+            {
+                return StartingPersonnel[0];
+            }
+            else
+            {
+                return StartingPersonnel[1];
+            }
+        }
+
+        public double GetPartVariable(string partName)
+        {
+            if (Part_Variables.TryGetValue(partName, out double d))
+                return d;
+            return 1d;
+        }
+
+        public double GetValueModifier(Dictionary<string, double> dict, IEnumerable<string> tags)
+        {
+            if (dict == null)
+                return 1d;
+
+            double value = 1d;
+            foreach (var name in tags)
+            {
+                if (dict.TryGetValue(name, out double d))
+                    value *= d;
+            }
+            return value;
+
+        }
+
+        public double GetValueModifierMax(Dictionary<string, double> dict, IEnumerable<string> tags)
+        {
+            if (dict == null)
+                return 1d;
+
+            double value = 1d;
+            foreach (var name in tags)
+            {
+                if (dict.TryGetValue(name, out double d))
+                    value = System.Math.Max(value, d);
+            }
+            return value;
+
+        }
+
+        //These are all multiplied in case multiple variables exist on one part
+        public double GetResourceVariablesMult(List<string> resourceNames) => GetValueModifier(Resource_Variables, resourceNames);
+
+        public double GetResourceVariablesMult(PartResourceList resources)
+        {
+            double value = 1d;
+            foreach (PartResource r in resources)
+            {
+                if (Resource_Variables.TryGetValue(r.resourceName, out double d))
+                    value *= d;
+            }
+            return value;
+        }
+
+        public double GetResourceVariableMult(string resName)
+        {
+            if (Resource_Variables.TryGetValue(resName, out double m))
+                return m;
+            return 1d;
+        }
+    }
+
+    public class ApplicantsFromContracts : EfficiencyUpgrades, IConfigNode
+    {
+        public int GetApplicantsFromContract(string contract) => (int)GetValue(contract);
+    }
+
+    public class EfficiencyUpgrades : PersistentDictionaryValueTypes<string, double>, IConfigNode
+    {
+        public double GetMultiplier()
+        {
+            double mult = 1d;
+            foreach (var kvp in this)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
+                    mult += kvp.Value;
+            }
+
+            return mult;
+        }
+
+        public double GetSum()
+        {
+            double sum = 0d;
+            foreach (var kvp in this)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
+                    sum += kvp.Value;
+            }
+            return sum;
+        }
+
+        public double GetValue(string tech)
+        {
+            double val;
+            if (TryGetValue(tech, out val))
+                return val;
+
+            return 0d;
         }
     }
 }

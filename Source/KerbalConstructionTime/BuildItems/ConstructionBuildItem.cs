@@ -23,7 +23,7 @@ namespace KerbalConstructionTime
 
         private double _buildRate = -1d;
 
-        public double RushMultiplier => workRate > 1f ? PresetManager.Instance.ActivePreset.GeneralSettings.ConstructionRushCost.Evaluate(workRate) : 1d;
+        public double RushMultiplier => workRate > 1f ? Database.SettingsSC.ConstructionRushCost.Evaluate(workRate) : 1d;
 
         public double RemainingCost => -RP0.CurrencyUtils.Funds(
             FacilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction,

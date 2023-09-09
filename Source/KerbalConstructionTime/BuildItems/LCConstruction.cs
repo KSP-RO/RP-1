@@ -76,7 +76,7 @@ namespace KerbalConstructionTime
                 lc.IsOperational = true;
                 lc.RecalculateBuildRates();
                 lc.Stats.GetCostStats(out double padCost, out _, out _);
-                padCost *= PresetManager.Instance.ActivePreset.GeneralSettings.AdditionalPadCostMult;
+                padCost *= Database.SettingsSC.AdditionalPadCostMult;
                 foreach (var pc in lc.PadConstructions)
                 {
                     pc.SetBP(padCost, 0d);

@@ -102,7 +102,7 @@ namespace KerbalConstructionTime
 
         public static double GetResearcherEfficiencyMultipliers()
         {
-            return PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiency;
+            return Database.SettingsSC.ResearcherEfficiency;
         }
 
         public static bool IsClamp(Part part)
@@ -662,7 +662,7 @@ namespace KerbalConstructionTime
                 }
 
                 origTotalBP = oldProgressBP = Formula.GetIntegrationBP(ship, KerbalConstructionTimeData.Instance.MergedVessels) + Formula.GetVesselBuildPoints(totalEffectiveCost);
-                oldProgressBP *= (1 - PresetManager.Instance.ActivePreset.GeneralSettings.MergingTimePenalty);
+                oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 
             double newTotalBP = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
@@ -1332,7 +1332,7 @@ namespace KerbalConstructionTime
 
         public static bool IsVabRecoveryTechResearched()
         {
-            string reqTech = PresetManager.Instance.ActivePreset.GeneralSettings.VABRecoveryTech;
+            string reqTech = Database.SettingsSC.VABRecoveryTech;
             return string.IsNullOrEmpty(reqTech) ||
                    ResearchAndDevelopment.GetTechnologyState(reqTech) == RDTech.State.Available;
         }

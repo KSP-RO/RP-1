@@ -260,7 +260,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Max:", GUILayout.Width(90));
-            int resLimit = PresetManager.Instance.ActivePreset.GetResearcherCap();
+            int resLimit = Database.SettingsSC.GetResearcherCap();
             string resLimitStr = resLimit >= 0 ? resLimit.ToString("N0") : "Unlimited";
             GUILayout.Label(resLimitStr, GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -273,7 +273,7 @@ namespace KerbalConstructionTime
             else if (_currentPersonnelHover == PersonnelButtonHover.Fire)
                 delta = -fireAmount;
 
-            double efficiency = PresetManager.Instance.ActivePreset.GeneralSettings.ResearcherEfficiency;
+            double efficiency = Database.SettingsSC.ResearcherEfficiency;
             double days = GameSettings.KERBIN_TIME ? 4 : 1;
 
             _nodeRate = Formula.GetResearchRate(0, 0, delta);
@@ -358,14 +358,14 @@ namespace KerbalConstructionTime
                 }
                 fireAmount = Math.Min(workers, fireAmount);
 
-                double modifiedHireCost = -RP0.CurrencyUtils.Funds(research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers, -PresetManager.Instance.ActivePreset.GeneralSettings.HireCost);
+                double modifiedHireCost = -RP0.CurrencyUtils.Funds(research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers, -Database.SettingsSC.HireCost);
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = Math.Max(_buyModifierMultsPersonnel[0], KerbalConstructionTimeData.Instance.Applicants + (int)(Funding.Instance.Funds / modifiedHireCost));
 
                 if (research)
                 {
-                    int maxRes = PresetManager.Instance.ActivePreset.GetResearcherCap();
+                    int maxRes = Database.SettingsSC.GetResearcherCap();
                     if (maxRes < 0)
                         maxRes = int.MaxValue;
 
@@ -375,14 +375,14 @@ namespace KerbalConstructionTime
                 double workersToHire = Math.Max(0, workers - KerbalConstructionTimeData.Instance.Applicants);
                 _fundsCost = modifiedHireCost * workersToHire;
                 // Show the result for whatever you're asking for, even if you can't afford it.
-                hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / PresetManager.Instance.ActivePreset.GeneralSettings.HireCost) + KerbalConstructionTimeData.Instance.UnassignedPersonnel);
+                hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / Database.SettingsSC.HireCost) + KerbalConstructionTimeData.Instance.UnassignedPersonnel);
 
                 canAfford = Funding.Instance.Funds >= _fundsCost;
                 style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
                 if (GUILayout.Button($"Hire {workers:N0}: √{_fundsCost:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
                     // Note: have to pass base, not modified, cost here, since the CMQ reruns
-                    Utilities.SpendFunds(workersToHire * PresetManager.Instance.ActivePreset.GeneralSettings.HireCost, research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers);
+                    Utilities.SpendFunds(workersToHire * Database.SettingsSC.HireCost, research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers);
                     if (research)
                     {
                         Utilities.ChangeResearchers(workers);

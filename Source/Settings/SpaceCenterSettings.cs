@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RP0
 {
-    public class MaintenanceSettings : ConfigNodePersistenceBase
+    public class SpaceCenterSettings : ConfigNodePersistenceBase
     {
         [Persistent]
         public double facilityLevelCostMult = 0.00002d;

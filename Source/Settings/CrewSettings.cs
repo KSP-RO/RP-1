@@ -2,9 +2,9 @@
 using UnityEngine;
 using RP0.DataTypes;
 
-namespace RP0.Crew
+namespace RP0
 {
-    public class CrewHandlerSettings : ConfigNodePersistenceBase, IConfigNode
+    public class CrewSettings : ConfigNodePersistenceBase, IConfigNode
     {
         [Persistent]
         public double retireOffsetBaseMult = 100, retireOffsetFlightNumPow = 1.5, retireOffsetStupidMin = 1.4, retireOffsetStupidMax = 0.8, retireIncreaseCap = 473040000;

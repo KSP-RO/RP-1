@@ -15,8 +15,8 @@ namespace KerbalConstructionTime
         public static List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
         public static Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
 
-        public static readonly RP0.MaintenanceSettings SettingsSC = new RP0.MaintenanceSettings();
-        public static readonly RP0.Crew.CrewHandlerSettings SettingsCrew = new RP0.Crew.CrewHandlerSettings();
+        public static readonly RP0.SpaceCenterSettings SettingsSC = new RP0.SpaceCenterSettings();
+        public static readonly RP0.CrewSettings SettingsCrew = new RP0.CrewSettings();
 
         private void Awake()
         {

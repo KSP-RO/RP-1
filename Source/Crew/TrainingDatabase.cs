@@ -61,6 +61,20 @@ namespace RP0.Crew
                 return false;
             }
 
+            public void FillBools(List<string> items, List<bool> bools)
+            {
+                for (int i = items.Count; i-- > 0;)
+                {
+                    if (items[i] == name)
+                    {
+                        bools[i] = true;
+                        break;
+                    }
+                }
+                foreach (string s in children)
+                    TrainingDatabase._FillBools(s, items, bools);
+            }
+
             #endregion
         }
 
@@ -195,6 +209,23 @@ namespace RP0.Crew
                 return h.HasName(name);
 
             return false;
+        }
+
+        public static void FillBools(string name, List<string> items, List<bool> bools)
+        {
+            ClearTracker();
+            string sanName = Sanitize(name);
+            _FillBools(sanName, items, bools);
+        }
+
+        protected static void _FillBools(string name, List<string> items, List<bool> bools)
+        {
+            if (unlockPathTracker.Contains(name))
+                return;
+            unlockPathTracker.Add(name);
+
+            if (holders.TryGetValue(name, out var h))
+                h.FillBools(items, bools);
         }
 
         protected static void FillTrackerFromHolder(TrainingHolder h)

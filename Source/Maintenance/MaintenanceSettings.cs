@@ -1,8 +1,9 @@
 ﻿using RP0.DataTypes;
+using System.Collections.Generic;
 
 namespace RP0
 {
-    public class MaintenanceSettings
+    public class MaintenanceSettings : ConfigNodePersistenceBase
     {
         [Persistent]
         public double facilityLevelCostMult = 0.00002d;
@@ -32,16 +33,18 @@ namespace RP0
         public PersistentListValueType<double> nautYearlyUpkeepPerFacLevel = new PersistentListValueType<double>();
 
         [Persistent]
-        public double nautInFlightDailyRate = 100d;
+        public PersistentDictionaryValueTypes<string, double> nautYearlyUpkeepPerTraining = new PersistentDictionaryValueTypes<string, double>();
+        public List<string> nautUpkeepTrainings = new List<string>();
+        public List<bool> nautUpkeepTrainingBools = new List<bool>();
 
         [Persistent]
-        public double nautOrbitProficiencyUpkeepAdd = 20d;
+        public double nautInFlightDailyRate = 100d;
 
         [Persistent]
         public double nautInactiveMult = 0.5d;
 
         [Persistent]
-        public double nautSubOrbitProficiencyUpkeepAdd = 20d;
+        public double nautTrainingTypeCostMult = 0.25d;
 
         [Persistent]
         public PersistentListValueType<double> nautTrainingCostPerFacLevel = new PersistentListValueType<double>();
@@ -57,5 +60,21 @@ namespace RP0
 
         [Persistent]
         public FloatCurve subsidyCurve = new FloatCurve();
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            foreach (var k in nautYearlyUpkeepPerTraining.Keys)
+            {
+                nautUpkeepTrainings.Add(k);
+                nautUpkeepTrainingBools.Add(false);
+            }
+        }
+
+        public void ResetBools()
+        {
+            for (int i = nautUpkeepTrainingBools.Count; i-- > 0;)
+                nautUpkeepTrainingBools[i] = false;
+        }
     }
 }

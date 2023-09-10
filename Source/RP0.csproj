@@ -64,6 +64,7 @@
     <Compile Include="DataTypes\PersistentCompressedConfigNode.cs" />
     <Compile Include="DataTypes\PersistentSortedList.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
+    <Compile Include="DTUtils.cs" />
     <Compile Include="Harmony\MainMenu.cs" />
     <Compile Include="Harmony\CrewListItem.cs" />
     <Compile Include="Harmony\EditorDriver.cs" />
@@ -327,9 +328,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ToolbarControl">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="MagiCore">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">

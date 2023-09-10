@@ -1641,46 +1641,6 @@ namespace KerbalConstructionTime
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
-        private const double MaxSecondsForDayDisplay = 7d * 86400d;
-        private const double MaxTimeToDisplay = 100d * 365.25d * 86400d;
-
-        public static string GetColonFormattedTime(double t, double extraTime = 0d, bool flip = false)
-        {
-            if (double.IsNaN(t) || double.IsInfinity(t))
-                return "(infinity)";
-
-            bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay;
-            double timeCheck = (shouldUseDate ^ flip) ? extraTime + t : t;
-            if (timeCheck > MaxTimeToDisplay)
-                return "(infinity)";
-
-            if (shouldUseDate ^ flip)
-                return KSPUtil.dateTimeFormatter.PrintDateCompact(Planetarium.GetUniversalTime() + extraTime + t, false, false);
-
-            return MagiCore.Utilities.GetColonFormattedTime(t);
-        }
-
-        public static string GetFormattedTime(double t, double extraTime = 0d, bool allowDate = true)
-        {
-            if (double.IsNaN(t) || double.IsInfinity(t))
-                return "(infinity)";
-
-            bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay && allowDate;
-            double timeCheck = shouldUseDate ? extraTime + t : t;
-            if (timeCheck > MaxTimeToDisplay)
-                return "(infinity)";
-
-            if (shouldUseDate)
-                return KSPUtil.dateTimeFormatter.PrintDate(Planetarium.GetUniversalTime() + extraTime + t, false, false);
-
-            return MagiCore.Utilities.GetFormattedTime(t);
-        }
-
-        public static GUIContent GetColonFormattedTimeWithTooltip(double t, string identifier, double extraTime = 0, bool showEst = false)
-        {
-            return new GUIContent(showEst ? $"Est: {GetColonFormattedTime(t, extraTime, false)}" : GetColonFormattedTime(t, extraTime, false), $"{identifier}¶{GetColonFormattedTime(t, extraTime, true)}");
-        }
-
         private const double ApplicantsPow = 0.92d;
         public static int ApplicantPacketsForScience(double sci) => (int)(Math.Pow(sci, ApplicantsPow) / 5d);
 

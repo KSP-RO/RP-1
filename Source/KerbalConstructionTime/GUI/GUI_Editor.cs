@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RP0;
+using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
@@ -319,11 +320,11 @@ namespace KerbalConstructionTime
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(fullVesselBP - newProgressBP) / (bR * bpLeaderEffect), 0, false));
+                GUILayout.Label(DTUtils.GetFormattedTime(Math.Abs(fullVesselBP - newProgressBP) / (bR * bpLeaderEffect), 0, false));
 
                 if (KCTGameStates.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutBP / bR, 0, false)}");
+                    GUILayout.Label($"Rollout Time: {DTUtils.GetFormattedTime(KCTGameStates.EditorRolloutBP / bR, 0, false)}");
                 }
             }
             else

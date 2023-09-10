@@ -1,5 +1,4 @@
-﻿using MagiCore;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 
 namespace KerbalConstructionTime

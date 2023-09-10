@@ -52,7 +52,7 @@ namespace RP0.Harmony
                 }
                 extraText += Localizer.Format(item.BuildRate > 0 ? "#rp0_RnD_Progress" : "#rp0_RnD_ProgressEst",
                     (item.GetFractionComplete() * 100d).ToString("N0"),
-                    KerbalConstructionTime.Utilities.GetColonFormattedTime(item.GetTimeLeftEst(prevTime), prevTime, false)) + "\n";
+                    DTUtils.GetColonFormattedTime(item.GetTimeLeftEst(prevTime), prevTime, flip: false, showSeconds: false)) + "\n";
             }
             if (showCredit || showProgress)
                 extraText += "\n";

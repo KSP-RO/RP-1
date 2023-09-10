@@ -284,40 +284,58 @@ namespace RP0.Crew
             }
         }
 
-        public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName)
+        public static bool CheckCrewForPart(ProtoCrewMember pcm, string partName, bool includeProf, bool includeMission)
         {
             // lolwut. But just in case.
             if (pcm == null)
                 return false;
 
-            bool requireTraining = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled;
-
-            if (!requireTraining || EntryCostStorage.GetCost(partName) == 1)
+            if (!HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled
+                || KerbalConstructionTimeData.Instance.IsSimulatedFlight)
                 return true;
 
-            return Instance.NautHasTrainingForPart(pcm, partName);
+            // If part doesn't have a training associated with it, abort
+            if (!TrainingDatabase.TrainingExists(partName, out string training))
+                return true;
+
+            return includeProf ? Instance.NautHasTrainingForPart(pcm, training, includeMission) : includeMission ? Instance.NautHasMissionTrainingForPart(pcm, training) : true;
         }
 
-        public bool NautHasTrainingForPart(ProtoCrewMember pcm, string partName)
+        public static bool CanCrewLaunchOnVessel(ProtoCrewMember pcm, List<Part> parts)
+        {
+            bool needsMission = Instance.IsMissionTrainingEnabled;
+            foreach (var p in parts)
+            {
+                if (p.CrewCapacity == 0)
+                    continue;
+
+                if (!CheckCrewForPart(pcm, p.partInfo.name, true, false))
+                    return false;
+                if (needsMission && !KerbalConstructionTime.Utilities.IsClampOrChild(p))
+                    needsMission = !CheckCrewForPart(pcm, p.partInfo.name, false, true);
+            }
+
+            return !needsMission;
+        }
+
+        public bool NautHasTrainingForPart(ProtoCrewMember pcm, string partName, bool includeMission)
         {
             if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
                 return true;
-
-            TrainingDatabase.SynonymReplace(partName, out partName);
 
             FlightLog.Entry ent = pcm.careerLog.Last();
             if (ent == null)
                 return false;
 
-            bool lacksMission = IsMissionTrainingEnabled;
+            bool lacksMission = includeMission && IsMissionTrainingEnabled;
             for (int i = pcm.careerLog.Entries.Count; i-- > 0;)
             {
                 FlightLog.Entry e = pcm.careerLog.Entries[i];
-                if (lacksMission)
-                {
-                    if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
+                if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
                         continue;
 
+                if (lacksMission)
+                {
                     if (e.type == TrainingType_Mission && e.target == partName)
                     {
                         double exp = GetExpiration(pcm.name, e);
@@ -326,10 +344,32 @@ namespace RP0.Crew
                 }
                 else
                 {
-                    if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
-                        continue;
-
                     if (e.type == TrainingType_Proficiency && e.target == partName)
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        public bool NautHasMissionTrainingForPart(ProtoCrewMember pcm, string partName)
+        {
+            if (pcm.type == ProtoCrewMember.KerbalType.Tourist)
+                return true;
+
+            FlightLog.Entry ent = pcm.careerLog.Last();
+            if (ent == null)
+                return false;
+
+            for (int i = pcm.careerLog.Entries.Count; i-- > 0;)
+            {
+                FlightLog.Entry e = pcm.careerLog.Entries[i];
+                if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
+                    continue;
+
+                if (e.type == TrainingType_Mission && e.target == partName)
+                {
+                    double exp = GetExpiration(pcm.name, e);
+                    if (exp != 0d && exp >= Planetarium.GetUniversalTime())
                         return true;
                 }
             }

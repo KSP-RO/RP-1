@@ -198,7 +198,9 @@ namespace RP0.Programs
                 {
                     if (p.fracElapsed < 0d)
                     {
-                        p.fracElapsed = (p.lastPaymentUT - p.acceptedUT) / (p.DurationYears * (365.25d * 86400d));
+                        double durSec = p.DurationYears * (365.25d * 86400d);
+                        p.fracElapsed = (p.lastPaymentUT - p.acceptedUT) / durSec;
+                        p.deadlineUT = p.acceptedUT + durSec;
                     }
                 }
                 _ready = true;

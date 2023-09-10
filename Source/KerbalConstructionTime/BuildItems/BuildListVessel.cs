@@ -1252,7 +1252,7 @@ namespace KerbalConstructionTime
 
             double bp = buildPoints + integrationPoints;
             double rate = Utilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated)
-                        * LC.Efficiency * LC.StrategyRateMultiplier;
+                        * LC.Efficiency * LC.StrategyRateMultiplier * LeaderEffect;
             return (bp - progress) / rate;
         }
 

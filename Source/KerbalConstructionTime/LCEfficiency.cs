@@ -143,9 +143,48 @@ namespace KerbalConstructionTime
             if (_efficiency == _MaxEfficiency)
                 return;
 
-            double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((Efficiency - _MinEfficiency) / _EfficiencyRange));
-            double delta = _EfficiencyGainMult * eval * timestep * portionEngineers / (365.25d * 86400d);
+            double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((_efficiency - _MinEfficiency) / _EfficiencyRange));
+            double delta = _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
             IncreaseEfficiency(delta, true);
+        }
+
+        /// <summary>
+        /// Note: This will underestimate efficiency because it does not take shared efficiency gain into account.
+        /// </summary>
+        /// <param name="tdelta"></param>
+        /// <param name="portionEngineers"></param>
+        /// <returns></returns>
+        public double PredictEfficiency(double tdelta, double portionEngineers)
+        {
+            double newEff = _efficiency;
+            const int defaultSteps = 100;
+            const double minStep = 3600d;
+            int steps = defaultSteps;
+            double timestep = tdelta / defaultSteps;
+            double weightedEff = 0d;
+            double remainingTime = tdelta;
+            if (timestep < minStep)
+            {
+                timestep = minStep;
+                steps = (int)(tdelta / timestep);
+            }
+            for (int i = 1; i <= steps; ++i)
+            {
+                remainingTime -= timestep;
+                weightedEff += newEff * timestep;
+                double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
+                newEff += _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
+                if (newEff >= _MaxEfficiency)
+                {
+                    newEff = _MaxEfficiency;
+                    break;
+                }
+            }
+            if (remainingTime > 1d)
+                weightedEff += newEff * remainingTime;
+
+            weightedEff /= tdelta;
+            return weightedEff;
         }
 
         public bool Contains(Guid id) => _lcIDs.Contains(id);

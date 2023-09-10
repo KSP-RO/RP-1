@@ -120,17 +120,6 @@ namespace KerbalConstructionTime
         public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
             * (LC == null ? 1d : _lc.Efficiency * _lc.RushRate);
 
-        public double TimeLeft
-        {
-            get
-            {
-                if (BuildRate > 0)
-                    return (integrationPoints + buildPoints - progress) / BuildRate;
-                else
-                    return double.PositiveInfinity;
-            }
-        }
-
         public bool IsValid => Type != ListType.None;
 
         private List<ConfigNode> ExtractedPartNodes => ShipNodeCompressed.Node.GetNodes("PART").ToList();
@@ -1244,16 +1233,67 @@ namespace KerbalConstructionTime
 
         public double GetFractionComplete() => progress / (buildPoints + integrationPoints);
 
-        public double GetTimeLeft() => TimeLeft;
+        public double GetTimeLeft()
+        {
+            return GetTimeLeft(out _);
+        }
+
+        public double GetTimeLeft(out double newEff)
+        {
+            newEff = LC.Efficiency;
+            if (BuildRate > 0)
+            {
+                double bpLeft = integrationPoints + buildPoints - progress;
+                if (LC.Efficiency == LCEfficiency.MaxEfficiency)
+                    return bpLeft / BuildRate;
+
+                return CalculateTimeLeftForBuildRate(bpLeft, BuildRate / LC.Efficiency, newEff, out newEff);
+            }
+            else
+                return double.PositiveInfinity;
+        }
+
         public double GetTimeLeftEst(double offset)
         {
-            if (BuildRate > 0)
-                return TimeLeft;
+            return GetTimeLeftEst(offset, LC.Efficiency, out _);
+        }
 
+        public double GetTimeLeftEst(double offset, double startingEff, out double newEff)
+        {
+            if (BuildRate > 0)
+            {
+                return GetTimeLeft(out newEff);
+            }
+            newEff = LC.Efficiency;
             double bp = buildPoints + integrationPoints;
-            double rate = Utilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated)
-                        * LC.Efficiency * LC.StrategyRateMultiplier * LeaderEffect;
-            return (bp - progress) / rate;
+            double rate = Utilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
+            double bpLeft = bp - progress;
+            if (newEff == LCEfficiency.MaxEfficiency)
+                return (bpLeft - progress) / (rate * newEff);
+
+            return CalculateTimeLeftForBuildRate(bpLeft, rate, startingEff, out newEff);
+        }
+
+        /// <summary>
+        /// Dumb version of this: we'll just see-saw for four iterations
+        /// And hope we get reasonably close. If we're less than a day
+        /// away, just report the time for the current efficiency with no increase
+        /// </summary>
+        /// <param name="bp"></param>
+        /// <param name="rate"></param>
+        /// <returns></returns>
+        public double CalculateTimeLeftForBuildRate(double bp, double rate, double startingEff, out double newEff)
+        {
+            newEff = startingEff;
+            double timeLeft = bp / (rate * LC.Efficiency);
+            if (timeLeft < 86400d)
+                return timeLeft;
+
+            for (int i = 0; i < 4; ++i)
+            {
+                timeLeft = bp / (rate * LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, LC.Engineers / LC.MaxEngineers, out newEff, startingEff));
+            }
+            return timeLeft;
         }
 
         public ListType GetListType() => Type;

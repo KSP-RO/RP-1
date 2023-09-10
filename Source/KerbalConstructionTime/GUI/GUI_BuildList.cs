@@ -625,11 +625,12 @@ namespace KerbalConstructionTime
                 foreach (var l in k.LaunchComplexes)
                 {
                     accTime = 0d;
+                    l.accumEffic = l.Efficiency;
                     foreach (var b in l.BuildList)
                     {
                         // FIXME handle multiple rates
                         _timeBeforeItem[b] = accTime;
-                        accTime += b.GetTimeLeftEst(accTime);
+                        accTime += b.GetTimeLeftEst(accTime, l.accumEffic, out l.accumEffic);
                         _allItems.Add(b);
                     }
                     _allItems.AddRange(l.Recon_Rollout);
@@ -838,7 +839,7 @@ namespace KerbalConstructionTime
 
             if (activeLC.LCType == LaunchComplexType.Pad)
                 RenderRollouts();
-            RenderVesselsBeingBuilt(activeLC.BuildList);
+            RenderVesselsBeingBuilt(activeLC);
             RenderWarehouse();
 
             GUILayout.EndScrollView();
@@ -875,10 +876,11 @@ namespace KerbalConstructionTime
             }
         }
 
-        private static void RenderVesselsBeingBuilt(List<BuildListVessel> buildList)
+        private static void RenderVesselsBeingBuilt(LCItem lc)
         {
             _accumulatedTimeBefore = 0d;
-            if (buildList.Count == 0)
+            lc.accumEffic = lc.Efficiency;
+            if (lc.BuildList.Count == 0)
             {
                 if (HighLogic.LoadedSceneIsEditor)
                     GUILayout.Label("No vessels integrating!");
@@ -886,9 +888,9 @@ namespace KerbalConstructionTime
                     GUILayout.Label($"No vessels integrating! Go to the {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad ? "VAB" : "SPH")} to add more.");
             }
             bool recalc = false;
-            for (int i = 0; i < buildList.Count; i++)
+            for (int i = 0; i < lc.BuildList.Count; i++)
             {
-                BuildListVessel b = buildList[i];
+                BuildListVessel b = lc.BuildList[i];
                 if (!b.AllPartsValid)
                     continue;
                 GUILayout.BeginHorizontal();
@@ -922,22 +924,22 @@ namespace KerbalConstructionTime
 
                 if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
                 {
-                    buildList.RemoveAt(i);
-                    buildList.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, b);
+                    lc.BuildList.RemoveAt(i);
+                    lc.BuildList.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, b);
                     recalc = true;
                 }
 
-                if (i < buildList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
+                if (i < lc.BuildList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
                 {
                     recalc = true;
-                    buildList.RemoveAt(i);
+                    lc.BuildList.RemoveAt(i);
                     if (GameSettings.MODIFIER_KEY.GetKey())
                     {
-                        buildList.Add(b);
+                        lc.BuildList.Add(b);
                     }
                     else
                     {
-                        buildList.Insert(i + 1, b);
+                        lc.BuildList.Insert(i + 1, b);
                     }
                 }
 
@@ -946,13 +948,13 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"{b.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (b.BuildRate > 0)
                 {
-                    double seconds = b.TimeLeft;
+                    double seconds = b.GetTimeLeft(out lc.accumEffic);
                     GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
-                    _accumulatedTimeBefore += seconds; // FIXME what to do with multiple lines? Min() I guess?
+                    _accumulatedTimeBefore += seconds;
                 }
                 else
                 {
-                    double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore);
+                    double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore, lc.accumEffic, out lc.accumEffic);
                     GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds;
                 }
@@ -960,8 +962,8 @@ namespace KerbalConstructionTime
             }
             if (recalc)
             {
-                for (int i = buildList.Count; i-- > 0;)
-                    buildList[i].UpdateBuildRate();
+                for (int i = lc.BuildList.Count; i-- > 0;)
+                    lc.BuildList[i].UpdateBuildRate();
             }
         }
 
@@ -969,7 +971,6 @@ namespace KerbalConstructionTime
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             bool isPad = activeLC.LCType == LaunchComplexType.Pad;
-            List<BuildListVessel> buildList = activeLC.Warehouse;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
             GUILayout.Label(isPad ? _rocketTexture : _planeTexture, GUILayout.ExpandWidth(false));
@@ -984,14 +985,14 @@ namespace KerbalConstructionTime
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin);
                 }
             }
-            if (buildList.Count == 0)
+            if (activeLC.Warehouse.Count == 0)
             {
                 GUILayout.Label("No vessels in storage!\nThey will be stored here when they are complete.");
             }
 
-            for (int i = 0; i < buildList.Count; i++)
+            for (int i = 0; i < activeLC.Warehouse.Count; i++)
             {
-                BuildListVessel b = buildList[i];
+                BuildListVessel b = activeLC.Warehouse[i];
                 RenderWarehouseRow(b, i, false);
             }
         }

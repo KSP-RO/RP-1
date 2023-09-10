@@ -240,6 +240,14 @@ namespace RP0.Crew
                     FillTrackerFromHolder(hc);
         }
 
+        public static bool TrainingExists(string name, out string newName)
+        {
+            if (SynonymReplace(name, out newName))
+                return true;
+
+            return holders.ContainsKey(newName);
+        }
+
         public static bool SynonymReplace(string name, out string result)
         {
             EnsureInitialized();

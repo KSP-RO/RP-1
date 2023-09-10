@@ -3,10 +3,11 @@ using RealFuels;
 using System.Collections;
 using UniLinq;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace RP0
 {
-    [KSPAddon(KSPAddon.Startup.FlightAndEditor, false)]
+    [KSPAddon(KSPAddon.Startup.FlightEditorAndKSC, false)]
     public class GameplayTips : MonoBehaviour
     {
         private static bool _airlaunchTipShown;
@@ -49,24 +50,26 @@ namespace RP0
                 _onKctVesselAddedToBuildQueueEvent.Add(OnKctVesselAddedToBuildQueue);
             }
 
-            var vessel = FlightGlobals.ActiveVessel;
-            if (!_airlaunchTipShown && vessel &&
-                KerbalConstructionTimeData.Instance.IsSimulatedFlight &&
-                vessel.GetVesselBuiltAt() == EditorFacility.SPH &&
-                vessel.FindPartModuleImplementing<ModuleEngineConfigs>() != null)    // Does the vessel have a rocket engine?
-            {
-                ShowAirlaunchTip();
-            }
-
-            if (HighLogic.LoadedSceneIsEditor && !rp0Settings.RealChuteTipShown)
-            {
-                GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
-                _subcribedToPAWEvent = true;
-            }
-
             if (HighLogic.LoadedSceneIsFlight)
             {
+                var vessel = FlightGlobals.ActiveVessel;
+                if (!_airlaunchTipShown && vessel &&
+                    KerbalConstructionTimeData.Instance.IsSimulatedFlight &&
+                    vessel.GetVesselBuiltAt() == EditorFacility.SPH &&
+                    vessel.FindPartModuleImplementing<ModuleEngineConfigs>() != null)    // Does the vessel have a rocket engine?
+                {
+                    ShowAirlaunchTip();
+                }
+
                 StartCoroutine(CheckLandedWhileActuallyFlying());
+            }
+            else if (HighLogic.LoadedSceneIsEditor)
+            {
+                if (!rp0Settings.RealChuteTipShown)
+                {
+                    GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
+                    _subcribedToPAWEvent = true;
+                }
             }
         }
 
@@ -188,6 +191,111 @@ namespace RP0
                     }
                 }
             }
+        }
+
+        private static readonly Dictionary<string, bool> _lackTrainingsCache = new Dictionary<string, bool>();
+
+        public void ShowUntrainedTip(List<Part> craftParts)
+        {
+            if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowUntrainedReminders || !HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled)
+                return;
+
+            List<AvailablePart> parts = new List<AvailablePart>();
+            foreach (var p in craftParts)
+            {
+                if (p.CrewCapacity == 0)
+                    continue;
+
+                // This will check if the part requires training and report the synonym
+                // to use later. If it doesn't need training, we just skip then and there.
+                if (!Crew.TrainingDatabase.TrainingExists(p.name, out string training))
+                    continue;
+
+                // If we've already encountered this training type, use the cached state
+                if (_lackTrainingsCache.TryGetValue(training, out bool state))
+                {
+                    if (!state && !parts.Contains(p.partInfo))
+                        parts.Add(p.partInfo);
+
+                    continue;
+                }
+
+                // Now we have to trawl through all crew and their trainings, and courses
+                bool found = false;
+                // First check courses, they're less expensive.
+                foreach (var c in Crew.CrewHandler.Instance.TrainingCourses)
+                {
+                    // A mission course implies proficiency, so use either type here
+                    if (c.Target == training)
+                    {
+                        found = true;
+                        break;
+                    }
+                }
+                // Now do the full search
+                if (!found)
+                {
+                    foreach (var pcm in HighLogic.CurrentGame.CrewRoster.Crew)
+                    {
+                        if (pcm.type != ProtoCrewMember.KerbalType.Crew)
+                            continue;
+
+                        // Directly check for the training, we've already boiled it down
+                        // to the right synonym to use. Only check prof, not mission.
+                        if (Crew.CrewHandler.Instance.NautHasTrainingForPart(pcm, training, false))
+                        {
+                            found = true;
+                            break;
+                        }
+                    }
+                }
+                
+                _lackTrainingsCache[training] = found;
+                if (!found)
+                    parts.Add(p.partInfo);
+            }
+            _lackTrainingsCache.Clear();
+
+            if (parts.Count == 0)
+                return;
+
+            string partStr = parts[0].title;
+            for (int i = 1; i < parts.Count; ++i)
+                partStr += "\n" + parts[i].title;
+            DialogGUIBase[] options = new DialogGUIBase[2];
+            options[0] = new DialogGUIButton(KSP.Localization.Localizer.Format("#autoLOC_190905"), () => { });
+            options[1] = new DialogGUIButton(KSP.Localization.Localizer.Format("#rp0_GameplayTip_DontShowAgain"), () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowUntrainedReminders = true; });
+            MultiOptionDialog diag = new MultiOptionDialog("ShowUntrainedPartsReminder",
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text", partStr), 
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 500, options);
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0GameplayTip", OnDialogSpawn, OnDialogDismiss);
+        }
+
+        private void OnDialogSpawn()
+        {
+            UIHolder.Instance.HideIfShowing();
+            KerbalConstructionTime.KCT_GUI.BackupUIState();
+            KerbalConstructionTime.KCT_GUI.HideAll();
+        }
+
+        private void OnDialogDismiss()
+        {
+            UIHolder.Instance.ShowIfWasHidden();
+            KerbalConstructionTime.KCT_GUI.RestorePrevUIState();
+        }
+
+        public void ShowHSFProgramTip()
+        {
+            if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowHSFProgramReminders || !HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled)
+                return;
+
+            DialogGUIBase[] options = new DialogGUIBase[2];
+            options[0] = new DialogGUIButton(KSP.Localization.Localizer.Format("#autoLOC_190905"), () => { });
+            options[1] = new DialogGUIButton(KSP.Localization.Localizer.Format("#rp0_GameplayTip_DontShowAgain"), () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowHSFProgramReminders = true; });
+            MultiOptionDialog diag = new MultiOptionDialog("ShowHSFProgramReminder",
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text"),
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 300, options);
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
         }
     }
 }

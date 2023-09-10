@@ -103,6 +103,8 @@ namespace RP0
         public bool AvionicsWindow_ShowInfo1 = true;
         public bool AvionicsWindow_ShowInfo2 = true;
         public bool AvionicsWindow_ShowInfo3 = true;
+        public bool NeverShowUntrainedReminders = false;
+        public bool NeverShowHSFProgramReminders = false;
 
         public string CareerLog_URL;
         public string CareerLog_Token;

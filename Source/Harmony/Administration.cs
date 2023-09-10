@@ -400,6 +400,10 @@ namespace RP0.Harmony
                 Administration.Instance.CreateStrategiesList(StrategySystem.Instance.SystemConfig.Departments);
                 Administration.Instance.SelectedWrapper.ButtonInUse.Value = true;
 
+                Program p = ProgramHandler.Instance.ActivePrograms[ProgramHandler.Instance.ActivePrograms.Count - 1];
+                if (p.isHSF)
+                    GameplayTips.Instance.ShowHSFProgramTip();
+
                 // Special handling if you have accepted your first program and don't realize you can select another.
                 if (ProgramHandler.Instance.ActivePrograms.Count < 2 && ProgramHandler.Instance.CompletedPrograms.Count == 0)
                 {

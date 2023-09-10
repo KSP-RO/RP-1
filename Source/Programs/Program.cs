@@ -40,6 +40,9 @@ namespace RP0.Programs
         [Persistent(isPersistant = false)]
         public bool isDisabled;
 
+        [Persistent(isPersistant = false)]
+        public bool isHSF;
+
         [Persistent]
         public double nominalDurationYears;
         public double DurationYears => DurationYearsCalc(speed, nominalDurationYears);

@@ -43,8 +43,14 @@ namespace RP0.Programs
         [Persistent]
         public double nominalDurationYears;
         public double DurationYears => DurationYearsCalc(speed, nominalDurationYears);
+        public double EffectiveDurationYears => acceptedUT == 0d ? DurationYears : ElapsedYears + RemainingDurationYears;
+        public double ElapsedYears => acceptedUT == 0d ? 0d : (Planetarium.GetUniversalTime() - acceptedUT) / secsPerYear;
 
-        public double ElapsedYears => (Planetarium.GetUniversalTime() - acceptedUT) / secsPerYear;
+        public double RemainingDurationYears => (1d - fracElapsed) * DurationYears;
+
+        [Persistent]
+        public double fracElapsed = -1d;
+        public double FracElapsed => fracElapsed;
 
         public static double DurationYearsCalc(Speed spd, double years)
         {
@@ -70,6 +76,9 @@ namespace RP0.Programs
 
         [Persistent]
         public double acceptedUT;
+
+        [Persistent]
+        public double deadlineUT;
 
         [Persistent]
         public double objectivesCompletedUT;
@@ -289,7 +298,9 @@ namespace RP0.Programs
                 lastPaymentUT = Planetarium.GetUniversalTime(),
                 totalFunding = TotalFunding,
                 fundsPaidOut = 0,
-                repPenaltyAssessed = 0
+                repPenaltyAssessed = 0,
+                fracElapsed = 0,
+                deadlineUT = acceptedUT + DurationYears * secsPerYear
             };
             CareerLog.Instance?.ProgramAccepted(p);
 
@@ -298,37 +309,44 @@ namespace RP0.Programs
 
         public double GetFundsForFutureTimestamp(double ut)
         {
-            double time2 = ut - acceptedUT;
-            double funds2 = GetFundsAtTime(time2);
+            double frac2 = fracElapsed + (ut - Planetarium.GetUniversalTime()) / (secsPerYear * DurationYears);
+            double funds2 = GetFundsAtFrac(frac2);
             return Math.Max(0, funds2 - fundsPaidOut);
         }
 
-        /// <summary>
-        /// This clamps current program fund tracking to expected. It is used when leaders change
-        /// (which may change program durations)
-        /// </summary>
-        public void ClampFunding()
+        public void OnLeaderChange()
         {
-            double calculatedLastTotalFunds = GetFundsAtTime(lastPaymentUT - acceptedUT);
-            if (fundsPaidOut > calculatedLastTotalFunds + 100d || fundsPaidOut < calculatedLastTotalFunds - 100d) // with slop
-                fundsPaidOut = calculatedLastTotalFunds;
+            deadlineUT = Planetarium.GetUniversalTime() + (1d - FracElapsed) * DurationYears * secsPerYear;
         }
 
         public void ProcessFunding()
         {
-            if (TotalFunding < 1) return;
+            if (TotalFunding < 1)
+                return;
 
+            if (!ProgramHandler.Instance.Ready)
+                return;
+
+            double duration = DurationYears;
             double nowUT = Planetarium.GetUniversalTime();
-            double time2 = nowUT - acceptedUT;
-            double funds2 = GetFundsAtTime(time2);
-            double fundsToAdd = Math.Max(0d, funds2 - fundsPaidOut);
-            lastPaymentUT = nowUT;
+            double frac2 = fracElapsed + (nowUT - lastPaymentUT) / (secsPerYear * duration);
+            if (fracElapsed == frac2)
+                return;
 
-            RP0Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / DurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
-            fundsPaidOut += fundsToAdd;
-            Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Mission);
+            // update deadline
+            if (frac2 < 1d)
+            {
+                // we're still in the future, recompute based on remaining duration
+                deadlineUT = nowUT + (1d - frac2) * duration * secsPerYear;
+            }
+            else if (fracElapsed < 1d)
+            {
+                // compute when deadline should have been
+                deadlineUT = lastPaymentUT + (1d - fracElapsed) * duration * secsPerYear;
+            }
 
-            double repLost = GetRepLossAtTime(time2);
+            // First, handle rep loss
+            double repLost = GetRepLossAtFrac(frac2);
             if (repLost > 0d)
             {
                 if (repPenaltyAssessed <= 0)
@@ -337,16 +355,31 @@ namespace RP0.Programs
                     {
                         KSP.UI.Screens.MessageSystem.Instance.AddMessage(new KSP.UI.Screens.MessageSystem.Message("Program Duration Expired",
                             $"The duration of the {title} program has expired.\n\n"
-                            + ( CanComplete ? "It should be completed in the Administration Building before we lose any more reputation."
+                            + (CanComplete ? "It should be completed in the Administration Building before we lose any more reputation."
                                 : "We need to finish its objectives as soon as possible!"),
                             KSP.UI.Screens.MessageSystemButton.MessageButtonColor.ORANGE, KSP.UI.Screens.MessageSystemButton.ButtonIcons.DEADLINE));
                     }
                 }
                 double repLossToApply = repLost - repPenaltyAssessed;
-                repPenaltyAssessed += repLossToApply;
-                Reputation.Instance.AddReputation((float)-repLossToApply, TransactionReasons.Mission);
-                RP0Debug.Log($"[RP-0] Penalizing rep by {repLossToApply} for program {name}");
+                if (repLossToApply > 0d)
+                {
+                    repPenaltyAssessed += repLossToApply;
+                    Reputation.Instance.AddReputation((float)-repLossToApply, TransactionReasons.Mission);
+                    RP0Debug.Log($"[RP-0] Penalizing rep by {repLossToApply} for program {name}");
+                }
             }
+
+            double funds2 = GetFundsAtFrac(frac2);
+            double fundsToAdd = funds2 - fundsPaidOut;
+            if (fundsToAdd <= 0d)
+                return;
+
+            lastPaymentUT = nowUT;
+            fracElapsed = frac2;
+
+            RP0Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / DurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
+            fundsPaidOut += fundsToAdd;
+            Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Mission);
         }
 
         public void MarkObjectivesComplete()
@@ -363,12 +396,13 @@ namespace RP0.Programs
 
         public double RepForComplete(double ut)
         {
-            double timeDelta = DurationYears * secsPerYear - (ut - acceptedUT);
-            double repDelta = 0d;
-            if (timeDelta > 0)
-            {
-                repDelta = (timeDelta / secsPerYear * repDeltaOnCompletePerYearEarly);
-            }
+            double duration = DurationYears;
+            double newFracElapsed = fracElapsed + (ut - lastPaymentUT) / (duration * secsPerYear);
+            if (newFracElapsed >= 1d)
+                return 0d;
+
+            double yearDelta = (1d - newFracElapsed) * duration;
+            double repDelta = yearDelta * repDeltaOnCompletePerYearEarly;
             return repDelta;
         }
 
@@ -388,21 +422,22 @@ namespace RP0.Programs
 
         public double GetFundsAtTime(double time)
         {
-            double fractionOfTotalDuration = time / DurationYears / secsPerYear;
+            return GetFundsAtFrac(time / DurationYears / secsPerYear);
+        }
+
+        public double GetFundsAtFrac(double fractionOfTotalDuration)
+        {
             DoubleCurve curve = ProgramHandler.Settings.FundingCurve(fundingCurve);
             double curveFactor = curve.Evaluate(fractionOfTotalDuration);
             return curveFactor * TotalFunding;
         }
 
-        private double GetRepLossAtTime(double time)
+        private double GetRepLossAtFrac(double frac)
         {
-            const double recip = 1d / secsPerYear;
-            double extraTime = time - DurationYears * secsPerYear;
-            if (extraTime > 0d)
-            {
-                return RepPenaltyPerYearLate * (extraTime * recip);
-            }
-            return 0d;
+            if (frac <= 1d)
+                return 0d;
+
+            return RepPenaltyPerYearLate * (1d - frac) * DurationYears;
         }
 
         public string GetDescription(bool extendedInfo)
@@ -444,9 +479,9 @@ namespace RP0.Programs
                 else
                 {
                     if (extendedInfo)
-                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDate(acceptedUT + duration * 365.25d * 86400d, false, false)}";
+                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDate(deadlineUT, false, false)}";
                     else
-                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDateCompact(acceptedUT + duration * 365.25d * 86400d, false, false)}";
+                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDateCompact(deadlineUT, false, false)}";
                 }
             }
             else
@@ -498,9 +533,8 @@ namespace RP0.Programs
                     int lastYear = (int)Math.Ceiling(duration) + 1;
                     if (IsActive)
                     {
-                        double relativeUT = Planetarium.GetUniversalTime() - acceptedUT;
-                        startYear = (int)(relativeUT / (86400d * 365.25d)) + 1;
-                        totalPaid = GetFundsAtTime(relativeUT);
+                        startYear = (int)(fracElapsed * duration) + 1;
+                        totalPaid = fundsPaidOut;
                     }
                     else
                     {
@@ -513,7 +547,7 @@ namespace RP0.Programs
                         double fundAtYear = GetFundsAtTime(Math.Min(i, duration) * secPerYear);
                         double paidThisYear = fundAtYear - totalPaid;
                         totalPaid = fundAtYear;
-                        text += $"\nYear {(lastYear > 10 ? " " : string.Empty)}{i}:  {CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, paidThisYear, 0d, 0d).GetCostLineOverride(false, false, false, true)}";
+                        text += $"\nNominal Year {(lastYear > 10 ? " " : string.Empty)}{i}:  {CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ProgramFunding, paidThisYear, 0d, 0d).GetCostLineOverride(false, false, false, true)}";
                     }
                 }
             }

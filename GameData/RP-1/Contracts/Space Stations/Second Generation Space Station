@@ -1,11 +1,11 @@
 CONTRACT_TYPE
 {
-	name = improved_spaceStation
-	title = Improved Space Station
+	name = secondGen_spaceStation
+	title = Second Generation Space Station
 	group = EarthSpaceStation
 	agent = Stations
 	
-	description = Design, build, and launch an improved space station with power generation, a science lab, and science experiments into Earth orbit. Once this contract is complete, missions to crew this station will be unlocked. This contract is based off of the Skylab and Second Generation Salyut space stations. 
+	description = <b>Program: Earth Space Station<br>Type: <color=red>CAPSTONE</color></b><br><br>Design, build, and launch a second generation space station into Earth orbit and research the effects of long duration space habitation over 2 years. This contract is based off of the Skylab and Second Generation Salyut space stations.
 	
 	synopsis = Launch a larger space station with power generation, a science lab, and science experiments
 	
@@ -29,7 +29,7 @@ CONTRACT_TYPE
 	prestige = Trivial       // 1.0x
 	advanceFunds = 0
 	rewardScience = 0
-	rewardReputation = 250
+	rewardReputation = 750
 	rewardFunds = 0
 	failureReputation = 0 // was @rewardReputation
 	failureFunds = 0
@@ -43,45 +43,35 @@ CONTRACT_TYPE
 	}
 	REQUIREMENT
 	{
-		name = CompleteContract
-		type = CompleteContract
-		contractType = first_spaceStation
+		name = Any
+		type = Any
+		
+		REQUIREMENT
+		{
+			name = TechResearched
+			type = TechResearched
+			tech = earlySpaceStations
+		}
+		REQUIREMENT
+		{
+			name = CompleteExperiment
+			type = Expression
+			title = Complete Long Duration Space Habitation 1
+			expression = AllScienceSubjects().Where(s => s.Experiment().ID() == "RP0longDurationHabit1" && s.Experiment().RemainingScience() == 0)
+		}
 	}
-	REQUIREMENT
-	{
-		name = IncompleteContract
-		type = CompleteContract
-		contractType = second_ISScrew
-		minCount = 2
-		invertRequirement = true
-	}
-	REQUIREMENT
-	{
-		name = noStation
-		type = ValidVessel
-		title = Station does not exist
-		vessel = @/craft
-		invertRequirement = true
-	}
-	DATA
-	{
-		type = string
-		craft = "improvedSpaceStation"
-		hidden = true
-	}
-	
 	// ************ PARAMETERS ************
 	
 	PARAMETER
 	{
 		name = vesselGroupLaunch
 		type = VesselParameterGroup
-		title = Put your improved Space Station in Orbit
-		notes = The station must include at least 1 docking port, support for at least 3 Crew, a Science Lab, and the ability to generate power.
-		define = @/craft
+		title = Put your Second Generation Space Station in Orbit
+		notes = The station must include at least 1 docking port, support for at least 3 Crew, and the ability to generate power.
+		define = secondGenStation
 		defineList = basicEarthStations
-		
 		disableOnStateChange = true
+		resetChildrenWhenVesselDestroyed = true
 		
 		PARAMETER
 		{
@@ -119,14 +109,6 @@ CONTRACT_TYPE
 		}
 		PARAMETER
 		{
-			name = HasScienceLab
-			title = Have a science lab
-			type = PartValidation
-			hideChildren = true
-			partModule = ModuleScienceLab
-		}
-		PARAMETER
-		{
 			name = Orbit
 			type = Orbit
 			minPeA = 400000
@@ -160,7 +142,7 @@ CONTRACT_TYPE
 		{
 			name = Rendezvous
 			type = Rendezvous
-			vessel = @/craft
+			vessel = secondGenStation
 			distance = 100
 			title = Rendezvous with the station and dock.
 		}
@@ -170,12 +152,13 @@ CONTRACT_TYPE
 	{
 		name = stayOnStation
 		type = VesselParameterGroup
-		title = Keep at least 3 crew aboard the station for 30 days.
-		vessel = @/craft
+		title = Keep at least 3 crew aboard the station and conduct long duration habitation analysis for 730 days. Progress is kept
+		vessel = secondGenStation
 		notes = You can work on other contracts while your crew are working. You are safe to return to Mission Control
 
 		completeInSequence = true
 		disableOnStateChange = true
+		resetChildrenWhenVesselDestroyed = true
 		
 		PARAMETER 
 		{
@@ -185,7 +168,6 @@ CONTRACT_TYPE
 			title = Have at least 3 crewmembers on board
 			hideChildren = true
 			disableOnStateChange = false
-			completeInSequence = true
 		}
 		PARAMETER
 		{
@@ -196,46 +178,17 @@ CONTRACT_TYPE
 			targetBody = HomeWorld()
 			disableOnStateChange = false
 			title = Remain in a stable orbit
-			completeInSequence = true
 		}
 		PARAMETER
 		{
-			name = Duration
-			type = Duration
-			duration =  30d
-			preWaitText = Transfer to the station in the specified orbit.
-			waitingText = Orbiting...
-			completionText = Stay completed, you may return home now.
-			completeInSequence = true
-		}
-		
-	}
-	PARAMETER
-	{
-		name = vesselGroupCrewReturn
-		type = VesselParameterGroup
-		title = Return the crew home
-		vessel = crewCapsule
-
-		completeInSequence = true
-		resetChildrenWhenVesselDestroyed = true
-		
-		PARAMETER 
-		{
-			name = Crewmembers
-			type = HasCrew
-			minCrew = 3
-			title = Have at least 3 crewmembers on board
-			hideChildren = true
-		}
-		PARAMETER
-		{
-			name = ReturnHome
-			type = ReturnHome
+			name = Long Duration Habitation Analysis
+			type = RP1CollectScience
+			title = Conduct Long Duration Habitation Analysis of your astronauts for 730d
+			notes = This experiment requires 2500 units of Research Payload every 30d //Placeholder value.
 			targetBody = HomeWorld()
-			title = Return home safely
-			hideChildren = true
-			completeInSequence = true
+			experiment = RP0longDurationHabit2
+			fractionComplete = 1 //730d
 		}
+		
 	}
 }

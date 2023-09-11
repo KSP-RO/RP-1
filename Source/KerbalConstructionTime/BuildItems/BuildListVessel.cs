@@ -1287,13 +1287,14 @@ namespace KerbalConstructionTime
         public double CalculateTimeLeftForBuildRate(double bp, double rate, double startingEff, out double newEff)
         {
             newEff = startingEff;
-            double timeLeft = bp / (rate * LC.Efficiency);
+            double timeLeft = bp / (rate * startingEff);
             if (timeLeft < 86400d)
                 return timeLeft;
 
+            double portion = LC.Engineers / (double)LC.MaxEngineers;
             for (int i = 0; i < 4; ++i)
             {
-                timeLeft = bp / (rate * LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, LC.Engineers / LC.MaxEngineers, out newEff, startingEff));
+                timeLeft = bp / (rate * LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, portion, out newEff, startingEff));
             }
             return timeLeft;
         }

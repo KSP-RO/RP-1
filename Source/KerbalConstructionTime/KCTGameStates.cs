@@ -105,7 +105,7 @@ namespace KerbalConstructionTime
         {
             if (lc.IsOperational && lc.Engineers > 0)
             {
-                if (lc.IsIdle) // not IsActive because completed rollouts/airlaunches still count
+                if (!lc.IsActive)
                     return lc.Engineers * Database.SettingsSC.IdleSalaryMult;
 
                 if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)

@@ -618,9 +618,6 @@
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\BreakSoundBarrier.cfg">
       <Link>Contracts\X-Plane Research\BreakSoundBarrier.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\RocketPlaneDevelopment.cfg">
-      <Link>Contracts\X-Plane Research\RocketPlaneDevelopment.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\RocketPlaneDevelopmentOptional.cfg">
       <Link>Contracts\X-Plane Research\RocketPlaneDevelopmentOptional.cfg</Link>
     </Content>
@@ -630,14 +627,23 @@
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHighAltitudeOptional.cfg">
       <Link>Contracts\X-Plane Research\XPlanesHighAltitudeOptional.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHypersonic.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesHypersonic.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHypersonicOptional.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesHypersonicOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesKarman.cfg">
       <Link>Contracts\X-Plane Research\XPlanesKarman.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesStratosphericResearch.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesStratosphericResearch.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesStratosphericResearchOptional.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesStratosphericResearchOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSuborbital.cfg">
       <Link>Contracts\X-Plane Research\XPlanesSuborbital.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonic.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSupersonic.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg">
       <Link>Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg</Link>
@@ -647,9 +653,6 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalLow.cfg">
       <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalLow.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalMid.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalMid.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>

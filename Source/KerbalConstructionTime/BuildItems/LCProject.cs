@@ -139,12 +139,30 @@ namespace KerbalConstructionTime
             if (IsComplete())
                 return 0d;
 
-            if (IsBlocking && _lc != null)
-                return GetTimeLeftEstAll();
+            if (GetBuildRate() == 0d)
+                return double.PositiveInfinity;
 
-            return GetBaseTimeLeft();
+            double timeLeft = IsBlocking && _lc != null ? GetTimeLeftEstAll() : GetBaseTimeLeft();
+            return TimeLeftWithEfficiencyIncrease(timeLeft);
         }
         public double GetTimeLeftEst(double offset) => GetTimeLeft();
+
+        private double TimeLeftWithEfficiencyIncrease(double timeLeft)
+        {
+            if (LC.Efficiency == LCEfficiency.MaxEfficiency)
+                return timeLeft;
+
+            if (timeLeft > 86400d)
+            {
+                double newEff = LC.Efficiency;
+                double portion = LC.Engineers / (double)LC.MaxEngineers;
+                for (int i = 0; i < 4; ++i)
+                {
+                    timeLeft = (timeLeft * newEff) / LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, portion, out newEff, LC.Efficiency);
+                }
+            }
+            return timeLeft;
+        }
 
         private struct LCPData
         {

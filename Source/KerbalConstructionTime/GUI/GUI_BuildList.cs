@@ -1084,7 +1084,7 @@ namespace KerbalConstructionTime
                 textColor = _redText;
 
             GUILayout.BeginHorizontal();
-            if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && (padStatus == VesselPadStatus.InStorage || padStatus == VesselPadStatus.RolledOut))
+            if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && (padStatus != VesselPadStatus.Recovering))
             {
                 if (GUILayout.Button("*", GUILayout.Width(_butW)))
                 {
@@ -1618,8 +1618,9 @@ namespace KerbalConstructionTime
             }
             string blvID = b.shipID.ToString();
             ReconRollout rollout = b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
+            ReconRollout rollback = rollout == null ? b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollback, launchSite) : null;
             bool isRollingOut = rollout != null && rollout.associatedID == blvID;
-            bool onPad = isRollingOut && rollout.IsComplete();
+            bool isRollingBack = rollback != null && rollback.associatedID == blvID;
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
@@ -1638,7 +1639,7 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (!onPad && GUILayout.Button("Scrap"))
+            if (!isRollingOut && !isRollingBack && GUILayout.Button("Scrap"))
             {
                 InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
                 DialogGUIBase[] options = new DialogGUIBase[2];
@@ -1652,7 +1653,7 @@ namespace KerbalConstructionTime
                 ResetBLWindow(false);
             }
 
-            if (!onPad && GUILayout.Button("Edit"))
+            if (!isRollingOut && !isRollingBack && GUILayout.Button("Edit"))
             {
                 GUIStates.ShowBLPlus = false;
                 EditorWindowPosition.height = 1;
@@ -1708,7 +1709,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
             }
 
-            if (!b.IsFinished && GUILayout.Button("Move to Top"))
+            if (!isRollingOut && !isRollingBack && !b.IsFinished && GUILayout.Button("Move to Top"))
             {
                 if (_isIntegrationSelected)
                 {

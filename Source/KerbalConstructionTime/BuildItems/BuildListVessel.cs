@@ -117,8 +117,8 @@ namespace KerbalConstructionTime
 
         internal ShipConstruct _ship;
 
-        public double BuildRate => (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
-            * (LC == null ? 1d : _lc.Efficiency * _lc.RushRate);
+        public double BuildRate => _lc.CanIntegrate ? ( (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
+            * (LC == null ? 1d : _lc.Efficiency * _lc.RushRate) ) : 0d;
 
         public bool IsValid => Type != ListType.None;
 

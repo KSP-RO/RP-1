@@ -194,7 +194,7 @@ namespace KerbalConstructionTime
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (currentLC.BuildList.Count > 0)
+            if (currentLC.CanIntegrate && currentLC.BuildList.Count > 0)
             {
                 BuildListVessel b = currentLC.BuildList[0];
                 GUILayout.Label($"Current Vessel: {b.shipName}");
@@ -213,17 +213,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                LCProject lcp = null;
-                foreach (var r in currentLC.Recon_Rollout)
-                {
-                    if (!r.IsComplete() && (lcp == null || lcp.GetTimeLeft() < r.GetTimeLeft()))
-                        lcp = r;
-                }
-                foreach (var a in currentLC.Airlaunch_Prep)
-                {
-                    if (!a.IsComplete() && (lcp == null || lcp.GetTimeLeft() < a.GetTimeLeft()))
-                        lcp = a;
-                }
+                LCProject lcp = LCProject.GetFirstCompleting(currentLC);
                 if (lcp != null)
                 {
                     int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.mass, lcp.vesselBP, lcp.isHumanRated) : int.MaxValue;

@@ -44,9 +44,9 @@ namespace KerbalConstructionTime
         [Persistent]
         public KCTObservableList<PadConstruction> PadConstructions = new KCTObservableList<PadConstruction>();
         [Persistent]
-        public PersistentList<ReconRollout> Recon_Rollout = new PersistentList<ReconRollout>();
+        public KCTObservableList<ReconRollout> Recon_Rollout = new KCTObservableList<ReconRollout>();
         [Persistent]
-        public PersistentList<AirlaunchPrep> Airlaunch_Prep = new PersistentList<AirlaunchPrep>();
+        public KCTObservableList<AirlaunchPrep> Airlaunch_Prep = new KCTObservableList<AirlaunchPrep>();
 
         private double _rate;
         private double _rateHRCapped;
@@ -130,6 +130,7 @@ namespace KerbalConstructionTime
         void added(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Add(pc); }
         void removed(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Remove(pc); }
         void updated() { RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
+        void lcpUpdated() { RecalculateProjectBP(); }
 
         void AddListeners()
         {
@@ -139,6 +140,8 @@ namespace KerbalConstructionTime
 
             BuildList.Updated += updated;
             Warehouse.Updated += updated;
+            Recon_Rollout.Updated += lcpUpdated;
+            Airlaunch_Prep.Updated += lcpUpdated;
         }
         #endregion
 
@@ -208,7 +211,41 @@ namespace KerbalConstructionTime
         public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRollout.RolloutReconType.Reconditioning) && Airlaunch_Prep.Count == 0;
         public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0 && Airlaunch_Prep.Count == 0;
         public bool CanModifyReal => Recon_Rollout.Count == 0 && Airlaunch_Prep.Count == 0;
-        public bool IsIdle => !IsActive;
+        public bool CanIntegrate => ProjectBPTotal == 0d;
+
+        private double _projectBPTotal = -1d;
+        public double ProjectBPTotal => _projectBPTotal < 0d ? RecalculateProjectBP() : _projectBPTotal;
+
+        public double RecalculateProjectBP()
+        {
+            _projectBPTotal = 0d;
+            foreach (var r in Recon_Rollout)
+            {
+                if (!r.IsBlocking || r.IsComplete())
+                    continue;
+                double amt = r.BP;
+                if (amt < 0d)
+                    amt = -amt;
+                _projectBPTotal += amt;
+            }
+            foreach (var r in Airlaunch_Prep)
+            {
+                if (!r.IsBlocking || r.IsComplete())
+                    continue;
+                double amt = r.BP;
+                if (amt < 0d)
+                    amt = -amt;
+                _projectBPTotal += amt;
+            }
+            return _projectBPTotal;
+        }
+        public double GetBlockingProjectTimeLeft()
+        {
+            if (_projectBPTotal == 0d)
+                return 0d;
+
+            return LCProject.GetTotalBlockingProjectTime(this);
+        }
 
         public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
             Recon_Rollout.FirstOrDefault(r => r.launchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
@@ -227,6 +264,8 @@ namespace KerbalConstructionTime
 
             foreach (var al in Airlaunch_Prep)
                 al.UpdateBuildRate();
+
+            RecalculateProjectBP();
 
             KCTDebug.Log($"Build rate for {Name} = {_rate:N3}, capped {_rateHRCapped:N3}");
         }

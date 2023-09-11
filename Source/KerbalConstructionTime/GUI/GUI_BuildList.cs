@@ -624,7 +624,7 @@ namespace KerbalConstructionTime
             {
                 foreach (var l in k.LaunchComplexes)
                 {
-                    accTime = 0d;
+                    accTime = l.GetBlockingProjectTimeLeft();
                     l.accumEffic = l.Efficiency;
                     foreach (var b in l.BuildList)
                     {
@@ -863,14 +863,15 @@ namespace KerbalConstructionTime
             foreach (ReconRollout reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
-                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(reconditioning.GetTimeLeft()):N0}"), GUILayout.Width((_butW + 4) * 3)))
+                double tLeft = reconditioning.GetTimeLeft();
+                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(tLeft):N0}"), GUILayout.Width((_butW + 4) * 3)))
                 {
                     KCTWarpController.Create(reconditioning);
                 }
                 DrawTypeIcon(reconditioning);
                 GUILayout.Label($"Reconditioning: {reconditioning.launchPadID}");
                 GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
-                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(tLeft, "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
 
                 GUILayout.EndHorizontal();
             }
@@ -954,6 +955,8 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
+                    if (_accumulatedTimeBefore == 0d)
+                        _accumulatedTimeBefore = lc.GetBlockingProjectTimeLeft();
                     double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore, lc.accumEffic, out lc.accumEffic);
                     GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds;

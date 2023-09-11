@@ -161,6 +161,7 @@ namespace KerbalConstructionTime
         }
 
         public override bool IsCapped => RRType != RolloutReconType.Reconditioning;
+        public override bool IsBlocking => RRType != RolloutReconType.Reconditioning;
 
         public override bool IsReversed => RRType == RolloutReconType.Rollback;
 

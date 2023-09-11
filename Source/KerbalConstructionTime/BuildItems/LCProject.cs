@@ -15,6 +15,8 @@ namespace KerbalConstructionTime
         public string associatedID = string.Empty;
         [Persistent]
         public bool isHumanRated;
+        [Persistent]
+        private bool _wasComplete;
         protected double _buildRate = -1;
 
         protected abstract TransactionReasonsRP0 transactionReason { get; }
@@ -75,6 +77,8 @@ namespace KerbalConstructionTime
 
         public virtual bool HasCost => false;
 
+        public virtual bool IsBlocking => true;
+
         public double GetBuildRate() => GetBaseBuildRate()
             * LC.Efficiency * LC.RushRate * (IsReversed ? -1d : 1d);
 
@@ -117,12 +121,202 @@ namespace KerbalConstructionTime
 
         public double GetFractionComplete() => IsReversed ? (BP - progress) / BP : progress / BP;
 
+        public double GetBaseTimeLeft()
+        {
+            if (IsComplete())
+                return 0d;
+
+            double rMult = 1d;
+            if (IsBlocking && _lc != null)
+                rMult = Math.Abs(BP) / _lc.ProjectBPTotal;
+
+            double n = IsReversed ? 0 : BP;
+            return (n - progress) / (rMult * GetBuildRate());
+        }
+
         public double GetTimeLeft()
         {
-            double n = IsReversed ? 0 : BP;
-            return (n - progress) / GetBuildRate();
+            if (IsComplete())
+                return 0d;
+
+            if (IsBlocking && _lc != null)
+                return GetTimeLeftEstAll();
+
+            return GetBaseTimeLeft();
         }
         public double GetTimeLeftEst(double offset) => GetTimeLeft();
+
+        private struct LCPData
+        {
+            public double rate;
+            public double bp;
+        }
+        private static readonly List<LCPData> _lcpData = new List<LCPData>();
+        // *(*%$@ you C# structs, I don't want ot clobber the whole struct in each element
+        // so we're just storing a separate list of doubles.
+        private static readonly List<double> _lcpDataBPRemaining = new List<double>();
+        private static double _bpTotal = 0d;
+        private static void AddLCP(LCProject lcp)
+        {
+            double bp = Math.Abs(lcp.BP);
+            _bpTotal += bp;
+            _lcpData.Add(new LCPData()
+            {
+                rate = Math.Abs(lcp.GetBuildRate()),
+                bp = bp
+            });
+            _lcpDataBPRemaining.Add(lcp.IsReversed ? lcp.progress : bp - lcp.progress);
+        }
+        public double GetTimeLeftEstAll()
+        {
+            if (GetBuildRate() == 0d)
+                return double.NaN;
+
+            if (!IsBlocking)
+                return GetBaseTimeLeft();
+
+            AddLCP(this);
+            foreach (var r in _lc.Recon_Rollout)
+            {
+                if (r == this || !r.IsBlocking || r.IsComplete())
+                    continue;
+
+                AddLCP(r);
+            }
+            foreach (var r in _lc.Airlaunch_Prep)
+            {
+                if (r == this || !r.IsBlocking || r.IsComplete())
+                    continue;
+
+                AddLCP(r);
+            }
+
+            double accumTime = 0d;
+            while (_lcpData.Count > 0)
+            {
+                double leastTime = double.MaxValue;
+                double bpToRemove = 0d;
+                int lcpIdx = 0;
+                for (int i = _lcpData.Count; i-- > 0;)
+                {
+                    double time = _lcpDataBPRemaining[i] / (_lcpData[i].rate * (_lcpData[i].bp / _bpTotal));
+                    if (time < leastTime)
+                    {
+                        leastTime = time;
+                        bpToRemove = _lcpData[i].bp;
+                        lcpIdx = i;
+                    }
+                }
+                accumTime += leastTime;
+                if (lcpIdx == 0) // the first one we added, i.e. us
+                {
+                    _bpTotal = 0d;
+                    _lcpData.Clear();
+                    _lcpDataBPRemaining.Clear();
+                    return accumTime;
+                }
+
+                for (int i = _lcpData.Count; i-- > 0;)
+                {
+                    if (i == lcpIdx)
+                    {
+                        _lcpData.RemoveAt(i);
+                        _lcpDataBPRemaining.RemoveAt(i);
+                        continue;
+                    }
+                    _lcpDataBPRemaining[i] -= (_lcpData[i].rate * (_lcpData[i].bp / _bpTotal)) * leastTime;
+                }
+                _bpTotal -= bpToRemove;
+            }
+
+            _bpTotal = 0d;
+            _lcpData.Clear();
+            _lcpDataBPRemaining.Clear();
+            return accumTime;
+        }
+
+        public static double GetTotalBlockingProjectTime(LCItem lc)
+        {
+            foreach (var r in lc.Recon_Rollout)
+            {
+                if (r.IsBlocking && !r.IsComplete())
+                    AddLCP(r);
+            }
+            foreach (var r in lc.Airlaunch_Prep)
+            {
+                if (r.IsBlocking && !r.IsComplete())
+                    AddLCP(r);
+            }
+
+            double accumTime = 0d;
+            while (_lcpData.Count > 0)
+            {
+                double leastTime = double.MaxValue;
+                double bpToRemove = 0d;
+                int lcpIdx = 0;
+                for (int i = _lcpData.Count; i-- > 0;)
+                {
+                    double time = _lcpDataBPRemaining[i] / (_lcpData[i].rate * (_lcpData[i].bp / _bpTotal));
+                    if (time < leastTime)
+                    {
+                        leastTime = time;
+                        bpToRemove = _lcpData[i].bp;
+                        lcpIdx = i;
+                    }
+                }
+                
+                for (int i = _lcpData.Count; i-- > 0;)
+                {
+                    if (i == lcpIdx)
+                    {
+                        _lcpData.RemoveAt(i);
+                        _lcpDataBPRemaining.RemoveAt(i);
+                        continue;
+                    }
+                    _lcpDataBPRemaining[i] -= (_lcpData[i].rate * (_lcpData[i].bp / _bpTotal)) * leastTime;
+                }
+                accumTime += leastTime;
+                _bpTotal -= bpToRemove;
+            }
+
+            _bpTotal = 0d;
+            _lcpData.Clear();
+            _lcpDataBPRemaining.Clear();
+            return accumTime;
+        }
+
+        public static LCProject GetFirstCompleting(LCItem lc)
+        {
+            double minTime = double.MaxValue;
+            LCProject lcp = null;
+            // The blocking LCP with the lowest time left
+            // doesn't have to worry about build rate changing
+            foreach (var r in lc.Recon_Rollout)
+            {
+                if (r.IsComplete())
+                    continue;
+
+                double time = r.GetBaseTimeLeft();
+                if (time < minTime)
+                {
+                    minTime = time;
+                    lcp = r;
+                }
+            }
+            foreach (var r in lc.Airlaunch_Prep)
+            {
+                if (r.IsComplete())
+                    continue;
+
+                double time = r.GetBaseTimeLeft();
+                if (time < minTime)
+                {
+                    minTime = time;
+                    lcp = r;
+                }
+            }
+            return lcp;
+        }
 
         public virtual BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
 
@@ -135,13 +329,16 @@ namespace KerbalConstructionTime
             if (bR == 0d)
                 return 0d;
 
-            double toGo = BP - progress;
+            if (IsBlocking && _lc != null && _lc.ProjectBPTotal > 0d)
+                bR *= (BP / _lc.ProjectBPTotal);
+
+            double toGo = (IsReversed ? 0 : BP) - progress;
             double incBP = bR * UTDiff;
             progress += incBP;
             if (progress > BP) progress = BP;
             else if (progress < 0) progress = 0;
 
-            double cost = (progress - progBefore) / BP * this.cost;
+            double cost = Math.Abs(progress - progBefore) / BP * this.cost;
 
             if (Utilities.CurrentGameIsCareer() && HasCost && this.cost > 0)
             {
@@ -160,6 +357,11 @@ namespace KerbalConstructionTime
                 {
                     Utilities.SpendFunds(cost, reason);
                 }
+            }
+            if (IsComplete() != _wasComplete && _lc != null)
+            {
+                _lc.RecalculateProjectBP();
+                _wasComplete = !_wasComplete;
             }
             if (IsComplete())
             {

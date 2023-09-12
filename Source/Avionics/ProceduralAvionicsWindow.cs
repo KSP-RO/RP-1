@@ -49,6 +49,8 @@ namespace RP0.ProceduralAvionics
             _showInfo1 = settings.AvionicsWindow_ShowInfo1;
             _showInfo2 = settings.AvionicsWindow_ShowInfo2;
             _showInfo3 = settings.AvionicsWindow_ShowInfo3;
+
+            RefreshDisplays();
         }
 
         public void OnTankDefinitionChanged()

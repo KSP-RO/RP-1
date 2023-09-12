@@ -554,7 +554,7 @@ namespace RP0.Programs
                                              Localizer.Format("#rp0_Leaders_LeadersUnlocked") + leaderString,
                                              Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
-                                             HighLogic.UISkin);
+                                             HighLogic.UISkin).HideGUIsWhilePopup();
             }
         }
     }

@@ -35,9 +35,9 @@ namespace RP0
         {
             private string _lockName;
             private Action _action;
-            
+
             public void Setup(string lockName, Action action)
-            { 
+            {
                 _lockName = lockName;
                 _action = action;
             }
@@ -50,6 +50,24 @@ namespace RP0
                 if (_action != null)
                     _action();
             }
+        }
+
+        public static void HideGUIsWhilePopup(this PopupDialog dialog)
+        {
+            PrePostActions(dialog, ControlTypes.KSC_ALL | ControlTypes.UI_MAIN | ControlTypes.EDITOR_SOFT_LOCK, "RP0GenericPopupDialogLock", OnDialogSpawn, OnDialogDismiss);
+        }
+
+        private static void OnDialogSpawn()
+        {
+            UIHolder.Instance.HideIfShowing();
+            KerbalConstructionTime.KCT_GUI.BackupUIState();
+            KerbalConstructionTime.KCT_GUI.HideAll();
+        }
+
+        private static void OnDialogDismiss()
+        {
+            UIHolder.Instance.ShowIfWasHidden();
+            KerbalConstructionTime.KCT_GUI.RestorePrevUIState();
         }
     }
 }

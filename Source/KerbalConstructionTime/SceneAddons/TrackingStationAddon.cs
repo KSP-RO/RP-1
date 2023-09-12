@@ -2,6 +2,7 @@
 using KSP.UI.Screens;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using static RP0.KSPUtils;
 
 namespace KerbalConstructionTime
 {
@@ -39,7 +40,7 @@ namespace KerbalConstructionTime
             options[1] = new DialogGUIButton("Cancel", () => { });
 
             var diag = new MultiOptionDialog("recoverVesselPopup", "Vessels can only be recovered for reuse in the Flight scene", "Recover Vessel", null, options: options);
-            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         public void RecoverToVAB()
@@ -78,7 +79,7 @@ namespace KerbalConstructionTime
             options.Add(new DialogGUIButton("Cancel", () => { }));
 
             var diag = new MultiOptionDialog("scrapVesselPopup", string.Empty, "Recover Vessel", null, options: options.ToArray());
-            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
     }
 }

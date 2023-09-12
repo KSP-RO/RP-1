@@ -233,7 +233,7 @@ namespace RP0.Crew
                                          $"This training requires an Astronaut Complex of level {reqLevel + 1} or higher. Upgrade the Astronaut Complex.",
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
-                                         HighLogic.UISkin);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
                         }
                         else
                         {
@@ -387,7 +387,7 @@ namespace RP0.Crew
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),
                 new DialogGUIHorizontalLayout(options));
-            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private void CancelCourse(TrainingCourse course)
@@ -413,7 +413,7 @@ namespace RP0.Crew
                 new Rect(0.5f, 0.5f, 150f, 60f),
                 new DialogGUIFlexibleSpace(),
                 new DialogGUIHorizontalLayout(options));
-            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private static void CreateCourseFinishAlarm(ProtoCrewMember student, TrainingCourse currentCourse)

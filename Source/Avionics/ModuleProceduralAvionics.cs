@@ -564,7 +564,7 @@ namespace RP0.ProceduralAvionics
                                          "RP-1 has detected an outdated version of ROLibrary. The probe core part will be broken unless ROLib is updated to the latest release.",
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
-                                         HighLogic.UISkin);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         /// <summary>

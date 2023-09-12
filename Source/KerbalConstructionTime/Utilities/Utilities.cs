@@ -508,7 +508,7 @@ namespace KerbalConstructionTime
                             $"Warning! This vessel needs to be built in {dialogStr}",
                         "Acknowledged",
                         false,
-                        HighLogic.UISkin);
+                        HighLogic.UISkin).HideGUIsWhilePopup();
                 return;
             }
 
@@ -1212,7 +1212,7 @@ namespace KerbalConstructionTime
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotSwitchEditor",
                             "Cannot switch editor!",
                             "Switching between VAB and SPH is not allowed while editing a vessel.",
-                            "Acknowledged", false, HighLogic.UISkin);
+                            "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
                     });
                 }
                 else

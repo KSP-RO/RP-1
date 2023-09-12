@@ -105,7 +105,7 @@ namespace RP0
                                          msg,
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
-                                         HighLogic.UISkin);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private void ShowAirlaunchTip()
@@ -122,7 +122,7 @@ namespace RP0
                                          msg,
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
-                                         HighLogic.UISkin);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private void OnKctVesselAddedToBuildQueue(BuildListVessel data)
@@ -143,7 +143,7 @@ namespace RP0
             options[0] = new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { });
             options[1] = new DialogGUIButton("Never remind me again", () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders = true; });
             MultiOptionDialog diag = new MultiOptionDialog("ShowUntooledPartsReminder", msg, "Untooled parts", null, 300, options);
-            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private void ShowRealChuteTip()
@@ -162,7 +162,7 @@ namespace RP0
                                          msg,
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
-                                         HighLogic.UISkin);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private IEnumerator CheckLandedWhileActuallyFlying()
@@ -249,7 +249,7 @@ namespace RP0
                         }
                     }
                 }
-                
+
                 _lackTrainingsCache[training] = found;
                 if (!found)
                     parts.Add(p.partInfo);
@@ -266,22 +266,9 @@ namespace RP0
             options[0] = new DialogGUIButton(KSP.Localization.Localizer.Format("#autoLOC_190905"), () => { });
             options[1] = new DialogGUIButton(KSP.Localization.Localizer.Format("#rp0_GameplayTip_DontShowAgain"), () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowUntrainedReminders = true; });
             MultiOptionDialog diag = new MultiOptionDialog("ShowUntrainedPartsReminder",
-                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text", partStr), 
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text", partStr),
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 500, options);
-            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0GameplayTip", OnDialogSpawn, OnDialogDismiss);
-        }
-
-        private void OnDialogSpawn()
-        {
-            UIHolder.Instance.HideIfShowing();
-            KerbalConstructionTime.KCT_GUI.BackupUIState();
-            KerbalConstructionTime.KCT_GUI.HideAll();
-        }
-
-        private void OnDialogDismiss()
-        {
-            UIHolder.Instance.ShowIfWasHidden();
-            KerbalConstructionTime.KCT_GUI.RestorePrevUIState();
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         public void ShowHSFProgramTip()
@@ -295,7 +282,7 @@ namespace RP0
             MultiOptionDialog diag = new MultiOptionDialog("ShowHSFProgramReminder",
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text"),
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 300, options);
-            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin);
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
     }
 }

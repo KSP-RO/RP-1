@@ -174,7 +174,7 @@ namespace KerbalConstructionTime
                                          "#rp0_Editor_LC_BuildVesselFirst_Text",
                                          "#autoLOC_190905",
                                          false,
-                                         HighLogic.UISkin);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private static void RenderEditorLaunchComplexControls()

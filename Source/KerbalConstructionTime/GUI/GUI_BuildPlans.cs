@@ -2,6 +2,7 @@
 using UniLinq;
 using ToolbarControl_NS;
 using UnityEngine;
+using static RP0.KSPUtils;
 
 namespace KerbalConstructionTime
 {
@@ -99,13 +100,12 @@ namespace KerbalConstructionTime
                         else if (GUILayout.Button("X", _redButton, GUILayout.Width(butW)))
                         {
                             _planToDelete = i;
-                            InputLockManager.SetControlLock(ControlTypes.EDITOR_SOFT_LOCK, "KCTPopupLock");
                             _selectedVesselId = b.shipID;
                             DialogGUIBase[] options = new DialogGUIBase[2];
                             options[0] = new DialogGUIButton("Yes", RemoveVesselFromPlans);
-                            options[1] = new DialogGUIButton("No", RemoveInputLocks);
+                            options[1] = new DialogGUIButton("No", () => { });
                             MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", "Are you sure you want to remove this vessel from the plans?", "Delete plan", null, options: options);
-                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
+                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
                         }
 
                         if (GUILayout.Button(new GUIContent(b.shipName, $"Cost: √{b.cost:N0}")))
@@ -182,7 +182,6 @@ namespace KerbalConstructionTime
 
         private static void RemoveVesselFromPlans()
         {
-            InputLockManager.RemoveControlLock("KCTPopupLock");
             KerbalConstructionTimeData.Instance.BuildPlans.RemoveAt(_planToDelete);
         }
     }

@@ -212,7 +212,7 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
-                                             HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN);
+                                             HighLogic.UISkin).HideGUIsWhilePopup();
                 }
             }
 

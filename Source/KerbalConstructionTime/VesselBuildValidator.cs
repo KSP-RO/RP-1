@@ -116,7 +116,7 @@ namespace KerbalConstructionTime
                         + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()),
                         "Acknowledged",
                         false,
-                        HighLogic.UISkin);
+                        HighLogic.UISkin).HideGUIsWhilePopup();
 
                     if (!BypassFacilityRequirements)
                     {
@@ -202,7 +202,7 @@ namespace KerbalConstructionTime
                     HighLogic.UISkin,
                     buttons),
                 false,
-                HighLogic.UISkin);
+                HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private void ProcessPartConfigs(BuildListVessel blv)
@@ -232,7 +232,7 @@ namespace KerbalConstructionTime
                     dlgRect,
                     controls),
                 false,
-                HighLogic.UISkin);
+                HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private ValidationResult ProcessFundsChecks(BuildListVessel blv)

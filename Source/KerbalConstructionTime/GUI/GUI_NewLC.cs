@@ -498,25 +498,16 @@ namespace KerbalConstructionTime
             {
                 if (HighLogic.LoadedSceneIsEditor && !KerbalConstructionTime.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
                 {
-                    BackupUIState();
-                    GUIStates.ShowNewLC = false;
-                    GUIStates.ShowModifyLC = false;
-                    GUIStates.ShowLCResources = false;
-
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("LCModifyVesselConfirm",
                         "The specified mass, size, and/or supported resources are incompatible with the current vessel in the editor. Are you sure you wish to commence construction?",
                         "Are You Sure?", HighLogic.UISkin,
                     new DialogGUIButton("#autoLOC_190905", () =>
                     {
-                        RestorePrevUIState();
                         ProcessNewLC(isModify, curPadCost, totalCost, oldTotalCost);
                     }),
-                    new DialogGUIButton("#autoLOC_191154", () =>
-                    {
-                        RestorePrevUIState();
-                    })
-                    ), false, HighLogic.UISkin);
+                    new DialogGUIButton("#autoLOC_191154", () => { })
+                    ), false, HighLogic.UISkin).HideGUIsWhilePopup();
                 }
                 else
                 {
@@ -560,9 +551,6 @@ namespace KerbalConstructionTime
 
             if (isModify && ModifyFailure(out string failedVessels))
             {
-                BackupUIState();
-                GUIStates.ShowModifyLC = false;
-                GUIStates.ShowLCResources = false;
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                          new Vector2(0.5f, 0.5f),
                                          "LCModifyFail",
@@ -570,7 +558,7 @@ namespace KerbalConstructionTime
                                          "The new limits and supported resources for this complex are incompatible with the following vessels:" + failedVessels + "\nEither scrap the vessels in question or choose settings that still support them too.",
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          true,
-                                         HighLogic.UISkin).PrePostActions(onDestroyAction: RestorePrevUIState);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
             }
             else
             {
@@ -595,16 +583,6 @@ namespace KerbalConstructionTime
                         lc = activeLC;
                         Utilities.ChangeEngineers(lc, -engineers);
                         KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
-                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                         new Vector2(0.5f, 0.5f),
-                                         "LCModifyStart",
-                                         "Renovation Begun",
-                                         $"All engineers at {_newLCData.Name} have been unassigned. "
-                                         + (_assignEngOnComplete ? "They will be reassigned if available when renovation completes."
-                                         : $"Remember to reassign engineers to {_newLCData.Name} when it finishes renovation."),
-                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
-                                         true,
-                                         HighLogic.UISkin);
 
                         // We have to update any ongoing pad constructions too
                         foreach (var pc in lc.PadConstructions)
@@ -656,6 +634,20 @@ namespace KerbalConstructionTime
                 _centralWindowPosition.x = (Screen.width - 300) / 2;
                 if (!HighLogic.LoadedSceneIsEditor || _wasShowBuildList)
                     GUIStates.ShowBuildList = true;
+
+                if (Utilities.CurrentGameIsCareer() && isModify)
+                {
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         "LCModifyStart",
+                                         "Renovation Begun",
+                                         $"All engineers at {_newLCData.Name} have been unassigned. "
+                                         + (_assignEngOnComplete ? "They will be reassigned if available when renovation completes."
+                                         : $"Remember to reassign engineers to {_newLCData.Name} when it finishes renovation."),
+                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
+                                         true,
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
+                }
             }
         }
 

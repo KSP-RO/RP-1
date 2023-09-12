@@ -263,7 +263,7 @@ namespace RP0.ProceduralAvionics
                                 new DialogGUIButton("Cancel", () => { }, 140.0f, 30.0f, true)
                                 )),
                         false,
-                        HighLogic.UISkin);
+                        HighLogic.UISkin).HideGUIsWhilePopup();
                 }
                 else
                 {

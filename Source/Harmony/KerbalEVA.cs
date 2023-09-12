@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using KSP.Localization;
+using static RP0.KSPUtils;
 
 namespace RP0.Harmony
 {
@@ -25,7 +26,7 @@ namespace RP0.Harmony
                                          Localizer.Format("#rp0_Crew_TransferFail_Text"),
                                          Localizer.Format("#autoLOC_190905"),
                                          false,
-                                         HighLogic.UISkin);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
 
             return false;
         }

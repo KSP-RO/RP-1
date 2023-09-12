@@ -161,7 +161,7 @@ namespace RP0
                                              new Vector2(0.5f, 0.5f),
                                              dialog,
                                              false,
-                                             HighLogic.UISkin);
+                                             HighLogic.UISkin).HideGUIsWhilePopup();
             }
         }
 

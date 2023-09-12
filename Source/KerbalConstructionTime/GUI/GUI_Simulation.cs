@@ -163,7 +163,7 @@ namespace KerbalConstructionTime
             if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
             {
                 string msg = "Current save already appears to be a simulation. Starting a simulation inside a simulation isn't allowed.";
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "simErrorPopup", "Simulation error", msg, "Understood", false, HighLogic.UISkin);
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "simErrorPopup", "Simulation error", msg, "Understood", false, HighLogic.UISkin).HideGUIsWhilePopup();
                 return;
             }
 

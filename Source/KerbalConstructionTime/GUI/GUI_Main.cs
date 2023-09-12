@@ -261,8 +261,6 @@ namespace KerbalConstructionTime
             ResetBLWindow();
         }
 
-        public static void RemoveInputLocks() => InputLockManager.RemoveControlLock("KCTPopupLock");
-
         public static void ResetFormulaRateHolders()
         {
             _fundsCost = int.MinValue;

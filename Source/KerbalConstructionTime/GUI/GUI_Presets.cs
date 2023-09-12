@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using static RP0.KSPUtils;
 
 namespace KerbalConstructionTime
 {
@@ -70,12 +71,11 @@ namespace KerbalConstructionTime
             }
             if (_workingPreset.AllowDeletion && _presetIndex != presetShortNames.Length - 1 && GUILayout.Button("Delete Preset")) //allowed to be deleted and isn't Custom
             {
-
                 DialogGUIBase[] options = new DialogGUIBase[2];
                 options[0] = new DialogGUIButton("Delete File", DeleteActivePreset);
-                options[1] = new DialogGUIButton("Cancel", RemoveInputLocks);
+                options[1] = new DialogGUIButton("Cancel", () => { });
                 MultiOptionDialog dialog = new MultiOptionDialog("deletePresetPopup", "Are you sure you want to delete the selected Preset, file and all? This cannot be undone!", "Confirm Deletion", null, options);
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), dialog, false, HighLogic.UISkin);
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), dialog, false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
             GUILayout.EndVertical();
 

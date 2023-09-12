@@ -10,6 +10,7 @@ using System.Reflection;
 using RP0.Programs;
 using UniLinq;
 using KSP.Localization;
+using static RP0.KSPUtils;
 
 namespace RP0.Harmony
 {
@@ -414,7 +415,7 @@ namespace RP0.Harmony
                                          "#rp0_Admin_AcceptAdditional_Program_Text",
                                          "#autoLOC_190905",
                                          false,
-                                         HighLogic.UISkin);
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
                 }
             }
             StrategySystem.Instance.StartCoroutine(CallbackUtil.DelayedCallback(2, delegate
@@ -472,6 +473,7 @@ namespace RP0.Harmony
                             new DialogGUIButton(Localizer.GetStringByTag("#autoLOC_439856"), OnPopupDismiss)),
                         persistAcrossScenes: false, HighLogic.UISkin);
                     dlg.OnDismiss = OnPopupDismiss;
+                    dlg.HideGUIsWhilePopup();
                 }
                 else
                 {
@@ -497,6 +499,7 @@ namespace RP0.Harmony
                         new DialogGUIButton(Localizer.Format("#autoLOC_439839"), OnActivateProgramConfirm),
                         new DialogGUIButton(Localizer.Format("#autoLOC_439840"), OnPopupDismiss)), persistAcrossScenes: false, HighLogic.UISkin);
                     dlg.OnDismiss = OnPopupDismiss;
+                    dlg.HideGUIsWhilePopup();
                 }
 
                 return false;
@@ -528,6 +531,7 @@ namespace RP0.Harmony
                     new DialogGUIButton(Localizer.Format("#autoLOC_439839"), OnRemoveLeaderConfirm),
                     new DialogGUIButton(Localizer.Format("#autoLOC_439840"), OnPopupDismiss)), persistAcrossScenes: false, HighLogic.UISkin);
                 dlg.OnDismiss = OnPopupDismiss;
+                dlg.HideGUIsWhilePopup();
 
                 return false;
             }

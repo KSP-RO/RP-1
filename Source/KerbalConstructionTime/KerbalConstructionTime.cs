@@ -9,6 +9,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
 using System.Reflection;
+using static RP0.KSPUtils;
 
 namespace KerbalConstructionTime
 {

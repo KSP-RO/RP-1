@@ -20,7 +20,7 @@ namespace RP0
                 new DialogGUIButton("No", () => {})
             };
             var dialog = new MultiOptionDialog("ConfirmRangeSafety", "Destroy Vessel?", "Range Safety", HighLogic.UISkin, 300, options);
-            PopupDialog.SpawnPopupDialog(dialog, true, HighLogic.UISkin);
+            PopupDialog.SpawnPopupDialog(dialog, true, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         [KSPAction("Range Safety")]

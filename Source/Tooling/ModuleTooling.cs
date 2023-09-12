@@ -84,7 +84,7 @@ namespace RP0
                                 new DialogGUIButton("Close", () => { }, 140.0f, 30.0f, true)
                                 )),
                         false,
-                        HighLogic.UISkin);
+                        HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private void UpdateButtonName() => tEvent.guiName = IsUnlocked() ? "Tooled" : toolingName;

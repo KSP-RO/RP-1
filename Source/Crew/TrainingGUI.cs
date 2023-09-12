@@ -17,6 +17,7 @@ namespace RP0.Crew
         private GUIStyle _tempCourseLblStyle = null;
         private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/KACIcon15", false), "Add alarm");
         private bool _showAllTrainings = false;
+        private static readonly Color _colorUnavailable = new Color(1f, 176f / 255f, 153f / 255f);
 
         protected override void OnStart()
         {
@@ -201,7 +202,7 @@ namespace RP0.Crew
             if (_courseBtnUnavailStyle == null)
             {
                 _courseBtnUnavailStyle = new GUIStyle(HighLogic.Skin.button);
-                _courseBtnUnavailStyle.normal.textColor = XKCDColors.BrightOrange;
+                _courseBtnUnavailStyle.normal.textColor = _colorUnavailable;
             }
 
             _courseSelectorScroll = GUILayout.BeginScrollView(_courseSelectorScroll, GUILayout.Width(505), GUILayout.Height(430));

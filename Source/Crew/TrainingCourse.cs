@@ -212,7 +212,8 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
-                                             HighLogic.UISkin).HideGUIsWhilePopup();
+                                             HighLogic.UISkin,
+                                             !HighLogic.LoadedSceneIsFlight).HideGUIsWhilePopup();
                 }
             }
 

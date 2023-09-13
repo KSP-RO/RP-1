@@ -437,7 +437,7 @@ namespace RP0.ProceduralAvionics
         [KSPEvent]
         public void OnResourceInitialChanged(BaseEventDetails eventData)
         {
-            if (eventData.Get<PartResource>("resource")?.part == _rfPM.part)
+            if (_rfPM?.part != null && eventData.Get<PartResource>("resource")?.part == _rfPM.part)
                 RefreshDisplays();
         }
 

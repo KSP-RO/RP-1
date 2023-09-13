@@ -26,7 +26,8 @@ namespace RP0.Harmony
                                          Localizer.Format("#rp0_Crew_TransferFail_Text"),
                                          Localizer.Format("#autoLOC_190905"),
                                          false,
-                                         HighLogic.UISkin).HideGUIsWhilePopup();
+                                         HighLogic.UISkin,
+                                         false).HideGUIsWhilePopup();
 
             return false;
         }

@@ -767,7 +767,8 @@ namespace RP0.Crew
                                                  "The following retirements have occurred:\n" + msgStr,
                                                  KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                                  true,
-                                                 HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
+                                                 HighLogic.UISkin,
+                                                 !HighLogic.LoadedSceneIsFlight).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
                 }
 
                 _toRemove.Clear();

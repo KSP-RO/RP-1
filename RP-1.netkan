@@ -1,4 +1,4 @@
-spec_version: 1
+spec_version: v1.26
 identifier: RP-1
 name: Realistic Progression One (RP-1)
 abstract: >-
@@ -45,8 +45,12 @@ depends:
   - name: KerbalChangelog
 recommends:
   - name: KSPBurst-Full
-  - name: ReStock
-  - name: ReStockPlus
+  - any_of:
+    - name: ReStock
+    - name: VenStockRevamp
+  - any_of:
+    - name: ReStockPlus
+    - name: VenStockRevamp
   - name: RSSDateTimeFormatter
   - name: ROEngines
   - name: ROHeatshields
@@ -62,7 +66,9 @@ recommends:
   - name: ProceduralParts
   - name: RCSBuildAid
   - name: RealAntennas
-  - name: TestFlight
+  - any_of:
+      - name: TestFlight
+      - name: TestLite
   - name: TextureReplacer
   - name: MechJeb2
   - name: Waterfall

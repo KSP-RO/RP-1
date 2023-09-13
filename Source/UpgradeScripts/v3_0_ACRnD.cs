@@ -126,11 +126,11 @@ namespace RP0.UpgradeScripts
                 double oldCost = KerbalConstructionTime.Database.FacilityLevelCosts[SpaceCenterFacility.AstronautComplex].SumThrough(newUp - 1);
                 double bp = KerbalConstructionTime.Formula.GetConstructionBP(cost, oldCost, SpaceCenterFacility.AstronautComplex);
                 double oldBP = 0d;
-                node.TryGetValue("BP", ref oldBP);
-                node.SetValue("BP", Math.Min(bp, oldBP));
-                node.SetValue("cost", cost.ToString("N0"));
-                node.SetValue("currentLevel", newCur);
-                node.SetValue("upgradeLevel", newUp);
+                n.TryGetValue("BP", ref oldBP);
+                n.SetValue("BP", Math.Min(bp, oldBP));
+                n.SetValue("cost", cost.ToString("N0"));
+                n.SetValue("currentLevel", newCur);
+                n.SetValue("upgradeLevel", newUp);
 
                 Debug.Log($"[RP-0] UpgradePipeline context {loadContext} updated KCT Admin Building upgrade to target level {newUp} (was {oldUp})");
             }

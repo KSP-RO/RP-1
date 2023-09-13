@@ -148,7 +148,7 @@
         "title": "CST-100 Launch Abort Engines (LAE)",
         "description": "The launch abort system of the CST-100 \"Starliner\" spacecraft. Uses four RS-88 engines (hypergolic variant). Plume configured by RealPlume.",
         "mod": "CST-100 Starliner",
-        "cost": "200",
+        "cost": 177,
         "entry_cost": "0",
         "category": "COMMAND",
         "info": "LES",

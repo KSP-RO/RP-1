@@ -804,7 +804,7 @@
         "title": "Merlin Series",
         "description": "The whole family of Merlin rocket engines, made by SpaceX. Diameter: [1.75 m]. Plume configured by RealPlume.",
         "mod": "RealFuels",
-        "cost": 377,
+        "cost": 342,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",

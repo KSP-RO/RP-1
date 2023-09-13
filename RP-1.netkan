@@ -48,9 +48,7 @@ recommends:
   - any_of:
     - name: ReStock
     - name: VenStockRevamp
-  - any_of:
-    - name: ReStockPlus
-    - name: VenStockRevamp
+  - name: ReStockPlus
   - name: RSSDateTimeFormatter
   - name: ROEngines
   - name: ROHeatshields

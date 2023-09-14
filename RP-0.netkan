@@ -1,120 +1,110 @@
-{
-	"spec_version" : "v1.26",
-	"identifier" : "RP-0",
-	"name"       : "RP-1 Legacy Version",
-	"abstract"   : "LEGACY Realistic Progression One - Career for Realism Overhaul. Use for finishing old saves.",
-	"license"    : "CC-BY-4.0",
-	"author"     : "RP-1 Group",
-	"$kref"      : "#/ckan/github/KSP-RO/RP-1/asset_match/v1",
-	"$vref"      : "#/ckan/ksp-avc",
-	"x_netkan_force_v": true,
-	"release_status" : "stable",
-	"resources": {
-		"homepage": "https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*",
-		"manual": "https://github.com/KSP-RO/RP-1/wiki"
-	},
-	"depends" : [
-		{ "name" : "ModuleManager" },
-		{
-			"name" : "RealismOverhaul",
-			"max_version" : "v15.99.0.0"
-		},
-		{ "name" : "SXTContinued" },
-		{ "name" : "ContractConfigurator" },
-		{ "name" : "CustomBarnKit" },
-		{ "name" : "VenStockRevamp-NewParts" },
-		{ "name" : "RealSolarSystem" },
-		{ "name" : "MagiCore" },
-		{ "name" : "ClickThroughBlocker" },
-		{ "name" : "ToolbarController" },
-		{ "name" : "Kerbalism-Config-RO" },
-		{ "name" : "KSPCommunityFixes" },
-		{ "name" : "KerbalChangelog" }
-	],
-	"recommends" : [
-		{ "name" : "RSSDateTimeFormatter" },
-		{ "any_of": [
-			{ "name" : "ReStock" },
-			{ "name" : "VenStockRevamp" }
-		] },
-		{
-			"name" : "ROEngines",
-			"max_version" : "v1.99.0.0"
-		},
-		{ "name" : "ROTanks" },
-		{
-			"name" : "ROCapsules",
-			"max_version" : "v1.99.0.0"
-		},
-		{
-			"name" : "ROSolar",
-			"max_version" : "v1.99.0.0"
-		},
-		{ "name" : "ROHeatshields" },
-		{ "name" : "B9-PWings-Fork" },
-		{ "name" : "KSPWheel" },
-		{ "name" : "HangerExtenderExtended" },
-		{ "name" : "KerbalAlarmClock" },
-		{ "name" : "KerbalRenamer" },
-		{ "name" : "KSCSwitcher" },
-		{ "name" : "MechJeb2" },
-		{ "name" : "AtmosphereAutopilot" },
-		{ "name" : "ProceduralFairings" },
-		{ "name" : "ProceduralParts" },
-		{ "name" : "RCSBuildAid" },
-		{ "name" : "RCSBuildAidCont" },
-		{ "name" : "RealAntennas" },
-		{ "name" : "ShipManifest" },
-		{ "any_of": [
-			{ "name" : "TestFlight" },
-			{ "name" : "TestLite" }
-		] },
-		{ "name" : "RSSVE-Textures" },
-		{ "name" : "TransferWindowPlannerFork" },
-		{ "name" : "Waterfall" },
-		{ "name" : "ModularLaunchPads" }
-	],
-	"suggests" : [
-		{ "name" : "BluedogDB" },
-		{ "name" : "FASA" },
-		{ "name" : "TextureReplacer" },
-		{ "name" : "SemiSaturatableRW" },
-		{ "name" : "JanitorsCloset" },
-		{ "name" : "HyperEdit" },
-		{ "name" : "EditorExtensionsRedux" },
-		{ "name" : "KerbalEngineerRedux" },
-		{ "name" : "kOS" },
-		{ "name" : "RealScaleBoosters" },
-		{ "name" : "NearFutureSolar" },
-		{ "name" : "NearFutureConstruction" },
-		{ "name" : "InternalRCS" },
-		{ "name" : "ProbesPlus" },
-		{ "name" : "ATKPropulsionPack" },
-		{ "name" : "WaypointManager" },
-		{ "name" : "SCANsat" },
-		{ "name" : "NavHudRenewed" },
-		{ "name" : "ConformalDecals" },
-		{ "name" : "CanaveralPads" }
-	],
-	"conflicts" : [
-		{ "name" : "RP-1" },
-		{ "name" : "KerbalConstructionTime" },
-		{ "name" : "CrowdSourcedScience" },
-		{ "name" : "HideEmptyTechNodes" },
-		{ "name" : "MechJebForAll" },
-		{ "name" : "NearFutureElectrical-DecayingRTGs" },
-		{ "name" : "KRASH" },
-		{
-			"name": "ROCapsules",
-			"min_version" : "v2.0.0.0"
-		},
-		{
-			"name": "ROEngines",
-			"min_version" : "v2.0.0.0"
-		},
-		{
-			"name": "ROSolar",
-			"min_version" : "v2.0.0.0"
-		}
-	]
-}
+spec_version: v1.26
+identifier: RP-0
+name: RP-1 Legacy Version
+abstract: >-
+  LEGACY Realistic Progression One - Career for Realism Overhaul. Use for
+  finishing old saves.
+license: CC-BY-4.0
+author: RP-1 Group
+$kref: '#/ckan/github/KSP-RO/RP-1/asset_match/v1'
+$vref: '#/ckan/ksp-avc'
+x_netkan_force_v: true
+release_status: stable
+resources:
+  homepage: https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*
+  manual: https://github.com/KSP-RO/RP-1/wiki
+depends:
+  - name: ModuleManager
+  - name: RealismOverhaul
+    max_version: v15.99.0.0
+  - name: SXTContinued
+    suppress_recommendations: true
+  - name: ContractConfigurator
+    suppress_recommendations: true
+  - name: CustomBarnKit
+    suppress_recommendations: true
+  - name: VenStockRevamp-NewParts
+    suppress_recommendations: true
+  - name: RealSolarSystem
+    suppress_recommendations: true
+  - name: MagiCore
+    suppress_recommendations: true
+  - name: ClickThroughBlocker
+    suppress_recommendations: true
+  - name: ToolbarController
+    suppress_recommendations: true
+  - name: Kerbalism-Config-RO
+    suppress_recommendations: true
+  - name: KSPCommunityFixes
+    suppress_recommendations: true
+  - name: KerbalChangelog
+    suppress_recommendations: true
+recommends:
+  - name: RSSDateTimeFormatter
+  - any_of:
+      - name: ReStock
+      - name: VenStockRevamp
+  - name: ROEngines
+    max_version: v1.99.0.0
+  - name: ROTanks
+  - name: ROCapsules
+    max_version: v1.99.0.0
+  - name: ROSolar
+    max_version: v1.99.0.0
+  - name: ROHeatshields
+  - name: B9-PWings-Fork
+  - name: KSPWheel
+  - name: HangerExtenderExtended
+  - name: KerbalAlarmClock
+  - name: KerbalRenamer
+  - name: KSCSwitcher
+  - name: MechJeb2
+  - name: AtmosphereAutopilot
+  - name: ProceduralFairings
+  - name: ProceduralParts
+  - name: RCSBuildAid
+  - name: RCSBuildAidCont
+  - name: RealAntennas
+  - name: ShipManifest
+  - any_of:
+      - name: TestFlight
+      - name: TestLite
+  - name: RSSVE-Textures
+  - name: TransferWindowPlannerFork
+  - name: Waterfall
+  - name: ModularLaunchPads
+suggests:
+  - name: BluedogDB
+  - name: FASA
+  - name: TextureReplacer
+  - name: SemiSaturatableRW
+  - name: JanitorsCloset
+  - name: HyperEdit
+  - name: EditorExtensionsRedux
+  - name: KerbalEngineerRedux
+  - name: kOS
+  - name: RealScaleBoosters
+  - name: NearFutureSolar
+  - name: NearFutureConstruction
+  - name: InternalRCS
+  - name: ProbesPlus
+  - name: ATKPropulsionPack
+  - name: WaypointManager
+  - name: SCANsat
+  - name: NavHudRenewed
+  - name: ConformalDecals
+  - name: CanaveralPads
+conflicts:
+  - name: RP-1
+  - name: KerbalConstructionTime
+  - name: CrowdSourcedScience
+  - name: HideEmptyTechNodes
+  - name: MechJebForAll
+  - name: NearFutureElectrical-DecayingRTGs
+  - name: KRASH
+  - name: ROCapsules
+    min_version: v2.0.0.0
+  - name: ROEngines
+    min_version: v2.0.0.0
+  - name: ROSolar
+    min_version: v2.0.0.0

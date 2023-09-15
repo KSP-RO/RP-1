@@ -107,7 +107,7 @@ namespace KerbalConstructionTime
 
         public static bool IsClamp(Part part)
         {
-            return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag("PadInfrastructure");
+            return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag(ModuleTagList.PadInfrastructure);
         }
 
         public static bool IsClampOrChild(this ProtoPartSnapshot p)

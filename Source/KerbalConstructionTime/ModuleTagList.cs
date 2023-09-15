@@ -5,7 +5,11 @@ namespace KerbalConstructionTime
 {
     public class ModuleTagList : PartModule
     {
+        public const string PadInfrastructure = "PadInfrastructure";
+
         [SerializeField] public List<string> tags;
+
+        public bool HasPadInfrastructure => tags.Contains(PadInfrastructure);
 
         public override void OnLoad(ConfigNode node)
         {

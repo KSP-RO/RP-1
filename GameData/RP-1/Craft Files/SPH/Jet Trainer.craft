@@ -1,6 +1,6 @@
-ship = Jet Trainer
+ship = #rp1_crafts_jettrainer
 version = 1.12.3
-description = Basic subsonic jet aircraft. 2 seater, very forgiving flight characteristics, if a bit twitchy at low speeds. Rotate at 35 m/s, liftoff at 45 m/s. Stall speed 40 m/s, max speed 270 m/s. AG 1 extends flaps, AG2 retracts them.
+description = #rp1_crafts_jettrainer_desc
 type = SPH
 size = 9.62759399,4.3061924,10.549736
 steamPublishedFileId = 0

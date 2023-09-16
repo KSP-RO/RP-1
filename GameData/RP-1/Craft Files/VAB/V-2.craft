@@ -1,6 +1,6 @@
-ship = V-2
+ship = #rp1_crafts_v2
 version = 1.12.3
-description = German short range ballistic missile, repurposed for more peaceful uses. Contains a large payload fairing in the nose with plenty of space, 250 km max altitude.
+description = #rp1_crafts_v2_desc
 type = VAB
 size = 3.52706838,11.4751921,3.52706814
 steamPublishedFileId = 0

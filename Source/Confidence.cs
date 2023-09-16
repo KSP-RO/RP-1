@@ -63,6 +63,8 @@ namespace RP0
                     conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTime.KerbalConstructionTimeData.Instance.SciPointsTotal)) * sciDelta;
                 else
                     conf = sciDelta * 2f;
+
+                conf = (float)CurrencyUtils.Conf(TransactionReasonsRP0.ScienceTransmission, conf);
             }
 
             // We'll actually process the confidence change here and use GetTotal, instead of GetEffectDelta

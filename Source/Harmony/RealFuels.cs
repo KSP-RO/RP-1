@@ -52,11 +52,15 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("SetConfiguration", new Type[] { typeof(ConfigNode), typeof(bool) })]
-        internal static void Postfix_SetConfiguration()
+        internal static void Postfix_SetConfiguration(RealFuels.ModuleEngineConfigsBase __instance)
         {
             if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTime.KerbalConstructionTime.Instance != null)
             {
                 KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            }
+            if (__instance.part.FindModuleImplementing<ModuleTagList>() is var mtl)
+            {
+                mtl.UpdateEngineTags(__instance.config);
             }
         }
     }
@@ -66,11 +70,15 @@ namespace RP0.Harmony
     {
         [HarmonyPostfix]
         [HarmonyPatch("RaiseTankDefinitionChanged")]
-        internal static void Postfix_RaiseTankDefinitionChanged()
+        internal static void Postfix_RaiseTankDefinitionChanged(RealFuels.Tanks.ModuleFuelTanks __instance)
         {
             if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTime.KerbalConstructionTime.Instance != null)
             {
                 KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            }
+            if (__instance.part.FindModuleImplementing<ModuleTagList>() is var mtl)
+            {
+                mtl.UpdateTankTags(__instance.type);
             }
         }
     }

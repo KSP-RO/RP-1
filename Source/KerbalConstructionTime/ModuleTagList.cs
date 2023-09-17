@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
@@ -7,8 +8,11 @@ namespace KerbalConstructionTime
     {
         public const string PadInfrastructure = "PadInfrastructure";
 
-        [KSPField]
-        public bool isDynamic = false;
+        [KSPField(isPersistant = true)]
+        public PersistentListValueType<string> engineTags = new PersistentListValueType<string>();
+
+        [KSPField(isPersistant = true)]
+        public PersistentListValueType<string> tankTags = new PersistentListValueType<string>();
 
         [SerializeField] public List<string> tags;
 
@@ -38,7 +42,12 @@ namespace KerbalConstructionTime
         public override string GetInfo()
         {
             var str = StringBuilderCache.Acquire();
-            foreach (var x in tags)
+            List<string> combinedTags = new List<string>();
+            combinedTags.AddRange(tags);
+            combinedTags.AddRange(engineTags);
+            combinedTags.AddRange(tankTags);
+            combinedTags.Sort();
+            foreach (var x in combinedTags)
             {
                 if (Database.KCTCostModifiers.TryGetValue(x, out var mod))
                 {
@@ -58,41 +67,42 @@ namespace KerbalConstructionTime
             return !string.IsNullOrEmpty(s) ? s : "None Specified";
         }
 
+        public void UpdateEngineTags(ConfigNode node)
+        {
+            engineTags.Clear();
+            // the config node will be correct regardless of which type of MEC it is
+            foreach (var v in node._values.values)
+                if (v.name == "tag")
+                    engineTags.AddUnique(v.value);
+        }
+
+        public void UpdateTankTags(string type)
+        {
+            tankTags.Clear();
+            if (!RealFuels.MFSSettings.tankDefinitions.TryGetValue(type, out var td))
+                return;
+            foreach (var s in td.tags)
+                tankTags.AddUnique(s);
+        }
+
+        private static PersistentListValueType<string> _tempTags = new PersistentListValueType<string>();
+
         public static List<string> GetTags(object p)
         {
+            List<string> combinedTags = new List<string>();
             if (p is Part part)
             {
                 ModuleTagList mod = part.FindModuleImplementing<ModuleTagList>();
                 if (mod == null)
                     return null;
 
-                if (!mod.isDynamic)
-                    return mod.tags;
-
-                List<string> list = new List<string>();
-                list.AddRange(mod.tags);
-                for (int i = 0; i < part.Modules.Count; ++i)
-                {
-                    PartModule m = part.Modules[i];
-                    if (m is RealFuels.ModuleEngineConfigsBase mecb)
-                    {
-                        // the config node will be correct regardless of which type of MEC it is
-                        foreach (var s in mecb.config.GetValuesList("tag"))
-                            list.AddUnique(s);
-                    }
-                    else if (m is RealFuels.Tanks.ModuleFuelTanks mft)
-                    {
-                        if (!RealFuels.MFSSettings.tankDefinitions.TryGetValue(mft.type, out var td))
-                            continue;
-                        foreach (var s in td.tags)
-                            list.AddUnique(s);
-                    }
-                }
-                list.Sort();
-                return list;
+                combinedTags.AddRange(mod.tags);
+                combinedTags.AddRange(mod.engineTags);
+                combinedTags.AddRange(mod.tankTags);
+                combinedTags.Sort();
+                return combinedTags;
             }
-
-            if (p is ConfigNode cn)
+            else if (p is ConfigNode cn)
             {
                 string name = Utilities.GetPartNameFromNode(cn);
                 Part partRef = Utilities.GetAvailablePartByName(name).partPrefab;
@@ -101,89 +111,24 @@ namespace KerbalConstructionTime
                 if (mod == null)
                     return null;
 
-                if (!mod.isDynamic)
-                    return mod.tags;
+                combinedTags.AddRange(mod.tags);
 
-                List<string> list = new List<string>();
-                list.AddRange(mod.tags);
-
-                int nextIdx = 0;
-                for (int j = 0; j < partRef.Modules.Count; ++j)
+                foreach (var node in cn._nodes.nodes)
                 {
-                    PartModule m = partRef.Modules[j];
-                    string mName = string.Empty;
-                    bool isEng = false;
-                    if (m is RealFuels.ModuleEngineConfigsBase)
-                    {
-                        mName = m.GetType().ToString();
-                        isEng = true;
-                    }
-                    else if (m is RealFuels.Tanks.ModuleFuelTanks)
-                    {
-                        mName = m.GetType().ToString();
-                        isEng = false;
-                    }
-
-                    if (mName == string.Empty)
+                    if (node.name != "MODULE")
+                        continue;
+                    if (node.GetValue("name") != "ModuleTagList")
                         continue;
 
-                    // Find matching module in nodes
-                    for (int i = nextIdx; i < cn.nodes.Count; ++i)
-                    {
-                        ConfigNode n = cn.nodes[i];
-                        if (n.name != "MODULE")
-                            continue;
-
-                        string nName = n.GetValue("name");
-                        if (nName == mName)
-                        {
-                            nextIdx = i + 1;
-
-                            if (isEng)
-                            {
-                                string config = n.GetValue("configuration");
-                                RealFuels.ModuleEngineConfigsBase mecb = m as RealFuels.ModuleEngineConfigsBase;
-                                ConfigNode cfg = mecb.configs.Find(c => c.GetValue("name") == config);
-                                if (cfg != null)
-                                {
-                                    bool useBase = true;
-                                    if (mecb is RealFuels.ModuleEngineConfigs mec && n.GetValue("activePatchName") is string patch && !string.IsNullOrEmpty(patch))
-                                    {
-                                        List<ConfigNode> subNodes = new List<ConfigNode>(cfg.GetNodes("SUBCONFIG"));
-                                        if (subNodes.Find(s => s.GetValue("name") == patch) is ConfigNode subCfg)
-                                        {
-                                            foreach (var s in subCfg.GetValuesList("tag"))
-                                            {
-                                                useBase = false;
-                                                list.AddUnique(s);
-                                            }
-                                        }
-                                    }
-                                    if (useBase)
-                                    {
-                                        foreach (var s in cfg.GetValuesList("tag"))
-                                            list.AddUnique(s);
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                string type = n.GetValue("type");
-                                if (!string.IsNullOrEmpty(type) && RealFuels.MFSSettings.tankDefinitions.TryGetValue(type, out var td))
-                                {
-                                    foreach (var s in td.tags)
-                                        list.AddUnique(s);
-                                }
-                            }
-
-                            break;
-                        }
-                    }
+                    _tempTags.Load(node.GetNode(nameof(engineTags)));
+                    combinedTags.AddRange(_tempTags);
+                    _tempTags.Load(node.GetNode(nameof(tankTags)));
+                    combinedTags.AddRange(_tempTags);
+                    _tempTags.Clear();
+                    combinedTags.Sort();
+                    return combinedTags;
                 }
-                list.Sort();
-                return list;
             }
-
             return null;
         }
     }

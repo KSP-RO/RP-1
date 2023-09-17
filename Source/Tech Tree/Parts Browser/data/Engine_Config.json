@@ -17678,7 +17678,9 @@
         "upgrade": false,
         "entry_cost_mods": "5000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "XLR11-RM-5",
@@ -17787,7 +17789,9 @@
         "upgrade": true,
         "entry_cost_mods": "8000,XLR11-RM-5",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "XLR41",

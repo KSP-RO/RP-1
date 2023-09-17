@@ -128,7 +128,7 @@ def create_app(test_config=None):
     @app.route('/api/generate_all_configs')
     def generate_all_configs():
         generate_parts_tree(part_data.parts,part_data.module_tags)
-        generate_engine_tree(part_data.parts)
+        generate_engine_tree(part_data.parts,part_data.module_tags)
         generate_identical_parts(part_data.parts)
         generate_ecm_parts(part_data.parts)
         generate_ecm_engines(part_data.parts)

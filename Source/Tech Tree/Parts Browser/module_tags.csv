@@ -17,3 +17,4 @@ TankServiceModule,Tag
 NonReentryRated,
 UnpressurizedCockpit,
 NuclearRTG,Tag
+isDynamic,TagSetting

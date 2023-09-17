@@ -66,8 +66,7 @@
         "entry_cost_mods": "AMBR-623N",
         "identical_part_name": "AMBR",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -302,8 +301,7 @@
         "entry_cost_mods": "ISE-100",
         "identical_part_name": "ISE100",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -1142,8 +1140,7 @@
         "entry_cost_mods": "XLR132",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "Toxic"
+            "EngineLiquidTurbo"
         ]
     },
     {

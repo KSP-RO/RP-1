@@ -1718,8 +1718,7 @@
         "entry_cost_mods": "AJ10-138",
         "identical_part_name": "AJ10 (Adv)",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -2110,8 +2109,7 @@
         "entry_cost_mods": "RD-215-8D513",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "Toxic"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -2332,8 +2330,7 @@
         "entry_cost_mods": "AJ10-137",
         "identical_part_name": "AJ10-137",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {

@@ -484,8 +484,7 @@
         "entry_cost_mods": "Aestus",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "Toxic"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -508,8 +507,7 @@
         "entry_cost_mods": "Viking-2",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "Toxic"
+            "EngineLiquidTurbo"
         ]
     },
     {

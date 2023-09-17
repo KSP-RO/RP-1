@@ -1282,8 +1282,7 @@ namespace KerbalConstructionTime
         /// <returns>True if Part has ModuleTagList PM and a tag with given name is defined in that PM</returns>
         public static bool HasTag(this Part p, string tag)
         {
-            ModuleTagList mTags = p.FindModuleImplementing<ModuleTagList>();
-            return mTags?.tags.Contains(tag) ?? false;
+            return ModuleTagList.GetTags(p)?.Contains(tag) ?? false;
         }
 
         public static KCTVesselData GetKCTVesselData(this Vessel v)

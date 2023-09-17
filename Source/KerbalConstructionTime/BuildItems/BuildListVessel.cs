@@ -1074,7 +1074,7 @@ namespace KerbalConstructionTime
             }
 
             // TODO: Add support for upgraded tags here
-            double moduleMultiplier = FindApplyTags(partRef);
+            double moduleMultiplier = FindApplyTags(o);
 
             foreach (var kvp in _tempResourceAmounts)
             {
@@ -1166,20 +1166,20 @@ namespace KerbalConstructionTime
             return costMod;
         }
 
-        private double FindApplyTags(Part p)
+        private double FindApplyTags(object o)
         {
             double mult = 1;
-            if (p.Modules.GetModule<ModuleTagList>() is ModuleTagList pm)
+            _tempTags = ModuleTagList.GetTags(o);
+            if (_tempTags == null)
+                return mult;
+
+            foreach (var x in _tempTags)
             {
-                _tempTags = pm.tags;
-                foreach (var x in pm.tags)
+                if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
                 {
-                    if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
-                    {
-                        mult *= mod.partMult;
-                        if (mod.globalMult != 1d)
-                            globalTags.Add(mod.name);
-                    }
+                    mult *= mod.partMult;
+                    if (mod.globalMult != 1d)
+                        globalTags.Add(mod.name);
                 }
             }
             return mult;

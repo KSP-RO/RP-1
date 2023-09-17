@@ -30,11 +30,31 @@ namespace KerbalConstructionTime
                 var part = ap.partPrefab;
                 if (part == null)
                     continue;
+
+                ModuleTagList mtl = null;
+                for (int i = 0; i < part.Modules.Count; ++i)
+                {
+                    if (part.Modules[i] is ModuleTagList m)
+                    {
+                        mtl = m;
+                        break;
+                    }
+                }
+                if (mtl == null)
+                    continue;
+
+                // Special handling: sometimes we add engines to CMs or SMs
+                // and we need to not further increase their Effective Cost
+                if (mtl.tags.Contains("NoResourceCostMult"))
+                    continue;
+
+                bool found = false;
                 for (int i = 0; i < part.Modules.Count; ++i)
                 {
                     var m = part.Modules[i];
                     if (m is RealFuels.ModuleEngineConfigsBase mecb)
                     {
+                        found = true;
                         foreach (var n in mecb.configs)
                         {
                             ApplyTagToConfig(n);
@@ -43,8 +63,35 @@ namespace KerbalConstructionTime
                                 ApplyTagToConfig(s);
                             }
                         }
+                        // do the same for current config so we can reload
+                        ApplyTagToConfig(mecb.config);
+                        mtl.UpdateEngineTags(mecb.config);
+                    }
+                    else if (m is RealFuels.Tanks.ModuleFuelTanks mft)
+                    {
+                        found = true;
+                        mtl.UpdateTankTags(mft.type);
                     }
                 }
+
+                // Update moduleinfo
+                if (found)
+                {
+                    string mName = mtl.GUIName ?? KSPUtil.PrintModuleName(mtl.moduleName);
+                    foreach (var mi in ap.moduleInfos)
+                    {
+                        if (mi.moduleName == mName)
+                        {
+                            mi.info = mtl.GetInfo().Trim();
+                            if (mtl.showUpgradesInModuleInfo && mtl.HasUpgrades())
+                            {
+                                mi.info = mi.info + "\n" + mtl.PrintUpgrades();
+                            }
+                            break;
+                        }
+                    }
+                }
+
             }
         }
 

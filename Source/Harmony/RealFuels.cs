@@ -52,15 +52,22 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("SetConfiguration", new Type[] { typeof(ConfigNode), typeof(bool) })]
-        internal static void Postfix_SetConfiguration(RealFuels.ModuleEngineConfigsBase __instance)
+        internal static void Postfix_SetConfiguration(RealFuels.ModuleEngineConfigsBase __instance, ConfigNode newConfig)
         {
             if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTime.KerbalConstructionTime.Instance != null)
             {
                 KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             }
-            if (__instance.part.FindModuleImplementing<ModuleTagList>() is var mtl)
+            if (HighLogic.LoadedScene != GameScenes.LOADING && __instance.part != null)
             {
-                mtl.UpdateEngineTags(__instance.config);
+                foreach (var m in __instance.part.modules)
+                {
+                    if (m is ModuleTagList mtl)
+                    {
+                        mtl.UpdateEngineTags(newConfig);
+                        break;
+                    }
+                }
             }
         }
     }
@@ -76,9 +83,16 @@ namespace RP0.Harmony
             {
                 KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             }
-            if (__instance.part.FindModuleImplementing<ModuleTagList>() is var mtl)
+            if (HighLogic.LoadedScene != GameScenes.LOADING && __instance.part != null)
             {
-                mtl.UpdateTankTags(__instance.type);
+                foreach (var m in __instance.part.modules)
+                {
+                    if (m is ModuleTagList mtl)
+                    {
+                        mtl.UpdateTankTags(__instance.type);
+                        break;
+                    }
+                }
             }
         }
     }

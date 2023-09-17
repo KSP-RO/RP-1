@@ -27,8 +27,7 @@ namespace RP0.Harmony
             int techItemIndex = -1;
             bool showProgress = !showCredit && (techItemIndex = KerbalConstructionTimeData.Instance.TechListIndex(techID)) != -1;
             showCredit |= showProgress;
-            if (!KerbalConstructionTime.KerbalConstructionTime.NodeTypes.TryGetValue(node.tech.techID, out NodeType type))
-                type = NodeType.None;
+            var type = Database.NodeTypes.ValueOrDefault(node.tech.techID);
             string extraText = Localizer.Format("#rp0_RnD_NodeType", Localizer.Format("#rp0_RnD_NodeType_" + type.ToStringCached())) + "\n";
 
             if (showCredit)

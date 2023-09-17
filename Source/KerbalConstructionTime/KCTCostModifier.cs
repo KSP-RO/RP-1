@@ -1,6 +1,6 @@
 ﻿namespace KerbalConstructionTime
 {
-    public class KCTCostModifier
+    public class KCTCostModifier : RP0.DataTypes.ConfigNodePersistenceBase
     {
         [Persistent] public string name;
         [Persistent] public string displayName;

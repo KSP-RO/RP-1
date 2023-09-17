@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using static RP0.MiscUtils;
 
 namespace KerbalConstructionTime
 {
@@ -392,7 +393,7 @@ namespace KerbalConstructionTime
                     {
                         foreach (PartResource rsc in p.Resources)
                         {
-                            if (Database.ValidFuelRes.Contains(rsc.resourceName) && rsc.flowState)
+                            if ((Database.ResourceInfo.LCResourceTypes.ValueOrDefault(rsc.resourceName) & LCResourceType.Fuel) != 0 && rsc.flowState)
                             {
                                 rsc.amount = rsc.maxAmount;
                             }
@@ -402,7 +403,7 @@ namespace KerbalConstructionTime
                     {
                         foreach (PartResource rsc in p.Resources)
                         {
-                            if (Database.ValidFuelRes.Contains(rsc.resourceName) && rsc.flowState)
+                            if ((Database.ResourceInfo.LCResourceTypes.ValueOrDefault(rsc.resourceName) & LCResourceType.Fuel) != 0 && rsc.flowState)
                             {
                                 PartResource templateRsc = p.partInfo.partPrefab.Resources.FirstOrDefault(r => r.resourceName == rsc.resourceName);
                                 if (templateRsc != null)

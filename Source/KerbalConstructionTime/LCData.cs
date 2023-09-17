@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
+using static RP0.MiscUtils;
 
 namespace KerbalConstructionTime
 {
@@ -116,17 +117,17 @@ namespace KerbalConstructionTime
         {
             Vector3 padSize = sizeMax; // we tweak it later.
 
-            HashSet<string> ignoredRes;
+            LCResourceType ignoredResType;
             if (lcType == LaunchComplexType.Pad)
             {
-                ignoredRes = Database.PadIgnoreRes;
+                ignoredResType = LCResourceType.PadIgnore;
 
                 double mass = massMax;
                 costPad = Math.Max(0d, Math.Pow(mass, 0.65d) * 2000d + Math.Pow(Math.Max(mass - 350, 0), 1.5d) * 2d - 2500d) + 500d;
             }
             else
             {
-                ignoredRes = Database.HangarIgnoreRes;
+                ignoredResType = LCResourceType.HangarIgnore;
 
                 costPad = 0f;
                 padSize.y *= 5f;
@@ -144,7 +145,7 @@ namespace KerbalConstructionTime
             costResources = 0d;
             foreach (var kvp in resourcesHandled)
             {
-                if (ignoredRes.Contains(kvp.Key))
+                if((Database.ResourceInfo.LCResourceTypes.ValueOrDefault(kvp.Key) & ignoredResType) != 0)
                     continue;
 
                 costResources += Formula.ResourceTankCost(kvp.Key, kvp.Value, false, lcType);

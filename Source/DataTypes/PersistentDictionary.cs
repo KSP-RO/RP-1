@@ -41,6 +41,48 @@ namespace RP0.DataTypes
         }
     }
 
+    public class PersistentDictionaryNodeKeyed<TValue> : Dictionary<string, TValue>, IConfigNode where TValue : IConfigNode
+    {
+        private string _keyName = "name";
+
+        public PersistentDictionaryNodeKeyed() {}
+        
+        public PersistentDictionaryNodeKeyed(string keyName)
+        {
+            _keyName = keyName;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            Clear();
+            for (int i = 0; i < node.nodes.Count; ++i)
+            {
+                var n = node.nodes[i];
+                string key = n.GetValue(_keyName);
+                if (string.IsNullOrEmpty(key))
+                {
+                    UnityEngine.Debug.LogError("[RP-0] PersistentDictionaryNodeKeyed: null or empty key in node! Skipping. Node=\n" + n.ToString());
+                    continue;
+                }
+                TValue value = System.Activator.CreateInstance<TValue>();
+                value.Load(n);
+                Add(key, value);
+            }
+        }
+
+        public void Save(ConfigNode node)
+        {
+            node.AddValue("version", 1);
+            foreach (var kvp in this)
+            {
+                ConfigNode n = new ConfigNode("VALUE");
+                kvp.Value.Save(n);
+                n.SetValue(_keyName, kvp.Key, true);
+                node.AddNode(n);
+            }
+        }
+    }
+
     /// <summary>
     /// This does not have a struct constraint because string is not a valuetype but can be handled by ConfigNode's parser
     /// </summary>

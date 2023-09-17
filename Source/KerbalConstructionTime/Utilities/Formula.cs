@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using static RP0.MiscUtils;
 
 namespace KerbalConstructionTime
 {
@@ -221,10 +222,9 @@ namespace KerbalConstructionTime
             const double rfTankCostPerLMultiplier = 10d;
             const double modifyMultiplier = 0.6d;
 
-            HashSet<string> ignoredRes = type == LaunchComplexType.Hangar ? Database.HangarIgnoreRes : Database.PadIgnoreRes;
-
-            if (ignoredRes.Contains(res)
-                || !Database.ValidFuelRes.Contains(res))
+            LCResourceType ignoredResType = type == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore;
+            var rType = Database.ResourceInfo.LCResourceTypes.ValueOrDefault(res);
+            if ((rType & ignoredResType) != 0 || (rType & LCResourceType.Fuel) == 0)
                 return 0d;
 
             if (def.tankList.TryGetValue(res, out var tank) && PartResourceLibrary.Instance.GetDefinition(res) is PartResourceDefinition resDef)
@@ -347,8 +347,8 @@ namespace KerbalConstructionTime
             var def = TankDefSMIV;
             foreach (string key in _resourceKeys)
             {
-                if (Database.PadIgnoreRes.Contains(key)
-                    || !Database.ValidFuelRes.Contains(key))
+                var rType = Database.ResourceInfo.LCResourceTypes.ValueOrDefault(key);
+                if ((rType & LCResourceType.PadIgnore) != 0 || (rType & LCResourceType.Fuel) == 0)
                     continue;
 
                 ourStats.resourcesHandled.TryGetValue(key, out double ours);

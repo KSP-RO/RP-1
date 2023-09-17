@@ -108,9 +108,9 @@ namespace RP0.Harmony
                 {
                     continue;
                 }
-                if (!Database.ValidFuelRes.Contains(current.name) 
-                    || current.id == hashcodeTEATEB // ignitors have no IResourceConsumer
-                    || Database.PadIgnoreRes.Contains(current.name)) // to ignore LS resources
+                if (current.id == hashcodeTEATEB // ignitors have no IResourceConsumer
+                    || (Database.ResourceInfo.LCResourceTypes.ValueOrDefault(current.name) is LCResourceType t &&
+                    ((t & LCResourceType.Fuel) == 0 || (t & LCResourceType.PadIgnore) != 0))) // if not fuel, or is ignored
                 {
                     continue;
                 }

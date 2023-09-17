@@ -30,9 +30,6 @@ namespace KerbalConstructionTime
         internal const string KCTKSCLock = "KCTKSCLock";
         private const float BUILD_TIME_INTERVAL = 0.5f;
         private const float YEAR_MULT_TIME_INTERVAL = 86400 * 7;
-        public static readonly Dictionary<string, KCTCostModifier> KCTCostModifiers = new Dictionary<string, KCTCostModifier>();
-        public static readonly Dictionary<string, KCTTechNodePeriod> TechNodePeriods = new Dictionary<string, KCTTechNodePeriod>();
-        public static readonly RP0.DataTypes.PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new RP0.DataTypes.PersistentDictionaryValueTypes<string, NodeType>();
 
         // These should live in the EditorAddon but we can't easily access it then.
         public BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);

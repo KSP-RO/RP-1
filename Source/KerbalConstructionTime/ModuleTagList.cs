@@ -40,7 +40,7 @@ namespace KerbalConstructionTime
             var str = StringBuilderCache.Acquire();
             foreach (var x in tags)
             {
-                if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                if (Database.KCTCostModifiers.TryGetValue(x, out var mod))
                 {
                     str.AppendLine($"<b><color=green>{mod.displayName}</color></b>");
                     str.AppendLine(mod.desc);

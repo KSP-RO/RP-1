@@ -5,6 +5,7 @@ using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
 using UnityEngine.Profiling;
+using static RP0.MiscUtils;
 
 namespace KerbalConstructionTime
 {
@@ -437,7 +438,7 @@ namespace KerbalConstructionTime
                 var resList = part.GetNodes("RESOURCE");
                 foreach (var res in resList)
                 {
-                    if (Database.WasteRes.Contains(res.GetValue("name")))
+                    if ((Database.ResourceInfo.LCResourceTypes.ValueOrDefault(res.GetValue("name")) & LCResourceType.Waste) != 0)
                     {
                         res.SetValue("amount", 0);
                     }
@@ -586,13 +587,13 @@ namespace KerbalConstructionTime
         public bool ResourcesOK(LCData stats, List<string> failedReasons = null)
         {
             bool pass = true;
-            HashSet<string> ignoredRes = stats.lcType == LaunchComplexType.Hangar ? Database.HangarIgnoreRes : Database.PadIgnoreRes;
+            LCResourceType ignoreType = stats.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore;
             double massMin = Math.Max(Formula.ResourceValidationAbsoluteMassMin, Formula.ResourceValidationRatioOfVesselMassMin * mass);
 
             foreach (var kvp in resourceAmounts)
             {
-                if (ignoredRes.Contains(kvp.Key)
-                    || !Database.ValidFuelRes.Contains(kvp.Key))
+                var type = Database.ResourceInfo.LCResourceTypes.ValueOrDefault(kvp.Key);
+                if ((type & ignoreType) != 0 || (type & LCResourceType.Fuel) == 0)
                     continue;
 
                 if (stats.resourcesHandled.TryGetValue(kvp.Key, out double lcAmount) && lcAmount >= kvp.Value)
@@ -725,7 +726,7 @@ namespace KerbalConstructionTime
             {
                 foreach (var r in p.Resources)
                 {
-                    if (r.flowState && Database.ValidFuelRes.Contains(r.resourceName) &&
+                    if (r.flowState && (Database.ResourceInfo.LCResourceTypes.ValueOrDefault(r.resourceName) & LCResourceType.Fuel) != 0 &&
                         Math.Abs(r.amount - r.maxAmount) >= 1)
                     {
                         Profiler.EndSample();
@@ -747,7 +748,7 @@ namespace KerbalConstructionTime
                 var resList = p.GetNodes("RESOURCE");
                 foreach (var res in resList)
                 {
-                    if (Database.ValidFuelRes.Contains(res.GetValue("name")) &&
+                    if ((Database.ResourceInfo.LCResourceTypes.ValueOrDefault(res.GetValue("name")) & LCResourceType.Fuel) != 0 &&
                         bool.Parse(res.GetValue("flowState")))
                     {
                         var maxAmt = res.GetValue("maxAmount");
@@ -1157,7 +1158,7 @@ namespace KerbalConstructionTime
             double costMod = 1d;
             foreach (var x in globalTags)
             {
-                if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                if (Database.KCTCostModifiers.TryGetValue(x, out var mod))
                 {
                     costMod *= mod.globalMult;
                     humanRated |= mod.isHumanRating;
@@ -1175,7 +1176,7 @@ namespace KerbalConstructionTime
 
             foreach (var x in _tempTags)
             {
-                if (KerbalConstructionTime.KCTCostModifiers.TryGetValue(x, out var mod))
+                if (Database.KCTCostModifiers.TryGetValue(x, out var mod))
                 {
                     mult *= mod.partMult;
                     if (mod.globalMult != 1d)

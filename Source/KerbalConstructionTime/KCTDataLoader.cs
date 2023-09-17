@@ -2,18 +2,35 @@
 using UniLinq;
 using UnityEngine;
 using System.Collections;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
+    [System.Flags]
+    public enum LCResourceType
+    {
+        None = 0,
+        Fuel = 1,
+        Waste = 2,
+        PadIgnore = 4,
+        HangarIgnore = 8,
+    }
+
+    public class ResourceInfo
+    {
+        [Persistent]
+        public PersistentDictionaryValueTypes<string, LCResourceType> LCResourceTypes = new PersistentDictionaryValueTypes<string, LCResourceType>();
+    }
+
     [KSPAddon(KSPAddon.Startup.Instantly, false)]
     public class Database : MonoBehaviour
     {
-        public static HashSet<string> ValidFuelRes = new HashSet<string>();
-        public static HashSet<string> WasteRes = new HashSet<string>();
-        public static HashSet<string> PadIgnoreRes = new HashSet<string>();
-        public static HashSet<string> HangarIgnoreRes = new HashSet<string>();
-        public static List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
-        public static Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
+        public static readonly ResourceInfo ResourceInfo = new ResourceInfo();
+        public static readonly PersistentDictionaryNodeKeyed<KCTCostModifier> KCTCostModifiers = new PersistentDictionaryNodeKeyed<KCTCostModifier>();
+        public static readonly PersistentDictionaryNodeKeyed<KCTTechNodePeriod> TechNodePeriods = new PersistentDictionaryNodeKeyed<KCTTechNodePeriod>("id");
+        public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
+        public static readonly List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
+        public static readonly Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
 
         public static readonly RP0.SpaceCenterSettings SettingsSC = new RP0.SpaceCenterSettings();
         public static readonly RP0.CrewSettings SettingsCrew = new RP0.CrewSettings();
@@ -61,87 +78,37 @@ namespace KerbalConstructionTime
 
         private IEnumerator LoadResources()
         {
-            Database.ValidFuelRes.Clear();
-            Database.WasteRes.Clear();
-            Database.PadIgnoreRes.Clear();
-            Database.HangarIgnoreRes.Clear();
-
-            var configNode = GameDatabase.Instance.GetConfigNodes("KCT_FUEL_RESOURCES").FirstOrDefault();
+            var configNode = GameDatabase.Instance.GetConfigNodes("RP1_Resource_Info").FirstOrDefault();
             if (configNode == null)
                 yield break;
 
-            int vCount = configNode.values.Count;
-            for (int i = 0; i < vCount; ++i)
-            {
-                ConfigNode.Value v = configNode.values[i];
-                if (string.IsNullOrEmpty(v.value))
-                    continue;
-                switch (v.name)
-                {
-                    case "fuelResource": Database.ValidFuelRes.Add(v.value); break;
-                    case "wasteResource": Database.WasteRes.Add(v.value); break;
-                    case "hangarIgnoreResource": Database.HangarIgnoreRes.Add(v.value); break;
-                    // This one gets both
-                    case "padIgnoreResource": Database.PadIgnoreRes.Add(v.value); Database.HangarIgnoreRes.Add(v.value); break;
-                }
-            }
+            ConfigNode.LoadObjectFromConfig(Database.ResourceInfo, configNode);
 
             yield return null;
         }
 
         private IEnumerator LoadTags()
         {
-            KerbalConstructionTime.KCTCostModifiers.Clear();
             var node = GameDatabase.Instance.GetConfigNodes("KCTTAGS")?.FirstOrDefault();
             if (node == null)
                 yield break;
 
-            var nodes = node.GetNodes("TAG");
-            int len = nodes.Length;
-            float inc = 1f / len;
-            for (int i = 0; i < len; ++i)
-            {
-                _progress += inc;
-                var tagNode = nodes[i];
-                KCTCostModifier x = new KCTCostModifier();
-                if (ConfigNode.LoadObjectFromConfig(x, tagNode) && !string.IsNullOrEmpty(x.name))
-                {
-                    if (string.IsNullOrEmpty(x.displayName))
-                        x.displayName = x.name;
-                    KerbalConstructionTime.KCTCostModifiers[x.name] = x;
-                }
-                if (i % 10 == 0)
-                    yield return null;
-            }
+            Database.KCTCostModifiers.Load(node);
         }
 
         private IEnumerator LoadTechs()
         {
-            KerbalConstructionTime.TechNodePeriods.Clear();
             var rootNode = GameDatabase.Instance.GetConfigNodes("KCT_TECH_NODE_PERIODS")?.FirstOrDefault();
             if (rootNode == null)
                 yield break;
 
-            var nodes = rootNode.GetNodes("TECHNode");
-            int len = nodes.Length;
-            float inc = 1f / len;
-            for (int i = 0; i < len; ++i)
-            {
-                _progress += inc;
-                var node = nodes[i];
-                KCTTechNodePeriod x = new KCTTechNodePeriod();
-                if (ConfigNode.LoadObjectFromConfig(x, node) && !string.IsNullOrEmpty(x.id))
-                {
-                    KerbalConstructionTime.TechNodePeriods[x.id] = x;
-                }
-                if (i % 10 == 0)
-                    yield return null;
-            }
+            Database.TechNodePeriods.Load(rootNode);
+            yield return null;
 
-            KerbalConstructionTime.NodeTypes.Clear();
+            Database.NodeTypes.Clear();
             ConfigNode typeNode = GameDatabase.Instance.GetConfigNodes("KCT_TECH_NODE_TYPES")?.FirstOrDefault();
             if (typeNode != null)
-                KerbalConstructionTime.NodeTypes.Load(typeNode);
+                Database.NodeTypes.Load(typeNode);
 
             yield return null;
         }

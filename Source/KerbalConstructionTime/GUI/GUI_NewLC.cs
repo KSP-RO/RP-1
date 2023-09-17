@@ -187,11 +187,12 @@ namespace KerbalConstructionTime
 
         private static void GetAllResourceKeys()
         {
-            foreach (var res in Database.ValidFuelRes)
+            foreach (var kvp in Database.ResourceInfo.LCResourceTypes)
             {
-                if (!Database.PadIgnoreRes.Contains(res))
+                if((kvp.Value & LCResourceType.Fuel) != 0 
+                    && (kvp.Value & (_newLCData.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore)) == 0)
                 {
-                    _allResourceKeys.Add(res);
+                    _allResourceKeys.Add(kvp.Key);
                     _allResourceValues.Add(string.Empty);
                     ++_resourceCount;
                 }
@@ -674,9 +675,6 @@ namespace KerbalConstructionTime
 
             for (int i = 0; i < _resourceCount; i++)
             {
-                if (_newLCData.lcType == LaunchComplexType.Hangar && Database.HangarIgnoreRes.Contains(_allResourceKeys[i]))
-                    continue;
-
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(_allResourceKeys[i]);
                 _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);

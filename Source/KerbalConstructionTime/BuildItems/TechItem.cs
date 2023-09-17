@@ -77,7 +77,7 @@ namespace KerbalConstructionTime
         {
             get
             {
-                if (KerbalConstructionTime.NodeTypes.TryGetValue(techID, out var type))
+                if (Database.NodeTypes.TryGetValue(techID, out var type))
                     return type;
 
                 return NodeType.None;
@@ -125,7 +125,7 @@ namespace KerbalConstructionTime
             ProtoNode.UpdateFromTechNode(techNode);
             // No need to feed this back into RnD yet--we'll do so on complete
 
-            if (KerbalConstructionTime.TechNodePeriods.TryGetValue(techID, out KCTTechNodePeriod period))
+            if (Database.TechNodePeriods.TryGetValue(techID, out KCTTechNodePeriod period))
             {
                 startYear = period.startYear;
                 endYear = period.endYear;

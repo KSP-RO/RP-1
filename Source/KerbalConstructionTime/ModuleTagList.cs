@@ -152,9 +152,11 @@ namespace KerbalConstructionTime
                                         List<ConfigNode> subNodes = new List<ConfigNode>(cfg.GetNodes("SUBCONFIG"));
                                         if (subNodes.Find(s => s.GetValue("name") == patch) is ConfigNode subCfg)
                                         {
-                                            useBase = false;
                                             foreach (var s in subCfg.GetValuesList("tag"))
+                                            {
+                                                useBase = false;
                                                 list.AddUnique(s);
+                                            }
                                         }
                                     }
                                     if (useBase)

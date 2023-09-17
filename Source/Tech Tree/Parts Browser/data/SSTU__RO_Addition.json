@@ -336,8 +336,7 @@
         "entry_cost_mods": "AJ10-138",
         "identical_part_name": "AJ10 (Adv)",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -362,8 +361,7 @@
         "entry_cost_mods": "AJ10-37",
         "identical_part_name": "AJ10 (Early)",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -388,8 +386,7 @@
         "entry_cost_mods": "AJ10-104",
         "identical_part_name": "AJ10 (Mid)",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {

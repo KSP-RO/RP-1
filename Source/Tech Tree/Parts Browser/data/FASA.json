@@ -239,8 +239,7 @@
         "entry_cost_mods": "Model117",
         "identical_part_name": "XLR81",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "Toxic"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -1087,8 +1086,7 @@
         "entry_cost_mods": "AJ10-137",
         "identical_part_name": "AJ10-137",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {
@@ -2452,8 +2450,7 @@
         "entry_cost_mods": "AJ10-138",
         "identical_part_name": "AJ10-138",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {

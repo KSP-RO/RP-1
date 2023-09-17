@@ -3992,8 +3992,7 @@
         "entry_cost_mods": "OrionESM, R-4D-11",
         "identical_part_name": "OrionESM",
         "module_tags": [
-            "EngineLiquidPF",
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {

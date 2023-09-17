@@ -11690,8 +11690,7 @@
         "entry_cost_mods": "60000, HydrazineFuel",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "Toxic"
+            "EngineLiquidTurbo"
         ]
     },
     {
@@ -12200,8 +12199,7 @@
         "entry_cost_mods": "R14-TP-1960",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "Toxic"
+            "EngineLiquidTurbo"
         ]
     },
     {

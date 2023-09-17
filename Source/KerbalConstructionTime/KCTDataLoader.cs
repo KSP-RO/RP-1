@@ -7,6 +7,14 @@ using RP0.DataTypes;
 namespace KerbalConstructionTime
 {
     [System.Flags]
+    public enum ResourceTagType
+    {
+        None = 0,
+        Toxic = 1,
+        Cryogenic = 2,
+    }
+
+    [System.Flags]
     public enum LCResourceType
     {
         None = 0,
@@ -20,6 +28,9 @@ namespace KerbalConstructionTime
     {
         [Persistent]
         public PersistentDictionaryValueTypes<string, LCResourceType> LCResourceTypes = new PersistentDictionaryValueTypes<string, LCResourceType>();
+        
+        [Persistent]
+        public PersistentDictionaryValueTypes<string, ResourceTagType> ResourceTagTypes = new PersistentDictionaryValueTypes<string, ResourceTagType>();
     }
 
     [KSPAddon(KSPAddon.Startup.Instantly, false)]

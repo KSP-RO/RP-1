@@ -29,6 +29,8 @@ module_template = Template("""
     { name = Module${module_tag} }""")
 module_template_tag = Template("""
     %MODULE[ModuleTagList] { tag = ${module_tag} }""")
+module_template_tag_setting = Template("""
+    %MODULE[ModuleTagList] { %${module_tag} = true }""")
 
 def generate_parts_tree(parts, module_tags_with_prefixes):
     part_configs = ""
@@ -48,6 +50,8 @@ def generate_part_config(part, module_tags_with_prefixes):
         prefix = module_tags_with_prefixes[module_tag].strip()
         if prefix == "Tag":
             module_tags += module_template_tag.substitute(module_tag=module_tag)
+        elif prefix == "TagSetting":
+            module_tags += module_template_tag_setting.substitute(module_tag=module_tag)
         else:
             module_tags += module_template.substitute(module_tag=prefix + module_tag)
     if len(module_tags) > 0:

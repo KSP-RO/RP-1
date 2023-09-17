@@ -217,7 +217,7 @@
         "entry_cost_mods": "XLR11-RM-3",
         "identical_part_name": "XLR11",
         "module_tags": [
-            "EngineLiquidPF"
+            "isDynamic"
         ]
     },
     {

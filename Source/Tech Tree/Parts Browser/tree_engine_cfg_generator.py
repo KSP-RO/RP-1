@@ -75,12 +75,12 @@ PART
 }
 """)
 
-def generate_engine_tree(parts):
+def generate_engine_tree(parts, module_tags_with_prefixes):
     engine_configs = ""
     part_upgrades = ""
     for part in parts:
         if "Engine_Config" == part["mod"] and not part['orphan']:
-            engine_configs += generate_engine_config(part)
+            engine_configs += generate_engine_config(part, module_tags_with_prefixes)
             if 'upgrade' in part and part['upgrade'] is True:
                 part_upgrades += generate_part_upgrade_config(part)
     text_file = open(output_dir + "TREE-Engines.cfg", "w", newline='\n')
@@ -90,8 +90,14 @@ def generate_engine_tree(parts):
     text_file.write(part_upgrades)
     text_file.close()
         
-def generate_engine_config(part):
+def generate_engine_config(part, module_tags_with_prefixes):
     optional_attributes = ""
+    for module_tag in part['module_tags']:
+        # some module tags have a prefix (usually 'Tag') so if it has a prefix, prefix it.
+        prefix = module_tags_with_prefixes[module_tag].strip()
+        if prefix == "Tag":
+            optional_attributes += """
+                tag = """ + module_tag
     if 'description' in part and len(part['description']) > 0:
         optional_attributes += """
                 %description = """ + part['description']

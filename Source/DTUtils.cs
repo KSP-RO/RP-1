@@ -33,7 +33,7 @@ namespace RP0
             if (shouldUseDate ^ flip)
                 return KSPUtil.dateTimeFormatter.PrintDateCompact(Planetarium.GetUniversalTime() + extraTime + t, false, showSeconds);
 
-            return PrintTimeStampCompact(t, days: true, years: false, seconds: showSeconds);
+            return PrintTimeStampCompact(t, days: t > 86400d, years: false, seconds: showSeconds);
         }
 
         public static string GetFormattedTime(double t, double extraTime = 0d, bool allowDate = true)

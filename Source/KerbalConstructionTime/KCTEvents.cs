@@ -99,7 +99,7 @@ namespace KerbalConstructionTime
 
         private void OnEditorStarted()
         {
-            Utilities.HandleEditorButton();
+            KCTUtilities.HandleEditorButton();
         }
 
         public void CreateEvents()
@@ -197,7 +197,7 @@ namespace KerbalConstructionTime
             if (changeDelta == 0f) return;
 
             KCTDebug.Log($"Detected sci point change: {changeDelta}");
-            Utilities.ProcessSciPointTotalChange(changeDelta);
+            KCTUtilities.ProcessSciPointTotalChange(changeDelta);
         }
 
         private void ShipModifiedEvent(ShipConstruct vessel)
@@ -228,7 +228,7 @@ namespace KerbalConstructionTime
             {
                 KCTGameStates.Reset();
                 KCTGameStates.IsFirstStart = false;
-                Utilities.DisableSimulationLocks();
+                KCTUtilities.DisableSimulationLocks();
                 InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTLaunchLock);
 
                 if (PresetManager.Instance != null)
@@ -244,9 +244,9 @@ namespace KerbalConstructionTime
             var validScenes = new List<GameScenes> { GameScenes.SPACECENTER, GameScenes.TRACKSTATION, GameScenes.EDITOR };
             if (validScenes.Contains(scene))
             {
-                if (Utilities.SimulationSaveExists())
+                if (KCTUtilities.SimulationSaveExists())
                 {
-                    Utilities.LoadSimulationSave(false);
+                    KCTUtilities.LoadSimulationSave(false);
                 }
             }
 
@@ -289,7 +289,7 @@ namespace KerbalConstructionTime
 
         public void VesselRecoverEvent(ProtoVessel v, bool quick)
         {
-            if (!Utilities.IsVesselKCTRecovering(v))
+            if (!KCTUtilities.IsVesselKCTRecovering(v))
                 return;
 
             KCTDebug.Log($"VesselRecoverEvent for {v.vesselName}");
@@ -318,7 +318,7 @@ namespace KerbalConstructionTime
         public void OnGameStateLoad(ConfigNode config)
         {
             // Run this after all scenariomodules have loaded (i.e. both us *and* RnD)
-            Utilities.AddResearchedPartsToExperimental();
+            KCTUtilities.AddResearchedPartsToExperimental();
         }
     }
 }

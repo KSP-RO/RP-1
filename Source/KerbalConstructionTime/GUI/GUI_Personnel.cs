@@ -65,7 +65,7 @@ namespace KerbalConstructionTime
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
-            if (Utilities.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
+            if (KCTUtilities.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
             GUILayout.EndHorizontal();
 
             if (_personnelWindowHolder == 0)    //VAB
@@ -127,7 +127,7 @@ namespace KerbalConstructionTime
 
             bool recalc = false;
             BuildListVessel.ListType type = currentLC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
-            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { Utilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
+            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { KCTUtilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -138,7 +138,7 @@ namespace KerbalConstructionTime
 
             GUILayout.Label($"  {currentLC.Engineers:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
 
-            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false)) && assignAmt > 0) { Utilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
+            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false)) && assignAmt > 0) { KCTUtilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -187,7 +187,7 @@ namespace KerbalConstructionTime
             }
             GUILayout.EndHorizontal();
 
-            double rateFull = Utilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * stratMult;
+            double rateFull = KCTUtilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * stratMult;
             double rate = rateFull * efficiency;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
@@ -206,7 +206,7 @@ namespace KerbalConstructionTime
                 int delta = assignDelta;
                 if (engCap < currentLC.Engineers + assignDelta)
                     delta = engCap - currentLC.Engineers;
-                double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, delta)
+                double buildRate = KCTUtilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, delta)
                     * efficiency * stratMult;
                 double bpLeft = b.buildPoints + b.integrationPoints - b.progress;
                 GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
@@ -311,7 +311,7 @@ namespace KerbalConstructionTime
 
         private static void RenderHireFire(bool research, out int fireAmount, out int hireAmount)
         {
-            if (Utilities.CurrentGameIsCareer())
+            if (KCTUtilities.CurrentGameIsCareer())
             {
                 GUILayout.BeginHorizontal();
 
@@ -329,13 +329,13 @@ namespace KerbalConstructionTime
                 {
                     if (research)
                     {
-                        Utilities.ChangeResearchers(-workers);
+                        KCTUtilities.ChangeResearchers(-workers);
                         KerbalConstructionTimeData.Instance.UpdateTechTimes();
                     }
                     else
                     {
                         KSCItem ksc = KCTGameStates.ActiveKSC;
-                        Utilities.ChangeEngineers(ksc, -workers);
+                        KCTUtilities.ChangeEngineers(ksc, -workers);
                         ksc.RecalculateBuildRates(false);
                     }
                 }
@@ -372,16 +372,16 @@ namespace KerbalConstructionTime
                 if (GUILayout.Button($"Hire {workers:N0}: √{_fundsCost:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
                     // Note: have to pass base, not modified, cost here, since the CMQ reruns
-                    Utilities.SpendFunds(workersToHire * Database.SettingsSC.HireCost, research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers);
+                    KCTUtilities.SpendFunds(workersToHire * Database.SettingsSC.HireCost, research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers);
                     if (research)
                     {
-                        Utilities.ChangeResearchers(workers);
+                        KCTUtilities.ChangeResearchers(workers);
                         KerbalConstructionTimeData.Instance.UpdateTechTimes();
                     }
                     else
                     {
                         KSCItem ksc = KCTGameStates.ActiveKSC;
-                        Utilities.ChangeEngineers(ksc, workers);
+                        KCTUtilities.ChangeEngineers(ksc, workers);
                         ksc.RecalculateBuildRates(false);
                     }
                     KerbalConstructionTimeData.Instance.Applicants = Math.Max(0, KerbalConstructionTimeData.Instance.Applicants - workers);

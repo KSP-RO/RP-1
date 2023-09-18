@@ -22,7 +22,7 @@ namespace KerbalConstructionTime
             if (FlightDriver.CanRevertToPostInit && GUILayout.Button("Restart Simulation"))
             {
                 GUIStates.ShowSimulationGUI = false;
-                Utilities.EnableSimulationLocks();
+                KCTUtilities.EnableSimulationLocks();
                 FlightDriver.RevertToLaunch();
                 KerbalConstructionTimeData.Instance.SimulationParams.Reset();
                 _centralWindowPosition.height = 1;
@@ -31,7 +31,7 @@ namespace KerbalConstructionTime
             if (FlightDriver.CanRevertToPrelaunch && GUILayout.Button("Revert to Editor"))
             {
                 GUIStates.ShowSimulationGUI = false;
-                Utilities.DisableSimulationLocks();
+                KCTUtilities.DisableSimulationLocks();
                 var facility = ShipConstruction.ShipType; // This uses stock behavior because the LaunchedVessel is no longer valid.
                 FlightDriver.RevertToPrelaunch(facility);
                 _centralWindowPosition.height = 1;
@@ -112,7 +112,7 @@ namespace KerbalConstructionTime
             GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"1960-01-01 15:30\"");
             GUILayout.Space(4);
 
-            if (Utilities.IsTestFlightInstalled || Utilities.IsTestLiteInstalled)
+            if (KCTUtilities.IsTestFlightInstalled || KCTUtilities.IsTestLiteInstalled)
             {
                 simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures");
                 GUILayout.Space(4);
@@ -216,7 +216,7 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            if (Utilities.IsPrincipiaInstalled && simParams.SimulationUT != 0 && simParams.SimulationUT < currentUT + 0.5)
+            if (KCTUtilities.IsPrincipiaInstalled && simParams.SimulationUT != 0 && simParams.SimulationUT < currentUT + 0.5)
             {
                 var message = new ScreenMessage("Going backwards in time isn't allowed with Principia", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
@@ -231,7 +231,7 @@ namespace KerbalConstructionTime
             GUIStates.ShowSimConfig = false;
             _centralWindowPosition.height = 1;
             string tempFile = KSPUtil.ApplicationRootPath + "saves/" + HighLogic.SaveFolder + "/Ships/temp.craft";
-            Utilities.MakeSimulationSave();
+            KCTUtilities.MakeSimulationSave();
 
             // Create the LaunchedVessel fresh instead of cloning the EditorVessel, since it's possible that the player
             // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.

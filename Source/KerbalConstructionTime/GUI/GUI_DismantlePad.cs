@@ -63,7 +63,7 @@ namespace KerbalConstructionTime
                 }
                 for (int i = activeLC.Warehouse.Count; i-- > 0;)
                 {
-                    Utilities.ScrapVessel(activeLC.Warehouse[i]);
+                    KCTUtilities.ScrapVessel(activeLC.Warehouse[i]);
                 }
                 KSCItem ksc = activeLC.KSC;
                 ksc.SwitchToPrevLaunchComplex();

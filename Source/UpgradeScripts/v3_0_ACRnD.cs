@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using SaveUpgradePipeline;
 using UnityEngine;
-using static KerbalConstructionTime.Utilities;
+using static KerbalConstructionTime.KCTUtilities;
 
 namespace RP0.UpgradeScripts
 {

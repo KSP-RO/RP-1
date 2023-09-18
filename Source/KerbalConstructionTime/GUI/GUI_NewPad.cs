@@ -70,7 +70,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBuildList = true;
 
                 Guid id = Guid.NewGuid();
-                if (!Utilities.CurrentGameIsCareer())
+                if (!KCTUtilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log("Building new launchpad!");
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(id, _newName, fractionalPadLvl)
@@ -130,7 +130,7 @@ namespace KerbalConstructionTime
                 {
                     case RenameType.Vessel:
                     {
-                        BuildListVessel b = Utilities.FindBLVesselByID(null, _selectedVesselId);
+                        BuildListVessel b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
                         b.shipName = _newName; //Change the name from our point of view
                         break;
                     }

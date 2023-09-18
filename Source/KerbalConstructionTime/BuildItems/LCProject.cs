@@ -22,7 +22,7 @@ namespace KerbalConstructionTime
         protected abstract TransactionReasonsRP0 transactionReason { get; }
         protected abstract TransactionReasonsRP0 transactionReasonTime { get; }
 
-        public BuildListVessel AssociatedBLV => Utilities.FindBLVesselByID(LC, new Guid(associatedID));
+        public BuildListVessel AssociatedBLV => KCTUtilities.FindBLVesselByID(LC, new Guid(associatedID));
 
         protected LCItem _lc = null;
         public LCItem LC
@@ -99,10 +99,10 @@ namespace KerbalConstructionTime
         {
             double rate;
             if (IsCapped)
-                rate = Utilities.GetBuildRate(LC, mass, vesselBP, isHumanRated, delta);
+                rate = KCTUtilities.GetBuildRate(LC, mass, vesselBP, isHumanRated, delta);
             else
-                rate = delta == 0 ? Utilities.GetBuildRate(0, LC, isHumanRated, false)
-                    : Utilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, LC, isHumanRated, delta);
+                rate = delta == 0 ? KCTUtilities.GetBuildRate(0, LC, isHumanRated, false)
+                    : KCTUtilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, LC, isHumanRated, delta);
 
             rate *= CurrencyUtils.Rate(transactionReasonTime);
 
@@ -358,7 +358,7 @@ namespace KerbalConstructionTime
 
             double cost = Math.Abs(progress - progBefore) / BP * this.cost;
 
-            if (Utilities.CurrentGameIsCareer() && HasCost && this.cost > 0)
+            if (KCTUtilities.CurrentGameIsCareer() && HasCost && this.cost > 0)
             {
                 var reason = transactionReason;
                 if (!CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d).CanAfford()) //If they can't afford to continue the rollout, progress stops
@@ -373,7 +373,7 @@ namespace KerbalConstructionTime
                 }
                 else
                 {
-                    Utilities.SpendFunds(cost, reason);
+                    KCTUtilities.SpendFunds(cost, reason);
                 }
             }
             if (IsComplete() != _wasComplete && _lc != null)

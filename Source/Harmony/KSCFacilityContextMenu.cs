@@ -76,7 +76,7 @@ namespace RP0.Harmony
                     if (HighLogic.LoadedSceneIsGame)
                         oldCost *= HighLogic.CurrentGame.Parameters.Career.FundsLossMultiplier;
                     var facilityType = GetFacilityType(__instance.host);
-                    double rate = KerbalConstructionTime.Utilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, facilityType);
+                    double rate = KerbalConstructionTime.KCTUtilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, facilityType);
 
                     if ((float)__instance.host.Facility.FacilityLevel != __instance.host.Facility.MaxLevel)
                     {

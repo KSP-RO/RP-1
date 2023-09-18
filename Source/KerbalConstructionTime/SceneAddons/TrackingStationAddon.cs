@@ -67,8 +67,8 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            bool canRecoverSPH = Utilities.IsSphRecoveryAvailable(selectedVessel);
-            bool canRecoverVAB = Utilities.IsVabRecoveryAvailable(selectedVessel);
+            bool canRecoverSPH = KCTUtilities.IsSphRecoveryAvailable(selectedVessel);
+            bool canRecoverVAB = KCTUtilities.IsVabRecoveryAvailable(selectedVessel);
 
             var options = new List<DialogGUIBase>();
             if (canRecoverSPH)

@@ -557,7 +557,7 @@ namespace KerbalConstructionTime
             _parts.Clear();
             foreach (PseudoPart pp in _pseudoParts)
             {
-                Part p = Utilities.GetAvailablePartByName(pp.Name).partPrefab;
+                Part p = KCTUtilities.GetAvailablePartByName(pp.Name).partPrefab;
                 p.craftID = pp.Uid;
                 _parts.Add(p);
                 KerbalConstructionTimeData.Instance.LaunchedCrew.Add(new PartCrewAssignment(pp.Uid, new List<CrewMemberAssignment>()));

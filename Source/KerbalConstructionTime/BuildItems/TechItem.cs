@@ -142,7 +142,7 @@ namespace KerbalConstructionTime
         public double UpdateBuildRate(int index)
         {
             ForceRecalculateYearBasedRateMult();
-            double rate = Formula.GetResearchRate(scienceCost, index, 0) * Utilities.GetResearcherEfficiencyMultipliers();
+            double rate = Formula.GetResearchRate(scienceCost, index, 0) * KCTUtilities.GetResearcherEfficiencyMultipliers();
             if (rate < 0)
                 rate = 0;
 
@@ -212,7 +212,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                double rate = Formula.GetResearchRate(scienceCost, 0, 0) * Utilities.GetResearcherEfficiencyMultipliers();
+                double rate = Formula.GetResearchRate(scienceCost, 0, 0) * KCTUtilities.GetResearcherEfficiencyMultipliers();
                 if (offset == 0d)
                     rate *= YearBasedRateMult;
                 else

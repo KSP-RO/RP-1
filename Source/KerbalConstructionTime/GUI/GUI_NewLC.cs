@@ -566,7 +566,7 @@ namespace KerbalConstructionTime
 
                 KerbalConstructionTimeData.Instance.StarterLCBuilding |= !isModify;
 
-                if (!Utilities.CurrentGameIsCareer())
+                if (!KCTUtilities.CurrentGameIsCareer())
                 {
                     KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
                     if (isModify)
@@ -582,7 +582,7 @@ namespace KerbalConstructionTime
                     if (isModify)
                     {
                         lc = activeLC;
-                        Utilities.ChangeEngineers(lc, -engineers);
+                        KCTUtilities.ChangeEngineers(lc, -engineers);
                         KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
 
                         // We have to update any ongoing pad constructions too
@@ -636,7 +636,7 @@ namespace KerbalConstructionTime
                 if (!HighLogic.LoadedSceneIsEditor || _wasShowBuildList)
                     GUIStates.ShowBuildList = true;
 
-                if (Utilities.CurrentGameIsCareer() && isModify)
+                if (KCTUtilities.CurrentGameIsCareer() && isModify)
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                          new Vector2(0.5f, 0.5f),

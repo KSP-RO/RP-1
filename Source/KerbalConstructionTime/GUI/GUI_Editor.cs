@@ -57,7 +57,7 @@ namespace KerbalConstructionTime
             double buildPoints = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
             double bpLeaderEffect = KerbalConstructionTime.Instance.EditorVessel.LeaderEffect;
             double effic = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency;
-            double rateWithCurEngis = Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
+            double rateWithCurEngis = KCTUtilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
                 * effic
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
 
@@ -153,7 +153,7 @@ namespace KerbalConstructionTime
             }
             if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {
-                Utilities.TryAddVesselToBuildList();
+                KCTUtilities.TryAddVesselToBuildList();
                 KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             }
             GUILayout.EndHorizontal();
@@ -316,11 +316,11 @@ namespace KerbalConstructionTime
             double fullVesselBP = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
             double bpLeaderEffect = KerbalConstructionTime.Instance.EditorVessel.LeaderEffect;
             double effic = editedVessel.LC.Efficiency;
-            Utilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
+            KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
             
-            double rateWithCurEngis = Utilities.GetBuildRate(editedVessel.LC, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
+            double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
                 * effic * editedVessel.LC.StrategyRateMultiplier;
 
             RenderBuildRateInputRow(fullVesselBP, rateWithCurEngis);
@@ -360,7 +360,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save Edits"))
             {
-                Utilities.TrySaveShipEdits(editedVessel);
+                KCTUtilities.TrySaveShipEdits(editedVessel);
             }
             if (GUILayout.Button("Cancel Edits"))
             {
@@ -389,7 +389,7 @@ namespace KerbalConstructionTime
                 foreach (Part p in EditorLogic.fetch.ship.parts)
                 {
                     //fill as part prefab would be filled?
-                    if (Utilities.PartIsProcedural(p))
+                    if (KCTUtilities.PartIsProcedural(p))
                     {
                         foreach (PartResource rsc in p.Resources)
                         {
@@ -439,7 +439,7 @@ namespace KerbalConstructionTime
             {
                 var ship = KerbalConstructionTime.Instance.EditorVessel;
                 var deltaToMaxEngineers = int.MaxValue - KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Engineers;
-                bR = Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
+                bR = KCTUtilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
                     * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
                 BuildRateForDisplay = bR.ToString();
             }

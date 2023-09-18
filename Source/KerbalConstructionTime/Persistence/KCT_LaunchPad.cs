@@ -219,7 +219,7 @@ namespace KerbalConstructionTime
                 KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
 
                 //set the level to this level
-                if (Utilities.CurrentGameIsCareer())
+                if (KCTUtilities.CurrentGameIsCareer())
                 {
                     UpgradeableFacility facility = GetUpgradeableFacilityReference();
                     facility.SetLevel(level);

@@ -57,7 +57,7 @@ namespace KerbalConstructionTime
         {
             foreach (KCT_Preset preset2 in Presets)
             {
-                if (Utilities.ConfigNodesAreEquivalent(preset.AsConfigNode(), preset2.AsConfigNode()))
+                if (KCTUtilities.ConfigNodesAreEquivalent(preset.AsConfigNode(), preset2.AsConfigNode()))
                     return Presets.IndexOf(preset2);
             }
             return -1;
@@ -140,9 +140,9 @@ namespace KerbalConstructionTime
                 try
                 {
                     KCT_Preset newPreset = new KCT_Preset(file);
-                    if (Utilities.CurrentGameIsCareer() && !newPreset.CareerEnabled) continue;    //Don't display presets that aren't designed for this game mode
+                    if (KCTUtilities.CurrentGameIsCareer() && !newPreset.CareerEnabled) continue;    //Don't display presets that aren't designed for this game mode
                     if (HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX && !newPreset.ScienceEnabled) continue;
-                    if (Utilities.CurrentGameIsSandbox() && !newPreset.SandboxEnabled) continue;
+                    if (KCTUtilities.CurrentGameIsSandbox() && !newPreset.SandboxEnabled) continue;
                     KCT_Preset existing = FindPresetByShortName(newPreset.ShortName);
                     if (existing != null) //Ensure there is only one preset with a given name. Take the last one found as the final one.
                     {

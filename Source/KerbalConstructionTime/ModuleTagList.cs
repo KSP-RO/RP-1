@@ -104,8 +104,8 @@ namespace KerbalConstructionTime
             }
             else if (p is ConfigNode cn)
             {
-                string name = Utilities.GetPartNameFromNode(cn);
-                Part partRef = Utilities.GetAvailablePartByName(name).partPrefab;
+                string name = KCTUtilities.GetPartNameFromNode(cn);
+                Part partRef = KCTUtilities.GetAvailablePartByName(name).partPrefab;
 
                 ModuleTagList mod = partRef.FindModuleImplementing<ModuleTagList>();
                 if (mod == null)

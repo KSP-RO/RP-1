@@ -112,7 +112,7 @@ namespace KerbalConstructionTime
             int engToAssign = Math.Min(engineersToReadd, Math.Min(lc.MaxEngineers, lc.KSC.UnassignedEngineers));
             if (engToAssign > 0)
             {
-                Utilities.ChangeEngineers(lc, engToAssign);
+                KCTUtilities.ChangeEngineers(lc, engToAssign);
                 lc.RecalculateBuildRates();
             }
         }

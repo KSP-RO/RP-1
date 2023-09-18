@@ -42,7 +42,7 @@ namespace KerbalConstructionTime
             {
                 SetNewWorkingPreset(null, true);
             }
-            if (_isChanged && _presetIndex < presetShortNames.Length - 1 && !Utilities.ConfigNodesAreEquivalent(_workingPreset.AsConfigNode(), PresetManager.Instance.Presets[_presetIndex].AsConfigNode())) //!KCT_PresetManager.Instance.PresetsEqual(WorkingPreset, KCT_PresetManager.Instance.Presets[presetIndex], true)
+            if (_isChanged && _presetIndex < presetShortNames.Length - 1 && !KCTUtilities.ConfigNodesAreEquivalent(_workingPreset.AsConfigNode(), PresetManager.Instance.Presets[_presetIndex].AsConfigNode())) //!KCT_PresetManager.Instance.PresetsEqual(WorkingPreset, KCT_PresetManager.Instance.Presets[presetIndex], true)
             {
                 SetNewWorkingPreset(null, true);
             }
@@ -119,7 +119,7 @@ namespace KerbalConstructionTime
                 _workingPreset = null;
 
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
-                    Utilities.DisableModFunctionality();
+                    KCTUtilities.DisableModFunctionality();
                 KCTGameStates.Settings.MaxTimeWarp = _newTimewarp;
                 KCTGameStates.Settings.DisableAllMessages = _disableAllMsgs;
                 KCTGameStates.Settings.ShowSimWatermark = _showSimWatermark;

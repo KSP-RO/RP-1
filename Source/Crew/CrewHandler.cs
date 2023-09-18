@@ -9,7 +9,7 @@ using System.Reflection;
 using System.Text;
 using UnityEngine;
 using UnityEngine.Profiling;
-using KCTUtils = KerbalConstructionTime.Utilities;
+using KCTUtils = KerbalConstructionTime.KCTUtilities;
 using RP0.DataTypes;
 
 namespace RP0.Crew
@@ -311,7 +311,7 @@ namespace RP0.Crew
 
                 if (!CheckCrewForPart(pcm, p.partInfo.name, true, false))
                     return false;
-                if (needsMission && !KerbalConstructionTime.Utilities.IsClampOrChild(p))
+                if (needsMission && !KerbalConstructionTime.KCTUtilities.IsClampOrChild(p))
                     needsMission = !CheckCrewForPart(pcm, p.partInfo.name, false, true);
             }
 
@@ -523,7 +523,7 @@ namespace RP0.Crew
             };
 
 
-            double acMult = Database.SettingsCrew.ACRnRMults[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
+            double acMult = Database.SettingsCrew.ACRnRMults[KerbalConstructionTime.KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             var allFlightsDict = new Dictionary<string, int>();
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {

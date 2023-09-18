@@ -499,7 +499,7 @@ namespace RP0
                     GUILayout.BeginHorizontal();
                     try
                     {
-                        KerbalConstructionTime.Utilities.GetConstructionTooltip(c, i, out string tooltip, out _);
+                        KerbalConstructionTime.KCTUtilities.GetConstructionTooltip(c, i, out string tooltip, out _);
                         GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), HighLogic.Skin.label, GUILayout.Width(200));
                         GUILayout.Label(FormatCost(c.GetConstructionCostOverTime(PeriodFactor * 86400d)), RightLabel, GUILayout.Width(120));
                     }

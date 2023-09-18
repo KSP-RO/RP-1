@@ -33,7 +33,7 @@ namespace RP0.Harmony
             if (pv == null)
                 return false;
 
-            if (!KerbalConstructionTime.Utilities.IsVesselKCTRecovering(pv))
+            if (!KerbalConstructionTime.KCTUtilities.IsVesselKCTRecovering(pv))
                 return true;
 
             if (mrDialog == null)
@@ -84,7 +84,7 @@ namespace RP0.Harmony
             if (!KerbalConstructionTime.KCT_GUI.IsPrimarilyDisabled)
                 return false;
 
-            __instance.AddFunds(-KerbalConstructionTime.Utilities.GetTotalVesselCost(ship.Parts), TransactionReasonsRP0.VesselPurchase.Stock());
+            __instance.AddFunds(-KerbalConstructionTime.KCTUtilities.GetTotalVesselCost(ship.Parts), TransactionReasonsRP0.VesselPurchase.Stock());
             return false;
         }
 

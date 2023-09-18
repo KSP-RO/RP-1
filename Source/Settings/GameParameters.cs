@@ -47,6 +47,12 @@ namespace RP0
         [GameParameters.CustomFloatParameterUI("Starting Unlock Credit", minValue = 0f, maxValue = 100000f, stepCount = 21, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
         public float StartingUnlockCredit = 25000f;
 
+        [GameParameters.CustomFloatParameterUI("Build/Integration Rate", minValue = 0.1f, maxValue = 1.5f, stepCount = 15, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
+        public float BuildRate = 1f;
+
+        [GameParameters.CustomFloatParameterUI("Research Rate", minValue = 0.1f, maxValue = 1.5f, stepCount = 15, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
+        public float ResearchRate = 1f;
+
         [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 20f, maxValue = 200f, stepCount = 31, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
         public float RepLossNautDeathFixed = 50f;
 
@@ -96,6 +102,8 @@ namespace RP0
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 750f;
                     StartingUnlockCredit = 75000f;
+                    BuildRate = 1.5f;
+                    ResearchRate = 1.5f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
@@ -103,6 +111,8 @@ namespace RP0
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
                     StartingUnlockCredit = 50000f;
+                    BuildRate = 1.2f;
+                    ResearchRate = 1.2f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
@@ -110,6 +120,8 @@ namespace RP0
                     RepLossNautDeathPercent = 0.1f;
                     StartingConfidence = 500f;
                     StartingUnlockCredit = 25000f;
+                    BuildRate = 1f;
+                    ResearchRate = 1f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
@@ -117,6 +129,8 @@ namespace RP0
                     RepLossNautDeathPercent = 0.2f;
                     StartingConfidence = 350f;
                     StartingUnlockCredit = 15000f;
+                    BuildRate = 1f;
+                    ResearchRate = 1f;
                     break;
             }
         }

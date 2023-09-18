@@ -45,14 +45,14 @@ namespace RP0
             if (isHumanRatedCapped)
                 personnel = Math.Min(personnel, LC.MaxEngineersNonHR);
 
-            return personnel * _EngineerBPRate;
+            return personnel * _EngineerBPRate * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
         }
 
         public static double GetConstructionBuildRate(int index, KSCItem KSC, SpaceCenterFacility facilityType)
         {
             double rate = 1d / 86400d;
             RP0.TransactionReasonsRP0 reason = facilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction;
-            return rate * CurrencyUtils.Rate(reason);
+            return rate * CurrencyUtils.Rate(reason) * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
         }
 
         public static double GetResearchRate(double ScienceValue, int index, int upgradeDelta)
@@ -64,7 +64,7 @@ namespace RP0
 
             double rate = Personnel > 0 ? 0.5 + Personnel * 0.05d : 0.001d;
             const double yearToSec = 1d / (86400d * 365d);
-            return rate * yearToSec;
+            return rate * yearToSec * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().ResearchRate;
         }
 
         public static double GetScienceResearchEfficiencyMult(double totalSci)

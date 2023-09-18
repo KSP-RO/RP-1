@@ -185,8 +185,8 @@ namespace RP0
             double rolloutCost = 0d;
             try
             {
-                rolloutCost = KCTGameStates.GetRolloutCostOverTime(PeriodFactor * 86400d)
-                    + KCTGameStates.GetAirlaunchCostOverTime(PeriodFactor * 86400d);
+                rolloutCost = KerbalConstructionTimeData.Instance.GetRolloutCostOverTime(PeriodFactor * 86400d)
+                    + KerbalConstructionTimeData.Instance.GetAirlaunchCostOverTime(PeriodFactor * 86400d);
                 GUILayout.Label("Rollout/Airlaunch Prep", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label(FormatCost(rolloutCost), RightLabel, GUILayout.Width(160));
             }
@@ -197,7 +197,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            double constrMaterials = KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d);
+            double constrMaterials = KerbalConstructionTimeData.Instance.GetConstructionCostOverTime(PeriodFactor * 86400d);
             GUILayout.Label("Constructions", HighLogic.Skin.label, GUILayout.Width(160));
             GUILayout.Label(FormatCost(constrMaterials), RightLabel, GUILayout.Width(160));
             if (GUILayout.Button(_infoBtnContent, InfoButton))
@@ -351,7 +351,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             double grandTotal = 0d;
-            foreach (var ksc in KCTGameStates.KSCs)
+            foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
                 string site = LocalizeSiteName(ksc.KSCName);
                 GUILayout.BeginHorizontal();
@@ -473,7 +473,7 @@ namespace RP0
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            foreach (var ksc in KCTGameStates.KSCs)
+            foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
                 string site = LocalizeSiteName(ksc.KSCName);
                 if (ksc.Constructions.Count == 0)
@@ -482,7 +482,7 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    double cost = KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc);
+                    double cost = KerbalConstructionTimeData.Instance.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc);
                     totalCost += cost;
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));

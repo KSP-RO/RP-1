@@ -285,7 +285,7 @@ namespace RP0
 
                 KerbalConstructionTimeData.Instance.TechList.Remove(this);
 
-                KCTGameStates.RecalculateBuildRates(); // this might change other rates
+                KerbalConstructionTimeData.Instance.RecalculateBuildRates(); // this might change other rates
 
                 double portion = toGo / increment;
                 UnlockCreditHandler.Instance.IncrementCreditTime(techID, portion * UTDiff);

@@ -49,7 +49,7 @@ namespace RP0
         private static void SetFieldsFromStartingLCData(LCData old)
         {
             _newLCData.SetFrom(old);
-            _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
+            _newLCData.Name = _newName = $"Launch Complex {(KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Count)}";
             SetStrings();
             SetResources();
         }
@@ -73,7 +73,7 @@ namespace RP0
                 if (blv.mass < 1f) // special case
                     _newLCData.massMax = 1f;
 
-                _newLCData.Name = _newName = $"Launch Complex {(KCTGameStates.ActiveKSC.LaunchComplexes.Count)}";
+                _newLCData.Name = _newName = $"Launch Complex {(KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Count)}";
                 _newLCData.massOrig = _newLCData.massMax;
                 _newLCData.lcType = LaunchComplexType.Pad;
             }
@@ -199,7 +199,7 @@ namespace RP0
 
         public static void DrawNewLCWindow(int windowID)
         {
-            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             double oldVABCost = 0, oldPadCost = 0, oldResCost = 0, lpMult = 1;
 
             bool isModify = GUIStates.ShowModifyLC;
@@ -546,7 +546,7 @@ namespace RP0
 
         private static void ProcessNewLC(bool isModify, double curPadCost, double totalCost, double oldTotalCost)
         {
-            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             if (isModify && ModifyFailure(out string failedVessels))
             {
@@ -570,7 +570,7 @@ namespace RP0
                     if (isModify)
                         activeLC.Modify(_newLCData, Guid.NewGuid());
                     else
-                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(new LCItem(_newLCData, KCTGameStates.ActiveKSC));
+                        KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Add(new LCItem(_newLCData, KerbalConstructionTimeData.Instance.ActiveKSC));
                 }
                 else
                 {
@@ -581,7 +581,7 @@ namespace RP0
                     {
                         lc = activeLC;
                         KCTUtilities.ChangeEngineers(lc, -engineers);
-                        KCTGameStates.ActiveKSC.SwitchToPrevLaunchComplex();
+                        KerbalConstructionTimeData.Instance.ActiveKSC.SwitchToPrevLaunchComplex();
 
                         // We have to update any ongoing pad constructions too
                         foreach (var pc in lc.PadConstructions)
@@ -594,9 +594,9 @@ namespace RP0
                     }
                     else
                     {
-                        lc = new LCItem(_newLCData, KCTGameStates.ActiveKSC);
+                        lc = new LCItem(_newLCData, KerbalConstructionTimeData.Instance.ActiveKSC);
                         lc.IsOperational = false;
-                        KCTGameStates.ActiveKSC.LaunchComplexes.Add(lc);
+                        KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Add(lc);
                     }
 
                     var modData = new LCData();
@@ -613,7 +613,7 @@ namespace RP0
                     lcConstr.SetBP(totalCost, oldTotalCost);
                     if (_assignEngOnComplete)
                         lcConstr.engineersToReadd = engineers;
-                    KCTGameStates.ActiveKSC.LCConstructions.Add(lcConstr);
+                    KerbalConstructionTimeData.Instance.ActiveKSC.LCConstructions.Add(lcConstr);
 
                     try
                     {
@@ -652,7 +652,7 @@ namespace RP0
 
         public static void DrawLCResourcesWindow(int windowID)
         {
-            //LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            //LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             //bool isModify = GUIStates.ShowModifyLC;
 
             if (_resourceCount == 0) GetAllResourceKeys();
@@ -760,7 +760,7 @@ namespace RP0
         private static bool ModifyFailure(out string failedVessels)
         {
             failedVessels = string.Empty;
-            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             foreach (var blv in activeLC.BuildList)
             {
                 if (!blv.MeetsFacilityRequirements(_newLCData, null))
@@ -810,9 +810,9 @@ namespace RP0
                 return false;
             }
 
-            for (int i = 0; i < KCTGameStates.ActiveKSC.LaunchComplexes.Count; i++)
+            for (int i = 0; i < KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Count; i++)
             {
-                var lp = KCTGameStates.ActiveKSC.LaunchComplexes[i];
+                var lp = KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes[i];
                 if (string.Equals(lp.Name, newName, StringComparison.OrdinalIgnoreCase))
                 {
                     ScreenMessages.PostScreenMessage("Another launch complex with the same name already exists");

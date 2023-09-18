@@ -10,7 +10,7 @@ namespace RP0
 
         public static void DrawNewPadWindow(int windowID)
         {
-            LCItem curLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem curLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
@@ -73,7 +73,7 @@ namespace RP0
                 if (!KCTUtilities.CurrentGameIsCareer())
                 {
                     RP0Debug.Log("Building new launchpad!");
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(id, _newName, fractionalPadLvl)
+                    KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(id, _newName, fractionalPadLvl)
                     {
                         isOperational = true
                     });
@@ -82,7 +82,7 @@ namespace RP0
                 {
                     RP0Debug.Log("Building new launchpad!");
                     var lp = new KCT_LaunchPad(id, _newName, fractionalPadLvl);
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(lp);
+                    KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(lp);
 
                     var padConstr = new PadConstruction
                     {
@@ -91,7 +91,7 @@ namespace RP0
                         name = _newName
                     };
                     padConstr.SetBP(curPadCost, 0d);
-                    KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.PadConstructions.Add(padConstr);
+                    KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.PadConstructions.Add(padConstr);
 
                     try
                     {
@@ -136,13 +136,13 @@ namespace RP0
                     }
                     case RenameType.Pad:
                     {
-                        KCT_LaunchPad lp = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
+                        KCT_LaunchPad lp = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
                         lp.Rename(_newName);
                         break;
                     }
                     case RenameType.LaunchComplex:
                     {
-                        LCItem lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                        LCItem lc = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
                         lc.Rename(_newName);
                         break;
                     }
@@ -171,9 +171,9 @@ namespace RP0
                 return false;
             }
 
-            for (int i = 0; i < KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Count; i++)
+            for (int i = 0; i < KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Count; i++)
             {
-                var lp = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads[i];
+                var lp = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads[i];
                 if (string.Equals(lp.name, _newName, StringComparison.OrdinalIgnoreCase))
                 {
                     ScreenMessages.PostScreenMessage("Another launchpad with the same name already exists");

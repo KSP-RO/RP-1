@@ -47,7 +47,7 @@ namespace RP0
             double salaryE = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(KCTGameStates.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+            GUILayout.Label(KerbalConstructionTimeData.Instance.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
             GUILayout.Label($"√{salaryE:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -80,7 +80,7 @@ namespace RP0
             if (GUILayout.Button("Close"))
             {
                 GUIStates.ShowPersonnelWindow = false;
-                _LCIndex = KCTGameStates.ActiveKSC.ActiveLaunchComplexIndex; // reset to current active LC
+                _LCIndex = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexIndex; // reset to current active LC
             }
             GUILayout.EndVertical();
             if (!Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
@@ -89,7 +89,7 @@ namespace RP0
 
         private static void RenderEngineersSection(bool isCostCacheInvalid)
         {
-            KSCItem KSC = KCTGameStates.ActiveKSC;
+            KSCItem KSC = KerbalConstructionTimeData.Instance.ActiveKSC;
             LCItem currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
@@ -315,7 +315,7 @@ namespace RP0
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                fireAmount = research ? KerbalConstructionTimeData.Instance.Researchers : KCTGameStates.ActiveKSC.UnassignedEngineers;
+                fireAmount = research ? KerbalConstructionTimeData.Instance.Researchers : KerbalConstructionTimeData.Instance.ActiveKSC.UnassignedEngineers;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = fireAmount;
@@ -331,7 +331,7 @@ namespace RP0
                     }
                     else
                     {
-                        KSCItem ksc = KCTGameStates.ActiveKSC;
+                        KSCItem ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
                         KCTUtilities.ChangeEngineers(ksc, -workers);
                         ksc.RecalculateBuildRates(false);
                     }
@@ -377,7 +377,7 @@ namespace RP0
                     }
                     else
                     {
-                        KSCItem ksc = KCTGameStates.ActiveKSC;
+                        KSCItem ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
                         KCTUtilities.ChangeEngineers(ksc, workers);
                         ksc.RecalculateBuildRates(false);
                     }

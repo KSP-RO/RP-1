@@ -74,7 +74,7 @@ namespace RP0.Harmony
                     if (HighLogic.LoadedSceneIsGame)
                         oldCost *= HighLogic.CurrentGame.Parameters.Career.FundsLossMultiplier;
                     var facilityType = GetFacilityType(__instance.host);
-                    double rate = KCTUtilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, facilityType);
+                    double rate = KCTUtilities.GetConstructionRate(0, KerbalConstructionTimeData.Instance.ActiveKSC, facilityType);
 
                     if ((float)__instance.host.Facility.FacilityLevel != __instance.host.Facility.MaxLevel)
                     {
@@ -388,7 +388,7 @@ namespace RP0.Harmony
                     cost = -cost;
                 upgrading.cost = cost;
 
-                KCTGameStates.ActiveKSC.FacilityUpgrades.Add(upgrading);
+                KerbalConstructionTimeData.Instance.ActiveKSC.FacilityUpgrades.Add(upgrading);
 
                 try
                 {

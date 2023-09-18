@@ -208,9 +208,9 @@ namespace RP0
         {
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
             IntegrationSalaries.Clear();
-            foreach (KSCItem ksc in KCTGameStates.KSCs)
+            foreach (KSCItem ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
-                IntegrationSalaries[ksc.KSCName] = KCTGameStates.GetEffectiveIntegrationEngineersForSalary(ksc);
+                IntegrationSalaries[ksc.KSCName] = KerbalConstructionTimeData.Instance.GetEffectiveIntegrationEngineersForSalary(ksc);
             }
             Profiler.EndSample();
         }
@@ -339,7 +339,7 @@ namespace RP0
 
         private double GetFacilityUpgradeRatio(SpaceCenterFacility facility)
         {
-            foreach (var fac in KCTGameStates.ActiveKSC.FacilityUpgrades)
+            foreach (var fac in KerbalConstructionTimeData.Instance.ActiveKSC.FacilityUpgrades)
                 if (fac.FacilityType == facility)
                     return fac.progress / fac.BP;
 
@@ -357,7 +357,7 @@ namespace RP0
             EnsureFacilityLvlCostsLoaded();
 
             LCsCostPerDay = 0d;
-            foreach (var ksc in KCTGameStates.KSCs)
+            foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
                 foreach (var lc in ksc.LaunchComplexes)
                     LCsCostPerDay += LCUpkeep(lc);

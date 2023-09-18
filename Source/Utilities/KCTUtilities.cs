@@ -483,12 +483,12 @@ namespace RP0
 
             BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
 
-            if ((type == BuildListVessel.ListType.VAB) != (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad))
+            if ((type == BuildListVessel.ListType.VAB) != (KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad))
             {
                 string dialogStr;
                 if (type == BuildListVessel.ListType.VAB)
                 {
-                    if (KCTGameStates.ActiveKSC.IsAnyLCOperational)
+                    if (KerbalConstructionTimeData.Instance.ActiveKSC.IsAnyLCOperational)
                         dialogStr = $"a launch complex. Please switch to a launch complex and try again.";
                     else
                         dialogStr = $"a launch complex. You must build a launch complex (or wait for a launch complex to finish building or renovating) before you can integrate this vessel.";
@@ -496,7 +496,7 @@ namespace RP0
                 }
                 else
                 {
-                    if (KCTGameStates.ActiveKSC.Hangar.IsOperational)
+                    if (KerbalConstructionTimeData.Instance.ActiveKSC.Hangar.IsOperational)
                         dialogStr = $"the Hangar. Please switch to the Hangar as active launch complex and try again.";
                     else
                         dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can integrate this vessel.";
@@ -552,7 +552,7 @@ namespace RP0
             }
             else
             {
-                RP0Debug.LogError($"Error! Tried to add {blv.shipName} to build list but couldn't find LC! KSC {KCTGameStates.ActiveKSC.KSCName} and active LC {KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance}");
+                RP0Debug.LogError($"Error! Tried to add {blv.shipName} to build list but couldn't find LC! KSC {KerbalConstructionTimeData.Instance.ActiveKSC.KSCName} and active LC {KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance}");
                 return;
             }
 
@@ -565,7 +565,7 @@ namespace RP0
                 Debug.LogException(ex);
             }
 
-            RP0Debug.Log($"Added {blv.shipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
+            RP0Debug.Log($"Added {blv.shipName} to build list at {lc.Name} at {KerbalConstructionTimeData.Instance.ActiveKSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
             RP0Debug.Log("Launch site is " + blv.launchSite);
             string text = $"Added {blv.shipName} to integration list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -802,10 +802,10 @@ namespace RP0
         public static IKCTBuildItem GetNextThingToFinish()
         {
             IKCTBuildItem thing = null;
-            if (KCTGameStates.ActiveKSC == null)
+            if (KerbalConstructionTimeData.Instance.ActiveKSC == null)
                 return null;
             double shortestTime = double.PositiveInfinity;
-            foreach (KSCItem KSC in KCTGameStates.KSCs)
+            foreach (KSCItem KSC in KerbalConstructionTimeData.Instance.KSCs)
             {
                 foreach (LCItem LC in KSC.LaunchComplexes)
                 {
@@ -918,33 +918,33 @@ namespace RP0
                             KerbalConstructionTime.Instance.PreEditorSwapLCID = oldLC.ID;
                         }
                         // the BLV constructor sets our LC type to Hangar. But let's swap to it as well.
-                        if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType != LaunchComplexType.Hangar && KCTGameStates.ActiveKSC.Hangar.IsOperational)
+                        if (KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LCType != LaunchComplexType.Hangar && KerbalConstructionTimeData.Instance.ActiveKSC.Hangar.IsOperational)
                         {
-                            KCTGameStates.ActiveKSC.SwitchLaunchComplex(KSCItem.HangarIndex);
+                            KerbalConstructionTimeData.Instance.ActiveKSC.SwitchLaunchComplex(KSCItem.HangarIndex);
                         }
                     }
                     else
                     {
                         // Try to recover a pad LC
                         bool swappedLC = false;
-                        if (KCTGameStates.ActiveKSC.LaunchComplexCount > 1)
+                        if (KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexCount > 1)
                         {
-                            if (KerbalConstructionTime.Instance.PreEditorSwapLCID != Guid.Empty && KCTGameStates.ActiveKSC.SwitchToLaunchComplex(KerbalConstructionTime.Instance.PreEditorSwapLCID))
+                            if (KerbalConstructionTime.Instance.PreEditorSwapLCID != Guid.Empty && KerbalConstructionTimeData.Instance.ActiveKSC.SwitchToLaunchComplex(KerbalConstructionTime.Instance.PreEditorSwapLCID))
                             {
                                 swappedLC = true;
                             }
                             else
                             {
-                                int idx = KCTGameStates.ActiveKSC.GetLaunchComplexIdxToSwitchTo(true, true);
+                                int idx = KerbalConstructionTimeData.Instance.ActiveKSC.GetLaunchComplexIdxToSwitchTo(true, true);
                                 if (idx != -1)
                                 {
-                                    KCTGameStates.ActiveKSC.SwitchLaunchComplex(idx);
+                                    KerbalConstructionTimeData.Instance.ActiveKSC.SwitchLaunchComplex(idx);
                                     swappedLC = true;
                                 }
                             }
                             if (swappedLC)
                             {
-                                KerbalConstructionTime.Instance.EditorVessel.LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                                KerbalConstructionTime.Instance.EditorVessel.LC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
                             }
                         }
                     }
@@ -983,7 +983,7 @@ namespace RP0
 
         public static bool ReconditioningActive(LCItem LC, string launchSite = "LaunchPad")
         {
-            if (LC == null) LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            if (LC == null) LC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             return LC.GetReconditioning(launchSite) is ReconRollout;
         }
 
@@ -997,7 +997,7 @@ namespace RP0
                     return b;
             }
 
-            foreach (KSCItem ksc in KCTGameStates.KSCs)
+            foreach (KSCItem ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
                 if (FindBLVesselByID(id, ksc) is BuildListVessel blv)
                     return blv;

@@ -246,7 +246,7 @@ namespace RP0
                     //Add the cost of the ship to the funds so it can be removed again by KSP
                     FlightGlobals.ActiveVessel.vesselName = blv.shipName;
                 }
-                if (vesselLC == null) vesselLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                if (vesselLC == null) vesselLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
                 if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is ReconRollout rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
 
@@ -447,11 +447,11 @@ namespace RP0
 
             while (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
-                if (KCTGameStates.ActiveKSC?.ActiveLaunchComplexInstance?.ActiveLPInstance is KCT_LaunchPad pad)
+                if (KerbalConstructionTimeData.Instance?.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance is KCT_LaunchPad pad)
                 {
                     if (KCTUtilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
                     {
-                        KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadIndex, false);
+                        KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.SwitchLaunchPad(KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadIndex, false);
                         pad.UpdateLaunchpadDestructionState(false);
                     }
                 }
@@ -578,7 +578,7 @@ namespace RP0
                 int rushingEngs = 0;
 
                 int totalEngineers = 0;
-                foreach (KSCItem ksc in KCTGameStates.KSCs)
+                foreach (KSCItem ksc in KerbalConstructionTimeData.Instance.KSCs)
                 {
                     totalEngineers += ksc.Engineers;
 
@@ -691,7 +691,7 @@ namespace RP0
             if (!KCTGameStates.VesselErrorAlerted)
             {
                 var erroredVessels = new List<BuildListVessel>();
-                foreach (KSCItem KSC in KCTGameStates.KSCs) //this is faster on subsequent scene changes
+                foreach (KSCItem KSC in KerbalConstructionTimeData.Instance.KSCs) //this is faster on subsequent scene changes
                 {
                     foreach (LCItem currentLC in KSC.LaunchComplexes)
                     {
@@ -756,7 +756,7 @@ namespace RP0
                     RP0Debug.Log("Showing first start.");
                     KCTGameStates.IsFirstStart = false;
                     KCT_GUI.GUIStates.ShowFirstRun = true;
-                    foreach (var ksc in KCTGameStates.KSCs)
+                    foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
                         ksc.EnsureStartingLaunchComplexes();
 
                     KerbalConstructionTimeData.Instance.Applicants = Database.SettingsSC.GetStartingPersonnel(HighLogic.CurrentGame.Mode);
@@ -779,7 +779,7 @@ namespace RP0
                     double UToffset = KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT - Planetarium.GetUniversalTime();
                     if (UToffset > 0)
                     {
-                        foreach (var ksc in KCTGameStates.KSCs)
+                        foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
                         {
                             for(int i = 0; i < ksc.Constructions.Count; ++i)
                             {
@@ -867,7 +867,7 @@ namespace RP0
             foreach (BuildListVessel blv in errored)
             {
                 //remove any associated recon_rollout
-                foreach (KSCItem ksc in KCTGameStates.KSCs)
+                foreach (KSCItem ksc in KerbalConstructionTimeData.Instance.KSCs)
                 {
                     foreach (LCItem currentLC in ksc.LaunchComplexes)
                     {

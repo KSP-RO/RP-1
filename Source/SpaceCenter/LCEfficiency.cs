@@ -61,7 +61,7 @@ namespace RP0
                     continue;
                 }
 
-                var lc = KCTGameStates.FindLCFromID(id);
+                var lc = KerbalConstructionTimeData.Instance.FindLCFromID(id);
                 if (lc == null)
                 {
                     _lcIDs.RemoveAt(i);

@@ -1,24 +1,18 @@
 ﻿using UnityEngine;
+using System.Collections.Generic;
+using KSP.UI.Screens;
+using UniLinq;
 
 namespace RP0
 {
-
-    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
-    public class MainMenuAddon : MonoBehaviour
+    public class RFTagApplier : HostedSingleton
     {
         private ResourceTagType _lastTag;
+        
+        public RFTagApplier(MonoBehaviour host) : base(host) { }
 
-        public void Start()
+        public override void Awake()
         {
-            RP0Debug.Log("MainMenuAddon Start called");
-
-            // Subscribe to events from KSP and other mods.
-            // This is done as early as possible for the scene change events to work when loading into a save from main menu.
-            if (!KCTEvents.Instance.SubscribedToEvents)
-            {
-                KCTEvents.Instance.SubscribeToEvents();
-            }
-
             var values = System.Enum.GetValues(typeof(ResourceTagType));
             _lastTag = (ResourceTagType)values.GetValue(values.Length - 1);
 
@@ -89,7 +83,6 @@ namespace RP0
                         }
                     }
                 }
-
             }
         }
 

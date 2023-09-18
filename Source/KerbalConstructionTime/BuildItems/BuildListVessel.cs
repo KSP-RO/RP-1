@@ -242,15 +242,17 @@ namespace KerbalConstructionTime
             {
                 Type = ListType.SPH;
                 FacilityBuiltIn = EditorFacility.SPH;
-                _lc = KCTGameStates.ActiveKSC.Hangar;
+                LC = KCTGameStates.ActiveKSC.Hangar;
             }
             else
             {
                 Type = ListType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
-                _lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
                 if (_lc.LCType == LaunchComplexType.Hangar)
-                    KCTDebug.LogError($"ERROR: Tried to add vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
+                {
+                    KCTDebug.LogError($"ERROR: Tried to link vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
+                }
             }
 
             if(_lc != null && !_lc.IsOperational)

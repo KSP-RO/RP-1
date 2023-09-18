@@ -17,7 +17,7 @@ namespace RP0
         [Persistent]
         protected PersistentListValueType<Guid> _lcIDs = new PersistentListValueType<Guid>();
 
-        public KCTObservableList<LCItem> _lcs = new KCTObservableList<LCItem>();
+        public PersistentObservableList<LCItem> _lcs = new PersistentObservableList<LCItem>();
 
         protected Dictionary<LCEfficiency, double> _closenessCache = new Dictionary<LCEfficiency, double>();
 

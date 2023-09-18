@@ -46,7 +46,7 @@ namespace RP0
         public KCT_LaunchPad LP(Guid id) => _LPIDtoLP[id];
 
         [KSPField(isPersistant = true)]
-        public KCTObservableList<TechItem> TechList = new KCTObservableList<TechItem>();
+        public PersistentObservableList<TechItem> TechList = new PersistentObservableList<TechItem>();
         public bool TechIgnoreUpdates = false;
 
         [KSPField(isPersistant = true)]

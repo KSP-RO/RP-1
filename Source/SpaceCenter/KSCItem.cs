@@ -17,9 +17,9 @@ namespace RP0
         [Persistent]
         public PersistentList<LCItem> LaunchComplexes = new PersistentList<LCItem>();
         [Persistent]
-        public KCTObservableList<LCConstruction> LCConstructions = new KCTObservableList<LCConstruction>();
+        public PersistentObservableList<LCConstruction> LCConstructions = new PersistentObservableList<LCConstruction>();
         [Persistent]
-        public KCTObservableList<FacilityUpgrade> FacilityUpgrades = new KCTObservableList<FacilityUpgrade>();
+        public PersistentObservableList<FacilityUpgrade> FacilityUpgrades = new PersistentObservableList<FacilityUpgrade>();
                 
 
         public List<ConstructionBuildItem> Constructions = new List<ConstructionBuildItem>();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace RP0
 {
@@ -461,7 +462,7 @@ namespace RP0
         {
             _accumulatedTimeBefore = 0d;
 
-            KCTObservableList<TechItem> techList = KerbalConstructionTimeData.Instance.TechList;
+            PersistentObservableList<TechItem> techList = KerbalConstructionTimeData.Instance.TechList;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));

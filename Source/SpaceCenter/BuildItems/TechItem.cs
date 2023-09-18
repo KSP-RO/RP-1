@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using RP0.DataTypes;
 
 namespace RP0
 {
@@ -52,6 +53,13 @@ namespace RP0
         Science = 1 << 21,
 
         Any = ~0,
+    }
+
+    public class KCTTechNodePeriod : RP0.DataTypes.ConfigNodePersistenceBase
+    {
+        [Persistent] public string id;
+        [Persistent] public int startYear;
+        [Persistent] public int endYear;
     }
 
     public class TechItem : IKCTBuildItem, IConfigNode
@@ -288,7 +296,7 @@ namespace RP0
             return 0d;
         }
 
-        public string GetBlockingTech(KCTObservableList<TechItem> techList)
+        public string GetBlockingTech(PersistentObservableList<TechItem> techList)
         {
             string blockingTech = null;
 

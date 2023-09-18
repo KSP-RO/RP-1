@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using KSPCommunityFixes.Modding;
 
 namespace RP0.DataTypes
@@ -67,7 +68,7 @@ namespace RP0.DataTypes
     /// </summary>
     /// <typeparam name="TKey"></typeparam>
     /// <typeparam name="TValue"></typeparam>
-    public class PersistentDictionaryValueTypes<TKey, TValue> : Dictionary<TKey, TValue>, IConfigNode
+    public class PersistentDictionaryValueTypes<TKey, TValue> : Dictionary<TKey, TValue>, ICloneable, IConfigNode
     {
         private static System.Type _KeyType = typeof(TKey);
         private static readonly DataType _KeyDataType = FieldData.ValueDataType(_KeyType);
@@ -108,7 +109,7 @@ namespace RP0.DataTypes
                 Add(kvp.Key, kvp.Value);
         }
 
-        public PersistentDictionaryValueTypes<TKey, TValue> Clone()
+        public object Clone()
         {
             var dict = new PersistentDictionaryValueTypes<TKey, TValue>();
             foreach (var kvp in this)

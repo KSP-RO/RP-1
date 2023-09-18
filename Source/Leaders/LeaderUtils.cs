@@ -15,10 +15,10 @@ namespace RP0.Leaders
             return _boxedDouble.value;
         }
 
-        public static double GetPartEffectiveCostEffect(IEnumerable<string> tags, Dictionary<string, double> resources, string partName)
+        public static double GetPartEffectiveCostEffect(IEnumerable<string> tags)
         {
             _boxedDouble.value = 1d;
-            KCTEvents.ApplyPartEffectiveCostMultiplier.Fire(_boxedDouble, tags, resources, partName);
+            KCTEvents.ApplyPartEffectiveCostMultiplier.Fire(_boxedDouble, tags);
             return _boxedDouble.value;
         }
 

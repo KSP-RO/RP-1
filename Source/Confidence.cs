@@ -1,4 +1,4 @@
-﻿using UnityEngine;
+using UnityEngine;
 
 namespace RP0
 {
@@ -46,52 +46,46 @@ namespace RP0
 
         public void AddConfidence(float delta, TransactionReasons reason)
         {
-            float oldConfidence = confidence;
-            confidence += delta;
+            // We'll apply the total change in OnCurrenciesModified
             CurrencyModifierQueryRP0 data = new CurrencyModifierQueryRP0(reason.RP0(), 0d, 0d, 0d, delta, 0d);
             GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(data);
             GameEvents.Modifiers.OnCurrencyModified.Fire(data);
-            if (confidence < 0f)
-                confidence = 0f;
-
-            if (confidence != oldConfidence && delta != 0f)
-            {
-                delta = confidence - oldConfidence;
-                OnConfidenceChanged.Fire(confidence, reason);
-                if (delta > 0f)
-                    confidenceEarned += delta;
-            }
         }
 
         private void OnCurrenciesModified(CurrencyModifierQuery query)
         {
-            float changeDelta = query.GetTotal(Currency.Science);
+            float sciDelta = query.GetInput(Currency.Science);
+            float conf = 0f;
             // Annoyingly Kerbalism uses TransactionReason.None
-            if (changeDelta > 0f && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
+            if (sciDelta > 0f && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
             {
-                float conf;
                 if (Programs.ProgramHandler.Settings != null)
-                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTime.KerbalConstructionTimeData.Instance.SciPointsTotal)) * changeDelta;
+                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTime.KerbalConstructionTimeData.Instance.SciPointsTotal)) * sciDelta;
                 else
-                    conf = changeDelta * 2f;
+                    conf = sciDelta * 2f;
 
-                AddConfidence(conf, query.reason);
+                conf = (float)CurrencyUtils.Conf(TransactionReasonsRP0.ScienceTransmission, conf);
             }
+
+            // We'll actually process the confidence change here and use GetTotal, instead of GetEffectDelta
             if (query is CurrencyModifierQueryRP0 cmq)
             {
-                changeDelta = (float)cmq.GetEffectDelta(CurrencyRP0.Confidence, true);
-                if (changeDelta != 0)
+                if(conf != 0f)
+                    cmq.AddPostDelta(CurrencyRP0.Confidence, conf, false);
+
+                float oldConfidence = confidence;
+
+                confidence += (float)cmq.GetTotal(CurrencyRP0.Confidence, true);
+
+                if (confidence < 0f)
+                    confidence = 0f;
+
+                if (confidence != oldConfidence)
                 {
-                    float oldConfidence = confidence;
-                    confidence += changeDelta;
-                    if (confidence < 0f)
-                        confidence = 0f;
-                    OnConfidenceChanged.Fire(confidence, query.reason);
-                    // We have to check the input to see if this is a source or sink of confidence
-                    // If it's a source, change confidenceEarned even if delta is negative, because this might
-                    // be a "-15% confidence from contracts" leader
-                    if (cmq.GetInput(CurrencyRP0.Confidence) > 0d)
-                        confidenceEarned += changeDelta;
+                    float delta = confidence - oldConfidence;
+                    OnConfidenceChanged.Fire(confidence, cmq.reason);
+                    if (delta > 0f)
+                        confidenceEarned += delta;
                 }
             }
         }

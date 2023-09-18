@@ -4,7 +4,7 @@ using KSPCommunityFixes.Modding;
 
 namespace RP0.DataTypes
 {
-    public class PersistentList<T> : List<T>, IConfigNode where T : IConfigNode
+    public class PersistentList<T> : List<T>, IConfigNode, ICloneable where T : IConfigNode
     {
         private static string typeName = typeof(T).Name;
 
@@ -27,6 +27,28 @@ namespace RP0.DataTypes
                 item.Save(n);
                 node.AddNode(n);
             }
+        }
+
+        public virtual object Clone()
+        {
+            var clone = new PersistentList<T>();
+            foreach (var v in this)
+            {
+                if (v is ICloneable c)
+                {
+                    clone.Add((T)c.Clone());
+                }
+                else
+                {
+                    ConfigNode n = new ConfigNode();
+                    v.Save(n);
+                    T item = System.Activator.CreateInstance<T>();
+                    item.Load(n);
+                    clone.Add(item);
+                }
+            }
+
+            return clone;
         }
     }
 

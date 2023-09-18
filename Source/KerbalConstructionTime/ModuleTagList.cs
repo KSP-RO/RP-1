@@ -5,14 +5,31 @@ namespace KerbalConstructionTime
 {
     public class ModuleTagList : PartModule
     {
+        public const string PadInfrastructure = "PadInfrastructure";
+
         [SerializeField] public List<string> tags;
+
+        public bool HasPadInfrastructure => tags.Contains(PadInfrastructure);
 
         public override void OnLoad(ConfigNode node)
         {
             if (node.name != "CURRENTUPGRADE")
-                tags = HighLogic.LoadedScene == GameScenes.LOADING ? node.GetValuesList("tag") : part.partInfo.partPrefab.GetComponent<ModuleTagList>()?.tags;
+            {
+                if (HighLogic.LoadedScene == GameScenes.LOADING)
+                {
+                    tags = node.GetValuesList("tag");
+                    tags.Sort();
+                }
+                else
+                {
+                    tags = part.partInfo.partPrefab.GetComponent<ModuleTagList>()?.tags;
+                }
+            }
             else
+            {
                 tags.AddRange(node.GetValuesList("tag"));
+                tags.Sort();
+            }
         }
 
         public override string GetInfo()

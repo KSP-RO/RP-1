@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RP0;
+using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
@@ -197,7 +198,7 @@ namespace KerbalConstructionTime
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
+                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
 
                 if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"√ Gain/Loss:\n{KCTGameStates.GetBudgetDelta(buildItem.GetTimeLeft()):N0}")))
                 {
@@ -405,11 +406,11 @@ namespace KerbalConstructionTime
                 if (buildRate > 0d)
                 {
                     double seconds = constr.GetTimeLeft();
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
                 else
                 {
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
 
                 if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d)
@@ -578,7 +579,7 @@ namespace KerbalConstructionTime
                     if (blockingPrereq == null)
                     {
                         double seconds = t.TimeLeft;
-                        GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName()), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                        GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName()), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                         _accumulatedTimeBefore += seconds;
                     }
                     else
@@ -588,7 +589,7 @@ namespace KerbalConstructionTime
                 {
                     DrawYearBasedMult(t, _accumulatedTimeBefore);
                     double seconds = t.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                     _accumulatedTimeBefore += seconds;
                 }
                 if (t.BuildRate > 0 && blockingPrereq == null)
@@ -624,11 +625,12 @@ namespace KerbalConstructionTime
                 foreach (var l in k.LaunchComplexes)
                 {
                     accTime = 0d;
+                    l.accumEffic = l.Efficiency;
                     foreach (var b in l.BuildList)
                     {
                         // FIXME handle multiple rates
                         _timeBeforeItem[b] = accTime;
-                        accTime += b.GetTimeLeftEst(accTime);
+                        accTime += b.GetTimeLeftEst(accTime, l.accumEffic, out l.accumEffic);
                         _allItems.Add(b);
                     }
                     _allItems.AddRange(l.Recon_Rollout);
@@ -718,11 +720,11 @@ namespace KerbalConstructionTime
                     GUILayout.Space(18);
 
                 if (t.GetBuildRate() > 0d)
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else if (t is BuildListVessel b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
 
@@ -837,7 +839,7 @@ namespace KerbalConstructionTime
 
             if (activeLC.LCType == LaunchComplexType.Pad)
                 RenderRollouts();
-            RenderVesselsBeingBuilt(activeLC.BuildList);
+            RenderVesselsBeingBuilt(activeLC);
             RenderWarehouse();
 
             GUILayout.EndScrollView();
@@ -868,16 +870,17 @@ namespace KerbalConstructionTime
                 DrawTypeIcon(reconditioning);
                 GUILayout.Label($"Reconditioning: {reconditioning.launchPadID}");
                 GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(reconditioning.GetTimeLeft(), "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
 
                 GUILayout.EndHorizontal();
             }
         }
 
-        private static void RenderVesselsBeingBuilt(List<BuildListVessel> buildList)
+        private static void RenderVesselsBeingBuilt(LCItem lc)
         {
             _accumulatedTimeBefore = 0d;
-            if (buildList.Count == 0)
+            lc.accumEffic = lc.Efficiency;
+            if (lc.BuildList.Count == 0)
             {
                 if (HighLogic.LoadedSceneIsEditor)
                     GUILayout.Label("No vessels integrating!");
@@ -885,9 +888,9 @@ namespace KerbalConstructionTime
                     GUILayout.Label($"No vessels integrating! Go to the {(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad ? "VAB" : "SPH")} to add more.");
             }
             bool recalc = false;
-            for (int i = 0; i < buildList.Count; i++)
+            for (int i = 0; i < lc.BuildList.Count; i++)
             {
-                BuildListVessel b = buildList[i];
+                BuildListVessel b = lc.BuildList[i];
                 if (!b.AllPartsValid)
                     continue;
                 GUILayout.BeginHorizontal();
@@ -921,22 +924,22 @@ namespace KerbalConstructionTime
 
                 if (i > 0 && GUILayout.Button("^", GUILayout.Width(_butW)))
                 {
-                    buildList.RemoveAt(i);
-                    buildList.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, b);
+                    lc.BuildList.RemoveAt(i);
+                    lc.BuildList.Insert(GameSettings.MODIFIER_KEY.GetKey() ? 0 : i - 1, b);
                     recalc = true;
                 }
 
-                if (i < buildList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
+                if (i < lc.BuildList.Count - 1 && GUILayout.Button("v", GUILayout.Width(_butW)))
                 {
                     recalc = true;
-                    buildList.RemoveAt(i);
+                    lc.BuildList.RemoveAt(i);
                     if (GameSettings.MODIFIER_KEY.GetKey())
                     {
-                        buildList.Add(b);
+                        lc.BuildList.Add(b);
                     }
                     else
                     {
-                        buildList.Insert(i + 1, b);
+                        lc.BuildList.Insert(i + 1, b);
                     }
                 }
 
@@ -945,22 +948,22 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"{b.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (b.BuildRate > 0)
                 {
-                    double seconds = b.TimeLeft;
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
-                    _accumulatedTimeBefore += seconds; // FIXME what to do with multiple lines? Min() I guess?
+                    double seconds = b.GetTimeLeft(out lc.accumEffic);
+                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    _accumulatedTimeBefore += seconds;
                 }
                 else
                 {
-                    double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore, lc.accumEffic, out lc.accumEffic);
+                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds;
                 }
                 GUILayout.EndHorizontal();
             }
             if (recalc)
             {
-                for (int i = buildList.Count; i-- > 0;)
-                    buildList[i].UpdateBuildRate();
+                for (int i = lc.BuildList.Count; i-- > 0;)
+                    lc.BuildList[i].UpdateBuildRate();
             }
         }
 
@@ -968,7 +971,6 @@ namespace KerbalConstructionTime
         {
             LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
             bool isPad = activeLC.LCType == LaunchComplexType.Pad;
-            List<BuildListVessel> buildList = activeLC.Warehouse;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
             GUILayout.Label(isPad ? _rocketTexture : _planeTexture, GUILayout.ExpandWidth(false));
@@ -983,14 +985,14 @@ namespace KerbalConstructionTime
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin);
                 }
             }
-            if (buildList.Count == 0)
+            if (activeLC.Warehouse.Count == 0)
             {
                 GUILayout.Label("No vessels in storage!\nThey will be stored here when they are complete.");
             }
 
-            for (int i = 0; i < buildList.Count; i++)
+            for (int i = 0; i < activeLC.Warehouse.Count; i++)
             {
-                BuildListVessel b = buildList[i];
+                BuildListVessel b = activeLC.Warehouse[i];
                 RenderWarehouseRow(b, i, false);
             }
         }
@@ -1082,7 +1084,7 @@ namespace KerbalConstructionTime
                 textColor = _redText;
 
             GUILayout.BeginHorizontal();
-            if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && (padStatus == VesselPadStatus.InStorage || padStatus == VesselPadStatus.RolledOut))
+            if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && (padStatus != VesselPadStatus.Recovering))
             {
                 if (GUILayout.Button("*", GUILayout.Width(_butW)))
                 {
@@ -1110,7 +1112,7 @@ namespace KerbalConstructionTime
             
             if (recovery != null)
             {
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             }
             else
             {
@@ -1153,7 +1155,7 @@ namespace KerbalConstructionTime
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, blvID, launchSite);
                         if (tmpRollout.cost > 0d)
                             GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -tmpRollout.cost):N0}");
-                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
+                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
                             if (foundPad != null && lpState == LaunchPadState.Free)
@@ -1188,7 +1190,7 @@ namespace KerbalConstructionTime
                                 _mouseOnRolloutButton = -1;
                     }
                     else if (!HighLogic.LoadedSceneIsEditor && rollback == null && rollout != null && !rollout.IsComplete() &&
-                             GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+ blvID), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
+                             GUILayout.Button(DTUtils.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+ blvID), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
                     {
                         rollout.SwapRolloutType();
                     }
@@ -1196,12 +1198,12 @@ namespace KerbalConstructionTime
                     {
                         if (rollout == null && padRollout == null)
                         {
-                            if (GUILayout.Button(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
+                            if (GUILayout.Button(DTUtils.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
                                 rollback.SwapRolloutType();
                         }
                         else
                         {
-                            GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                            GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ blvID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                         }
                     }
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
@@ -1246,7 +1248,7 @@ namespace KerbalConstructionTime
                                 }
                                 else if (vesselLC.GetReconditioning(launchSite) is ReconRollout recon)
                                 {
-                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {Utilities.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
                                     ScreenMessages.PostScreenMessage(message);
                                 }
                                 else
@@ -1291,7 +1293,7 @@ namespace KerbalConstructionTime
                             var tmpPrep = new AirlaunchPrep(b, blvID);
                             if (tmpPrep.cost > 0d)
                                 GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
-                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? Utilities.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ blvID) : new GUIContent("Prep for airlaunch");
+                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ blvID) : new GUIContent("Prep for airlaunch");
                             if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
                             {
                                 AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
@@ -1312,7 +1314,7 @@ namespace KerbalConstructionTime
                         }
                         else if (airlaunchPrep != null)
                         {
-                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : Utilities.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.associatedID);
+                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : DTUtils.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.associatedID);
                             if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
                             {
                                 airlaunchPrep.SwitchDirection();
@@ -1616,8 +1618,9 @@ namespace KerbalConstructionTime
             }
             string blvID = b.shipID.ToString();
             ReconRollout rollout = b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
+            ReconRollout rollback = rollout == null ? b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollback, launchSite) : null;
             bool isRollingOut = rollout != null && rollout.associatedID == blvID;
-            bool onPad = isRollingOut && rollout.IsComplete();
+            bool isRollingBack = rollback != null && rollback.associatedID == blvID;
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
@@ -1636,7 +1639,7 @@ namespace KerbalConstructionTime
                 }
             }
 
-            if (!onPad && GUILayout.Button("Scrap"))
+            if (!isRollingOut && !isRollingBack && GUILayout.Button("Scrap"))
             {
                 InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "KCTPopupLock");
                 DialogGUIBase[] options = new DialogGUIBase[2];
@@ -1650,7 +1653,7 @@ namespace KerbalConstructionTime
                 ResetBLWindow(false);
             }
 
-            if (!onPad && GUILayout.Button("Edit"))
+            if (!isRollingOut && !isRollingBack && GUILayout.Button("Edit"))
             {
                 GUIStates.ShowBLPlus = false;
                 EditorWindowPosition.height = 1;
@@ -1706,7 +1709,7 @@ namespace KerbalConstructionTime
                 GUIStates.ShowBLPlus = false;
             }
 
-            if (!b.IsFinished && GUILayout.Button("Move to Top"))
+            if (!isRollingOut && !isRollingBack && !b.IsFinished && GUILayout.Button("Move to Top"))
             {
                 if (_isIntegrationSelected)
                 {

@@ -32,8 +32,6 @@ namespace RP0
 
         private const int CurrentVersion = 1;
 
-        private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
-
         private EventData<TechItem> onKctTechCompletedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
         private EventData<FacilityUpgrade> onKctFacilityUpgradeCancelEvent;
@@ -328,11 +326,6 @@ namespace RP0
             }
         }
 
-        public static DateTime UTToDate(double ut)
-        {
-            return _epoch.AddSeconds(ut);
-        }
-
         public void AddTechEvent(TechItem tech)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
@@ -380,7 +373,7 @@ namespace RP0
                                                 .Sum();
                 return new[]
                 {
-                    UTToDate(p.StartUT).ToString("yyyy-MM"),
+                    DTUtils.UTToDate(p.StartUT).ToString("yyyy-MM"),
                     p.NumEngineers.ToString(),
                     p.NumResearchers.ToString(),
                     p.CurrentFunds.ToString("F0"),
@@ -580,8 +573,8 @@ namespace RP0
             return new CareerLogDto
             {
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
-                startDate = UTToDate(logPeriod.StartUT).ToString("o"),
-                endDate = UTToDate(logPeriod.EndUT).ToString("o"),
+                startDate = DTUtils.UTToDate(logPeriod.StartUT).ToString("o"),
+                endDate = DTUtils.UTToDate(logPeriod.EndUT).ToString("o"),
                 numEngineers = logPeriod.NumEngineers,
                 numResearchers = logPeriod.NumResearchers,
                 efficiencyEngineers = logPeriod.EfficiencyEngineers,
@@ -647,8 +640,8 @@ namespace RP0
         {
             if (!_periodDict.TryGetValue(periodStartUt, out LogPeriod period))
             {
-                DateTime dtNextPeriod = UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
-                double nextPeriodStart = (dtNextPeriod - _epoch).TotalSeconds;
+                DateTime dtNextPeriod = DTUtils.UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
+                double nextPeriodStart = (dtNextPeriod - DTUtils.Epoch).TotalSeconds;
                 period = new LogPeriod(periodStartUt, nextPeriodStart);
                 _periodDict.Add(periodStartUt, period);
             }

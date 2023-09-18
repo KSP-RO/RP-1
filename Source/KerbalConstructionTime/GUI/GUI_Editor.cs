@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RP0;
+using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
@@ -53,9 +54,10 @@ namespace KerbalConstructionTime
         private static void RenderBuildMode()
         {
             double buildPoints = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
-            BuildListVessel.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            double bpLeaderEffect = KerbalConstructionTime.Instance.EditorVessel.LeaderEffect;
+            double effic = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency;
             double rateWithCurEngis = Utilities.GetBuildRate(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
-                * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Efficiency
+                * effic
                 * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
 
             RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
@@ -65,7 +67,11 @@ namespace KerbalConstructionTime
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                double buildTime = buildPoints / bR;
+                double buildTime = bR > 0d
+                    ? (effic >= LCEfficiency.MaxEfficiency
+                        ? buildPoints / (bR * bpLeaderEffect)
+                        : KerbalConstructionTime.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, effic, out _))
+                    : 0d;
                 GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")}");
 
                 if (KCTGameStates.EditorRolloutBP > 0)
@@ -147,7 +153,7 @@ namespace KerbalConstructionTime
             if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {
                 Utilities.TryAddVesselToBuildList();
-                Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             }
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Show/Hide Management"))
@@ -307,23 +313,30 @@ namespace KerbalConstructionTime
         {
             BuildListVessel editedVessel = KerbalConstructionTimeData.Instance.EditedVessel;
             double fullVesselBP = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
-
+            double bpLeaderEffect = KerbalConstructionTime.Instance.EditorVessel.LeaderEffect;
+            double effic = editedVessel.LC.Efficiency;
             Utilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
-
+            
             double rateWithCurEngis = Utilities.GetBuildRate(editedVessel.LC, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
-                * editedVessel.LC.Efficiency * editedVessel.LC.StrategyRateMultiplier;
+                * effic * editedVessel.LC.StrategyRateMultiplier;
 
             RenderBuildRateInputRow(fullVesselBP, rateWithCurEngis);
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
-                GUILayout.Label(Utilities.GetFormattedTime(Math.Abs(fullVesselBP - newProgressBP) / bR, 0, false));
+                double buildPoints = Math.Abs(fullVesselBP - newProgressBP);
+                double buildTime = bR > 0d
+                    ? (effic >= LCEfficiency.MaxEfficiency
+                        ? buildPoints / (bR * bpLeaderEffect)
+                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, effic, out _))
+                    : double.NaN;
+                GUILayout.Label(DTUtils.GetFormattedTime(buildTime, 0, false));
 
                 if (KCTGameStates.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {Utilities.GetFormattedTime(KCTGameStates.EditorRolloutBP / bR, 0, false)}");
+                    GUILayout.Label($"Rollout Time: {DTUtils.GetFormattedTime(KCTGameStates.EditorRolloutBP / bR, 0, false)}");
                 }
             }
             else

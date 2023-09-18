@@ -17,6 +17,30 @@ namespace RP0.Crew
         private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/KACIcon15", false), "Add alarm");
         private bool _showAllTrainings = false;
 
+        protected override void OnStart()
+        {
+            var evt = GameEvents.FindEvent<EventVoid>("OnKctRecalculateBuildRates");
+            if (evt != null)
+            {
+                evt.Add(OnRecalcBuildRates);
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            var evt = GameEvents.FindEvent<EventVoid>("OnKctRecalculateBuildRates");
+            if (evt != null)
+            {
+                evt.Remove(OnRecalcBuildRates);
+            }
+        }
+
+        private void OnRecalcBuildRates()
+        {
+            if (_selectedCourse != null)
+                _selectedCourse.RecalculateBuildRate();
+        }
+
         protected void RenderNautListHeading()
         {
             GUILayout.BeginHorizontal();
@@ -233,9 +257,10 @@ namespace RP0.Crew
             bool underMin = _selectedCourse.SeatMin > _selectedCourse.Students.Count;
             if (underMin)
                 GUILayout.Label($"{_selectedCourse.SeatMin - _selectedCourse.Students.Count} more naut(s) required.");
-            const string tooltip = "Time for Proficiency training varies\nbased on nauts' prior proficiencies";
-            GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTimeLeft(), true, false)}", tooltip));
-            GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + _selectedCourse.GetTimeLeft(), false)}", tooltip));
+            const string tooltipProf = "Time for Proficiency training varies\nbased on nauts' prior proficiencies";
+            const string tooltipMission = "Time for Mission training varies\nbased on nauts' stupidity";
+            GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(_selectedCourse.GetTimeLeft(), true, false)}", _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission));
+            GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + _selectedCourse.GetTimeLeft(), false)}", _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission));
             if (CrewHandler.Instance.RetirementEnabled && _selectedCourse.Students.Count > 0)
             {
                 GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.AverageRetireExtension(), true, false)}");

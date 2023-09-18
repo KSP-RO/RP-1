@@ -32,7 +32,7 @@ namespace RP0.Harmony
             //So we have to intercept and store the value.
             if (__instance.Root is ContractConfigurator.ConfiguredContract cc && Programs.ProgramHandler.Instance != null && Programs.ProgramHandler.Instance.RepToConfidenceForContract(cc, true) is float repToConf && repToConf > 0f)
             {
-                _storedRep = __instance.ReputationCompletion;
+                _storedRep = __instance.ReputationCompletion / (float)CurrencyUtils.Rep(TransactionReasonsRP0.ContractReward, 1d);
             }
         }
     }

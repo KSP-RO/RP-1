@@ -1,8 +1,9 @@
 ﻿using System;
+using RP0.DataTypes;
 
 namespace KerbalConstructionTime
 {
-    public class KCTVesselData : IConfigNode
+    public class KCTVesselData : ConfigNodePersistenceBase, IConfigNode
     {
         [Persistent]
         public EditorFacility FacilityBuiltIn;
@@ -54,16 +55,6 @@ namespace KerbalConstructionTime
             LCID = data.LCID;
             LCModID = data.LCModID;
             HasStartedReconditioning = data.HasStartedReconditioning;
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

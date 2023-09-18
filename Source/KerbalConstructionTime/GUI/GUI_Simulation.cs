@@ -1,4 +1,5 @@
-﻿using System;
+﻿using RP0;
+using System;
 using UnityEngine;
 
 namespace KerbalConstructionTime
@@ -105,10 +106,10 @@ namespace KerbalConstructionTime
             GUILayout.Space(4);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Time: ");
-            _UTString = GUILayout.TextField(_UTString, GUILayout.Width(100));
+            _UTString = GUILayout.TextField(_UTString, GUILayout.Width(110));
             _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the amount of time entered onto the field. Otherwise the date and time will be set to entered value."));
             GUILayout.EndHorizontal();
-            GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\"");
+            GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"1960-01-01 15:30\"");
             GUILayout.Space(4);
 
             if (Utilities.IsTestFlightInstalled || Utilities.IsTestLiteInstalled)
@@ -190,15 +191,22 @@ namespace KerbalConstructionTime
             }
 
             double currentUT = Planetarium.GetUniversalTime();
+            double ut = 0;
+            if (!string.IsNullOrWhiteSpace(_UTString) && !DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
+            {
+                var message = new ScreenMessage("Please enter a valid time value.", 6f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+                return;
+            }
+
             simParams.DelayMoveSeconds = 0;
             if (_fromCurrentUT)
             {
-                double utOffset = MagiCore.Utilities.ParseTimeString(_UTString, false);
-                simParams.SimulationUT = utOffset != 0 ? currentUT + utOffset : 0;
+                simParams.SimulationUT = ut != 0 ? currentUT + ut : 0;
             }
             else
             {
-                simParams.SimulationUT = MagiCore.Utilities.ParseTimeString(_UTString, true);
+                simParams.SimulationUT = ut;
             }
 
             if (simParams.SimulationUT < 0)

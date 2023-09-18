@@ -107,7 +107,7 @@ namespace KerbalConstructionTime
 
         public static bool IsClamp(Part part)
         {
-            return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag("PadInfrastructure");
+            return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag(ModuleTagList.PadInfrastructure);
         }
 
         public static bool IsClampOrChild(this ProtoPartSnapshot p)
@@ -143,7 +143,7 @@ namespace KerbalConstructionTime
 
         public static float GetTotalVesselCost(List<Part> parts, bool includeFuel = true)
         {
-            Profiler.BeginSample("SaveShip");
+            Profiler.BeginSample("RP0SaveShip");
             float total = 0f;
             float resCost = 0f;
             int count = parts.Count;
@@ -197,7 +197,7 @@ namespace KerbalConstructionTime
 
         public static float GetShipMass(this ShipConstruct sc, bool excludeClamps, out float dryMass, out float fuelMass)
         {
-            Profiler.BeginSample("GetShipMass");
+            Profiler.BeginSample("RP0GetShipMass");
             dryMass = 0f;
             fuelMass = 0f;
             foreach (var part in sc.parts)
@@ -229,7 +229,7 @@ namespace KerbalConstructionTime
             if (ship.parts.Count == 0)
                 return Vector3.zero;
 
-            Profiler.BeginSample("GetShipSize");
+            Profiler.BeginSample("RP0GetShipSize");
 
             Bounds craftBounds = new Bounds();
             Vector3 rootPos = ship.parts[0].orgPos;
@@ -897,9 +897,60 @@ namespace KerbalConstructionTime
         {
             if (!HighLogic.LoadedSceneIsEditor) return;
 
+            LCItem oldLC = KerbalConstructionTime.Instance.EditorVessel.LC;
+            var oldFac = KerbalConstructionTime.Instance.EditorVessel.FacilityBuiltIn;
+
             KerbalConstructionTime.Instance.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
             // override LC in case of vessel editing
-            KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
+            if (KCTGameStates.EditorShipEditingMode)
+            {
+                KerbalConstructionTime.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.EditedVessel.LCID;
+            }
+            else
+            {
+                // Check if we switched editors
+                if (oldFac != KerbalConstructionTime.Instance.EditorVessel.FacilityBuiltIn)
+                {
+                    if (oldFac == EditorFacility.VAB)
+                    {
+                        if (oldLC.LCType == LaunchComplexType.Pad)
+                        {
+                            // cache this off -- we swapped editors
+                            KerbalConstructionTime.Instance.PreEditorSwapLCID = oldLC.ID;
+                        }
+                        // the BLV constructor sets our LC type to Hangar. But let's swap to it as well.
+                        if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType != LaunchComplexType.Hangar && KCTGameStates.ActiveKSC.Hangar.IsOperational)
+                        {
+                            KCTGameStates.ActiveKSC.SwitchLaunchComplex(KSCItem.HangarIndex);
+                        }
+                    }
+                    else
+                    {
+                        // Try to recover a pad LC
+                        bool swappedLC = false;
+                        if (KCTGameStates.ActiveKSC.LaunchComplexCount > 1)
+                        {
+                            if (KerbalConstructionTime.Instance.PreEditorSwapLCID != Guid.Empty && KCTGameStates.ActiveKSC.SwitchToLaunchComplex(KerbalConstructionTime.Instance.PreEditorSwapLCID))
+                            {
+                                swappedLC = true;
+                            }
+                            else
+                            {
+                                int idx = KCTGameStates.ActiveKSC.GetLaunchComplexIdxToSwitchTo(true, true);
+                                if (idx != -1)
+                                {
+                                    KCTGameStates.ActiveKSC.SwitchLaunchComplex(idx);
+                                    swappedLC = true;
+                                }
+                            }
+                            if (swappedLC)
+                            {
+                                KerbalConstructionTime.Instance.EditorVessel.LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                            }
+                        }
+                    }
+                }
+            }
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
@@ -1164,6 +1215,11 @@ namespace KerbalConstructionTime
                             "Acknowledged", false, HighLogic.UISkin);
                     });
                 }
+                else
+                {
+                    EditorLogic.fetch.switchEditorBtn.onClick.RemoveListener(OnEditorSwitch);
+                    EditorLogic.fetch.switchEditorBtn.onClick.AddListener(OnEditorSwitch);
+                }
 
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
@@ -1200,6 +1256,22 @@ namespace KerbalConstructionTime
                     }
                 }
             }
+        }
+
+        private static void OnEditorSwitch()
+        {
+            KerbalConstructionTime.Instance.StartCoroutine(PostEditorSwitch());
+        }
+
+        private static System.Collections.IEnumerator PostEditorSwitch()
+        {
+            yield return new WaitForSeconds(0.1f);
+            while (EditorDriver.fetch != null && EditorDriver.fetch.restartingEditor)
+                yield return null;
+            if (EditorDriver.fetch == null)
+                yield break;
+
+            KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
         }
 
         /// <summary>
@@ -1639,46 +1711,6 @@ namespace KerbalConstructionTime
             KerbalConstructionTimeData.Instance.Researchers += delta;
             KCTEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
-        }
-
-        private const double MaxSecondsForDayDisplay = 7d * 86400d;
-        private const double MaxTimeToDisplay = 100d * 365.25d * 86400d;
-
-        public static string GetColonFormattedTime(double t, double extraTime = 0d, bool flip = false)
-        {
-            if (double.IsNaN(t) || double.IsInfinity(t))
-                return "(infinity)";
-
-            bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay;
-            double timeCheck = (shouldUseDate ^ flip) ? extraTime + t : t;
-            if (timeCheck > MaxTimeToDisplay)
-                return "(infinity)";
-
-            if (shouldUseDate ^ flip)
-                return KSPUtil.dateTimeFormatter.PrintDateCompact(Planetarium.GetUniversalTime() + extraTime + t, false, false);
-
-            return MagiCore.Utilities.GetColonFormattedTime(t);
-        }
-
-        public static string GetFormattedTime(double t, double extraTime = 0d, bool allowDate = true)
-        {
-            if (double.IsNaN(t) || double.IsInfinity(t))
-                return "(infinity)";
-
-            bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay && allowDate;
-            double timeCheck = shouldUseDate ? extraTime + t : t;
-            if (timeCheck > MaxTimeToDisplay)
-                return "(infinity)";
-
-            if (shouldUseDate)
-                return KSPUtil.dateTimeFormatter.PrintDate(Planetarium.GetUniversalTime() + extraTime + t, false, false);
-
-            return MagiCore.Utilities.GetFormattedTime(t);
-        }
-
-        public static GUIContent GetColonFormattedTimeWithTooltip(double t, string identifier, double extraTime = 0, bool showEst = false)
-        {
-            return new GUIContent(showEst ? $"Est: {GetColonFormattedTime(t, extraTime, false)}" : GetColonFormattedTime(t, extraTime, false), $"{identifier}¶{GetColonFormattedTime(t, extraTime, true)}");
         }
 
         private const double ApplicantsPow = 0.92d;

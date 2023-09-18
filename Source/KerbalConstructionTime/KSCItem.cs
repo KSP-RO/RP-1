@@ -27,7 +27,8 @@ namespace KerbalConstructionTime
 
         private bool _allowRecalcConstructions = true;
 
-        public LCItem Hangar => LaunchComplexes[0];
+        public const int HangarIndex = 0;
+        public LCItem Hangar => LaunchComplexes[HangarIndex];
 
         void added(int idx, ConstructionBuildItem item) { Constructions.Add(item); }
         void removed(int idx, ConstructionBuildItem item) { Constructions.Remove(item); }
@@ -153,7 +154,7 @@ namespace KerbalConstructionTime
             {
                 if (!KCTGameStates.EditorShipEditingMode)
                     KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
-                RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
+                KerbalConstructionTime.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, RP0.Harmony.PatchEngineersReport.UpdateCraftStats));
             }
 
             LaunchComplexes[LC_index].SwitchLaunchPad();
@@ -186,6 +187,23 @@ namespace KerbalConstructionTime
             } while (!lc.IsOperational || (padOnly && lc.LCType != LaunchComplexType.Pad));
 
             return startIndex;
+        }
+
+        public bool SwitchToLaunchComplex(System.Guid lcid, bool skipDisabled = true)
+        {
+            for (int i = 0; i < LaunchComplexes.Count; ++i)
+            {
+                if (!LaunchComplexes[i].IsOperational && skipDisabled)
+                    continue;
+
+                if (LaunchComplexes[i].ID == lcid)
+                {
+                    SwitchLaunchComplex(i);
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         public void Save(ConfigNode node)

@@ -16,8 +16,8 @@ namespace RP0.ProceduralAvionics
         private const string KwFormat = "{0:0.##}";
         private const string WFormat = "{0:0}";
         private const float FloatTolerance = 1.00001f;
-        private const float InternalTanksTotalVolumeUtilization = 0.246f; //Max utilization for 2 spheres within a cylindrical container worst case scenario
-        private const float InternalTanksAvailableVolumeUtilization = 0.5f;
+        internal const float InternalTanksTotalVolumeUtilization = 0.246f; //Max utilization for 2 spheres within a cylindrical container worst case scenario
+        internal const float InternalTanksAvailableVolumeUtilization = 0.5f;
 
         #region Fields and properties
 
@@ -48,7 +48,10 @@ namespace RP0.ProceduralAvionics
         [NonSerialized]
         public bool showGUI;
 
-        public bool IsScienceCore => CurrentProceduralAvionicsTechNode.IsScienceCore;
+        [KSPField]
+        public string info1Text = string.Empty;
+        [KSPField]
+        public string info3Text = string.Empty;
 
         private static bool _configsLoaded = false;
 
@@ -58,15 +61,15 @@ namespace RP0.ProceduralAvionics
         private PartModule _procPartPM;
         private PartModule _roTankPM;
         private ModuleFuelTanks _rfPM;
-        private Dictionary<string, FuelTank> _tanksDict = null;
-        private FuelTank _ecTank;
         private MethodInfo _seekVolumeMethod;
         private FieldInfo _procPartMinVolumeField;
         private PropertyInfo _procPartCurShapeProp;
         private PropertyInfo _procPartVolumeProp;
         private PropertyInfo _roTankVolumeProp;
 
-        public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig { get; private set; }
+        private ProceduralAvionicsWindow _window;
+
+        public ProceduralAvionicsConfig CurrentProceduralAvionicsConfig { get; internal set; }
 
         public ProceduralAvionicsTechNode CurrentProceduralAvionicsTechNode
         {
@@ -80,6 +83,8 @@ namespace RP0.ProceduralAvionics
             }
         }
 
+        public bool IsScienceCore => CurrentProceduralAvionicsTechNode.IsScienceCore;
+
         public float Utilization => GetAvionicsMass() / MaxAvionicsMass;
 
         private float MaxAvionicsMass => (_cachedVolume - CurrentProceduralAvionicsTechNode.reservedRFTankVolume) * 
@@ -87,19 +92,21 @@ namespace RP0.ProceduralAvionics
 
         public float InternalTanksVolume { get; private set; }
 
+        public bool CanSeekVolume => _seekVolumeMethod != null && _seekVolumeMethod.GetParameters().Length == 2;
+
         #endregion
 
         #region Get Utilities
         protected override float GetInternalMassLimit() => !IsScienceCore ? controllableMass : 0;
 
-        private bool ClampControllableMass()
+        internal bool ClampControllableMass()
         {
             var maxControllableMass = GetMaximumControllableMass();
             if (controllableMass > maxControllableMass * FloatTolerance)
             {
                 Log($"Resetting procedural mass limit to {maxControllableMass}, was {controllableMass}");
                 controllableMass = maxControllableMass;
-                _sControllableMass = $"{controllableMass:0.###}";
+                UpdateControllableMassInWindow();
                 MonoUtilities.RefreshContextWindows(part);
                 return true;
             }
@@ -120,9 +127,9 @@ namespace RP0.ProceduralAvionics
         private static float GetAvionicsMass(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.massExponent, techNode.massConstant, techNode.massFactor) / 1000f;
         private float GetAvionicsCost() => GetAvionicsCost(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode);
         private static float GetAvionicsCost(float massLimit, ProceduralAvionicsTechNode techNode) => GetPolynomial(massLimit, techNode.costExponent, techNode.costConstant, techNode.costFactor);
-        private float GetAvionicsVolume() => GetAvionicsMass() / CurrentProceduralAvionicsTechNode.avionicsDensity;
+        internal float GetAvionicsVolume() => GetAvionicsMass() / CurrentProceduralAvionicsTechNode.avionicsDensity;
         private float GetShieldedAvionicsMass() => GetShieldedAvionicsMass(GetInternalMassLimit());
-        private float GetShieldedAvionicsMass(float controllableMass)
+        internal float GetShieldedAvionicsMass(float controllableMass)
         {
             var avionicsMass = GetAvionicsMass(controllableMass);
             return avionicsMass + GetShieldingMass(avionicsMass);
@@ -233,10 +240,6 @@ namespace RP0.ProceduralAvionics
             }
 
             _rfPM = part.Modules.GetModule<ModuleFuelTanks>();
-            FieldInfo fiDict = typeof(ModuleFuelTanks).GetField("tanksDict", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            _tanksDict = (Dictionary<string, FuelTank>)fiDict.GetValue(_rfPM);
-            _ecTank = _tanksDict["ElectricCharge"];
-
             _seekVolumeMethod = GetSeekVolumeMethod();
         }
 
@@ -294,12 +297,8 @@ namespace RP0.ProceduralAvionics
 
             Fields[nameof(controllableMass)].uiControlEditor.onFieldChanged = ControllableMassChanged;
             Fields[nameof(avionicsConfigName)].uiControlEditor.onFieldChanged = AvionicsConfigChanged;
+            Fields[nameof(showGUI)].uiControlEditor.onFieldChanged = ShowGUIChanged;
             Fields[nameof(massLimit)].guiActiveEditor = false;
-
-            var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
-            _showInfo1 = settings.AvionicsWindow_ShowInfo1;
-            _showInfo2 = settings.AvionicsWindow_ShowInfo2;
-            _showInfo3 = settings.AvionicsWindow_ShowInfo3;
         }
 
         #endregion
@@ -338,7 +337,7 @@ namespace RP0.ProceduralAvionics
             return Math.Max(Math.Floor(log - 1.3), -2);
         }
 
-        private void UpdateControllableMassSlider()
+        internal void UpdateControllableMassSlider()
         {
             Fields[nameof(controllableMass)].guiActiveEditor = !IsScienceCore;
             UI_FloatEdit controllableMassEdit = Fields[nameof(controllableMass)].uiControlEditor as UI_FloatEdit;
@@ -383,7 +382,7 @@ namespace RP0.ProceduralAvionics
             }
 
             massLimit = controllableMass;
-            _sControllableMass = $"{controllableMass:0.###}";
+            UpdateControllableMassInWindow();
             SendRemainingVolume();
             RefreshDisplays();
             Profiler.EndSample();
@@ -395,7 +394,21 @@ namespace RP0.ProceduralAvionics
             AvionicsConfigChanged();
         }
 
-        private void AvionicsConfigChanged()
+        internal void ShowGUIChanged(BaseField f, object obj)
+        {
+            if (showGUI && _window == null)
+            {
+                _window = gameObject.AddComponent<ProceduralAvionicsWindow>();
+                _window.ShowForModule(this);
+            }
+            else if (!showGUI && _window != null)
+            {
+                Destroy(_window);
+                _window = null;
+            }
+        }
+
+        internal void AvionicsConfigChanged()
         {
             Profiler.BeginSample("RP0ProcAvi AvionicsConfigChanged");
             CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
@@ -414,7 +427,7 @@ namespace RP0.ProceduralAvionics
             RefreshDisplays();
             if (HighLogic.LoadedSceneIsEditor)
             {
-                _sControllableMass = $"{controllableMass:0.###}";
+                UpdateControllableMassInWindow();
                 if (_started)
                     GameEvents.onEditorShipModified.Fire(EditorLogic.fetch.ship);
             }
@@ -424,7 +437,7 @@ namespace RP0.ProceduralAvionics
         [KSPEvent]
         public void OnResourceInitialChanged(BaseEventDetails eventData)
         {
-            if (_ecTank is FuelTank && eventData.Get<PartResource>("resource")?.part == _rfPM.part)
+            if (_rfPM?.part != null && eventData.Get<PartResource>("resource")?.part == _rfPM.part)
                 RefreshDisplays();
         }
 
@@ -448,20 +461,10 @@ namespace RP0.ProceduralAvionics
         {
             if (!HighLogic.LoadedSceneIsEditor || !_started) return;
 
-            // RF will regenerate all the FuelTank instances if Tank Definition is changed.
-            // Thus need to refetch EC tank.
-            _ecTank = _tanksDict["ElectricCharge"];
+            _window?.OnTankDefinitionChanged();
         }
 
-        private void UpdateMassLimitsAndVolume()
-        {
-            if (ClampControllableMass())
-                SetProcPartVolumeLimit();
-            UpdateControllableMassSlider();
-            SendRemainingVolume();
-        }
-
-        private void SendRemainingVolume()
+        internal void SendRemainingVolume()
         {
             Profiler.BeginSample("RP0ProcAvi SendRemainingVolume");
             if (_started && _cachedVolume < float.MaxValue)
@@ -477,8 +480,6 @@ namespace RP0.ProceduralAvionics
             Profiler.EndSample();
         }
 
-        private float GetAvailableVolume() => Math.Max(Math.Min((_cachedVolume - GetAvionicsVolume()) * InternalTanksAvailableVolumeUtilization, _cachedVolume * InternalTanksTotalVolumeUtilization), 0);
-
         public void SendVolumeChangedEvent(double newVolume)
         {
             var data = new BaseEventDetails(BaseEventDetails.Sender.USER);
@@ -489,7 +490,23 @@ namespace RP0.ProceduralAvionics
 
         #endregion
 
-        private bool SetProcPartVolumeLimit()
+        private void UpdateMassLimitsAndVolume()
+        {
+            if (ClampControllableMass())
+                SetProcPartVolumeLimit();
+            UpdateControllableMassSlider();
+            SendRemainingVolume();
+        }
+
+        private void UpdateControllableMassInWindow()
+        {
+            if (_window != null)
+                _window.ControllableMass = $"{controllableMass:0.###}";
+        }
+
+        internal float GetAvailableVolume() => Math.Max(Math.Min((_cachedVolume - GetAvionicsVolume()) * InternalTanksAvailableVolumeUtilization, _cachedVolume * InternalTanksTotalVolumeUtilization), 0);
+
+        internal bool SetProcPartVolumeLimit()
         {
             if (_procPartPM != null && _procPartMinVolumeField != null && _procPartCurShapeProp != null)
             {
@@ -521,7 +538,7 @@ namespace RP0.ProceduralAvionics
             return false;
         }
 
-        private void SeekVolume(float targetVolume)
+        internal void SeekVolume(float targetVolume)
         {
             Profiler.BeginSample("RP0ProcAvi SeekVolume");
             if (_seekVolumeMethod != null)
@@ -566,15 +583,14 @@ namespace RP0.ProceduralAvionics
             Dictionary<string, double> availableResources, List<KeyValuePair<string, double>> resourceChangeRequest,
             double elapsed_s) => ModuleAvionics.BackgroundUpdate(v, part_snapshot, module_snapshot, proto_part_module, proto_part, availableResources, resourceChangeRequest, elapsed_s);
 
-        private void RefreshDisplays()
+        internal void RefreshDisplays()
         {
             RefreshPowerDisplay();
             massDisplay = MathUtils.FormatMass(CurrentProceduralAvionicsTechNode.avionicsDensity > 0 ? GetShieldedAvionicsMass() : 0);
             costDisplay = $"{Mathf.Round(CurrentProceduralAvionicsTechNode.avionicsDensity > 0 ? GetAvionicsCost() : 0)}";
             utilizationDisplay = $"{Utilization * 100:0.#}%";
             Log($"RefreshDisplays() Controllable mass: {controllableMass}, mass: {massDisplay} cost: {costDisplay}, Utilization: {utilizationDisplay}");
-            if (_ecTank != null) _sECAmount = $"{_ecTank.maxAmount:F0}";
-            if (_rfPM != null) _sExtraVolume = $"{_rfPM.AvailableVolume:0.#}";
+            _window?.RefreshDisplays();
         }
 
         private void RefreshPowerDisplay()
@@ -641,7 +657,7 @@ namespace RP0.ProceduralAvionics
             return PurchaseConfig(avionicsConfigName, CurrentProceduralAvionicsTechNode);
         }
 
-        private static bool PurchaseConfig(string curCfgName, ProceduralAvionicsTechNode techNode)
+        internal static bool PurchaseConfig(string curCfgName, ProceduralAvionicsTechNode techNode)
         {
             bool success = false;
             if (!HighLogic.CurrentGame.Parameters.Difficulty.BypassEntryPurchaseAfterResearch)
@@ -655,6 +671,19 @@ namespace RP0.ProceduralAvionics
             }
 
             return success;
+        }
+
+        internal static float GetStatsForTechNode(ProceduralAvionicsTechNode techNode, float controllableMass, out float massKG, out float cost, out float powerWatts)
+        {
+            if (techNode.IsScienceCore)
+                controllableMass = 0f;
+            else if (controllableMass <= 0)
+                controllableMass = techNode.interplanetary ? 0.5f : 100f;
+
+            massKG = GetAvionicsMass(techNode, controllableMass) * 1000;
+            cost = GetAvionicsCost(controllableMass, techNode);
+            powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;
+            return controllableMass;
         }
     }
 }

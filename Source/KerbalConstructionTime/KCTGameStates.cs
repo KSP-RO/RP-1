@@ -16,7 +16,7 @@ namespace KerbalConstructionTime
         private static readonly List<KSCItem> _EmptyKSCs = new List<KSCItem>();
         public static List<KSCItem> KSCs => KerbalConstructionTimeData.Instance?.KSCs ?? _EmptyKSCs;
         
-        public const int VERSION = 3;
+        public const int VERSION = 4;
 
         public static ToolbarControl ToolbarControl;
 
@@ -85,6 +85,10 @@ namespace KerbalConstructionTime
                 TechItem tech = KerbalConstructionTimeData.Instance.TechList[i];
                 tech.UpdateBuildRate(i);
             }
+
+            RP0.Crew.CrewHandler.Instance?.RecalculateBuildRates();
+
+            KCTEvents.OnRecalculateBuildRates.Fire();
         }
 
         public static double GetEffectiveIntegrationEngineersForSalary(KSCItem ksc)

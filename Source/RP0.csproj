@@ -64,6 +64,7 @@
     <Compile Include="DataTypes\PersistentCompressedConfigNode.cs" />
     <Compile Include="DataTypes\PersistentSortedList.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
+    <Compile Include="DTUtils.cs" />
     <Compile Include="Harmony\MainMenu.cs" />
     <Compile Include="Harmony\CrewListItem.cs" />
     <Compile Include="Harmony\EditorDriver.cs" />
@@ -159,7 +160,6 @@
     <Compile Include="ModuleUnpressurizedCockpit.cs" />
     <Compile Include="Avionics\ProceduralAvionicsConfig.cs" />
     <Compile Include="Avionics\ControlLocker.cs" />
-    <Compile Include="Avionics\ModuleAvionicsModifier.cs" />
     <Compile Include="Avionics\ModuleProceduralAvionics.cs" />
     <Compile Include="ModuleRangeSafety.cs" />
     <Compile Include="Avionics\ModuleAvionics.cs" />
@@ -327,9 +327,6 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ToolbarControl">
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="MagiCore">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine">

@@ -40,7 +40,7 @@ namespace RP0InstallChecker
             }
 
             assembliesToCheck = new[] { "ToolbarController", "ClickThroughBlocker", "RealFuels", "ContractConfigurator", "ModularFlightIntegrator" };    // These are values of KSPAssembly attribute
-            if (!AssemblyLoader.loadedAssemblies.Any(a => a.assembly.GetName().Name.Equals("magicore", StringComparison.OrdinalIgnoreCase)) || assembliesToCheck.Any(an => !AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals(an, StringComparison.OrdinalIgnoreCase))))
+            if (assembliesToCheck.Any(an => !AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals(an, StringComparison.OrdinalIgnoreCase))))
             {
                 string titleText = "Incorrect RP-1 Installation";
                 string contentText = "You are missing dependencies for RP-1. This could be caused by manually installing RP-1." +

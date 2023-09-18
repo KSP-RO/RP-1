@@ -184,12 +184,13 @@ namespace RP0.Harmony
                     UnityEngine.Debug.LogWarning($"[RP-0]: Warning: Program {p.name} does not have its strategy activated. Doing so now.");
                     if (s is ProgramStrategy ps)
                     {
-                        ps.PerformActivate(false, false);
+                        ps.PerformActivate(false);
                         ps.dateActivated = p.acceptedUT; // overwrite with correct activation UT
                     }
-                    
                 }
             }
+
+            ProgramHandler.Instance.OnLoadStrategiesComplete();
 
             KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
         }

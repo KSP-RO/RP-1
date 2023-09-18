@@ -117,7 +117,7 @@ namespace RP0
             if (!CanBeActivated(out _))
                 return false;
 
-            PerformActivate(true, true);
+            PerformActivate(true);
 
             
 
@@ -127,7 +127,7 @@ namespace RP0
         /// <summary>
         /// Teh
         /// </summary>
-        public void PerformActivate(bool useCurrency, bool recalcRates)
+        public void PerformActivate(bool useCurrency)
         {
             isActive = true;
             Register();
@@ -145,16 +145,14 @@ namespace RP0
             if (useCurrency)
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
-            if (recalcRates)
+            if (!(this is Programs.ProgramStrategy))
             {
                 KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
-                Programs.ProgramHandler.Instance.ClampFunding();
                 MaintenanceHandler.Instance?.UpdateUpkeep();
-            }
-
-            if(!(this is Programs.ProgramStrategy))
+                Programs.ProgramHandler.Instance.OnLeaderChange();
                 // FIXME add setup cost if we add setup costs to leaders
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
+            }
         }
 
         /// <summary>
@@ -184,11 +182,13 @@ namespace RP0
 
             Unregister();
 
-            KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
-            Programs.ProgramHandler.Instance.ClampFunding();
-            
             if (!(this is Programs.ProgramStrategy))
+            {
+                KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
+                MaintenanceHandler.Instance?.UpdateUpkeep();
+                Programs.ProgramHandler.Instance.OnLeaderChange();
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, false, deactivateRep);
+            }
 
             return true;
         }

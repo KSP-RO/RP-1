@@ -11,6 +11,8 @@ namespace KerbalConstructionTime
         public const int MinEngineersConst = 1;
         public const int EngineersPerPacket = 10;
 
+        public double accumEffic = 0d; // for UI use
+
         [Persistent(name = "LCName")]
         public string Name;
         [Persistent(name = "id")]

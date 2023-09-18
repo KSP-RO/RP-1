@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace KerbalConstructionTime
 {
-    public class LCEfficiency : IConfigNode
+    public class LCEfficiency : ConfigNodePersistenceBase, IConfigNode
     {
         [Persistent]
         protected double _efficiency = 0.5d;
@@ -45,16 +45,6 @@ namespace KerbalConstructionTime
             _lcs.Removed += removed;
 
             _lcs.Add(lc);
-        }
-
-        public void Load(ConfigNode node)
-        {
-            ConfigNode.LoadObjectFromConfig(this, node);
-        }
-
-        public void Save(ConfigNode node)
-        {
-            ConfigNode.CreateConfigFromObject(this, node);
         }
 
         protected void Relink()
@@ -153,9 +143,95 @@ namespace KerbalConstructionTime
             if (_efficiency == _MaxEfficiency)
                 return;
 
-            double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((Efficiency - _MinEfficiency) / _EfficiencyRange));
-            double delta = _EfficiencyGainMult * eval * timestep * portionEngineers / (365.25d * 86400d);
+            double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((_efficiency - _MinEfficiency) / _EfficiencyRange));
+            double delta = _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
             IncreaseEfficiency(delta, true);
+        }
+
+
+        private const int defaultSteps = 100;
+        private const double minTimeStep = 86400d;
+
+        /// <summary>
+        /// Note: This will underestimate efficiency because it does not take shared efficiency gain into account.
+        /// </summary>
+        /// <param name="tdelta"></param>
+        /// <param name="portionEngineers"></param>
+        /// <param name="newEff"></param>
+        /// <param name="startingEfficiency"></param>
+        /// <returns></returns>
+        public double PredictWeightedEfficiency(double tdelta, double portionEngineers, out double newEff, double startingEfficiency = -1d)
+        {
+            if (startingEfficiency < 0d)
+                startingEfficiency = _efficiency;
+
+            newEff = startingEfficiency;
+
+            if (tdelta < 86400d || startingEfficiency >= _MaxEfficiency)
+                return tdelta;
+
+            int steps = defaultSteps;
+            double timestep = tdelta / defaultSteps;
+            double weightedEff = 0d;
+            double remainingTime = tdelta;
+            if (timestep < minTimeStep)
+            {
+                steps = (int)Math.Ceiling(tdelta / minTimeStep);
+                timestep = tdelta / steps;
+            }
+            for (int i = steps; i-- > 0;)
+            {
+                remainingTime -= timestep;
+                weightedEff += newEff * timestep;
+                double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
+                newEff += _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
+                if (newEff >= _MaxEfficiency)
+                {
+                    newEff = _MaxEfficiency;
+                    break;
+                }
+            }
+            if (remainingTime > 0d)
+                weightedEff += newEff * remainingTime;
+
+            weightedEff /= tdelta;
+            return weightedEff;
+        }
+
+        /// <summary>
+        /// Note: This will underestimate efficiency because it does not take shared efficiency gain into account.
+        /// </summary>
+        /// <param name="tdelta"></param>
+        /// <param name="portionEngineers"></param>
+        /// <param name="startingEfficiency"></param>
+        /// <returns></returns>
+        public double PredictEfficiency(double tdelta, double portionEngineers, double startingEfficiency = -1d)
+        {
+            if (startingEfficiency < 0d)
+                startingEfficiency = _efficiency;
+
+            if (tdelta < 86400d || startingEfficiency >= _MaxEfficiency)
+                return startingEfficiency;
+
+            double newEff = startingEfficiency;
+            int steps = defaultSteps;
+            double timestep = tdelta / defaultSteps;
+            if (timestep < minTimeStep)
+            {
+                steps = (int)Math.Ceiling(tdelta / minTimeStep);
+                timestep = tdelta / steps;
+            }
+            for (int i = steps; i-- > 0;)
+            {
+                double eval = PresetManager.Instance.ActivePreset.GeneralSettings.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
+                newEff += _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
+                if (newEff >= _MaxEfficiency)
+                {
+                    return _MaxEfficiency;
+                }
+            }
+
+            return newEff;
         }
 
         public bool Contains(Guid id) => _lcIDs.Contains(id);

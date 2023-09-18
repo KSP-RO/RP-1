@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UniLinq;
+using RP0;
 
 namespace KerbalConstructionTime
 {
@@ -208,7 +209,7 @@ namespace KerbalConstructionTime
                 double buildRate = Utilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, delta)
                     * efficiency * stratMult;
                 double bpLeft = b.buildPoints + b.integrationPoints - b.progress;
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
+                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -236,7 +237,7 @@ namespace KerbalConstructionTime
 
                     double buildRate = lcp.GetBuildRate(delta);
                     double bpLeft = (lcp.IsReversed ? 0 : lcp.BP) - lcp.progress;
-                    GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
+                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
                 }
                 else
                 {
@@ -309,7 +310,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"Current Research: {t.techName}");
                 double techRate = Formula.GetResearchRate(t.scienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
                 double timeLeft = (t.scienceCost - t.progress) / techRate;
-                GUILayout.Label(Utilities.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
+                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }
             else
             {

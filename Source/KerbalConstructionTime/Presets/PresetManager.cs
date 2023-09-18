@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
-using UniLinq;
-using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class PresetManager
     {
@@ -19,7 +17,7 @@ namespace KerbalConstructionTime
                 if (value == null)
                     return;
 
-                RP0.LocalizationHandler.UpdateLocalizedText();
+                LocalizationHandler.UpdateLocalizedText();
             }
         }
         private KCT_Preset _activePreset;

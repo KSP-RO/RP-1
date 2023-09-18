@@ -1,7 +1,5 @@
-﻿using KSP.UI;
-using KSP.UI.TooltipTypes;
+﻿using KSP.UI.TooltipTypes;
 using System;
-using UnityEngine.EventSystems;
 
 namespace RP0.UI
 {

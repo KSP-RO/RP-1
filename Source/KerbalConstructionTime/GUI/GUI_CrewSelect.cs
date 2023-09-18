@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {
@@ -74,7 +73,7 @@ namespace KerbalConstructionTime
 
             _possibleCrewForParts.Clear();
             foreach (ProtoCrewMember pcm in _availableCrew)
-                if (RP0.Crew.CrewHandler.CanCrewLaunchOnVessel(pcm, _parts))
+                if (Crew.CrewHandler.CanCrewLaunchOnVessel(pcm, _parts))
                     _possibleCrewForParts.Add(pcm);
 
             bool foundAssignableCrew = false;
@@ -96,7 +95,7 @@ namespace KerbalConstructionTime
                 
                 _possibleCrewForPart.Clear();
                 foreach (ProtoCrewMember pcm in _possibleCrewForParts)
-                    if (RP0.Crew.CrewHandler.CheckCrewForPart(pcm, p.partInfo.name, false, true))
+                    if (Crew.CrewHandler.CheckCrewForPart(pcm, p.partInfo.name, false, true))
                         _possibleCrewForPart.Add(pcm);
                 
 
@@ -250,7 +249,7 @@ namespace KerbalConstructionTime
             bool anyFound = false;
             _possibleCrewForParts.Clear();
             foreach (ProtoCrewMember pcm in _availableCrew)
-                if (RP0.Crew.CrewHandler.CanCrewLaunchOnVessel(pcm, _parts))
+                if (Crew.CrewHandler.CanCrewLaunchOnVessel(pcm, _parts))
                     _possibleCrewForParts.Add(pcm);
 
             for (int j = 0; j < _parts.Count; j++)
@@ -260,7 +259,7 @@ namespace KerbalConstructionTime
                 {
                     _possibleCrewForPart.Clear();
                     foreach (ProtoCrewMember pcm in _possibleCrewForParts)
-                        if (RP0.Crew.CrewHandler.CheckCrewForPart(pcm, p.partInfo.name, false, true))
+                        if (Crew.CrewHandler.CheckCrewForPart(pcm, p.partInfo.name, false, true))
                             _possibleCrewForPart.Add(pcm);
 
                     for (int i = 0; i < p.CrewCapacity; i++)
@@ -576,7 +575,7 @@ namespace KerbalConstructionTime
 
         private static void ShowUntrainedTip()
         {
-            RP0.GameplayTips.Instance.ShowUntrainedTip(_parts);
+            GameplayTips.Instance.ShowUntrainedTip(_parts);
         }
 
 

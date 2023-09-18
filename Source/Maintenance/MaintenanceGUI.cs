@@ -83,7 +83,7 @@ namespace RP0
 
         public void RenderSummaryTab()
         {
-            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance == null)
+            if (KerbalConstructionTimeData.Instance == null)
                 return;
 
             double totalCost = 0d;
@@ -185,8 +185,8 @@ namespace RP0
             double rolloutCost = 0d;
             try
             {
-                rolloutCost = KerbalConstructionTime.KCTGameStates.GetRolloutCostOverTime(PeriodFactor * 86400d)
-                    + KerbalConstructionTime.KCTGameStates.GetAirlaunchCostOverTime(PeriodFactor * 86400d);
+                rolloutCost = KCTGameStates.GetRolloutCostOverTime(PeriodFactor * 86400d)
+                    + KCTGameStates.GetAirlaunchCostOverTime(PeriodFactor * 86400d);
                 GUILayout.Label("Rollout/Airlaunch Prep", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label(FormatCost(rolloutCost), RightLabel, GUILayout.Width(160));
             }
@@ -197,7 +197,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            double constrMaterials = KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d);
+            double constrMaterials = KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d);
             GUILayout.Label("Constructions", HighLogic.Skin.label, GUILayout.Width(160));
             GUILayout.Label(FormatCost(constrMaterials), RightLabel, GUILayout.Width(160));
             if (GUILayout.Button(_infoBtnContent, InfoButton))
@@ -227,9 +227,9 @@ namespace RP0
             GUILayout.Label("Unlock Credit", HighLogic.Skin.label, GUILayout.Width(160));
             double unlockCredit = 0d;
             double accumTime = 0d;
-            for (int i = 0; i < KerbalConstructionTime.KerbalConstructionTimeData.Instance.TechList.Count && accumTime < utDelta; ++i)
+            for (int i = 0; i < KerbalConstructionTimeData.Instance.TechList.Count && accumTime < utDelta; ++i)
             {
-                var tech = KerbalConstructionTime.KerbalConstructionTimeData.Instance.TechList[i];
+                var tech = KerbalConstructionTimeData.Instance.TechList[i];
                 double buildTime = tech.BuildRate > 0d ? tech.TimeLeft : tech.GetTimeLeftEst(accumTime);
                 double timeLeft = utDelta - accumTime;
                 if (buildTime > timeLeft)
@@ -289,24 +289,24 @@ namespace RP0
                     {
                         UIHolder.Instance.ShowWindow();
                         InputLockManager.RemoveControlLock("warptofunds");
-                        KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                        KerbalConstructionTimeData.Instance.fundTarget.Clear();
                     })), false, HighLogic.UISkin);
                     return;
                 }
 
-                KerbalConstructionTime.FundTarget target = new KerbalConstructionTime.FundTarget(fundTarget);
+                RP0.FundTarget target = new RP0.FundTarget(fundTarget);
                 double time = target.GetTimeLeft();
                 if (time < 0d)
                 {
                     PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
-                        $"Failed to find a time to warp to, with a limit of {KSPUtil.PrintDateDeltaCompact(KerbalConstructionTime.FundTarget.MaxTime, false, false)}",
+                        $"Failed to find a time to warp to, with a limit of {KSPUtil.PrintDateDeltaCompact(FundTarget.MaxTime, false, false)}",
                         "Error",
                         HighLogic.UISkin,
                         300,
                         new DialogGUIButton("Understood", () => {
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
-                            KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                            KerbalConstructionTimeData.Instance.fundTarget.Clear();
                         })), false, HighLogic.UISkin);
                 }
                 else
@@ -314,21 +314,21 @@ namespace RP0
                     var options = new DialogGUIBase[] {
                         new DialogGUIButton("Yes, Warp", () => 
                         {
-                            KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget.Clear();
-                            KerbalConstructionTime.KCTWarpController.Create(target);
+                            KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                            KCTWarpController.Create(target);
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         }),
                         new DialogGUIButton("Add Warp Target", () =>
                         {
-                            KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget = target;
+                            KerbalConstructionTimeData.Instance.fundTarget = target;
                             target.SetAutoWarp(false);
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         }),
                         new DialogGUIButton("Cancel", () => 
                         {
-                            KerbalConstructionTime.KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                            KerbalConstructionTimeData.Instance.fundTarget.Clear();
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         })
@@ -341,7 +341,7 @@ namespace RP0
 
         public void RenderFacilitiesTab()
         {
-            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance == null)
+            if (KerbalConstructionTimeData.Instance == null)
                 return;
 
             GUILayout.BeginHorizontal();
@@ -351,7 +351,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             double grandTotal = 0d;
-            foreach (var ksc in KerbalConstructionTime.KCTGameStates.KSCs)
+            foreach (var ksc in KCTGameStates.KSCs)
             {
                 string site = LocalizeSiteName(ksc.KSCName);
                 GUILayout.BeginHorizontal();
@@ -415,7 +415,7 @@ namespace RP0
 
         public void RenderIntegrationTab()
         {
-            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance == null)
+            if (KerbalConstructionTimeData.Instance == null)
                 return;
 
             GUILayout.BeginHorizontal();
@@ -436,7 +436,7 @@ namespace RP0
                 try
                 {
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
-                    double cost = -engineers * KerbalConstructionTime.Database.SettingsSC.salaryEngineers * PeriodFactor / 365.25d;
+                    double cost = -engineers * Database.SettingsSC.salaryEngineers * PeriodFactor / 365.25d;
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, cost);
                     grandTotal += cost;
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
@@ -463,7 +463,7 @@ namespace RP0
 
         public void RenderConstructionTab()
         {
-            if (KerbalConstructionTime.KerbalConstructionTimeData.Instance == null)
+            if (KerbalConstructionTimeData.Instance == null)
                 return;
 
             double totalCost = 0d;
@@ -473,7 +473,7 @@ namespace RP0
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            foreach (var ksc in KerbalConstructionTime.KCTGameStates.KSCs)
+            foreach (var ksc in KCTGameStates.KSCs)
             {
                 string site = LocalizeSiteName(ksc.KSCName);
                 if (ksc.Constructions.Count == 0)
@@ -482,7 +482,7 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    double cost = KerbalConstructionTime.KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc);
+                    double cost = KCTGameStates.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc);
                     totalCost += cost;
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
@@ -499,7 +499,7 @@ namespace RP0
                     GUILayout.BeginHorizontal();
                     try
                     {
-                        KerbalConstructionTime.KCTUtilities.GetConstructionTooltip(c, i, out string tooltip, out _);
+                        KCTUtilities.GetConstructionTooltip(c, i, out string tooltip, out _);
                         GUILayout.Label(new GUIContent($"  {c.GetItemName()}", tooltip), HighLogic.Skin.label, GUILayout.Width(200));
                         GUILayout.Label(FormatCost(c.GetConstructionCostOverTime(PeriodFactor * 86400d)), RightLabel, GUILayout.Width(120));
                     }

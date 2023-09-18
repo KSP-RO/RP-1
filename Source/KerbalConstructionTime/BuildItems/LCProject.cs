@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniLinq;
-using RP0;
 using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public abstract class LCProject : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
     {

@@ -1,21 +1,14 @@
 using HarmonyLib;
-using KerbalConstructionTime;
-using KSP.UI.Screens;
-using KSP.UI.Screens.Editor;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using TMPro;
-using UnityEngine;
-using System.Reflection;
 using System.Reflection.Emit;
 
 namespace RP0
 {
-	/// <summary>
-	/// Prevents EVAs being added to flight log when they happen at homeworld while situation < orbit.
-	/// </summary>
-	[HarmonyPatch(typeof(FlightEVA))]
+    /// <summary>
+    /// Prevents EVAs being added to flight log when they happen at homeworld while situation < orbit.
+    /// </summary>
+    [HarmonyPatch(typeof(FlightEVA))]
 	internal class PatchFlightEVA
 	{
 		[HarmonyTranspiler]

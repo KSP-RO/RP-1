@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using UnityEngine;
 using KSP.UI;
 using RP0.Crew;
 using KSP.Localization;

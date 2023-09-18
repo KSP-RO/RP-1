@@ -3,16 +3,12 @@
 using System;
 using System.Collections.Generic;
 using UniLinq;
-using System.Reflection;
-using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using KSP.UI;
 using KSP.UI.Screens;
 using Strategies;
-using ContractConfigurator;
-using ContractConfigurator.Util;
 using KSP.Localization;
 
 namespace RP0.Programs
@@ -138,7 +134,7 @@ namespace RP0.Programs
             public void OnSpeedSet(UnityEngine.EventSystems.PointerEventData data, UIRadioButton.CallType callType)
             {
                 // Find the speedbutton of this speed
-                var item = AdminExtender.Instance._speedButtons[speed];
+                var item = Instance._speedButtons[speed];
                 item.ResetInteractivity(true);
                 var oldSpeed = programStrategy.Program.ProgramSpeed;
                 programStrategy.Program.SetSpeed(speed); // no-op if same speed
@@ -146,7 +142,7 @@ namespace RP0.Programs
                 // Update the description and the button on change
                 if (oldSpeed != speed)
                 {
-                    AdminExtender.Instance.PressedSpeedButton = true; // so we don't reset program speed when we rebuild UI
+                    Instance.PressedSpeedButton = true; // so we don't reset program speed when we rebuild UI
                     // Rebuild the UI
                     Administration.Instance.SetSelectedStrategy(Administration.Instance.SelectedWrapper);
                 }
@@ -155,7 +151,7 @@ namespace RP0.Programs
             public void OnSpeedUnset(UnityEngine.EventSystems.PointerEventData data, UIRadioButton.CallType callType)
             {
                 // These are radio buttons, so this runs on the buttons that just got inactivated
-                AdminExtender.Instance._speedButtons[speed].ResetInteractivity(false);
+                Instance._speedButtons[speed].ResetInteractivity(false);
             }
         }
 
@@ -194,12 +190,12 @@ namespace RP0.Programs
             var tabAvailable = ACtransforms.First(t => t.name == "Tab Available");
 
             // Now we can spawn the parent (the Tabs transform)
-            GameObject newTabSetObj = GameObject.Instantiate(tabAvailable.parent.gameObject);
+            GameObject newTabSetObj = Instantiate(tabAvailable.parent.gameObject);
 
             // Position it correctly and kill the old tab.
             newTabSetObj.transform.SetParent(oldTabTransform.parent, false);
             newTabSetObj.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-            GameObject.Destroy(oldTabTransform.gameObject);
+            Destroy(oldTabTransform.gameObject);
 
             // Fix the Toggle Controller to always switch to the same list (we *could* try to manage three lists
             // but instead we'll just fix it in Redraw)
@@ -213,7 +209,7 @@ namespace RP0.Programs
             for (int i = 0; i < newTabSetObj.transform.childCount; ++i)
             {
                 Transform child = newTabSetObj.transform.GetChild(i);
-                GameObject.Destroy(child.gameObject.GetComponent<UIList>());
+                Destroy(child.gameObject.GetComponent<UIList>());
                 child.gameObject.GetComponent<Toggle>().onValueChanged.AddListener(OnClickTab);
                 child.gameObject.GetComponent<LayoutElement>().preferredWidth = 180;
                 foreach (var text in child.gameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>())
@@ -259,9 +255,9 @@ namespace RP0.Programs
             {
                 Program.Speed spd = (Program.Speed)i;
 
-                var newButton = GameObject.Instantiate(Administration.Instance.prefabStratListItem, buttonArea.transform, worldPositionStays: false);
+                var newButton = Instantiate(Administration.Instance.prefabStratListItem, buttonArea.transform, worldPositionStays: false);
                 newButton.gameObject.name = "speedButton" + i;
-                GameObject.Destroy(newButton.GetComponent<StrategyListItem>());
+                Destroy(newButton.GetComponent<StrategyListItem>());
 
                 var textRect = newButton.transform.Find("btn").transform.Find("Text").GetComponent<RectTransform>();
                 textRect.offsetMin = new Vector2(2, 2);
@@ -287,12 +283,12 @@ namespace RP0.Programs
                 lE.preferredWidth = width;
             }
             // Add a spacer between the speed buttons and the accept button
-            var newSpacerLE = GameObject.Instantiate(ApplicationLauncher.Instance.CurrentLayout.GetTopRightSpacer(), buttonArea.transform, worldPositionStays: false);
+            var newSpacerLE = Instantiate(ApplicationLauncher.Instance.CurrentLayout.GetTopRightSpacer(), buttonArea.transform, worldPositionStays: false);
             newSpacerLE.preferredWidth = 100;
             newSpacerLE.gameObject.SetActive(true);
 
             // Add a spacer to replace the button (sometimes the accept button isn't shown at all)
-            _btnSpacer = GameObject.Instantiate(ApplicationLauncher.Instance.CurrentLayout.GetTopRightSpacer(), buttonArea.transform, worldPositionStays: false);
+            _btnSpacer = Instantiate(ApplicationLauncher.Instance.CurrentLayout.GetTopRightSpacer(), buttonArea.transform, worldPositionStays: false);
             _btnSpacer.preferredWidth = 48;
             _btnSpacer.gameObject.SetActive(false);
 
@@ -339,8 +335,8 @@ namespace RP0.Programs
         {
             Transform scrollbarOld = transform.FindDeepChild("Scrollbar H");
             Transform bottomArea = transform.FindDeepChild("Panel_bottom").FindDeepChild("ListAndScrollbar");
-            GameObject.Destroy(bottomArea.gameObject.GetComponent<HorizontalLayoutGroup>());
-            RectTransform newScrollbar = GameObject.Instantiate(scrollbarOld.gameObject, bottomArea).GetComponent<RectTransform>();
+            Destroy(bottomArea.gameObject.GetComponent<HorizontalLayoutGroup>());
+            RectTransform newScrollbar = Instantiate(scrollbarOld.gameObject, bottomArea).GetComponent<RectTransform>();
             ScrollRect scroll = bottomArea.FindDeepChild("ScrollRect").GetComponent<ScrollRect>();
             scroll.horizontal = true;
             scroll.horizontalScrollbar = newScrollbar.GetComponent<Scrollbar>();
@@ -378,7 +374,7 @@ namespace RP0.Programs
         {
             if (Instance != null)
             {
-                GameObject.Destroy(Instance);
+                Destroy(Instance);
             }
             Instance = this;
         }

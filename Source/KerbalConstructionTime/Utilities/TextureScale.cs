@@ -6,7 +6,7 @@ using UnityEngine;
 // http://wiki.unity3d.com/index.php/TextureScale
 //and is covered by the:  Creative Commons Attribution Share Alike license
 //
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class TextureScale
     {

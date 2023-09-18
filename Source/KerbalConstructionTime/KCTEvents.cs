@@ -1,10 +1,7 @@
-using KSP.UI.Screens;
-using System;
 using System.Collections.Generic;
-using UniLinq;
 using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class KCTEvents
     {
@@ -153,14 +150,14 @@ namespace KerbalConstructionTime
         {
             EnterSCSubscene();
             HideAllGUIs();
-            RP0.UIHolder.Instance.HideIfShowing();
+            UIHolder.Instance.HideIfShowing();
         }
 
         private void ExitSCSubsceneAndShow()
         {
             ExitSCSubscene();
             RestoreAllGUIs();
-            RP0.UIHolder.Instance.ShowIfWasHidden();
+            UIHolder.Instance.ShowIfWasHidden();
         }
 
 

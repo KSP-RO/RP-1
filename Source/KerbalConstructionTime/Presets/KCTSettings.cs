@@ -1,7 +1,6 @@
 ﻿using System.IO;
-using UniLinq;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class KCTSettings
     {

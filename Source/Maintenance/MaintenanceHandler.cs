@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using UniLinq;
-using KerbalConstructionTime;
 using RP0.Crew;
 using RP0.Programs;
 using UnityEngine;
 using UnityEngine.Profiling;
 using Upgradeables;
-using System.Collections;
 
 namespace RP0
 {
@@ -263,7 +261,7 @@ namespace RP0
         public void GetNautCost(ProtoCrewMember k, out double baseCostPerDay, out double flightCostPerDay)
         {
             flightCostPerDay = 0d;
-            baseCostPerDay = Database.SettingsSC.nautYearlyUpkeepPerFacLevel[KerbalConstructionTime.KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
+            baseCostPerDay = Database.SettingsSC.nautYearlyUpkeepPerFacLevel[KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             if (k.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
             {
                 flightCostPerDay = Database.SettingsSC.nautInFlightDailyRate;
@@ -373,11 +371,11 @@ namespace RP0
                 if (!_facilityLevelCosts.TryGetValue(facility, out float[] facCosts))
                     continue;
 
-                double cost = ComputeDailyMaintenanceCost(SumCosts(facCosts, KerbalConstructionTime.KCTUtilities.GetFacilityLevel(facility)));
+                double cost = ComputeDailyMaintenanceCost(SumCosts(facCosts, KCTUtilities.GetFacilityLevel(facility)));
                 double ratio = GetFacilityUpgradeRatio(facility);
                 if (ratio > 0d)
                 {
-                    double newCost = ComputeDailyMaintenanceCost(SumCosts(facCosts, 1 + KerbalConstructionTime.KCTUtilities.GetFacilityLevel(facility)));
+                    double newCost = ComputeDailyMaintenanceCost(SumCosts(facCosts, 1 + KCTUtilities.GetFacilityLevel(facility)));
                     cost = UtilMath.LerpUnclamped(cost, newCost, ratio);
                 }
                 FacilityMaintenanceCosts[facility] = cost;
@@ -399,7 +397,7 @@ namespace RP0
                         double trainingTypeCost = GetTrainingCostFromBools();
                         Database.SettingsSC.ResetBools();
                         TrainingUpkeepPerDay += course.Students.Count *
-                            (Database.SettingsSC.nautTrainingCostPerFacLevel[KerbalConstructionTime.KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)]
+                            (Database.SettingsSC.nautTrainingCostPerFacLevel[KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)]
                             + trainingTypeCost * Database.SettingsSC.nautTrainingTypeCostMult);
                     }
                     TrainingUpkeepPerDay /= 365.25d;
@@ -559,7 +557,7 @@ namespace RP0
             }
 
             // Finally, update all builds
-            KerbalConstructionTime.KerbalConstructionTime.Instance.ProgressBuildTime(UTDiff);
+            KerbalConstructionTime.Instance.ProgressBuildTime(UTDiff);
         }
 
         public void OnDestroy()

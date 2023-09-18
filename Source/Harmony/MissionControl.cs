@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using System;
 using KSP.UI.Screens;
 using System.Collections.Generic;
 using KSP.Localization;

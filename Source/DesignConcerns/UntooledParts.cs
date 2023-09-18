@@ -1,5 +1,4 @@
 ﻿using PreFlightTests;
-using System;
 using KSP.Localization;
 
 namespace RP0.DesignConcerns

@@ -1,7 +1,7 @@
 ﻿using System;
 using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class AirlaunchParams : ConfigNodePersistenceBase, IConfigNode
     {

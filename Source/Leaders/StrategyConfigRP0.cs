@@ -162,7 +162,7 @@ namespace RP0
 
             // we are skipping the case where the strategy or its tag is active, but 
             // groupTags will take care of that.
-            double lastActive = System.Math.Max(nameDeactivate, tagDeactivate);
+            double lastActive = Math.Max(nameDeactivate, tagDeactivate);
             if (lastActive > 0d)
             {
                 if (reactivateCooldown == 0d || lastActive + reactivateCooldown > Planetarium.GetUniversalTime())

@@ -1,6 +1,4 @@
-﻿using UnityEngine;
-
-namespace RP0
+﻿namespace RP0
 {
     public class ModuleUnpressurizedCockpit : PartModule
     {

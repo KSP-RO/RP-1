@@ -36,7 +36,7 @@ namespace RP0.Programs
 
             var rawImage = buttonTransform.Find("RawImage");
             if (rawImage != null)
-                GameObject.Destroy(rawImage.gameObject);
+                Destroy(rawImage.gameObject);
         }
 
         public void Initialize(string title, Program.Speed speed)

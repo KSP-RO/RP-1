@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UniLinq;
 using Upgradeables;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public enum LaunchPadState
     {

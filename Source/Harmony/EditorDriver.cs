@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
 
 namespace RP0.Harmony
 {

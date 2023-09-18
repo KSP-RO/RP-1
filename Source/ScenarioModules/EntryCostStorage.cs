@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using UnityEngine;
-using KSP;
 
 namespace RP0
 {
@@ -33,7 +30,7 @@ namespace RP0
 
                 run = false;
 
-                GameObject.Destroy(this);
+                Destroy(this);
             }
         }
     }

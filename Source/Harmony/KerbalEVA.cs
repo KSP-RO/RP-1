@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using UnityEngine;
 using KSP.Localization;
-using static RP0.KSPUtils;
 
 namespace RP0.Harmony
 {

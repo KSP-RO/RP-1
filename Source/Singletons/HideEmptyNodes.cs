@@ -97,7 +97,7 @@ namespace RP0
             {
                 if (deleteNodes.Contains(tree.controller.nodes[i]))
                 {
-                    GameObject.Destroy(tree.controller.nodes[i]);
+                    Destroy(tree.controller.nodes[i]);
                     tree.controller.nodes.RemoveAt(i);
                 }
             }

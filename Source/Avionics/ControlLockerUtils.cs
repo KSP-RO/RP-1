@@ -1,5 +1,4 @@
-﻿using KerbalConstructionTime;
-using KSP.UI;
+﻿using KSP.UI;
 using System;
 using System.Collections.Generic;
 

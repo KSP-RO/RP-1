@@ -157,7 +157,7 @@ namespace RP0
         public static bool ApproximatelyZero(double a)
         {
             double absA = Math.Abs(a);
-            return absA < Math.Max(1E-06d * absA, UnityEngine.Mathf.Epsilon * 8d);
+            return absA < Math.Max(1E-06d * absA, Mathf.Epsilon * 8d);
         }
 
         public static string SpriteString(CurrencyRP0 c) => c switch

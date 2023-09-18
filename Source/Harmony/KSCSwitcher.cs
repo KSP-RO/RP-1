@@ -1,7 +1,5 @@
 ﻿using HarmonyLib;
 using System.Reflection;
-using UnityEngine;
-using KerbalConstructionTime;
 
 namespace RP0.Harmony
 {

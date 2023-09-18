@@ -18,7 +18,7 @@ namespace RP0.DataTypes
             for (int i = 0; i < keyNode.values.Count; ++i)
             {
                 TKey key = ParseKey(keyNode.values[i].value);
-                TValue value = System.Activator.CreateInstance<TValue>();
+                TValue value = Activator.CreateInstance<TValue>();
                 value.Load(valueNode.nodes[i]);
                 Add(key, value);
             }

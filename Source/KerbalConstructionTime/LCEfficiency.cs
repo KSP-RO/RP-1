@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using RP0.DataTypes;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class LCEfficiency : ConfigNodePersistenceBase, IConfigNode
     {
@@ -331,8 +331,8 @@ namespace KerbalConstructionTime
 
         public static void RecalculateConstants()
         {
-            _EfficiencyGainMult = RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.EfficiencyGainLC);
-            double efficMult = RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.MaxEfficiencyLC);
+            _EfficiencyGainMult = CurrencyUtils.Rate(TransactionReasonsRP0.EfficiencyGainLC);
+            double efficMult = CurrencyUtils.Rate(TransactionReasonsRP0.MaxEfficiencyLC);
             _MinEfficiency = efficMult * Database.SettingsSC.LCEfficiencyMin;
             _MaxEfficiency = efficMult * Database.SettingsSC.LCEfficiencyMax;
             _EfficiencyRange = _MaxEfficiency - _MinEfficiency;

@@ -3,7 +3,7 @@ using KSP.UI.TooltipTypes;
 using ToolbarControl_NS;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public abstract class GUI_TopRightButton
     {
@@ -125,7 +125,7 @@ namespace KerbalConstructionTime
             }
             else if (_tooltipObject != null)
             {
-                GameObject.Destroy(_tooltipObject);
+                Object.Destroy(_tooltipObject);
                 _tooltipObject = null;
             }
         }

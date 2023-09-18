@@ -1,5 +1,4 @@
-﻿using KerbalConstructionTime;
-using RP0.DataTypes;
+﻿using RP0.DataTypes;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -266,9 +265,9 @@ namespace RP0.Crew
             return GetTimeLeft();
         }
 
-        public KerbalConstructionTime.BuildListVessel.ListType GetListType()
+        public RP0.BuildListVessel.ListType GetListType()
         {
-            return KerbalConstructionTime.BuildListVessel.ListType.Crew;
+            return BuildListVessel.ListType.Crew;
         }
 
         public bool IsComplete()
@@ -279,7 +278,7 @@ namespace RP0.Crew
         public static double CalculateBuildRate()
         {
             double r = 1d;
-            r *= Database.SettingsCrew.ACTrainingRates[KerbalConstructionTime.KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
+            r *= Database.SettingsCrew.ACTrainingRates[KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             r *= CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
             return r;
         }

@@ -1,7 +1,6 @@
 ﻿using KSP.UI.TooltipTypes;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 namespace RP0.UI

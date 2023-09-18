@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SaveUpgradePipeline;
 using UnityEngine;
 
@@ -120,7 +119,7 @@ namespace RP0.UpgradeScripts
                     case 3: cost = 250000d; break;
                     case 4: cost = 400000d; break;
                 }
-                node.SetValue("BP", KerbalConstructionTime.Formula.GetConstructionBP(cost, 0d, SpaceCenterFacility.Administration));
+                node.SetValue("BP", Formula.GetConstructionBP(cost, 0d, SpaceCenterFacility.Administration));
                 node.SetValue("cost", cost.ToString("N0"));
             }
             node.SetValue("currentLevel", newCur);

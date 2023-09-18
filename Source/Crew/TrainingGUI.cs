@@ -208,7 +208,7 @@ namespace RP0.Crew
             _courseSelectorScroll = GUILayout.BeginScrollView(_courseSelectorScroll, GUILayout.Width(505), GUILayout.Height(430));
             try
             {
-                int acLevel = KerbalConstructionTime.KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
+                int acLevel = KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
                 foreach (TrainingTemplate course in CrewHandler.Instance.TrainingTemplates)
                 {
                     // Mission trainings are only available for purchased parts

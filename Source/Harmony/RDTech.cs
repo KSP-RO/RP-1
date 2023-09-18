@@ -1,6 +1,4 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
-using UniLinq;
 
 namespace RP0.Harmony
 {
@@ -26,7 +24,7 @@ namespace RP0.Harmony
 
             KCTEvents.OnTechQueued.Fire(__instance);
 
-            KerbalConstructionTime.KCTUtilities.AddNodePartsToExperimental(__instance.techID);
+            KCTUtilities.AddNodePartsToExperimental(__instance.techID);
 
             return false;
         }

@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using SaveUpgradePipeline;
-using UnityEngine;
 
 namespace RP0.UpgradeScripts
 {

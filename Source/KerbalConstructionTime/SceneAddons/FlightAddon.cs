@@ -3,9 +3,8 @@ using KSP.UI.Screens;
 using UnityEngine.UI;
 using System.Collections.Generic;
 using RP0.UI;
-using static RP0.KSPUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.Flight, false)]
     public class FlightAddon : KerbalConstructionTime

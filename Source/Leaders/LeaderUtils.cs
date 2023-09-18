@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using KerbalConstructionTime;
 using RP0.DataTypes;
 
 namespace RP0.Leaders

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UniLinq;
-
-namespace RP0
+﻿namespace RP0
 {
     public class FailureEvent : CareerEvent
     {

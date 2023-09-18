@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 
 namespace RP0.Crew
 {
@@ -45,7 +44,7 @@ namespace RP0.Crew
                     if (string.IsNullOrEmpty(ap.TechRequired))
                         return true;
 
-                    if (!KerbalConstructionTime.KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired) && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available)
+                    if (!KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired) && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available)
                         return true;
                 }
 
@@ -94,7 +93,7 @@ namespace RP0.Crew
 
             averageStupid /= sC;
 
-            return curTime * UtilMath.Lerp(KerbalConstructionTime.Database.SettingsCrew.trainingMissionStupidMin, KerbalConstructionTime.Database.SettingsCrew.trainingMissionStupidMax, averageStupid);
+            return curTime * UtilMath.Lerp(Database.SettingsCrew.trainingMissionStupidMin, Database.SettingsCrew.trainingMissionStupidMax, averageStupid);
         }
 
         public double GetExpiration(ProtoCrewMember pcm)

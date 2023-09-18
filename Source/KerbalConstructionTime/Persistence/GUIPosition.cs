@@ -2,7 +2,7 @@
 using System.IO;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class GUIPosition
     {

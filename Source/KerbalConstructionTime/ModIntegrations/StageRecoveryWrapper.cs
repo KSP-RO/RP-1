@@ -3,11 +3,9 @@
 //magico13.
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 //Change this to your mod's namespace!
-namespace KerbalConstructionTime
+namespace RP0
 {
     /////////////////////////////////////
     // DO NOT EDIT BEYOND THIS POINT!  //

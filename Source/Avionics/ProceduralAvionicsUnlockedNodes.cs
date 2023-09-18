@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UniLinq;
-using System.Text;
-
-namespace RP0.ProceduralAvionics
+﻿namespace RP0.ProceduralAvionics
 {
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.SPACECENTER })]
     public class ProceduralAvionicsUnlockedTechSaver : ScenarioModule

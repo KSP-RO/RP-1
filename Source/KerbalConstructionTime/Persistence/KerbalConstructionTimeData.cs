@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
-using static RP0.KSPUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class KerbalConstructionTimeData : ScenarioModule
@@ -297,8 +296,8 @@ namespace KerbalConstructionTime
 
         public void TechListUpdated()
         {
-            RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
-            RP0.Harmony.PatchRDTechTree.Instance?.RefreshUI();
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
+            Harmony.PatchRDTechTree.Instance?.RefreshUI();
         }
 
         public void RegisterLC(LCItem lc)

@@ -28,7 +28,7 @@ using UniLinq;
 using System.Reflection;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class CTIWrapper
     {

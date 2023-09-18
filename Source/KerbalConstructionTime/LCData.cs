@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
-using static RP0.MiscUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public enum LaunchComplexType
     {

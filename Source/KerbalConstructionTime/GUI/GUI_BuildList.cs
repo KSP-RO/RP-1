@@ -1,11 +1,9 @@
-﻿using RP0;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using static RP0.MiscUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {
@@ -447,7 +445,7 @@ namespace KerbalConstructionTime
                 double br = c.GetBuildRate();
                 if (br > 0d)
                 {
-                    costday += br * 86400d / c.BP * -RP0.CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction, -c.cost * c.RushMultiplier);
+                    costday += br * 86400d / c.BP * -CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction, -c.cost * c.RushMultiplier);
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());
@@ -489,7 +487,7 @@ namespace KerbalConstructionTime
                     options[0] = new DialogGUIButton("Yes", () => { CancelTechNode(cancelID); });
                     options[1] = new DialogGUIButton("No", () => { });
                     MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.techName}?\n\nThis will also cancel any dependent techs."
-                        + (RP0.Crew.CrewHandler.Instance?.GetTrainingCoursesForTech(t.techID) ?? string.Empty), "Cancel Node?", null, 300, options);
+                        + (Crew.CrewHandler.Instance?.GetTrainingCoursesForTech(t.techID) ?? string.Empty), "Cancel Node?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
                 }
 
@@ -647,7 +645,7 @@ namespace KerbalConstructionTime
                 accTime += t.GetTimeLeftEst(accTime);
                 _allItems.Add(t);
             }
-            _allItems.AddRange(RP0.Crew.CrewHandler.Instance.TrainingCourses);
+            _allItems.AddRange(Crew.CrewHandler.Instance.TrainingCourses);
             
             if (KerbalConstructionTimeData.Instance.fundTarget.IsValid)
                 _allItems.Add(KerbalConstructionTimeData.Instance.fundTarget);
@@ -902,7 +900,7 @@ namespace KerbalConstructionTime
                         options[0] = new DialogGUIButton("Yes", ScrapVessel);
                         options[1] = new DialogGUIButton("No", () => { });
                         MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
-                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselPurchase, b.cost, 0f, 0f).GetCostLineOverride(false, false) +".",
+                            + CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, b.cost, 0f, 0f).GetCostLineOverride(false, false) +".",
                             "Scrap Vessel", null, options: options);
                         PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
                     }
@@ -1153,7 +1151,7 @@ namespace KerbalConstructionTime
                             btnColor = _yellowButton;
                         ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, blvID, launchSite);
                         if (tmpRollout.cost > 0d)
-                            GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -tmpRollout.cost):N0}");
+                            GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -tmpRollout.cost):N0}");
                         GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
@@ -1291,7 +1289,7 @@ namespace KerbalConstructionTime
                         {
                             var tmpPrep = new AirlaunchPrep(b, blvID);
                             if (tmpPrep.cost > 0d)
-                                GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
+                                GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
                             GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ blvID) : new GUIContent("Prep for airlaunch");
                             if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
                             {
@@ -1575,7 +1573,7 @@ namespace KerbalConstructionTime
                     }
                 }
                 KerbalConstructionTimeData.Instance.TechList.RemoveAt(index);
-                RP0.Crew.CrewHandler.Instance?.OnTechCanceled(node.techID);
+                Crew.CrewHandler.Instance?.OnTechCanceled(node.techID);
 
                 if (initialCancel) // do this only once
                 {
@@ -1642,7 +1640,7 @@ namespace KerbalConstructionTime
                 options[0] = new DialogGUIButton("Yes", ScrapVessel);
                 options[1] = new DialogGUIButton("No", () => { });
                 MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to scrap this vessel? You will regain "
-                            + RP0.CurrencyModifierQueryRP0.RunQuery(RP0.TransactionReasonsRP0.VesselPurchase, b.cost, 0f, 0f).GetCostLineOverride(false, false) + ".",
+                            + CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, b.cost, 0f, 0f).GetCostLineOverride(false, false) + ".",
                             "Scrap Vessel", null, options: options);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
                 ResetBLWindow(false);

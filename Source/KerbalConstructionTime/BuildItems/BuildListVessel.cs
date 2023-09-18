@@ -5,9 +5,8 @@ using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
 using UnityEngine.Profiling;
-using static RP0.MiscUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class BuildListVessel : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
     {
@@ -1210,10 +1209,10 @@ namespace KerbalConstructionTime
             double globalMult = ApplyGlobalCostModifiers();
             foreach (var t in tagEffectiveCosts)
             {
-                double ec = t.ec * RP0.Leaders.LeaderUtils.GetPartEffectiveCostEffect(t.tags);
+                double ec = t.ec * Leaders.LeaderUtils.GetPartEffectiveCostEffect(t.tags);
                 modifiedEC += (ec - t.ec) * globalMult;
             }
-            modifiedEC *= RP0.Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
+            modifiedEC *= Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
             double modifiedBP = Formula.GetVesselBuildPoints(modifiedEC);
             if (modifiedBP < 1d)
                 modifiedBP = 1d;

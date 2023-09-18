@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using SaveUpgradePipeline;
 using UnityEngine;
-using static KerbalConstructionTime.KCTUtilities;
 
 namespace RP0.UpgradeScripts
 {
@@ -122,9 +120,9 @@ namespace RP0.UpgradeScripts
                         break;
                 }
                 // We rejigger BP and total cost. Ignore fundsloss parameter here
-                double cost = KerbalConstructionTime.Database.FacilityLevelCosts[SpaceCenterFacility.AstronautComplex][newUp];
-                double oldCost = KerbalConstructionTime.Database.FacilityLevelCosts[SpaceCenterFacility.AstronautComplex].SumThrough(newUp - 1);
-                double bp = KerbalConstructionTime.Formula.GetConstructionBP(cost, oldCost, SpaceCenterFacility.AstronautComplex);
+                double cost = Database.FacilityLevelCosts[SpaceCenterFacility.AstronautComplex][newUp];
+                double oldCost = Database.FacilityLevelCosts[SpaceCenterFacility.AstronautComplex].SumThrough(newUp - 1);
+                double bp = Formula.GetConstructionBP(cost, oldCost, SpaceCenterFacility.AstronautComplex);
                 double oldBP = 0d;
                 n.TryGetValue("BP", ref oldBP);
                 n.SetValue("BP", Math.Min(bp, oldBP));

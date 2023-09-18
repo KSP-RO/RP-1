@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {
@@ -45,7 +45,7 @@ namespace KerbalConstructionTime
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     return;
 
-                if (RP0.Milestones.NewspaperUI.IsOpen)
+                if (Milestones.NewspaperUI.IsOpen)
                     return;
 
                 if (GUIStates.ShowEditorGUI)

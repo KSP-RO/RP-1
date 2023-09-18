@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using RP0.DataTypes;
+﻿using RP0.DataTypes;
 
 namespace RP0
 {

@@ -61,9 +61,9 @@ namespace RP0.Harmony
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ContractReward, 0d, 0d, 0d, _contract.ReputationCompletion * repToConf, 0d);
                 value += $"<color={CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence)}>{CurrencyModifierQueryRP0.SpriteString(CurrencyRP0.Confidence)} {cmq.GetTotal(CurrencyRP0.Confidence):N0} {cmq.GetEffectDeltaText(CurrencyRP0.Confidence, "N0", CurrencyModifierQuery.TextStyling.OnGUI)}  </color>";
             }
-            if (KerbalConstructionTime.PresetManager.Instance != null)
+            if (PresetManager.Instance != null)
             {
-                int applicants = KerbalConstructionTime.Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(_contract.contractType.name);
+                int applicants = Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(_contract.contractType.name);
                 if (applicants > 0)
                     value += $"\n{KSP.Localization.Localizer.Format("#rp0_ContractRewards_GainApplicants", applicants)}";
             }

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniLinq;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     [Flags]
     public enum NodeType
@@ -149,8 +148,8 @@ namespace KerbalConstructionTime
             if (rate != 0)
             {
                 rate *= YearBasedRateMult;
-                rate *= RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.RateResearch);
-                rate *= RP0.Leaders.LeaderUtils.GetResearchRateEffect(nodeType, techID);
+                rate *= CurrencyUtils.Rate(TransactionReasonsRP0.RateResearch);
+                rate *= Leaders.LeaderUtils.GetResearchRateEffect(nodeType, techID);
             }
 
             _buildRate = rate;
@@ -218,8 +217,8 @@ namespace KerbalConstructionTime
                 else
                     rate *= CalculateYearBasedRateMult(offset);
 
-                rate *= RP0.CurrencyUtils.Rate(RP0.TransactionReasonsRP0.RateResearch);
-                rate *= RP0.Leaders.LeaderUtils.GetResearchRateEffect(nodeType, techID);
+                rate *= CurrencyUtils.Rate(TransactionReasonsRP0.RateResearch);
+                rate *= Leaders.LeaderUtils.GetResearchRateEffect(nodeType, techID);
 
                 return (scienceCost - progress) / rate;
             }
@@ -281,11 +280,11 @@ namespace KerbalConstructionTime
                 KCTGameStates.RecalculateBuildRates(); // this might change other rates
 
                 double portion = toGo / increment;
-                RP0.UnlockCreditHandler.Instance.IncrementCreditTime(techID, portion * UTDiff);
+                UnlockCreditHandler.Instance.IncrementCreditTime(techID, portion * UTDiff);
                 return (1d - portion) * UTDiff;
             }
 
-            RP0.UnlockCreditHandler.Instance.IncrementCreditTime(techID, UTDiff);
+            UnlockCreditHandler.Instance.IncrementCreditTime(techID, UTDiff);
             return 0d;
         }
 

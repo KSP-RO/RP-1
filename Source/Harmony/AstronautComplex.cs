@@ -17,7 +17,7 @@ namespace RP0.Harmony
         internal static void Postfix_Awake(AstronautComplex __instance)
         {
             if (Instance != __instance)
-                GameObject.Destroy(Instance);
+                Object.Destroy(Instance);
 
             Instance = __instance;
         }

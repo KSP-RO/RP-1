@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using UniLinq;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class WindowHelper
     {

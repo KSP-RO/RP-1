@@ -1,8 +1,6 @@
 ﻿using UnityEngine;
-using System.Collections.Generic;
-using static RP0.MiscUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
 
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]

@@ -19,7 +19,7 @@ namespace RP0.DataTypes
             for (int i = 0; i < keyNode.values.Count; ++i)
             {
                 TKey key = ParseKey(keyNode.values[i].value);
-                TValue value = System.Activator.CreateInstance<TValue>();
+                TValue value = Activator.CreateInstance<TValue>();
                 value.Load(valueNode.nodes[i]);
                 Add(key, value);
             }
@@ -64,7 +64,7 @@ namespace RP0.DataTypes
                     UnityEngine.Debug.LogError("[RP-0] PersistentDictionaryNodeKeyed: null or empty key in node! Skipping. Node=\n" + n.ToString());
                     continue;
                 }
-                TValue value = System.Activator.CreateInstance<TValue>();
+                TValue value = Activator.CreateInstance<TValue>();
                 value.Load(n);
                 Add(key, value);
             }

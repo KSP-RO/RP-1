@@ -1,6 +1,5 @@
 ﻿using Contracts;
 using Csv;
-using KerbalConstructionTime;
 using RP0.DataTypes;
 using RP0.Programs;
 using System;

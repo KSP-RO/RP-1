@@ -1,7 +1,4 @@
 ﻿using HarmonyLib;
-using UnityEngine;
-using KSP.UI.Screens;
-using KerbalConstructionTime;
 
 namespace RP0.Harmony
 {

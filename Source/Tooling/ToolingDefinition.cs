@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace RP0
+﻿namespace RP0
 {
     public class ToolingDefinition : IConfigNode
     {

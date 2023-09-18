@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
 using ToolbarControl_NS;
-using Upgradeables;
-using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static class KCTGameStates
     {
@@ -86,7 +84,7 @@ namespace KerbalConstructionTime
                 tech.UpdateBuildRate(i);
             }
 
-            RP0.Crew.CrewHandler.Instance?.RecalculateBuildRates();
+            Crew.CrewHandler.Instance?.RecalculateBuildRates();
 
             KCTEvents.OnRecalculateBuildRates.Fire();
         }
@@ -124,10 +122,10 @@ namespace KerbalConstructionTime
         {
             // note NetUpkeepPerDay is negative or 0.
             
-            double averageSubsidyPerDay = RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.Subsidy, RP0.MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
-            double fundDelta = System.Math.Min(0d, RP0.MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
+            double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
+            double fundDelta = System.Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
                 + GetConstructionCostOverTime(deltaTime) + GetRolloutCostOverTime(deltaTime) + GetAirlaunchCostOverTime(deltaTime)
-                + RP0.Programs.ProgramHandler.Instance.GetDisplayProgramFunding(deltaTime);
+                + Programs.ProgramHandler.Instance.GetDisplayProgramFunding(deltaTime);
 
             return fundDelta;
         }
@@ -196,7 +194,7 @@ namespace KerbalConstructionTime
                 if (t > time)
                     fac = time / t;
 
-                delta += RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -rr.cost * (1d - rr.progress / rr.BP) * fac);
+                delta += CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -rr.cost * (1d - rr.progress / rr.BP) * fac);
             }
 
             return delta;
@@ -224,7 +222,7 @@ namespace KerbalConstructionTime
                     if (t > time)
                         fac = time / t;
 
-                    delta += RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.AirLaunchRollout, -al.cost * (1d - al.progress / al.BP) * fac);
+                    delta += CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -al.cost * (1d - al.progress / al.BP) * fac);
                 }
             }
 

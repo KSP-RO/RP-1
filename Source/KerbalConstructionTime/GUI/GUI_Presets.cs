@@ -1,8 +1,7 @@
 ﻿using System;
 using UnityEngine;
-using static RP0.KSPUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {
@@ -143,7 +142,7 @@ namespace KerbalConstructionTime
                 KCTGameStates.RecalculateBuildRates();
 
                 ResetFormulaRateHolders();
-                RP0.Harmony.PatchKSCFacilityContextMenu.AreTextsUpdated = false;
+                Harmony.PatchKSCFacilityContextMenu.AreTextsUpdated = false;
             }
             if (GUILayout.Button("Cancel", GUILayout.ExpandWidth(false)))
             {

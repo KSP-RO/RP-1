@@ -198,7 +198,7 @@ namespace RP0.Requirements
         {
             get
             {
-                bool b = KerbalConstructionTime.KCTUtilities.GetFacilityLevel(Facility) >= Level;
+                bool b = KCTUtilities.GetFacilityLevel(Facility) >= Level;
                 return IsInverted ? !b : b;
             }
         }

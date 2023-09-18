@@ -1,7 +1,6 @@
 ﻿using HarmonyLib;
 using KSP.UI.Screens;
 using System.Collections.Generic;
-using KerbalConstructionTime;
 using KSP.Localization;
 
 namespace RP0.Harmony

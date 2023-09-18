@@ -2,7 +2,6 @@
 using KSP.Localization;
 using System.Collections.Generic;
 using RP0.ProceduralAvionics;
-using KerbalConstructionTime;
 
 namespace RP0
 {

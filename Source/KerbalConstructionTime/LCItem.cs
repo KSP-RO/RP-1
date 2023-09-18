@@ -1,10 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class LCItem : IConfigNode
     {
@@ -129,7 +128,7 @@ namespace KerbalConstructionTime
         #region Observable funcs
         void added(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Add(pc); }
         void removed(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Remove(pc); }
-        void updated() { RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
+        void updated() { MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
         void lcpUpdated() { RecalculateProjectBP(); }
 
         void AddListeners()
@@ -433,7 +432,7 @@ namespace KerbalConstructionTime
 
         private void CalculateAndSetRates()
         {
-            _strategyRateMultiplier = RP0.CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? RP0.TransactionReasonsRP0.RateIntegrationVAB : RP0.TransactionReasonsRP0.RateIntegrationSPH);
+            _strategyRateMultiplier = CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? TransactionReasonsRP0.RateIntegrationVAB : TransactionReasonsRP0.RateIntegrationSPH);
             _rate = KCTUtilities.GetBuildRate(0, this, IsHumanRated, true);
             _rateHRCapped = KCTUtilities.GetBuildRate(0, this, false, true);
             KCT_GUI.BuildRateForDisplay = null;

@@ -49,6 +49,30 @@ namespace RP0.Harmony
         {
             RFECMPatcher.techNode = null;
         }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("SetConfiguration", new Type[] { typeof(ConfigNode), typeof(bool) })]
+        internal static void Postfix_SetConfiguration()
+        {
+            if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTime.KerbalConstructionTime.Instance != null)
+            {
+                KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            }
+        }
+    }
+
+    [HarmonyPatch(typeof(RealFuels.Tanks.ModuleFuelTanks))]
+    internal class RFMFTPatcher
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("RaiseTankDefinitionChanged")]
+        internal static void Postfix_RaiseTankDefinitionChanged()
+        {
+            if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTime.KerbalConstructionTime.Instance != null)
+            {
+                KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            }
+        }
     }
 
     [HarmonyPatch(typeof(RealFuels.EntryCostManager))]

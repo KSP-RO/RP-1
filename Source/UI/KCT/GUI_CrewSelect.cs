@@ -675,7 +675,7 @@ namespace RP0
             int slotIdx = inv.FirstEmptySlot();
             if (slotIdx < 0)
             {
-                KCTDebug.LogError($"Part {inv.part.name} does not have inventory space to add {partName}");
+                RP0Debug.LogError($"Part {inv.part.name} does not have inventory space to add {partName}");
                 return;
             }
 

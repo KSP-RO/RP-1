@@ -44,12 +44,12 @@ namespace RP0
             currentLevel = oldLevel;
             base.name = name;
 
-            KCTDebug.Log($"Upgrade of {name} requested from {oldLevel} to {newLevel}");
+            RP0Debug.Log($"Upgrade of {name} requested from {oldLevel} to {newLevel}");
         }
 
         public void Abort()
         {
-            KCTDebug.Log($"Downgrading {name} to level {currentLevel}");
+            RP0Debug.Log($"Downgrading {name} to level {currentLevel}");
             foreach (UpgradeableFacility facility in GetFacilityReferencesById(id))
             {
                 facility.SetLevel(currentLevel);
@@ -58,7 +58,7 @@ namespace RP0
 
         public void Apply()
         {
-            KCTDebug.Log($"Upgrading {name} to level {upgradeLevel}");
+            RP0Debug.Log($"Upgrading {name} to level {upgradeLevel}");
 
             List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(id);
             foreach (UpgradeableFacility facility in facilityRefs)
@@ -73,7 +73,7 @@ namespace RP0
                 UpgradeLockedFacilities();
             }
 
-            KCTDebug.Log($"Upgrade processed: {upgradeProcessed} Current: {newLvl} Desired: {upgradeLevel}");
+            RP0Debug.Log($"Upgrade processed: {upgradeProcessed} Current: {newLvl} Desired: {upgradeLevel}");
         }
 
         public static List<UpgradeableFacility> GetFacilityReferencesById(string id)

@@ -266,7 +266,7 @@ namespace RP0
 
             RecalculateProjectBP();
 
-            KCTDebug.Log($"Build rate for {Name} = {_rate:N3}, capped {_rateHRCapped:N3}");
+            RP0Debug.Log($"Build rate for {Name} = {_rate:N3}, capped {_rateHRCapped:N3}");
         }
 
         public void SwitchToPrevLaunchPad() => SwitchLaunchPad(false);

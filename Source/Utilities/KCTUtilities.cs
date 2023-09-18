@@ -365,7 +365,7 @@ namespace RP0
             ship.LC.Warehouse.Add(ship);
             ship.LC.RecalculateBuildRates();
 
-            KCTDebug.Log($"Moved vessel {ship.shipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
+            RP0Debug.Log($"Moved vessel {ship.shipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
 
             KCT_GUI.ResetBLWindow(false);
             if (!KCTGameStates.Settings.DisableAllMessages)
@@ -384,7 +384,7 @@ namespace RP0
         {
             if (!CurrentGameIsCareer())
                 return 0;
-            KCTDebug.Log($"Removing funds: {toSpend}, New total: {Funding.Instance.Funds - toSpend}");
+            RP0Debug.Log($"Removing funds: {toSpend}, New total: {Funding.Instance.Funds - toSpend}");
             Funding.Instance.AddFunds(-toSpend, reason);
             return Funding.Instance.Funds;
         }
@@ -398,7 +398,7 @@ namespace RP0
         {
             if (!CurrentGameIsCareer())
                 return 0;
-            KCTDebug.Log($"Adding funds: {toAdd}, New total: {Funding.Instance.Funds + toAdd}");
+            RP0Debug.Log($"Adding funds: {toAdd}, New total: {Funding.Instance.Funds + toAdd}");
             Funding.Instance.AddFunds(toAdd, reason);
             return Funding.Instance.Funds;
         }
@@ -417,18 +417,18 @@ namespace RP0
             float pointsBef = Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);
 
             KerbalConstructionTimeData.Instance.SciPointsTotal += changeDelta;
-            KCTDebug.Log("Total sci points earned is now: " + KerbalConstructionTimeData.Instance.SciPointsTotal);
+            RP0Debug.Log("Total sci points earned is now: " + KerbalConstructionTimeData.Instance.SciPointsTotal);
 
             //double upgradesBef = ApplicantPacketsForScience(pointsBef);
             //double upgradesAft = ApplicantPacketsForScience(KerbalConstructionTimeData.Instance.SciPointsTotal);
-            //KCTDebug.Log($"Upg points bef: {upgradesBef}; aft: {upgradesAft}");
+            //RP0Debug.Log($"Upg points bef: {upgradesBef}; aft: {upgradesAft}");
 
             //int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
             //if (upgradesToAdd > 0)
             //{
             //    int numWorkers = upgradesToAdd * LCItem.EngineersPerPacket;
             //    KerbalConstructionTimeData.Instance.UnassignedPersonnel += numWorkers;
-            //    KCTDebug.Log($"Added {numWorkers} workers from science points");
+            //    RP0Debug.Log($"Added {numWorkers} workers from science points");
             //    ScreenMessages.PostScreenMessage($"Inspired by our latest scientific discoveries, {numWorkers} workers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
             //}
         }
@@ -437,12 +437,12 @@ namespace RP0
         {
             if (KerbalConstructionTimeData.Instance.SciPointsTotal == -1f)
             {
-                KCTDebug.Log("Trying to determine total science points for current save...");
+                RP0Debug.Log("Trying to determine total science points for current save...");
 
                 float totalSci = 0f;
                 foreach (TechItem t in KerbalConstructionTimeData.Instance.TechList)
                 {
-                    KCTDebug.Log($"Found tech in KCT list: {t.ProtoNode.techID} | {t.ProtoNode.state} | {t.ProtoNode.scienceCost}");
+                    RP0Debug.Log($"Found tech in KCT list: {t.ProtoNode.techID} | {t.ProtoNode.state} | {t.ProtoNode.scienceCost}");
                     if (t.ProtoNode.state == RDTech.State.Available) continue;
 
                     totalSci += t.ProtoNode.scienceCost;
@@ -454,11 +454,11 @@ namespace RP0
                     var ptn = ResearchAndDevelopment.Instance.GetTechState(techId);
                     if (ptn == null)
                     {
-                        KCTDebug.Log($"Failed to find tech with id {techId}");
+                        RP0Debug.Log($"Failed to find tech with id {techId}");
                         continue;
                     }
 
-                    KCTDebug.Log($"Found tech {ptn.techID} | {ptn.state} | {ptn.scienceCost}");
+                    RP0Debug.Log($"Found tech {ptn.techID} | {ptn.state} | {ptn.scienceCost}");
                     if (ptn.techID == "unlockParts") continue;    // This node in RP-1 is unlocked automatically but has a high science cost
                     if (ptn.state != RDTech.State.Available) continue;
 
@@ -467,7 +467,7 @@ namespace RP0
 
                 totalSci += ResearchAndDevelopment.Instance.Science - changeDelta;
 
-                KCTDebug.Log("Calculated total: " + totalSci);
+                RP0Debug.Log("Calculated total: " + totalSci);
                 KerbalConstructionTimeData.Instance.SciPointsTotal = totalSci;
             }
         }
@@ -552,7 +552,7 @@ namespace RP0
             }
             else
             {
-                KCTDebug.LogError($"Error! Tried to add {blv.shipName} to build list but couldn't find LC! KSC {KCTGameStates.ActiveKSC.KSCName} and active LC {KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance}");
+                RP0Debug.LogError($"Error! Tried to add {blv.shipName} to build list but couldn't find LC! KSC {KCTGameStates.ActiveKSC.KSCName} and active LC {KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance}");
                 return;
             }
 
@@ -565,8 +565,8 @@ namespace RP0
                 Debug.LogException(ex);
             }
 
-            KCTDebug.Log($"Added {blv.shipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
-            KCTDebug.Log("Launch site is " + blv.launchSite);
+            RP0Debug.Log($"Added {blv.shipName} to build list at {lc.Name} at {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
+            RP0Debug.Log("Launch site is " + blv.launchSite);
             string text = $"Added {blv.shipName} to integration list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
@@ -629,7 +629,7 @@ namespace RP0
 
             GetShipEditProgress(editableShip, out double progressBP, out _, out _);
             newShip.progress = progressBP;
-            KCTDebug.Log($"Finished? {editableShip.IsFinished}");
+            RP0Debug.Log($"Finished? {editableShip.IsFinished}");
             if (editableShip.IsFinished)
                 newShip.cannotEarnScience = true;
 
@@ -637,7 +637,7 @@ namespace RP0
 
             KCTGameStates.ClearVesselEditMode();
 
-            KCTDebug.Log("Edits saved.");
+            RP0Debug.Log("Edits saved.");
 
             HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
@@ -694,7 +694,7 @@ namespace RP0
                     HandlePurchase(ap);
                 }
 
-                KCTDebug.Log($"{ap.title} is no longer an experimental part. Part was unlocked.");
+                RP0Debug.Log($"{ap.title} is no longer an experimental part. Part was unlocked.");
                 RemoveExperimentalPart(ap);
             }
 
@@ -1107,7 +1107,7 @@ namespace RP0
                 {
                     //screw it, let's call it 2
                     lvl = 2;
-                    KCTDebug.Log($"Couldn't get actual max level or cached one for {facilityID}. Assuming 2.");
+                    RP0Debug.Log($"Couldn't get actual max level or cached one for {facilityID}. Assuming 2.");
                 }
             }
             return lvl;
@@ -1122,7 +1122,7 @@ namespace RP0
                 {
                     //screw it, let's call it 2
                     lvl = 2;
-                    KCTDebug.Log($"Couldn't get actual max level or cached one for {facility}. Assuming 2.");
+                    RP0Debug.Log($"Couldn't get actual max level or cached one for {facility}. Assuming 2.");
                 }
             }
             return lvl;
@@ -1132,7 +1132,7 @@ namespace RP0
         {
             try
             {
-                KCTDebug.Log("Attempting to recover active vessel to storage.  listType: " + listType);
+                RP0Debug.Log("Attempting to recover active vessel to storage.  listType: " + listType);
                 GamePersistence.SaveGame("KCT_Backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
                 KerbalConstructionTimeData.Instance.RecoveredVessel = new BuildListVessel(FlightGlobals.ActiveVessel, listType);
@@ -1160,7 +1160,7 @@ namespace RP0
 
                 if (test != null)
                     ShipConstruction.CreateBackup(test);
-                KCTDebug.Log("Load test reported success = " + (test == null ? "false" : "true"));
+                RP0Debug.Log("Load test reported success = " + (test == null ? "false" : "true"));
                 if (test == null)
                 {
                     KerbalConstructionTimeData.Instance.RecoveredVessel = new BuildListVessel();
@@ -1232,11 +1232,11 @@ namespace RP0
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller == null)
                     {
-                        KCTDebug.Log("UILaunchsiteController is null");
+                        RP0Debug.Log("UILaunchsiteController is null");
                     }
                     else
                     {
-                        KCTDebug.Log("Killing UILaunchsiteController");
+                        RP0Debug.Log("Killing UILaunchsiteController");
                         UnityEngine.Object.Destroy(controller);
                     }
                 }
@@ -1247,7 +1247,7 @@ namespace RP0
                 if (!kctInstance.IsLaunchSiteControllerDisabled)
                 {
                     kctInstance.IsLaunchSiteControllerDisabled = true;
-                    KCTDebug.Log("Attempting to disable launchsite specific buttons");
+                    RP0Debug.Log("Attempting to disable launchsite specific buttons");
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller != null)
                     {
@@ -1349,7 +1349,7 @@ namespace RP0
 
         public static void MakeSimulationSave()
         {
-            KCTDebug.Log("Making simulation backup file.");
+            RP0Debug.Log("Making simulation backup file.");
             GamePersistence.SaveGame("KCT_simulation_backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
         }
 
@@ -1385,7 +1385,7 @@ namespace RP0
                 FlightGlobals.PersistentUnloadedPartIds.Clear();
             }
 
-            KCTDebug.Log("Swapping persistent.sfs with simulation backup file.");
+            RP0Debug.Log("Swapping persistent.sfs with simulation backup file.");
             if (useNewMethod)
             {
                 ConfigNode lastShip = ShipConstruction.ShipConfig;
@@ -1579,7 +1579,7 @@ namespace RP0
                         }
                         catch (Exception ex)
                         {
-                            KCTDebug.LogError($"Config validation failed for {p.name}");
+                            RP0Debug.LogError($"Config validation failed for {p.name}");
                             Debug.LogException(ex);
                             allSucceeded = false;
                             parameters[0] = "error occurred, check the logs";
@@ -1611,7 +1611,7 @@ namespace RP0
 
             List<string> techList = SortAndFilterTechListForFinalNodes(pendingTech);
             float totalCost = runningCost + Convert.ToSingle(ecmCost);
-            KCTDebug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Raw cost: {runningCost}, ECM cost: {ecmCost}");
+            RP0Debug.Log($"Vessel parts unlock cost check. Total: {totalCost}, Raw cost: {runningCost}, ECM cost: {ecmCost}");
             return new Tuple<float, List<string>>(totalCost, techList);
         }
 
@@ -1677,7 +1677,7 @@ namespace RP0
         
         public static void ScrapVessel(BuildListVessel b)
         {
-            KCTDebug.Log($"Scrapping {b.shipName}");
+            RP0Debug.Log($"Scrapping {b.shipName}");
             if (!b.IsFinished)
             {
                 b.RemoveFromBuildList(out _);
@@ -1797,13 +1797,13 @@ namespace RP0
             // Is also called at the start of the flight scene when recovering clamps & debris
             if (KerbalConstructionTimeData.Instance.RecoveredVessel?.IsValid != true)
             {
-                KCTDebug.Log("Recovered vessel is null!");
+                RP0Debug.Log("Recovered vessel is null!");
                 return false;
             }
 
             if (v.vesselName != KerbalConstructionTimeData.Instance.RecoveredVessel.shipName)
             {
-                KCTDebug.Log($"Recovered vessel '{v.vesselName}' and '{KerbalConstructionTimeData.Instance.RecoveredVessel.shipName}' do not match ");
+                RP0Debug.Log($"Recovered vessel '{v.vesselName}' and '{KerbalConstructionTimeData.Instance.RecoveredVessel.shipName}' do not match ");
                 return false;
             }
 

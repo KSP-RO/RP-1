@@ -142,7 +142,7 @@ namespace RP0
             IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> lockedParts = partStatuses.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable);
             if (lockedParts.Any())
             {
-                KCTDebug.Log($"Tried to add {blv.shipName} to build list but it contains locked parts.");
+                RP0Debug.Log($"Tried to add {blv.shipName} to build list but it contains locked parts.");
 
                 // Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
                 string lockedMsg = ConstructLockedPartsWarning(lockedParts);
@@ -244,8 +244,8 @@ namespace RP0
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, -totalCost, 0d, 0d);
                 if (!cmq.CanAfford())
                 {
-                    KCTDebug.Log($"Tried to add {blv.shipName} to integration list but not enough funds.");
-                    KCTDebug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds, true)}, Current funds: {Funding.Instance.Funds}");
+                    RP0Debug.Log($"Tried to add {blv.shipName} to integration list but not enough funds.");
+                    RP0Debug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds, true)}, Current funds: {Funding.Instance.Funds}");
                     var msg = new ScreenMessage("Not Enough Funds To Integrate!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
 
@@ -312,7 +312,7 @@ namespace RP0
                         }
                         catch (Exception ex)
                         {
-                            KCTDebug.LogError($"Config validation failed for {part.name}");
+                            RP0Debug.LogError($"Config validation failed for {part.name}");
                             Debug.LogException(ex);
                             allSucceeded = false;
                             parameters[0] = "error occurred, check the logs";

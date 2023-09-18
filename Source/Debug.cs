@@ -2,25 +2,27 @@
 {
     public static class RP0Debug
     {
-        public static void Log(string str)
+        public static void Log(string str, bool always = false)
         {
 #if DEBUG
-            UnityEngine.Debug.Log(str);
+            bool isBetaVersion = true;
+#else
+            bool isBetaVersion = always;
 #endif
+            if (isBetaVersion)
+            {
+                UnityEngine.Debug.Log(str);
+            }
         }
 
         public static void LogWarning(string str)
         {
-#if DEBUG
             UnityEngine.Debug.LogWarning(str);
-#endif
         }
 
         public static void LogError(string str)
         {
-#if DEBUG
             UnityEngine.Debug.LogError(str);
-#endif
         }
     }
 }

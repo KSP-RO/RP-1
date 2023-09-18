@@ -69,7 +69,7 @@ namespace RP0
         {
             if (KCTUtilities.CurrentGameIsMission()) return;
 
-            KCTDebug.Log("Awake called");
+            RP0Debug.Log("Awake called");
 
             if (Instance != null)
                 Destroy(Instance);
@@ -109,7 +109,7 @@ namespace RP0
 
         public void Start()
         {
-            KCTDebug.Log("Start called");
+            RP0Debug.Log("Start called");
             _wfsOne = new WaitForSeconds(1f);
             _wfsTwo = new WaitForSeconds(2f);
             _wfsHalf = new WaitForSeconds(0.5f);
@@ -200,7 +200,7 @@ namespace RP0
             }
             // Need to do this in every scene.
             StartCoroutine(CacheFacilityLevels());
-            KCTDebug.Log("Start finished");
+            RP0Debug.Log("Start finished");
 
             DelayedStart();
 
@@ -218,7 +218,7 @@ namespace RP0
                 if (string.IsNullOrWhiteSpace(dataModule.Data.LaunchID))
                 {
                     dataModule.Data.LaunchID = Guid.NewGuid().ToString("N");
-                    KCTDebug.Log($"Assigned LaunchID: {dataModule.Data.LaunchID}");
+                    RP0Debug.Log($"Assigned LaunchID: {dataModule.Data.LaunchID}");
                 }
 
                 // This will only fire the first time, because we make it invalid afterwards by clearing the BLV
@@ -240,7 +240,7 @@ namespace RP0
             if (blv.IsValid)
             {
                 LCItem vesselLC = blv.LC;
-                KCTDebug.Log("Attempting to remove launched vessel from build list");
+                RP0Debug.Log("Attempting to remove launched vessel from build list");
                 if (blv.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
                 {
                     //Add the cost of the ship to the funds so it can be removed again by KSP
@@ -279,11 +279,11 @@ namespace RP0
                 KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
                 foreach (Part p in FlightGlobals.ActiveVessel.parts)
                 {
-                    KCTDebug.Log($"Part being tested: {p.partInfo.title}");
+                    RP0Debug.Log($"Part being tested: {p.partInfo.title}");
                     if (p.CrewCapacity == 0 || !(KerbalConstructionTimeData.Instance.LaunchedCrew.Find(part => part.PartID == p.craftID) is PartCrewAssignment cp))
                         continue;
                     List<CrewMemberAssignment> crewList = cp.CrewList;
-                    KCTDebug.Log($"cP.crewList.Count: {cp.CrewList.Count}");
+                    RP0Debug.Log($"cP.crewList.Count: {cp.CrewList.Count}");
                     foreach (CrewMemberAssignment assign in crewList)
                     {
                         ProtoCrewMember crewMember = assign.PCM;
@@ -294,19 +294,19 @@ namespace RP0
                         {
                             if (p.AddCrewmember(crewMember))
                             {
-                                KCTDebug.Log($"Assigned {crewMember.name} to {p.partInfo.name}");
+                                RP0Debug.Log($"Assigned {crewMember.name} to {p.partInfo.name}");
                                 crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Assigned;
                                 crewMember.seat?.SpawnCrew();
                             }
                             else
                             {
-                                KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
+                                RP0Debug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}");
                                 crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
                             }
                         }
                         catch (Exception ex)
                         {
-                            KCTDebug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}: {ex}");
+                            RP0Debug.LogError($"Error when assigning {crewMember.name} to {p.partInfo.name}: {ex}");
                             crewMember.rosterStatus = ProtoCrewMember.RosterStatus.Available;
                         }
                     }
@@ -472,7 +472,7 @@ namespace RP0
                 foreach (SpaceCenterFacility facility in Enum.GetValues(typeof(SpaceCenterFacility)))
                 {
                     KCTGameStates.BuildingMaxLevelCache[facility.ToString()] = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
-                    KCTDebug.Log($"Cached {facility} max at {KCTGameStates.BuildingMaxLevelCache[facility.ToString()]}");
+                    RP0Debug.Log($"Cached {facility} max at {KCTGameStates.BuildingMaxLevelCache[facility.ToString()]}");
                 }
             }
         }
@@ -519,7 +519,7 @@ namespace RP0
         private static IEnumerator SetSimOrbit(SimulationParams simParams)
         {
             yield return new WaitForEndOfFrame();
-            KCTDebug.Log($"Moving vessel to orbit. {simParams.SimulationBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
+            RP0Debug.Log($"Moving vessel to orbit. {simParams.SimulationBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
             HyperEdit_Utilities.PutInOrbitAround(simParams.SimulationBody, simParams.SimOrbitAltitude, simParams.SimInclination);
         }
 
@@ -530,7 +530,7 @@ namespace RP0
             var uiController = KSP.UI.UIMasterController.Instance;
             if (uiController == null)
             {
-                KCTDebug.LogError("UIMasterController.Instance is null");
+                RP0Debug.LogError("UIMasterController.Instance is null");
                 return;
             }
 
@@ -670,7 +670,7 @@ namespace RP0
         {
             if (KCTUtilities.CurrentGameIsMission()) return;
 
-            KCTDebug.Log("DelayedStart start");
+            RP0Debug.Log("DelayedStart start");
             if (PresetManager.Instance?.ActivePreset == null || !PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return;
 
@@ -686,7 +686,7 @@ namespace RP0
                 KerbalConstructionTimeData.Instance.SetActiveKSCToRSS();
             }
 
-            KCTDebug.Log("Checking vessels for missing parts.");
+            RP0Debug.Log("Checking vessels for missing parts.");
             //check that all parts are valid in all ships. If not, warn the user and disable that vessel (once that code is written)
             if (!KCTGameStates.VesselErrorAlerted)
             {
@@ -699,7 +699,7 @@ namespace RP0
                         {
                             if (!blv.AllPartsValid)
                             {
-                                KCTDebug.Log(blv.shipName + " contains invalid parts!");
+                                RP0Debug.Log(blv.shipName + " contains invalid parts!");
                                 erroredVessels.Add(blv);
                             }
                         }
@@ -707,7 +707,7 @@ namespace RP0
                         {
                             if (!blv.AllPartsValid)
                             {
-                                KCTDebug.Log(blv.shipName + " contains invalid parts!");
+                                RP0Debug.Log(blv.shipName + " contains invalid parts!");
                                 erroredVessels.Add(blv);
                             }
                         }
@@ -720,13 +720,13 @@ namespace RP0
 
             if (HighLogic.LoadedSceneIsEditor && KCTGameStates.EditorShipEditingMode)
             {
-                KCTDebug.Log($"Editing {KerbalConstructionTimeData.Instance.EditedVessel.shipName}");
+                RP0Debug.Log($"Editing {KerbalConstructionTimeData.Instance.EditedVessel.shipName}");
                 EditorLogic.fetch.shipNameField.text = KerbalConstructionTimeData.Instance.EditedVessel.shipName;
             }
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
-                KCTDebug.Log("SP Start");
+                RP0Debug.Log("SP Start");
                 if (!KCT_GUI.IsPrimarilyDisabled)
                 {
                     if (ToolbarManager.ToolbarAvailable && KCTGameStates.Settings.PreferBlizzyToolbar)
@@ -749,11 +749,11 @@ namespace RP0
                     KCT_GUI.GUIStates.ShowBuildList = false;
                     KCTGameStates.ShowWindows[0] = false;
                 }
-                KCTDebug.Log("SP UI done");
+                RP0Debug.Log("SP UI done");
 
                 if (KCTGameStates.IsFirstStart)
                 {
-                    KCTDebug.Log("Showing first start.");
+                    RP0Debug.Log("Showing first start.");
                     KCTGameStates.IsFirstStart = false;
                     KCT_GUI.GUIStates.ShowFirstRun = true;
                     foreach (var ksc in KCTGameStates.KSCs)
@@ -766,7 +766,7 @@ namespace RP0
                     KCT_GUI.GUIStates.ShowFirstRun = true;
                 }
 
-                KCTDebug.Log("SP done");
+                RP0Debug.Log("SP done");
             }
 
             if (HighLogic.LoadedSceneIsFlight && KerbalConstructionTimeData.Instance.IsSimulatedFlight)
@@ -790,7 +790,7 @@ namespace RP0
                             }
                         }
                     }
-                    KCTDebug.Log($"Setting simulation UT to {KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT}");
+                    RP0Debug.Log($"Setting simulation UT to {KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT}");
                     if (!KCTUtilities.IsPrincipiaInstalled)
                         Planetarium.SetUniversalTime(KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT);
                     else
@@ -806,7 +806,7 @@ namespace RP0
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "Simulation Error", msg, "Understood", false, HighLogic.UISkin);
             }
 
-            KCTDebug.Log("DelayedStart finished");
+            RP0Debug.Log("DelayedStart finished");
         }
 
         private IEnumerator EaseSimulationUT_Coroutine(double startUT, double targetUT)
@@ -815,7 +815,7 @@ namespace RP0
 
             if (targetUT <= Planetarium.GetUniversalTime()) yield break;
 
-            KCTDebug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
+            RP0Debug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
 
             int currentFrame = Time.frameCount;
             double nextUT = startUT;
@@ -900,7 +900,7 @@ namespace RP0
 
         public static void ShowLaunchAlert(string launchSite)
         {
-            KCTDebug.Log("Showing Launch Alert");
+            RP0Debug.Log("Showing Launch Alert");
             if (KCT_GUI.IsPrimarilyDisabled)
             {
                 EditorLogic.fetch.launchVessel();

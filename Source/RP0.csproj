@@ -251,7 +251,6 @@
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="Utilities\ECMHelper.cs" />
     <Compile Include="SpaceCenter\BuildItems\IKCTBuildItem.cs" />
-    <Compile Include="Utilities\KCTDebug.cs" />
     <Compile Include="SpaceCenter\BuildItems\AirlaunchPrep.cs" />
     <Compile Include="SpaceCenter\BuildItems\BuildListVessel.cs" />
     <Compile Include="UI\KCT\GUI_BuildPlans.cs" />

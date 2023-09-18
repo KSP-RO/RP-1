@@ -169,8 +169,8 @@ namespace RP0
             }
             KerbalConstructionTimeData.Instance.BuildPlans.Add(blv.shipName, blv);
 
-            KCTDebug.Log($"Added {blv.shipName} to plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}");
-            KCTDebug.Log($"Launch site is {blv.launchSite}");
+            RP0Debug.Log($"Added {blv.shipName} to plans list at KSC {KCTGameStates.ActiveKSC.KSCName}. Cost: {blv.cost}");
+            RP0Debug.Log($"Launch site is {blv.launchSite}");
             string text = $"Added {blv.shipName} to plans list.";
             message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);

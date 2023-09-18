@@ -138,8 +138,8 @@ namespace RP0
                 endYear = period.endYear;
             }
 
-            KCTDebug.Log("techID = " + techID);
-            KCTDebug.Log("TimeLeft = " + TimeLeft);
+            RP0Debug.Log("techID = " + techID);
+            RP0Debug.Log("TimeLeft = " + TimeLeft);
         }
 
         public TechItem() { }

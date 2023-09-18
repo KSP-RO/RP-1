@@ -251,12 +251,12 @@ namespace RP0
                 LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
                 if (_lc.LCType == LaunchComplexType.Hangar)
                 {
-                    KCTDebug.LogError($"ERROR: Tried to link vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
+                    RP0Debug.LogError($"ERROR: Tried to link vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
                 }
             }
 
             if(_lc != null && !_lc.IsOperational)
-                KCTDebug.LogError($"ERROR: Tried to add vessel {shipName} to LC {_lc.Name} but LC is not operational!");
+                RP0Debug.LogError($"ERROR: Tried to add vessel {shipName} to LC {_lc.Name} but LC is not operational!");
 
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
@@ -538,7 +538,7 @@ namespace RP0
             }
             else if (HighLogic.LoadedSceneIsEditor)
             {
-                KCTDebug.LogError("BLV tried to get ShipConstruct from within editor but _ship was null! Returning EditorLogic's shipconstruct.");
+                RP0Debug.LogError("BLV tried to get ShipConstruct from within editor but _ship was null! Returning EditorLogic's shipconstruct.");
                 return EditorLogic.fetch.ship;
             }
             return _ship;
@@ -710,7 +710,7 @@ namespace RP0
                     {
                         if (module.HasValue("timestamp"))
                         {
-                            KCTDebug.Log("Updating RF timestamp on a part");
+                            RP0Debug.Log("Updating RF timestamp on a part");
                             module.SetValue("timestamp", Planetarium.GetUniversalTime().ToString());
                         }
                     }
@@ -821,7 +821,7 @@ namespace RP0
             oldIndex = -1;
             if (LC == null)
             {
-                KCTDebug.Log("Could not find the LC to remove vessel!");
+                RP0Debug.Log("Could not find the LC to remove vessel!");
                 return false;
             }
             else
@@ -844,21 +844,21 @@ namespace RP0
                     }
                 }
             }
-            KCTDebug.Log($"Removing {shipName} from {_lc.Name} storage/list.");
+            RP0Debug.Log($"Removing {shipName} from {_lc.Name} storage/list.");
             if (!removed)
             {
                 // This will happen when we launch the vessel (or we remove an edited vessel)
                 // because the BLV instance is not the same instance as what's stored in the LC, just a copy.
                 // We could try to be smarter, but eh. At least we're going to check warehouse first
                 // since launching is the usual case.
-                KCTDebug.Log("Failed to remove ship from list! Performing direct comparison of ids...");
+                RP0Debug.Log("Failed to remove ship from list! Performing direct comparison of ids...");
 
                 for (int i = _lc.Warehouse.Count; i-- > 0;)
                 {
                     BuildListVessel blv = _lc.Warehouse[i];
                     if (blv.shipID == shipID)
                     {
-                        KCTDebug.Log("Ship found in Warehouse list. Removing...");
+                        RP0Debug.Log("Ship found in Warehouse list. Removing...");
                         oldIndex = -1; // report notfound for removed from warehouse
                         removed = true;
                         _lc.Warehouse.RemoveAt(i);
@@ -872,7 +872,7 @@ namespace RP0
                         BuildListVessel blv = _lc.BuildList[i];
                         if (blv.shipID == shipID)
                         {
-                            KCTDebug.Log("Ship found in BuildList. Removing...");
+                            RP0Debug.Log("Ship found in BuildList. Removing...");
                             removed = true;
                             _lc.BuildList.RemoveAt(i);
                             oldIndex = i;
@@ -884,9 +884,9 @@ namespace RP0
             }
 
             if (removed)
-                KCTDebug.Log("Sucessfully removed vessel from LC.");
+                RP0Debug.Log("Sucessfully removed vessel from LC.");
             else 
-                KCTDebug.Log("Still couldn't remove ship!");
+                RP0Debug.Log("Still couldn't remove ship!");
 
             return removed;
         }
@@ -990,7 +990,7 @@ namespace RP0
 
             double globalMultiplier = ApplyGlobalCostModifiers();
             double multipliedCost = totalEffectiveCost * globalMultiplier;
-            KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
+            RP0Debug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
             Profiler.EndSample();
             return multipliedCost;
@@ -1010,7 +1010,7 @@ namespace RP0
 
             double globalMultiplier = ApplyGlobalCostModifiers();
             double multipliedCost = totalEffectiveCost * globalMultiplier;
-            KCTDebug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
+            RP0Debug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
             return multipliedCost;
         }
@@ -1123,7 +1123,7 @@ namespace RP0
 
             UpdateTagECs(effectiveCost);
 
-            KCTDebug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
+            RP0Debug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
 
             _tempTags = null;
             _tempResourceAmounts.Clear();
@@ -1354,7 +1354,7 @@ namespace RP0
                     }
                 }
             }
-            KCTDebug.Log($"Removed {referencesRemoved} invalid symmetry references.");
+            RP0Debug.Log($"Removed {referencesRemoved} invalid symmetry references.");
         }
 
         public ShipConstruct CreateShipConstructAndRelease()

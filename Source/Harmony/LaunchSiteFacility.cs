@@ -11,7 +11,7 @@ namespace RP0.Harmony
         {
             if (!KCT_GUI.IsPrimarilyDisabled && HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
-                KCTDebug.LogError("LaunchSiteFacility tried to spawn VesselSpawnDialog! Aborting.");
+                RP0Debug.LogError("LaunchSiteFacility tried to spawn VesselSpawnDialog! Aborting.");
                 return false;
             }
 

@@ -127,7 +127,7 @@ namespace RP0
                     //find next lower rate that will not step past the remaining time
                     while (newRate > 0 && TimeWarp.fetch.warpRates[newRate] * Planetarium.fetch.fixedDeltaTime * nBuffer > remaining)
                         newRate--;
-                    KCTDebug.Log($"Warping down to {newRate} (step size: {TimeWarp.fetch.warpRates[newRate] * Planetarium.fetch.fixedDeltaTime})");
+                    RP0Debug.Log($"Warping down to {newRate} (step size: {TimeWarp.fetch.warpRates[newRate] * Planetarium.fetch.fixedDeltaTime})");
                     desiredWarpRate = newRate;
                     if (newRate == 0)
                         StopWarp();

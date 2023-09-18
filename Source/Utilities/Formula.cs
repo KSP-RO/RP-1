@@ -80,7 +80,7 @@ namespace RP0
             if (powScalar > 0)
                 finalBP += Math.Pow(powScalar, 1.4d) * 0.864d;
 
-            KCTDebug.Log($"BP: {finalBP}");
+            RP0Debug.Log($"BP: {finalBP}");
             return finalBP;
         }
 
@@ -371,7 +371,7 @@ namespace RP0
                     }
                     else
                     {
-                        KCTDebug.Log($"Unable to find resource definition for {key}");
+                        RP0Debug.Log($"Unable to find resource definition for {key}");
                     }
                 }
                 if (rescaledTheirs == 0) rescaledOurs *= 2;

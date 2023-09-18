@@ -102,7 +102,7 @@ namespace RP0
                     HighLogic.CurrentGame.Parameters.Career.TechTreeUrl = System.IO.Path.Combine("GameData", "ModuleManager.TechTree");
 
                 string fullPath = KSPUtil.ApplicationRootPath + HighLogic.CurrentGame.Parameters.Career.TechTreeUrl;
-                KCTDebug.Log($"Loading tech tree from {fullPath}");
+                RP0Debug.Log($"Loading tech tree from {fullPath}");
 
                 if (ConfigNode.Load(fullPath) is ConfigNode fileNode && fileNode.HasNode("TechTree"))
                 {
@@ -137,7 +137,7 @@ namespace RP0
         {
             if (KCTUtilities.CurrentGameIsMission()) return;
 
-            KCTDebug.Log("Writing to persistence.");
+            RP0Debug.Log("Writing to persistence.");
             base.OnSave(node);
 
             KCT_GUI.GuiDataSaver.Save();
@@ -152,7 +152,7 @@ namespace RP0
 
                 if (KCTUtilities.CurrentGameIsMission()) return;
 
-                KCTDebug.Log("Reading from persistence.");
+                RP0Debug.Log("Reading from persistence.");
 
                 TechList.Updated += techListUpdated;
 
@@ -350,7 +350,7 @@ namespace RP0
 
                         if (_fiKSCSwInstance == null || _fiKSCSwSites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null)
                         {
-                            KCTDebug.LogError("Failed to bind to KSCSwitcher");
+                            RP0Debug.LogError("Failed to bind to KSCSwitcher");
                             _isKSCSwitcherInstalled = false;
                         }
                     }
@@ -391,7 +391,7 @@ namespace RP0
                 site = _defaultKscId;
             if (ActiveKSC == null || site != ActiveKSC.KSCName)
             {
-                KCTDebug.Log($"Setting active site to {site}");
+                RP0Debug.Log($"Setting active site to {site}");
                 KSCItem newKsc = KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
                 if (newKsc == null)
                 {

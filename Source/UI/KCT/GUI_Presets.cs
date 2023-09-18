@@ -123,7 +123,6 @@ namespace RP0
                 KCTGameStates.Settings.DisableAllMessages = _disableAllMsgs;
                 KCTGameStates.Settings.ShowSimWatermark = _showSimWatermark;
                 KCTGameStates.Settings.OverrideLaunchButton = _overrideLaunchBtn;
-                KCTGameStates.Settings.Debug = _debug;
                 KCTGameStates.Settings.AutoKACAlarms = _autoAlarms;
                 KCTGameStates.Settings.CleanUpKSCDebris = _cleanUpKSCDebris;
                 KCTGameStates.Settings.UseDates = _useDates;
@@ -302,7 +301,6 @@ namespace RP0
             _newTimewarp = KCTGameStates.Settings.MaxTimeWarp;
             _disableAllMsgs = KCTGameStates.Settings.DisableAllMessages;
             _showSimWatermark = KCTGameStates.Settings.ShowSimWatermark;
-            _debug = KCTGameStates.Settings.Debug;
             _overrideLaunchBtn = KCTGameStates.Settings.OverrideLaunchButton;
             _autoAlarms = KCTGameStates.Settings.AutoKACAlarms;
             _cleanUpKSCDebris = KCTGameStates.Settings.CleanUpKSCDebris;

@@ -37,15 +37,15 @@ namespace RP0
         [Persistent]
         public PersistentList<KCT_LaunchPad> LaunchPads = new PersistentList<KCT_LaunchPad>();
         [Persistent]
-        public KCTObservableList<BuildListVessel> BuildList = new KCTObservableList<BuildListVessel>();
+        public PersistentObservableList<BuildListVessel> BuildList = new PersistentObservableList<BuildListVessel>();
         [Persistent]
-        public KCTObservableList<BuildListVessel> Warehouse = new KCTObservableList<BuildListVessel>();
+        public PersistentObservableList<BuildListVessel> Warehouse = new PersistentObservableList<BuildListVessel>();
         [Persistent]
-        public KCTObservableList<PadConstruction> PadConstructions = new KCTObservableList<PadConstruction>();
+        public PersistentObservableList<PadConstruction> PadConstructions = new PersistentObservableList<PadConstruction>();
         [Persistent]
-        public KCTObservableList<ReconRollout> Recon_Rollout = new KCTObservableList<ReconRollout>();
+        public PersistentObservableList<ReconRollout> Recon_Rollout = new PersistentObservableList<ReconRollout>();
         [Persistent]
-        public KCTObservableList<AirlaunchPrep> Airlaunch_Prep = new KCTObservableList<AirlaunchPrep>();
+        public PersistentObservableList<AirlaunchPrep> Airlaunch_Prep = new PersistentObservableList<AirlaunchPrep>();
 
         private double _rate;
         private double _rateHRCapped;

@@ -10,10 +10,150 @@ author:
   - RP-1 Group
 $kref: '#/ckan/github/KSP-RO/RP-1'
 $vref: '#/ckan/ksp-avc'
+x_netkan_force_v: true
 release_status: stable
 resources:
-  manual: https://github.com/KSP-RO/RP-1/wiki
   homepage: https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*
+  manual: https://github.com/KSP-RO/RP-1/wiki
+depends:
+  - name: ModuleManager
+  - name: RealismOverhaul
+    min_version: v16.0.0.0
+  - name: SXTContinued
+    suppress_recommendations: true
+  - name: ContractConfigurator
+    suppress_recommendations: true
+  - name: CustomBarnKit
+    suppress_recommendations: true
+  - name: VenStockRevamp-NewParts
+    suppress_recommendations: true
+  - name: RealSolarSystem
+    suppress_recommendations: true
+  - name: ClickThroughBlocker
+    suppress_recommendations: true
+  - name: ToolbarController
+    suppress_recommendations: true
+  - name: Kerbalism-Config-RO
+    suppress_recommendations: true
+  - name: KSPCommunityFixes
+    suppress_recommendations: true
+  - name: KerbalChangelog
+    suppress_recommendations: true
+recommends:
+  - name: ROLoadingImages
+  - name: RSSDateTimeFormatter
+  - name: KSPBurst-Full
+    suppress_recommendations: true
+  - any_of:
+    - name: ReStock
+      suppress_recommendations: true
+    - name: VenStockRevamp
+      suppress_recommendations: true
+  - name: ReStockPlus
+    suppress_recommendations: true
+  - name: ROEngines
+    min_version: v2.0.0.0
+  - name: ROTanks
+  - name: ROCapsules
+    min_version: v2.0.0.0
+  - name: ROSolar
+    min_version: v2.0.0.0
+  - name: ROHeatshields
+  - name: B9-PWings-Fork
+    suppress_recommendations: true
+  - name: KSPWheel
+    suppress_recommendations: true
+  - name: KerbalRenamer
+    suppress_recommendations: true
+  - name: KSCSwitcher
+    suppress_recommendations: true
+  - name: AtmosphereAutopilot
+    suppress_recommendations: true
+  - name: ProceduralFairings
+    suppress_recommendations: true
+  - name: ProceduralParts
+    suppress_recommendations: true
+  - name: RCSBuildAid
+    suppress_recommendations: true
+  - name: RealAntennas
+    suppress_recommendations: true
+  - any_of:
+      - name: TestFlight
+        suppress_recommendations: true
+      - name: TestLite
+        suppress_recommendations: true
+  - name: TextureReplacer
+    suppress_recommendations: true
+  - name: MechJeb2
+    suppress_recommendations: true
+  - name: Waterfall
+    suppress_recommendations: true
+  - name: HangerExtenderExtended
+    suppress_recommendations: true
+  - name: ModularLaunchPads
+    suppress_recommendations: true
+  - name: ConformalDecals
+    suppress_recommendations: true
+  - name: Shabby
+    suppress_recommendations: true
+  - name: EditorExtensionsRedux
+    suppress_recommendations: true
+  - name: KerbalAlarmClock
+    suppress_recommendations: true
+  - name: TransferWindowPlannerFork
+    suppress_recommendations: true
+  - name: LunarTransferPlanner
+  - name: Principia
+    suppress_recommendations: true
+  - name: kOS
+    suppress_recommendations: true
+  - name: DockingPortSoundFX
+    suppress_recommendations: true
+suggests:
+  - name: CryoEngines
+    suppress_recommendations: true
+  - name: KerbalAtomics
+    suppress_recommendations: true
+  - name: NearFutureLaunchVehicles
+    suppress_recommendations: true
+  - name: HullcamVDSContinued
+    suppress_recommendations: true
+  - name: InternalRCS
+    suppress_recommendations: true
+  - name: NearFutureConstruction
+    suppress_recommendations: true
+  - name: NearFutureElectrical
+    suppress_recommendations: true
+  - name: NearFutureExploration
+    suppress_recommendations: true
+  - name: NearFutureSolar
+    suppress_recommendations: true
+  - name: ShuttleOrbiterConstructionKit
+    suppress_recommendations: true
+  - name: BuranEnergia
+    suppress_recommendations: true
+  - name: RN-SovietSpacecraft
+    suppress_recommendations: true
+  - name: RN-SalyutStations
+    suppress_recommendations: true
+  - name: BetterTimeWarpCont
+    suppress_recommendations: true
+  - name: DockingPortAlignmentIndicator
+    suppress_recommendations: true
+  - name: Historian-expanded
+    suppress_recommendations: true
+  - name: HyperEdit
+    suppress_recommendations: true
+  - name: KVVContinued
+    suppress_recommendations: true
+  - name: NavHudRenewed
+    suppress_recommendations: true
+  - name: WasdEditorCameraContinued
+    suppress_recommendations: true
+  - name: WaypointManager
+    suppress_recommendations: true
+  - name: WernherCheckerContinued
+    suppress_recommendations: true
 conflicts:
   - name: RP-0
   - name: KerbalConstructionTime
@@ -28,81 +168,4 @@ conflicts:
     max_version: v1.99.0.0
   - name: ROSolar
     max_version: v1.99.0.0
-depends:
-  - name: ModuleManager
-  - name: RealismOverhaul
-    min_version: v16.0.0.0
-  - name: SXTContinued
-  - name: ContractConfigurator
-  - name: CustomBarnKit
-  - name: VenStockRevamp-NewParts
-  - name: RealSolarSystem
-  - name: MagiCore
-  - name: ClickThroughBlocker
-  - name: ToolbarController
-  - name: Kerbalism-Config-RO
-  - name: KSPCommunityFixes
-  - name: KerbalChangelog
-recommends:
-  - name: KSPBurst-Full
-  - any_of:
-    - name: ReStock
-    - name: VenStockRevamp
-  - name: ReStockPlus
-  - name: RSSDateTimeFormatter
-  - name: ROEngines
-  - name: ROHeatshields
-  - name: ROTanks
-  - name: ROCapsules
-  - name: ROSolar
-  - name: B9-PWings-Fork
-  - name: KSPWheel
-  - name: KerbalRenamer
-  - name: KSCSwitcher
-  - name: AtmosphereAutopilot
-  - name: ProceduralFairings
-  - name: ProceduralParts
-  - name: RCSBuildAid
-  - name: RealAntennas
-  - any_of:
-      - name: TestFlight
-      - name: TestLite
-  - name: TextureReplacer
-  - name: MechJeb2
-  - name: Waterfall
-  - name: HangerExtenderExtended
-  - name: ModularLaunchPads
-  - name: ConformalDecals
-  - name: Shabby
-  - name: ROLoadingImages
-  - name: EditorExtensionsRedux
-  - name: KerbalAlarmClock
-  - name: TransferWindowPlannerFork
-  - name: LunarTransferPlanner
-  - name: Principia
-  - name: kOS
-  - name: DockingPortSoundFX
-suggests:
-  - name: CryoEngines
-  - name: KerbalAtomics
-  - name: NearFutureLaunchVehicles
-  - name: HullcamVDSContinued
-  - name: InternalRCS
-  - name: NearFutureConstruction
-  - name: NearFutureElectrical
-  - name: NearFutureExploration
-  - name: NearFutureSolar
-  - name: ShuttleOrbiterConstructionKit
-  - name: BuranEnergia
-  - name: RN-SovietSpacecraft
-  - name: RN-SalyutStations
-  - name: BetterTimeWarpCont
-  - name: DockingPortAlignmentIndicator
-  - name: Historian-expanded
-  - name: HyperEdit
-  - name: KVVContinued
-  - name: NavHudRenewed
-  - name: WasdEditorCameraContinued
-  - name: WaypointManager
-  - name: WernherCheckerContinued
 x_via: Generated by Metadata Webtool

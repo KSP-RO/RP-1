@@ -13,7 +13,7 @@ namespace RP0.DataTypes
             Clear();
             foreach (ConfigNode n in node.nodes)
             {
-                T item = System.Activator.CreateInstance<T>();
+                T item = Activator.CreateInstance<T>();
                 item.Load(n);
                 Add(item);
             }
@@ -42,7 +42,7 @@ namespace RP0.DataTypes
                 {
                     ConfigNode n = new ConfigNode();
                     v.Save(n);
-                    T item = System.Activator.CreateInstance<T>();
+                    T item = Activator.CreateInstance<T>();
                     item.Load(n);
                     clone.Add(item);
                 }

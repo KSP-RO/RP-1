@@ -607,8 +607,8 @@ namespace RP0
         {
             Message = String.Format(Message, strParams);
             String strMessageLine = String.Format("{0},{2}-{3},{1}",
-                DateTime.Now, Message, System.Reflection.Assembly.GetExecutingAssembly().GetName().Name,
-                System.Reflection.MethodBase.GetCurrentMethod().DeclaringType.Name);
+                DateTime.Now, Message, Assembly.GetExecutingAssembly().GetName().Name,
+                MethodBase.GetCurrentMethod().DeclaringType.Name);
             UnityEngine.Debug.Log(strMessageLine);
         }
         #endregion

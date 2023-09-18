@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
 using KSP.UI.Screens;
 using UnityEngine;
 using KSP.Localization;
@@ -7,7 +6,6 @@ using System.Collections.Generic;
 using KSP.UI;
 using Upgradeables;
 using System;
-using UnityEngine.UI;
 using KSP.UI.TooltipTypes;
 
 namespace RP0.Harmony
@@ -24,7 +22,7 @@ namespace RP0.Harmony
         [HarmonyPatch("Create")]
         internal static bool Prefix_Create(SpaceCenterBuilding host, Callback<KSCFacilityContextMenu.DismissAction> onMenuDismiss, out KSCFacilityContextMenu __result)
         {
-            KSCFacilityContextMenu menu = GameObject.Instantiate(AssetBase.GetPrefab("FacilityContextMenu")).GetComponent<KSCFacilityContextMenu>();
+            KSCFacilityContextMenu menu = UnityEngine.Object.Instantiate(AssetBase.GetPrefab("FacilityContextMenu")).GetComponent<KSCFacilityContextMenu>();
             menu.hasFacility = host != null && host.Facility != null;
             menu.isUpgradeable = ScenarioUpgradeableFacilities.Instance != null && menu.hasFacility && (object)host.Facility != null;
             menu.showDowngradeControls = Input.GetKey(KeyCode.LeftControl);
@@ -76,7 +74,7 @@ namespace RP0.Harmony
                     if (HighLogic.LoadedSceneIsGame)
                         oldCost *= HighLogic.CurrentGame.Parameters.Career.FundsLossMultiplier;
                     var facilityType = GetFacilityType(__instance.host);
-                    double rate = KerbalConstructionTime.KCTUtilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, facilityType);
+                    double rate = KCTUtilities.GetConstructionRate(0, KCTGameStates.ActiveKSC, facilityType);
 
                     if ((float)__instance.host.Facility.FacilityLevel != __instance.host.Facility.MaxLevel)
                     {
@@ -450,7 +448,7 @@ namespace RP0.Harmony
                     {
                         double mult = facilityUpgrade.UpgradeLevels.Length > 1 ? 1d / (facilityUpgrade.UpgradeLevels.Length - 1d) : 1d;
                         for (int i = 0; i < facilityUpgrade.UpgradeLevels.Length; i++)
-                            RP0.LocalizationHandler.UpdateFacilityLevelStats(facilityUpgrade.UpgradeLevels[i], i, i * mult);
+                            LocalizationHandler.UpdateFacilityLevelStats(facilityUpgrade.UpgradeLevels[i], i, i * mult);
                     }
                 }
             }

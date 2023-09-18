@@ -1,10 +1,7 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
 using KSP.Localization;
 using KSP.UI.TooltipTypes;
 using RP0.UI;
-using TMPro;
-using UnityEngine;
 using UnityEngine.UI;
 
 namespace RP0.Harmony

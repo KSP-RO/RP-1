@@ -60,7 +60,7 @@ namespace RP0
             if (sciDelta > 0f && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
             {
                 if (Programs.ProgramHandler.Settings != null)
-                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTime.KerbalConstructionTimeData.Instance.SciPointsTotal)) * sciDelta;
+                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTimeData.Instance.SciPointsTotal)) * sciDelta;
                 else
                     conf = sciDelta * 2f;
 

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using UniLinq;
-using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     /// <summary>
     /// A VesselModule for keeping persistent vessel data across decouplings, dockings, recoveries and edits inside the VAB/SPH.

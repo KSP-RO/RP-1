@@ -3,7 +3,7 @@ using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class AirlaunchTechLevel : ConfigNodePersistenceBase, IConfigNode
     {

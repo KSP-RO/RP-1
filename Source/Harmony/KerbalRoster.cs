@@ -1,6 +1,4 @@
 ﻿using HarmonyLib;
-using KSP.UI.Screens.SpaceCenter.MissionSummaryDialog;
-using System.Collections.Generic;
 
 namespace RP0.Harmony
 {

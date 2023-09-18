@@ -1,15 +1,7 @@
 ﻿using HarmonyLib;
-using KSP.UI.Screens;
-using KSP.UI;
 using Strategies;
-using System;
-using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
-using System.Reflection;
 using RP0.Programs;
-using UniLinq;
 
 namespace RP0.Harmony
 {

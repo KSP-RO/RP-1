@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace RP0.Crew
@@ -45,7 +44,7 @@ namespace RP0.Crew
                 double c = days;
 
                 foreach (string s in children)
-                    c += TrainingDatabase._GetTime(s);
+                    c += _GetTime(s);
 
                 return c;
             }
@@ -55,7 +54,7 @@ namespace RP0.Crew
                 if (this.name == name)
                     return true;
                 foreach (string s in children)
-                    if (TrainingDatabase.holders[s].HasName(name))
+                    if (holders[s].HasName(name))
                         return true;
 
                 return false;
@@ -72,7 +71,7 @@ namespace RP0.Crew
                     }
                 }
                 foreach (string s in children)
-                    TrainingDatabase._FillBools(s, items, bools);
+                    _FillBools(s, items, bools);
             }
 
             #endregion
@@ -194,7 +193,7 @@ namespace RP0.Crew
             int maxLevel = 0;
             foreach (var s in unlockPathTracker)
             {
-                if (KerbalConstructionTime.Database.SettingsCrew.ACLevelsForTraining.TryGetValue(s, out var lvl) && lvl > maxLevel)
+                if (Database.SettingsCrew.ACLevelsForTraining.TryGetValue(s, out var lvl) && lvl > maxLevel)
                     maxLevel = lvl;
             }
 

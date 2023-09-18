@@ -253,7 +253,6 @@
     <Compile Include="KerbalConstructionTime\Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="KerbalConstructionTime\Utilities\ECMHelper.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\IKCTBuildItem.cs" />
-    <Compile Include="KerbalConstructionTime\ModIntegrations\KACWrapper.cs" />
     <Compile Include="KerbalConstructionTime\Utilities\KCTDebug.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\AirlaunchPrep.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\BuildListVessel.cs" />

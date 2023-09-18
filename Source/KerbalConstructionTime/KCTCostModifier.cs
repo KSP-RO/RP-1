@@ -1,4 +1,4 @@
-﻿namespace KerbalConstructionTime
+﻿namespace RP0
 {
     public class KCTCostModifier : RP0.DataTypes.ConfigNodePersistenceBase
     {

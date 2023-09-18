@@ -1,9 +1,6 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
-using KSP.UI.TooltipTypes;
 using KSP.UI.Screens.Editor;
 using System;
-using UniLinq;
 using UnityEngine;
 using KSP.Localization;
 

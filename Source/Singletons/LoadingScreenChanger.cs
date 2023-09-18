@@ -76,7 +76,7 @@ namespace RP0
                 Debug.LogError($"[RP-0] Patching failed: with error {error}, exception {ex}");
             }
 
-            GameObject.Destroy(this);
+            Destroy(this);
 
             _done = true;
         }

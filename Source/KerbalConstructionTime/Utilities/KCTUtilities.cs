@@ -1,6 +1,5 @@
 ﻿using KSP.UI;
 using KSP.UI.Screens;
-using RP0;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -10,7 +9,7 @@ using UniLinq;
 using UnityEngine;
 using UnityEngine.Profiling;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static class KCTUtilities
     {
@@ -680,7 +679,7 @@ namespace KerbalConstructionTime
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
         {
             // this will spend the funds, which is why we set costsFunds=false below.
-            RP0.UnlockCreditHandler.Instance.SpendCreditAndCost(availableParts);
+            UnlockCreditHandler.Instance.SpendCreditAndCost(availableParts);
 
             foreach (var ap in availableParts)
             {
@@ -827,7 +826,7 @@ namespace KerbalConstructionTime
                 if (tech.GetBlockingTech(KerbalConstructionTimeData.Instance.TechList) == null)   // Ignore items that are blocked
                     _checkTime(tech, ref shortestTime, ref thing);
             }
-            foreach (IKCTBuildItem course in RP0.Crew.CrewHandler.Instance.TrainingCourses)
+            foreach (IKCTBuildItem course in Crew.CrewHandler.Instance.TrainingCourses)
                 _checkTime(course, ref shortestTime, ref thing);
             if (KerbalConstructionTimeData.Instance.fundTarget.IsValid)
                 _checkTime(KerbalConstructionTimeData.Instance.fundTarget, ref shortestTime, ref thing);
@@ -967,14 +966,14 @@ namespace KerbalConstructionTime
             Tuple<float, List<string>> unlockInfo = GetVesselUnlockInfo(ship);
             KCTGameStates.EditorUnlockCosts = unlockInfo.Item1;
             KCTGameStates.EditorRequiredTechs = unlockInfo.Item2;
-            RP0.ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
+            ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
             KCTGameStates.EditorToolingCosts = toolingCost;
 
             // It would be better to only do this if necessary, but eh.
             // It's not easy to know if various buried fields in the blv changed.
             // It would *also* be nice to not run the ER before the blv is ready
             // post craft-load, but...also eh. This is fine.
-            RP0.Harmony.PatchEngineersReport.UpdateCraftStats();
+            Harmony.PatchEngineersReport.UpdateCraftStats();
         }
 
         public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)
@@ -1606,9 +1605,9 @@ namespace KerbalConstructionTime
                 }
             }
 
-            double ecmCost = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.PartOrUpgradeUnlock, -RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList));
+            double ecmCost = -CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmPartsList));
 
-            runningCost = -(float)RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.PartOrUpgradeUnlock, -runningCost);
+            runningCost = -(float)CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -runningCost);
 
             List<string> techList = SortAndFilterTechListForFinalNodes(pendingTech);
             float totalCost = runningCost + Convert.ToSingle(ecmCost);
@@ -1666,7 +1665,7 @@ namespace KerbalConstructionTime
                 else
                 {
                     PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
-                    if (KCTUtilities.PartIsUnlocked(part))
+                    if (PartIsUnlocked(part))
                         status = PurchasabilityStatus.Purchased;
                     else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
                         status = PurchasabilityStatus.Purchasable;

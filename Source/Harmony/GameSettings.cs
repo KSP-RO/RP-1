@@ -1,6 +1,4 @@
 ﻿using HarmonyLib;
-using System.Reflection;
-using UnityEngine;
 
 namespace RP0.Harmony
 {

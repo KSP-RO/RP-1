@@ -1,8 +1,4 @@
-﻿using RP0;
-using System;
-using UniLinq;
-
-namespace KerbalConstructionTime
+﻿namespace RP0
 {
     public class AirlaunchPrep : LCProject
     {

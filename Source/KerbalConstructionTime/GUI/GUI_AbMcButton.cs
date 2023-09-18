@@ -1,14 +1,14 @@
 ﻿using KSP.UI.Screens;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     internal class GUI_AbMcButton : GUI_TopRightButton
     {
         public bool IsMcUp => MissionControl.Instance != null;
         public bool IsAbUp => Administration.Instance != null;
 
-        public GUI_AbMcButton(int offset) : base(offset, GUI_TopRightButton.StateMode.Toggle)
+        public GUI_AbMcButton(int offset) : base(offset, StateMode.Toggle)
         {
         }
 

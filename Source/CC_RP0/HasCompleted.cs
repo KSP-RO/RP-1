@@ -4,7 +4,7 @@ using System.Linq;
 using System;
 using Contracts;
 using ContractConfigurator.Parameters;
-using KerbalConstructionTime;
+using RP0;
 using UnityEngine;
 
 namespace ContractConfigurator.RP0

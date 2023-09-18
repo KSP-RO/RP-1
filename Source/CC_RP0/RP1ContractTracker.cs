@@ -2,7 +2,6 @@
 using System.Linq;
 using Contracts;
 using ContractConfigurator.Parameters;
-using KerbalConstructionTime;
 using RP0;
 
 namespace ContractConfigurator.RP0

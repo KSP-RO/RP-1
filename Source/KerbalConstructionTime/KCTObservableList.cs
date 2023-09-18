@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class KCTObservableList<T> : PersistentList<T> where T : IConfigNode
     {
@@ -90,7 +90,7 @@ namespace KerbalConstructionTime
         public new int RemoveAll(Predicate<T> match)
         {
             int removed = 0;
-            for (int i = base.Count - 1; i >= 0; --i)
+            for (int i = Count - 1; i >= 0; --i)
             {
                 T item = base[i];
                 if (match(item))

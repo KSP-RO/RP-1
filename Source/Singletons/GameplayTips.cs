@@ -1,5 +1,4 @@
-﻿using KerbalConstructionTime;
-using RealFuels;
+﻿using RealFuels;
 using System.Collections;
 using UniLinq;
 using UnityEngine;

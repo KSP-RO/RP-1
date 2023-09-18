@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace RP0
@@ -60,14 +59,14 @@ namespace RP0
         private static void OnDialogSpawn()
         {
             UIHolder.Instance.HideIfShowing();
-            KerbalConstructionTime.KCT_GUI.BackupUIState();
-            KerbalConstructionTime.KCT_GUI.HideAll();
+            KCT_GUI.BackupUIState();
+            KCT_GUI.HideAll();
         }
 
         private static void OnDialogDismiss()
         {
             UIHolder.Instance.ShowIfWasHidden();
-            KerbalConstructionTime.KCT_GUI.RestorePrevUIState();
+            KCT_GUI.RestorePrevUIState();
         }
     }
 }

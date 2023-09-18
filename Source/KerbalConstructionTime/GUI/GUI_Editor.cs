@@ -1,11 +1,8 @@
-﻿using RP0;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using UniLinq;
 using UnityEngine;
-using static RP0.MiscUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {
@@ -101,27 +98,27 @@ namespace KerbalConstructionTime
                 double effectiveEngCount = bR / rateWithCurEngis * KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.Engineers;
                 double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.IdleSalaryMult);
                 double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
-                GUILayout.Label(new GUIContent($"Net Salary: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
+                GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
             }
 
             if (KCTGameStates.EditorRolloutCost > 0)
-                GUILayout.Label($"Rollout Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCost):N1}");
+                GUILayout.Label($"Rollout Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCost):N1}");
 
             bool showCredit = false;
             if (KCTGameStates.EditorUnlockCosts > 0)
             {
                 showCredit = true;
-                GUILayout.Label($"Unlock Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.PartOrUpgradeUnlock, -KCTGameStates.EditorUnlockCosts):N1}");
+                GUILayout.Label($"Unlock Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -KCTGameStates.EditorUnlockCosts):N1}");
             }
 
             if (KCTGameStates.EditorToolingCosts > 0)
             {
                 showCredit = true;
-                GUILayout.Label($"Tooling Cost: √{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.ToolingPurchase, -KCTGameStates.EditorToolingCosts):N1}");
+                GUILayout.Label($"Tooling Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -KCTGameStates.EditorToolingCosts):N1}");
             }
 
             if (showCredit)
-                GUILayout.Label($"Unlock Credit: √{RP0.UnlockCreditHandler.Instance.TotalCredit:N1}");
+                GUILayout.Label($"Unlock Credit: √{UnlockCreditHandler.Instance.TotalCredit:N1}");
 
             if (KCTGameStates.EditorRequiredTechs.Count > 0)
             {

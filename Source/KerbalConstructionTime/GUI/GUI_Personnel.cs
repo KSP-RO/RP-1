@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using UnityEngine;
-using UniLinq;
-using RP0;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {
@@ -47,7 +44,7 @@ namespace KerbalConstructionTime
             GUILayout.Label(KerbalConstructionTimeData.Instance.Applicants.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            double salaryE = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryEngineers, -RP0.MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
+            double salaryE = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
             GUILayout.Label(KCTGameStates.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
@@ -55,7 +52,7 @@ namespace KerbalConstructionTime
             GUILayout.Label($"√{salaryE:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            double salaryR = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.SalaryResearchers, -RP0.MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d);
+            double salaryR = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
             GUILayout.Label(KerbalConstructionTimeData.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
@@ -348,7 +345,7 @@ namespace KerbalConstructionTime
                 }
                 fireAmount = Math.Min(workers, fireAmount);
 
-                double modifiedHireCost = -RP0.CurrencyUtils.Funds(research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers, -Database.SettingsSC.HireCost);
+                double modifiedHireCost = -CurrencyUtils.Funds(research ? TransactionReasonsRP0.HiringResearchers : TransactionReasonsRP0.HiringEngineers, -Database.SettingsSC.HireCost);
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = Math.Max(_buyModifierMultsPersonnel[0], KerbalConstructionTimeData.Instance.Applicants + (int)(Funding.Instance.Funds / modifiedHireCost));
@@ -372,7 +369,7 @@ namespace KerbalConstructionTime
                 if (GUILayout.Button($"Hire {workers:N0}: √{_fundsCost:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
                     // Note: have to pass base, not modified, cost here, since the CMQ reruns
-                    KCTUtilities.SpendFunds(workersToHire * Database.SettingsSC.HireCost, research ? RP0.TransactionReasonsRP0.HiringResearchers : RP0.TransactionReasonsRP0.HiringEngineers);
+                    KCTUtilities.SpendFunds(workersToHire * Database.SettingsSC.HireCost, research ? TransactionReasonsRP0.HiringResearchers : TransactionReasonsRP0.HiringEngineers);
                     if (research)
                     {
                         KCTUtilities.ChangeResearchers(workers);

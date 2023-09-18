@@ -2,15 +2,12 @@
 using KSP.UI.Screens;
 using KSP.UI;
 using Strategies;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using System.Reflection;
 using RP0.Programs;
 using UniLinq;
 using KSP.Localization;
-using static RP0.KSPUtils;
 
 namespace RP0.Harmony
 {
@@ -51,7 +48,7 @@ namespace RP0.Harmony
             // First we need to find each program (well, each ProgramStrategy) and
             // figure out what its best allowable speed is, because that depends on
             // the current confidence quantity.
-            foreach (var strat in Strategies.StrategySystem.Instance.GetStrategies("Programs"))
+            foreach (var strat in StrategySystem.Instance.GetStrategies("Programs"))
             {
                 if (strat is ProgramStrategy ps)
                 {
@@ -64,7 +61,7 @@ namespace RP0.Harmony
             foreach (var trf in trfs)
             {
                 if (trf.name == "DepartmentSpacer1" || trf.name == "DepartmentSpacer2")
-                    GameObject.DestroyImmediate(trf.gameObject);
+                    UnityEngine.Object.DestroyImmediate(trf.gameObject);
             }
         }
 
@@ -161,14 +158,14 @@ namespace RP0.Harmony
             // Create some spacers to make everything look nicer.
             __instance.scrollListStrategies.GetUilistItemAt(0).GetComponent<LayoutElement>().minWidth = 280f;
             var firstDep = __instance.scrollListKerbals.GetUilistItemAt(0);
-            GameObject spacer = GameObject.Instantiate(firstDep.gameObject);
+            GameObject spacer = UnityEngine.Object.Instantiate(firstDep.gameObject);
             spacer.name = "DepartmentSpacer1";
             for (int i = spacer.transform.childCount - 1; i >= 0; --i)
-                GameObject.DestroyImmediate(spacer.transform.GetChild(i).gameObject);
+                UnityEngine.Object.DestroyImmediate(spacer.transform.GetChild(i).gameObject);
 
-            GameObject.DestroyImmediate(spacer.GetComponent<KerbalListItem>());
-            GameObject.DestroyImmediate(spacer.GetComponent<Image>());
-            GameObject.DestroyImmediate(spacer.GetComponent<UIListItem>());
+            UnityEngine.Object.DestroyImmediate(spacer.GetComponent<KerbalListItem>());
+            UnityEngine.Object.DestroyImmediate(spacer.GetComponent<Image>());
+            UnityEngine.Object.DestroyImmediate(spacer.GetComponent<UIListItem>());
 
             spacer.GetComponent<LayoutElement>().minWidth = 70f;
             spacer.transform.SetParent(firstDep.transform.parent, false);
@@ -176,7 +173,7 @@ namespace RP0.Harmony
 
             firstDep.transform.SetAsFirstSibling();
 
-            GameObject spacer2 = GameObject.Instantiate(spacer);
+            GameObject spacer2 = UnityEngine.Object.Instantiate(spacer);
             spacer2.name = "DepartmentSpacer2";
             spacer2.transform.SetParent(spacer.transform.parent, false);
             spacer2.transform.SetAsFirstSibling();

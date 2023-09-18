@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Upgradeables;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class FacilityUpgrade : ConstructionBuildItem
     {

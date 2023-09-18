@@ -1,8 +1,7 @@
-﻿using RP0;
-using System;
+﻿using System;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {

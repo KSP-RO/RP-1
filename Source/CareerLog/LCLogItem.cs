@@ -1,5 +1,4 @@
-﻿using KerbalConstructionTime;
-using System;
+﻿using System;
 using UnityEngine;
 using RP0.DataTypes;
 

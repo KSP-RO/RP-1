@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
 using KSP.UI.Screens;
 using UniLinq;
 using UnityEngine.UI;

@@ -1,7 +1,6 @@
 ﻿using ContractConfigurator;
 using ContractConfigurator.Parameters;
 using Contracts;
-using KerbalConstructionTime;
 using RP0.DataTypes;
 using System.Collections;
 using System.Collections.Generic;
@@ -78,7 +77,7 @@ namespace RP0.Milestones
 
             // If we have queued milestones, and we're not in a subscene, and there isn't one showing, try showing
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER && queuedMilestones.Count > 0 &&
-                !KerbalConstructionTime.KCT_GUI.InSCSubscene && !NewspaperUI.IsOpen)
+                !KCT_GUI.InSCSubscene && !NewspaperUI.IsOpen)
             {
                 TryCreateNewspaper();
             }

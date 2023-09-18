@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System;
-using static RP0.MiscUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class Formula
     {
@@ -52,8 +51,8 @@ namespace KerbalConstructionTime
         public static double GetConstructionBuildRate(int index, KSCItem KSC, SpaceCenterFacility facilityType)
         {
             double rate = 1d / 86400d;
-            RP0.TransactionReasonsRP0 reason = facilityType == SpaceCenterFacility.LaunchPad ? RP0.TransactionReasonsRP0.StructureConstructionLC : RP0.TransactionReasonsRP0.StructureConstruction;
-            return rate * RP0.CurrencyUtils.Rate(reason);
+            RP0.TransactionReasonsRP0 reason = facilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction;
+            return rate * CurrencyUtils.Rate(reason);
         }
 
         public static double GetResearchRate(double ScienceValue, int index, int upgradeDelta)

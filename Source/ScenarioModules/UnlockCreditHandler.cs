@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
-using KerbalConstructionTime;
 using System;
 
 namespace RP0
@@ -18,12 +17,12 @@ namespace RP0
         public double CreditForTime(double UT)
         {
             double sum = 0d;
-            double mult = UT * KerbalConstructionTime.Database.SettingsSC.salaryResearchers * (1d / (86400d * 365.25d));
+            double mult = UT * Database.SettingsSC.salaryResearchers * (1d / (86400d * 365.25d));
             
             int res = KerbalConstructionTimeData.Instance.Researchers;
             int totalCounted = 0;
             
-            foreach (var kvp in KerbalConstructionTime.Database.SettingsSC.researchersToUnlockCreditSalaryMultipliers)
+            foreach (var kvp in Database.SettingsSC.researchersToUnlockCreditSalaryMultipliers)
             {
                 if (totalCounted >= res)
                     break;
@@ -219,7 +218,7 @@ namespace RP0
                 int remainingCost = (int)ProcessCredit(ap.entryCost, ap.TechRequired);
                 ap.SetEntryCost(remainingCost);
                 if(HighLogic.LoadedSceneIsEditor)
-                    KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+                    KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             }
         }
 
@@ -229,7 +228,7 @@ namespace RP0
             float remainingCost = ProcessCredit(up.entryCost, up.techRequired);
             up.entryCost = remainingCost;
             if (HighLogic.LoadedSceneIsEditor)
-                KerbalConstructionTime.KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+                KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
         }
 
         public override void OnLoad(ConfigNode node)

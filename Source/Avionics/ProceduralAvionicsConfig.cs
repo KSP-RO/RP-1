@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using UniLinq;
-using System.Text;
 
 namespace RP0.ProceduralAvionics
 {

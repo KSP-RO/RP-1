@@ -2,7 +2,6 @@
 using Strategies;
 using System.Collections.Generic;
 using RP0.Programs;
-using UniLinq;
 
 namespace RP0.Harmony
 {
@@ -192,7 +191,7 @@ namespace RP0.Harmony
 
             ProgramHandler.Instance.OnLoadStrategiesComplete();
 
-            KerbalConstructionTime.KCTGameStates.RecalculateBuildRates();
+            KCTGameStates.RecalculateBuildRates();
         }
     }
 }

@@ -164,9 +164,9 @@ namespace RP0.ProceduralAvionics
             PartUpgradeHandler.Upgrade upgd = PartUpgradeManager.Handler.GetUpgrade(upgdName);
             if (upgd == null) return false;
 
-            RP0.Harmony.RFECMPatcher.techNode = techNode.TechNodeName;
+            Harmony.RFECMPatcher.techNode = techNode.TechNodeName;
             bool success = EntryCostManager.Instance.PurchaseConfig(upgdName);
-            RP0.Harmony.RFECMPatcher.techNode = null;
+            Harmony.RFECMPatcher.techNode = null;
             if (success)
             {
                 PartUpgradeManager.Handler.SetUnlocked(upgd.name, true);

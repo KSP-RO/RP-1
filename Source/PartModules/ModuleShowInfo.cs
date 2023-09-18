@@ -1,8 +1,6 @@
 ﻿using RP0.Crew;
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using UniLinq;
 using System.Reflection;
 using UnityEngine;
 using RealFuels;
@@ -17,7 +15,7 @@ namespace RP0
         private void Awake()
         {
             if (HighLogic.LoadedSceneIsFlight)
-                GameObject.Destroy(this);
+                Destroy(this);
         }
 
         private void Update()
@@ -41,7 +39,7 @@ namespace RP0
                 }
 
                 run = false;
-                GameObject.Destroy(this);
+                Destroy(this);
             }
         }
     }

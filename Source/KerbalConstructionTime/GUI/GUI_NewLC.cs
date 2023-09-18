@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using static RP0.UIBase;
-using RP0;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {
@@ -234,9 +232,9 @@ namespace KerbalConstructionTime
                 GUILayout.Label($"{activeLC.MaxEngineers:N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
-                double oldMaintenance = Math.Max(0d, RP0.MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(oldVABCost + oldResCost + oldPadCost * lpMult, isHangar ? RP0.FacilityMaintenanceType.Hangar : RP0.FacilityMaintenanceType.LC));
+                double oldMaintenance = Math.Max(0d, MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(oldVABCost + oldResCost + oldPadCost * lpMult, isHangar ? FacilityMaintenanceType.Hangar : FacilityMaintenanceType.LC));
 
-                oldMaintenance = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureRepairLC, -oldMaintenance);
+                oldMaintenance = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -oldMaintenance);
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Yearly Upkeep:", GUILayout.ExpandWidth(false));
                 GUILayout.Label(new GUIContent($"√{(oldMaintenance * 365.25d):N0}", $"Daily: √{oldMaintenance:N1}"), GetLabelRightAlignStyle());
@@ -427,7 +425,7 @@ namespace KerbalConstructionTime
                 GUILayout.Label(" ");
 
                 double buildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
-                double buildCost = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -totalCost);
+                double buildCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -totalCost);
                 string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
@@ -438,7 +436,7 @@ namespace KerbalConstructionTime
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(_extraPadsContent, GUILayout.ExpandWidth(false));
-                    GUILayout.Label($"√{-RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureConstructionLC, -curPadCost):N0}", GetLabelRightAlignStyle());
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -curPadCost):N0}", GetLabelRightAlignStyle());
                     GUILayout.EndHorizontal();
                 }
                 GUILayout.BeginHorizontal();
@@ -446,11 +444,11 @@ namespace KerbalConstructionTime
                 GUILayout.Label(new GUIContent(sBuildTime, "At 100% work rate"), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
-                double projectedMaintenance = RP0.MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(totalCostForMaintenance, isHangar ? RP0.FacilityMaintenanceType.Hangar : RP0.FacilityMaintenanceType.LC);
+                double projectedMaintenance = MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(totalCostForMaintenance, isHangar ? FacilityMaintenanceType.Hangar : FacilityMaintenanceType.LC);
 
                 if (projectedMaintenance > 0d)
                 {
-                    projectedMaintenance = -RP0.CurrencyUtils.Funds(RP0.TransactionReasonsRP0.StructureRepairLC, -projectedMaintenance);
+                    projectedMaintenance = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -projectedMaintenance);
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Est. Yearly Upkeep:", GUILayout.ExpandWidth(false));
                     GUILayout.Label(new GUIContent($"√{(projectedMaintenance * 365.25d):N0}", $"Daily: √{projectedMaintenance:N1}"), GetLabelRightAlignStyle());

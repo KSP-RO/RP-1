@@ -1,12 +1,7 @@
 ﻿using HarmonyLib;
 using Strategies;
-using System.Reflection;
 using RP0.Programs;
-using UniLinq;
-using System.Collections;
-using System.Collections.Generic;
 using KSP.Localization;
-using System.Reflection.Emit;
 
 namespace RP0.Harmony
 {
@@ -30,7 +25,7 @@ namespace RP0.Harmony
         {
             if (__instance is ProgramStrategy && __result)
             {
-                reason = KSP.Localization.Localizer.GetStringByTag("#rp0_Admin_CanCompleteProgram");
+                reason = Localizer.GetStringByTag("#rp0_Admin_CanCompleteProgram");
             }
         }
 

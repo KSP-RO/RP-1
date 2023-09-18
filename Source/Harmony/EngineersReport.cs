@@ -1,15 +1,11 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
 using KSP.Localization;
 using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 using KSP.UI.Screens;
 using KSP.UI;
 using System.Collections.Generic;
-using System.Reflection;
 using PreFlightTests;
-using System.Collections;
 
 namespace RP0.Harmony
 {
@@ -159,17 +155,17 @@ namespace RP0.Harmony
             bool resourcesOK = true;
             if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
-                totalMass = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.mass;
-                craftSize = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.ShipSize;
-                vesselHumanRated = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.humanRated;
+                totalMass = KerbalConstructionTime.Instance.EditorVessel.mass;
+                craftSize = KerbalConstructionTime.Instance.EditorVessel.ShipSize;
+                vesselHumanRated = KerbalConstructionTime.Instance.EditorVessel.humanRated;
 
-                resourcesOK = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.ResourcesOK(KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.LC.Stats);
+                resourcesOK = KerbalConstructionTime.Instance.EditorVessel.ResourcesOK(KerbalConstructionTime.Instance.EditorVessel.LC.Stats);
 
-                massLimit = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.LC.MassMax;
-                minMassLimit = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.LC.MassMin;
-                maxSize = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.LC.SizeMax;
-                lcHumanRated = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.LC.IsHumanRated;
-                vesselHumanRated = KerbalConstructionTime.KerbalConstructionTime.Instance.EditorVessel.humanRated;
+                massLimit = KerbalConstructionTime.Instance.EditorVessel.LC.MassMax;
+                minMassLimit = KerbalConstructionTime.Instance.EditorVessel.LC.MassMin;
+                maxSize = KerbalConstructionTime.Instance.EditorVessel.LC.SizeMax;
+                lcHumanRated = KerbalConstructionTime.Instance.EditorVessel.LC.IsHumanRated;
+                vesselHumanRated = KerbalConstructionTime.Instance.EditorVessel.humanRated;
             }
             else
             {

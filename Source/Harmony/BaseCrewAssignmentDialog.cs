@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
 using KSP.UI;
 using System;
 using System.Collections.Generic;

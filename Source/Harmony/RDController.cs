@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
 using KSP.UI.Screens;
 using UnityEngine;
 using KSP.Localization;

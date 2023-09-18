@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 using UniLinq;
-using UnityEngine;
 using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class KSCItem : IConfigNode
     {
@@ -35,7 +34,7 @@ namespace KerbalConstructionTime
         void updated()
         {
             if (_allowRecalcConstructions) RecalculateBuildRates(false);
-            RP0.MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
         }
 
         private void AddListeners()
@@ -154,7 +153,7 @@ namespace KerbalConstructionTime
             {
                 if (!KCTGameStates.EditorShipEditingMode)
                     KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
-                KerbalConstructionTime.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, RP0.Harmony.PatchEngineersReport.UpdateCraftStats));
+                KerbalConstructionTime.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, Harmony.PatchEngineersReport.UpdateCraftStats));
             }
 
             LaunchComplexes[LC_index].SwitchLaunchPad();

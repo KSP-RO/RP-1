@@ -41,7 +41,7 @@ namespace RP0
             GameVariables.Instance.contractPrestigeSignificant = 1f;
             GameVariables.Instance.contractPrestigeExceptional = 1f;
 
-            GameObject.Destroy(this);
+            Destroy(this);
         }
     }
 

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
     public class KCTVesselTrackerEventHandler : MonoBehaviour

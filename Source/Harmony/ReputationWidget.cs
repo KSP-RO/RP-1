@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using KerbalConstructionTime;
 using KSP.Localization;
 using KSP.UI.TooltipTypes;
 using RP0.UI;
@@ -30,24 +29,24 @@ namespace RP0.Harmony
         [HarmonyPatch("DelayedStart")]
         internal static bool Prefix_DelayedStart(ReputationWidget __instance)
         {
-            GameObject.DestroyImmediate(__instance.gauge);
+            Object.DestroyImmediate(__instance.gauge);
             __instance.gauge = null;
-            GameObject.DestroyImmediate(__instance.gameObject.transform.Find("circularGauge").gameObject);
+            Object.DestroyImmediate(__instance.gameObject.transform.Find("circularGauge").gameObject);
 
             // Create the Confidence widget
-            ConfidenceWidget.CreateConfidenceWidget(GameObject.Instantiate(__instance.gameObject, __instance.transform.parent, worldPositionStays: false));
+            ConfidenceWidget.CreateConfidenceWidget(Object.Instantiate(__instance.gameObject, __instance.transform.parent, worldPositionStays: false));
 
             var frameImage = (Image)__instance.gameObject.GetComponentInChildren(typeof(Image));
             frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-1/Resources/rep_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
 
-            var img = GameObject.Instantiate(new GameObject("repBackground"), __instance.transform, worldPositionStays: false).AddComponent<Image>();
+            var img = Object.Instantiate(new GameObject("repBackground"), __instance.transform, worldPositionStays: false).AddComponent<Image>();
             img.color = new Color32(58, 58, 63, 255);
             img.rectTransform.anchorMin = frameImage.rectTransform.anchorMin;
             img.rectTransform.anchorMax = frameImage.rectTransform.anchorMax;
             img.rectTransform.anchoredPosition = frameImage.rectTransform.anchoredPosition;
             img.rectTransform.sizeDelta = ((RectTransform)__instance.gameObject.transform).sizeDelta;    // No idea why the frame image transform is larger than the component itself
 
-            RepLabel = GameObject.Instantiate(new GameObject("repLabel"), __instance.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
+            RepLabel = Object.Instantiate(new GameObject("repLabel"), __instance.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
             RepLabel.alignment = TextAlignmentOptions.Right;
             RepLabel.color = XKCDColors.Mustard;
             RepLabel.fontSize = 22;
@@ -69,12 +68,12 @@ namespace RP0.Harmony
             MaintenanceHandler.SubsidyDetails details = new MaintenanceHandler.SubsidyDetails();
             MaintenanceHandler.FillSubsidyDetails(ref details, Planetarium.GetUniversalTime(), Reputation.Instance.reputation);
 
-            double repLostPerDay = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -Reputation.Instance.reputation * KerbalConstructionTime.Database.SettingsSC.repPortionLostPerDay);
+            double repLostPerDay = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -Reputation.Instance.reputation * Database.SettingsSC.repPortionLostPerDay);
             double repLostPerYear = repLostPerDay * 5.25d;
             double runningRep = Reputation.Instance.reputation - repLostPerYear;
             for (int i = 0; i < 12; ++i)
             {
-                double lossAmt = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -runningRep * KerbalConstructionTime.Database.SettingsSC.repPortionLostPerDay) * 30d;
+                double lossAmt = -CurrencyUtils.Rep(TransactionReasonsRP0.DailyRepDecline, -runningRep * Database.SettingsSC.repPortionLostPerDay) * 30d;
                 runningRep -= lossAmt;
                 repLostPerYear += lossAmt;
             }

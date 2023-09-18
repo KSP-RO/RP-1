@@ -1,6 +1,6 @@
 ﻿using ContractConfigurator.Parameters;
 using Contracts;
-using KerbalConstructionTime;
+using RP0;
 using System.Collections.Generic;
 using System.Linq;
 

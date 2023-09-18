@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 using System.Collections.Generic;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {

@@ -1,9 +1,4 @@
-﻿using System;
-using UnityEngine;
-using UniLinq;
-using System.Reflection;
-
-namespace KerbalConstructionTime
+﻿namespace RP0
 {
     internal static class ECMHelper
     {
@@ -23,7 +18,7 @@ namespace KerbalConstructionTime
 
         internal static string GetEcmNameFromModuleProceduralAvionics(RP0.ProceduralAvionics.ModuleProceduralAvionics pm)
         {
-            return RP0.ProceduralAvionics.ProceduralAvionicsTechManager.GetPartUpgradeName(pm.CurrentProceduralAvionicsConfig.name, pm.CurrentProceduralAvionicsTechNode);
+            return ProceduralAvionics.ProceduralAvionicsTechManager.GetPartUpgradeName(pm.CurrentProceduralAvionicsConfig.name, pm.CurrentProceduralAvionicsTechNode);
         }
 
         internal static string GetEcmNameFromModuleEngineConfigsBase(PartModule pm)

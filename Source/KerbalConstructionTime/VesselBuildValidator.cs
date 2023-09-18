@@ -5,9 +5,8 @@ using UniLinq;
 using System.Reflection;
 using UnityEngine;
 using RP0.UI;
-using RP0;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class VesselBuildValidator
     {
@@ -415,10 +414,10 @@ namespace KerbalConstructionTime
 
         private bool PurchaseConfig(PartModule pm, string tech)
         {
-            RP0.Harmony.RFECMPatcher.techNode = tech;
+            Harmony.RFECMPatcher.techNode = tech;
             var mi = pm.GetType().GetMethod("ResolveValidationError", BindingFlags.Instance | BindingFlags.Public);
             object retVal = mi?.Invoke(pm, new object[] { });
-            RP0.Harmony.RFECMPatcher.techNode = null;
+            Harmony.RFECMPatcher.techNode = null;
 
             bool ret = (retVal is bool b) && b;
             if (ret)

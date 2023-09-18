@@ -1,10 +1,6 @@
-﻿using System.Collections.Generic;
-using UniLinq;
-using ToolbarControl_NS;
-using UnityEngine;
-using static RP0.KSPUtils;
+﻿using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {

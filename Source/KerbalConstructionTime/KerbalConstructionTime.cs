@@ -8,10 +8,8 @@ using ToolbarControl_NS;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
-using System.Reflection;
-using static RP0.KSPUtils;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class KerbalConstructionTime : MonoBehaviour
     {
@@ -74,7 +72,7 @@ namespace KerbalConstructionTime
             KCTDebug.Log("Awake called");
 
             if (Instance != null)
-                GameObject.Destroy(Instance);
+                Destroy(Instance);
 
             Instance = this;
 
@@ -846,7 +844,7 @@ namespace KerbalConstructionTime
                 foreach (BuildListVessel blv in errored)
                 {
                     blv.RemoveFromBuildList(out _);
-                    KCTUtilities.AddFunds(blv.GetTotalCost(), RP0.TransactionReasonsRP0.VesselPurchase);
+                    KCTUtilities.AddFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
                     //remove any associated recon_rollout
                 }
             });

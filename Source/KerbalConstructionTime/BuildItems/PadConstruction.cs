@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public class PadConstruction : ConstructionBuildItem
     {

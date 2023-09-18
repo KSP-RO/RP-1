@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UniLinq;
-using System.Text;
-using KerbalConstructionTime;
-using RP0.DataTypes;
-
-namespace RP0.Crew
+﻿namespace RP0.Crew
 {
     public class TrainingFlightEntry
     {

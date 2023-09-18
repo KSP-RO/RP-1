@@ -42,19 +42,19 @@ namespace RP0.UI
         {
             confidenceWidgetObj.name = "ConfidenceWidget";
 
-            GameObject.Destroy(confidenceWidgetObj.GetComponent<ReputationWidget>());
+            Destroy(confidenceWidgetObj.GetComponent<ReputationWidget>());
 
             var frameImage = (Image)confidenceWidgetObj.GetComponentInChildren(typeof(Image));
             frameImage.sprite = Sprite.Create(GameDatabase.Instance.GetTexture("RP-1/Resources/confidence_background", false), frameImage.sprite.rect, frameImage.sprite.pivot);
 
-            var img = GameObject.Instantiate(new GameObject("Background"), confidenceWidgetObj.transform, worldPositionStays: false).AddComponent<Image>();
+            var img = Instantiate(new GameObject("Background"), confidenceWidgetObj.transform, worldPositionStays: false).AddComponent<Image>();
             img.color = new Color32(58, 58, 63, 255);
             img.rectTransform.anchorMin = frameImage.rectTransform.anchorMin;
             img.rectTransform.anchorMax = frameImage.rectTransform.anchorMax;
             img.rectTransform.anchoredPosition = frameImage.rectTransform.anchoredPosition;
             img.rectTransform.sizeDelta = ((RectTransform)confidenceWidgetObj.transform).sizeDelta;    // No idea why the frame image transform is larger than the component itself
 
-            var textComp = GameObject.Instantiate(new GameObject("Text"), confidenceWidgetObj.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
+            var textComp = Instantiate(new GameObject("Text"), confidenceWidgetObj.transform, worldPositionStays: false).AddComponent<TextMeshProUGUI>();
             textComp.alignment = TextAlignmentOptions.Right;
             ColorUtility.TryParseHtmlString(CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence), out var color);
             textComp.color = color;

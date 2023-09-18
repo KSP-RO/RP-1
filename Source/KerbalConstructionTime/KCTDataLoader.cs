@@ -4,7 +4,7 @@ using UnityEngine;
 using System.Collections;
 using RP0.DataTypes;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     [System.Flags]
     public enum ResourceTagType

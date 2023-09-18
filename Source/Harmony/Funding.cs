@@ -33,7 +33,7 @@ namespace RP0.Harmony
             if (pv == null)
                 return false;
 
-            if (!KerbalConstructionTime.KCTUtilities.IsVesselKCTRecovering(pv))
+            if (!KCTUtilities.IsVesselKCTRecovering(pv))
                 return true;
 
             if (mrDialog == null)
@@ -81,10 +81,10 @@ namespace RP0.Harmony
         [HarmonyPatch("onVesselRollout")]
         internal static bool Prefix_onVesselRollout(Funding __instance, ShipConstruct ship)
         {
-            if (!KerbalConstructionTime.KCT_GUI.IsPrimarilyDisabled)
+            if (!KCT_GUI.IsPrimarilyDisabled)
                 return false;
 
-            __instance.AddFunds(-KerbalConstructionTime.KCTUtilities.GetTotalVesselCost(ship.Parts), TransactionReasonsRP0.VesselPurchase.Stock());
+            __instance.AddFunds(-KCTUtilities.GetTotalVesselCost(ship.Parts), TransactionReasonsRP0.VesselPurchase.Stock());
             return false;
         }
 

@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using UniLinq;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     // From the HyperEdit mod created by khyperia and Ezriilc.
     // The Lander code has been modified to simulate doing airlaunches from a carrier plane.

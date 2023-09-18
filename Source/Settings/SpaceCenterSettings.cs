@@ -99,7 +99,7 @@ namespace RP0
         public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
         public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
         public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier()
-            * KerbalConstructionTime.Formula.GetScienceResearchEfficiencyMult(KerbalConstructionTime.KerbalConstructionTimeData.Instance.SciPointsTotal);
+            * Formula.GetScienceResearchEfficiencyMult(KerbalConstructionTimeData.Instance.SciPointsTotal);
 
         public override void Load(ConfigNode node)
         {

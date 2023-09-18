@@ -1,5 +1,4 @@
-﻿using KerbalConstructionTime;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
 

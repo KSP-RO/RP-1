@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using UniLinq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RP0.DataTypes
+﻿namespace RP0.DataTypes
 {
     public class Boxed<T> where T : struct
     {

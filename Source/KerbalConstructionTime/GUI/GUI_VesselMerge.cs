@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     public static partial class KCT_GUI
     {

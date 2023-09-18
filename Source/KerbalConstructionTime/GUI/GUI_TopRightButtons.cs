@@ -2,7 +2,7 @@
 using UniLinq;
 using UnityEngine;
 
-namespace KerbalConstructionTime
+namespace RP0
 {
     [KSPAddon(KSPAddon.Startup.FlightEditorAndKSC, false)]
     internal class GUI_TopRightButtonSection : MonoBehaviour

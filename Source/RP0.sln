@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.29728.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RP0", "RP0.csproj", "{997854F8-4EFB-4A78-87BC-F7C8CEA64669}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RP0", "RP0\RP0.csproj", "{997854F8-4EFB-4A78-87BC-F7C8CEA64669}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CC_RP0", "CC_RP0\CC_RP0.csproj", "{CB4E4485-39C3-4C4A-9C24-CDD85841AA4E}"
 EndProject

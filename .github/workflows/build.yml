@@ -60,7 +60,7 @@ jobs:
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@AssemblyInformationalVersion
         with:
-          path: ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
+          path: ${GITHUB_WORKSPACE}/Source/RP0/Properties/AssemblyInfo.cs
           tag: "2.0.0.0"
           informational-version: ${{env.info_text}}
 

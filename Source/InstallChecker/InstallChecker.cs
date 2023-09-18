@@ -43,7 +43,7 @@ namespace RP0InstallChecker
             if (assembliesToCheck.Any(an => !AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals(an, StringComparison.OrdinalIgnoreCase))))
             {
                 string titleText = "Incorrect RP-1 Installation";
-                string contentText = "You are missing dependencies for RP-1. This could be caused by manually installing RP-1." +
+                string contentText = "You are missing dependencies for RP-1. This could be caused by manually installing RP-1, or by not updating dependencies." +
                     "Make sure to follow the install guide located in the RP-1 wiki.\n\n" +
                     "If the goal was to obtain the latest developmental version of RP-1, then install normally through the guide and then use the link at the top of the RP-1 readme.";
                 ShowErrorDialog(titleText, contentText);

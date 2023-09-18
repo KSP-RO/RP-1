@@ -216,7 +216,7 @@ namespace RP0
             try
             {
                 int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
-                KCTDebug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
+                RP0Debug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
 
                 //set the level to this level
                 if (KCTUtilities.CurrentGameIsCareer())
@@ -230,7 +230,7 @@ namespace RP0
             }
             catch (Exception ex)
             {
-                KCTDebug.LogError("Error while calling SetActive: " + ex);
+                RP0Debug.LogError("Error while calling SetActive: " + ex);
             }
         }
 
@@ -238,7 +238,7 @@ namespace RP0
         {
             // Comments suggest may need to wait until next frame.  Unsure why.
             //yield return new WaitForFixedUpdate();
-            KCTDebug.Log("Updating launchpad destruction state.");
+            RP0Debug.Log("Updating launchpad destruction state.");
             if (upgradeRepair)
             {
                 RefreshDestructionNode();

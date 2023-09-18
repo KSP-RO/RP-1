@@ -566,7 +566,7 @@ namespace RP0
 
                 if (!KCTUtilities.CurrentGameIsCareer())
                 {
-                    KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
+                    RP0Debug.Log($"Building/Modifying launch complex {_newLCData.Name}");
                     if (isModify)
                         activeLC.Modify(_newLCData, Guid.NewGuid());
                     else
@@ -574,7 +574,7 @@ namespace RP0
                 }
                 else
                 {
-                    KCTDebug.Log($"Building/Modifying launch complex {_newLCData.Name}");
+                    RP0Debug.Log($"Building/Modifying launch complex {_newLCData.Name}");
                     LCItem lc;
                     int engineers = isModify ? activeLC.Engineers : LCItem.MaxEngineersCalc(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated);
                     if (isModify)

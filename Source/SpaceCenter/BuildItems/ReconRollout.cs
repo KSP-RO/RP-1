@@ -86,7 +86,7 @@ namespace RP0
             RRType = type;
             associatedID = id;
             launchPadID = launchSite;
-            KCTDebug.Log("New recon_rollout at launchsite: " + launchPadID);
+            RP0Debug.Log("New recon_rollout at launchsite: " + launchPadID);
             progress = 0;
             _lc = lc;
 
@@ -100,7 +100,7 @@ namespace RP0
             }
             catch
             {
-                KCTDebug.Log("Error while determining BP for recon_rollout");
+                RP0Debug.Log("Error while determining BP for recon_rollout");
             }
             if (type == RolloutReconType.Rollback)
                 progress = BP;

@@ -72,7 +72,7 @@ namespace RP0
                 Guid id = Guid.NewGuid();
                 if (!KCTUtilities.CurrentGameIsCareer())
                 {
-                    KCTDebug.Log("Building new launchpad!");
+                    RP0Debug.Log("Building new launchpad!");
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(id, _newName, fractionalPadLvl)
                     {
                         isOperational = true
@@ -80,7 +80,7 @@ namespace RP0
                 }
                 else
                 {
-                    KCTDebug.Log("Building new launchpad!");
+                    RP0Debug.Log("Building new launchpad!");
                     var lp = new KCT_LaunchPad(id, _newName, fractionalPadLvl);
                     KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(lp);
 

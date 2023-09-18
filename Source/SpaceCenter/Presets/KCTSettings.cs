@@ -16,8 +16,6 @@ namespace RP0
         [Persistent]
         public bool AutoKACAlarms;
         [Persistent]
-        public bool Debug;
-        [Persistent]
         public bool OverrideLaunchButton;
         [Persistent]
         public bool PreferBlizzyToolbar;
@@ -36,7 +34,6 @@ namespace RP0
         {
             DisableAllMessages = true;
             ShowSimWatermark = true;
-            Debug = false;
             OverrideLaunchButton = true;
             AutoKACAlarms = false;
             PreferBlizzyToolbar = false;

@@ -47,7 +47,7 @@ namespace RP0
 
         public KCTEvents()
         {
-            KCTDebug.Log("KCT_Events constructor");
+            RP0Debug.Log("KCT_Events constructor");
             SubscribedToEvents = false;
             CreatedEvents = false;
         }
@@ -165,7 +165,7 @@ namespace RP0
         {
             if (KCT_GUI.IsPrimarilyDisabled) return;
 
-            KCTDebug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
+            RP0Debug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
             KCTGameStates.RecalculateBuildRates();
         }
 
@@ -173,7 +173,7 @@ namespace RP0
         {
             if (facility.id.Contains("LaunchPad"))
             {
-                KCTDebug.Log("LaunchPad was repaired.");
+                RP0Debug.Log("LaunchPad was repaired.");
                 KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
                 KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.CompletelyRepairNode();
             }
@@ -183,7 +183,7 @@ namespace RP0
         {
             if (facility.id.Contains("LaunchPad"))
             {
-                KCTDebug.Log("LaunchPad was damaged.");
+                RP0Debug.Log("LaunchPad was damaged.");
                 KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
             }
         }
@@ -193,7 +193,7 @@ namespace RP0
             float changeDelta = query.GetTotal(Currency.Science);
             if (changeDelta == 0f) return;
 
-            KCTDebug.Log($"Detected sci point change: {changeDelta}");
+            RP0Debug.Log($"Detected sci point change: {changeDelta}");
             KCTUtilities.ProcessSciPointTotalChange(changeDelta);
         }
 
@@ -289,7 +289,7 @@ namespace RP0
             if (!KCTUtilities.IsVesselKCTRecovering(v))
                 return;
 
-            KCTDebug.Log($"VesselRecoverEvent for {v.vesselName}");
+            RP0Debug.Log($"VesselRecoverEvent for {v.vesselName}");
 
             LCItem targetLC = KerbalConstructionTimeData.Instance.RecoveredVessel.LC;
             if (targetLC == null)

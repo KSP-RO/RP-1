@@ -16,7 +16,7 @@ namespace RP0
             base.Start();
             if (KCT_GUI.IsPrimarilyDisabled)
                 return;
-            KCTDebug.Log("KCT_Flight, Start");
+            RP0Debug.Log("KCT_Flight, Start");
             if (FindObjectOfType<AltimeterSliderButtons>() is AltimeterSliderButtons altimeter)
             {
                 _originalCallback = altimeter.vesselRecoveryButton.onClick;

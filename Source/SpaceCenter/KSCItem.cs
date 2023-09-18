@@ -207,7 +207,7 @@ namespace RP0
 
         public void Save(ConfigNode node)
         {
-            KCTDebug.Log("Saving KSC " + KSCName);
+            RP0Debug.Log("Saving KSC " + KSCName);
             ConfigNode.CreateConfigFromObject(this, node);
         }
 

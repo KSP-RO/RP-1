@@ -82,12 +82,12 @@ namespace RP0
                 if (source != null) //Get settings from the original preset, if it exists
                 {
                     ActivePreset = source;
-                    KCTDebug.Log("Loading settings from preset, rather than save. Name: " + ActivePreset.Name);
+                    RP0Debug.Log("Loading settings from preset, rather than save. Name: " + ActivePreset.Name);
                 }
                 else
                 {
                     ActivePreset = saved;
-                    KCTDebug.Log("Loading saved settings.");
+                    RP0Debug.Log("Loading saved settings.");
                 }
             }
             else
@@ -123,7 +123,7 @@ namespace RP0
                 //Add all the files in the folder
                 foreach (FileInfo fi in dir.GetFiles("*.cfg"))
                 {
-                    KCTDebug.Log("Found preset at " + fi.Name);
+                    RP0Debug.Log("Found preset at " + fi.Name);
                     PresetPaths.Add(fi.FullName);
                 }
             }
@@ -251,7 +251,7 @@ namespace RP0
 
         public void LoadFromFile(string filePath)
         {
-            KCTDebug.Log("Loading a preset from " + filePath);
+            RP0Debug.Log("Loading a preset from " + filePath);
             _presetFileLocation = filePath;
             ConfigNode node = ConfigNode.Load(filePath);
             FromConfigNode(node.GetNode("KCT_Preset"));

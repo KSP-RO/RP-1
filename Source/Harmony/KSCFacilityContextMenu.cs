@@ -361,7 +361,7 @@ namespace RP0.Harmony
 
             int oldLevel = host.Facility.FacilityLevel;
             int newLevel = oldLevel + (isUpgrade ? 1 : -1);
-            KCTDebug.Log($"Upgrading from level {oldLevel} to {newLevel}");
+            RP0Debug.Log($"Upgrading from level {oldLevel} to {newLevel}");
 
             string facilityID = host.Facility.id;
             SpaceCenterFacility facilityType = GetFacilityType(host);
@@ -400,12 +400,12 @@ namespace RP0.Harmony
                 }
 
                 ScreenMessages.PostScreenMessage(Localizer.GetStringByTag("#rp0_FacilityContextMenu_UpgradeStart"), 4f, ScreenMessageStyle.UPPER_CENTER);
-                KCTDebug.Log($"Facility {facilityID} upgrade requested from lvl {oldLevel} to lvl {newLevel}, BP {upgrading.BP}");
+                RP0Debug.Log($"Facility {facilityID} upgrade requested from lvl {oldLevel} to lvl {newLevel}, BP {upgrading.BP}");
             }
             else if (newLevel != upgrading.currentLevel)
             {
                 ScreenMessages.PostScreenMessage(Localizer.GetStringByTag("#rp0_FacilityContextMenu_UpgradeInProgress"), 4f, ScreenMessageStyle.UPPER_CENTER);
-                KCTDebug.Log($"Facility {facilityID} tried to upgrade from lvl {oldLevel} to lvl {newLevel} but already in list!");
+                RP0Debug.Log($"Facility {facilityID} tried to upgrade from lvl {oldLevel} to lvl {newLevel} but already in list!");
             }
         }
 

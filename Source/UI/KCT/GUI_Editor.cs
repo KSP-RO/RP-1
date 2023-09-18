@@ -361,7 +361,7 @@ namespace RP0
             }
             if (GUILayout.Button("Cancel Edits"))
             {
-                KCTDebug.Log("Edits cancelled.");
+                RP0Debug.Log("Edits cancelled.");
                 KCTGameStates.ClearVesselEditMode();
 
                 HighLogic.LoadScene(GameScenes.SPACECENTER);

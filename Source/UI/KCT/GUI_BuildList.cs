@@ -76,7 +76,7 @@ namespace RP0
 
         public static void InitBuildListVars()
         {
-            KCTDebug.Log("InitBuildListVars");
+            RP0Debug.Log("InitBuildListVars");
             _redText = new GUIStyle(GUI.skin.label);
             _redText.normal.textColor = XKCDColors.KSPNotSoGoodOrange;
             _yellowText = new GUIStyle(GUI.skin.label);
@@ -214,7 +214,7 @@ namespace RP0
                     double UT = Planetarium.GetUniversalTime();
                     if (!KCTUtilities.IsApproximatelyEqual(KCTGameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
                     {
-                        KCTDebug.Log("KAC Alarm being created!");
+                        RP0Debug.Log("KAC Alarm being created!");
                         KCTGameStates.KACAlarmUT = buildItem.GetTimeLeft() + UT;
                         KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KCTGameStates.KACAlarmId);
                         if (alarm == null)
@@ -223,7 +223,7 @@ namespace RP0
                         }
                         if (alarm != null)
                         {
-                            KCTDebug.Log("Removing existing alarm");
+                            RP0Debug.Log("Removing existing alarm");
                             KACWrapper.KAC.DeleteAlarm(alarm.ID);
                         }
                         txt = "RP-1: ";
@@ -252,7 +252,7 @@ namespace RP0
                         else
                             txt += $"{buildItem.GetItemName()} Complete";
                         KCTGameStates.KACAlarmId = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, txt, KCTGameStates.KACAlarmUT);
-                        KCTDebug.Log($"Alarm created with ID: {KCTGameStates.KACAlarmId}");
+                        RP0Debug.Log($"Alarm created with ID: {KCTGameStates.KACAlarmId}");
                     }
                 }
             }
@@ -1545,7 +1545,7 @@ namespace RP0
             if (KerbalConstructionTimeData.Instance.TechList.Count > index)
             {
                 TechItem node = KerbalConstructionTimeData.Instance.TechList[index];
-                KCTDebug.Log($"Cancelling tech: {node.techName}");
+                RP0Debug.Log($"Cancelling tech: {node.techName}");
 
                 // cancel children
                 for (int i = 0; i < KerbalConstructionTimeData.Instance.TechList.Count; i++)
@@ -1590,7 +1590,7 @@ namespace RP0
             if (KCTGameStates.ActiveKSC.Constructions.Count > index)
             {
                 ConstructionBuildItem item = KCTGameStates.ActiveKSC.Constructions[index];
-                KCTDebug.Log($"Cancelling construction: {item.GetItemName()}");
+                RP0Debug.Log($"Cancelling construction: {item.GetItemName()}");
                 item.Cancel();
             }
         }
@@ -1763,7 +1763,7 @@ namespace RP0
             BuildListVessel b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
             if (b == null)
             {
-                KCTDebug.Log("Tried to remove a vessel that doesn't exist!");
+                RP0Debug.Log("Tried to remove a vessel that doesn't exist!");
                 return;
             }
             KCTUtilities.ScrapVessel(b);

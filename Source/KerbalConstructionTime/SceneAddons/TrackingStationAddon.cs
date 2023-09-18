@@ -16,7 +16,7 @@ namespace RP0
             if (KCT_GUI.IsPrimarilyDisabled)
                 return;
 
-            KCTDebug.Log("KCT_TS, Start");
+            RP0Debug.Log("KCT_TS, Start");
             if (FindObjectOfType<SpaceTracking>() is SpaceTracking trackingStation)
             {
                 _originalCallback = trackingStation.RecoverButton.onClick;

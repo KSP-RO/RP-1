@@ -18,7 +18,7 @@ namespace KerbalConstructionTime
             if (EditorPartList.Instance != null && !IsOn)
             {
                 EditorPartList.Instance.ExcludeFilters.AddFilter(_expPartsFilter);
-                Utilities.RemoveResearchedPartsFromExperimental();
+                KCTUtilities.RemoveResearchedPartsFromExperimental();
             }
         }
 
@@ -29,12 +29,12 @@ namespace KerbalConstructionTime
             if (IsOn)
             {
                 EditorPartList.Instance.ExcludeFilters.RemoveFilter(_expPartsFilter);
-                Utilities.AddResearchedPartsToExperimental();
+                KCTUtilities.AddResearchedPartsToExperimental();
             }
             else
             {
                 EditorPartList.Instance.ExcludeFilters.AddFilter(_expPartsFilter);
-                Utilities.RemoveResearchedPartsFromExperimental();
+                KCTUtilities.RemoveResearchedPartsFromExperimental();
             }
 
             EditorPartList.Instance.Refresh();

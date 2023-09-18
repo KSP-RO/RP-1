@@ -121,7 +121,7 @@ namespace KerbalConstructionTime
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Next:", _windowSkin.label);
-            IKCTBuildItem buildItem = Utilities.GetNextThingToFinish();
+            IKCTBuildItem buildItem = KCTUtilities.GetNextThingToFinish();
             if (buildItem != null)
             {
                 string txt = buildItem.GetItemName(), locTxt = "VAB";
@@ -213,7 +213,7 @@ namespace KerbalConstructionTime
                 if (KCTGameStates.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
-                    if (!Utilities.IsApproximatelyEqual(KCTGameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
+                    if (!KCTUtilities.IsApproximatelyEqual(KCTGameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
                     {
                         KCTDebug.Log("KAC Alarm being created!");
                         KCTGameStates.KACAlarmUT = buildItem.GetTimeLeft() + UT;
@@ -271,13 +271,13 @@ namespace KerbalConstructionTime
                 SelectList("Integration");
 
             bool constructionSelectedNew = false;
-            if (Utilities.CurrentGameIsCareer())
+            if (KCTUtilities.CurrentGameIsCareer())
                 constructionSelectedNew = GUILayout.Toggle(_isConstructionSelected, "Construction", GUI.skin.button);
             if (constructionSelectedNew != _isConstructionSelected)
                 SelectList("Construction");
 
             bool techSelectedNew = false;
-            if (Utilities.CurrentGameHasScience())
+            if (KCTUtilities.CurrentGameHasScience())
                 techSelectedNew = GUILayout.Toggle(_isResearchSelected, "Research", GUI.skin.button);
             if (techSelectedNew != _isResearchSelected)
                 SelectList("Research");
@@ -398,7 +398,7 @@ namespace KerbalConstructionTime
 
                 double buildRate = constr.GetBuildRate();
                 DrawTypeIcon(constr);
-                Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
+                KCTUtilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
                 GUILayout.Label(new GUIContent(constr.GetItemName(), "name" + costTooltip));
                 GUILayout.Label(new GUIContent($"{constr.GetFractionComplete():P2}", "progress" + costTooltip), GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
                 if (buildRate > 0d)
@@ -694,7 +694,7 @@ namespace KerbalConstructionTime
                     GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
                 else if (t is ConstructionBuildItem constr)
                 {
-                    Utilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
+                    KCTUtilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
                     GUILayout.Label(new GUIContent(t.GetItemName(), "name" + costTooltip));
                 }
                 else if (t is RP0.Crew.TrainingCourse course)
@@ -976,10 +976,10 @@ namespace KerbalConstructionTime
             GUILayout.Label("Storage");
             GUILayout.EndHorizontal();
             if (HighLogic.LoadedSceneIsFlight && 
-                (isPad ? Utilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) : Utilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) ) &&
+                (isPad ? KCTUtilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) : KCTUtilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) ) &&
                 GUILayout.Button("Recover Active Vessel To Warehouse"))
             {
-                if (!Utilities.RecoverActiveVesselToStorage(isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH))
+                if (!KCTUtilities.RecoverActiveVesselToStorage(isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
                 }
@@ -1217,7 +1217,7 @@ namespace KerbalConstructionTime
                             launchTxt = pad == null ? "No Pad" : "Repairs Required";
                             btnColor = _redButton;
                         }
-                        else if (Utilities.ReconditioningActive(vesselLC, rollout.launchPadID))
+                        else if (KCTUtilities.ReconditioningActive(vesselLC, rollout.launchPadID))
                         {
                             launchTxt = "Reconditioning";
                             btnColor = _yellowButton;
@@ -1328,7 +1328,7 @@ namespace KerbalConstructionTime
                         List<string> facilityChecks = new List<string>();
                         if (b.MeetsFacilityRequirements(facilityChecks))
                         {
-                            bool operational = Utilities.IsLaunchFacilityIntact(BuildListVessel.ListType.SPH);
+                            bool operational = KCTUtilities.IsLaunchFacilityIntact(BuildListVessel.ListType.SPH);
                             if (!operational)
                             {
                                 ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -1450,7 +1450,7 @@ namespace KerbalConstructionTime
             activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
                 $"Enable rush integration.\nRate: {Database.SettingsSC.RushRateMult:N1}x\nSalary cost: {Database.SettingsSC.RushSalaryMult:N1}x{(activeLC.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"));
             if (oldRushing != activeLC.IsRushing)
-                Utilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
+                KCTUtilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
 
             KCT_LaunchPad activePad = activeLC.ActiveLPInstance;
             
@@ -1487,7 +1487,7 @@ namespace KerbalConstructionTime
             }
             if (GUILayout.Button(new GUIContent("Location", "Choose KerbalKonstructs launch site"), GUILayout.ExpandWidth(false)))
             {
-                _launchSites = Utilities.GetLaunchSites(true);
+                _launchSites = KCTUtilities.GetLaunchSites(true);
                 if (_launchSites.Any())
                 {
                     _isSelectingLaunchSiteForVessel = false;
@@ -1540,7 +1540,7 @@ namespace KerbalConstructionTime
             if (initialCancel)
             {
                 KerbalConstructionTimeData.Instance.TechIgnoreUpdates = true;
-                Utilities.RemoveResearchedPartsFromExperimental();
+                KCTUtilities.RemoveResearchedPartsFromExperimental();
             }
 
             if (KerbalConstructionTimeData.Instance.TechList.Count > index)
@@ -1561,7 +1561,7 @@ namespace KerbalConstructionTime
                     }
                 }
 
-                if (Utilities.CurrentGameHasScience())
+                if (KCTUtilities.CurrentGameHasScience())
                 {
                     bool valBef = KCTGameStates.IsRefunding;
                     KCTGameStates.IsRefunding = true;
@@ -1581,7 +1581,7 @@ namespace KerbalConstructionTime
                 {
                     KerbalConstructionTimeData.Instance.TechListUpdated();
                     KerbalConstructionTimeData.Instance.TechIgnoreUpdates = false;
-                    Utilities.AddResearchedPartsToExperimental();
+                    KCTUtilities.AddResearchedPartsToExperimental();
                 }
             }
         }
@@ -1601,7 +1601,7 @@ namespace KerbalConstructionTime
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
             _blPlusPosition.height = 225;
-            BuildListVessel b = Utilities.FindBLVesselByID(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
+            BuildListVessel b = KCTUtilities.FindBLVesselByID(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
             GUILayout.BeginVertical();
             string launchSite = b.launchSite;
 
@@ -1622,7 +1622,7 @@ namespace KerbalConstructionTime
             // Rockets use whatever location is set for their pad.
             if (b.Type == BuildListVessel.ListType.SPH && b.LC.Airlaunch_Prep.Find(a => a.associatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
             {
-                _launchSites = Utilities.GetLaunchSites(b.Type == BuildListVessel.ListType.VAB);
+                _launchSites = KCTUtilities.GetLaunchSites(b.Type == BuildListVessel.ListType.VAB);
                 if (_launchSites.Any())
                 {
                     GUIStates.ShowBLPlus = false;
@@ -1683,7 +1683,7 @@ namespace KerbalConstructionTime
 
             if (GUILayout.Button("Duplicate"))
             {
-                Utilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true);
+                KCTUtilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true);
             }
 
             if (GUILayout.Button("Add to Plans"))
@@ -1743,7 +1743,7 @@ namespace KerbalConstructionTime
                     if (_isSelectingLaunchSiteForVessel)
                     {
                         //Set the chosen vessel's launch site to the selected site
-                        BuildListVessel blv = Utilities.FindBLVesselByID(null, _selectedVesselId);
+                        BuildListVessel blv = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
                         blv.launchSite = launchsite;
                     }
                     else
@@ -1761,13 +1761,13 @@ namespace KerbalConstructionTime
 
         private static void ScrapVessel()
         {
-            BuildListVessel b = Utilities.FindBLVesselByID(null, _selectedVesselId);
+            BuildListVessel b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
             if (b == null)
             {
                 KCTDebug.Log("Tried to remove a vessel that doesn't exist!");
                 return;
             }
-            Utilities.ScrapVessel(b);
+            KCTUtilities.ScrapVessel(b);
         }
     }
 }

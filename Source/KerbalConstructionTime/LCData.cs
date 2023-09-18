@@ -84,23 +84,23 @@ namespace KerbalConstructionTime
         {
             float fractionalPadLvl = 0f;
 
-            if (Utilities.PadTons != null)
+            if (KCTUtilities.PadTons != null)
             {
                 float unlimitedTonnageThreshold = 2500f;
 
                 if (massMax >= unlimitedTonnageThreshold)
                 {
-                    int padLvl = Utilities.PadTons.Length - 1;
+                    int padLvl = KCTUtilities.PadTons.Length - 1;
                     fractionalPadLvl = padLvl;
                 }
                 else
                 {
-                    for (int i = 1; i < Utilities.PadTons.Length; i++)
+                    for (int i = 1; i < KCTUtilities.PadTons.Length; i++)
                     {
-                        if (massMax < Utilities.PadTons[i])
+                        if (massMax < KCTUtilities.PadTons[i])
                         {
-                            float lowerBound = Utilities.PadTons[i - 1];
-                            float upperBound = Math.Min(Utilities.PadTons[i], unlimitedTonnageThreshold);
+                            float lowerBound = KCTUtilities.PadTons[i - 1];
+                            float upperBound = Math.Min(KCTUtilities.PadTons[i], unlimitedTonnageThreshold);
                             float fractionOverFullLvl = (massMax - lowerBound) / (upperBound - lowerBound);
                             fractionalPadLvl = (i - 1) + fractionOverFullLvl;
 

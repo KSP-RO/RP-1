@@ -26,7 +26,7 @@ namespace RP0.Harmony
 
             KCTEvents.OnTechQueued.Fire(__instance);
 
-            KerbalConstructionTime.Utilities.AddNodePartsToExperimental(__instance.techID);
+            KerbalConstructionTime.KCTUtilities.AddNodePartsToExperimental(__instance.techID);
 
             return false;
         }

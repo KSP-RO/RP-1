@@ -35,7 +35,7 @@ namespace KerbalConstructionTime
             else
             {
                 controller.isNextThing = true;
-                controller.warpTarget = Utilities.GetNextThingToFinish();
+                controller.warpTarget = KCTUtilities.GetNextThingToFinish();
             }
             Debug.Log($"{ModTag} Created for warp target {controller.warpTarget.GetItemName()}");
         }
@@ -96,7 +96,7 @@ namespace KerbalConstructionTime
 
             if (isNextThing)
             {
-                var newTarget = Utilities.GetNextThingToFinish();
+                var newTarget = KCTUtilities.GetNextThingToFinish();
                 if (newTarget != warpTarget)
                 {
                     warpTarget = newTarget;
@@ -148,7 +148,7 @@ namespace KerbalConstructionTime
             int newRate = TimeWarp.CurrentRateIndex;
             double timeLeft = item.GetTimeLeft();
             if (double.IsPositiveInfinity(timeLeft))
-                timeLeft = Utilities.GetNextThingToFinish().GetTimeLeft();
+                timeLeft = KCTUtilities.GetNextThingToFinish().GetTimeLeft();
             while ((newRate + 1 < TimeWarp.fetch.warpRates.Length) &&
                    (timeLeft > TimeWarp.fetch.warpRates[newRate + 1] * Planetarium.fetch.fixedDeltaTime) &&
                    (newRate < KCTGameStates.Settings.MaxTimeWarp))

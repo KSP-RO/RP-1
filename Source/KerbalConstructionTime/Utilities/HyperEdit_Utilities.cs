@@ -113,7 +113,7 @@ namespace KerbalConstructionTime
             {
                 foreach (var part in parts)
                 {
-                    if (Utilities.IsClamp(part))
+                    if (KCTUtilities.IsClamp(part))
                     {
                         part.Die();
                     }
@@ -127,7 +127,7 @@ namespace KerbalConstructionTime
             Vessel vessel = FlightGlobals.ActiveVessel;
 
             // SpaceCenter.Instance.transform doesn't work correctly with RSS + KSCSwitcher installed
-            PQSCity ksc = Utilities.FindKSC(body);
+            PQSCity ksc = KCTUtilities.FindKSC(body);
             Vector3d kscPosition = ksc.transform.position - body.position;
             Vector3d kscUp = kscPosition.normalized;
             Vector3d kscEast = Vector3d.Cross(body.angularVelocity, kscPosition).normalized;

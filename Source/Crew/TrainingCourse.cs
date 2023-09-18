@@ -279,7 +279,7 @@ namespace RP0.Crew
         public static double CalculateBuildRate()
         {
             double r = 1d;
-            r *= Database.SettingsCrew.ACTrainingRates[KerbalConstructionTime.Utilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
+            r *= Database.SettingsCrew.ACTrainingRates[KerbalConstructionTime.KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             r *= CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
             return r;
         }

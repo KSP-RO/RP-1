@@ -12,7 +12,7 @@ using UnityEngine.Profiling;
 
 namespace KerbalConstructionTime
 {
-    public static class Utilities
+    public static class KCTUtilities
     {
         private static bool? _isPrincipiaInstalled = null;
         private static bool? _isTestFlightInstalled = null;
@@ -1666,7 +1666,7 @@ namespace KerbalConstructionTime
                 else
                 {
                     PurchasabilityStatus status = PurchasabilityStatus.Unavailable;
-                    if (Utilities.PartIsUnlocked(part))
+                    if (KCTUtilities.PartIsUnlocked(part))
                         status = PurchasabilityStatus.Purchased;
                     else if (ResearchAndDevelopment.GetTechnologyState(part.TechRequired) == RDTech.State.Available)
                         status = PurchasabilityStatus.Purchasable;

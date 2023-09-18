@@ -101,7 +101,7 @@ namespace KerbalConstructionTime
 
         public double UpdateBuildRate(int index)
         {
-            double rate = Utilities.GetConstructionRate(index, KSC, FacilityType);
+            double rate = KCTUtilities.GetConstructionRate(index, KSC, FacilityType);
             if (rate < 0)
                 rate = 0;
 
@@ -111,7 +111,7 @@ namespace KerbalConstructionTime
 
         public virtual void Cancel()
         {
-            if (Utilities.CurrentGameIsCareer())
+            if (KCTUtilities.CurrentGameIsCareer())
             {
                 // Nothing to reimburse - you don't get back what you've already paid.
 
@@ -131,7 +131,7 @@ namespace KerbalConstructionTime
         public static double CalculateBuildTime(double cost, double oldCost, SpaceCenterFacility facilityType, KSCItem KSC = null)
         {
             double bp = Formula.GetConstructionBP(cost, oldCost, facilityType);
-            double rateTotal = Utilities.GetConstructionRate(0, KSC, facilityType);
+            double rateTotal = KCTUtilities.GetConstructionRate(0, KSC, facilityType);
 
             return bp / rateTotal;
         }
@@ -153,7 +153,7 @@ namespace KerbalConstructionTime
             {
                 double rushCostDelta = costDelta * RushMultiplier;
 
-                if (Utilities.CurrentGameIsCareer() && !CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -(float)rushCostDelta, 0f, 0f).CanAfford())
+                if (KCTUtilities.CurrentGameIsCareer() && !CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -(float)rushCostDelta, 0f, 0f).CanAfford())
                 {
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                     {
@@ -163,7 +163,7 @@ namespace KerbalConstructionTime
                     return 0d;
                 }
 
-                Utilities.SpendFunds(rushCostDelta, TransactionReasons.StructureConstruction);
+                KCTUtilities.SpendFunds(rushCostDelta, TransactionReasons.StructureConstruction);
                 spentCost += costDelta;
                 spentRushCost += rushCostDelta;
             }

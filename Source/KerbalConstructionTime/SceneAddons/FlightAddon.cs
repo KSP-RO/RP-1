@@ -29,7 +29,7 @@ namespace KerbalConstructionTime
 
         public void RecoverToVAB()
         {
-            if (!Utilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.VAB))
+            if (!KCTUtilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.VAB))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
@@ -37,7 +37,7 @@ namespace KerbalConstructionTime
 
         public void RecoverToSPH()
         {
-            if (!Utilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.SPH))
+            if (!KCTUtilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.SPH))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "recoverShipErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
@@ -56,8 +56,8 @@ namespace KerbalConstructionTime
                 return;
             }
 
-            bool isSPHAllowed = Utilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel);
-            bool isVABAllowed = Utilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel);
+            bool isSPHAllowed = KCTUtilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel);
+            bool isVABAllowed = KCTUtilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel);
             var options = new List<DialogGUIBase>();
             if (!FlightGlobals.ActiveVessel.isEVA)
             {

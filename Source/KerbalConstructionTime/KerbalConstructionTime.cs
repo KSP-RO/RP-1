@@ -57,7 +57,7 @@ namespace KerbalConstructionTime
 
         internal void OnGUI()
         {
-            if (Utilities.CurrentGameIsMission()) return;
+            if (KCTUtilities.CurrentGameIsMission()) return;
 
             if (!_isGUIInitialized)
             {
@@ -69,7 +69,7 @@ namespace KerbalConstructionTime
 
         public void Awake()
         {
-            if (Utilities.CurrentGameIsMission()) return;
+            if (KCTUtilities.CurrentGameIsMission()) return;
 
             KCTDebug.Log("Awake called");
 
@@ -99,10 +99,10 @@ namespace KerbalConstructionTime
                 ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW | ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.SPH | ApplicationLauncher.AppScenes.TRACKSTATION | ApplicationLauncher.AppScenes.VAB,
                 KCTGameStates._modId,
                 "MainButton",
-                Utilities._icon_KCT_On_38,
-                Utilities._icon_KCT_Off_38,
-                Utilities._icon_KCT_On_24,
-                Utilities._icon_KCT_Off_24,
+                KCTUtilities._icon_KCT_On_38,
+                KCTUtilities._icon_KCT_Off_38,
+                KCTUtilities._icon_KCT_On_24,
+                KCTUtilities._icon_KCT_Off_24,
                 KCTGameStates._modName
                 );
 
@@ -118,7 +118,7 @@ namespace KerbalConstructionTime
 
             KCT_GUI.InitTooltips();
 
-            if (Utilities.CurrentGameIsMission()) return;
+            if (KCTUtilities.CurrentGameIsMission()) return;
 
             // Subscribe to events from KSP and other mods
             if (!KCTEvents.Instance.SubscribedToEvents)
@@ -342,7 +342,7 @@ namespace KerbalConstructionTime
 
             HyperEdit_Utilities.DoAirlaunch(launchParams);
 
-            if (Utilities.IsPrincipiaInstalled)
+            if (KCTUtilities.IsPrincipiaInstalled)
                 StartCoroutine(ClobberPrincipia());
         }
 
@@ -377,7 +377,7 @@ namespace KerbalConstructionTime
                 {
                     _hasFirstRecalculated = true;
                     IsEditorRecalcuationRequired = false;
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                    KCTUtilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
                 }
                 // make sure we're not destructing
                 else if (!_hasFirstRecalculated && this != null)
@@ -397,14 +397,14 @@ namespace KerbalConstructionTime
             while (true)
             {
                 if (HighLogic.LoadedSceneIsEditor && EditorLogic.fetch != null)
-                    Utilities.HandleEditorButton();
+                    KCTUtilities.HandleEditorButton();
                 yield return _wfsHalf;
             }
         }
 
         public void FixedUpdate()
         {
-            if (Utilities.CurrentGameIsMission()) return;
+            if (KCTUtilities.CurrentGameIsMission()) return;
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
             double UT = Planetarium.GetUniversalTime();
@@ -442,7 +442,7 @@ namespace KerbalConstructionTime
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
 
-            if (HighLogic.LoadedScene != GameScenes.SPACECENTER || !Utilities.CurrentGameIsCareer())
+            if (HighLogic.LoadedScene != GameScenes.SPACECENTER || !KCTUtilities.CurrentGameIsCareer())
                 yield break;
 
             FacilityUpgrade.UpgradeLockedFacilities();
@@ -451,7 +451,7 @@ namespace KerbalConstructionTime
             {
                 if (KCTGameStates.ActiveKSC?.ActiveLaunchComplexInstance?.ActiveLPInstance is KCT_LaunchPad pad)
                 {
-                    if (Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
+                    if (KCTUtilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
                     {
                         KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.SwitchLaunchPad(KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadIndex, false);
                         pad.UpdateLaunchpadDestructionState(false);
@@ -488,7 +488,7 @@ namespace KerbalConstructionTime
             {
                 if (simParams.DisableFailures)
                 {
-                    Utilities.ToggleFailures(!simParams.DisableFailures);
+                    KCTUtilities.ToggleFailures(!simParams.DisableFailures);
                 }
                 if (!simParams.SimulateInOrbit || !FlightDriver.CanRevertToPrelaunch)
                 {
@@ -617,7 +617,7 @@ namespace KerbalConstructionTime
                             //Reset the associated launchpad id when rollback completes
                             Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindBLVesselByID");
                             if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
-                                && Utilities.FindBLVesselByID(rr.LC, new Guid(rr.associatedID)) is BuildListVessel blv)
+                                && KCTUtilities.FindBLVesselByID(rr.LC, new Guid(rr.associatedID)) is BuildListVessel blv)
                             {
                                 blv.launchSiteIndex = -1;
                             }
@@ -670,7 +670,7 @@ namespace KerbalConstructionTime
 
         public void DelayedStart()
         {
-            if (Utilities.CurrentGameIsMission()) return;
+            if (KCTUtilities.CurrentGameIsMission()) return;
 
             KCTDebug.Log("DelayedStart start");
             if (PresetManager.Instance?.ActivePreset == null || !PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
@@ -773,7 +773,7 @@ namespace KerbalConstructionTime
 
             if (HighLogic.LoadedSceneIsFlight && KerbalConstructionTimeData.Instance.IsSimulatedFlight)
             {
-                Utilities.EnableSimulationLocks();
+                KCTUtilities.EnableSimulationLocks();
                 if (KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT > 0 &&
                     FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
                 {
@@ -793,7 +793,7 @@ namespace KerbalConstructionTime
                         }
                     }
                     KCTDebug.Log($"Setting simulation UT to {KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT}");
-                    if (!Utilities.IsPrincipiaInstalled)
+                    if (!KCTUtilities.IsPrincipiaInstalled)
                         Planetarium.SetUniversalTime(KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT);
                     else
                         StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), KerbalConstructionTimeData.Instance.SimulationParams.SimulationUT));
@@ -846,7 +846,7 @@ namespace KerbalConstructionTime
                 foreach (BuildListVessel blv in errored)
                 {
                     blv.RemoveFromBuildList(out _);
-                    Utilities.AddFunds(blv.GetTotalCost(), RP0.TransactionReasonsRP0.VesselPurchase);
+                    KCTUtilities.AddFunds(blv.GetTotalCost(), RP0.TransactionReasonsRP0.VesselPurchase);
                     //remove any associated recon_rollout
                 }
             });
@@ -909,7 +909,7 @@ namespace KerbalConstructionTime
             }
             else
             {
-                Utilities.TryAddVesselToBuildList(launchSite);
+                KCTUtilities.TryAddVesselToBuildList(launchSite);
                 // We are recalculating because vessel validation might have changed state.
                 Instance.IsEditorRecalcuationRequired = true;
             }

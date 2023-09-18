@@ -203,15 +203,15 @@ namespace KerbalConstructionTime
 
             StorePartNames(s.parts);
             // Override KSP sizing of the ship construct
-            ShipSize = Utilities.GetShipSize(s, true, false);
+            ShipSize = KCTUtilities.GetShipSize(s, true, false);
 
             if (storeConstruct)
                 StoreShipConstruct(s);
 
             shipName = s.shipName;
-            cost = Utilities.GetTotalVesselCost(s.parts, true);
-            emptyCost = Utilities.GetTotalVesselCost(s.parts, false);
-            mass = Utilities.GetShipMass(s, true, out emptyMass, out _);
+            cost = KCTUtilities.GetTotalVesselCost(s.parts, true);
+            emptyCost = KCTUtilities.GetTotalVesselCost(s.parts, false);
+            mass = KCTUtilities.GetShipMass(s, true, out emptyMass, out _);
             tanksFull = AreTanksFull(s.parts);
             isCrewable = IsCrewable(s.parts);
 
@@ -312,8 +312,8 @@ namespace KerbalConstructionTime
             FacilityBuiltIn = listType == ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
 
             CacheClamps(vessel.parts);
-            cost = Utilities.GetTotalVesselCost(vessel.parts);
-            emptyCost = Utilities.GetTotalVesselCost(vessel.parts, false);
+            cost = KCTUtilities.GetTotalVesselCost(vessel.parts);
+            emptyCost = KCTUtilities.GetTotalVesselCost(vessel.parts, false);
             mass = 0;
             emptyMass = 0;
             tanksFull = AreTanksFull(vessel.parts);
@@ -382,7 +382,7 @@ namespace KerbalConstructionTime
             ConfigNode cn = ConstructToSave.SaveShip();
             SanitizeShipNode(cn);
             // override KSP sizing of the ship construct
-            cn.SetValue("size", KSPUtil.WriteVector(Utilities.GetShipSize(ConstructToSave, true, true)));
+            cn.SetValue("size", KSPUtil.WriteVector(KCTUtilities.GetShipSize(ConstructToSave, true, true)));
             // These are actually needed, do not comment them out
             VesselToSave.SetRotation(OriginalRotation);
             VesselToSave.SetPosition(OriginalPosition);
@@ -431,7 +431,7 @@ namespace KerbalConstructionTime
             {
                 foreach(ConfigNode module in part.GetNodes("MODULE"))
                 {
-                    SanitizeNode(Utilities.GetPartNameFromNode(part), module, templates);
+                    SanitizeNode(KCTUtilities.GetPartNameFromNode(part), module, templates);
                 }
 
                 // Remove all waste resources
@@ -579,7 +579,7 @@ namespace KerbalConstructionTime
                 launchSiteName = pad.launchSiteName;
             }
 
-            Utilities.CleanupDebris(launchSiteName);
+            KCTUtilities.CleanupDebris(launchSiteName);
             KerbalConstructionTimeData.Instance.AirlaunchParams.KSPVesselId = Guid.Empty;
             FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
         }
@@ -630,7 +630,7 @@ namespace KerbalConstructionTime
 
         public bool MeetsFacilityRequirements(LCData stats, List<string> failedReasons)
         {
-            if (!Utilities.CurrentGameIsCareer())
+            if (!KCTUtilities.CurrentGameIsCareer())
                 return true;
 
             double totalMass = GetTotalMass();
@@ -692,7 +692,7 @@ namespace KerbalConstructionTime
 
             foreach (var p in parts)
             {
-                if (Utilities.IsClamp(p))
+                if (KCTUtilities.IsClamp(p))
                 {
                     clampState = ClampsState.HasClamps;
                     break;
@@ -800,8 +800,8 @@ namespace KerbalConstructionTime
         {
             if (cost == 0 || emptyCost == 0)
             {
-                cost = Utilities.GetTotalVesselCost(ShipNodeCompressed.Node);
-                emptyCost = Utilities.GetTotalVesselCost(ShipNodeCompressed.Node, false);
+                cost = KCTUtilities.GetTotalVesselCost(ShipNodeCompressed.Node);
+                emptyCost = KCTUtilities.GetTotalVesselCost(ShipNodeCompressed.Node, false);
                 integrationCost = (float)Formula.GetIntegrationCost(this);
                 ShipNodeCompressed.CompressAndRelease();
             }
@@ -923,7 +923,7 @@ namespace KerbalConstructionTime
             if (partNames.Count > 0)
             {
                 foreach (var s in partNames)
-                    if (Utilities.GetAvailablePartByName(s) == null)
+                    if (KCTUtilities.GetAvailablePartByName(s) == null)
                         return false;
             }
 
@@ -935,7 +935,7 @@ namespace KerbalConstructionTime
             List<string> missing = new List<string>();
             foreach(var name in partNames)
             {
-                if (Utilities.GetAvailablePartByName(name) == null)
+                if (KCTUtilities.GetAvailablePartByName(name) == null)
                 {
                     //invalid part detected!
                     missing.Add(name);
@@ -958,7 +958,7 @@ namespace KerbalConstructionTime
                 apList.Add(part);
             }
 
-            res = Utilities.GetPartsWithPurchasability(apList);
+            res = KCTUtilities.GetPartsWithPurchasability(apList);
             return res;
         }
 
@@ -1042,8 +1042,8 @@ namespace KerbalConstructionTime
             if (!(o is Part) && !(o is ConfigNode))
                 return 0;
 
-            string name = (o as Part)?.partInfo.name ?? Utilities.GetPartNameFromNode(o as ConfigNode);
-            Part partRef = o as Part ?? Utilities.GetAvailablePartByName(name).partPrefab;
+            string name = (o as Part)?.partInfo.name ?? KCTUtilities.GetPartNameFromNode(o as ConfigNode);
+            Part partRef = o as Part ?? KCTUtilities.GetAvailablePartByName(name).partPrefab;
 
             float dryCost;
             float fuelCost;
@@ -1051,7 +1051,7 @@ namespace KerbalConstructionTime
             float fuelMass;
 
             if (o is ConfigNode)
-                ShipConstruction.GetPartCostsAndMass(o as ConfigNode, Utilities.GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
+                ShipConstruction.GetPartCostsAndMass(o as ConfigNode, KCTUtilities.GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
             else
             {
                 GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass, _tempResourceAmounts);
@@ -1227,7 +1227,7 @@ namespace KerbalConstructionTime
             if (LC == null)
                 return 0d;
 
-            _buildRate = Utilities.GetBuildRate(this) * LC.StrategyRateMultiplier * UpdateLeaderEffect();
+            _buildRate = KCTUtilities.GetBuildRate(this) * LC.StrategyRateMultiplier * UpdateLeaderEffect();
             if (_buildRate < 0d)
                 _buildRate = 0d;
 
@@ -1269,7 +1269,7 @@ namespace KerbalConstructionTime
             }
             newEff = LC.Efficiency;
             double bp = buildPoints + integrationPoints;
-            double rate = Utilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
+            double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
             double bpLeft = bp - progress;
             if (newEff == LCEfficiency.MaxEfficiency)
                 return (bpLeft - progress) / (rate * newEff);
@@ -1315,7 +1315,7 @@ namespace KerbalConstructionTime
             progress += bR * UTDiff;
             if (IsComplete())
             {
-                Utilities.MoveVesselToWarehouse(this);
+                KCTUtilities.MoveVesselToWarehouse(this);
                 if (amt > toGo)
                     return (1d - toGo / amt) * UTDiff;
             }

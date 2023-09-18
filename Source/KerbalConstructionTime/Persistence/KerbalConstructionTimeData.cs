@@ -136,7 +136,7 @@ namespace KerbalConstructionTime
 
         public override void OnSave(ConfigNode node)
         {
-            if (Utilities.CurrentGameIsMission()) return;
+            if (KCTUtilities.CurrentGameIsMission()) return;
 
             KCTDebug.Log("Writing to persistence.");
             base.OnSave(node);
@@ -151,7 +151,7 @@ namespace KerbalConstructionTime
                 base.OnLoad(node);
                 LoadTree();
 
-                if (Utilities.CurrentGameIsMission()) return;
+                if (KCTUtilities.CurrentGameIsMission()) return;
 
                 KCTDebug.Log("Reading from persistence.");
 

@@ -277,7 +277,7 @@
     <Compile Include="KerbalConstructionTime\BuildItems\TechItem.cs" />
     <Compile Include="KerbalConstructionTime\SceneAddons\TrackingStationAddon.cs" />
     <Compile Include="KerbalConstructionTime\BuildItems\FacilityUpgrade.cs" />
-    <Compile Include="KerbalConstructionTime\Utilities\Utilities.cs" />
+    <Compile Include="KerbalConstructionTime\Utilities\KCTUtilities.cs" />
     <Compile Include="KerbalConstructionTime\Utilities\WindowHelper.cs" />
     <Compile Include="KerbalConstructionTime\KerbalConstructionTime.cs" />
     <Compile Include="KerbalConstructionTime\Persistence\KerbalConstructionTimeData.cs" />

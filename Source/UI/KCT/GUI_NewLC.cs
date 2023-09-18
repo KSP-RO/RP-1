@@ -789,14 +789,14 @@ namespace RP0
             if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < Math.Max(1, (int)lc.MassOrig / 2) || tonnageLimit > lc.MassOrig * 2)))
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid tonnage limit");
-                Debug.Log($"[RP-0] Invalid LC tonnage set, fractional: {fractionalPadLvl}, tonnageLimit {tonnageLimit}, orig {(lc != null ? lc.MassOrig : -1f)}");
+                RP0Debug.Log($"Invalid LC tonnage set, fractional: {fractionalPadLvl}, tonnageLimit {tonnageLimit}, orig {(lc != null ? lc.MassOrig : -1f)}");
                 return false;
             }
 
             if (lc != null && !lc.CanModifyReal)
             {
                 ScreenMessages.PostScreenMessage("Please wait for any reconditioning, rollout, rollback, or recovery to complete");
-                Debug.Log($"[RP-0] Can't modify LC, recon_rollout in progress");
+                RP0Debug.Log($"Can't modify LC, recon_rollout in progress");
                 return false;
             }
 

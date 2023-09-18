@@ -73,7 +73,7 @@ namespace RP0
             }
             catch (Exception ex)
             {
-                Debug.LogError($"[RP-0] Patching failed: with error {error}, exception {ex}");
+                RP0Debug.LogError($"Patching failed: with error {error}, exception {ex}");
             }
 
             Destroy(this);

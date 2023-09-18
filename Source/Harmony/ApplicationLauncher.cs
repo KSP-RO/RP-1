@@ -10,14 +10,6 @@ namespace RP0.Harmony
         [HarmonyPatch("Show")]
         internal static bool Prefix_Show(ApplicationLauncher __instance)
         {
-            //if (KerbalConstructionTime.KCT_GUI.InSCSubscene)
-            //{
-            //    Transform trf = __instance.transform;
-            //    while (trf.parent != null)
-            //        trf = trf.parent;
-            //    Debug.Log("$$$$$$$$$$$$");
-            //    trf.gameObject.Dump();
-            //}
             if (ApplicationLauncher.Ready && __instance.launcherSpace.gameObject.activeSelf)
                 return false;
 

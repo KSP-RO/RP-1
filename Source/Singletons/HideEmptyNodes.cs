@@ -62,7 +62,7 @@ namespace RP0
                 RDTech tech = node.GetComponent<RDTech>();
                 if (tech == null)
                 {
-                    Debug.LogError($"[RP-0]: Error, can't find RDTech component on {node.name} with description {node.description}");
+                    RP0Debug.LogError($"Can't find RDTech component on {node.name} with description {node.description}");
                     return;
                 }
                 if (nodeNamesFromKerbalism.Contains(tech.techID) || tech.partsAssigned.Any(ap => !ap.TechHidden) || PartUpgradeManager.Handler.GetUpgradesForTech(tech.techID).Count > 0)
@@ -79,7 +79,7 @@ namespace RP0
                     RDNodeData parentData;
                     if (!nodeData.TryGetValue(p.parent.node, out parentData))
                     {
-                        Debug.LogError($"[RP-0]: Error! Null parent node for node {node.GetComponent<RDTech>().techID}");
+                        RP0Debug.LogError($"Null parent node for node {node.GetComponent<RDTech>().techID}");
                         return;
                     }
 

@@ -238,7 +238,7 @@ namespace RP0.Programs
             {
                 p.OnLeaderChange();
             }
-            RP0Debug.Log($"[RP-0] ProgramHandler clamped active program funding on leader change.");
+            RP0Debug.Log($"ProgramHandler clamped active program funding on leader change.");
         }
 
         public void ProcessFunding()
@@ -249,7 +249,7 @@ namespace RP0.Programs
             {
                 p.ProcessFunding();
             }
-            RP0Debug.Log($"[RP-0] ProgramHandler added {Funding.Instance.Funds - fundsOld} funds.");
+            RP0Debug.Log($"ProgramHandler added {Funding.Instance.Funds - fundsOld} funds.");
             Profiler.EndSample();
         }
 
@@ -489,7 +489,7 @@ namespace RP0.Programs
         {
             if (p == null)
             {
-                Debug.LogError($"[RP-0] Error: Tried to accept null program!");
+                RP0Debug.LogError($"Error: Tried to accept null program!");
                 return;
             }
 
@@ -502,7 +502,7 @@ namespace RP0.Programs
 
             ProgramStrategy ps = activeP.GetStrategy();
             if (ps == null)
-                Debug.LogError($"[RP-0] ProgramHandler Error! Couldn't find Strategy to match program {activeP.name}");
+                RP0Debug.LogError($"ProgramHandler Error! Couldn't find Strategy to match program {activeP.name}");
             else
                 ps.SetProgram(activeP);
 
@@ -529,9 +529,9 @@ namespace RP0.Programs
         private void DisableProgram(string s)
         {
             if (DisabledPrograms.Add(s))
-                Debug.Log($"[RP-0] Disabling program {s}");
+                RP0Debug.Log($"Disabling program {s}");
             else
-                Debug.Log($"[RP-0] tried to disable program {s} but it already was!");
+                RP0Debug.Log($"tried to disable program {s} but it already was!");
         }
 
         private static List<StrategyConfigRP0> GetAllUnlockedLeaders()

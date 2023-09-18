@@ -54,7 +54,7 @@ namespace RP0.UpgradeScripts
                 }
 
                 n.SetValue("lvl", lvl);
-                Debug.Log($"[RP-0] UpgradePipeline context {loadContext} updated AC level to {lvl}");
+                RP0Debug.Log($"UpgradePipeline context {loadContext} updated AC level to {lvl}");
                 return;
             }
         }
@@ -130,7 +130,7 @@ namespace RP0.UpgradeScripts
                 n.SetValue("currentLevel", newCur);
                 n.SetValue("upgradeLevel", newUp);
 
-                Debug.Log($"[RP-0] UpgradePipeline context {loadContext} updated KCT Admin Building upgrade to target level {newUp} (was {oldUp})");
+                RP0Debug.Log($"UpgradePipeline context {loadContext} updated KCT Admin Building upgrade to target level {newUp} (was {oldUp})");
             }
         }
     }

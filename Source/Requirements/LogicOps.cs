@@ -71,7 +71,7 @@ namespace RP0.Requirements
             uint count = 0;
             if (!cn.TryGetValue("count", ref count))
             {
-                Debug.LogError("[RP-0] Invalid RequirementBlock logic operator: " + cn);
+                RP0Debug.LogError("Invalid RequirementBlock logic operator: " + cn);
             }
             Count = count;
         }

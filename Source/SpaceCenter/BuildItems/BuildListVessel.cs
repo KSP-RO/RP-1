@@ -393,7 +393,7 @@ namespace RP0
         {
             if (s == null)
             {
-                Debug.LogError("[RP-0] BLV: Tried to store a null shipconstruct. Probably copying a vessel outside the editor and the source had a null shipnode.");
+                RP0Debug.LogError("BLV: Tried to store a null shipconstruct. Probably copying a vessel outside the editor and the source had a null shipnode.");
                 return;
             }
 

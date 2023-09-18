@@ -24,7 +24,7 @@ namespace RP0
             if (Instance != null)
             {
                 Destroy(Instance);
-                Debug.LogError("[RP-0] Error: duplicate Confidence instance!");
+                RP0Debug.LogError("Error: duplicate Confidence instance!");
             }
             Instance = this;
 

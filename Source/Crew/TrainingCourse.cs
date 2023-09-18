@@ -62,7 +62,7 @@ namespace RP0.Crew
         {
             _template = CrewHandler.Instance.TrainingTemplates.Find(c => c.id == id);
             if (_template == null)
-                Debug.LogWarning($"[RP-0] Template not found for linking: {id}");
+                RP0Debug.LogWarning($"Template not found for linking: {id}");
         }
 
         public bool MeetsStudentReqs(ProtoCrewMember student)
@@ -314,7 +314,7 @@ namespace RP0.Crew
         {
             if (_template == null)
             {
-                Debug.LogWarning($"[RP-0] TrainingCourse RecalculateBP not possible because template is empty: {id}");
+                RP0Debug.LogWarning($"TrainingCourse RecalculateBP not possible because template is empty: {id}");
                 return;
             }
             BP = _template.GetBaseTime(Students);

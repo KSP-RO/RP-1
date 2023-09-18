@@ -150,7 +150,7 @@ namespace RP0
                 }
                 catch
                 {
-                    Debug.LogError("[KCT] Could not load preset at " + file);
+                    RP0Debug.LogError("Could not load preset at " + file);
                 }
             }
         }

@@ -231,7 +231,7 @@ namespace RP0.ProceduralAvionics
             }
             else
             {
-                Debug.LogError("[RP0ProcAvi] Part needs to be procedural");
+                RP0Debug.LogError("[RP0ProcAvi] Part needs to be procedural");
             }
 
             _rfPM = part.Modules.GetModule<ModuleFuelTanks>();
@@ -363,7 +363,7 @@ namespace RP0.ProceduralAvionics
             Log($"ControllableMassChanged to {arg1.GetValue(this)} from {arg2}");
             if (float.IsNaN(controllableMass))
             {
-                Debug.LogError("[RP0ProcAvi] - ControllableMassChanged tried to set to NAN! Resetting to 0.");
+                RP0Debug.LogError("[RP0ProcAvi] - ControllableMassChanged tried to set to NAN! Resetting to 0.");
                 controllableMass = 0;
             }
 
@@ -546,7 +546,7 @@ namespace RP0.ProceduralAvionics
                                                                                new object[] { targetVolume, 1 };
                     _seekVolumeMethod.Invoke(_procPartPM, args);
                 }
-                catch (Exception ex) { Debug.LogError($"{ex?.InnerException.Message ?? ex.Message}"); }
+                catch (Exception ex) { RP0Debug.LogError($"{ex?.InnerException.Message ?? ex.Message}"); }
             }
             else
             {

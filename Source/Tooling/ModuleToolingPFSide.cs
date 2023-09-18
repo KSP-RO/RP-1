@@ -43,7 +43,7 @@ namespace RP0
 
                 if (baseRad == null)
                 {
-                    Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide fields on {part}");
+                    RP0Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide fields on {part}");
                     return false;
                 }
             }
@@ -79,7 +79,7 @@ namespace RP0
 
             if (pmFairing == null)
             {
-                Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide module on {part}");
+                RP0Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide module on {part}");
                 return;
             }
             if (!EnsureFields())

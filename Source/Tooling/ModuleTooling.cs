@@ -109,7 +109,7 @@ namespace RP0
 
         public override void OnStart(StartState state)
         {
-            Debug.Log($"[MT] OnStart() Loading part modules for {part}");
+            RP0Debug.Log($"[MT] OnStart() Loading part modules for {part}");
             tEvent = Events["ToolingEvent"];
             try
             {
@@ -163,7 +163,7 @@ namespace RP0
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"Applying tooling definition {ToolingType} to part {part.name} failed: {ex}");
+                    RP0Debug.LogError($"Applying tooling definition {ToolingType} to part {part.name} failed: {ex}");
                     return false;
                 }
             }

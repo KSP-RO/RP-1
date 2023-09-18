@@ -62,7 +62,7 @@ namespace RP0
             if (!(FindObjectOfType(typeof(SpaceTracking)) is SpaceTracking ts
                 && ts.SelectedVessel is Vessel selectedVessel))
             {
-                Debug.LogError("[KCT] No Vessel selected.");
+                RP0Debug.LogError("No Vessel selected.");
                 return;
             }
 

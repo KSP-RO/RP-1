@@ -213,7 +213,7 @@ namespace RP0.Harmony
                     // (But in certain load scenarious it might not be? Bleh.)
                     if (AdminExtender.Instance.ActiveTabView == AdministrationActiveTabView.Active && !strategy.IsActive)
                     {
-                        Debug.LogError($"[RP-0] ProgramStrategy {p.name} is not active but program is active. Activating...");
+                        RP0Debug.LogError($"ProgramStrategy {p.name} is not active but program is active. Activating...");
                         strategy.Activate();
                     }
 
@@ -221,7 +221,7 @@ namespace RP0.Harmony
                     if (strategy is ProgramStrategy ps)
                     {
                         if (ps.Program != p)
-                            Debug.LogError($"[RP-0] ProgramStrategy binding mismatch for completed program! Strat {strategy.Config.Name} is bound to program that is not the same. Null? {ps.Program == null}");
+                            RP0Debug.LogError($"ProgramStrategy binding mismatch for completed program! Strat {strategy.Config.Name} is bound to program that is not the same. Null? {ps.Program == null}");
                     }
 
                     _strategies.Add(strategy);

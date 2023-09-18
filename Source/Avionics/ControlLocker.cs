@@ -49,9 +49,9 @@ namespace RP0
                 _getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);
             }
             if (_mjDeactivateControl != null && _getMasterMechJeb != null)
-                Debug.Log($"{ModTag} MechJeb methods found");
+                RP0Debug.Log($"{ModTag} MechJeb methods found", true);
             else
-                Debug.Log($"{ModTag} MJ assembly or methods NOT found");
+                RP0Debug.Log($"{ModTag} MJ assembly or methods NOT found", true);
         }
 
         private void Start()

@@ -14,7 +14,7 @@ namespace ClearInputLocks.RP0
             if (Input.GetKeyDown(KeyCode.F7))
             {
                 InputLockManager.ClearControlLocks();
-                // Debug.Log("Input Locks Cleared");
+                //Debug.Log("Input Locks Cleared");
             }
         }
     }        

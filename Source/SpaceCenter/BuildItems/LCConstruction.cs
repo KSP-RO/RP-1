@@ -68,7 +68,7 @@ namespace RP0
             }
             if (index < 0)
             {
-                Debug.LogError($"[RP-0]: Error! Can't find LC from LCC, LC ID {lcID}");
+                RP0Debug.LogError($"Can't find LC from LCC, LC ID {lcID}");
                 return;
             }
             if (isModify)

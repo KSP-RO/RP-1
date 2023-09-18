@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using RP0;
 
 namespace ContractConfigurator.RP0
 {
@@ -75,13 +76,13 @@ namespace ContractConfigurator.RP0
         {
             base.AwardCompletion();
 
-            Debug.Log("[RP-0] DownrangeDistance AwardCompletion");
+            RP0Debug.Log("DownrangeDistance AwardCompletion");
 
             var cc = (ConfiguredContract)Root;
             if (cc.AutoAccept)
             {
                 string contractName = ConfiguredContract.contractTypeName(cc);
-                Debug.Log("[RP-0] Contract name: " + contractName);
+                RP0Debug.Log("Contract name: " + contractName);
 
                 GameEvents.onGameSceneSwitchRequested.Add(SceneChangeInProgress);
 
@@ -113,7 +114,7 @@ namespace ContractConfigurator.RP0
 
                 if (cc.AutoAccept && CompletedParams != null && CompletedParams.ContainsKey(contractName))
                 {
-                    Debug.Log("[RP-0] Carrying starting point over to new contract...");
+                    RP0Debug.Log("Carrying starting point over to new contract...");
                     DownrangeDistance oldParam = CompletedParams[contractName];
                     triggered = oldParam.triggered;
                     curDist = oldParam.curDist;
@@ -123,7 +124,7 @@ namespace ContractConfigurator.RP0
             }
             catch (Exception ex)
             {
-                Debug.LogError("[RP-0] OnRegisterError: " + ex);
+                RP0Debug.LogError("OnRegisterError: " + ex);
             }
         }
 
@@ -160,7 +161,7 @@ namespace ContractConfigurator.RP0
 
         private void SceneChangeInProgress(GameEvents.FromToAction<GameScenes, GameScenes> evt)
         {
-            Debug.Log("[RP-0] SceneChangeInProgress");
+            RP0Debug.Log("SceneChangeInProgress");
             GameEvents.onGameSceneSwitchRequested.Remove(SceneChangeInProgress);
             CompletedParams = null;
         }

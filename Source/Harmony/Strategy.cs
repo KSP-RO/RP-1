@@ -37,7 +37,7 @@ namespace RP0.Harmony
         {
             if (config == null)
             {
-                UnityEngine.Debug.LogError("Strategy: Config cannot be null");
+                RP0Debug.LogError("Strategy: Config cannot be null");
                 __result = null;
                 return false;
             }

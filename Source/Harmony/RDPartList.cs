@@ -97,7 +97,7 @@ namespace RP0.Harmony
             }
             catch (System.Exception e)
             {
-                Debug.LogError("[RP-0] AddUpgradeListItem: Error adding Upgrade item " + upgrade.name + ": " + e);
+                RP0Debug.LogError("AddUpgradeListItem: Error adding Upgrade item " + upgrade.name + ": " + e);
             }
 
             return false;

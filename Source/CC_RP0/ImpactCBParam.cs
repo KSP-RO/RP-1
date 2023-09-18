@@ -1,6 +1,6 @@
 ﻿using ContractConfigurator.Parameters;
 using System.Collections.Generic;
-using UnityEngine;
+using RP0;
 
 namespace ContractConfigurator.RP0
 {
@@ -30,7 +30,7 @@ namespace ContractConfigurator.RP0
             bool isValidVel = srfVelQueue.Count > 0 && srfVelQueue.Peek() >= minSrfVel;
             bool isValidAlt = vessel.radarAltitude < 100;
 
-            Debug.Log($"[ImpactCB] VesselMeetsCondition vel: {srfVelQueue.Peek()}; isDestroyed: {isDestroyed}; isCorrectBody: {isCorrectBody}; radarAltitude: {vessel.radarAltitude}");
+            RP0Debug.Log($"[ImpactCB] VesselMeetsCondition vel: {srfVelQueue.Peek()}; isDestroyed: {isDestroyed}; isCorrectBody: {isCorrectBody}; radarAltitude: {vessel.radarAltitude}");
 
             return isDestroyed && isCorrectBody && isValidVel && isValidAlt;
         }

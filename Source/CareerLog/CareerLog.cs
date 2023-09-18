@@ -234,7 +234,7 @@ namespace RP0
                             }
                             catch
                             {
-                                Debug.LogError($"[RP-0] LOGPERIOD for {periodStart} already exists, skipping...");
+                                RP0Debug.LogError($"LOGPERIOD for {periodStart} already exists, skipping...");
                             }
                         }
                     }
@@ -537,7 +537,7 @@ namespace RP0
 
             jsonToSend += "] }";
 
-            Debug.Log("[RP-0] Request payload: " + jsonToSend);
+            RP0Debug.Log("Request payload: " + jsonToSend);
 
             var byteJson = new UTF8Encoding().GetBytes(jsonToSend);
 
@@ -558,12 +558,12 @@ namespace RP0
             if (uwr.isNetworkError || uwr.isHttpError)
             {
                 onRequestFail(uwr.error);
-                Debug.Log($"Error While Sending: {uwr.error}; {uwr.downloadHandler.text}");
+                RP0Debug.LogError($"Error While Sending: {uwr.error}; {uwr.downloadHandler.text}");
             }
             else
             {
                 onRequestSuccess();
-                Debug.Log("Received: " + uwr.downloadHandler.text);
+                RP0Debug.Log("Received: " + uwr.downloadHandler.text);
             }
         }
 
@@ -851,7 +851,7 @@ namespace RP0
             // KJR can clobber the vessel back to prelaunch state in case of clamp wobble. Need to exclude such events.
             if (!_launched && ev.from == Vessel.Situations.PRELAUNCH && ev.host == FlightGlobals.ActiveVessel)
             {
-                Debug.Log($"[RP-0] Launching {FlightGlobals.ActiveVessel?.vesselName}");
+                RP0Debug.Log($"Launching {FlightGlobals.ActiveVessel?.vesselName}");
 
                 _launched = true;
                 _launchedVessels.Add(new LaunchEvent(Planetarium.GetUniversalTime())

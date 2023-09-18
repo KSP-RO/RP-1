@@ -82,13 +82,13 @@ namespace RP0
             ScienceExperiment experiment = ResearchAndDevelopment.GetExperiment(experimentID);
             if (experiment == null)
             {
-                Debug.LogError($"[RP-0] MarkExperimentAsDone: Invalid experiment {experimentID}");
+                RP0Debug.LogError($"MarkExperimentAsDone: Invalid experiment {experimentID}");
                 return;
             }
             CelestialBody body = FlightGlobals.GetBodyByName(bodyName);
             if (!Enum.TryParse(situationName, out ExperimentSituations situation))
             {
-                Debug.LogError($"[RP-0] MarkExperimentAsDone: Invalid situation {situationName}");
+                RP0Debug.LogError($"MarkExperimentAsDone: Invalid situation {situationName}");
                 return;
             }
 
@@ -128,7 +128,7 @@ namespace RP0
             }
             else
             {
-                Debug.Log("[RP-0] FirstStart: RealChute not found");
+                RP0Debug.Log("FirstStart: RealChute not found");
             }
         }
 

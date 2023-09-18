@@ -34,7 +34,7 @@ namespace RP0
 
             if (pm == null)
             {
-                Debug.LogError("[ModuleTooling] Could not find module " + partModuleName + " to bind to");
+                RP0Debug.LogError("[ModuleTooling] Could not find module " + partModuleName + " to bind to");
                 return;
             }
 
@@ -44,7 +44,7 @@ namespace RP0
 
                 if (diameter == null)
                 {
-                    Debug.LogError("[ModuleTooling] Could not bind to field: " + diamField + " on " + partModuleName);
+                    RP0Debug.LogError("[ModuleTooling] Could not bind to field: " + diamField + " on " + partModuleName);
                     return;
                 }
             }
@@ -55,7 +55,7 @@ namespace RP0
 
                 if (length == null)
                 {
-                    Debug.LogError("[ModuleTooling] Could not bind to field: " + lenField + " on " + partModuleName);
+                    RP0Debug.LogError("[ModuleTooling] Could not bind to field: " + lenField + " on " + partModuleName);
                     return;
                 }
             }

@@ -20,7 +20,7 @@ namespace RP0
 
             res = part.Resources.Get(resourceName);
             if (res == null)
-                Debug.LogError("ModuleNonRecharge ERROR: cannot find resource " + resourceName);
+                RP0Debug.LogError("ModuleNonRecharge ERROR: cannot find resource " + resourceName);
         }
 
         protected void FixedUpdate()

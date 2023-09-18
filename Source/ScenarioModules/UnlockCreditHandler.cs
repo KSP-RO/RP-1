@@ -190,12 +190,12 @@ namespace RP0
             double postCMQCost = -CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -entryCost);
             if (double.IsNaN(postCMQCost))
             {
-                Debug.LogError("[RP-0] CMQ for a credit unlock returned NaN, ignoring and going back to regular cost.");
+                RP0Debug.LogError("CMQ for a credit unlock returned NaN, ignoring and going back to regular cost.");
                 postCMQCost = entryCost;
             }
             else if (postCMQCost == 0d)
             {
-                Debug.LogError("[RP-0] CMQ for a credit unlock returned 0, not spending any credit.");
+                RP0Debug.LogError("CMQ for a credit unlock returned 0, not spending any credit.");
                 return 0f;
             }
 

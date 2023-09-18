@@ -303,7 +303,7 @@ namespace RP0
             List<string> parentList;
             if (!KerbalConstructionTimeData.techNameToParents.TryGetValue(techID, out parentList))
             {
-                Debug.LogError($"[KCT] Could not find techToParent for tech {techID}");
+                RP0Debug.LogError($"Could not find techToParent for tech {techID}");
                 return null;
             }
 

@@ -109,7 +109,7 @@ namespace RP0
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[RP-0] Exception loading requirements for strategy {name}: {ex}");
+                    RP0Debug.LogError($"Exception loading requirements for strategy {name}: {ex}");
                 }
             }
 

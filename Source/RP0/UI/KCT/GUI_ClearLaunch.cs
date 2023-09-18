@@ -37,7 +37,7 @@ namespace RP0
 
             if (GUILayout.Button("Cancel"))
             {
-                KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();
+                KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject();
                 GUIStates.ShowClearLaunch = false;
                 GUIStates.ShowAirlaunch = false;
                 GUIStates.ShowBuildList = true;

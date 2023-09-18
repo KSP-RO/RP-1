@@ -161,7 +161,7 @@ namespace RP0
                     KerbalConstructionTimeData.Instance.AirlaunchParams = _airlaunchParams;
                     _airlaunchParams = null;
 
-                    BuildListVessel b = KerbalConstructionTimeData.Instance.LaunchedVessel;
+                    VesselProject b = KerbalConstructionTimeData.Instance.LaunchedVessel;
                     if (!b.IsCrewable())
                     {
                         b.Launch();

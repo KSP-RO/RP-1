@@ -120,37 +120,37 @@ namespace RP0
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Next:", _windowSkin.label);
-            IKCTBuildItem buildItem = KCTUtilities.GetNextThingToFinish();
+            ISpaceCenterProject buildItem = KCTUtilities.GetNextThingToFinish();
             if (buildItem != null)
             {
                 string txt = buildItem.GetItemName(), locTxt = "VAB";
-                if (buildItem.GetListType() == BuildListVessel.ListType.None)
+                if (buildItem.GetListType() == VesselProject.ListType.None)
                 {
                     locTxt = string.Empty;
                 }
-                else if (buildItem.GetListType() == BuildListVessel.ListType.Reconditioning)
+                else if (buildItem.GetListType() == VesselProject.ListType.Reconditioning)
                 {
-                    ReconRollout reconRoll = buildItem as ReconRollout;
-                    if (reconRoll.RRType == ReconRollout.RolloutReconType.Reconditioning)
+                    ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
+                    if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
                     {
                         txt = "Reconditioning";
                         locTxt = reconRoll.launchPadID;
                     }
-                    else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
+                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
                         txt = $"{associated.shipName} Rollout";
                         locTxt = reconRoll.launchPadID;
                     }
-                    else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
+                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
                         txt = $"{associated.shipName} Rollback";
                         locTxt = reconRoll.launchPadID;
                     }
-                    else if (reconRoll.RRType == ReconRollout.RolloutReconType.Recovery)
+                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Recovery)
                     {
-                        BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
                         txt = $"{associated.shipName} Recovery";
                         locTxt = associated.LC.Name;
                     }
@@ -159,13 +159,13 @@ namespace RP0
                         locTxt = "Storage";
                     }
                 }
-                else if (buildItem.GetListType() == BuildListVessel.ListType.AirLaunch)
+                else if (buildItem.GetListType() == VesselProject.ListType.AirLaunch)
                 {
-                    AirlaunchPrep ar = buildItem as AirlaunchPrep;
-                    BuildListVessel associated = ar.AssociatedBLV;
+                    AirlaunchProject ar = buildItem as AirlaunchProject;
+                    VesselProject associated = ar.AssociatedBLV;
                     if (associated != null)
                     {
-                        if (ar.direction == AirlaunchPrep.PrepDirection.Mount)
+                        if (ar.direction == AirlaunchProject.PrepDirection.Mount)
                             txt = $"{associated.shipName} Mounting";
                         else
                             txt = $"{associated.shipName} Unmounting";
@@ -176,20 +176,20 @@ namespace RP0
                     locTxt = ar.LC.Name;
 
                 }
-                else if (buildItem.GetListType() == BuildListVessel.ListType.VAB || buildItem.GetListType() == BuildListVessel.ListType.SPH)
+                else if (buildItem.GetListType() == VesselProject.ListType.VAB || buildItem.GetListType() == VesselProject.ListType.SPH)
                 {
-                    BuildListVessel blv = buildItem as BuildListVessel;
+                    VesselProject blv = buildItem as VesselProject;
                     locTxt = blv == null || blv.LC == null ? "Vessel" : blv.LC.Name;
                 }
-                else if (buildItem.GetListType() == BuildListVessel.ListType.TechNode)
+                else if (buildItem.GetListType() == VesselProject.ListType.TechNode)
                 {
                     locTxt = "Tech";
                 }
-                else if (buildItem.GetListType() == BuildListVessel.ListType.KSC)
+                else if (buildItem.GetListType() == VesselProject.ListType.KSC)
                 {
                     locTxt = "KSC";
                 }
-                else if (buildItem.GetListType() == BuildListVessel.ListType.Crew)
+                else if (buildItem.GetListType() == VesselProject.ListType.Crew)
                 {
                     locTxt = txt;
                     txt = "Training";
@@ -227,21 +227,21 @@ namespace RP0
                             KACWrapper.KAC.DeleteAlarm(alarm.ID);
                         }
                         txt = "RP-1: ";
-                        if (buildItem.GetListType() == BuildListVessel.ListType.Reconditioning)
+                        if (buildItem.GetListType() == VesselProject.ListType.Reconditioning)
                         {
-                            ReconRollout reconRoll = buildItem as ReconRollout;
-                            if (reconRoll.RRType == ReconRollout.RolloutReconType.Reconditioning)
+                            ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
+                            if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
                             {
                                 txt += $"{reconRoll.launchPadID} Reconditioning";
                             }
-                            else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollout)
+                            else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
                             {
-                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
                                 txt += $"{associated.shipName} rollout at {reconRoll.launchPadID}";
                             }
-                            else if (reconRoll.RRType == ReconRollout.RolloutReconType.Rollback)
+                            else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
                             {
-                                BuildListVessel associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
+                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(blv => blv.shipID.ToString() == reconRoll.associatedID);
                                 txt += $"{associated.shipName} rollback at {reconRoll.launchPadID}";
                             }
                             else
@@ -363,7 +363,7 @@ namespace RP0
 
         private static void RenderConstructionList()
         {
-            KSCItem ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
+            SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
@@ -380,7 +380,7 @@ namespace RP0
             double totalCost = 0d;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
-                ConstructionBuildItem constr = ksc.Constructions[i];
+                ConstructionProject constr = ksc.Constructions[i];
                 double rCost = constr.RemainingCost;
                 totalCost += rCost;
                 GUILayout.BeginHorizontal();
@@ -462,7 +462,7 @@ namespace RP0
         {
             _accumulatedTimeBefore = 0d;
 
-            PersistentObservableList<TechItem> techList = KerbalConstructionTimeData.Instance.TechList;
+            PersistentObservableList<ResearchProject> techList = KerbalConstructionTimeData.Instance.TechList;
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
@@ -477,7 +477,7 @@ namespace RP0
             int cancelID = -1;
             for (int i = 0; i < techList.Count; i++)
             {
-                TechItem t = techList[i];
+                ResearchProject t = techList[i];
                 GUILayout.BeginHorizontal();
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
@@ -605,14 +605,14 @@ namespace RP0
             GUILayout.EndScrollView();
         }
 
-        private static int CompareBuildItems(IKCTBuildItem a, IKCTBuildItem b)
+        private static int CompareBuildItems(ISpaceCenterProject a, ISpaceCenterProject b)
         {
             return (_timeBeforeItem.ValueOrDefault(a) + _estTimeForItem[a]).CompareTo(_timeBeforeItem.ValueOrDefault(b) + _estTimeForItem[b]);
         }
 
-        private static List<IKCTBuildItem> _allItems = new List<IKCTBuildItem>();
-        private static Dictionary<IKCTBuildItem, double> _timeBeforeItem = new Dictionary<IKCTBuildItem, double>();
-        private static Dictionary<IKCTBuildItem, double> _estTimeForItem = new Dictionary<IKCTBuildItem, double>();
+        private static List<ISpaceCenterProject> _allItems = new List<ISpaceCenterProject>();
+        private static Dictionary<ISpaceCenterProject, double> _timeBeforeItem = new Dictionary<ISpaceCenterProject, double>();
+        private static Dictionary<ISpaceCenterProject, double> _estTimeForItem = new Dictionary<ISpaceCenterProject, double>();
         private static void RenderCombinedList()
         {
             double accTime;
@@ -666,20 +666,20 @@ namespace RP0
 
             for (int i = 0; i < _allItems.Count; i++)
             {
-                IKCTBuildItem t = _allItems[i];
+                ISpaceCenterProject t = _allItems[i];
                 if (t.IsComplete())
                     continue;
 
                 GUILayout.BeginHorizontal();
                 DrawTypeIcon(t);
-                BuildListVessel blv;
-                if (t is ReconRollout r)
+                VesselProject blv;
+                if (t is ReconRolloutProject r)
                 {
-                    if (r.RRType == ReconRollout.RolloutReconType.Reconditioning)
+                    if (r.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
                         GUILayout.Label($"{r.LC.Name}: {r.GetItemName()} {r.launchPadID}");
                     else if ((blv = r.AssociatedBLV) != null)
                     {
-                        if (r.RRType == ReconRollout.RolloutReconType.Rollout)
+                        if (r.RRType == ReconRolloutProject.RolloutReconType.Rollout)
                             GUILayout.Label($"{blv.LC.Name}: Rollout {blv.shipName} to {r.launchPadID}");
                         else
                             GUILayout.Label($"{blv.LC.Name}: {r.GetItemName()} {blv.shipName}");
@@ -687,16 +687,16 @@ namespace RP0
                     else
                         GUILayout.Label(r.GetItemName());
                 }
-                else if (t is AirlaunchPrep a && (blv = a.AssociatedBLV) != null)
+                else if (t is AirlaunchProject a && (blv = a.AssociatedBLV) != null)
                     GUILayout.Label($"{a.GetItemName()}: {blv.shipName}");
-                else if (t is BuildListVessel b)
+                else if (t is VesselProject b)
                     GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
-                else if (t is ConstructionBuildItem constr)
+                else if (t is ConstructionProject constr)
                 {
                     KCTUtilities.GetConstructionTooltip(constr, i, out string costTooltip, out string identifier);
                     GUILayout.Label(new GUIContent(t.GetItemName(), "name" + costTooltip));
                 }
-                else if (t is RP0.Crew.TrainingCourse course)
+                else if (t is Crew.TrainingCourse course)
                 {
                     var sb = StringBuilderCache.Acquire();
                     sb.Append("Astronauts:");
@@ -710,14 +710,14 @@ namespace RP0
                 GUILayout.Label($"{t.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
 
                 double timeBeforeItem = _timeBeforeItem.ValueOrDefault(t);
-                if (t is TechItem tech)
+                if (t is ResearchProject tech)
                     DrawYearBasedMult(tech, timeBeforeItem);
                 else
                     GUILayout.Space(18);
 
                 if (t.GetBuildRate() > 0d)
                     GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
-                else if (t is BuildListVessel b && !b.LC.IsOperational)
+                else if (t is VesselProject b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
                     GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
@@ -748,7 +748,7 @@ namespace RP0
             _estTimeForItem.Clear();
         }
 
-        private static void DrawYearBasedMult(TechItem t, double offset)
+        private static void DrawYearBasedMult(ResearchProject t, double offset)
         {
             double mult = offset == 0 ? t.YearBasedRateMult : t.CalculateYearBasedRateMult(offset);
 
@@ -778,56 +778,56 @@ namespace RP0
             GUILayout.Label(new GUIContent("•", txt), _blobText, GUILayout.Width(15));
         }
 
-        private static GUIContent GetTypeIcon(IKCTBuildItem b)
+        private static GUIContent GetTypeIcon(ISpaceCenterProject b)
         {
             switch (b.GetListType())
             {
-                case BuildListVessel.ListType.VAB:
+                case VesselProject.ListType.VAB:
                     return _rocketTexture;
 
-                case BuildListVessel.ListType.SPH:
+                case VesselProject.ListType.SPH:
                     return _planeTexture;
 
-                case BuildListVessel.ListType.Reconditioning:
-                    if (b is ReconRollout r)
+                case VesselProject.ListType.Reconditioning:
+                    if (b is ReconRolloutProject r)
                     {
                         switch (r.RRType)
                         {
-                            case ReconRollout.RolloutReconType.Reconditioning:
+                            case ReconRolloutProject.RolloutReconType.Reconditioning:
                                 return _reconTexture;
-                            case ReconRollout.RolloutReconType.Recovery:
+                            case ReconRolloutProject.RolloutReconType.Recovery:
                                 return _recoveryTexture;
-                            case ReconRollout.RolloutReconType.Rollback:
+                            case ReconRolloutProject.RolloutReconType.Rollback:
                                 return _rollbackTexture;
-                            case ReconRollout.RolloutReconType.Rollout:
+                            case ReconRolloutProject.RolloutReconType.Rollout:
                                 return _rolloutTexture;
                         }
                     }
                     return _rocketTexture;
 
-                case BuildListVessel.ListType.AirLaunch:
-                    if (b is AirlaunchPrep a && a.direction == AirlaunchPrep.PrepDirection.Mount)
+                case VesselProject.ListType.AirLaunch:
+                    if (b is AirlaunchProject a && a.direction == AirlaunchProject.PrepDirection.Mount)
                         return _airlaunchTexture;
                     return _hangarTexture;
 
-                case BuildListVessel.ListType.KSC:
+                case VesselProject.ListType.KSC:
                     return _constructTexture;
 
-                case BuildListVessel.ListType.TechNode:
+                case VesselProject.ListType.TechNode:
                     return _techTexture;
             }
 
             return _constructTexture;
         }
 
-        private static void DrawTypeIcon(IKCTBuildItem b)
+        private static void DrawTypeIcon(ISpaceCenterProject b)
         {
             GUILayout.Label(GetTypeIcon(b), GUILayout.ExpandWidth(false));
         }
 
         private static void RenderBuildList()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             RenderBuildlistHeader();
 
@@ -855,8 +855,8 @@ namespace RP0
 
         private static void RenderRollouts()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
-            foreach (ReconRollout reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRollout.RolloutReconType.Reconditioning))
+            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            foreach (ReconRolloutProject reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRolloutProject.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
                 double tLeft = reconditioning.GetTimeLeft();
@@ -873,7 +873,7 @@ namespace RP0
             }
         }
 
-        private static void RenderVesselsBeingBuilt(LCItem lc)
+        private static void RenderVesselsBeingBuilt(LaunchComplex lc)
         {
             _accumulatedTimeBefore = 0d;
             lc.accumEffic = lc.Efficiency;
@@ -887,7 +887,7 @@ namespace RP0
             bool recalc = false;
             for (int i = 0; i < lc.BuildList.Count; i++)
             {
-                BuildListVessel b = lc.BuildList[i];
+                VesselProject b = lc.BuildList[i];
                 if (!b.AllPartsValid)
                     continue;
                 GUILayout.BeginHorizontal();
@@ -967,7 +967,7 @@ namespace RP0
 
         private static void RenderWarehouse()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             bool isPad = activeLC.LCType == LaunchComplexType.Pad;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
@@ -978,7 +978,7 @@ namespace RP0
                 (isPad ? KCTUtilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) : KCTUtilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) ) &&
                 GUILayout.Button("Recover Active Vessel To Warehouse"))
             {
-                if (!KCTUtilities.RecoverActiveVesselToStorage(isPad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH))
+                if (!KCTUtilities.RecoverActiveVesselToStorage(isPad ? VesselProject.ListType.VAB : VesselProject.ListType.SPH))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
                 }
@@ -990,17 +990,17 @@ namespace RP0
 
             for (int i = 0; i < activeLC.Warehouse.Count; i++)
             {
-                BuildListVessel b = activeLC.Warehouse[i];
+                VesselProject b = activeLC.Warehouse[i];
                 RenderWarehouseRow(b, i, false);
             }
         }
 
-        private static void RenderWarehouseRow(BuildListVessel b, int listIdx, bool isCombinedList)
+        private static void RenderWarehouseRow(VesselProject b, int listIdx, bool isCombinedList)
         {
             if (!b.AllPartsValid)
                 return;
 
-            LCItem vesselLC = b.LC;
+            LaunchComplex vesselLC = b.LC;
 
             bool isPad = vesselLC != KerbalConstructionTimeData.Instance.ActiveKSC.Hangar;
 
@@ -1012,7 +1012,7 @@ namespace RP0
                 else
                     launchSite = b.LC.ActiveLPInstance.name;
             }
-            ReconRollout rollout = null, rollback = null, recovery = null, padRollout = null;
+            ReconRolloutProject rollout = null, rollback = null, recovery = null, padRollout = null;
             string blvID = b.shipID.ToString();
             foreach (var rr in vesselLC.Recon_Rollout)
             {
@@ -1020,18 +1020,18 @@ namespace RP0
                 {
                     switch (rr.RRType)
                     {
-                        case ReconRollout.RolloutReconType.Recovery: recovery = rr; break;
-                        case ReconRollout.RolloutReconType.Rollback: rollback = rr; break;
-                        case ReconRollout.RolloutReconType.Rollout: rollout = rr; break;
+                        case ReconRolloutProject.RolloutReconType.Recovery: recovery = rr; break;
+                        case ReconRolloutProject.RolloutReconType.Rollback: rollback = rr; break;
+                        case ReconRolloutProject.RolloutReconType.Rollout: rollout = rr; break;
                         // any other type is wrong.
                     }
                 }
-                else if (isPad && rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.launchPadID == launchSite)
+                else if (isPad && rr.RRType == ReconRolloutProject.RolloutReconType.Rollout && rr.launchPadID == launchSite)
                     padRollout = rr; // something else is being rollout out to this launchsite.
             }
-            AirlaunchPrep airlaunchPrep = !isPad ? vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blvID) : null;
+            AirlaunchProject airlaunchPrep = !isPad ? vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blvID) : null;
 
-            IKCTBuildItem typeIcon = rollout ?? rollback ?? recovery ?? null;
+            ISpaceCenterProject typeIcon = rollout ?? rollback ?? recovery ?? null;
             typeIcon = typeIcon ?? airlaunchPrep;
             typeIcon = typeIcon ?? b;
 
@@ -1116,7 +1116,7 @@ namespace RP0
             {
                 if (isPad)
                 {
-                    KCT_LaunchPad foundPad = null;
+                    LCLaunchPad foundPad = null;
                     LaunchPadState lpState = LaunchPadState.None;
                     if (rollout == null && rollback == null)
                     {
@@ -1131,7 +1131,7 @@ namespace RP0
                         else
                         {
                             lpState = vesselLC.ActiveLPInstance.State;
-                            if (padRollout == null && vesselLC.GetReconRollout(ReconRollout.RolloutReconType.None, launchSite) == null)
+                            if (padRollout == null && vesselLC.GetReconRollout(ReconRolloutProject.RolloutReconType.None, launchSite) == null)
                             {
                                 foundPad = vesselLC.ActiveLPInstance;
                             }
@@ -1150,7 +1150,7 @@ namespace RP0
                             btnColor = _yellowButton;
                         else if (!meetsChecks)
                             btnColor = _yellowButton;
-                        ReconRollout tmpRollout = new ReconRollout(b, ReconRollout.RolloutReconType.Rollout, blvID, launchSite);
+                        ReconRolloutProject tmpRollout = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.Rollout, blvID, launchSite);
                         if (tmpRollout.cost > 0d)
                             GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -tmpRollout.cost):N0}");
                         GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ blvID) : new GUIContent("Rollout");
@@ -1207,7 +1207,7 @@ namespace RP0
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
                              (rollout != null && rollout.IsComplete()))
                     {
-                        KCT_LaunchPad pad = vesselLC.LaunchPads.Find(lp => lp.name == rollout.launchPadID);
+                        LCLaunchPad pad = vesselLC.LaunchPads.Find(lp => lp.name == rollout.launchPadID);
                         bool operational = pad != null && !pad.IsDestroyed && pad.isOperational;
                         GUIStyle btnColor = _greenButton;
                         string launchTxt = "Launch";
@@ -1244,7 +1244,7 @@ namespace RP0
                                 {
                                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchRepairPopup", "Cannot Launch!", "You must repair the launchpad before you can launch a vessel from it!", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
                                 }
-                                else if (vesselLC.GetReconditioning(launchSite) is ReconRollout recon)
+                                else if (vesselLC.GetReconditioning(launchSite) is ReconRolloutProject recon)
                                 {
                                     ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
                                     ScreenMessages.PostScreenMessage(message);
@@ -1288,7 +1288,7 @@ namespace RP0
                     {
                         if (airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
                         {
-                            var tmpPrep = new AirlaunchPrep(b, blvID);
+                            var tmpPrep = new AirlaunchProject(b, blvID);
                             if (tmpPrep.cost > 0d)
                                 GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
                             GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ blvID) : new GUIContent("Prep for airlaunch");
@@ -1327,7 +1327,7 @@ namespace RP0
                         List<string> facilityChecks = new List<string>();
                         if (b.MeetsFacilityRequirements(facilityChecks))
                         {
-                            bool operational = KCTUtilities.IsLaunchFacilityIntact(BuildListVessel.ListType.SPH);
+                            bool operational = KCTUtilities.IsLaunchFacilityIntact(VesselProject.ListType.SPH);
                             if (!operational)
                             {
                                 ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -1378,7 +1378,7 @@ namespace RP0
 
         private static void RenderLaunchComplexControls()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginHorizontal();
             // Don't allow switching in edit mode
@@ -1442,7 +1442,7 @@ namespace RP0
 
         private static void RenderLaunchPadControls()
         {
-            LCItem activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
@@ -1451,7 +1451,7 @@ namespace RP0
             if (oldRushing != activeLC.IsRushing)
                 KCTUtilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
 
-            KCT_LaunchPad activePad = activeLC.ActiveLPInstance;
+            LCLaunchPad activePad = activeLC.ActiveLPInstance;
             
             GUILayout.Space(15);
 
@@ -1544,7 +1544,7 @@ namespace RP0
 
             if (KerbalConstructionTimeData.Instance.TechList.Count > index)
             {
-                TechItem node = KerbalConstructionTimeData.Instance.TechList[index];
+                ResearchProject node = KerbalConstructionTimeData.Instance.TechList[index];
                 RP0Debug.Log($"Cancelling tech: {node.techName}");
 
                 // cancel children
@@ -1589,7 +1589,7 @@ namespace RP0
         {
             if (KerbalConstructionTimeData.Instance.ActiveKSC.Constructions.Count > index)
             {
-                ConstructionBuildItem item = KerbalConstructionTimeData.Instance.ActiveKSC.Constructions[index];
+                ConstructionProject item = KerbalConstructionTimeData.Instance.ActiveKSC.Constructions[index];
                 RP0Debug.Log($"Cancelling construction: {item.GetItemName()}");
                 item.Cancel();
             }
@@ -1600,7 +1600,7 @@ namespace RP0
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
             _blPlusPosition.height = 225;
-            BuildListVessel b = KCTUtilities.FindBLVesselByID(KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
+            VesselProject b = KCTUtilities.FindBLVesselByID(KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
             GUILayout.BeginVertical();
             string launchSite = b.launchSite;
 
@@ -1612,16 +1612,16 @@ namespace RP0
                     launchSite = b.LC.ActiveLPInstance.name;
             }
             string blvID = b.shipID.ToString();
-            ReconRollout rollout = b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollout, launchSite);
-            ReconRollout rollback = rollout == null ? b.LC.GetReconRollout(ReconRollout.RolloutReconType.Rollback, launchSite) : null;
+            ReconRolloutProject rollout = b.LC.GetReconRollout(ReconRolloutProject.RolloutReconType.Rollout, launchSite);
+            ReconRolloutProject rollback = rollout == null ? b.LC.GetReconRollout(ReconRolloutProject.RolloutReconType.Rollback, launchSite) : null;
             bool isRollingOut = rollout != null && rollout.associatedID == blvID;
             bool isRollingBack = rollback != null && rollback.associatedID == blvID;
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
-            if (b.Type == BuildListVessel.ListType.SPH && b.LC.Airlaunch_Prep.Find(a => a.associatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
+            if (b.Type == VesselProject.ListType.SPH && b.LC.Airlaunch_Prep.Find(a => a.associatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
             {
-                _launchSites = KCTUtilities.GetLaunchSites(b.Type == BuildListVessel.ListType.VAB);
+                _launchSites = KCTUtilities.GetLaunchSites(b.Type == VesselProject.ListType.VAB);
                 if (_launchSites.Any())
                 {
                     GUIStates.ShowBLPlus = false;
@@ -1662,7 +1662,7 @@ namespace RP0
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_NEW, "KCTEditNew");
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, "KCTEditLaunch");
 
-                EditorDriver.StartAndLoadVessel(tempFile, b.Type == BuildListVessel.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB);
+                EditorDriver.StartAndLoadVessel(tempFile, b.Type == VesselProject.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB);
             }
 
             if (GUILayout.Button("Rename"))
@@ -1690,7 +1690,7 @@ namespace RP0
                 AddVesselToPlansList(b.CreateCopy());
             }
 
-            ReconRollout blvRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRollout.RolloutReconType.Rollout && rr.associatedID == blvID);
+            ReconRolloutProject blvRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRolloutProject.RolloutReconType.Rollout && rr.associatedID == blvID);
             if (blvRollout != null && GUILayout.Button("Rollback"))
             {
                 blvRollout.SwapRolloutType();
@@ -1707,7 +1707,7 @@ namespace RP0
             {
                 if (_isIntegrationSelected)
                 {
-                    LCItem lc = b.LC;
+                    LaunchComplex lc = b.LC;
                     if (lc.BuildList.Remove(b))
                     {
                         lc.BuildList.Insert(0, b);
@@ -1730,7 +1730,7 @@ namespace RP0
 
         public static void DrawLaunchSiteChooser(int windowID)
         {
-            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginVertical();
             _launchSiteScrollView = GUILayout.BeginScrollView(_launchSiteScrollView, GUILayout.Height((float)Math.Min(Screen.height * 0.75, 25 * _launchSites.Count + 10)));
@@ -1742,7 +1742,7 @@ namespace RP0
                     if (_isSelectingLaunchSiteForVessel)
                     {
                         //Set the chosen vessel's launch site to the selected site
-                        BuildListVessel blv = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
+                        VesselProject blv = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
                         blv.launchSite = launchsite;
                     }
                     else
@@ -1760,7 +1760,7 @@ namespace RP0
 
         private static void ScrapVessel()
         {
-            BuildListVessel b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
+            VesselProject b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
             if (b == null)
             {
                 RP0Debug.Log("Tried to remove a vessel that doesn't exist!");

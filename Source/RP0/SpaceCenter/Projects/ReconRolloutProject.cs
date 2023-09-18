@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace RP0
 {
-    public class ReconRollout : LCProject
+    public class ReconRolloutProject : LCOpsProject
     {
         public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None };
 
@@ -77,11 +77,11 @@ namespace RP0
             {  RolloutReconType.None, UnknownStr }
         };
 
-        public ReconRollout() : base()
+        public ReconRolloutProject() : base()
         {
         }
 
-        public ReconRollout(Vessel vessel, RolloutReconType type, string id, string launchSite, LCItem lc)
+        public ReconRolloutProject(Vessel vessel, RolloutReconType type, string id, string launchSite, LaunchComplex lc)
         {
             RRType = type;
             associatedID = id;
@@ -93,7 +93,7 @@ namespace RP0
             mass = vessel.GetTotalMass();
             try
             {
-                var blv = new BuildListVessel(vessel, BuildListVessel.ListType.VAB);
+                var blv = new VesselProject(vessel, VesselProject.ListType.VAB);
                 isHumanRated = blv.humanRated;
                 BP = Formula.GetReconditioningBP(blv);
                 vesselBP = blv.buildPoints + blv.integrationPoints;
@@ -106,12 +106,12 @@ namespace RP0
                 progress = BP;
             else if (type == RolloutReconType.Recovery)
             {
-                double KSCDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
-                double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
+                double KSCDistance = (float)global::SpaceCenter.Instance.GreatCircleDistance(global::SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
+                double maxDist = global::SpaceCenter.Instance.cb.Radius * Math.PI;
                 BP += BP * (KSCDistance / maxDist);
             }
         }
-        public ReconRollout(BuildListVessel vessel, RolloutReconType type, string id, string launchSite = "")
+        public ReconRolloutProject(VesselProject vessel, RolloutReconType type, string id, string launchSite = "")
         {
             RRType = type;
             associatedID = id;
@@ -144,7 +144,7 @@ namespace RP0
                 progress = BP;
             else if (type == RolloutReconType.Recovery)
             {
-                double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
+                double maxDist = global::SpaceCenter.Instance.cb.Radius * Math.PI;
                 BP += BP * (vessel.kscDistance / maxDist);
                 BP *= (vessel.LandedAt?.Contains("Runway") ?? false) ? .75 : 1;
             } 
@@ -165,7 +165,7 @@ namespace RP0
 
         public override bool HasCost => RRType == RolloutReconType.Rollout;
 
-        public override BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
+        public override VesselProject.ListType GetListType() => VesselProject.ListType.Reconditioning;
 
         public override void Load(ConfigNode node)
         {

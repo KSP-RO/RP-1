@@ -3,14 +3,14 @@ using UnityEngine;
 
 namespace RP0
 {
-    public class PadConstruction : ConstructionBuildItem
+    public class PadConstructionProject : ConstructionProject
     {
         [Persistent]
         public Guid id;
 
-        private LCItem _lc = null;
+        private LaunchComplex _lc = null;
 
-        public LCItem LC
+        public LaunchComplex LC
         {
             get
             {
@@ -32,11 +32,11 @@ namespace RP0
             }
         }
 
-        public PadConstruction()
+        public PadConstructionProject()
         {
         }
 
-        public PadConstruction(string name)
+        public PadConstructionProject(string name)
         {
             base.name = name;
         }
@@ -45,7 +45,7 @@ namespace RP0
 
         protected override void ProcessCancel()
         {
-            KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
+            LCLaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
             int index = LC.LaunchPads.IndexOf(lp);
             LC.LaunchPads.RemoveAt(index);
             if (LC.ActiveLaunchPadIndex >= index)
@@ -70,7 +70,7 @@ namespace RP0
 
             if (ScenarioUpgradeableFacilities.Instance != null && !KCTGameStates.ErroredDuringOnLoad)
             {
-                KCT_LaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
+                LCLaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
                 lp.isOperational = true;
                 lp.DestructionNode = new ConfigNode("DestructionState");
                 upgradeProcessed = true;

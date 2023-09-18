@@ -74,8 +74,8 @@ namespace RP0.Programs
         /// </summary>
         public bool PressedSpeedButton = false;
 
-        private TMPro.TextMeshProUGUI _speedOptionsNames;
-        private TMPro.TextMeshProUGUI _speedOptionsCosts;
+        private TextMeshProUGUI _speedOptionsNames;
+        private TextMeshProUGUI _speedOptionsCosts;
 
         private ProgramFundingOverview _fundingOverview;
 
@@ -212,7 +212,7 @@ namespace RP0.Programs
                 Destroy(child.gameObject.GetComponent<UIList>());
                 child.gameObject.GetComponent<Toggle>().onValueChanged.AddListener(OnClickTab);
                 child.gameObject.GetComponent<LayoutElement>().preferredWidth = 180;
-                foreach (var text in child.gameObject.GetComponentsInChildren<TMPro.TextMeshProUGUI>())
+                foreach (var text in child.gameObject.GetComponentsInChildren<TextMeshProUGUI>())
                 {
                     if (i == 0)
                         text.text = Localizer.Format("#rp0_Admin_ActivePrograms");

@@ -55,14 +55,14 @@ namespace RP0
         Any = ~0,
     }
 
-    public class KCTTechNodePeriod : RP0.DataTypes.ConfigNodePersistenceBase
+    public class TechPeriod : ConfigNodePersistenceBase
     {
         [Persistent] public string id;
         [Persistent] public int startYear;
         [Persistent] public int endYear;
     }
 
-    public class TechItem : IKCTBuildItem, IConfigNode
+    public class ResearchProject : ISpaceCenterProject, IConfigNode
     {
         private static readonly DateTime _epoch = new DateTime(1951, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
@@ -122,7 +122,7 @@ namespace RP0
             }
         }
 
-        public TechItem(RDTech techNode)
+        public ResearchProject(RDTech techNode)
         {
             scienceCost = techNode.scienceCost;
             techName = techNode.title;
@@ -132,7 +132,7 @@ namespace RP0
             ProtoNode.UpdateFromTechNode(techNode);
             // No need to feed this back into RnD yet--we'll do so on complete
 
-            if (Database.TechNodePeriods.TryGetValue(techID, out KCTTechNodePeriod period))
+            if (Database.TechNodePeriods.TryGetValue(techID, out TechPeriod period))
             {
                 startYear = period.startYear;
                 endYear = period.endYear;
@@ -142,7 +142,7 @@ namespace RP0
             RP0Debug.Log("TimeLeft = " + TimeLeft);
         }
 
-        public TechItem() { }
+        public ResearchProject() { }
 
         public override string ToString() => techID;
 
@@ -232,7 +232,7 @@ namespace RP0
             }
         }
 
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.TechNode;
+        public VesselProject.ListType GetListType() => VesselProject.ListType.TechNode;
 
         public bool IsComplete() => progress >= scienceCost;
 
@@ -296,7 +296,7 @@ namespace RP0
             return 0d;
         }
 
-        public string GetBlockingTech(PersistentObservableList<TechItem> techList)
+        public string GetBlockingTech(PersistentObservableList<ResearchProject> techList)
         {
             string blockingTech = null;
 

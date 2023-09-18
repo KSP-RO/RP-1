@@ -234,7 +234,7 @@ namespace RP0
 
             // Create the LaunchedVessel fresh instead of cloning the EditorVessel, since it's possible that the player
             // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.
-            KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
+            KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
             // Just in case, let's set the LCID
             KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ID;
 

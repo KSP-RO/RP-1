@@ -10,7 +10,7 @@ namespace RP0
 
         public static void DrawNewPadWindow(int windowID)
         {
-            LCItem curLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex curLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
@@ -45,7 +45,7 @@ namespace RP0
 
             if (curPadCost > 0)
             {
-                double curPadBuildTime = ConstructionBuildItem.CalculateBuildTime(curPadCost, 0d, SpaceCenterFacility.LaunchPad);
+                double curPadBuildTime = ConstructionProject.CalculateBuildTime(curPadCost, 0d, SpaceCenterFacility.LaunchPad);
                 string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
 
                 GUILayout.BeginHorizontal();
@@ -73,7 +73,7 @@ namespace RP0
                 if (!KCTUtilities.CurrentGameIsCareer())
                 {
                     RP0Debug.Log("Building new launchpad!");
-                    KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new KCT_LaunchPad(id, _newName, fractionalPadLvl)
+                    KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(new LCLaunchPad(id, _newName, fractionalPadLvl)
                     {
                         isOperational = true
                     });
@@ -81,10 +81,10 @@ namespace RP0
                 else
                 {
                     RP0Debug.Log("Building new launchpad!");
-                    var lp = new KCT_LaunchPad(id, _newName, fractionalPadLvl);
+                    var lp = new LCLaunchPad(id, _newName, fractionalPadLvl);
                     KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.Add(lp);
 
-                    var padConstr = new PadConstruction
+                    var padConstr = new PadConstructionProject
                     {
                         id = id,
                         cost = curPadCost,
@@ -130,19 +130,19 @@ namespace RP0
                 {
                     case RenameType.Vessel:
                     {
-                        BuildListVessel b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
+                        VesselProject b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
                         b.shipName = _newName; //Change the name from our point of view
                         break;
                     }
                     case RenameType.Pad:
                     {
-                        KCT_LaunchPad lp = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
+                        LCLaunchPad lp = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance;
                         lp.Rename(_newName);
                         break;
                     }
                     case RenameType.LaunchComplex:
                     {
-                        LCItem lc = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+                        LaunchComplex lc = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
                         lc.Rename(_newName);
                         break;
                     }

@@ -41,7 +41,7 @@ namespace RP0.Harmony
 
             if (showProgress)
             {
-                TechItem item = KerbalConstructionTimeData.Instance.TechList[techItemIndex];
+                ResearchProject item = KerbalConstructionTimeData.Instance.TechList[techItemIndex];
                 double prevTime = 0d;
                 if (KCTGameStates.Settings.UseDates)
                 {

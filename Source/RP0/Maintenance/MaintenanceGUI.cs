@@ -294,12 +294,12 @@ namespace RP0
                     return;
                 }
 
-                RP0.FundTarget target = new RP0.FundTarget(fundTarget);
+                FundTargetProject target = new FundTargetProject(fundTarget);
                 double time = target.GetTimeLeft();
                 if (time < 0d)
                 {
                     PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
-                        $"Failed to find a time to warp to, with a limit of {KSPUtil.PrintDateDeltaCompact(FundTarget.MaxTime, false, false)}",
+                        $"Failed to find a time to warp to, with a limit of {KSPUtil.PrintDateDeltaCompact(FundTargetProject.MaxTime, false, false)}",
                         "Error",
                         HighLogic.UISkin,
                         300,

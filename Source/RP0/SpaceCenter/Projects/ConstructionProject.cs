@@ -2,7 +2,7 @@
 
 namespace RP0
 {
-    public abstract class ConstructionBuildItem : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
+    public abstract class ConstructionProject : ConfigNodePersistenceBase, ISpaceCenterProject, IConfigNode
     {
         [Persistent]
         public double progress = 0;
@@ -38,9 +38,9 @@ namespace RP0
 
         public double EstimatedTimeLeft => GetTimeLeft();
 
-        private KSCItem _ksc = null;
+        private SpaceCenter _ksc = null;
 
-        public KSCItem KSC
+        public SpaceCenter KSC
         {
             get
             {
@@ -58,7 +58,7 @@ namespace RP0
         public double GetFractionComplete() => progress / BP;
         public double GetTimeLeft() => (BP - progress) / GetBuildRate();
         public double GetTimeLeftEst(double offset) => GetTimeLeft();
-        public BuildListVessel.ListType GetListType() => BuildListVessel.ListType.KSC;
+        public VesselProject.ListType GetListType() => VesselProject.ListType.KSC;
         public bool IsComplete() => progress >= BP;
         public virtual double IncrementProgress(double UTDiff)
         {
@@ -128,7 +128,7 @@ namespace RP0
             BP = Formula.GetConstructionBP(cost, oldCost, FacilityType);
         }
 
-        public static double CalculateBuildTime(double cost, double oldCost, SpaceCenterFacility facilityType, KSCItem KSC = null)
+        public static double CalculateBuildTime(double cost, double oldCost, SpaceCenterFacility facilityType, SpaceCenter KSC = null)
         {
             double bp = Formula.GetConstructionBP(cost, oldCost, facilityType);
             double rateTotal = KCTUtilities.GetConstructionRate(0, KSC, facilityType);

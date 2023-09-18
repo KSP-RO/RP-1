@@ -38,13 +38,13 @@ namespace RP0
     {
         public static readonly ResourceInfo ResourceInfo = new ResourceInfo();
         public static readonly PersistentDictionaryNodeKeyed<KCTCostModifier> KCTCostModifiers = new PersistentDictionaryNodeKeyed<KCTCostModifier>();
-        public static readonly PersistentDictionaryNodeKeyed<KCTTechNodePeriod> TechNodePeriods = new PersistentDictionaryNodeKeyed<KCTTechNodePeriod>("id");
+        public static readonly PersistentDictionaryNodeKeyed<TechPeriod> TechNodePeriods = new PersistentDictionaryNodeKeyed<TechPeriod>("id");
         public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
         public static readonly List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
         public static readonly Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
 
-        public static readonly RP0.SpaceCenterSettings SettingsSC = new RP0.SpaceCenterSettings();
-        public static readonly RP0.CrewSettings SettingsCrew = new RP0.CrewSettings();
+        public static readonly SpaceCenterSettings SettingsSC = new SpaceCenterSettings();
+        public static readonly CrewSettings SettingsCrew = new CrewSettings();
 
         private void Awake()
         {
@@ -161,7 +161,7 @@ namespace RP0
                     string costs = string.Empty;
                     node.TryGetValue("upgrades", ref costs);
                     List<int> costList = new List<int>();
-                    costList.FromCommaString<int>(costs);
+                    costList.FromCommaString(costs);
                     Database.FacilityLevelCosts[fac] = costList;
                 }
             }

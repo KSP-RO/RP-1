@@ -5,7 +5,7 @@ using Upgradeables;
 
 namespace RP0
 {
-    public class FacilityUpgrade : ConstructionBuildItem
+    public class FacilityUpgradeProject : ConstructionProject
     {
         [Persistent]
         public int upgradeLevel;
@@ -31,11 +31,11 @@ namespace RP0
 
         
 
-        public FacilityUpgrade()
+        public FacilityUpgradeProject()
         {
         }
 
-        public FacilityUpgrade(SpaceCenterFacility type, string facilityID, int newLevel, int oldLevel, string name)
+        public FacilityUpgradeProject(SpaceCenterFacility type, string facilityID, int newLevel, int oldLevel, string name)
         {
             uid = Guid.NewGuid();
             sFacilityType = type;

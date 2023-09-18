@@ -5,7 +5,7 @@ using RP0.DataTypes;
 
 namespace RP0
 {
-    public class LCItem : IConfigNode
+    public class LaunchComplex : IConfigNode
     {
         public const int MinEngineersConst = 1;
         public const int EngineersPerPacket = 10;
@@ -35,17 +35,17 @@ namespace RP0
 
 
         [Persistent]
-        public PersistentList<KCT_LaunchPad> LaunchPads = new PersistentList<KCT_LaunchPad>();
+        public PersistentList<LCLaunchPad> LaunchPads = new PersistentList<LCLaunchPad>();
         [Persistent]
-        public PersistentObservableList<BuildListVessel> BuildList = new PersistentObservableList<BuildListVessel>();
+        public PersistentObservableList<VesselProject> BuildList = new PersistentObservableList<VesselProject>();
         [Persistent]
-        public PersistentObservableList<BuildListVessel> Warehouse = new PersistentObservableList<BuildListVessel>();
+        public PersistentObservableList<VesselProject> Warehouse = new PersistentObservableList<VesselProject>();
         [Persistent]
-        public PersistentObservableList<PadConstruction> PadConstructions = new PersistentObservableList<PadConstruction>();
+        public PersistentObservableList<PadConstructionProject> PadConstructions = new PersistentObservableList<PadConstructionProject>();
         [Persistent]
-        public PersistentObservableList<ReconRollout> Recon_Rollout = new PersistentObservableList<ReconRollout>();
+        public PersistentObservableList<ReconRolloutProject> Recon_Rollout = new PersistentObservableList<ReconRolloutProject>();
         [Persistent]
-        public PersistentObservableList<AirlaunchPrep> Airlaunch_Prep = new PersistentObservableList<AirlaunchPrep>();
+        public PersistentObservableList<AirlaunchProject> Airlaunch_Prep = new PersistentObservableList<AirlaunchProject>();
 
         private double _rate;
         private double _rateHRCapped;
@@ -73,7 +73,7 @@ namespace RP0
             double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
             return Math.Max(MinEngineersConst, (int)Math.Ceiling((tngMax * 0.25d + bpMax * 0.75d) * EngineersPerPacket));
         }
-        public int MaxEngineersFor(BuildListVessel blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.buildPoints + blv.integrationPoints, blv.humanRated);
+        public int MaxEngineersFor(VesselProject blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.buildPoints + blv.integrationPoints, blv.humanRated);
 
         private double _strategyRateMultiplier = 1d;
         public double StrategyRateMultiplier => _strategyRateMultiplier;
@@ -121,13 +121,13 @@ namespace RP0
         public static string SupportedSizeAsPrettyTextCalc(Vector3 size) => size.y == float.MaxValue ? "unlimited" : $"{size.z:N0}x{size.x:N0}x{size.y:N0}m";
         public string SupportedSizeAsPrettyText => SupportedSizeAsPrettyTextCalc(SizeMax);
 
-        private KSCItem _ksc = null;
+        private SpaceCenter _ksc = null;
 
-        public KSCItem KSC => _ksc;
+        public SpaceCenter KSC => _ksc;
 
         #region Observable funcs
-        void added(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Add(pc); }
-        void removed(int idx, ConstructionBuildItem pc) { _ksc.Constructions.Remove(pc); }
+        void added(int idx, ConstructionProject pc) { _ksc.Constructions.Add(pc); }
+        void removed(int idx, ConstructionProject pc) { _ksc.Constructions.Remove(pc); }
         void updated() { MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
         void lcpUpdated() { RecalculateProjectBP(); }
 
@@ -144,9 +144,9 @@ namespace RP0
         }
         #endregion
 
-        public LCItem() { } // does not add listeners, instead adds them in Load.
+        public LaunchComplex() { } // does not add listeners, instead adds them in Load.
 
-        public LCItem(LCData lcData, KSCItem ksc)
+        public LaunchComplex(LCData lcData, SpaceCenter ksc)
         {
             _ksc = ksc;
             _id = Guid.NewGuid();
@@ -157,7 +157,7 @@ namespace RP0
             if (_lcData.lcType == LaunchComplexType.Pad)
             {
                 float fracLevel = _lcData.GetPadFracLevel();
-                var pad = new KCT_LaunchPad(Guid.NewGuid(), Name + "-A", fracLevel);
+                var pad = new LCLaunchPad(Guid.NewGuid(), Name + "-A", fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }
@@ -191,14 +191,14 @@ namespace RP0
             RecalculateBuildRates();
         }
 
-        public KCT_LaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex && ActiveLaunchPadIndex >= 0 ? LaunchPads[ActiveLaunchPadIndex] : null;
+        public LCLaunchPad ActiveLPInstance => LaunchPads.Count > ActiveLaunchPadIndex && ActiveLaunchPadIndex >= 0 ? LaunchPads[ActiveLaunchPadIndex] : null;
 
         public int LaunchPadCount
         {
             get
             {
                 int count = 0;
-                foreach (KCT_LaunchPad lp in LaunchPads)
+                foreach (LCLaunchPad lp in LaunchPads)
                     if (lp.isOperational) count++;
                 return count;
             }
@@ -207,7 +207,7 @@ namespace RP0
         public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Airlaunch_Prep.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
 
         public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0 || Airlaunch_Prep.Count > 0;
-        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRollout.RolloutReconType.Reconditioning) && Airlaunch_Prep.Count == 0;
+        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning) && Airlaunch_Prep.Count == 0;
         public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0 && Airlaunch_Prep.Count == 0;
         public bool CanModifyReal => Recon_Rollout.Count == 0 && Airlaunch_Prep.Count == 0;
         public bool CanIntegrate => ProjectBPTotal == 0d;
@@ -243,14 +243,14 @@ namespace RP0
             if (_projectBPTotal == 0d)
                 return 0d;
 
-            return LCProject.GetTotalBlockingProjectTime(this);
+            return LCOpsProject.GetTotalBlockingProjectTime(this);
         }
 
-        public ReconRollout GetReconditioning(string launchSite = "LaunchPad") =>
-            Recon_Rollout.FirstOrDefault(r => r.launchPadID == launchSite && ((IKCTBuildItem)r).GetItemName() == "LaunchPad Reconditioning");
+        public ReconRolloutProject GetReconditioning(string launchSite = "LaunchPad") =>
+            Recon_Rollout.FirstOrDefault(r => r.launchPadID == launchSite && ((ISpaceCenterProject)r).GetItemName() == "LaunchPad Reconditioning");
 
-        public ReconRollout GetReconRollout(ReconRollout.RolloutReconType type, string launchSite = "LaunchPad") =>
-            Recon_Rollout.FirstOrDefault(r => (type == ReconRollout.RolloutReconType.None ||  r.RRType == type) && r.launchPadID == launchSite);
+        public ReconRolloutProject GetReconRollout(ReconRolloutProject.RolloutReconType type, string launchSite = "LaunchPad") =>
+            Recon_Rollout.FirstOrDefault(r => (type == ReconRolloutProject.RolloutReconType.None ||  r.RRType == type) && r.launchPadID == launchSite);
 
         public void RecalculateBuildRates()
         {
@@ -281,7 +281,7 @@ namespace RP0
             }
 
             int idx = ActiveLaunchPadIndex;
-            KCT_LaunchPad pad;
+            LCLaunchPad pad;
             int count = LaunchPads.Count;
             do
             {
@@ -348,7 +348,7 @@ namespace RP0
         public LaunchPadState GetBestLaunchPadState()
         {
             LaunchPadState state = LaunchPadState.None;
-            foreach (KCT_LaunchPad lp in LaunchPads)
+            foreach (LCLaunchPad lp in LaunchPads)
             {
                 var padState = lp.State;
                 if (padState > state)
@@ -358,9 +358,9 @@ namespace RP0
             return state;
         }
 
-        public KCT_LaunchPad FindFreeLaunchPad()
+        public LCLaunchPad FindFreeLaunchPad()
         {
-            foreach (KCT_LaunchPad lp in LaunchPads)
+            foreach (LCLaunchPad lp in LaunchPads)
             {
                 if (lp.State == LaunchPadState.Free)
                     return lp;
@@ -412,7 +412,7 @@ namespace RP0
             AddListeners();
         }
 
-        public void PostLoad(KSCItem ksc)
+        public void PostLoad(SpaceCenter ksc)
         {
             _ksc = ksc;
             int i = 0;

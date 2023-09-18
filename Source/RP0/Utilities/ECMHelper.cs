@@ -4,7 +4,7 @@
     {
         public static string GetEcmNameFromPartModule(PartModule pm)
         {
-            if (pm is RP0.ProceduralAvionics.ModuleProceduralAvionics pa)
+            if (pm is ProceduralAvionics.ModuleProceduralAvionics pa)
                 return GetEcmNameFromModuleProceduralAvionics(pa);
 
             if (pm is RealFuels.ModuleEngineConfigsBase)
@@ -16,7 +16,7 @@
             return null;
         }
 
-        internal static string GetEcmNameFromModuleProceduralAvionics(RP0.ProceduralAvionics.ModuleProceduralAvionics pm)
+        internal static string GetEcmNameFromModuleProceduralAvionics(ProceduralAvionics.ModuleProceduralAvionics pm)
         {
             return ProceduralAvionics.ProceduralAvionicsTechManager.GetPartUpgradeName(pm.CurrentProceduralAvionicsConfig.name, pm.CurrentProceduralAvionicsTechNode);
         }

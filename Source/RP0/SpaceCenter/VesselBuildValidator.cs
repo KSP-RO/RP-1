@@ -23,16 +23,16 @@ namespace RP0
         public bool CheckPartConfigs { get; set; } = true;
         public bool CheckAvailableFunds { get; set; } = true;
         public double? CostOffset { get; set; } = null;
-        public Action<BuildListVessel> SuccessAction { get; set; }
+        public Action<VesselProject> SuccessAction { get; set; }
         public Action FailureAction { get; set; }
 
         private static IEnumerator _routine;
         private ValidationResult _validationResult;
 
-        private Action<BuildListVessel> _successActions;
+        private Action<VesselProject> _successActions;
         private Action _failureActions;
 
-        public void ProcessVessel(BuildListVessel blv)
+        public void ProcessVessel(VesselProject blv)
         {
             _successActions = SuccessAction + ((_) =>
             {
@@ -51,7 +51,7 @@ namespace RP0
             KerbalConstructionTime.Instance.StartCoroutine(_routine);
         }
 
-        private IEnumerator RunValidationRoutine(BuildListVessel blv)
+        private IEnumerator RunValidationRoutine(VesselProject blv)
         {
             if (ProcessFacilityChecks(blv) != ValidationResult.Success)
             {
@@ -99,7 +99,7 @@ namespace RP0
             _successActions(blv);
         }
 
-        private ValidationResult ProcessFacilityChecks(BuildListVessel blv)
+        private ValidationResult ProcessFacilityChecks(VesselProject blv)
         {
             if (CheckFacilityRequirements)
             {
@@ -128,7 +128,7 @@ namespace RP0
             return ValidationResult.Success;
         }
 
-        private void ProcessPartAvailability(BuildListVessel blv)
+        private void ProcessPartAvailability(VesselProject blv)
         {
             _validationResult = ValidationResult.Undecided;
             if (!CheckPartAvailability)
@@ -204,7 +204,7 @@ namespace RP0
                 HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        private void ProcessPartConfigs(BuildListVessel blv)
+        private void ProcessPartConfigs(VesselProject blv)
         {
             _validationResult = ValidationResult.Undecided;
             if (!CheckPartConfigs)
@@ -234,7 +234,7 @@ namespace RP0
                 HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        private ValidationResult ProcessFundsChecks(BuildListVessel blv)
+        private ValidationResult ProcessFundsChecks(VesselProject blv)
         {
             if (CheckAvailableFunds)
             {
@@ -289,7 +289,7 @@ namespace RP0
             return sb.ToStringAndRelease();
         }
 
-        private Dictionary<Part, List<PartConfigValidationError>> GetConfigErrorsDict(BuildListVessel blv)
+        private Dictionary<Part, List<PartConfigValidationError>> GetConfigErrorsDict(VesselProject blv)
         {
             ShipConstruct sc = blv.GetShip();
             if (sc == null)

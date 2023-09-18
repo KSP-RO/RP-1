@@ -86,7 +86,7 @@ namespace RP0
             return ret;
         }
 
-        public static string DisplayHolder(RealFuels.PartEntryCostHolder h, bool recurse=false)
+        public static string DisplayHolder(PartEntryCostHolder h, bool recurse=false)
         {
             if (h is null) return "null";
             if (h.cost == 0 && h.children.Count == 1) return DisplayHolder(EntryCostDatabase.GetHolder(h.children[0]), recurse);

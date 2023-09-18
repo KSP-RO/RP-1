@@ -60,7 +60,7 @@ namespace RP0.DataTypes
             ProtoCrewMember,
         }
 
-        private static ParseableType GetParseableType(System.Type t)
+        private static ParseableType GetParseableType(Type t)
         {
             if (t == typeof(ProtoCrewMember))
                 return ParseableType.ProtoCrewMember;
@@ -107,7 +107,7 @@ namespace RP0.DataTypes
     /// </summary>
     public class PersistentListValueType<T> : List<T>, IConfigNode
     {
-        private readonly static System.Type _Type = typeof(T);
+        private readonly static Type _Type = typeof(T);
         private readonly static DataType _DataType = FieldData.ValueDataType(_Type);
 
         public void Load(ConfigNode node)

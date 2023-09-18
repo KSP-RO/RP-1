@@ -1,13 +1,13 @@
 ﻿namespace RP0
 {
-    public interface IKCTBuildItem
+    public interface ISpaceCenterProject
     {
         string GetItemName();
         double GetBuildRate();
         double GetFractionComplete();
         double GetTimeLeft();
         double GetTimeLeftEst(double offset);
-        BuildListVessel.ListType GetListType();
+        VesselProject.ListType GetListType();
         bool IsComplete();
         double IncrementProgress(double UTDiff);
     }

@@ -4,7 +4,7 @@ using RP0.DataTypes;
 
 namespace RP0
 {
-    public abstract class LCProject : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
+    public abstract class LCOpsProject : ConfigNodePersistenceBase, ISpaceCenterProject, IConfigNode
     {
         public virtual string Name => "Null";
         [Persistent]
@@ -20,10 +20,10 @@ namespace RP0
         protected abstract TransactionReasonsRP0 transactionReason { get; }
         protected abstract TransactionReasonsRP0 transactionReasonTime { get; }
 
-        public BuildListVessel AssociatedBLV => KCTUtilities.FindBLVesselByID(LC, new Guid(associatedID));
+        public VesselProject AssociatedBLV => KCTUtilities.FindBLVesselByID(LC, new Guid(associatedID));
 
-        protected LCItem _lc = null;
-        public LCItem LC
+        protected LaunchComplex _lc = null;
+        public LaunchComplex LC
         {
             get
             {
@@ -33,7 +33,7 @@ namespace RP0
                     {
                         foreach (var lc in ksc.LaunchComplexes)
                         {
-                            if (this is ReconRollout r)
+                            if (this is ReconRolloutProject r)
                             {
                                 if (lc.Recon_Rollout.Contains(r))
                                 {
@@ -41,7 +41,7 @@ namespace RP0
                                     break;
                                 }
                             }
-                            else if(this is AirlaunchPrep a)
+                            else if(this is AirlaunchProject a)
                             {
                                 if (lc.Airlaunch_Prep.Contains(a))
                                 {
@@ -61,7 +61,7 @@ namespace RP0
             }
         }
 
-        public LCProject()
+        public LCOpsProject()
         {
         }
 
@@ -100,7 +100,7 @@ namespace RP0
                 rate = KCTUtilities.GetBuildRate(LC, mass, vesselBP, isHumanRated, delta);
             else
                 rate = delta == 0 ? KCTUtilities.GetBuildRate(0, LC, isHumanRated, false)
-                    : KCTUtilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH, LC, isHumanRated, delta);
+                    : KCTUtilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? VesselProject.ListType.VAB : VesselProject.ListType.SPH, LC, isHumanRated, delta);
 
             rate *= CurrencyUtils.Rate(transactionReasonTime);
 
@@ -172,7 +172,7 @@ namespace RP0
         // so we're just storing a separate list of doubles.
         private static readonly List<double> _lcpDataBPRemaining = new List<double>();
         private static double _bpTotal = 0d;
-        private static void AddLCP(LCProject lcp)
+        private static void AddLCP(LCOpsProject lcp)
         {
             double bp = Math.Abs(lcp.BP);
             _bpTotal += bp;
@@ -251,7 +251,7 @@ namespace RP0
             return accumTime;
         }
 
-        public static double GetTotalBlockingProjectTime(LCItem lc)
+        public static double GetTotalBlockingProjectTime(LaunchComplex lc)
         {
             foreach (var r in lc.Recon_Rollout)
             {
@@ -301,10 +301,10 @@ namespace RP0
             return accumTime;
         }
 
-        public static LCProject GetFirstCompleting(LCItem lc)
+        public static LCOpsProject GetFirstCompleting(LaunchComplex lc)
         {
             double minTime = double.MaxValue;
-            LCProject lcp = null;
+            LCOpsProject lcp = null;
             // The blocking LCP with the lowest time left
             // doesn't have to worry about build rate changing
             foreach (var r in lc.Recon_Rollout)
@@ -334,7 +334,7 @@ namespace RP0
             return lcp;
         }
 
-        public virtual BuildListVessel.ListType GetListType() => BuildListVessel.ListType.Reconditioning;
+        public virtual VesselProject.ListType GetListType() => VesselProject.ListType.Reconditioning;
 
         public bool IsComplete() => IsReversed ? progress <= 0 : progress >= BP;
 

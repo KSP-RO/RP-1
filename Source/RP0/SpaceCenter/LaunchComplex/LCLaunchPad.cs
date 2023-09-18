@@ -16,7 +16,7 @@ namespace RP0
         Free,
     }
 
-    public class KCT_LaunchPad : IConfigNode
+    public class LCLaunchPad : IConfigNode
     {
         public const string LPID = "SpaceCenter/LaunchPad";
 
@@ -63,13 +63,13 @@ namespace RP0
             }
         }
 
-        public LCItem LC
+        public LaunchComplex LC
         {
             get
             {
-                foreach (KSCItem currentKSC in KerbalConstructionTimeData.Instance.KSCs)
+                foreach (SpaceCenter currentKSC in KerbalConstructionTimeData.Instance.KSCs)
                 {
-                    if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LCItem currentLC)
+                    if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LaunchComplex currentLC)
                     {
                         return currentLC;
                     }
@@ -95,9 +95,9 @@ namespace RP0
                     {
                         switch (rr.RRType)
                         {
-                            case ReconRollout.RolloutReconType.Reconditioning: return LaunchPadState.Reconditioning;
-                            case ReconRollout.RolloutReconType.Rollback: return LaunchPadState.Rollback;
-                            case ReconRollout.RolloutReconType.Rollout: return LaunchPadState.Rollout;
+                            case ReconRolloutProject.RolloutReconType.Reconditioning: return LaunchPadState.Reconditioning;
+                            case ReconRolloutProject.RolloutReconType.Rollback: return LaunchPadState.Rollback;
+                            case ReconRolloutProject.RolloutReconType.Rollout: return LaunchPadState.Rollout;
                         }
                         break;
                     }
@@ -107,7 +107,7 @@ namespace RP0
             }
         }
 
-        public KCT_LaunchPad() { }
+        public LCLaunchPad() { }
 
         /// <summary>
         /// Creates a new pad with fractional level. Will NOT mark it as built/operational.
@@ -115,7 +115,7 @@ namespace RP0
         /// <param name="id"></param>
         /// <param name="name"></param>
         /// <param name="lvl">0-based level, can be fractional</param>
-        public KCT_LaunchPad(Guid id, string name, float lvl)
+        public LCLaunchPad(Guid id, string name, float lvl)
         {
             this.id = id;
             this.name = name;
@@ -128,9 +128,9 @@ namespace RP0
 
         public bool Delete(out string failReason)
         {
-            foreach (KSCItem currentKSC in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (SpaceCenter currentKSC in KerbalConstructionTimeData.Instance.KSCs)
             {
-                foreach (LCItem currentLC in currentKSC.LaunchComplexes)
+                foreach (LaunchComplex currentLC in currentKSC.LaunchComplexes)
                 {
                     int idx = currentLC.LaunchPads.IndexOf(this);
                     if (idx < 0) continue;
@@ -140,18 +140,18 @@ namespace RP0
                         if (rr.launchPadID != name)
                             continue;
 
-                        if (rr.RRType != ReconRollout.RolloutReconType.Reconditioning)
+                        if (rr.RRType != ReconRolloutProject.RolloutReconType.Reconditioning)
                         {
                             failReason = rr.IsComplete() ? "a vessel is currently on the pad" : "pad has ongoing rollout";
                             return false;
                         }
                     }
 
-                    foreach (BuildListVessel vessel in currentLC.Warehouse)
+                    foreach (VesselProject vessel in currentLC.Warehouse)
                     {
                         if (vessel.launchSiteIndex >= idx) vessel.launchSiteIndex--;
                     }
-                    foreach (BuildListVessel vessel in currentLC.BuildList)
+                    foreach (VesselProject vessel in currentLC.BuildList)
                     {
                         if (vessel.launchSiteIndex >= idx) vessel.launchSiteIndex--;
                     }
@@ -184,20 +184,20 @@ namespace RP0
         {
             //find everything that references this launchpad by name and update the name reference
 
-            LCItem lc = LC;
+            LaunchComplex lc = LC;
             if (lc != null)
             {
                 if (lc.LaunchPads.Exists(lp => string.Equals(lp.name, newName, StringComparison.OrdinalIgnoreCase)))
                     return; //can't name it something that already is named that
 
-                foreach (ReconRollout rr in lc.Recon_Rollout)
+                foreach (ReconRolloutProject rr in lc.Recon_Rollout)
                 {
                     if (rr.launchPadID == name)
                     {
                         rr.launchPadID = newName;
                     }
                 }
-                foreach (PadConstruction pc in lc.PadConstructions)
+                foreach (PadConstructionProject pc in lc.PadConstructions)
                 {
                     if (pc.id == id)
                     {

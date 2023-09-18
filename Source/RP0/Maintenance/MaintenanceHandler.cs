@@ -208,7 +208,7 @@ namespace RP0
         {
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
             IntegrationSalaries.Clear();
-            foreach (KSCItem ksc in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (SpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
                 IntegrationSalaries[ksc.KSCName] = KerbalConstructionTimeData.Instance.GetEffectiveIntegrationEngineersForSalary(ksc);
             }
@@ -293,7 +293,7 @@ namespace RP0
             return upkeep;
         }
 
-        private double LCUpkeep(LCItem lc, int padCount)
+        private double LCUpkeep(LaunchComplex lc, int padCount)
         {
             switch (lc.LCType)
             {
@@ -321,7 +321,7 @@ namespace RP0
             return 0d;
         }
 
-        public double LCUpkeep(LCItem lc)
+        public double LCUpkeep(LaunchComplex lc)
         {
             if (!lc.IsOperational)
             {

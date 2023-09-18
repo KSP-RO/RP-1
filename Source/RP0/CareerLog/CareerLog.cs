@@ -31,18 +31,18 @@ namespace RP0
 
         private const int CurrentVersion = 1;
 
-        private EventData<TechItem> onKctTechCompletedEvent;
-        private EventData<FacilityUpgrade> onKctFacilityUpgradeQueuedEvent;
-        private EventData<FacilityUpgrade> onKctFacilityUpgradeCancelEvent;
-        private EventData<FacilityUpgrade> onKctFacilityUpgradeCompletedEvent;
-        private EventData<LCConstruction, LCItem> onKctLCConstructionQueuedEvent;
-        private EventData<LCConstruction, LCItem> onKctLCConstructionCancelEvent;
-        private EventData<LCConstruction, LCItem> onKctLCConstructionCompleteEvent;
-        private EventData<LCItem> onKctLCDismantledEvent;
-        private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionQueuedEvent;
-        private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCancelEvent;
-        private EventData<PadConstruction, KCT_LaunchPad> onKctPadConstructionCompletedEvent;
-        private EventData<KCT_LaunchPad> onKctPadDismantledEvent;
+        private EventData<ResearchProject> onKctTechCompletedEvent;
+        private EventData<FacilityUpgradeProject> onKctFacilityUpgradeQueuedEvent;
+        private EventData<FacilityUpgradeProject> onKctFacilityUpgradeCancelEvent;
+        private EventData<FacilityUpgradeProject> onKctFacilityUpgradeCompletedEvent;
+        private EventData<LCConstructionProject, LaunchComplex> onKctLCConstructionQueuedEvent;
+        private EventData<LCConstructionProject, LaunchComplex> onKctLCConstructionCancelEvent;
+        private EventData<LCConstructionProject, LaunchComplex> onKctLCConstructionCompleteEvent;
+        private EventData<LaunchComplex> onKctLCDismantledEvent;
+        private EventData<PadConstructionProject, LCLaunchPad> onKctPadConstructionQueuedEvent;
+        private EventData<PadConstructionProject, LCLaunchPad> onKctPadConstructionCancelEvent;
+        private EventData<PadConstructionProject, LCLaunchPad> onKctPadConstructionCompletedEvent;
+        private EventData<LCLaunchPad> onKctPadDismantledEvent;
 
         [KSPField(isPersistant = true)]
         private readonly PersistentDictionary<double, LogPeriod> _periodDict = new PersistentDictionaryValueTypeKey<double, LogPeriod>();
@@ -111,73 +111,73 @@ namespace RP0
 
         public void Start()
         {
-            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<TechItem>>("OnKctTechCompleted");
+            onKctTechCompletedEvent = GameEvents.FindEvent<EventData<ResearchProject>>("OnKctTechCompleted");
             if (onKctTechCompletedEvent != null)
             {
                 onKctTechCompletedEvent.Add(OnKctTechCompleted);
             }
 
-            onKctFacilityUpgradeQueuedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeQueued");
+            onKctFacilityUpgradeQueuedEvent = GameEvents.FindEvent<EventData<FacilityUpgradeProject>>("OnKctFacilityUpgradeQueued");
             if (onKctFacilityUpgradeQueuedEvent != null)
             {
                 onKctFacilityUpgradeQueuedEvent.Add(OnKctFacilityUpgdQueued);
             }
 
-            onKctFacilityUpgradeCancelEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeCancel");
+            onKctFacilityUpgradeCancelEvent = GameEvents.FindEvent<EventData<FacilityUpgradeProject>>("OnKctFacilityUpgradeCancel");
             if (onKctFacilityUpgradeCancelEvent != null)
             {
                 onKctFacilityUpgradeCancelEvent.Add(OnKctFacilityUpgdCancel);
             }
 
-            onKctFacilityUpgradeCompletedEvent = GameEvents.FindEvent<EventData<FacilityUpgrade>>("OnKctFacilityUpgradeComplete");
+            onKctFacilityUpgradeCompletedEvent = GameEvents.FindEvent<EventData<FacilityUpgradeProject>>("OnKctFacilityUpgradeComplete");
             if (onKctFacilityUpgradeCompletedEvent != null)
             {
                 onKctFacilityUpgradeCompletedEvent.Add(OnKctFacilityUpgdComplete);
             }
 
-            onKctLCConstructionQueuedEvent = GameEvents.FindEvent<EventData<LCConstruction, LCItem>>("OnKctLCConstructionQueued");
+            onKctLCConstructionQueuedEvent = GameEvents.FindEvent<EventData<LCConstructionProject, LaunchComplex>>("OnKctLCConstructionQueued");
             if (onKctLCConstructionQueuedEvent != null)
             {
                 onKctLCConstructionQueuedEvent.Add(OnKctLCConstructionQueued);
             }
 
-            onKctLCConstructionCancelEvent = GameEvents.FindEvent<EventData<LCConstruction, LCItem>>("OnKctLCConstructionCancel");
+            onKctLCConstructionCancelEvent = GameEvents.FindEvent<EventData<LCConstructionProject, LaunchComplex>>("OnKctLCConstructionCancel");
             if (onKctLCConstructionCancelEvent != null)
             {
                 onKctLCConstructionCancelEvent.Add(OnKctLCConstructionCancel);
             }
 
-            onKctLCConstructionCompleteEvent = GameEvents.FindEvent<EventData<LCConstruction, LCItem>>("OnKctLCConstructionComplete");
+            onKctLCConstructionCompleteEvent = GameEvents.FindEvent<EventData<LCConstructionProject, LaunchComplex>>("OnKctLCConstructionComplete");
             if (onKctLCConstructionCompleteEvent != null)
             {
                 onKctLCConstructionCompleteEvent.Add(OnKctLCConstructionComplete);
             }
 
-            onKctLCDismantledEvent = GameEvents.FindEvent<EventData<LCItem>>("OnKctLCDismantled");
+            onKctLCDismantledEvent = GameEvents.FindEvent<EventData<LaunchComplex>>("OnKctLCDismantled");
             if (onKctLCDismantledEvent != null)
             {
                 onKctLCDismantledEvent.Add(OnKctLCDismantled);
             }
 
-            onKctPadConstructionQueuedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionQueued");
+            onKctPadConstructionQueuedEvent = GameEvents.FindEvent<EventData<PadConstructionProject, LCLaunchPad>>("OnKctPadConstructionQueued");
             if (onKctPadConstructionQueuedEvent != null)
             {
                 onKctPadConstructionQueuedEvent.Add(OnKctPadConstructionQueued);
             }
 
-            onKctPadConstructionCancelEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionCancel");
+            onKctPadConstructionCancelEvent = GameEvents.FindEvent<EventData<PadConstructionProject, LCLaunchPad>>("OnKctPadConstructionCancel");
             if (onKctPadConstructionCancelEvent != null)
             {
                 onKctPadConstructionCancelEvent.Add(OnKctPadConstructionCancel);
             }
 
-            onKctPadConstructionCompletedEvent = GameEvents.FindEvent<EventData<PadConstruction, KCT_LaunchPad>>("OnKctPadConstructionComplete");
+            onKctPadConstructionCompletedEvent = GameEvents.FindEvent<EventData<PadConstructionProject, LCLaunchPad>>("OnKctPadConstructionComplete");
             if (onKctPadConstructionCompletedEvent != null)
             {
                 onKctPadConstructionCompletedEvent.Add(OnKctPadConstructionComplete);
             }
 
-            onKctPadDismantledEvent = GameEvents.FindEvent<EventData<KCT_LaunchPad>>("OnKctPadDismantled");
+            onKctPadDismantledEvent = GameEvents.FindEvent<EventData<LCLaunchPad>>("OnKctPadDismantled");
             if (onKctPadDismantledEvent != null)
             {
                 onKctPadDismantledEvent.Add(OnKctPadDismantled);
@@ -325,7 +325,7 @@ namespace RP0
             }
         }
 
-        public void AddTechEvent(TechItem tech)
+        public void AddTechEvent(ResearchProject tech)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
@@ -898,67 +898,67 @@ namespace RP0
             }
         }
 
-        private void OnKctTechCompleted(TechItem tech)
+        private void OnKctTechCompleted(ResearchProject tech)
         {
             AddTechEvent(tech);
         }
 
-        private void OnKctFacilityUpgdQueued(FacilityUpgrade data)
+        private void OnKctFacilityUpgdQueued(FacilityUpgradeProject data)
         {
             AddFacilityConstructionEvent(data, ConstructionState.Started);
         }
 
-        private void OnKctFacilityUpgdCancel(FacilityUpgrade data)
+        private void OnKctFacilityUpgdCancel(FacilityUpgradeProject data)
         {
             AddFacilityConstructionEvent(data, ConstructionState.Cancelled);
         }
 
-        private void OnKctFacilityUpgdComplete(FacilityUpgrade data)
+        private void OnKctFacilityUpgdComplete(FacilityUpgradeProject data)
         {
             AddFacilityConstructionEvent(data, ConstructionState.Completed);
         }
 
-        private void OnKctLCConstructionQueued(LCConstruction data, LCItem lc)
+        private void OnKctLCConstructionQueued(LCConstructionProject data, LaunchComplex lc)
         {
             AddLCConstructionEvent(data, lc, ConstructionState.Started);
         }
 
-        private void OnKctLCConstructionCancel(LCConstruction data, LCItem lc)
+        private void OnKctLCConstructionCancel(LCConstructionProject data, LaunchComplex lc)
         {
             AddLCConstructionEvent(data, lc, ConstructionState.Cancelled);
         }
 
-        private void OnKctLCConstructionComplete(LCConstruction data, LCItem lc)
+        private void OnKctLCConstructionComplete(LCConstructionProject data, LaunchComplex lc)
         {
             AddLCConstructionEvent(data, lc, ConstructionState.Completed);
         }
 
-        private void OnKctLCDismantled(LCItem lc)
+        private void OnKctLCDismantled(LaunchComplex lc)
         {
             AddLCConstructionEvent(null, lc, ConstructionState.Dismantled);
         }
 
-        private void OnKctPadConstructionQueued(PadConstruction data, KCT_LaunchPad lp)
+        private void OnKctPadConstructionQueued(PadConstructionProject data, LCLaunchPad lp)
         {
             AddPadConstructionEvent(data, lp, ConstructionState.Started);
         }
 
-        private void OnKctPadConstructionCancel(PadConstruction data, KCT_LaunchPad lp)
+        private void OnKctPadConstructionCancel(PadConstructionProject data, LCLaunchPad lp)
         {
             AddPadConstructionEvent(data, lp, ConstructionState.Cancelled);
         }
 
-        private void OnKctPadConstructionComplete(PadConstruction data, KCT_LaunchPad lp)
+        private void OnKctPadConstructionComplete(PadConstructionProject data, LCLaunchPad lp)
         {
             AddPadConstructionEvent(data, lp, ConstructionState.Completed);
         }
 
-        private void OnKctPadDismantled(KCT_LaunchPad lp)
+        private void OnKctPadDismantled(LCLaunchPad lp)
         {
             AddPadConstructionEvent(null, lp, ConstructionState.Dismantled);
         }
 
-        private void AddFacilityConstructionEvent(FacilityUpgrade data, ConstructionState state)
+        private void AddFacilityConstructionEvent(FacilityUpgradeProject data, ConstructionState state)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;    // facility type can be null in case of third party mods that define custom facilities
 
@@ -981,7 +981,7 @@ namespace RP0
             });
         }
 
-        private void AddLCConstructionEvent(LCConstruction data, LCItem lc, ConstructionState state)
+        private void AddLCConstructionEvent(LCConstructionProject data, LaunchComplex lc, ConstructionState state)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
@@ -1001,12 +1001,12 @@ namespace RP0
             });
         }
 
-        private void AddPadConstructionEvent(PadConstruction data, KCT_LaunchPad lp, ConstructionState state)
+        private void AddPadConstructionEvent(PadConstructionProject data, LCLaunchPad lp, ConstructionState state)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
 
             Guid id = data?.id ?? lp.id;
-            LCItem lc = data?.LC ?? lp.LC;
+            LaunchComplex lc = data?.LC ?? lp.LC;
             if (!_lpConstructions.Any(lpc => lpc.LPID == id))
             {
                 _lpConstructions.Add(new LPConstruction

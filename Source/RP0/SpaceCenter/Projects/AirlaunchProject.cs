@@ -1,6 +1,6 @@
 ﻿namespace RP0
 {
-    public class AirlaunchPrep : LCProject
+    public class AirlaunchProject : LCOpsProject
     {
         public enum PrepDirection { Mount, Unmount };
 
@@ -15,11 +15,11 @@
         protected override TransactionReasonsRP0 transactionReason => TransactionReasonsRP0.AirLaunchRollout;
         protected override TransactionReasonsRP0 transactionReasonTime => TransactionReasonsRP0.RateAirlaunch;
 
-        public AirlaunchPrep() : base()
+        public AirlaunchProject() : base()
         {
         }
 
-        public AirlaunchPrep(BuildListVessel vessel, string id)
+        public AirlaunchProject(VesselProject vessel, string id)
         {
             direction = PrepDirection.Mount;
             associatedID = id;
@@ -36,7 +36,7 @@
         public override bool IsReversed => direction == PrepDirection.Unmount;
         public override bool HasCost => direction == PrepDirection.Mount;
 
-        public override BuildListVessel.ListType GetListType() => BuildListVessel.ListType.AirLaunch;
+        public override VesselProject.ListType GetListType() => VesselProject.ListType.AirLaunch;
 
         public void SwitchDirection()
         {

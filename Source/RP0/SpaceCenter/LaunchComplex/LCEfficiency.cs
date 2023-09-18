@@ -17,7 +17,7 @@ namespace RP0
         [Persistent]
         protected PersistentListValueType<Guid> _lcIDs = new PersistentListValueType<Guid>();
 
-        public PersistentObservableList<LCItem> _lcs = new PersistentObservableList<LCItem>();
+        public PersistentObservableList<LaunchComplex> _lcs = new PersistentObservableList<LaunchComplex>();
 
         protected Dictionary<LCEfficiency, double> _closenessCache = new Dictionary<LCEfficiency, double>();
 
@@ -30,7 +30,7 @@ namespace RP0
         }
 
         // Used when created during runtime
-        public LCEfficiency(LCItem lc)
+        public LCEfficiency(LaunchComplex lc)
         {
             _lcStats.SetFrom(lc);
             _lcStats.Name = "EfficiencyData";
@@ -82,7 +82,7 @@ namespace RP0
                     _closenessCache[e] = Formula.GetLCCloseness(_lcStats, e._lcStats);
         }
 
-        public void RemoveLC(LCItem lc)
+        public void RemoveLC(LaunchComplex lc)
         {
             int idx = _lcs.IndexOf(lc);
             if (idx >= 0)
@@ -236,13 +236,13 @@ namespace RP0
 
         public bool Contains(Guid id) => _lcIDs.Contains(id);
 
-        public bool Contains(LCItem lc) => _lcs.Contains(lc);
+        public bool Contains(LaunchComplex lc) => _lcs.Contains(lc);
 
         public string FirstLCName() => _lcs.Count > 0 ? _lcs[0].Name : "No Named LC";
 
         static LCData _comparisonLCData = new LCData();
 
-        public static LCEfficiency FindClosest(LCItem lc, out double bestCloseness)
+        public static LCEfficiency FindClosest(LaunchComplex lc, out double bestCloseness)
         {
             _comparisonLCData.SetFrom(lc);
             return FindClosest(_comparisonLCData, out bestCloseness);
@@ -265,7 +265,7 @@ namespace RP0
             return bestItem;
         }
 
-        public static LCEfficiency GetOrCreateEfficiencyForLC(LCItem lc, bool allowLookup)
+        public static LCEfficiency GetOrCreateEfficiencyForLC(LaunchComplex lc, bool allowLookup)
         {
             LCEfficiency e;
             if (allowLookup && KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(lc, out e))
@@ -369,7 +369,7 @@ namespace RP0
         /// </summary>
         private bool _ignoreObserve = false;
 
-        private void added(int idx, LCItem lc)
+        private void added(int idx, LaunchComplex lc)
         {
             if (KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(lc, out var oldEffic))
             {
@@ -386,7 +386,7 @@ namespace RP0
             _lcIDs.Insert(idx, lc.ID);
         }
 
-        private void removed(int idx, LCItem lc)
+        private void removed(int idx, LaunchComplex lc)
         {
             KerbalConstructionTimeData.Instance.LCToEfficiency.Remove(lc);
 

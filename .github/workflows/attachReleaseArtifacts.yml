@@ -35,7 +35,7 @@ jobs:
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@master
         with:
-          path: ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
+          path: ${GITHUB_WORKSPACE}/Source/RP0/Properties/AssemblyInfo.cs
           tag: ${{ github.event.release.tag_name }}
 
       - name: Build mod solution

@@ -20,7 +20,7 @@ namespace RP0
 
             if (SSTUTank == null)
             {
-                Debug.LogError("[ModuleTooling] Could not find SSTU part to bind to");
+                RP0Debug.LogError("[ModuleTooling] Could not find SSTU part to bind to");
                 return;
             }
 
@@ -28,7 +28,7 @@ namespace RP0
             // ******* 1.4+ diam1 = SSTUTank.Fields["currentDiameter"];
             diameter = SSTUTank.Fields["currentTankDiameter"].GetValue<float>(SSTUTank);
             length = diameter * GetLengthMultiplier();
-            // Debug.Log($"[ModuleTooling] SSTU Tank Size: Diameter = {diam}, Length = {len}");
+            // RP0Debug.Log($"[ModuleTooling] SSTU Tank Size: Diameter = {diam}, Length = {len}");
         }
 
         private float GetLengthMultiplier()
@@ -36,7 +36,7 @@ namespace RP0
             // Get core size from part field and convert to String
             // ******* 1.4+ string coreStr = SSTUTank.Fields["currentCore"].GetValue<string>(SSTUTank);
             string coreStr = SSTUTank.Fields["currentTankType"].GetValue<string>(SSTUTank);
-            // Debug.Log($"[ModuleTooling] SSTU Tank Core: {coreStr}");
+            // RP0Debug.Log($"[ModuleTooling] SSTU Tank Core: {coreStr}");
 
             string noseType = SSTUTank.Fields["currentNoseType"].GetValue<string>(SSTUTank);
             string mountType = SSTUTank.Fields["currentMountType"].GetValue<string>(SSTUTank);
@@ -60,7 +60,7 @@ namespace RP0
                 return GetBoosterBaseLengthMultiplier(coreStr);
             }
 
-            Debug.LogError("[ModuleTooling] Unknown Tank: " + coreStr);
+            RP0Debug.LogError("[ModuleTooling] Unknown Tank: " + coreStr);
             return 0;
         }
 

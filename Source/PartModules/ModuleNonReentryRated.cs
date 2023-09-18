@@ -44,7 +44,7 @@ namespace RP0
         {
             if (!_isRegisteredWithMFI)
             {
-                Debug.Log("[RP-0] Registering overrides with ModularFlightIntegrator");
+                RP0Debug.Log("Registering overrides with ModularFlightIntegrator");
                 ModularFI.ModularFlightIntegrator.RegisterUpdateThermodynamicsPre(UpdateThermodynamicsPre);
                 _isRegisteredWithMFI = true;
             }

@@ -61,7 +61,7 @@ namespace RP0.DataTypes
                 string key = n.GetValue(_keyName);
                 if (string.IsNullOrEmpty(key))
                 {
-                    UnityEngine.Debug.LogError("[RP-0] PersistentDictionaryNodeKeyed: null or empty key in node! Skipping. Node=\n" + n.ToString());
+                    RP0Debug.LogError("PersistentDictionaryNodeKeyed: null or empty key in node! Skipping. Node=\n" + n.ToString());
                     continue;
                 }
                 TValue value = Activator.CreateInstance<TValue>();
@@ -126,7 +126,7 @@ namespace RP0.DataTypes
                 TValue value = (TValue)FieldData.ReadValue(v.value, _ValueDataType, _ValueType);
                 if (ContainsKey(key))
                 {
-                    UnityEngine.Debug.LogError($"PersistentDictionary: Contains key {key}");
+                    RP0Debug.LogError($"PersistentDictionary: Contains key {key}");
                     Remove(key);
                 }
                 Add(key, value);

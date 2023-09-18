@@ -100,7 +100,7 @@ namespace RP0
 
         public void AddDelta(CurrencyRP0 c, double val)
         {
-            Debug.LogError($"[RP-0]: CurrencyModifierQuery: Something tried to AddDelta! Currency {c} and values {val} for reason {reasonRP0}");
+            RP0Debug.LogError($"CurrencyModifierQuery: Something tried to AddDelta! Currency {c} and values {val} for reason {reasonRP0}");
             if (inputs[c] == 0d)
                 return;
 

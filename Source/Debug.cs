@@ -11,18 +11,18 @@
 #endif
             if (isBetaVersion)
             {
-                UnityEngine.Debug.Log(str);
+                UnityEngine.Debug.Log("[RP-0] " + str);
             }
         }
 
         public static void LogWarning(string str)
         {
-            UnityEngine.Debug.LogWarning(str);
+            UnityEngine.Debug.LogWarning("[RP-0] " + str);
         }
 
         public static void LogError(string str)
         {
-            UnityEngine.Debug.LogError(str);
+            UnityEngine.Debug.LogError("[RP-0] " + str);
         }
     }
 }

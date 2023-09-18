@@ -32,7 +32,7 @@ namespace RP0.Harmony
                             int idx = __instance.cascadingList.ruiList.cascadingList.GetIndex(kvp.Value.header);
                             if (idx < 0)
                             {
-                                Debug.LogError($"[RP-0] ContractsApp patcher: {cc.contractType.name} can't be found in UI list despite its guid existing in dictionary!");
+                                RP0Debug.LogError($"ContractsApp patcher: {cc.contractType.name} can't be found in UI list despite its guid existing in dictionary!");
                                 continue;
                             }
                             if (index < 0 || idx < index)

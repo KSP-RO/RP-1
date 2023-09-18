@@ -69,7 +69,7 @@ namespace RP0
                 }
                 catch (Exception ex)
                 {
-                    Debug.LogError($"[RP-0] {ex}");
+                    RP0Debug.LogError($"{ex}");
                     _exportStatusWeb = $"Export failed: {ex.Message}";
                 }
             }

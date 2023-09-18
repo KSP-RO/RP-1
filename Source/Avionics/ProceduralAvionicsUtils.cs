@@ -18,7 +18,7 @@ namespace RP0.ProceduralAvionics
                 {
                     builder.Append(part);
                 }
-                Debug.Log(builder.ToStringAndRelease());
+                RP0Debug.Log(builder.ToStringAndRelease());
             }
         }
 
@@ -32,7 +32,7 @@ namespace RP0.ProceduralAvionics
                 {
                     builder.Append(part.ToString());
                 }
-                Debug.Log(builder.ToStringAndRelease());
+                RP0Debug.Log(builder.ToStringAndRelease());
             }
         }
     }

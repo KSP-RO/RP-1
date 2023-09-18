@@ -230,7 +230,7 @@ namespace RP0.Programs
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"[RP-0] Exception loading requirements for program {name}: {e}");
+                    RP0Debug.LogError($"Exception loading requirements for program {name}: {e}");
                 }
             }
 
@@ -245,7 +245,7 @@ namespace RP0.Programs
                 }
                 catch (Exception e)
                 {
-                    Debug.LogError($"[RP-0] Exception loading objectives for program {name}: {e}");
+                    RP0Debug.LogError($"Exception loading objectives for program {name}: {e}");
                 }
 
             }
@@ -368,7 +368,7 @@ namespace RP0.Programs
                 {
                     repPenaltyAssessed += repLossToApply;
                     Reputation.Instance.AddReputation((float)-repLossToApply, TransactionReasons.Mission);
-                    RP0Debug.Log($"[RP-0] Penalizing rep by {repLossToApply} for program {name}");
+                    RP0Debug.Log($"Penalizing rep by {repLossToApply} for program {name}");
                 }
             }
 
@@ -380,7 +380,7 @@ namespace RP0.Programs
             lastPaymentUT = nowUT;
             fracElapsed = frac2;
 
-            RP0Debug.Log($"[RP-0] Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / DurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
+            RP0Debug.Log($"Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / DurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
             fundsPaidOut += fundsToAdd;
             Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Mission);
         }
@@ -417,7 +417,7 @@ namespace RP0.Programs
             {
                 Reputation.Instance.AddReputation(repDelta, TransactionReasonsRP0.ProgramCompletion.Stock());
             }
-            Debug.Log($"[RP-0] Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT) / secsPerYear}. Adding {repDelta} rep.");
+            RP0Debug.Log($"Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT) / secsPerYear}. Adding {repDelta} rep.");
 
             CareerLog.Instance?.ProgramCompleted(this);
             Milestones.MilestoneHandler.Instance.OnProgramComplete(name);

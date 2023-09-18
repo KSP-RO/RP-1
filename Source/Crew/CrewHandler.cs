@@ -465,7 +465,7 @@ namespace RP0.Crew
             _retireIncreases[pcmName] = newTotal;
 
             string sRetireOffset = KSPUtil.PrintDateDelta(retireOffset, false, false);
-            Debug.Log("[RP-0] retire date increased by: " + sRetireOffset);
+            RP0Debug.Log("retire date increased by: " + sRetireOffset);
 
             _retireTimes[pcmName] = GetRetireTime(pcmName) + retireOffset;
             return retireOffset;
@@ -486,7 +486,7 @@ namespace RP0.Crew
 
         private void VesselRecoveryProcessing(ProtoVessel v, MissionRecoveryDialog mrDialog, float data)
         {
-            Debug.Log("[RP-0] - Vessel recovery processing");
+            RP0Debug.Log("- Vessel recovery processing");
 
             var retirementChanges = new List<string>();
             var inactivity = new List<string>();
@@ -500,7 +500,7 @@ namespace RP0.Crew
             // when you're not actually controlling the vessel
             double elapsedTime = UT - v.launchTime;
 
-            Debug.Log($"[RP-0] mission elapsedTime: {KSPUtil.PrintDateDeltaCompact(elapsedTime, true, true)}");
+            RP0Debug.Log($"mission elapsedTime: {KSPUtil.PrintDateDeltaCompact(elapsedTime, true, true)}");
 
             // When flight duration was too short, mission training should not be set as expired.
             // This can happen when an on-the-pad failure occurs and the vessel is recovered.
@@ -508,7 +508,7 @@ namespace RP0.Crew
             // (if the user didn't recover right from the pad I think this is a fair assumption)
             if (elapsedTime < Database.SettingsCrew.minFlightDurationSecondsForTrainingExpire)
             {
-                Debug.Log($"[RP-0] - mission time too short for crew to be inactive (elapsed time was {elapsedTime}, settings set for {Database.SettingsCrew.minFlightDurationSecondsForTrainingExpire})");
+                RP0Debug.Log($"- mission time too short for crew to be inactive (elapsed time was {elapsedTime}, settings set for {Database.SettingsCrew.minFlightDurationSecondsForTrainingExpire})");
                 return;
             }
 
@@ -524,7 +524,7 @@ namespace RP0.Crew
             var allFlightsDict = new Dictionary<string, int>();
             foreach (ProtoCrewMember pcm in v.GetVesselCrew())
             {
-                Debug.Log("[RP-0] - Found ProtoCrewMember: " + pcm.displayName);
+                RP0Debug.Log("- Found ProtoCrewMember: " + pcm.displayName);
 
                 allFlightsDict.Clear();
 
@@ -573,12 +573,12 @@ namespace RP0.Crew
                     }
                 }
 
-                Debug.Log($"[RP-0]  retirementMult: {retirementMult}, inactivityMult: {inactivityMult}, number of valid situations: {situations}");
+                RP0Debug.Log($" retirementMult: {retirementMult}, inactivityMult: {inactivityMult}, number of valid situations: {situations}");
 
                 if (GetRetireTime(pcm.name) > 0d)
                 {
                     double stupidityPenalty = UtilMath.Lerp(Database.SettingsCrew.retireOffsetStupidMin, Database.SettingsCrew.retireOffsetStupidMax, pcm.stupidity);
-                    Debug.Log($"[RP-0]  stupidityPenalty for {pcm.stupidity}: {stupidityPenalty}");
+                    RP0Debug.Log($" stupidityPenalty for {pcm.stupidity}: {stupidityPenalty}");
                     double retireOffset = retirementMult * 86400 * Database.SettingsCrew.retireOffsetBaseMult / stupidityPenalty * retireCMQmult;
 
                     retireOffset = IncreaseRetireTime(pcm.name, retireOffset);
@@ -590,7 +590,7 @@ namespace RP0.Crew
                 double inactiveTimeDays = Math.Max(Database.SettingsCrew.inactivityMinFlightDurationDays, Math.Pow(elapsedTimeDays, Database.SettingsCrew.inactivityFlightDurationExponent)) *
                                           Math.Min(Database.SettingsCrew.inactivityMaxSituationMult, inactivityMult) * acMult;
                 double inactiveTime = inactiveTimeDays * 86400d * inactiveCMQmult;
-                Debug.Log($"[RP-0] inactive for: {KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
+                RP0Debug.Log($"inactive for: {KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
 
                 if (CrewRnREnabled)
                 {

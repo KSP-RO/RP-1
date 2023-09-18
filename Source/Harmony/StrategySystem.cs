@@ -174,13 +174,13 @@ namespace RP0.Harmony
                 var s = p.GetStrategy();
                 if (s == null)
                 {
-                    UnityEngine.Debug.LogError("[RP-0]: Error: Could not find ProgramStrategy for program " + p.name);
+                    RP0Debug.LogError("Error: Could not find ProgramStrategy for program " + p.name);
                     continue;
                 }
 
                 if (!s.isActive)
                 {
-                    UnityEngine.Debug.LogWarning($"[RP-0]: Warning: Program {p.name} does not have its strategy activated. Doing so now.");
+                    RP0Debug.LogWarning($"Warning: Program {p.name} does not have its strategy activated. Doing so now.");
                     if (s is ProgramStrategy ps)
                     {
                         ps.PerformActivate(false);

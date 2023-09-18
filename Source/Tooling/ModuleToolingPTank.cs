@@ -63,7 +63,7 @@ namespace RP0
 
             if (procTank == null)
             {
-                Debug.LogError($"[ModuleTooling]: Could not find ProceduralPart or ModuleROTank to bind to for {part}");
+                RP0Debug.LogError($"[ModuleTooling]: Could not find ProceduralPart or ModuleROTank to bind to for {part}");
                 return;
             }
             if (TTank == TankType.ProceduralPart)
@@ -87,7 +87,7 @@ namespace RP0
 
                 if (procShape == null)
                 {
-                    Debug.LogError("[ModuleTooling] Could not find proc SHAPE to bind to");
+                    RP0Debug.LogError("[ModuleTooling] Could not find proc SHAPE to bind to");
                     return;
                 }
                 length = GetRealLengthFieldForShape(procShape, isTruss);
@@ -104,7 +104,7 @@ namespace RP0
 
             if (diam1 == null || length == null)
             {
-                Debug.LogError($"[ModuleTooling] Could not bind to length or diamater fields for {host} on {part}");
+                RP0Debug.LogError($"[ModuleTooling] Could not bind to length or diamater fields for {host} on {part}");
                 return;
             }
             diam = Mathf.Max(diam1.GetValue<float>(host), (isCone && procShape) ? diam2.GetValue<float>(host) : 0);

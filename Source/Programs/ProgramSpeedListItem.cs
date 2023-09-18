@@ -94,7 +94,7 @@ namespace RP0.Programs
         public void UpdateButton(bool allowed)
         {
             if (!_setup)
-                Debug.LogError("[RP-0] Programs: Tried to update Program Speed button but Setup was not called!");
+                RP0Debug.LogError("Programs: Tried to update Program Speed button but Setup was not called!");
             if (allowed)
             {
                 SetButtonTitle(_title, validColor);

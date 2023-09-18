@@ -40,10 +40,10 @@ namespace RP0.Leaders
         {
             base.OnLoad(node);
             if (appliesToParts && appliesToVessel)
-                Debug.LogError("[RP-0] Tried to load IntegrationRateModifier but it applies to both parts and the vessel. Node:\n" + node.ToString());
+                RP0Debug.LogError("Tried to load IntegrationRateModifier but it applies to both parts and the vessel. Node:\n" + node.ToString());
 
             if(appliesToParts && resources.Count > 0)
-                Debug.LogError("[RP-0] Tried to load IntegrationRateModifier but it applies to parts and has resources defined. Node:\n" + node.ToString());
+                RP0Debug.LogError("Tried to load IntegrationRateModifier but it applies to parts and has resources defined. Node:\n" + node.ToString());
         }
 
         protected override string DescriptionString()

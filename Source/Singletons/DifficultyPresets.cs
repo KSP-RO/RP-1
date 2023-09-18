@@ -15,7 +15,7 @@ namespace RP0
 
             if (paramsNode == null)
             {
-                Debug.LogError("[RP-0] Could not find GAMEPARAMETERS node.");
+                RP0Debug.LogError("Could not find GAMEPARAMETERS node.");
                 return;
             }
 
@@ -28,7 +28,7 @@ namespace RP0
                     kvp.Value.Load(n);
             }
 
-            Debug.Log("[RP-0] Reset difficulty presets.");
+            RP0Debug.Log("Reset difficulty presets.");
         }
     }
 

@@ -35,7 +35,7 @@ namespace RP0.UpgradeScripts
             }
             node.AddValue("_totalCredit", totalCredit);
 
-            Debug.Log($"[RP-0] UpgradePipeline context {loadContext} updated UnlockSubsidyHandler to UnlockCreditHandler, total credit {totalCredit:N0}");
+            RP0Debug.Log($"UpgradePipeline context {loadContext} updated UnlockSubsidyHandler to UnlockCreditHandler, total credit {totalCredit:N0}");
         }
     }
 }

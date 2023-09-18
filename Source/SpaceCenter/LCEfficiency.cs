@@ -56,7 +56,7 @@ namespace RP0
                 var id = _lcIDs[i];
                 if (id == Guid.Empty)
                 {
-                    Debug.LogError("[RP-0] Error: found empty guid relinking LCEfficiency");
+                    RP0Debug.LogError("Error: found empty guid relinking LCEfficiency");
                     _lcIDs.RemoveAt(i);
                     continue;
                 }
@@ -65,7 +65,7 @@ namespace RP0
                 if (lc == null)
                 {
                     _lcIDs.RemoveAt(i);
-                    Debug.LogError($"[RP-0] Error: could not find LC for guid {id} relinking LCEfficiency");
+                    RP0Debug.LogError($"Error: could not find LC for guid {id} relinking LCEfficiency");
                     continue;
                 }
 

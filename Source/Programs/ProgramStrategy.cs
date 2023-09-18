@@ -31,7 +31,7 @@ namespace RP0.Programs
                 Program source = ProgramHandler.Programs.Find(p => p.name == Config.Name);
                 if (source == null)
                 {
-                    Debug.LogError($"[RP-0] ProgramStrategy: Error finding program {Config.Name}");
+                    RP0Debug.LogError($"ProgramStrategy: Error finding program {Config.Name}");
                     return;
                 }
                 // Create a copy so we can mess with the speed freely in the UI
@@ -148,7 +148,7 @@ namespace RP0.Programs
                 // we will still let you complete the program.
                 if (_program.AllObjectivesMet && _program.IsActive && !_program.IsComplete)
                 {
-                    Debug.LogError($"[RP-0]: Program {_program.name} was incorrectly not marked as complete. Marking complete now.");
+                    RP0Debug.LogError($"Program {_program.name} was incorrectly not marked as complete. Marking complete now.");
                     _program.MarkObjectivesComplete();
                 }
                 else

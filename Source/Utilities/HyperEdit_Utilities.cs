@@ -30,12 +30,12 @@ namespace RP0
             var destinationMagnitude = newOrbit.getRelativePositionAtUT(Planetarium.GetUniversalTime()).magnitude;
             if (destinationMagnitude > newOrbit.referenceBody.sphereOfInfluence)
             {
-                Debug.LogError("Destination position was above the sphere of influence");
+                RP0Debug.LogError("Destination position was above the sphere of influence");
                 return;
             }
             if (destinationMagnitude < newOrbit.referenceBody.Radius)
             {
-                Debug.LogError("Destination position was below the surface");
+                RP0Debug.LogError("Destination position was below the surface");
                 return;
             }
 
@@ -47,7 +47,7 @@ namespace RP0
             }
             catch (NullReferenceException)
             {
-                Debug.LogError("HyperEdit_Utilities HoldVesselUnpack threw NullReferenceException");
+                RP0Debug.LogError("HyperEdit_Utilities HoldVesselUnpack threw NullReferenceException");
             }
 
             var allVessels = FlightGlobals.fetch?.vessels ?? (IEnumerable<Vessel>)new[] { vessel };

@@ -33,7 +33,7 @@ namespace RP0
                 controller.isNextThing = true;
                 controller.warpTarget = KCTUtilities.GetNextThingToFinish();
             }
-            Debug.Log($"{ModTag} Created for warp target {controller.warpTarget.GetItemName()}");
+            RP0Debug.Log($"{ModTag} Created for warp target {controller.warpTarget.GetItemName()}");
         }
 
         public void Awake()
@@ -45,7 +45,7 @@ namespace RP0
 
         public void OnDestroy()
         {
-            Debug.Log($"{ModTag} {warpTarget.GetItemName()} OnDestroy.");
+            RP0Debug.Log($"{ModTag} {warpTarget.GetItemName()} OnDestroy.");
             if (Instance == this)
             {
                 Destroy(this);
@@ -115,7 +115,7 @@ namespace RP0
                 if (warping && warpRate < desiredWarpRate) //if something else changes the warp rate then release control to them, such as Kerbal Alarm Clock
                 {
                     // This will prevent us warping up again--but note this does _not_ make us exit.
-                    Debug.Log($"{ModTag} External warp change detected, backing off control.");
+                    RP0Debug.Log($"{ModTag} External warp change detected, backing off control.");
                     warping = false;
                 }
                 int nBuffer = 3;   // TODO: Make configurable
@@ -157,7 +157,7 @@ namespace RP0
 
         public void StopWarp()
         {
-            Debug.Log($"{ModTag} Halting warp to target {warpTarget?.GetItemName() ?? "(null)"}");
+            RP0Debug.Log($"{ModTag} Halting warp to target {warpTarget?.GetItemName() ?? "(null)"}");
             TimeWarp.SetRate(0, true);
             warping = false;
             gameObject.DestroyGameObject();

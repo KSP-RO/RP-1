@@ -19,7 +19,7 @@ namespace RP0
 
             if (pm == null)
             {
-                Debug.LogError("[ModuleTooling]: Could not find Stock Fairing module to bind to");
+                RP0Debug.LogError("[ModuleTooling]: Could not find Stock Fairing module to bind to");
                 return;
             }
 

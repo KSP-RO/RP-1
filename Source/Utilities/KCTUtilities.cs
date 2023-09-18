@@ -1177,8 +1177,8 @@ namespace RP0
             }
             catch (Exception ex)
             {
-                Debug.LogError("[KCT] Error while recovering craft into inventory.");
-                Debug.LogError("[KCT] error: " + ex);
+                RP0Debug.LogError("Error while recovering craft into inventory.");
+                RP0Debug.LogError("error: " + ex);
                 KerbalConstructionTimeData.Instance.RecoveredVessel = new BuildListVessel();
                 ShipConstruction.ClearBackups();
                 return false;

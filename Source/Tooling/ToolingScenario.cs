@@ -66,9 +66,9 @@ namespace RP0
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("TOOLING_DEFINITION"))
                 {
                     var def = new ToolingDefinition(n);
-                    Debug.Log("[ModuleTooling] Loaded definition: " + def.name);
+                    RP0Debug.Log("[ModuleTooling] Loaded definition: " + def.name);
                     if (toolingDefinitions.ContainsKey(def.name))
-                        Debug.LogError("[ModuleTooling] Found duplicate definition: " + def.name);
+                        RP0Debug.LogError("[ModuleTooling] Found duplicate definition: " + def.name);
                     else
                         toolingDefinitions.Add(def.name, def);
                 }

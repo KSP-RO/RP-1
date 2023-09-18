@@ -97,7 +97,7 @@ namespace RP0
             details.maxRep = (details.maxSubsidy - details.minSubsidy) / Database.SettingsSC.repToSubsidyConversion;
             double invLerp = UtilMath.InverseLerp(0, details.maxRep, UtilMath.Clamp(rep, 0, details.maxRep));
             details.subsidy = UtilMath.LerpUnclamped(details.minSubsidy, details.maxSubsidy, invLerp);
-            //Debug.Log($"$$$$ years {years}: minSub: {details.minSubsidy}, conversion {Database.SettingsSC.repToSubsidyConversion}, maxSub {Database.SettingsSC.subsidyMultiplierForMax}, maxRep {details.maxRep}, invLerp {invLerp}, subsidy {details.subsidy}=>{(details.subsidy * (1d / 365.25d))}");
+            //RP0Debug.Log($"$$$$ years {years}: minSub: {details.minSubsidy}, conversion {Database.SettingsSC.repToSubsidyConversion}, maxSub {Database.SettingsSC.subsidyMultiplierForMax}, maxRep {details.maxRep}, invLerp {invLerp}, subsidy {details.subsidy}=>{(details.subsidy * (1d / 365.25d))}");
         }
 
         public static double GetYearlySubsidyAtTimeDelta(double deltaTime)
@@ -550,10 +550,10 @@ namespace RP0
                 Funding.Instance.AddFunds(-ResearchSalaryPerDay * timeFactor, TransactionReasonsRP0.SalaryResearchers.Stock());
                 Funding.Instance.AddFunds(-(NautBaseUpkeepPerDay + NautInFlightUpkeepPerDay) * timeFactor, TransactionReasonsRP0.SalaryCrew.Stock());
                 Funding.Instance.AddFunds(-TrainingUpkeepPerDay * timeFactor, TransactionReasonsRP0.CrewTraining.Stock());
-                //RP0Debug.Log($"[RP-0] MaintenanceHandler removing {(-totalUpkeep - netSubsidy)} funds where upkeep is {-totalUpkeep / timeFactor} ({(preMaint - Funding.Instance.Funds)} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
+                //RP0Debug.Log($"MaintenanceHandler removing {(-totalUpkeep - netSubsidy)} funds where upkeep is {-totalUpkeep / timeFactor} ({(preMaint - Funding.Instance.Funds)} for period) and subsidy {MaintenanceSubsidyPerDay} ({subsidyForPassedTime} for period). Delta = {(Funding.Instance.Funds - fundsOld)}");
                 //double delta = fundsOld + totalUpkeep + netSubsidy - Funding.Instance.Funds;
                 //if (Math.Abs(delta) > 0.1)
-                //    Debug.LogError($"[RP-0] $$$$ Error! Fund mismatch from prediction in maintenance! Prediction:\nMaintenance: {totalUpkeep}\n Subsidy: {netSubsidy} subsidy\nTotal: {totalUpkeep + netSubsidy}\nbut real delta: {Funding.Instance.Funds - fundsOld} (diff {delta})");
+                //    RP0Debug.LogError($"$$$$ Error! Fund mismatch from prediction in maintenance! Prediction:\nMaintenance: {totalUpkeep}\n Subsidy: {netSubsidy} subsidy\nTotal: {totalUpkeep + netSubsidy}\nbut real delta: {Funding.Instance.Funds - fundsOld} (diff {delta})");
             }
 
             // Finally, update all builds
@@ -596,7 +596,7 @@ namespace RP0
                     }
                     _facilityLevelCosts[(SpaceCenterFacility)Enum.Parse(typeof(SpaceCenterFacility), facility.name)] = costArr;
                 }
-                Debug.Log($"[RP-0] Updated facilityLevelsCosts, count: {_facilityLevelCosts.Count}");
+                RP0Debug.Log($"Updated facilityLevelsCosts, count: {_facilityLevelCosts.Count}");
             }
             return true;
         }

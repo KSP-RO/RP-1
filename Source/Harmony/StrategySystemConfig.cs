@@ -36,12 +36,12 @@ namespace RP0.Harmony
             ProgramHandler.EnsurePrograms();
             foreach (Program p in ProgramHandler.Programs)
             {
-                Debug.Log($"Added Program {p.name} as config");
+                RP0Debug.Log($"Added Program {p.name} as config");
                 System.Type type = StrategySystem.GetStrategyType(p.name);
                 if (type == null)
-                    Debug.LogError("ERROR! Can't find type!");
+                    RP0Debug.LogError("ERROR! Can't find type!");
                 else
-                    Debug.Log($"Found type: {type.FullName}");
+                    RP0Debug.Log($"Found type: {type.FullName}");
                 ConfigNode node = new ConfigNode();
                 node.AddValue("name", p.name);
                 node.AddValue("department", "Programs");

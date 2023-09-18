@@ -149,7 +149,7 @@ namespace RP0.Crew
                     }
                     else
                     {
-                        Debug.LogError($"[RP-0] Couldn't find TrainingHolder for {entry.target}");
+                        RP0Debug.LogError($"Couldn't find TrainingHolder for {entry.target}");
                     }
                 }
                 else if (entry.type == expired && entry.target == sanName)
@@ -169,7 +169,7 @@ namespace RP0.Crew
                 foreach (string s in unlockPathTracker)
                     msg += "\n" + s;
 
-                Debug.LogError(msg);*/
+                RP0Debug.LogError(msg);*/
                 return 0;
             }
 

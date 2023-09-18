@@ -75,6 +75,8 @@ namespace RP0
         public bool MergingAvailable;
         public List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
 
+        public bool VesselErrorAlerted = false;
+
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
         public override void OnAwake()
@@ -413,6 +415,225 @@ namespace RP0
             // which will require doing some work on KSC switch
             ActiveKSC = ksc;
         }
+
+        public void RecalculateBuildRates()
+        {
+            LCEfficiency.RecalculateConstants();
+
+            foreach (var ksc in KSCs)
+                ksc.RecalculateBuildRates(true);
+
+            for (int i = TechList.Count; i-- > 0;)
+            {
+                TechItem tech = TechList[i];
+                tech.UpdateBuildRate(i);
+            }
+
+            Crew.CrewHandler.Instance?.RecalculateBuildRates();
+
+            KCTEvents.OnRecalculateBuildRates.Fire();
+        }
+
+        public LCItem FindLCFromID(System.Guid guid)
+        {
+            return LC(guid);
+        }
+
+        #region Budget
+
+        public double GetEffectiveIntegrationEngineersForSalary(KSCItem ksc)
+        {
+            double engineers = 0d;
+            foreach (var lc in ksc.LaunchComplexes)
+                engineers += GetEffectiveEngineersForSalary(lc);
+            return engineers + ksc.UnassignedEngineers * Database.SettingsSC.IdleSalaryMult;
+        }
+
+        public double GetEffectiveEngineersForSalary(KSCItem ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
+
+        public double GetEffectiveEngineersForSalary(LCItem lc)
+        {
+            if (lc.IsOperational && lc.Engineers > 0)
+            {
+                if (!lc.IsActive)
+                    return lc.Engineers * Database.SettingsSC.IdleSalaryMult;
+
+                if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
+                {
+                    int num = System.Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
+                    return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.IdleSalaryMult;
+                }
+
+                return lc.Engineers * lc.RushSalary;
+            }
+
+            return 0;
+        }
+
+        public double GetBudgetDelta(double deltaTime)
+        {
+            // note NetUpkeepPerDay is negative or 0.
+
+            double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
+            double fundDelta = System.Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
+                + GetConstructionCostOverTime(deltaTime) + GetRolloutCostOverTime(deltaTime) + GetAirlaunchCostOverTime(deltaTime)
+                + Programs.ProgramHandler.Instance.GetDisplayProgramFunding(deltaTime);
+
+            return fundDelta;
+        }
+
+        public double GetConstructionCostOverTime(double time)
+        {
+            double delta = 0;
+            foreach (var ksc in KSCs)
+            {
+                delta += GetConstructionCostOverTime(time, ksc);
+            }
+            return delta;
+        }
+
+        public double GetConstructionCostOverTime(double time, KSCItem ksc)
+        {
+            double delta = 0;
+            foreach (var c in ksc.Constructions)
+                delta += c.GetConstructionCostOverTime(time);
+
+            return delta;
+        }
+
+        public double GetConstructionCostOverTime(double time, string kscName)
+        {
+            foreach (var ksc in KSCs)
+            {
+                if (ksc.KSCName == kscName)
+                {
+                    return GetConstructionCostOverTime(time, ksc);
+                }
+            }
+
+            return 0d;
+        }
+
+        public double GetRolloutCostOverTime(double time)
+        {
+            double delta = 0;
+            foreach (var ksc in KSCs)
+            {
+                delta += GetRolloutCostOverTime(time, ksc);
+            }
+            return delta;
+        }
+
+        public double GetRolloutCostOverTime(double time, KSCItem ksc)
+        {
+            double delta = 0;
+            for (int i = 1; i < ksc.LaunchComplexes.Count; ++i)
+                delta += GetRolloutCostOverTime(time, ksc.LaunchComplexes[i]);
+
+            return delta;
+        }
+
+        public double GetRolloutCostOverTime(double time, LCItem lc)
+        {
+            double delta = 0;
+            foreach (var rr in lc.Recon_Rollout)
+            {
+                if (rr.RRType != ReconRollout.RolloutReconType.Rollout)
+                    continue;
+
+                double t = rr.GetTimeLeft();
+                double fac = 1d;
+                if (t > time)
+                    fac = time / t;
+
+                delta += CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -rr.cost * (1d - rr.progress / rr.BP) * fac);
+            }
+
+            return delta;
+        }
+
+        public double GetAirlaunchCostOverTime(double time)
+        {
+            double delta = 0;
+            foreach (var ksc in KSCs)
+            {
+                delta += GetAirlaunchCostOverTime(time, ksc);
+            }
+            return delta;
+        }
+
+        public double GetAirlaunchCostOverTime(double time, KSCItem ksc)
+        {
+            double delta = 0;
+            foreach (var al in ksc.Hangar.Airlaunch_Prep)
+            {
+                if (al.direction == AirlaunchPrep.PrepDirection.Mount)
+                {
+                    double t = al.GetTimeLeft();
+                    double fac = 1d;
+                    if (t > time)
+                        fac = time / t;
+
+                    delta += CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -al.cost * (1d - al.progress / al.BP) * fac);
+                }
+            }
+
+            return delta;
+        }
+
+        public double GetRolloutCostOverTime(double time, string kscName)
+        {
+            foreach (var ksc in KSCs)
+            {
+                if (ksc.KSCName == kscName)
+                {
+                    return GetRolloutCostOverTime(time, ksc);
+                }
+            }
+
+            return 0d;
+        }
+
+        public int TotalEngineers
+        {
+            get
+            {
+                int eng = 0;
+                foreach (var ksc in KSCs)
+                    eng += ksc.Engineers;
+
+                return eng;
+            }
+        }
+
+        public double WeightedAverageEfficiencyEngineers
+        {
+            get
+            {
+                double effic = 0d;
+                int engineers = 0;
+                foreach (var ksc in KSCs)
+                {
+                    foreach (var lc in ksc.LaunchComplexes)
+                    {
+                        if (!lc.IsOperational || lc.LCType == LaunchComplexType.Hangar)
+                            continue;
+
+                        if (lc.Engineers == 0d)
+                            continue;
+
+                        engineers += lc.Engineers;
+                        effic += lc.Efficiency * engineers;
+                    }
+                }
+
+                if (engineers == 0)
+                    return 0d;
+
+                return effic / engineers;
+            }
+        }
+        #endregion
     }
 }
 

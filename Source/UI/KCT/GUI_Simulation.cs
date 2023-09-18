@@ -236,7 +236,7 @@ namespace RP0
             // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.
             KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
             // Just in case, let's set the LCID
-            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
+            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)
@@ -246,9 +246,9 @@ namespace RP0
             EditorLogic.fetch.ship.SaveShip().Save(tempFile);
             KerbalConstructionTimeData.Instance.IsSimulatedFlight = true;
             string launchSiteName = EditorLogic.fetch.launchSiteName;
-            if (launchSiteName == "LaunchPad" && KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad)
+            if (launchSiteName == "LaunchPad" && KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad)
             {
-                launchSiteName = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.launchSiteName;
+                launchSiteName = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.launchSiteName;
             }
             FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
         }

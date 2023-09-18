@@ -46,7 +46,7 @@ namespace RP0
             {
                 if (_ksc == null)
                 {
-                    _ksc = KCTGameStates.KSCs.Find(ksc => ksc.Constructions.Contains(this));
+                    _ksc = KerbalConstructionTimeData.Instance.KSCs.Find(ksc => ksc.Constructions.Contains(this));
                 }
                 return _ksc;
             }

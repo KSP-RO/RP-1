@@ -191,7 +191,7 @@ namespace RP0.Harmony
 
             ProgramHandler.Instance.OnLoadStrategiesComplete();
 
-            KCTGameStates.RecalculateBuildRates();
+            KerbalConstructionTimeData.Instance.RecalculateBuildRates();
         }
     }
 }

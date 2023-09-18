@@ -67,7 +67,7 @@ namespace RP0
         {
             get
             {
-                foreach (KSCItem currentKSC in KCTGameStates.KSCs)
+                foreach (KSCItem currentKSC in KerbalConstructionTimeData.Instance.KSCs)
                 {
                     if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LCItem currentLC)
                     {
@@ -128,7 +128,7 @@ namespace RP0
 
         public bool Delete(out string failReason)
         {
-            foreach (KSCItem currentKSC in KCTGameStates.KSCs)
+            foreach (KSCItem currentKSC in KerbalConstructionTimeData.Instance.KSCs)
             {
                 foreach (LCItem currentLC in currentKSC.LaunchComplexes)
                 {
@@ -167,7 +167,7 @@ namespace RP0
 
                     currentLC.LaunchPads.RemoveAt(idx);
 
-                    if (currentLC == KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance)
+                    if (currentLC == KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance)
                     {
                         currentLC.SwitchLaunchPad(0);
                     }
@@ -215,7 +215,7 @@ namespace RP0
 
             try
             {
-                int idx = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
+                int idx = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
                 RP0Debug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
 
                 //set the level to this level

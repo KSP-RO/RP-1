@@ -29,7 +29,7 @@ namespace RP0
             {
                 if (_lc == null)
                 {
-                    foreach (var ksc in KCTGameStates.KSCs)
+                    foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
                     {
                         foreach (var lc in ksc.LaunchComplexes)
                         {

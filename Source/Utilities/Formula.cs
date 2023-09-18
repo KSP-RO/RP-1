@@ -91,7 +91,7 @@ namespace RP0
 
             LCItem vLC = vessel.LC;
             if (vLC == null)
-                vLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                vLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             double multHR = 1d;
             if (vLC.IsHumanRated)

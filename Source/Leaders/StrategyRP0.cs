@@ -145,7 +145,7 @@ namespace RP0
 
             if (!(this is Programs.ProgramStrategy))
             {
-                KCTGameStates.RecalculateBuildRates();
+                KerbalConstructionTimeData.Instance.RecalculateBuildRates();
                 MaintenanceHandler.Instance?.UpdateUpkeep();
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 // FIXME add setup cost if we add setup costs to leaders
@@ -182,7 +182,7 @@ namespace RP0
 
             if (!(this is Programs.ProgramStrategy))
             {
-                KCTGameStates.RecalculateBuildRates();
+                KerbalConstructionTimeData.Instance.RecalculateBuildRates();
                 MaintenanceHandler.Instance?.UpdateUpkeep();
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, false, deactivateRep);

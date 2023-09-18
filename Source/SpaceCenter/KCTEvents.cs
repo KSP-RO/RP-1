@@ -166,7 +166,7 @@ namespace RP0
             if (KCT_GUI.IsPrimarilyDisabled) return;
 
             RP0Debug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
-            KCTGameStates.RecalculateBuildRates();
+            KerbalConstructionTimeData.Instance.RecalculateBuildRates();
         }
 
         public void FaciliyRepaired(DestructibleBuilding facility)
@@ -174,8 +174,8 @@ namespace RP0
             if (facility.id.Contains("LaunchPad"))
             {
                 RP0Debug.Log("LaunchPad was repaired.");
-                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
-                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.CompletelyRepairNode();
+                KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
+                KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.CompletelyRepairNode();
             }
         }
 
@@ -184,7 +184,7 @@ namespace RP0
             if (facility.id.Contains("LaunchPad"))
             {
                 RP0Debug.Log("LaunchPad was damaged.");
-                KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
+                KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
             }
         }
 
@@ -268,7 +268,7 @@ namespace RP0
                     if (dataModule != null && dataModule.Data.FacilityBuiltIn == EditorFacility.VAB && !dataModule.Data.HasStartedReconditioning)
                     {
                         string launchSite = FlightDriver.LaunchSiteName;
-                        LCItem lc = KCTGameStates.FindLCFromID(dataModule.Data.LCID);
+                        LCItem lc = KerbalConstructionTimeData.Instance.FindLCFromID(dataModule.Data.LCID);
                         if (lc != null)
                         {
                             if (lc.LCType == LaunchComplexType.Pad && lc.ActiveLPInstance != null
@@ -293,7 +293,7 @@ namespace RP0
 
             LCItem targetLC = KerbalConstructionTimeData.Instance.RecoveredVessel.LC;
             if (targetLC == null)
-                targetLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                targetLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             targetLC.Warehouse.Add(KerbalConstructionTimeData.Instance.RecoveredVessel);
             targetLC.Recon_Rollout.Add(new ReconRollout(KerbalConstructionTimeData.Instance.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KerbalConstructionTimeData.Instance.RecoveredVessel.shipID.ToString()));

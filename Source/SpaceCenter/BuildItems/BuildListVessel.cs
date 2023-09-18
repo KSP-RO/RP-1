@@ -242,13 +242,13 @@ namespace RP0
             {
                 Type = ListType.SPH;
                 FacilityBuiltIn = EditorFacility.SPH;
-                LC = KCTGameStates.ActiveKSC.Hangar;
+                LC = KerbalConstructionTimeData.Instance.ActiveKSC.Hangar;
             }
             else
             {
                 Type = ListType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
-                LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                LC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
                 if (_lc.LCType == LaunchComplexType.Hangar)
                 {
                     RP0Debug.LogError($"ERROR: Tried to link vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
@@ -556,11 +556,11 @@ namespace RP0
         {
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
-            LCItem lc = KCTGameStates.FindLCFromID(_lcID);
+            LCItem lc = KerbalConstructionTimeData.Instance.FindLCFromID(_lcID);
             if (lc == null)
-                lc = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                lc = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             else
-                KCTGameStates.ActiveKSC.SwitchLaunchComplex(KCTGameStates.ActiveKSC.LaunchComplexes.IndexOf(lc));
+                KerbalConstructionTimeData.Instance.ActiveKSC.SwitchLaunchComplex(KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.IndexOf(lc));
 
             string tempFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/temp.craft";
             UpdateRFTanks();
@@ -617,7 +617,7 @@ namespace RP0
             LCItem selectedLC;
             if (LC == null)
             {
-                selectedLC = Type == ListType.VAB ? KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance : KCTGameStates.ActiveKSC.Hangar;
+                selectedLC = Type == ListType.VAB ? KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance : KerbalConstructionTimeData.Instance.ActiveKSC.Hangar;
             }
             else
             {

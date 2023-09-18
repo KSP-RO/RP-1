@@ -126,7 +126,7 @@ namespace RP0
 
         public static bool AlreadyInProgressByID(string id)
         {
-            return KCTGameStates.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == id) != null) != null;
+            return KerbalConstructionTimeData.Instance.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == id) != null) != null;
         }
 
         protected override void ProcessCancel()

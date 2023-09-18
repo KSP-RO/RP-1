@@ -152,7 +152,7 @@ namespace RP0
             if (HighLogic.LoadedSceneIsEditor)
             {
                 if (!KCTGameStates.EditorShipEditingMode)
-                    KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
+                    KerbalConstructionTime.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ID;
                 KerbalConstructionTime.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, Harmony.PatchEngineersReport.UpdateCraftStats));
             }
 

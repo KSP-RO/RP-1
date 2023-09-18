@@ -79,7 +79,7 @@ namespace RP0
             {
                 double time = (timeUpper + timeLower) * 0.5d;
                 // This is the post-CMQ delta.
-                double fundDelta = KCTGameStates.GetBudgetDelta(time);
+                double fundDelta = KerbalConstructionTimeData.Instance.GetBudgetDelta(time);
                 double totalFunds = baseFunds + fundDelta;
 
                 if (totalFunds >= targetFunds)

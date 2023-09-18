@@ -619,9 +619,9 @@ namespace RP0
                 _prevPeriod.CurrentFunds = Funding.Instance.Funds;
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
                 _prevPeriod.RnDQueueLength = KerbalConstructionTimeData.Instance.TechList.Sum(t => t.scienceCost);
-                _prevPeriod.NumEngineers = KCTGameStates.TotalEngineers;
+                _prevPeriod.NumEngineers = KerbalConstructionTimeData.Instance.TotalEngineers;
                 _prevPeriod.NumResearchers = KerbalConstructionTimeData.Instance.Researchers;
-                _prevPeriod.EfficiencyEngineers = KCTGameStates.WeightedAverageEfficiencyEngineers;
+                _prevPeriod.EfficiencyEngineers = KerbalConstructionTimeData.Instance.WeightedAverageEfficiencyEngineers;
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
                 _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmount(_prevPeriod.StartUT, _prevPeriod.EndUT);

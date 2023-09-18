@@ -7,7 +7,7 @@ namespace RP0
     {
         public static void DrawDismantlePadWindow(int windowID)
         {
-            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             bool isLC = GUIStates.ShowDismantleLC;
             GUILayout.BeginVertical();
             GUILayout.Label("Are you sure you want to dismantle the currently selected " + 
@@ -38,7 +38,7 @@ namespace RP0
 
         private static void TryDismantleLCorPad(bool isLC)
         {
-            LCItem activeLC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             if (isLC)
             {
                 if (activeLC.LCType == LaunchComplexType.Hangar)

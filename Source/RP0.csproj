@@ -256,9 +256,7 @@
     <Compile Include="SpaceCenter\BuildItems\AirlaunchPrep.cs" />
     <Compile Include="SpaceCenter\BuildItems\BuildListVessel.cs" />
     <Compile Include="UI\KCT\GUI_BuildPlans.cs" />
-    <Compile Include="KerbalConstructionTime\SceneAddons\EditorAddon.cs" />
     <Compile Include="SpaceCenter\KCTEvents.cs" />
-    <Compile Include="KerbalConstructionTime\SceneAddons\FlightAddon.cs" />
     <Compile Include="Singletons\Database.cs" />
     <Compile Include="KerbalConstructionTime\KCTGameStates.cs" />
     <Compile Include="UI\KCT\GUI_Main.cs" />
@@ -271,9 +269,7 @@
     <Compile Include="SpaceCenter\Presets\PresetManager.cs" />
     <Compile Include="SpaceCenter\BuildItems\ReconRollout.cs" />
     <Compile Include="SpaceCenter\Presets\KCTSettings.cs" />
-    <Compile Include="KerbalConstructionTime\SceneAddons\SpaceCenterAddon.cs" />
     <Compile Include="SpaceCenter\BuildItems\TechItem.cs" />
-    <Compile Include="KerbalConstructionTime\SceneAddons\TrackingStationAddon.cs" />
     <Compile Include="SpaceCenter\BuildItems\FacilityUpgrade.cs" />
     <Compile Include="Utilities\KCTUtilities.cs" />
     <Compile Include="Utilities\WindowHelper.cs" />

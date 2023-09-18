@@ -1195,7 +1195,6 @@ namespace RP0
             //also set the editor ui to 1 height
             KCT_GUI.EditorWindowPosition.height = 1;
 
-            var kctInstance = KerbalConstructionTime.Instance as EditorAddon;
             if (EditorLogic.fetch == null)
                 return;
 
@@ -1223,12 +1222,12 @@ namespace RP0
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
 
-                if (kctInstance == null)
+                if (KerbalConstructionTime.Instance == null)
                     return;
 
-                if (!kctInstance.IsLaunchSiteControllerDisabled)
+                if (!KerbalConstructionTime.Instance.IsLaunchSiteControllerDisabled)
                 {
-                    kctInstance.IsLaunchSiteControllerDisabled = true;
+                    KerbalConstructionTime.Instance.IsLaunchSiteControllerDisabled = true;
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller == null)
                     {
@@ -1241,12 +1240,12 @@ namespace RP0
                     }
                 }
             }
-            else if(kctInstance != null)
+            else if(KerbalConstructionTime.Instance != null)
             {
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, KerbalConstructionTime.KCTLaunchLock);
-                if (!kctInstance.IsLaunchSiteControllerDisabled)
+                if (!KerbalConstructionTime.Instance.IsLaunchSiteControllerDisabled)
                 {
-                    kctInstance.IsLaunchSiteControllerDisabled = true;
+                    KerbalConstructionTime.Instance.IsLaunchSiteControllerDisabled = true;
                     RP0Debug.Log("Attempting to disable launchsite specific buttons");
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller != null)

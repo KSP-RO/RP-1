@@ -54,7 +54,7 @@ namespace RP0
 
         private void OnCurrenciesModified(CurrencyModifierQuery query)
         {
-            float sciDelta = query.GetTotal(Currency.Science);
+            float sciDelta = query.GetInput(Currency.Science);
             float conf = 0f;
             // Annoyingly Kerbalism uses TransactionReason.None
             if (sciDelta > 0f && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))

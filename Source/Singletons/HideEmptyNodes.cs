@@ -5,8 +5,7 @@ using UniLinq;
 
 namespace RP0
 {
-    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
-    public class HideEmptyNodes : MonoBehaviour
+    public class HideEmptyNodes : HostedSingleton
     {
         private class RDNodeData
         {
@@ -19,10 +18,10 @@ namespace RP0
         // This is filled during Awake rather than each run
         private HashSet<string> nodeNamesFromKerbalism = new HashSet<string>();
 
-        public void Awake()
-        {
-            DontDestroyOnLoad(this);
+        public HideEmptyNodes(MonoBehaviour host) : base(host) { }
 
+        public override void Awake()
+        {
             RDTechTree.OnTechTreeSpawn.Add(OnUpdateRnD);
             foreach (var node in GameDatabase.Instance.GetConfigNodes("PART"))
             {
@@ -34,12 +33,11 @@ namespace RP0
                         if (!string.IsNullOrEmpty(tech))
                             nodeNamesFromKerbalism.Add(tech);
                     }
-
                 }
             }
         }
 
-        public void OnDestroy()
+        public override void OnDestroy()
         {
             RDTechTree.OnTechTreeSpawn.Remove(OnUpdateRnD);
         }
@@ -97,7 +95,7 @@ namespace RP0
             {
                 if (deleteNodes.Contains(tree.controller.nodes[i]))
                 {
-                    Destroy(tree.controller.nodes[i]);
+                    GameObject.Destroy(tree.controller.nodes[i]);
                     tree.controller.nodes.RemoveAt(i);
                 }
             }

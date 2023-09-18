@@ -5,12 +5,12 @@ using RP0.ProceduralAvionics;
 
 namespace RP0
 {
-    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
-    public class LocalizationHandler : MonoBehaviour
+    public class LocalizationHandler : HostedSingleton
     {
-        public void Awake()
+        public LocalizationHandler(MonoBehaviour host) : base(host) { }
+
+        public override void Awake()
         {
-            DontDestroyOnLoad(this);
             GameEvents.onLanguageSwitched.Add(OnLanguageChange);
             OnLanguageChange(); // Initialize
 

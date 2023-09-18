@@ -8,12 +8,17 @@ using ToolbarControl_NS;
 using UnityEngine;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
+using RP0.UI;
 
 namespace RP0
 {
+    [KSPAddon(KSPAddon.Startup.AllGameScenes, false)]
     public class KerbalConstructionTime : MonoBehaviour
     {
         public static KerbalConstructionTime Instance { get; private set; }
+
+        private Button.ButtonClickedEvent _recoverCallback, _flyCallback;
+        private SpaceTracking _trackingStation;
 
         public bool IsEditorRecalcuationRequired = false;
         private bool _hasFirstRecalculated = false;
@@ -29,9 +34,10 @@ namespace RP0
         private const float BUILD_TIME_INTERVAL = 0.5f;
         private const float YEAR_MULT_TIME_INTERVAL = 86400 * 7;
 
-        // These should live in the EditorAddon but we can't easily access it then.
+        // Editor fields
         public BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
         public Guid PreEditorSwapLCID = Guid.Empty;
+        public bool IsLaunchSiteControllerDisabled;
 
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
@@ -205,6 +211,29 @@ namespace RP0
             DelayedStart();
 
             StartCoroutine(HandleEditorButton_Coroutine());
+
+            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
+            {
+                _trackingStation = FindObjectOfType<SpaceTracking>();
+                if (_trackingStation != null)
+                {
+                    _recoverCallback = _trackingStation.RecoverButton.onClick;
+                    _flyCallback = _trackingStation.FlyButton.onClick;
+
+                    _trackingStation.RecoverButton.onClick = new Button.ButtonClickedEvent();
+                    _trackingStation.RecoverButton.onClick.AddListener(RecoveryChoiceTS);
+                }
+            }
+            else if (HighLogic.LoadedSceneIsFlight)
+            {
+                if (FindObjectOfType<AltimeterSliderButtons>() is AltimeterSliderButtons altimeter)
+                {
+                    _recoverCallback = altimeter.vesselRecoveryButton.onClick;
+
+                    altimeter.vesselRecoveryButton.onClick = new Button.ButtonClickedEvent();
+                    altimeter.vesselRecoveryButton.onClick.AddListener(RecoveryChoiceFlight);
+                }
+            }
         }
 
         private void ProcessFlightStart()
@@ -911,6 +940,127 @@ namespace RP0
                 // We are recalculating because vessel validation might have changed state.
                 Instance.IsEditorRecalcuationRequired = true;
             }
+        }
+
+        // TS code
+        private void Fly()
+        {
+            _flyCallback.Invoke();
+        }
+
+        private void PopupNoKCTRecoveryInTS()
+        {
+            DialogGUIBase[] options = new DialogGUIBase[2];
+            options[0] = new DialogGUIButton("Go to Flight scene", Fly);
+            options[1] = new DialogGUIButton("Cancel", () => { });
+
+            var diag = new MultiOptionDialog("recoverVesselPopup", "Vessels can only be recovered for reuse in the Flight scene", "Recover Vessel", null, options: options);
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
+        private void RecoverToVAB()
+        {
+            if (!HighLogic.LoadedSceneIsFlight)
+            {
+                PopupNoKCTRecoveryInTS();
+                return;
+            }
+
+            if (!KCTUtilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.VAB))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+        }
+
+        private void RecoverToSPH()
+        {
+            if (!HighLogic.LoadedSceneIsFlight)
+            {
+                PopupNoKCTRecoveryInTS();
+                return;
+            }
+
+            if (!KCTUtilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.SPH))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "recoverShipErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+        }
+
+        private void DoNormalRecovery()
+        {
+            _recoverCallback.Invoke();
+        }
+
+        private void RecoveryChoiceTS()
+        {
+            if (!(_trackingStation != null && _trackingStation.SelectedVessel is Vessel selectedVessel))
+            {
+                RP0Debug.LogError("No Vessel selected.");
+                return;
+            }
+
+            bool canRecoverSPH = KCTUtilities.IsSphRecoveryAvailable(selectedVessel);
+            bool canRecoverVAB = KCTUtilities.IsVabRecoveryAvailable(selectedVessel);
+
+            var options = new List<DialogGUIBase>();
+            if (canRecoverSPH)
+                options.Add(new DialogGUIButton("Recover to SPH", RecoverToSPH));
+            if (canRecoverVAB)
+                options.Add(new DialogGUIButton("Recover to VAB", RecoverToVAB));
+            options.Add(new DialogGUIButton("Normal recovery", DoNormalRecovery));
+            options.Add(new DialogGUIButton("Cancel", () => { }));
+
+            var diag = new MultiOptionDialog("scrapVesselPopup", string.Empty, "Recover Vessel", null, options: options.ToArray());
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
+        private void RecoveryChoiceFlight()
+        {
+            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+            {
+                KCT_GUI.GUIStates.ShowSimulationGUI = true;
+                return;
+            }
+
+            bool isSPHAllowed = KCTUtilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel);
+            bool isVABAllowed = KCTUtilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel);
+            var options = new List<DialogGUIBase>();
+            if (!FlightGlobals.ActiveVessel.isEVA)
+            {
+                string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(Database.SettingsSC.VABRecoveryTech);
+                string techLimitText = string.IsNullOrEmpty(nodeTitle) ? string.Empty :
+                                       $"\nAdditionally requires {nodeTitle} tech node to be researched (unless the vessel is in Prelaunch state).";
+                string genericReuseText = "Allows the vessel to be launched again after a short recovery delay.";
+
+                options.Add(new DialogGUIButtonWithTooltip("Recover to SPH", RecoverToSPH)
+                {
+                    OptionInteractableCondition = () => isSPHAllowed,
+                    tooltipText = isSPHAllowed ? genericReuseText : "Can only be used when the vessel was built in SPH."
+                });
+
+                options.Add(new DialogGUIButtonWithTooltip("Recover to VAB", RecoverToVAB)
+                {
+                    OptionInteractableCondition = () => isVABAllowed,
+                    tooltipText = isVABAllowed ? genericReuseText : $"Can only be used when the vessel was built in VAB.{techLimitText}"
+                });
+
+                options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecovery)
+                {
+                    tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded."
+                });
+            }
+            else
+            {
+                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecovery));
+            }
+
+            options.Add(new DialogGUIButton("Cancel", () => { }));
+
+            var diag = new MultiOptionDialog("RecoverVesselPopup",
+                string.Empty,
+                "Recover vessel",
+                null, options: options.ToArray());
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
     }
 }

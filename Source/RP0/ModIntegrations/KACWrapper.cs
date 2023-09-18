@@ -17,8 +17,8 @@ namespace RP0
     /// </summary>
     public class KACWrapper
     {
-        protected static System.Type KACType;
-        protected static System.Type KACAlarmType;
+        protected static Type KACType;
+        protected static Type KACAlarmType;
 
         protected static Object actualKAC = null;
 
@@ -83,7 +83,7 @@ namespace RP0
             }
 
             LogFormatted("KAC Version:{0}", KACType.Assembly.GetName().Version.ToString());
-            if (KACType.Assembly.GetName().Version.CompareTo(new System.Version(3, 0, 0, 5)) < 0)
+            if (KACType.Assembly.GetName().Version.CompareTo(new Version(3, 0, 0, 5)) < 0)
             {
                 //No TimeEntry or alarmchoice options = need a newer version
                 NeedUpgrade = true;

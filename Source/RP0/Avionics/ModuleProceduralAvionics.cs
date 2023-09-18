@@ -478,7 +478,7 @@ namespace RP0.ProceduralAvionics
         {
             var data = new BaseEventDetails(BaseEventDetails.Sender.USER);
             data.Set<string>("volName", "Tankage");
-            data.Set<double>("newTotalVolume", newVolume);
+            data.Set("newTotalVolume", newVolume);
             part.SendEvent(nameof(OnPartVolumeChanged), data, 0);
         }
 

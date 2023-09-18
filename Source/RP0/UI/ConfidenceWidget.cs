@@ -8,7 +8,7 @@ namespace RP0.UI
 {
     public class ConfidenceWidget : CurrencyWidget
     {
-        public TMPro.TextMeshProUGUI text;
+        public TextMeshProUGUI text;
 
         private void Awake()
         {

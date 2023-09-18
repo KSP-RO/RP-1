@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace RP0.Crew
 {
-    public class TrainingCourse : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
+    public class TrainingCourse : ConfigNodePersistenceBase, ISpaceCenterProject, IConfigNode
     {
         [Persistent]
         public string id;
@@ -204,8 +204,8 @@ namespace RP0.Crew
                     foreach (string s in retirementChanges)
                         sb.Append(s);
 
-                    PopupDialog.SpawnPopupDialog(new UnityEngine.Vector2(0.5f, 0.5f),
-                                             new UnityEngine.Vector2(0.5f, 0.5f),
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                             new Vector2(0.5f, 0.5f),
                                              "CrewUpdateNotification",
                                              "Crew Updates",
                                              sb.ToString(),
@@ -265,9 +265,9 @@ namespace RP0.Crew
             return GetTimeLeft();
         }
 
-        public RP0.BuildListVessel.ListType GetListType()
+        public VesselProject.ListType GetListType()
         {
-            return BuildListVessel.ListType.Crew;
+            return VesselProject.ListType.Crew;
         }
 
         public bool IsComplete()

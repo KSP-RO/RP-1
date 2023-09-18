@@ -4,7 +4,7 @@ using RP0.DataTypes;
 
 namespace RP0
 {
-    public class KSCItem : IConfigNode
+    public class SpaceCenter : IConfigNode
     {
         [Persistent]
         public string KSCName;
@@ -15,22 +15,22 @@ namespace RP0
         public int ActiveLaunchComplexIndex = 0;
 
         [Persistent]
-        public PersistentList<LCItem> LaunchComplexes = new PersistentList<LCItem>();
+        public PersistentList<LaunchComplex> LaunchComplexes = new PersistentList<LaunchComplex>();
         [Persistent]
-        public PersistentObservableList<LCConstruction> LCConstructions = new PersistentObservableList<LCConstruction>();
+        public PersistentObservableList<LCConstructionProject> LCConstructions = new PersistentObservableList<LCConstructionProject>();
         [Persistent]
-        public PersistentObservableList<FacilityUpgrade> FacilityUpgrades = new PersistentObservableList<FacilityUpgrade>();
+        public PersistentObservableList<FacilityUpgradeProject> FacilityUpgrades = new PersistentObservableList<FacilityUpgradeProject>();
                 
 
-        public List<ConstructionBuildItem> Constructions = new List<ConstructionBuildItem>();
+        public List<ConstructionProject> Constructions = new List<ConstructionProject>();
 
         private bool _allowRecalcConstructions = true;
 
         public const int HangarIndex = 0;
-        public LCItem Hangar => LaunchComplexes[HangarIndex];
+        public LaunchComplex Hangar => LaunchComplexes[HangarIndex];
 
-        void added(int idx, ConstructionBuildItem item) { Constructions.Add(item); }
-        void removed(int idx, ConstructionBuildItem item) { Constructions.Remove(item); }
+        void added(int idx, ConstructionProject item) { Constructions.Add(item); }
+        void removed(int idx, ConstructionProject item) { Constructions.Remove(item); }
         void updated()
         {
             if (_allowRecalcConstructions) RecalculateBuildRates(false);
@@ -47,26 +47,26 @@ namespace RP0
             FacilityUpgrades.Updated += updated;
         }
 
-        public KSCItem()
+        public SpaceCenter()
         {
             AddListeners();
         }
 
-        public KSCItem(string name)
+        public SpaceCenter(string name)
         {
             KSCName = name;
 
             AddListeners();
         }
 
-        public LCItem ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexIndex ? LaunchComplexes[ActiveLaunchComplexIndex] : null;
+        public LaunchComplex ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexIndex ? LaunchComplexes[ActiveLaunchComplexIndex] : null;
 
         public int LaunchComplexCount
         {
             get
             {
                 int count = 0;
-                foreach (LCItem lc in LaunchComplexes)
+                foreach (LaunchComplex lc in LaunchComplexes)
                     if (lc.IsOperational) 
                         ++count;
                 return count;
@@ -78,7 +78,7 @@ namespace RP0
             get
             {
                 int count = 0;
-                foreach (LCItem lc in LaunchComplexes)
+                foreach (LaunchComplex lc in LaunchComplexes)
                     if (lc.IsOperational && lc.LCType == LaunchComplexType.Pad)
                         ++count;
                 return count;
@@ -107,7 +107,7 @@ namespace RP0
         {
             if (LaunchComplexes.Count > 0) return;
 
-            LCItem sph = new LCItem(LCData.StartingHangar, this);
+            LaunchComplex sph = new LaunchComplex(LCData.StartingHangar, this);
             sph.IsOperational = true;
             LaunchComplexes.Add(sph);
         }
@@ -115,7 +115,7 @@ namespace RP0
         public void RecalculateBuildRates(bool all = true)
         {
             if(all)
-                foreach (LCItem lc in LaunchComplexes)
+                foreach (LaunchComplex lc in LaunchComplexes)
                     lc.RecalculateBuildRates();
 
             for (int j = 0; j < Constructions.Count; j++)
@@ -166,7 +166,7 @@ namespace RP0
             if (startIndex < 0)
                 startIndex = ActiveLaunchComplexIndex;
 
-            LCItem lc;
+            LaunchComplex lc;
             int count = LaunchComplexes.Count;
             do
             {

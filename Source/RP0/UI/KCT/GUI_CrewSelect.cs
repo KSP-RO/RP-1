@@ -219,7 +219,7 @@ namespace RP0
             {
                 GUIStates.ShowShipRoster = false;
                 GUIStates.ShowBuildList = true;
-                KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();
+                KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject();
                 KerbalConstructionTimeData.Instance.LaunchedCrew.Clear();
                 _crewListWindowPosition.height = 1;
                 _availableCrew = null;

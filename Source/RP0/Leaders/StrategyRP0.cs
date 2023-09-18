@@ -8,7 +8,7 @@ namespace RP0
     /// This extends and improves the base Strategy class and includes
     /// those bits needed to support Leaders.
     /// </summary>
-    public class StrategyRP0 : Strategies.Strategy
+    public class StrategyRP0 : Strategy
     {
         public bool ShowExtendedInfo = false;
 

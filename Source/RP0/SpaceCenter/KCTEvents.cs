@@ -11,20 +11,20 @@ namespace RP0
         public bool CreatedEvents { get; private set; }
         public bool KCTButtonStockImportant { get; set; }
 
-        public static EventData<BuildListVessel> OnVesselAddedToBuildQueue;
+        public static EventData<VesselProject> OnVesselAddedToBuildQueue;
         public static EventData<RDTech> OnTechQueued;
-        public static EventData<TechItem> OnTechCompleted;
-        public static EventData<FacilityUpgrade> OnFacilityUpgradeQueued;
-        public static EventData<FacilityUpgrade> OnFacilityUpgradeCancel;
-        public static EventData<FacilityUpgrade> OnFacilityUpgradeComplete;
-        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionQueued;
-        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionCancel;
-        public static EventData<PadConstruction, KCT_LaunchPad> OnPadConstructionComplete;
-        public static EventData<KCT_LaunchPad> OnPadDismantled;
-        public static EventData<LCConstruction, LCItem> OnLCConstructionQueued;
-        public static EventData<LCConstruction, LCItem> OnLCConstructionCancel;
-        public static EventData<LCConstruction, LCItem> OnLCConstructionComplete;
-        public static EventData<LCItem> OnLCDismantled;
+        public static EventData<ResearchProject> OnTechCompleted;
+        public static EventData<FacilityUpgradeProject> OnFacilityUpgradeQueued;
+        public static EventData<FacilityUpgradeProject> OnFacilityUpgradeCancel;
+        public static EventData<FacilityUpgradeProject> OnFacilityUpgradeComplete;
+        public static EventData<PadConstructionProject, LCLaunchPad> OnPadConstructionQueued;
+        public static EventData<PadConstructionProject, LCLaunchPad> OnPadConstructionCancel;
+        public static EventData<PadConstructionProject, LCLaunchPad> OnPadConstructionComplete;
+        public static EventData<LCLaunchPad> OnPadDismantled;
+        public static EventData<LCConstructionProject, LaunchComplex> OnLCConstructionQueued;
+        public static EventData<LCConstructionProject, LaunchComplex> OnLCConstructionCancel;
+        public static EventData<LCConstructionProject, LaunchComplex> OnLCConstructionComplete;
+        public static EventData<LaunchComplex> OnLCDismantled;
         public static EventVoid OnPersonnelChange;
         public static EventVoid OnRecalculateBuildRates;
 
@@ -101,20 +101,20 @@ namespace RP0
 
         public void CreateEvents()
         {
-            OnVesselAddedToBuildQueue = new EventData<BuildListVessel>("OnKctVesselAddedToBuildQueue");
+            OnVesselAddedToBuildQueue = new EventData<VesselProject>("OnKctVesselAddedToBuildQueue");
             OnTechQueued = new EventData<RDTech>("OnKctTechQueued");
-            OnTechCompleted = new EventData<TechItem>("OnKctTechCompleted");
-            OnFacilityUpgradeQueued = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeQueued");
-            OnFacilityUpgradeCancel = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeCancel");
-            OnFacilityUpgradeComplete = new EventData<FacilityUpgrade>("OnKctFacilityUpgradeComplete");
-            OnPadConstructionQueued = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionQueued");
-            OnPadConstructionCancel = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionCancel");
-            OnPadConstructionComplete = new EventData<PadConstruction, KCT_LaunchPad>("OnKctPadConstructionComplete");
-            OnPadDismantled = new EventData<KCT_LaunchPad>("OnKctPadDismantled");
-            OnLCConstructionQueued = new EventData<LCConstruction, LCItem>("OnKctLCConstructionQueued");
-            OnLCConstructionCancel = new EventData<LCConstruction, LCItem>("OnKctLCConstructionCancel");
-            OnLCConstructionComplete = new EventData<LCConstruction, LCItem>("OnKctLCConstructionComplete");
-            OnLCDismantled = new EventData<LCItem>("OnKctLCDismantled");
+            OnTechCompleted = new EventData<ResearchProject>("OnKctTechCompleted");
+            OnFacilityUpgradeQueued = new EventData<FacilityUpgradeProject>("OnKctFacilityUpgradeQueued");
+            OnFacilityUpgradeCancel = new EventData<FacilityUpgradeProject>("OnKctFacilityUpgradeCancel");
+            OnFacilityUpgradeComplete = new EventData<FacilityUpgradeProject>("OnKctFacilityUpgradeComplete");
+            OnPadConstructionQueued = new EventData<PadConstructionProject, LCLaunchPad>("OnKctPadConstructionQueued");
+            OnPadConstructionCancel = new EventData<PadConstructionProject, LCLaunchPad>("OnKctPadConstructionCancel");
+            OnPadConstructionComplete = new EventData<PadConstructionProject, LCLaunchPad>("OnKctPadConstructionComplete");
+            OnPadDismantled = new EventData<LCLaunchPad>("OnKctPadDismantled");
+            OnLCConstructionQueued = new EventData<LCConstructionProject, LaunchComplex>("OnKctLCConstructionQueued");
+            OnLCConstructionCancel = new EventData<LCConstructionProject, LaunchComplex>("OnKctLCConstructionCancel");
+            OnLCConstructionComplete = new EventData<LCConstructionProject, LaunchComplex>("OnKctLCConstructionComplete");
+            OnLCDismantled = new EventData<LaunchComplex>("OnKctLCDismantled");
             OnPersonnelChange = new EventVoid("OnKctPesonnelChange");
             OnRecalculateBuildRates = new EventVoid("OnKctRecalculateBuildRates");
 
@@ -268,7 +268,7 @@ namespace RP0
                     if (dataModule != null && dataModule.Data.FacilityBuiltIn == EditorFacility.VAB && !dataModule.Data.HasStartedReconditioning)
                     {
                         string launchSite = FlightDriver.LaunchSiteName;
-                        LCItem lc = KerbalConstructionTimeData.Instance.FindLCFromID(dataModule.Data.LCID);
+                        LaunchComplex lc = KerbalConstructionTimeData.Instance.FindLCFromID(dataModule.Data.LCID);
                         if (lc != null)
                         {
                             if (lc.LCType == LaunchComplexType.Pad && lc.ActiveLPInstance != null
@@ -276,7 +276,7 @@ namespace RP0
                             {
                                 launchSite = lc.ActiveLPInstance.name;
                             }
-                            lc.Recon_Rollout.Add(new ReconRollout(ev.host, ReconRollout.RolloutReconType.Reconditioning, ev.host.id.ToString(), launchSite, lc));
+                            lc.Recon_Rollout.Add(new ReconRolloutProject(ev.host, ReconRolloutProject.RolloutReconType.Reconditioning, ev.host.id.ToString(), launchSite, lc));
                             dataModule.Data.HasStartedReconditioning = true;
                         }
                     }
@@ -291,13 +291,13 @@ namespace RP0
 
             RP0Debug.Log($"VesselRecoverEvent for {v.vesselName}");
 
-            LCItem targetLC = KerbalConstructionTimeData.Instance.RecoveredVessel.LC;
+            LaunchComplex targetLC = KerbalConstructionTimeData.Instance.RecoveredVessel.LC;
             if (targetLC == null)
                 targetLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             targetLC.Warehouse.Add(KerbalConstructionTimeData.Instance.RecoveredVessel);
-            targetLC.Recon_Rollout.Add(new ReconRollout(KerbalConstructionTimeData.Instance.RecoveredVessel, ReconRollout.RolloutReconType.Recovery, KerbalConstructionTimeData.Instance.RecoveredVessel.shipID.ToString()));
-            KerbalConstructionTimeData.Instance.RecoveredVessel = new BuildListVessel();
+            targetLC.Recon_Rollout.Add(new ReconRolloutProject(KerbalConstructionTimeData.Instance.RecoveredVessel, ReconRolloutProject.RolloutReconType.Recovery, KerbalConstructionTimeData.Instance.RecoveredVessel.shipID.ToString()));
+            KerbalConstructionTimeData.Instance.RecoveredVessel = new VesselProject();
         }
 
         public void OnExitAdmin()

@@ -39,7 +39,7 @@ namespace RP0.Programs
         public static List<Program> Programs { get; private set; }
         public static Dictionary<string, Program> ProgramDict { get; private set; }
 
-        private static Dictionary<string, System.Type> programStrategies = new Dictionary<string, System.Type>();
+        private static Dictionary<string, Type> programStrategies = new Dictionary<string, Type>();
         private static AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
                     new AssemblyName("RP0ProgramsDynamic"), AssemblyBuilderAccess.Run);
         private static ModuleBuilder moduleBuilder = assemblyBuilder.DefineDynamicModule("RP0ProgramsDynamicModule");

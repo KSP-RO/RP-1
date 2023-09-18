@@ -5,14 +5,14 @@ using KSP.Localization;
 
 namespace RP0.Harmony
 {
-    [HarmonyPatch(typeof(Strategies.Strategy))]
+    [HarmonyPatch(typeof(Strategy))]
     internal class PatchStrategy
     {
         // Fix SetupConfig to fire an OnSetupConfig after completion
         // if the StrategyConfig is a StrategyConfigRP0
         [HarmonyPostfix]
         [HarmonyPatch("SetupConfig")]
-        internal static void Postfix_SetupConfig(Strategies.Strategy __instance)
+        internal static void Postfix_SetupConfig(Strategy __instance)
         {
             if (__instance is StrategyRP0 s)
                 s.OnSetupConfig();
@@ -21,7 +21,7 @@ namespace RP0.Harmony
         // Add one more test and reason string to CanBeDeactivated to support Programs
         [HarmonyPostfix]
         [HarmonyPatch("CanBeDeactivated")]
-        internal static void Postfix_CanBeDeactivated(Strategies.Strategy __instance, ref string reason, bool __result)
+        internal static void Postfix_CanBeDeactivated(Strategy __instance, ref string reason, bool __result)
         {
             if (__instance is ProgramStrategy && __result)
             {
@@ -64,7 +64,7 @@ namespace RP0.Harmony
         // set the number of active strategies to 0, and then reset it after CanBeActivated finishes.
         [HarmonyPrefix]
         [HarmonyPatch("CanBeActivated")]
-        internal static void Prefix_CanBeActivated(Strategies.Strategy __instance)
+        internal static void Prefix_CanBeActivated(Strategy __instance)
         {
             if (KSP.UI.Screens.Administration.Instance != null)
                 KSP.UI.Screens.Administration.Instance.activeStrategyCount = 0;

@@ -54,14 +54,14 @@ namespace RP0
             SetResources();
         }
 
-        private static void SetFieldsFromLC(LCItem LC)
+        private static void SetFieldsFromLC(LaunchComplex LC)
         {
             _newLCData.SetFrom(LC);
             SetStrings();
             SetResources();
         }
 
-        private static void SetFieldsFromVessel(BuildListVessel blv, LCItem lc = null)
+        private static void SetFieldsFromVessel(VesselProject blv, LaunchComplex lc = null)
         {
             _newLCData.sizeMax.z = Mathf.Ceil(blv.ShipSize.z * 1.2f);
             _newLCData.sizeMax.x = Mathf.Ceil(blv.ShipSize.x * 1.2f);
@@ -123,7 +123,7 @@ namespace RP0
             SetResources();
         }
 
-        private static void SetFieldsFromVesselKeepOld(BuildListVessel blv, LCItem lc)
+        private static void SetFieldsFromVesselKeepOld(VesselProject blv, LaunchComplex lc)
         {
             if (lc == null)
             {
@@ -199,7 +199,7 @@ namespace RP0
 
         public static void DrawNewLCWindow(int windowID)
         {
-            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             double oldVABCost = 0, oldPadCost = 0, oldResCost = 0, lpMult = 1;
 
             bool isModify = GUIStates.ShowModifyLC;
@@ -419,12 +419,12 @@ namespace RP0
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Max Engineers:", GUILayout.ExpandWidth(false));
-                GUILayout.Label($"{LCItem.MaxEngineersCalc(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated):N0}", GetLabelRightAlignStyle());
+                GUILayout.Label($"{LaunchComplex.MaxEngineersCalc(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated):N0}", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
                 GUILayout.Label(" ");
 
-                double buildTime = ConstructionBuildItem.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
+                double buildTime = ConstructionProject.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
                 double buildCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -totalCost);
                 string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
                 string costString = isModify ? "Renovate Cost:" : "Build Cost:";
@@ -546,7 +546,7 @@ namespace RP0
 
         private static void ProcessNewLC(bool isModify, double curPadCost, double totalCost, double oldTotalCost)
         {
-            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             if (isModify && ModifyFailure(out string failedVessels))
             {
@@ -570,13 +570,13 @@ namespace RP0
                     if (isModify)
                         activeLC.Modify(_newLCData, Guid.NewGuid());
                     else
-                        KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Add(new LCItem(_newLCData, KerbalConstructionTimeData.Instance.ActiveKSC));
+                        KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Add(new LaunchComplex(_newLCData, KerbalConstructionTimeData.Instance.ActiveKSC));
                 }
                 else
                 {
                     RP0Debug.Log($"Building/Modifying launch complex {_newLCData.Name}");
-                    LCItem lc;
-                    int engineers = isModify ? activeLC.Engineers : LCItem.MaxEngineersCalc(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated);
+                    LaunchComplex lc;
+                    int engineers = isModify ? activeLC.Engineers : LaunchComplex.MaxEngineersCalc(_newLCData.massMax, _newLCData.sizeMax, _newLCData.isHumanRated);
                     if (isModify)
                     {
                         lc = activeLC;
@@ -594,14 +594,14 @@ namespace RP0
                     }
                     else
                     {
-                        lc = new LCItem(_newLCData, KerbalConstructionTimeData.Instance.ActiveKSC);
+                        lc = new LaunchComplex(_newLCData, KerbalConstructionTimeData.Instance.ActiveKSC);
                         lc.IsOperational = false;
                         KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Add(lc);
                     }
 
                     var modData = new LCData();
                     modData.SetFrom(_newLCData);
-                    var lcConstr = new LCConstruction
+                    var lcConstr = new LCConstructionProject
                     {
                         lcID = lc.ID,
                         cost = totalCost,
@@ -760,7 +760,7 @@ namespace RP0
         private static bool ModifyFailure(out string failedVessels)
         {
             failedVessels = string.Empty;
-            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             foreach (var blv in activeLC.BuildList)
             {
                 if (!blv.MeetsFacilityRequirements(_newLCData, null))
@@ -775,7 +775,7 @@ namespace RP0
             return failedVessels != string.Empty;
         }
 
-        private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LCItem lc)
+        private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LaunchComplex lc)
         {
             if (curPadSize == Vector3.zero)
             {

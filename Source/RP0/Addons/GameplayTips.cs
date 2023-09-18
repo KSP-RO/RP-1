@@ -13,7 +13,7 @@ namespace RP0
         private static bool _isInterplanetaryWarningShown;
 
         private bool _subcribedToPAWEvent;
-        private EventData<BuildListVessel> _onKctVesselAddedToBuildQueueEvent;
+        private EventData<VesselProject> _onKctVesselAddedToBuildQueueEvent;
 
         public static GameplayTips Instance { get; private set; }
 
@@ -43,7 +43,7 @@ namespace RP0
             }
             _airlaunchTipShown |= rp0Settings.AirlaunchTipShown;
 
-            _onKctVesselAddedToBuildQueueEvent = GameEvents.FindEvent<EventData<BuildListVessel>>("OnKctVesselAddedToBuildQueue");
+            _onKctVesselAddedToBuildQueueEvent = GameEvents.FindEvent<EventData<VesselProject>>("OnKctVesselAddedToBuildQueue");
             if (_onKctVesselAddedToBuildQueueEvent != null)
             {
                 _onKctVesselAddedToBuildQueueEvent.Add(OnKctVesselAddedToBuildQueue);
@@ -125,7 +125,7 @@ namespace RP0
                                          HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        private void OnKctVesselAddedToBuildQueue(BuildListVessel data)
+        private void OnKctVesselAddedToBuildQueue(VesselProject data)
         {
             if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders) return;
 

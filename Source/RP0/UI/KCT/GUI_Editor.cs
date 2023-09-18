@@ -177,7 +177,7 @@ namespace RP0
 
         private static void RenderEditorLaunchComplexControls()
         {
-            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             bool rightLC = (EditorDriver.editorFacility == EditorFacility.SPH) == (activeLC.LCType == LaunchComplexType.Hangar);
             int lcCount = KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexCountPad;
 
@@ -309,7 +309,7 @@ namespace RP0
 
         private static void RenderEditMode()
         {
-            BuildListVessel editedVessel = KerbalConstructionTimeData.Instance.EditedVessel;
+            VesselProject editedVessel = KerbalConstructionTimeData.Instance.EditedVessel;
             double fullVesselBP = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
             double bpLeaderEffect = KerbalConstructionTime.Instance.EditorVessel.LeaderEffect;
             double effic = editedVessel.LC.Efficiency;
@@ -375,7 +375,7 @@ namespace RP0
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
 
-                KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
+                KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
                 KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = editedVessel.LC.ID; // should already be correct, but just in case.
             }
             GUILayout.EndHorizontal();

@@ -38,30 +38,30 @@ namespace RP0
         [KSPField(isPersistant = true)]
         private PersistentList<LCEfficiency> _lcEfficiencies = new PersistentList<LCEfficiency>();
         public PersistentList<LCEfficiency> LCEfficiencies => _lcEfficiencies;
-        public Dictionary<LCItem, LCEfficiency> LCToEfficiency = new Dictionary<LCItem, LCEfficiency>();
+        public Dictionary<LaunchComplex, LCEfficiency> LCToEfficiency = new Dictionary<LaunchComplex, LCEfficiency>();
 
-        private readonly Dictionary<Guid, LCItem> _LCIDtoLC = new Dictionary<Guid, LCItem>();
-        public LCItem LC(Guid id) => _LCIDtoLC.TryGetValue(id, out var lc) ? lc : null;
-        private readonly Dictionary<Guid, KCT_LaunchPad> _LPIDtoLP = new Dictionary<Guid, KCT_LaunchPad>();
-        public KCT_LaunchPad LP(Guid id) => _LPIDtoLP[id];
+        private readonly Dictionary<Guid, LaunchComplex> _LCIDtoLC = new Dictionary<Guid, LaunchComplex>();
+        public LaunchComplex LC(Guid id) => _LCIDtoLC.TryGetValue(id, out var lc) ? lc : null;
+        private readonly Dictionary<Guid, LCLaunchPad> _LPIDtoLP = new Dictionary<Guid, LCLaunchPad>();
+        public LCLaunchPad LP(Guid id) => _LPIDtoLP[id];
 
         [KSPField(isPersistant = true)]
-        public PersistentObservableList<TechItem> TechList = new PersistentObservableList<TechItem>();
+        public PersistentObservableList<ResearchProject> TechList = new PersistentObservableList<ResearchProject>();
         public bool TechIgnoreUpdates = false;
 
         [KSPField(isPersistant = true)]
-        public PersistentSortedListValueTypeKey<string, BuildListVessel> BuildPlans = new PersistentSortedListValueTypeKey<string, BuildListVessel>();
+        public PersistentSortedListValueTypeKey<string, VesselProject> BuildPlans = new PersistentSortedListValueTypeKey<string, VesselProject>();
 
         [KSPField(isPersistant = true)]
-        public PersistentList<KSCItem> KSCs = new PersistentList<KSCItem>();
-        public KSCItem ActiveKSC = null;
+        public PersistentList<SpaceCenter> KSCs = new PersistentList<SpaceCenter>();
+        public SpaceCenter ActiveKSC = null;
 
         [KSPField(isPersistant = true)]
-        public BuildListVessel LaunchedVessel = new BuildListVessel();
+        public VesselProject LaunchedVessel = new VesselProject();
         [KSPField(isPersistant = true)]
-        public BuildListVessel EditedVessel = new BuildListVessel();
+        public VesselProject EditedVessel = new VesselProject();
         [KSPField(isPersistant = true)]
-        public BuildListVessel RecoveredVessel = new BuildListVessel();
+        public VesselProject RecoveredVessel = new VesselProject();
 
         [KSPField(isPersistant = true)]
         public PersistentList<PartCrewAssignment> LaunchedCrew = new PersistentList<PartCrewAssignment>();
@@ -70,10 +70,10 @@ namespace RP0
         public AirlaunchParams AirlaunchParams = new AirlaunchParams();
 
         [KSPField(isPersistant = true)]
-        public FundTarget fundTarget = new FundTarget();
+        public FundTargetProject fundTarget = new FundTargetProject();
 
         public bool MergingAvailable;
-        public List<BuildListVessel> MergedVessels = new List<BuildListVessel>();
+        public List<VesselProject> MergedVessels = new List<VesselProject>();
 
         public bool VesselErrorAlerted = false;
 
@@ -182,7 +182,7 @@ namespace RP0
                 // Prune bad or inactive KSCs.
                 for (int i = KSCs.Count; i-- > 0;)
                 {
-                    KSCItem ksc = KSCs[i];
+                    SpaceCenter ksc = KSCs[i];
                     if (ksc.KSCName == null || ksc.KSCName.Length == 0 || (ksc.IsEmpty && ksc != ActiveKSC))
                         KSCs.RemoveAt(i);
                 }
@@ -224,7 +224,7 @@ namespace RP0
 
         private void TryMigrateStockKSC()
         {
-            KSCItem stockKsc = KSCs.Find(k => string.Equals(k.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
+            SpaceCenter stockKsc = KSCs.Find(k => string.Equals(k.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
             if (KSCs.Count == 1)
             {
                 // Rename the stock KSC to the new default (Cape)
@@ -245,7 +245,7 @@ namespace RP0
             if (numOtherUsedKSCs == 0)
             {
                 string kscName = GetActiveRSSKSC() ?? _defaultKscId;
-                KSCItem newDefault = KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
+                SpaceCenter newDefault = KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
                 if (newDefault != null)
                 {
                     // Stock KSC isn't empty but the new default one is - safe to rename the stock and remove the old default item
@@ -302,22 +302,22 @@ namespace RP0
             Harmony.PatchRDTechTree.Instance?.RefreshUI();
         }
 
-        public void RegisterLC(LCItem lc)
+        public void RegisterLC(LaunchComplex lc)
         {
             _LCIDtoLC[lc.ID] = lc;
         }
 
-        public bool UnregisterLC(LCItem lc)
+        public bool UnregisterLC(LaunchComplex lc)
         {
             return _LCIDtoLC.Remove(lc.ID);
         }
 
-        public void RegisterLP(KCT_LaunchPad lp)
+        public void RegisterLP(LCLaunchPad lp)
         {
             _LPIDtoLP[lp.id] = lp;
         }
 
-        public bool UnregsiterLP(KCT_LaunchPad lp)
+        public bool UnregsiterLP(LCLaunchPad lp)
         {
             return _LPIDtoLP.Remove(lp.id);
         }
@@ -394,10 +394,10 @@ namespace RP0
             if (ActiveKSC == null || site != ActiveKSC.KSCName)
             {
                 RP0Debug.Log($"Setting active site to {site}");
-                KSCItem newKsc = KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
+                SpaceCenter newKsc = KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
                 if (newKsc == null)
                 {
-                    newKsc = new KSCItem(site);
+                    newKsc = new SpaceCenter(site);
                     newKsc.EnsureStartingLaunchComplexes();
                     KSCs.Add(newKsc);
                 }
@@ -406,7 +406,7 @@ namespace RP0
             }
         }
 
-        public void SetActiveKSC(KSCItem ksc)
+        public void SetActiveKSC(SpaceCenter ksc)
         {
             if (ksc == null || ksc == ActiveKSC)
                 return;
@@ -425,7 +425,7 @@ namespace RP0
 
             for (int i = TechList.Count; i-- > 0;)
             {
-                TechItem tech = TechList[i];
+                ResearchProject tech = TechList[i];
                 tech.UpdateBuildRate(i);
             }
 
@@ -434,14 +434,14 @@ namespace RP0
             KCTEvents.OnRecalculateBuildRates.Fire();
         }
 
-        public LCItem FindLCFromID(System.Guid guid)
+        public LaunchComplex FindLCFromID(Guid guid)
         {
             return LC(guid);
         }
 
         #region Budget
 
-        public double GetEffectiveIntegrationEngineersForSalary(KSCItem ksc)
+        public double GetEffectiveIntegrationEngineersForSalary(SpaceCenter ksc)
         {
             double engineers = 0d;
             foreach (var lc in ksc.LaunchComplexes)
@@ -449,9 +449,9 @@ namespace RP0
             return engineers + ksc.UnassignedEngineers * Database.SettingsSC.IdleSalaryMult;
         }
 
-        public double GetEffectiveEngineersForSalary(KSCItem ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
+        public double GetEffectiveEngineersForSalary(SpaceCenter ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
 
-        public double GetEffectiveEngineersForSalary(LCItem lc)
+        public double GetEffectiveEngineersForSalary(LaunchComplex lc)
         {
             if (lc.IsOperational && lc.Engineers > 0)
             {
@@ -492,7 +492,7 @@ namespace RP0
             return delta;
         }
 
-        public double GetConstructionCostOverTime(double time, KSCItem ksc)
+        public double GetConstructionCostOverTime(double time, SpaceCenter ksc)
         {
             double delta = 0;
             foreach (var c in ksc.Constructions)
@@ -524,7 +524,7 @@ namespace RP0
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, KSCItem ksc)
+        public double GetRolloutCostOverTime(double time, SpaceCenter ksc)
         {
             double delta = 0;
             for (int i = 1; i < ksc.LaunchComplexes.Count; ++i)
@@ -533,12 +533,12 @@ namespace RP0
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, LCItem lc)
+        public double GetRolloutCostOverTime(double time, LaunchComplex lc)
         {
             double delta = 0;
             foreach (var rr in lc.Recon_Rollout)
             {
-                if (rr.RRType != ReconRollout.RolloutReconType.Rollout)
+                if (rr.RRType != ReconRolloutProject.RolloutReconType.Rollout)
                     continue;
 
                 double t = rr.GetTimeLeft();
@@ -562,12 +562,12 @@ namespace RP0
             return delta;
         }
 
-        public double GetAirlaunchCostOverTime(double time, KSCItem ksc)
+        public double GetAirlaunchCostOverTime(double time, SpaceCenter ksc)
         {
             double delta = 0;
             foreach (var al in ksc.Hangar.Airlaunch_Prep)
             {
-                if (al.direction == AirlaunchPrep.PrepDirection.Mount)
+                if (al.direction == AirlaunchProject.PrepDirection.Mount)
                 {
                     double t = al.GetTimeLeft();
                     double fac = 1d;

@@ -35,7 +35,7 @@ namespace RP0
             return Math.Max(bp, minDays);
         }
 
-        public static double GetVesselBuildRate(int index, LCItem LC, bool isHumanRatedCapped, int persDelta)
+        public static double GetVesselBuildRate(int index, LaunchComplex LC, bool isHumanRatedCapped, int persDelta)
         {
             if (index > 0 || !LC.IsOperational)
                 return 0d;
@@ -48,10 +48,10 @@ namespace RP0
             return personnel * _EngineerBPRate * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
         }
 
-        public static double GetConstructionBuildRate(int index, KSCItem KSC, SpaceCenterFacility facilityType)
+        public static double GetConstructionBuildRate(int index, SpaceCenter KSC, SpaceCenterFacility facilityType)
         {
             double rate = 1d / 86400d;
-            RP0.TransactionReasonsRP0 reason = facilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction;
+            TransactionReasonsRP0 reason = facilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction;
             return rate * CurrencyUtils.Rate(reason) * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
         }
 
@@ -84,12 +84,12 @@ namespace RP0
             return finalBP;
         }
 
-        public static double GetRolloutCost(BuildListVessel vessel)
+        public static double GetRolloutCost(VesselProject vessel)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            LCItem vLC = vessel.LC;
+            LaunchComplex vLC = vessel.LC;
             if (vLC == null)
                 vLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
@@ -105,13 +105,13 @@ namespace RP0
             return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
         }
 
-        public static double GetIntegrationCost(BuildListVessel vessel)
+        public static double GetIntegrationCost(VesselProject vessel)
         {
             // set to 0 -- handled by salaries
             return 0d;
         }
 
-        public static double GetIntegrationBP(BuildListVessel vessel, List<BuildListVessel> mergedVessels = null)
+        public static double GetIntegrationBP(VesselProject vessel, List<VesselProject> mergedVessels = null)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0d;
@@ -125,7 +125,7 @@ namespace RP0
             return BP;
         }
 
-        public static double GetAirlaunchCost(BuildListVessel vessel)
+        public static double GetAirlaunchCost(VesselProject vessel)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
@@ -134,7 +134,7 @@ namespace RP0
             return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetAirlaunchBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
         }
 
-        public static double GetAirlaunchBP(BuildListVessel vessel)
+        public static double GetAirlaunchBP(VesselProject vessel)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
@@ -150,7 +150,7 @@ namespace RP0
             return 0.5d * (1 + runFactor);
         }
 
-        public static double GetRolloutBP(BuildListVessel vessel)
+        public static double GetRolloutBP(VesselProject vessel)
         {
             double costDeltaHighPow;
             double costDelta = vessel.effectiveCost - vessel.cost;
@@ -169,12 +169,12 @@ namespace RP0
 
         }
 
-        public static double GetReconditioningBP(BuildListVessel vessel)
+        public static double GetReconditioningBP(VesselProject vessel)
         {
             return vessel.buildPoints * 0.01d + Math.Max(1, vessel.GetTotalMass() - 20d) * 2000d;
         }
 
-        public static double GetRecoveryBPSPH(BuildListVessel vessel)
+        public static double GetRecoveryBPSPH(VesselProject vessel)
         {
             double costDeltaHighPow;
             double costDelta = vessel.effectiveCost - vessel.cost;
@@ -193,7 +193,7 @@ namespace RP0
             return bp * 2.15d;
         }
 
-        public static double GetRecoveryBPVAB(BuildListVessel vessel)
+        public static double GetRecoveryBPVAB(VesselProject vessel)
         {
             double costDeltaHighPow;
             double costDelta = vessel.effectiveCost - vessel.cost;

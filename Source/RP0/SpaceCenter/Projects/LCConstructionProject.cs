@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RP0
 {
-    public class LCConstruction : ConstructionBuildItem
+    public class LCConstructionProject : ConstructionProject
     {
         [Persistent]
         public bool isModify = false;
@@ -21,7 +21,7 @@ namespace RP0
         public int engineersToReadd = 0;
 
 
-        public LCConstruction()
+        public LCConstructionProject()
         {
         }
 
@@ -34,7 +34,7 @@ namespace RP0
         {
             if (!KCTGameStates.ErroredDuringOnLoad)
             {
-                LCItem lc = KSC.LaunchComplexes.Find(l => l.ID == lcID);
+                LaunchComplex lc = KSC.LaunchComplexes.Find(l => l.ID == lcID);
                 lc.IsOperational = true;
                 upgradeProcessed = true;
                 if (isModify)
@@ -56,7 +56,7 @@ namespace RP0
         protected override void ProcessCancel()
         {
             int index = -1;
-            LCItem lc = null;
+            LaunchComplex lc = null;
             for (int i = 0; i < KSC.LaunchComplexes.Count; ++i)
             {
                 lc = KSC.LaunchComplexes[i];
@@ -104,7 +104,7 @@ namespace RP0
             KSC.RecalculateBuildRates(false);
         }
 
-        private void ReassignEngineers(LCItem lc)
+        private void ReassignEngineers(LaunchComplex lc)
         {
             if (engineersToReadd == 0)
                 return;

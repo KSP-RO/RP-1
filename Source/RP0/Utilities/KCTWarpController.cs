@@ -13,11 +13,11 @@ namespace RP0
         private int desiredWarpRate = 0;
         private bool warping = false;
         private bool isNextThing = false;
-        internal IKCTBuildItem warpTarget;
+        internal ISpaceCenterProject warpTarget;
         public static KCTWarpController Instance { get; private set; } = null;
         private static GameObject go = null;
 
-        public static void Create(IKCTBuildItem warpTarget)
+        public static void Create(ISpaceCenterProject warpTarget)
         {
             if (go is GameObject)
                 go.DestroyGameObject();
@@ -139,7 +139,7 @@ namespace RP0
             Profiler.EndSample();
         }
 
-        private int RampUpWarp(IKCTBuildItem item)
+        private int RampUpWarp(ISpaceCenterProject item)
         {
             int newRate = TimeWarp.CurrentRateIndex;
             double timeLeft = item.GetTimeLeft();

@@ -7,7 +7,7 @@ namespace RP0
     {
         public static void DrawDismantlePadWindow(int windowID)
         {
-            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             bool isLC = GUIStates.ShowDismantleLC;
             GUILayout.BeginVertical();
             GUILayout.Label("Are you sure you want to dismantle the currently selected " + 
@@ -38,7 +38,7 @@ namespace RP0
 
         private static void TryDismantleLCorPad(bool isLC)
         {
-            LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             if (isLC)
             {
                 if (activeLC.LCType == LaunchComplexType.Hangar)
@@ -54,7 +54,7 @@ namespace RP0
 
                 for (int i = activeLC.LaunchPads.Count - 1; i >= 0; --i)
                 {
-                    KCT_LaunchPad lpToDel = activeLC.LaunchPads[i];
+                    LCLaunchPad lpToDel = activeLC.LaunchPads[i];
                     if (!lpToDel.Delete(out string err))
                     {
                         ScreenMessages.PostScreenMessage($"Dismantle failed dismantling pad {lpToDel.name}: {err}", 5f, ScreenMessageStyle.UPPER_CENTER);
@@ -65,7 +65,7 @@ namespace RP0
                 {
                     KCTUtilities.ScrapVessel(activeLC.Warehouse[i]);
                 }
-                KSCItem ksc = activeLC.KSC;
+                SpaceCenter ksc = activeLC.KSC;
                 ksc.SwitchToPrevLaunchComplex();
                 activeLC.Delete();
 
@@ -82,7 +82,7 @@ namespace RP0
             {
                 if (activeLC.LaunchPadCount < 2) return;
 
-                KCT_LaunchPad lpToDel = activeLC.ActiveLPInstance;
+                LCLaunchPad lpToDel = activeLC.ActiveLPInstance;
                 if (!lpToDel.Delete(out string err))
                 {
                     ScreenMessages.PostScreenMessage("Dismantle failed: " + err, 5f, ScreenMessageStyle.UPPER_CENTER);

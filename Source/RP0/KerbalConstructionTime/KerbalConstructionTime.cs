@@ -35,7 +35,7 @@ namespace RP0
         private const float YEAR_MULT_TIME_INTERVAL = 86400 * 7;
 
         // Editor fields
-        public BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
+        public VesselProject EditorVessel = new VesselProject("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
         public Guid PreEditorSwapLCID = Guid.Empty;
         public bool IsLaunchSiteControllerDisabled;
 
@@ -240,7 +240,7 @@ namespace RP0
         {
             if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.situation != Vessel.Situations.PRELAUNCH) return;
 
-            BuildListVessel blv = KerbalConstructionTimeData.Instance.LaunchedVessel;
+            VesselProject blv = KerbalConstructionTimeData.Instance.LaunchedVessel;
             var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
             if (dataModule != null)
             {
@@ -268,7 +268,7 @@ namespace RP0
             // This only fires the first time because we clear the BLV afterwards.
             if (blv.IsValid)
             {
-                LCItem vesselLC = blv.LC;
+                LaunchComplex vesselLC = blv.LC;
                 RP0Debug.Log("Attempting to remove launched vessel from build list");
                 if (blv.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
                 {
@@ -276,13 +276,13 @@ namespace RP0
                     FlightGlobals.ActiveVessel.vesselName = blv.shipName;
                 }
                 if (vesselLC == null) vesselLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
-                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is ReconRollout rollout)
+                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is ReconRolloutProject rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
 
-                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is AirlaunchPrep alPrep)
+                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is AirlaunchProject alPrep)
                     vesselLC.Airlaunch_Prep.Remove(alPrep);
 
-                KerbalConstructionTimeData.Instance.LaunchedVessel = new BuildListVessel();
+                KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject();
             }
 
             var alParams = KerbalConstructionTimeData.Instance.AirlaunchParams;
@@ -472,11 +472,11 @@ namespace RP0
             if (HighLogic.LoadedScene != GameScenes.SPACECENTER || !KCTUtilities.CurrentGameIsCareer())
                 yield break;
 
-            FacilityUpgrade.UpgradeLockedFacilities();
+            FacilityUpgradeProject.UpgradeLockedFacilities();
 
             while (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
-                if (KerbalConstructionTimeData.Instance?.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance is KCT_LaunchPad pad)
+                if (KerbalConstructionTimeData.Instance?.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance is LCLaunchPad pad)
                 {
                     if (KCTUtilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
                     {
@@ -607,13 +607,13 @@ namespace RP0
                 int rushingEngs = 0;
 
                 int totalEngineers = 0;
-                foreach (KSCItem ksc in KerbalConstructionTimeData.Instance.KSCs)
+                foreach (SpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
                 {
                     totalEngineers += ksc.Engineers;
 
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {
-                        LCItem currentLC = ksc.LaunchComplexes[j];
+                        LaunchComplex currentLC = ksc.LaunchComplexes[j];
                         if (!currentLC.IsOperational || currentLC.Engineers == 0 || !currentLC.IsActive)
                             continue;
 
@@ -643,21 +643,21 @@ namespace RP0
                             rr.IncrementProgress(UTDiff);
                             //Reset the associated launchpad id when rollback completes
                             Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindBLVesselByID");
-                            if (rr.RRType == ReconRollout.RolloutReconType.Rollback && rr.IsComplete()
-                                && KCTUtilities.FindBLVesselByID(rr.LC, new Guid(rr.associatedID)) is BuildListVessel blv)
+                            if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollback && rr.IsComplete()
+                                && KCTUtilities.FindBLVesselByID(rr.LC, new Guid(rr.associatedID)) is VesselProject blv)
                             {
                                 blv.launchSiteIndex = -1;
                             }
                             Profiler.EndSample();
                         }
 
-                        currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRollout.RolloutReconType.Rollout && rr.IsComplete());
+                        currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.IsComplete());
                         
                         // These also are in parallel
                         for (int i = currentLC.Airlaunch_Prep.Count; i-- > 0;)
                             currentLC.Airlaunch_Prep[i].IncrementProgress(UTDiff);
 
-                        currentLC.Airlaunch_Prep.RemoveAll(ap => ap.direction != AirlaunchPrep.PrepDirection.Mount && ap.IsComplete());
+                        currentLC.Airlaunch_Prep.RemoveAll(ap => ap.direction != AirlaunchProject.PrepDirection.Mount && ap.IsComplete());
                     }
 
                     for (int i = ksc.Constructions.Count; i-- > 0;)
@@ -719,12 +719,12 @@ namespace RP0
             //check that all parts are valid in all ships. If not, warn the user and disable that vessel (once that code is written)
             if (!KCTGameStates.VesselErrorAlerted)
             {
-                var erroredVessels = new List<BuildListVessel>();
-                foreach (KSCItem KSC in KerbalConstructionTimeData.Instance.KSCs) //this is faster on subsequent scene changes
+                var erroredVessels = new List<VesselProject>();
+                foreach (SpaceCenter KSC in KerbalConstructionTimeData.Instance.KSCs) //this is faster on subsequent scene changes
                 {
-                    foreach (LCItem currentLC in KSC.LaunchComplexes)
+                    foreach (LaunchComplex currentLC in KSC.LaunchComplexes)
                     {
-                        foreach (BuildListVessel blv in currentLC.BuildList)
+                        foreach (VesselProject blv in currentLC.BuildList)
                         {
                             if (!blv.AllPartsValid)
                             {
@@ -732,7 +732,7 @@ namespace RP0
                                 erroredVessels.Add(blv);
                             }
                         }
-                        foreach (BuildListVessel blv in currentLC.Warehouse)
+                        foreach (VesselProject blv in currentLC.Warehouse)
                         {
                             if (!blv.AllPartsValid)
                             {
@@ -864,13 +864,13 @@ namespace RP0
             Planetarium.SetUniversalTime(targetUT);
         }
 
-        public static void PopUpVesselError(List<BuildListVessel> errored)
+        public static void PopUpVesselError(List<VesselProject> errored)
         {
             DialogGUIBase[] options = new DialogGUIBase[2];
             options[0] = new DialogGUIButton("Understood", () => { });
             options[1] = new DialogGUIButton("Delete Vessels", () =>
             {
-                foreach (BuildListVessel blv in errored)
+                foreach (VesselProject blv in errored)
                 {
                     blv.RemoveFromBuildList(out _);
                     KCTUtilities.AddFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
@@ -880,7 +880,7 @@ namespace RP0
 
             string txt = "The following stored/building vessels contain missing or invalid parts and have been quarantined. Either add the missing parts back into your game or delete the vessels. A file containing the ship names and missing parts has been added to your save folder.\n";
             string txtToWrite = "";
-            foreach (BuildListVessel blv in errored)
+            foreach (VesselProject blv in errored)
             {
                 txt += blv.shipName + "\n";
                 txtToWrite += blv.shipName + "\n";
@@ -893,16 +893,16 @@ namespace RP0
             File.WriteAllText(filename, txtToWrite);
 
             //remove all rollout and recon items since they're invalid without the ships
-            foreach (BuildListVessel blv in errored)
+            foreach (VesselProject blv in errored)
             {
                 //remove any associated recon_rollout
-                foreach (KSCItem ksc in KerbalConstructionTimeData.Instance.KSCs)
+                foreach (SpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
                 {
-                    foreach (LCItem currentLC in ksc.LaunchComplexes)
+                    foreach (LaunchComplex currentLC in ksc.LaunchComplexes)
                     {
                         for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
                         {
-                            ReconRollout rr = currentLC.Recon_Rollout[i];
+                            ReconRolloutProject rr = currentLC.Recon_Rollout[i];
                             if (rr.associatedID == blv.shipID.ToString())
                             {
                                 currentLC.Recon_Rollout.Remove(rr);
@@ -912,7 +912,7 @@ namespace RP0
 
                         for (int i = 0; i < currentLC.Airlaunch_Prep.Count; i++)
                         {
-                            AirlaunchPrep ap = currentLC.Airlaunch_Prep[i];
+                            AirlaunchProject ap = currentLC.Airlaunch_Prep[i];
                             if (ap.associatedID == blv.shipID.ToString())
                             {
                                 currentLC.Airlaunch_Prep.Remove(ap);
@@ -966,7 +966,7 @@ namespace RP0
                 return;
             }
 
-            if (!KCTUtilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.VAB))
+            if (!KCTUtilities.RecoverActiveVesselToStorage(VesselProject.ListType.VAB))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
@@ -980,7 +980,7 @@ namespace RP0
                 return;
             }
 
-            if (!KCTUtilities.RecoverActiveVesselToStorage(BuildListVessel.ListType.SPH))
+            if (!KCTUtilities.RecoverActiveVesselToStorage(VesselProject.ListType.SPH))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "recoverShipErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
             }

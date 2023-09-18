@@ -433,7 +433,7 @@ namespace RP0
         }
     }
 
-    [System.Flags]
+    [Flags]
     public enum TransactionReasonsRP0 : long
     {
         None = 0,

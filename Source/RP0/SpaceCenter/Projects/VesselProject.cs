@@ -8,7 +8,7 @@ using UnityEngine.Profiling;
 
 namespace RP0
 {
-    public class BuildListVessel : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
+    public class VesselProject : ConfigNodePersistenceBase, ISpaceCenterProject, IConfigNode
     {
         public enum ClampsState
         {
@@ -126,7 +126,7 @@ namespace RP0
 
         public bool IsFinished => progress >= buildPoints + integrationPoints;
 
-        public KSCItem KSC
+        public SpaceCenter KSC
         {
             get
             {
@@ -155,8 +155,8 @@ namespace RP0
             }
         }
 
-        private LCItem _lc = null;
-        public LCItem LC
+        private LaunchComplex _lc = null;
+        public LaunchComplex LC
         {
             get
             {
@@ -192,9 +192,9 @@ namespace RP0
         /// </summary>
         public List<string> desiredManifest { set; get; } = new List<string>();
 
-        public BuildListVessel() { }
+        public VesselProject() { }
 
-        public BuildListVessel(ShipConstruct s, string ls, string flagURL, bool storeConstruct)
+        public VesselProject(ShipConstruct s, string ls, string flagURL, bool storeConstruct)
         {
             Profiler.BeginSample("RP0BuildListVessel ctor");
             _ship = s;
@@ -277,7 +277,7 @@ namespace RP0
             Profiler.EndSample();
         }
 
-        public BuildListVessel(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, EditorFacility editorFacility, bool isHuman)
+        public VesselProject(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, EditorFacility editorFacility, bool isHuman)
         {
             launchSite = ls;
             shipName = name;
@@ -299,7 +299,7 @@ namespace RP0
         /// </summary>
         /// <param name="vessel"></param>
         /// <param name="listType"></param>
-        public BuildListVessel(Vessel vessel, ListType listType)
+        public VesselProject(Vessel vessel, ListType listType)
         {
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
@@ -345,7 +345,7 @@ namespace RP0
             buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
             flag = HighLogic.CurrentGame.flagURL;
 
-            kscDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
+            kscDistance = (float)global::SpaceCenter.Instance.GreatCircleDistance(global::SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
 
             integrationPoints = Formula.GetIntegrationBP(this);
             integrationCost = (float)Formula.GetIntegrationCost(this);
@@ -481,9 +481,9 @@ namespace RP0
                 SanitizeNode(partName, node, templates);
         }
 
-        public BuildListVessel CreateCopy()
+        public VesselProject CreateCopy()
         {
-            BuildListVessel ret = new BuildListVessel(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated);
+            VesselProject ret = new VesselProject(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated);
             ret._lc = _lc;
             ret._lcID = _lcID;
             ret.globalTags = globalTags.Clone() as PersistentHashSetValueType<string>;
@@ -556,7 +556,7 @@ namespace RP0
         {
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
-            LCItem lc = KerbalConstructionTimeData.Instance.FindLCFromID(_lcID);
+            LaunchComplex lc = KerbalConstructionTimeData.Instance.FindLCFromID(_lcID);
             if (lc == null)
                 lc = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             else
@@ -573,7 +573,7 @@ namespace RP0
                 if (launchSiteIndex >= 0)
                     lc.SwitchLaunchPad(launchSiteIndex);
 
-                KCT_LaunchPad pad = lc.ActiveLPInstance;
+                LCLaunchPad pad = lc.ActiveLPInstance;
                 
                 launchSiteName = pad.launchSiteName;
             }
@@ -614,7 +614,7 @@ namespace RP0
         public bool MeetsFacilityRequirements(List<string> failedReasons)
         {
             // Use blv's existing LC if available, else use active complex
-            LCItem selectedLC;
+            LaunchComplex selectedLC;
             if (LC == null)
             {
                 selectedLC = Type == ListType.VAB ? KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance : KerbalConstructionTimeData.Instance.ActiveKSC.Hangar;
@@ -855,7 +855,7 @@ namespace RP0
 
                 for (int i = _lc.Warehouse.Count; i-- > 0;)
                 {
-                    BuildListVessel blv = _lc.Warehouse[i];
+                    VesselProject blv = _lc.Warehouse[i];
                     if (blv.shipID == shipID)
                     {
                         RP0Debug.Log("Ship found in Warehouse list. Removing...");
@@ -869,7 +869,7 @@ namespace RP0
                 {
                     for (int i = _lc.BuildList.Count; i-- > 0;)
                     {
-                        BuildListVessel blv = _lc.BuildList[i];
+                        VesselProject blv = _lc.BuildList[i];
                         if (blv.shipID == shipID)
                         {
                             RP0Debug.Log("Ship found in BuildList. Removing...");
@@ -1368,7 +1368,7 @@ namespace RP0
             return sc;
         }
 
-        public void LinkToLC(LCItem lc)
+        public void LinkToLC(LaunchComplex lc)
         {
             LC = lc;
             if (lc == null)

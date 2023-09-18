@@ -47,7 +47,7 @@ namespace RP0
         public static void ClearVesselEditMode()
         {
             EditorShipEditingMode = false;
-            KerbalConstructionTimeData.Instance.EditedVessel = new BuildListVessel();
+            KerbalConstructionTimeData.Instance.EditedVessel = new VesselProject();
             KerbalConstructionTimeData.Instance.MergedVessels.Clear();
 
             InputLockManager.RemoveControlLock("KCTEditExit");

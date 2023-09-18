@@ -45,7 +45,7 @@ namespace RP0
             return $"{TechRequired};Alt:{MaxAltitude};Vel:{MaxVelocity}";
         }
 
-        public bool CanLaunchVessel(BuildListVessel vessel, out string reason)
+        public bool CanLaunchVessel(VesselProject vessel, out string reason)
         {
             if (vessel == null)
             {

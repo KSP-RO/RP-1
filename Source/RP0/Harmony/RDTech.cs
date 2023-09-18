@@ -17,7 +17,7 @@ namespace RP0.Harmony
             if (KerbalConstructionTimeData.Instance.TechListHas(__instance.techID))
                 return false;
 
-            var tech = new TechItem(__instance);
+            var tech = new ResearchProject(__instance);
 
             KerbalConstructionTimeData.Instance.TechList.Add(tech);
             tech.UpdateBuildRate(KerbalConstructionTimeData.Instance.TechList.Count - 1);

@@ -36,7 +36,7 @@ namespace RP0.DataTypes
     /// </summary>
     public class PersistentHashSetValueType<T> : HashSet<T>, ICloneable, IConfigNode
     {
-        private readonly static System.Type _Type = typeof(T);
+        private readonly static Type _Type = typeof(T);
         private readonly static DataType _DataType = FieldData.ValueDataType(_Type);
 
         public void Load(ConfigNode node)

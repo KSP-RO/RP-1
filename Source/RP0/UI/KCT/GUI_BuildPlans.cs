@@ -84,7 +84,7 @@ namespace RP0
                 }
                 for (int i = 0; i < KerbalConstructionTimeData.Instance.BuildPlans.Count; i++)
                 {
-                    BuildListVessel b = KerbalConstructionTimeData.Instance.BuildPlans.Values[i];
+                    VesselProject b = KerbalConstructionTimeData.Instance.BuildPlans.Values[i];
                     if (!b.AllPartsValid)
                         continue;
                     GUILayout.BeginHorizontal();
@@ -143,7 +143,7 @@ namespace RP0
             {
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
-            BuildListVessel blv = new BuildListVessel(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL, true)
+            VesselProject blv = new VesselProject(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL, true)
             {
                 shipName = EditorLogic.fetch.shipNameField.text,
                 LCID = System.Guid.Empty
@@ -158,7 +158,7 @@ namespace RP0
             v.ProcessVessel(blv);
         }
 
-        public static void AddVesselToPlansList(BuildListVessel blv)
+        public static void AddVesselToPlansList(VesselProject blv)
         {
             ScreenMessage message;
             if (KerbalConstructionTimeData.Instance.BuildPlans.ContainsKey(blv.shipName))

@@ -61,7 +61,7 @@ namespace RP0.Harmony
             string tooltipDown = null;
             if (kctActive && __instance.hasFacility)
             {
-                if (FacilityUpgrade.AlreadyInProgressByID(__instance.host.Facility.id))
+                if (FacilityUpgradeProject.AlreadyInProgressByID(__instance.host.Facility.id))
                 {
                     kctUpgradeBlocked = true;
                     tooltipDown = tooltipUp = Localizer.GetStringByTag("#rp0_FacilityContextMenu_AlreadyUpgrading");
@@ -183,7 +183,7 @@ namespace RP0.Harmony
             // Rerun the logic in CreateWindowContent
             if (kctActive && __instance.hasFacility)
             {
-                if (FacilityUpgrade.AlreadyInProgressByID(__instance.host.Facility.id))
+                if (FacilityUpgradeProject.AlreadyInProgressByID(__instance.host.Facility.id))
                 {
                     kctUpgradeBlocked = true;
                 }
@@ -373,7 +373,7 @@ namespace RP0.Harmony
             }
 
             var split = facilityID.Split('/');
-            var upgrading = new FacilityUpgrade(facilityType, facilityID, newLevel, oldLevel, split[split.Length - 1]);
+            var upgrading = new FacilityUpgradeProject(facilityType, facilityID, newLevel, oldLevel, split[split.Length - 1]);
 
             if (!upgrading.AlreadyInProgress())
             {

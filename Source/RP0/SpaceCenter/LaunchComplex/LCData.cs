@@ -50,7 +50,7 @@ namespace RP0
             SetFrom(old);
         }
 
-        public LCData(LCItem lc)
+        public LCData(LaunchComplex lc)
         {
             SetFrom(lc);
         }
@@ -69,13 +69,13 @@ namespace RP0
                 resourcesHandled[kvp.Key] = kvp.Value;
         }
 
-        public void SetFrom(LCItem lc)
+        public void SetFrom(LaunchComplex lc)
         {
             SetFrom(lc.Stats);
         }
 
         // NOTE: Not comparing name, which I think is correct here.
-        public bool Compare(LCItem lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, lc.ResourcesHandled);
+        public bool Compare(LaunchComplex lc) => massMax == lc.MassMax && sizeMax == lc.SizeMax && lcType == lc.LCType && isHumanRated == lc.IsHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, lc.ResourcesHandled);
         public bool Compare(LCData data) => massMax == data.massMax && sizeMax == data.sizeMax && lcType == data.lcType && isHumanRated == data.isHumanRated && PersistentDictionaryValueTypes<string, double>.AreEqual(resourcesHandled, data.resourcesHandled);
 
         public float GetPadFracLevel()

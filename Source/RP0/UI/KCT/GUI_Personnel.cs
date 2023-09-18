@@ -89,8 +89,8 @@ namespace RP0
 
         private static void RenderEngineersSection(bool isCostCacheInvalid)
         {
-            KSCItem KSC = KerbalConstructionTimeData.Instance.ActiveKSC;
-            LCItem currentLC = KSC.LaunchComplexes[_LCIndex];
+            SpaceCenter KSC = KerbalConstructionTimeData.Instance.ActiveKSC;
+            LaunchComplex currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Engineers:", GUILayout.Width(100));
@@ -123,7 +123,7 @@ namespace RP0
             string unassignStr = GetAssignText(false, currentLC, out int unassignAmt);
 
             bool recalc = false;
-            BuildListVessel.ListType type = currentLC.LCType == LaunchComplexType.Pad ? BuildListVessel.ListType.VAB : BuildListVessel.ListType.SPH;
+            VesselProject.ListType type = currentLC.LCType == LaunchComplexType.Pad ? VesselProject.ListType.VAB : VesselProject.ListType.SPH;
             if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { KCTUtilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {
@@ -193,7 +193,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (currentLC.CanIntegrate && currentLC.BuildList.Count > 0)
             {
-                BuildListVessel b = currentLC.BuildList[0];
+                VesselProject b = currentLC.BuildList[0];
                 GUILayout.Label($"Current Vessel: {b.shipName}");
 
                 int engCap = currentLC.MaxEngineersFor(b);
@@ -210,7 +210,7 @@ namespace RP0
             }
             else
             {
-                LCProject lcp = LCProject.GetFirstCompleting(currentLC);
+                LCOpsProject lcp = LCOpsProject.GetFirstCompleting(currentLC);
                 if (lcp != null)
                 {
                     int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.mass, lcp.vesselBP, lcp.isHumanRated) : int.MaxValue;
@@ -293,7 +293,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (KerbalConstructionTimeData.Instance.TechList.Count > 0)
             {
-                TechItem t = KerbalConstructionTimeData.Instance.TechList[0];
+                ResearchProject t = KerbalConstructionTimeData.Instance.TechList[0];
                 GUILayout.Label($"Current Research: {t.techName}");
                 double techRate = Formula.GetResearchRate(t.scienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
                 double timeLeft = (t.scienceCost - t.progress) / techRate;
@@ -331,7 +331,7 @@ namespace RP0
                     }
                     else
                     {
-                        KSCItem ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
+                        SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
                         KCTUtilities.ChangeEngineers(ksc, -workers);
                         ksc.RecalculateBuildRates(false);
                     }
@@ -377,7 +377,7 @@ namespace RP0
                     }
                     else
                     {
-                        KSCItem ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
+                        SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
                         KCTUtilities.ChangeEngineers(ksc, workers);
                         ksc.RecalculateBuildRates(false);
                     }
@@ -404,7 +404,7 @@ namespace RP0
             }
         }
 
-        private static string GetAssignText(bool add, LCItem currentLC, out int mod)
+        private static string GetAssignText(bool add, LaunchComplex currentLC, out int mod)
         {
             string signChar;
             int limit;

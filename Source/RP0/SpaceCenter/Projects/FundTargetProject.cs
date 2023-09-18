@@ -2,7 +2,7 @@
 
 namespace RP0
 {
-    public class FundTarget : ConfigNodePersistenceBase, IKCTBuildItem, IConfigNode
+    public class FundTargetProject : ConfigNodePersistenceBase, ISpaceCenterProject, IConfigNode
     {
         [Persistent]
         private double targetFunds = 0d;
@@ -21,9 +21,9 @@ namespace RP0
 
         public bool IsValid => targetFunds != origFunds && targetFunds > 0d;
 
-        public FundTarget() { }
+        public FundTargetProject() { }
 
-        public FundTarget(double funds)
+        public FundTargetProject(double funds)
         {
             targetFunds = funds;
             origFunds = Funding.Instance?.Funds ?? 0d;
@@ -59,9 +59,9 @@ namespace RP0
             return $"Fund Target: {targetFunds:N0}";
         }
 
-        public BuildListVessel.ListType GetListType()
+        public VesselProject.ListType GetListType()
         {
-            return BuildListVessel.ListType.None;
+            return VesselProject.ListType.None;
         }
 
         public double GetTimeLeft()

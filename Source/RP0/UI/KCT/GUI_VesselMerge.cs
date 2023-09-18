@@ -7,7 +7,7 @@ namespace RP0
         private static Vector2 _activeLCMergeScroll;
         private static bool _showMergeSelectionList = false;
 
-        private static void RenderMergeSection(BuildListVessel ship)
+        private static void RenderMergeSection(VesselProject ship)
         {
             if (!_showMergeSelectionList && KerbalConstructionTimeData.Instance.MergingAvailable && GUILayout.Button("Merge Built Vessel"))
             {
@@ -26,8 +26,8 @@ namespace RP0
 
                 _activeLCMergeScroll = GUILayout.BeginScrollView(_activeLCMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
 
-                LCItem lc = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
-                foreach (BuildListVessel vessel in lc.Warehouse)
+                LaunchComplex lc = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+                foreach (VesselProject vessel in lc.Warehouse)
                 {
                     if (vessel.shipID != ship.shipID && !KerbalConstructionTimeData.Instance.MergedVessels.Exists(x => x.shipID == vessel.shipID) && GUILayout.Button(vessel.shipName))
                     {

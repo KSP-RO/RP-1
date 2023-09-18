@@ -47,7 +47,7 @@ namespace RP0.DataTypes
     /// <typeparam name="TValue"></typeparam>
     public class PersistentSortedListValueTypeKey<TKey, TValue> : PersistentSortedList<TKey, TValue> where TValue : IConfigNode
     {
-        private static readonly System.Type _KeyType = typeof(TKey);
+        private static readonly Type _KeyType = typeof(TKey);
         private static readonly DataType _KeyDataType = FieldData.ValueDataType(_KeyType);
 
         protected override TKey ParseKey(string value)
@@ -69,9 +69,9 @@ namespace RP0.DataTypes
     /// <typeparam name="TValue"></typeparam>
     public class PersistentSortedListValueTypes<TKey, TValue> : SortedList<TKey, TValue>, IConfigNode
     {
-        private static System.Type _KeyType = typeof(TKey);
+        private static Type _KeyType = typeof(TKey);
         private static readonly DataType _KeyDataType = FieldData.ValueDataType(_KeyType);
-        private static System.Type _ValueType = typeof(TValue);
+        private static Type _ValueType = typeof(TValue);
         private static readonly DataType _ValueDataType = FieldData.ValueDataType(_ValueType);
 
         public void Load(ConfigNode node)

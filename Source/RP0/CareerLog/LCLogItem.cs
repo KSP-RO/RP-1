@@ -42,7 +42,7 @@ namespace RP0
             Load(n);
         }
 
-        public LCLogItem(LCItem lc)
+        public LCLogItem(LaunchComplex lc)
         {
             Name = lc.Name;
             MassMax = lc.MassMax;
@@ -54,7 +54,7 @@ namespace RP0
             ModID = lc.ModID;
         }
 
-        public LCLogItem(LCConstruction data)
+        public LCLogItem(LCConstructionProject data)
         {
             Name = data.name;
             MassMax = data.lcData.massMax;

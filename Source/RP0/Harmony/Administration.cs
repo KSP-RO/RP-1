@@ -143,7 +143,7 @@ namespace RP0.Harmony
 
                 // There will not previously be a button here because all this UI is recreated as part of the stock
                 // code for this method. So it's safe to just add, not replace.
-                var button = kerbal.gameObject.AddComponent<UnityEngine.UI.Button>();
+                var button = kerbal.gameObject.AddComponent<Button>();
                 button.transition = Selectable.Transition.None;
                 //button.transition = Selectable.Transition.ColorTint;
                 //button.targetGraphic = kerbal.kerbalImage;
@@ -180,7 +180,7 @@ namespace RP0.Harmony
         }
 
         // We'll cache the strategy list to save a tiny bit of GC
-        internal static List<Strategies.Strategy> _strategies = new List<Strategies.Strategy>();
+        internal static List<Strategy> _strategies = new List<Strategy>();
 
         [HarmonyPrefix]
         [HarmonyPatch("CreateActiveStratList")]
@@ -205,7 +205,7 @@ namespace RP0.Harmony
                 foreach (Program p in programs)
                 {
                     // Find the matching ProgramStrategy for the program
-                    Strategies.Strategy strategy = StrategySystem.Instance.Strategies.Find(s => s.Config.Name == p.name);
+                    Strategy strategy = StrategySystem.Instance.Strategies.Find(s => s.Config.Name == p.name);
                     if (strategy == null)
                         continue;
 
@@ -229,7 +229,7 @@ namespace RP0.Harmony
             }
 
             // Now we actually create the items. This broadly equates to stock code.
-            foreach (Strategies.Strategy strategy in _strategies)
+            foreach (Strategy strategy in _strategies)
             {
                 UIListItem item = UnityEngine.Object.Instantiate(__instance.prefabActiveStrat);
                 ActiveStrategyListItem stratItem = item.GetComponent<ActiveStrategyListItem>();

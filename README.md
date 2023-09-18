@@ -39,7 +39,6 @@ Discord Link: https://discord.gg/V73jjNd
 - Custom Barn Kit
 - Ven's Stock Revamp - Core (Needed for engines)
 - Ven's Stock Revamp - New Parts (Needed for engines)
-- Magicore
 - Click Through Blocker
 - Toolbar Controller
 - Kerbalism (RO Config)

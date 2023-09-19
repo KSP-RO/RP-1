@@ -12,7 +12,7 @@ namespace RP0
 
         public static void DrawFirstRun(int windowID)
         {
-            if (IsPrimarilyDisabled)
+            if (IsPrimarilyDisabled || KerbalConstructionTimeData.Instance.DontShowFirstRunAgain)
             {
                 GUIStates.ShowFirstRun = false;
                 return;
@@ -85,10 +85,7 @@ namespace RP0
             {
                 if (_dontShowFirstRunAgain)
                 {
-                    KerbalConstructionTimeData.Instance.StarterLCBuilding = true;
-                    KerbalConstructionTimeData.Instance.HiredStarterApplicants = true;
-                    KerbalConstructionTimeData.Instance.StartedProgram = true;
-                    KerbalConstructionTimeData.Instance.AcceptedContract = true;
+                    KerbalConstructionTimeData.Instance.DontShowFirstRunAgain = true;
                 }
                 GUIStates.ShowFirstRun = false;
             }

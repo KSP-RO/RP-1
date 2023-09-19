@@ -38,12 +38,16 @@ namespace RP0
         [KSPField(isPersistant = true)] public string KACAlarmId = string.Empty;
         [KSPField(isPersistant = true)] public double KACAlarmUT = 0;
 
+        [KSPField(isPersistant = true)] public bool ErroredDuringOnLoad = false;
+
         #region First Run
         [KSPField(isPersistant = true)] public bool StarterLCBuilding = false;
         [KSPField(isPersistant = true)] public bool HiredStarterApplicants = false;
         [KSPField(isPersistant = true)] public bool StartedProgram = false;
         [KSPField(isPersistant = true)] public bool AcceptedContract = false;
-        public bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
+        public bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract)
+            && !DontShowFirstRunAgain;
+        [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
         public const int VERSION = 4;
@@ -204,7 +208,7 @@ namespace RP0
             }
             catch (Exception ex)
             {
-                KerbalConstructionTime.ErroredDuringOnLoad = true;
+                ErroredDuringOnLoad = true;
                 RP0Debug.LogError("ERROR! An error while KCT loading data occurred. Things will be seriously broken!\n" + ex);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "Error Loading RP-1 Data", "ERROR! An error occurred while loading RP-1 data. Things will be seriously broken! Please report this error to RP-1 GitHub and attach the log file. The game will be UNPLAYABLE in this state!", "Understood", false, HighLogic.UISkin).HideGUIsWhilePopup();
             }

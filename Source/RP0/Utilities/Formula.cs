@@ -91,7 +91,7 @@ namespace RP0
 
             LaunchComplex vLC = vessel.LC;
             if (vLC == null)
-                vLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+                vLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             double multHR = 1d;
             if (vLC.IsHumanRated)

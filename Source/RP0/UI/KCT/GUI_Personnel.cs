@@ -80,7 +80,7 @@ namespace RP0
             if (GUILayout.Button("Close"))
             {
                 GUIStates.ShowPersonnelWindow = false;
-                _LCIndex = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexIndex; // reset to current active LC
+                _LCIndex = KerbalConstructionTimeData.Instance.ActiveSC.LCIndex; // reset to current active LC
             }
             GUILayout.EndVertical();
             if (!Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
@@ -89,7 +89,7 @@ namespace RP0
 
         private static void RenderEngineersSection(bool isCostCacheInvalid)
         {
-            SpaceCenter KSC = KerbalConstructionTimeData.Instance.ActiveKSC;
+            SpaceCenter KSC = KerbalConstructionTimeData.Instance.ActiveSC;
             LaunchComplex currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
@@ -315,7 +315,7 @@ namespace RP0
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                fireAmount = research ? KerbalConstructionTimeData.Instance.Researchers : KerbalConstructionTimeData.Instance.ActiveKSC.UnassignedEngineers;
+                fireAmount = research ? KerbalConstructionTimeData.Instance.Researchers : KerbalConstructionTimeData.Instance.ActiveSC.UnassignedEngineers;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = fireAmount;
@@ -331,7 +331,7 @@ namespace RP0
                     }
                     else
                     {
-                        SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
+                        SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
                         KCTUtilities.ChangeEngineers(ksc, -workers);
                         ksc.RecalculateBuildRates(false);
                     }
@@ -377,7 +377,7 @@ namespace RP0
                     }
                     else
                     {
-                        SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
+                        SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
                         KCTUtilities.ChangeEngineers(ksc, workers);
                         ksc.RecalculateBuildRates(false);
                     }

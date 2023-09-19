@@ -174,8 +174,8 @@ namespace RP0
             if (facility.id.Contains("LaunchPad"))
             {
                 RP0Debug.Log("LaunchPad was repaired.");
-                KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
-                KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.CompletelyRepairNode();
+                KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance.RefreshDestructionNode();
+                KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance.CompletelyRepairNode();
             }
         }
 
@@ -184,7 +184,7 @@ namespace RP0
             if (facility.id.Contains("LaunchPad"))
             {
                 RP0Debug.Log("LaunchPad was damaged.");
-                KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance.RefreshDestructionNode();
+                KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance.RefreshDestructionNode();
             }
         }
 
@@ -292,7 +292,7 @@ namespace RP0
 
             LaunchComplex targetLC = KerbalConstructionTimeData.Instance.RecoveredVessel.LC;
             if (targetLC == null)
-                targetLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+                targetLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             targetLC.Warehouse.Add(KerbalConstructionTimeData.Instance.RecoveredVessel);
             targetLC.Recon_Rollout.Add(new ReconRolloutProject(KerbalConstructionTimeData.Instance.RecoveredVessel, ReconRolloutProject.RolloutReconType.Recovery, KerbalConstructionTimeData.Instance.RecoveredVessel.shipID.ToString()));

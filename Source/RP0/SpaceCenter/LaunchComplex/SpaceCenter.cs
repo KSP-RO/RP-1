@@ -11,8 +11,8 @@ namespace RP0
         [Persistent]
         public int Engineers = 0;
         public int UnassignedEngineers => Engineers - LaunchComplexes.Sum(lc => lc.Engineers);
-        [Persistent]
-        public int ActiveLaunchComplexIndex = 0;
+        [Persistent(name = "ActiveLaunchComplexIndex")]
+        public int LCIndex = 0;
 
         [Persistent]
         public PersistentList<LaunchComplex> LaunchComplexes = new PersistentList<LaunchComplex>();
@@ -59,7 +59,7 @@ namespace RP0
             AddListeners();
         }
 
-        public LaunchComplex ActiveLaunchComplexInstance => LaunchComplexes.Count > ActiveLaunchComplexIndex ? LaunchComplexes[ActiveLaunchComplexIndex] : null;
+        public LaunchComplex ActiveLC => LaunchComplexes.Count > LCIndex ? LaunchComplexes[LCIndex] : null;
 
         public int LaunchComplexCount
         {
@@ -127,7 +127,7 @@ namespace RP0
 
         public int SwitchLaunchComplex(bool forwardDirection, bool padOnly, int startIndex = -1)
         {
-            if (LaunchComplexCount < 2) return startIndex < 0 ? ActiveLaunchComplexIndex : startIndex;
+            if (LaunchComplexCount < 2) return startIndex < 0 ? LCIndex : startIndex;
 
             startIndex = GetLaunchComplexIdxToSwitchTo(forwardDirection, padOnly, startIndex);
             SwitchLaunchComplex(startIndex);
@@ -139,20 +139,20 @@ namespace RP0
         {
             if (LC_index < 0)
             {
-                LC_index = ActiveLaunchComplexIndex;
+                LC_index = LCIndex;
             }
             else
             {
-                if (LC_index == ActiveLaunchComplexIndex)
+                if (LC_index == LCIndex)
                     return;
 
-                ActiveLaunchComplexIndex = LC_index;
+                LCIndex = LC_index;
             }
 
             if (HighLogic.LoadedSceneIsEditor)
             {
                 if (!KerbalConstructionTime.EditorShipEditingMode)
-                    KerbalConstructionTime.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ID;
+                    KerbalConstructionTime.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ID;
                 KerbalConstructionTime.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, Harmony.PatchEngineersReport.UpdateCraftStats));
             }
 
@@ -161,10 +161,10 @@ namespace RP0
 
         public int GetLaunchComplexIdxToSwitchTo(bool forwardDirection, bool padOnly, int startIndex = -1)
         {
-            if (LaunchComplexCount < 2) return startIndex < 0 ? ActiveLaunchComplexIndex : startIndex;
+            if (LaunchComplexCount < 2) return startIndex < 0 ? LCIndex : startIndex;
 
             if (startIndex < 0)
-                startIndex = ActiveLaunchComplexIndex;
+                startIndex = LCIndex;
 
             LaunchComplex lc;
             int count = LaunchComplexes.Count;

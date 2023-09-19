@@ -26,7 +26,7 @@ namespace RP0
 
                 _activeLCMergeScroll = GUILayout.BeginScrollView(_activeLCMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
 
-                LaunchComplex lc = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+                LaunchComplex lc = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
                 foreach (VesselProject vessel in lc.Warehouse)
                 {
                     if (vessel.shipID != ship.shipID && !KerbalConstructionTimeData.Instance.MergedVessels.Exists(x => x.shipID == vessel.shipID) && GUILayout.Button(vessel.shipName))

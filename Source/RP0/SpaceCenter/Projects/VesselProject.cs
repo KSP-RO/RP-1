@@ -242,13 +242,13 @@ namespace RP0
             {
                 Type = ListType.SPH;
                 FacilityBuiltIn = EditorFacility.SPH;
-                LC = KerbalConstructionTimeData.Instance.ActiveKSC.Hangar;
+                LC = KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
             }
             else
             {
                 Type = ListType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
-                LC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+                LC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
                 if (_lc.LCType == LaunchComplexType.Hangar)
                 {
                     RP0Debug.LogError($"ERROR: Tried to link vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
@@ -558,9 +558,9 @@ namespace RP0
 
             LaunchComplex lc = KerbalConstructionTimeData.Instance.FindLCFromID(_lcID);
             if (lc == null)
-                lc = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+                lc = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
             else
-                KerbalConstructionTimeData.Instance.ActiveKSC.SwitchLaunchComplex(KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.IndexOf(lc));
+                KerbalConstructionTimeData.Instance.ActiveSC.SwitchLaunchComplex(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.IndexOf(lc));
 
             string tempFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/temp.craft";
             UpdateRFTanks();
@@ -617,7 +617,7 @@ namespace RP0
             LaunchComplex selectedLC;
             if (LC == null)
             {
-                selectedLC = Type == ListType.VAB ? KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance : KerbalConstructionTimeData.Instance.ActiveKSC.Hangar;
+                selectedLC = Type == ListType.VAB ? KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC : KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
             }
             else
             {

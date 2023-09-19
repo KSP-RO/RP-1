@@ -339,7 +339,7 @@ namespace RP0
 
         private double GetFacilityUpgradeRatio(SpaceCenterFacility facility)
         {
-            foreach (var fac in KerbalConstructionTimeData.Instance.ActiveKSC.FacilityUpgrades)
+            foreach (var fac in KerbalConstructionTimeData.Instance.ActiveSC.FacilityUpgrades)
                 if (fac.FacilityType == facility)
                     return fac.progress / fac.BP;
 

@@ -64,7 +64,7 @@ namespace RP0
 
         [KSPField(isPersistant = true)]
         public PersistentList<SpaceCenter> KSCs = new PersistentList<SpaceCenter>();
-        public SpaceCenter ActiveKSC = null;
+        public SpaceCenter ActiveSC = null;
 
         [KSPField(isPersistant = true)]
         public VesselProject LaunchedVessel = new VesselProject();
@@ -163,7 +163,7 @@ namespace RP0
                 for (int i = KSCs.Count; i-- > 0;)
                 {
                     SpaceCenter ksc = KSCs[i];
-                    if (ksc.KSCName == null || ksc.KSCName.Length == 0 || (ksc.IsEmpty && ksc != ActiveKSC))
+                    if (ksc.KSCName == null || ksc.KSCName.Length == 0 || (ksc.IsEmpty && ksc != ActiveSC))
                         KSCs.RemoveAt(i);
                 }
 
@@ -383,7 +383,7 @@ namespace RP0
         {
             if (site == null || site.Length == 0)
                 site = _defaultKscId;
-            if (ActiveKSC == null || site != ActiveKSC.KSCName)
+            if (ActiveSC == null || site != ActiveSC.KSCName)
             {
                 RP0Debug.Log($"Setting active site to {site}");
                 SpaceCenter newKsc = KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
@@ -400,12 +400,12 @@ namespace RP0
 
         public void SetActiveKSC(SpaceCenter ksc)
         {
-            if (ksc == null || ksc == ActiveKSC)
+            if (ksc == null || ksc == ActiveSC)
                 return;
 
             // TODO: Allow setting KSC outside the tracking station
             // which will require doing some work on KSC switch
-            ActiveKSC = ksc;
+            ActiveSC = ksc;
         }
 
         #endregion

@@ -53,10 +53,10 @@ namespace RP0
         {
             double buildPoints = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
             double bpLeaderEffect = KerbalConstructionTime.Instance.EditorVessel.LeaderEffect;
-            double effic = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.Efficiency;
-            double rateWithCurEngis = KCTUtilities.GetBuildRate(KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
+            double effic = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Efficiency;
+            double rateWithCurEngis = KCTUtilities.GetBuildRate(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC, KerbalConstructionTime.Instance.EditorVessel.mass, KerbalConstructionTime.Instance.EditorVessel.buildPoints, KerbalConstructionTime.Instance.EditorVessel.humanRated, 0)
                 * effic
-                * KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
+                * KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
 
             RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
 
@@ -82,11 +82,11 @@ namespace RP0
                 GUILayout.Label("Invalid Integration Rate");
             }
 
-            if (EditorDriver.editorFacility == EditorFacility.SPH || (KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad && KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated && !KerbalConstructionTime.Instance.EditorVessel.humanRated))
+            if (EditorDriver.editorFacility == EditorFacility.SPH || (KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad && KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.IsHumanRated && !KerbalConstructionTime.Instance.EditorVessel.humanRated))
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Engineer Cap:");
-                GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? KerbalConstructionTimeData.Instance.ActiveKSC.Hangar : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance).MaxEngineersFor(KerbalConstructionTime.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
+                GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? KerbalConstructionTimeData.Instance.ActiveSC.Hangar : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC).MaxEngineersFor(KerbalConstructionTime.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
             }
 
@@ -95,7 +95,7 @@ namespace RP0
 
             if (bR > 0d && rateWithCurEngis > 0d)
             {
-                double effectiveEngCount = bR / rateWithCurEngis * KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.Engineers;
+                double effectiveEngCount = bR / rateWithCurEngis * KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Engineers;
                 double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.IdleSalaryMult);
                 double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
@@ -135,7 +135,7 @@ namespace RP0
                 GUILayout.Label(techLabel);
             }
 
-            if (KerbalConstructionTime.Instance.EditorVessel.humanRated && !KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.IsHumanRated)
+            if (KerbalConstructionTime.Instance.EditorVessel.humanRated && !KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.IsHumanRated)
             {
                 GUILayout.Label("WARNING: Cannot integrate vessel!");
                 GUILayout.Label("Select a human-rated Launch Complex.");
@@ -177,9 +177,9 @@ namespace RP0
 
         private static void RenderEditorLaunchComplexControls()
         {
-            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
             bool rightLC = (EditorDriver.editorFacility == EditorFacility.SPH) == (activeLC.LCType == LaunchComplexType.Hangar);
-            int lcCount = KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexCountPad;
+            int lcCount = KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexCountPad;
 
             GUILayout.BeginHorizontal();
             if (rightLC)
@@ -188,7 +188,7 @@ namespace RP0
                 {
                     if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
                     {
-                        KerbalConstructionTimeData.Instance.ActiveKSC.SwitchToPrevLaunchComplex();
+                        KerbalConstructionTimeData.Instance.ActiveSC.SwitchToPrevLaunchComplex();
                         BuildRateForDisplay = null;
                     }
                 }
@@ -201,7 +201,7 @@ namespace RP0
                 {
                     if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
                     {
-                        KerbalConstructionTimeData.Instance.ActiveKSC.SwitchToNextLaunchComplex();
+                        KerbalConstructionTimeData.Instance.ActiveSC.SwitchToNextLaunchComplex();
                         BuildRateForDisplay = null;
                     }
                 }
@@ -213,19 +213,19 @@ namespace RP0
                     if (lcCount > 0)
                     {
                         if (GUILayout.Button(_gcSwitchToLC))
-                            KerbalConstructionTimeData.Instance.ActiveKSC.SwitchToNextLaunchComplex();
+                            KerbalConstructionTimeData.Instance.ActiveSC.SwitchToNextLaunchComplex();
                     }
                     else
                     {
-                        GUILayout.Label(KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.Count > 1 ? _gcNoLCAvailableSomeConstructing : _gcNoLCAvailable, GetLabelCenterAlignStyle());
+                        GUILayout.Label(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Count > 1 ? _gcNoLCAvailableSomeConstructing : _gcNoLCAvailable, GetLabelCenterAlignStyle());
                     }
                 }
                 else
                 {
-                    if (KerbalConstructionTimeData.Instance.ActiveKSC.Hangar.IsOperational)
+                    if (KerbalConstructionTimeData.Instance.ActiveSC.Hangar.IsOperational)
                     {
                         if (GUILayout.Button(_gcSwitchToHangar))
-                            KerbalConstructionTimeData.Instance.ActiveKSC.SwitchLaunchComplex(KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes.IndexOf(KerbalConstructionTimeData.Instance.ActiveKSC.Hangar));
+                            KerbalConstructionTimeData.Instance.ActiveSC.SwitchLaunchComplex(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.IndexOf(KerbalConstructionTimeData.Instance.ActiveSC.Hangar));
                     }
                     else
                     {
@@ -435,9 +435,9 @@ namespace RP0
             if (GUILayout.Button(_gcMaxBuildRate, GUILayout.ExpandWidth(false)))
             {
                 var ship = KerbalConstructionTime.Instance.EditorVessel;
-                var deltaToMaxEngineers = int.MaxValue - KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.Engineers;
-                bR = KCTUtilities.GetBuildRate(KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
-                    * KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.Efficiency * KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.StrategyRateMultiplier;
+                var deltaToMaxEngineers = int.MaxValue - KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Engineers;
+                bR = KCTUtilities.GetBuildRate(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
+                    * KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Efficiency * KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
                 BuildRateForDisplay = bR.ToString();
             }
 

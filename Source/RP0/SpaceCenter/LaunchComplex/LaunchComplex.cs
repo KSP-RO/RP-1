@@ -385,8 +385,8 @@ namespace RP0
 
             int index = KSC.LaunchComplexes.IndexOf(this);
             KSC.LaunchComplexes.RemoveAt(index);
-            if (KSC.ActiveLaunchComplexIndex >= index)
-                --KSC.ActiveLaunchComplexIndex; // should not change active LC unless it was this
+            if (KSC.LCIndex >= index)
+                --KSC.LCIndex; // should not change active LC unless it was this
         }
 
         public void Save(ConfigNode node)

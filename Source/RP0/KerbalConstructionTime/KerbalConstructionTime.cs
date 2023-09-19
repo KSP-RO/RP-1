@@ -322,7 +322,7 @@ namespace RP0
                     //Add the cost of the ship to the funds so it can be removed again by KSP
                     FlightGlobals.ActiveVessel.vesselName = blv.shipName;
                 }
-                if (vesselLC == null) vesselLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+                if (vesselLC == null) vesselLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
                 if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is ReconRolloutProject rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
 
@@ -523,11 +523,11 @@ namespace RP0
 
             while (HighLogic.LoadedScene == GameScenes.SPACECENTER)
             {
-                if (KerbalConstructionTimeData.Instance?.ActiveKSC.ActiveLaunchComplexInstance.ActiveLPInstance is LCLaunchPad pad)
+                if (KerbalConstructionTimeData.Instance?.ActiveSC.ActiveLC.ActiveLPInstance is LCLaunchPad pad)
                 {
                     if (KCTUtilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
                     {
-                        KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.SwitchLaunchPad(KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ActiveLaunchPadIndex, false);
+                        KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.SwitchLaunchPad(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLaunchPadIndex, false);
                         pad.UpdateLaunchpadDestructionState(false);
                     }
                 }
@@ -754,7 +754,7 @@ namespace RP0
 
             //The following should only be executed when fully enabled for the save
 
-            if (KerbalConstructionTimeData.Instance.ActiveKSC == null)
+            if (KerbalConstructionTimeData.Instance.ActiveSC == null)
             {
                 // This should not be hit, because either KSCSwitcher's LastKSC loads after KCTData
                 // or KCTData loads first and the harmony patch runs.

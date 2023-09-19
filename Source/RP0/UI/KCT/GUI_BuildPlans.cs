@@ -112,7 +112,7 @@ namespace RP0
                             }
                             else
                             {
-                                KCTUtilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true, KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance);
+                                KCTUtilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true, KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC);
                             }
                         }
                     }
@@ -169,7 +169,7 @@ namespace RP0
             }
             KerbalConstructionTimeData.Instance.BuildPlans.Add(blv.shipName, blv);
 
-            RP0Debug.Log($"Added {blv.shipName} to plans list at KSC {KerbalConstructionTimeData.Instance.ActiveKSC.KSCName}. Cost: {blv.cost}");
+            RP0Debug.Log($"Added {blv.shipName} to plans list at KSC {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {blv.cost}");
             RP0Debug.Log($"Launch site is {blv.launchSite}");
             string text = $"Added {blv.shipName} to plans list.";
             message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);

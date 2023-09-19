@@ -167,7 +167,7 @@ namespace RP0
 
                     currentLC.LaunchPads.RemoveAt(idx);
 
-                    if (currentLC == KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance)
+                    if (currentLC == KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC)
                     {
                         currentLC.SwitchLaunchPad(0);
                     }
@@ -215,7 +215,7 @@ namespace RP0
 
             try
             {
-                int idx = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LaunchPads.IndexOf(this);
+                int idx = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LaunchPads.IndexOf(this);
                 RP0Debug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
 
                 //set the level to this level

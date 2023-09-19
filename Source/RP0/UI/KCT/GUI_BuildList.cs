@@ -294,8 +294,8 @@ namespace RP0
             //}
             bool hasIdleEngineers = false;
             // This reimplements FreeEngineers for speed, since we also have to check LCs for idle
-            int engCount = KerbalConstructionTimeData.Instance.ActiveKSC.Engineers;
-            foreach (var lc in KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes)
+            int engCount = KerbalConstructionTimeData.Instance.ActiveSC.Engineers;
+            foreach (var lc in KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes)
             {
                 if (!lc.IsOperational || lc.Engineers == 0)
                     continue;
@@ -317,7 +317,7 @@ namespace RP0
                 GUIStates.ShowPersonnelWindow = true;
                 //GUIStates.ShowBuildList = false;
                 //GUIStates.ShowBLPlus = false;
-                _LCIndex = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexIndex;
+                _LCIndex = KerbalConstructionTimeData.Instance.ActiveSC.LCIndex;
                 _currentPersonnelHover = PersonnelButtonHover.None;
             }
             if (GUILayout.Button("Plans"))
@@ -363,7 +363,7 @@ namespace RP0
 
         private static void RenderConstructionList()
         {
-            SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveKSC;
+            SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
@@ -734,7 +734,7 @@ namespace RP0
             _scrollPos2 = GUILayout.BeginScrollView(_scrollPos2, GUILayout.Height(GUI.skin.label.lineHeight * 5));
 
             int idx = 0;
-            foreach (var lc in KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexes)
+            foreach (var lc in KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes)
             {
                 foreach (var b in lc.Warehouse)
                     RenderWarehouseRow(b, idx++, true);
@@ -827,7 +827,7 @@ namespace RP0
 
         private static void RenderBuildList()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             RenderBuildlistHeader();
 
@@ -855,7 +855,7 @@ namespace RP0
 
         private static void RenderRollouts()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
             foreach (ReconRolloutProject reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRolloutProject.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
@@ -882,7 +882,7 @@ namespace RP0
                 if (HighLogic.LoadedSceneIsEditor)
                     GUILayout.Label("No vessels integrating!");
                 else
-                    GUILayout.Label($"No vessels integrating! Go to the {(KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.LCType == LaunchComplexType.Pad ? "VAB" : "SPH")} to add more.");
+                    GUILayout.Label($"No vessels integrating! Go to the {(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad ? "VAB" : "SPH")} to add more.");
             }
             bool recalc = false;
             for (int i = 0; i < lc.BuildList.Count; i++)
@@ -967,7 +967,7 @@ namespace RP0
 
         private static void RenderWarehouse()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
             bool isPad = activeLC.LCType == LaunchComplexType.Pad;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
@@ -1002,7 +1002,7 @@ namespace RP0
 
             LaunchComplex vesselLC = b.LC;
 
-            bool isPad = vesselLC != KerbalConstructionTimeData.Instance.ActiveKSC.Hangar;
+            bool isPad = vesselLC != KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
 
             string launchSite = b.launchSite;
             if (launchSite == "LaunchPad" && isPad)
@@ -1378,14 +1378,14 @@ namespace RP0
 
         private static void RenderLaunchComplexControls()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             GUILayout.BeginHorizontal();
             // Don't allow switching in edit mode
-            int lcCount = KerbalConstructionTime.EditorShipEditingMode ? 1 : KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexCount;
+            int lcCount = KerbalConstructionTime.EditorShipEditingMode ? 1 : KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexCount;
             if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
-                KerbalConstructionTimeData.Instance.ActiveKSC.SwitchToPrevLaunchComplex();
+                KerbalConstructionTimeData.Instance.ActiveSC.SwitchToPrevLaunchComplex();
             }
             GUILayout.FlexibleSpace();
             string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
@@ -1435,14 +1435,14 @@ namespace RP0
             GUILayout.FlexibleSpace();
             if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
             {
-                KerbalConstructionTimeData.Instance.ActiveKSC.SwitchToNextLaunchComplex();
+                KerbalConstructionTimeData.Instance.ActiveSC.SwitchToNextLaunchComplex();
             }
             GUILayout.EndHorizontal();
         }
 
         private static void RenderLaunchPadControls()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
@@ -1587,9 +1587,9 @@ namespace RP0
 
         public static void CancelConstruction(int index)
         {
-            if (KerbalConstructionTimeData.Instance.ActiveKSC.Constructions.Count > index)
+            if (KerbalConstructionTimeData.Instance.ActiveSC.Constructions.Count > index)
             {
-                ConstructionProject item = KerbalConstructionTimeData.Instance.ActiveKSC.Constructions[index];
+                ConstructionProject item = KerbalConstructionTimeData.Instance.ActiveSC.Constructions[index];
                 RP0Debug.Log($"Cancelling construction: {item.GetItemName()}");
                 item.Cancel();
             }
@@ -1600,7 +1600,7 @@ namespace RP0
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
             _blPlusPosition.height = 225;
-            VesselProject b = KCTUtilities.FindBLVesselByID(KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance, _selectedVesselId);
+            VesselProject b = KCTUtilities.FindBLVesselByID(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC, _selectedVesselId);
             GUILayout.BeginVertical();
             string launchSite = b.launchSite;
 
@@ -1730,7 +1730,7 @@ namespace RP0
 
         public static void DrawLaunchSiteChooser(int windowID)
         {
-            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             GUILayout.BeginVertical();
             _launchSiteScrollView = GUILayout.BeginScrollView(_launchSiteScrollView, GUILayout.Height((float)Math.Min(Screen.height * 0.75, 25 * _launchSites.Count + 10)));

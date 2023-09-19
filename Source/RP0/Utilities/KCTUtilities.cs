@@ -448,7 +448,7 @@ namespace RP0
                     totalSci += t.ProtoNode.scienceCost;
                 }
 
-                var techIDs = KerbalConstructionTimeData.techNameToTitle.Keys;
+                var techIDs = Database.TechNameToTitle.Keys;
                 foreach (var techId in techIDs)
                 {
                     var ptn = ResearchAndDevelopment.Instance.GetTechState(techId);
@@ -1620,7 +1620,7 @@ namespace RP0
             SortedList<string, string> slist = new SortedList<string, string>();
             foreach(string s in input)
             {
-                foreach (string parent in KerbalConstructionTimeData.techNameToParents[s])
+                foreach (string parent in Database.TechNameToParents[s])
                 {
                     blacklist.Add(parent);
                 }
@@ -1630,7 +1630,7 @@ namespace RP0
                 if (!blacklist.Contains(s))
                 {
                     // sort our result, depth into the tree then alpha
-                    int depth = KerbalConstructionTimeData.techNameToParents[s].Count();
+                    int depth = Database.TechNameToParents[s].Count();
                     string skey = $"{depth:d2}{s}";
                     if (!slist.ContainsKey(skey))
                         slist.Add(skey, s);

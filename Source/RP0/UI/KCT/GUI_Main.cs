@@ -185,11 +185,11 @@ namespace RP0
         {
             if (GUIStates.IsMainGuiVisible)
             {
-                KCTGameStates.ToolbarControl.SetTrue(false);
+                KerbalConstructionTimeData.ToolbarControl.SetTrue(false);
             }
             else
             {
-                KCTGameStates.ToolbarControl.SetFalse(false);
+                KerbalConstructionTimeData.ToolbarControl.SetFalse(false);
             }
         }
 

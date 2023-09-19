@@ -33,7 +33,7 @@ namespace RP0
         public PersistentDictionaryValueTypes<string, ResourceTagType> ResourceTagTypes = new PersistentDictionaryValueTypes<string, ResourceTagType>();
     }
 
-    [KSPAddon(KSPAddon.Startup.Instantly, false)]
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class Database : MonoBehaviour
     {
         public static readonly ResourceInfo ResourceInfo = new ResourceInfo();
@@ -42,6 +42,8 @@ namespace RP0
         public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
         public static readonly List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
         public static readonly Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
+        public static readonly Dictionary<string, string> TechNameToTitle = new Dictionary<string, string>();
+        public static readonly Dictionary<string, List<string>> TechNameToParents = new Dictionary<string, List<string>>();
 
         public static readonly SpaceCenterSettings SettingsSC = new SpaceCenterSettings();
         public static readonly CrewSettings SettingsCrew = new CrewSettings();
@@ -59,6 +61,47 @@ namespace RP0
                     if (index == -1)
                         index = System.Math.Max(0, loaders.Count - 1);
                     loaders.Insert(index, configLoader);
+                }
+            }
+        }
+
+        public static void LoadTree()
+        {
+            if (HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX || HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+            {
+                // On starting a new game, MM has not yet patched the tech tree URL so we're
+                // going to use that directly instead of the one in HighLogic.
+                if (HighLogic.CurrentGame.Parameters.Career.TechTreeUrl.Contains("Squad"))
+                    HighLogic.CurrentGame.Parameters.Career.TechTreeUrl = System.IO.Path.Combine("GameData", "ModuleManager.TechTree");
+
+                string fullPath = KSPUtil.ApplicationRootPath + HighLogic.CurrentGame.Parameters.Career.TechTreeUrl;
+                RP0Debug.Log($"Loading tech tree from {fullPath}");
+
+                if (ConfigNode.Load(fullPath) is ConfigNode fileNode && fileNode.HasNode("TechTree"))
+                {
+                    TechNameToTitle.Clear();
+                    TechNameToParents.Clear();
+
+                    ConfigNode treeNode = fileNode.GetNode("TechTree");
+                    foreach (ConfigNode n in treeNode.GetNodes("RDNode"))
+                    {
+                        string techID = n.GetValue("id");
+                        if (techID != null)
+                        {
+                            string title = n.GetValue("title");
+                            if (title != null)
+                                TechNameToTitle[techID] = title;
+
+                            var pList = new List<string>();
+                            foreach (ConfigNode p in n.GetNodes("Parent"))
+                            {
+                                string pID = p.GetValue("parentID");
+                                if (pID != null)
+                                    pList.Add(pID);
+                            }
+                            TechNameToParents[techID] = pList;
+                        }
+                    }
                 }
             }
         }

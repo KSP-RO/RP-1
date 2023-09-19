@@ -4,14 +4,22 @@ using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
+using ToolbarControl_NS;
 
 namespace RP0
 {
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class KerbalConstructionTimeData : ScenarioModule
     {
-        public static Dictionary<string, string> techNameToTitle = new Dictionary<string, string>();
-        public static Dictionary<string, List<string>> techNameToParents = new Dictionary<string, List<string>>();
+        #region Statics
+        public static bool TechListIgnoreUpdates = false;
+        public static bool VesselErrorAlerted = false;
+
+        internal const string _modId = "KCT_NS";
+        internal const string _modName = "Kerbal Construction Time";
+        public static ToolbarControl ToolbarControl;
+        #endregion
+
 
         [KSPField(isPersistant = true)]
         public bool enabledForSave = HighLogic.CurrentGame.Mode == Game.Modes.CAREER ||
@@ -47,7 +55,6 @@ namespace RP0
 
         [KSPField(isPersistant = true)]
         public PersistentObservableList<ResearchProject> TechList = new PersistentObservableList<ResearchProject>();
-        public bool TechIgnoreUpdates = false;
 
         [KSPField(isPersistant = true)]
         public PersistentSortedListValueTypeKey<string, VesselProject> BuildPlans = new PersistentSortedListValueTypeKey<string, VesselProject>();
@@ -75,8 +82,6 @@ namespace RP0
         public bool MergingAvailable;
         public List<VesselProject> MergedVessels = new List<VesselProject>();
 
-        public bool VesselErrorAlerted = false;
-
         public static KerbalConstructionTimeData Instance { get; protected set; }
 
         public override void OnAwake()
@@ -94,46 +99,25 @@ namespace RP0
                 Instance = null;
         }
 
-        protected void LoadTree()
+        public void RecalculateBuildRates()
         {
-            if (HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX || HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
+            LCEfficiency.RecalculateConstants();
+
+            foreach (var ksc in KSCs)
+                ksc.RecalculateBuildRates(true);
+
+            for (int i = TechList.Count; i-- > 0;)
             {
-                // On starting a new game, MM has not yet patched the tech tree URL so we're
-                // going to use that directly instead of the one in HighLogic.
-                if (HighLogic.CurrentGame.Parameters.Career.TechTreeUrl.Contains("Squad"))
-                    HighLogic.CurrentGame.Parameters.Career.TechTreeUrl = System.IO.Path.Combine("GameData", "ModuleManager.TechTree");
-
-                string fullPath = KSPUtil.ApplicationRootPath + HighLogic.CurrentGame.Parameters.Career.TechTreeUrl;
-                RP0Debug.Log($"Loading tech tree from {fullPath}");
-
-                if (ConfigNode.Load(fullPath) is ConfigNode fileNode && fileNode.HasNode("TechTree"))
-                {
-                    techNameToTitle.Clear();
-                    techNameToParents.Clear();
-
-                    ConfigNode treeNode = fileNode.GetNode("TechTree");
-                    foreach (ConfigNode n in treeNode.GetNodes("RDNode"))
-                    {
-                        string techID = n.GetValue("id");
-                        if (techID != null)
-                        {
-                            string title = n.GetValue("title");
-                            if (title != null)
-                                techNameToTitle[techID] = title;
-
-                            var pList = new List<string>();
-                            foreach (ConfigNode p in n.GetNodes("Parent"))
-                            {
-                                string pID = p.GetValue("parentID");
-                                if(pID != null)
-                                    pList.Add(pID);
-                            }
-                            techNameToParents[techID] = pList;
-                        }
-                    }
-                }
+                ResearchProject tech = TechList[i];
+                tech.UpdateBuildRate(i);
             }
+
+            Crew.CrewHandler.Instance?.RecalculateBuildRates();
+
+            KCTEvents.OnRecalculateBuildRates.Fire();
         }
+
+        #region Persistence
 
         public override void OnSave(ConfigNode node)
         {
@@ -150,7 +134,7 @@ namespace RP0
             try
             {
                 base.OnLoad(node);
-                LoadTree();
+                Database.LoadTree();
 
                 if (KCTUtilities.CurrentGameIsMission()) return;
 
@@ -264,13 +248,12 @@ namespace RP0
             }
         }
 
+        #endregion
+
+        #region Tech
         public bool TechListHas(string techID)
         {
-            for (int i = TechList.Count; i-- > 0;)
-                if (TechList[i].techID == techID)
-                    return true;
-
-            return false;
+            return TechListIndex(techID) != -1;
         }
 
         public int TechListIndex(string techID)
@@ -290,7 +273,7 @@ namespace RP0
 
         private void techListUpdated()
         {
-            if (TechIgnoreUpdates)
+            if (TechListIgnoreUpdates)
                 return;
 
             TechListUpdated();
@@ -301,6 +284,10 @@ namespace RP0
             MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
             Harmony.PatchRDTechTree.Instance?.RefreshUI();
         }
+
+        #endregion
+
+        #region LC
 
         public void RegisterLC(LaunchComplex lc)
         {
@@ -321,6 +308,13 @@ namespace RP0
         {
             return _LPIDtoLP.Remove(lp.id);
         }
+
+        public LaunchComplex FindLCFromID(Guid guid)
+        {
+            return LC(guid);
+        }
+
+        #endregion
 
         #region KSCSwitcher section
 
@@ -381,6 +375,8 @@ namespace RP0
 
         #endregion
 
+        #region KSC
+
         public void SetActiveKSCToRSS()
         {
             string site = GetActiveRSSKSC();
@@ -416,28 +412,7 @@ namespace RP0
             ActiveKSC = ksc;
         }
 
-        public void RecalculateBuildRates()
-        {
-            LCEfficiency.RecalculateConstants();
-
-            foreach (var ksc in KSCs)
-                ksc.RecalculateBuildRates(true);
-
-            for (int i = TechList.Count; i-- > 0;)
-            {
-                ResearchProject tech = TechList[i];
-                tech.UpdateBuildRate(i);
-            }
-
-            Crew.CrewHandler.Instance?.RecalculateBuildRates();
-
-            KCTEvents.OnRecalculateBuildRates.Fire();
-        }
-
-        public LaunchComplex FindLCFromID(Guid guid)
-        {
-            return LC(guid);
-        }
+        #endregion
 
         #region Budget
 

@@ -153,7 +153,7 @@ namespace RP0
         public bool IsEditorRecalcuationRequired = false;
         private bool _hasFirstRecalculated = false;
 
-        private WaitForSeconds _wfsHalf = null, _wfsOne = null, _wfsTwo = null;
+        private static WaitForSeconds _wfsHalf = new WaitForSeconds(0.5f), _wfsOne = new WaitForSeconds(1f), _wfsTwo = new WaitForSeconds(2f);
         private double _lastRateUpdateUT = 0;
         private double _lastYearMultUpdateUT = 0;
 
@@ -174,7 +174,9 @@ namespace RP0
 
         #endregion
 
-        public static KerbalConstructionTimeData Instance { get; protected set; }
+        public static KerbalConstructionTimeData Instance { get; private set; }
+
+        #region Lifecycle
 
         public override void OnAwake()
         {
@@ -219,35 +221,13 @@ namespace RP0
 
         public void Start()
         {
-            RP0Debug.Log("Start called");
-            _wfsOne = new WaitForSeconds(1f);
-            _wfsTwo = new WaitForSeconds(2f);
-            _wfsHalf = new WaitForSeconds(0.5f);
-
             KCT_GUI.InitTooltips();
 
             if (KCTUtilities.CurrentGameIsMission()) return;
 
-            // Subscribe to events from KSP and other mods
-            if (!KCTEvents.Instance.SubscribedToEvents)
-            {
-                KCTEvents.Instance.SubscribeToEvents();
-            }
-
             if (IsFirstStart)
             {
                 PresetManager.Instance.SaveActiveToSaveData();
-            }
-
-            // Ghetto event queue
-            if (HighLogic.LoadedScene == GameScenes.EDITOR)
-            {
-                KCT_GUI.BuildRateForDisplay = null;
-                if (!KCT_GUI.IsPrimarilyDisabled)
-                {
-                    IsEditorRecalcuationRequired = true;
-                }
-                InvokeRepeating("EditorRecalculation", 0.02f, 1f);
             }
 
             if (KCT_GUI.IsPrimarilyDisabled &&
@@ -287,126 +267,71 @@ namespace RP0
                         else
                             KCT_GUI.ToggleVisibility(KCT_GUI.GUIStates.ShowEditorGUI);
                     }
+                    EditorStart();
                     break;
                 case GameScenes.SPACECENTER:
-                    bool shouldStart = KCT_GUI.GUIStates.ShowFirstRun;
+                    bool showFirstRun = FirstRunNotComplete;
                     KCT_GUI.HideAll();
                     ClearVesselEditMode();
-                    if (!shouldStart)
+                    if (showFirstRun)
+                    {
+                        KCT_GUI.GUIStates.ShowFirstRun = true;
+                    }
+                    else
                     {
                         KCT_GUI.GUIStates.ShowBuildList = ShowWindows[0];
                         KCT_GUI.ToggleVisibility(KCT_GUI.GUIStates.ShowBuildList);
                     }
-                    KCT_GUI.GUIStates.ShowFirstRun = shouldStart;
                     StartCoroutine(UpdateFacilityLevels());
                     break;
                 case GameScenes.TRACKSTATION:
                     ClearVesselEditMode();
+                    _trackingStation = FindObjectOfType<SpaceTracking>();
+                    if (_trackingStation != null)
+                    {
+                        _recoverCallback = _trackingStation.RecoverButton.onClick;
+                        _flyCallback = _trackingStation.FlyButton.onClick;
+
+                        _trackingStation.RecoverButton.onClick = new Button.ButtonClickedEvent();
+                        _trackingStation.RecoverButton.onClick.AddListener(RecoveryChoiceTS);
+                    }
                     break;
                 case GameScenes.FLIGHT:
                     KCT_GUI.HideAll();
-                    ProcessFlightStart();
+                    FlightStart();
                     break;
             }
 
-            RP0Debug.Log("Start finished");
+            StartFinished();
+        }
 
-            DelayedStart();
-
+        private void EditorStart()
+        {
+            KCT_GUI.BuildRateForDisplay = null;
+            if (!KCT_GUI.IsPrimarilyDisabled)
+            {
+                IsEditorRecalcuationRequired = true;
+            }
+            InvokeRepeating("EditorRecalculation", 0.02f, 1f);
             StartCoroutine(HandleEditorButton_Coroutine());
-
-            if (HighLogic.LoadedScene == GameScenes.TRACKSTATION)
-            {
-                _trackingStation = FindObjectOfType<SpaceTracking>();
-                if (_trackingStation != null)
-                {
-                    _recoverCallback = _trackingStation.RecoverButton.onClick;
-                    _flyCallback = _trackingStation.FlyButton.onClick;
-
-                    _trackingStation.RecoverButton.onClick = new Button.ButtonClickedEvent();
-                    _trackingStation.RecoverButton.onClick.AddListener(RecoveryChoiceTS);
-                }
-            }
-            else if (HighLogic.LoadedSceneIsFlight)
-            {
-                if (FindObjectOfType<AltimeterSliderButtons>() is AltimeterSliderButtons altimeter)
-                {
-                    _recoverCallback = altimeter.vesselRecoveryButton.onClick;
-
-                    altimeter.vesselRecoveryButton.onClick = new Button.ButtonClickedEvent();
-                    altimeter.vesselRecoveryButton.onClick.AddListener(RecoveryChoiceFlight);
-                }
-            }
         }
 
-        private void ProcessFlightStart()
+        private void FlightStart()
         {
-            if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.situation != Vessel.Situations.PRELAUNCH) return;
-
-            VesselProject blv = LaunchedVessel;
-            var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
-            if (dataModule != null)
+            if (FindObjectOfType<AltimeterSliderButtons>() is AltimeterSliderButtons altimeter)
             {
-                if (string.IsNullOrWhiteSpace(dataModule.Data.LaunchID))
-                {
-                    dataModule.Data.LaunchID = Guid.NewGuid().ToString("N");
-                    RP0Debug.Log($"Assigned LaunchID: {dataModule.Data.LaunchID}");
-                }
+                _recoverCallback = altimeter.vesselRecoveryButton.onClick;
 
-                // This will only fire the first time, because we make it invalid afterwards by clearing the BLV
-                if (blv.IsValid)
-                {
-                    dataModule.Data.FacilityBuiltIn = blv.FacilityBuiltIn;
-                    dataModule.Data.VesselID = blv.KCTPersistentID;
-                    dataModule.Data.LCID = blv.LCID;
-                    if (dataModule.Data.LCID != Guid.Empty)
-                        dataModule.Data.LCModID = blv.LC.ModID;
-                }
+                altimeter.vesselRecoveryButton.onClick = new Button.ButtonClickedEvent();
+                altimeter.vesselRecoveryButton.onClick.AddListener(RecoveryChoiceFlight);
             }
 
-            if (KCT_GUI.IsPrimarilyDisabled) return;
-
-            AssignCrewToCurrentVessel();
-
-            // This only fires the first time because we clear the BLV afterwards.
-            if (blv.IsValid)
-            {
-                LaunchComplex vesselLC = blv.LC;
-                RP0Debug.Log("Attempting to remove launched vessel from build list");
-                if (blv.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
-                {
-                    //Add the cost of the ship to the funds so it can be removed again by KSP
-                    FlightGlobals.ActiveVessel.vesselName = blv.shipName;
-                }
-                if (vesselLC == null) vesselLC = ActiveSC.ActiveLC;
-                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is ReconRolloutProject rollout)
-                    vesselLC.Recon_Rollout.Remove(rollout);
-
-                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is AirlaunchProject alPrep)
-                    vesselLC.Airlaunch_Prep.Remove(alPrep);
-
-                LaunchedVessel = new VesselProject();
-            }
-
-            var alParams = AirlaunchParams;
-            if ((blv.IsValid && alParams.KCTVesselId == blv.shipID) ||
-                alParams.KSPVesselId == FlightGlobals.ActiveVessel.id)
-            {
-                if (alParams.KSPVesselId == Guid.Empty)
-                    alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
-                StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
-
-                // Clear the KCT vessel ID but keep KSP's own ID.
-                // 'Revert To Launch' state is saved some frames after the scene got loaded so LaunchedVessel is no longer there.
-                // In this case we use KSP's own id to figure out if airlaunch should be done.
-                AirlaunchParams.KCTVesselId = Guid.Empty;
-            }
+            if (FlightGlobals.ActiveVessel != null && FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH)
+                ProcessNewFlight();
         }
 
-        public void DelayedStart()
+        private void StartFinished()
         {
-            if (KCTUtilities.CurrentGameIsMission()) return;
-
             RP0Debug.Log("DelayedStart start");
             if (PresetManager.Instance?.ActivePreset == null || !PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return;
@@ -423,118 +348,90 @@ namespace RP0
                 SetActiveKSCToRSS();
             }
 
-            RP0Debug.Log("Checking vessels for missing parts.");
-            //check that all parts are valid in all ships. If not, warn the user and disable that vessel (once that code is written)
-            if (!VesselErrorAlerted)
+            CheckMissingParts();
+
+            switch (HighLogic.LoadedScene)
             {
-                var erroredVessels = new List<VesselProject>();
-                foreach (SpaceCenter KSC in KSCs) //this is faster on subsequent scene changes
-                {
-                    foreach (LaunchComplex currentLC in KSC.LaunchComplexes)
+                case GameScenes.EDITOR:
+                    if (EditorShipEditingMode)
                     {
-                        foreach (VesselProject blv in currentLC.BuildList)
-                        {
-                            if (!blv.AllPartsValid)
-                            {
-                                RP0Debug.Log(blv.shipName + " contains invalid parts!");
-                                erroredVessels.Add(blv);
-                            }
-                        }
-                        foreach (VesselProject blv in currentLC.Warehouse)
-                        {
-                            if (!blv.AllPartsValid)
-                            {
-                                RP0Debug.Log(blv.shipName + " contains invalid parts!");
-                                erroredVessels.Add(blv);
-                            }
-                        }
+                        RP0Debug.Log($"Editing {EditedVessel.shipName}");
+                        EditorLogic.fetch.shipNameField.text = EditedVessel.shipName;
                     }
-                }
-                if (erroredVessels.Count > 0)
-                    PopUpVesselError(erroredVessels);
-                VesselErrorAlerted = true;
-            }
-
-            if (HighLogic.LoadedSceneIsEditor && EditorShipEditingMode)
-            {
-                RP0Debug.Log($"Editing {EditedVessel.shipName}");
-                EditorLogic.fetch.shipNameField.text = EditedVessel.shipName;
-            }
-
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-            {
-                RP0Debug.Log("SP Start");
-                if (!KCT_GUI.IsPrimarilyDisabled)
-                {
-                    if (ToolbarManager.ToolbarAvailable && Settings.PreferBlizzyToolbar)
+                    break;
+                case GameScenes.SPACECENTER:
+                    if (!KCT_GUI.IsPrimarilyDisabled)
                     {
-                        if (ShowWindows[0])
-                            KCT_GUI.ToggleVisibility(true);
-                        else
+                        // TODO: This looks like a duplicate of the code in Start's switch, can we combine?
+                        if (ToolbarManager.ToolbarAvailable && Settings.PreferBlizzyToolbar)
                         {
-                            if (KCTEvents.Instance != null && ToolbarControl != null)
+                            if (ShowWindows[0])
+                                KCT_GUI.ToggleVisibility(true);
+                            else
                             {
-                                if (ShowWindows[0])
-                                    KCT_GUI.ToggleVisibility(true);
+                                if (KCTEvents.Instance != null && ToolbarControl != null)
+                                {
+                                    if (ShowWindows[0])
+                                        KCT_GUI.ToggleVisibility(true);
+                                }
                             }
                         }
+                        KCT_GUI.ResetBLWindow();
                     }
-                    KCT_GUI.ResetBLWindow();
-                }
-                else
-                {
-                    KCT_GUI.GUIStates.ShowBuildList = false;
-                    ShowWindows[0] = false;
-                }
-                RP0Debug.Log("SP UI done");
-
-                if (IsFirstStart)
-                {
-                    RP0Debug.Log("Showing first start.");
-                    IsFirstStart = false;
-                    KCT_GUI.GUIStates.ShowFirstRun = true;
-                    foreach (var ksc in KSCs)
-                        ksc.EnsureStartingLaunchComplexes();
-
-                    Applicants = Database.SettingsSC.GetStartingPersonnel(HighLogic.CurrentGame.Mode);
-                }
-                else if (FirstRunNotComplete)
-                {
-                    KCT_GUI.GUIStates.ShowFirstRun = true;
-                }
-
-                RP0Debug.Log("SP done");
-            }
-
-            if (HighLogic.LoadedSceneIsFlight && IsSimulatedFlight)
-            {
-                KCTUtilities.EnableSimulationLocks();
-                if (SimulationParams.SimulationUT > 0 &&
-                    FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
-                {
-                    // Advance building construction
-                    double UToffset = SimulationParams.SimulationUT - Planetarium.GetUniversalTime();
-                    if (UToffset > 0)
-                    {
-                        foreach (var ksc in KSCs)
-                        {
-                            for (int i = 0; i < ksc.Constructions.Count; ++i)
-                            {
-                                var c = ksc.Constructions[i];
-                                double t = c.GetTimeLeft();
-                                if (t <= UToffset)
-                                    c.progress = c.BP;
-                            }
-                        }
-                    }
-                    RP0Debug.Log($"Setting simulation UT to {SimulationParams.SimulationUT}");
-                    if (!KCTUtilities.IsPrincipiaInstalled)
-                        Planetarium.SetUniversalTime(SimulationParams.SimulationUT);
                     else
-                        StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), SimulationParams.SimulationUT));
-                }
+                    {
+                        KCT_GUI.GUIStates.ShowBuildList = false;
+                        ShowWindows[0] = false;
+                    }
 
-                AddSimulationWatermark();
+                    if (IsFirstStart)
+                    {
+                        IsFirstStart = false;
+                        KCT_GUI.GUIStates.ShowFirstRun = true;
+                        foreach (var ksc in KSCs)
+                            ksc.EnsureStartingLaunchComplexes();
+
+                        Applicants = Database.SettingsSC.GetStartingPersonnel(HighLogic.CurrentGame.Mode);
+                    }
+                    else if (FirstRunNotComplete)
+                    {
+                        KCT_GUI.GUIStates.ShowFirstRun = true;
+                    }
+
+                    break;
+
+                case GameScenes.FLIGHT:
+                    if (IsSimulatedFlight)
+                    {
+                        KCTUtilities.EnableSimulationLocks();
+                        if (SimulationParams.SimulationUT > 0 &&
+                            FlightDriver.CanRevertToPrelaunch)    // Used for checking whether the player has saved and then loaded back into that save
+                        {
+                            // Advance building construction
+                            double UToffset = SimulationParams.SimulationUT - Planetarium.GetUniversalTime();
+                            if (UToffset > 0)
+                            {
+                                foreach (var ksc in KSCs)
+                                {
+                                    for (int i = 0; i < ksc.Constructions.Count; ++i)
+                                    {
+                                        var c = ksc.Constructions[i];
+                                        double t = c.GetTimeLeft();
+                                        if (t <= UToffset)
+                                            c.progress = c.BP;
+                                    }
+                                }
+                            }
+                            RP0Debug.Log($"Setting simulation UT to {SimulationParams.SimulationUT}");
+                            if (!KCTUtilities.IsPrincipiaInstalled)
+                                Planetarium.SetUniversalTime(SimulationParams.SimulationUT);
+                            else
+                                StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), SimulationParams.SimulationUT));
+                        }
+
+                        AddSimulationWatermark();
+                    }
+                    break;
             }
 
             if (IsSimulatedFlight && HighLogic.LoadedSceneIsGame && !HighLogic.LoadedSceneIsFlight)
@@ -542,8 +439,33 @@ namespace RP0
                 string msg = $"The current save appears to be a simulation and we cannot automatically find a suitable pre-simulation save. Please load an older save manually; we recommend the backup that should have been saved to \\saves\\{HighLogic.SaveFolder}\\Backup\\KCT_simulation_backup.sfs";
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "Simulation Error", msg, "Understood", false, HighLogic.UISkin);
             }
+        }
 
-            RP0Debug.Log("DelayedStart finished");
+        public void FixedUpdate()
+        {
+            if (KCTUtilities.CurrentGameIsMission()) return;
+            if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
+                return;
+            double UT = Planetarium.GetUniversalTime();
+            if (_lastRateUpdateUT == 0d)
+                _lastRateUpdateUT = UT;
+            double UTDiff = UT - _lastRateUpdateUT;
+            if (!KCT_GUI.IsPrimarilyDisabled && (TimeWarp.CurrentRateIndex > 0 || UTDiff > BUILD_TIME_INTERVAL))
+            {
+                // Drive this from RP-1: ProgressBuildTime(UTDiff);
+                _lastRateUpdateUT = UT;
+
+                if (UT - _lastYearMultUpdateUT > YEAR_MULT_TIME_INTERVAL)
+                {
+                    UpdateTechYearMults();
+                    _lastYearMultUpdateUT = UT;
+                }
+            }
+
+            if (HighLogic.LoadedSceneIsFlight && IsSimulatedFlight)
+            {
+                ProcessSimulation();
+            }
         }
 
         public void OnDestroy()
@@ -562,7 +484,7 @@ namespace RP0
                 Instance = null;
         }
 
-        internal void OnGUI()
+        public void OnGUI()
         {
             if (KCTUtilities.CurrentGameIsMission()) return;
 
@@ -574,24 +496,8 @@ namespace RP0
             KCT_GUI.SetGUIPositions();
         }
 
-        public void RecalculateBuildRates()
-        {
-            LCEfficiency.RecalculateConstants();
-
-            foreach (var ksc in KSCs)
-                ksc.RecalculateBuildRates(true);
-
-            for (int i = TechList.Count; i-- > 0;)
-            {
-                ResearchProject tech = TechList[i];
-                tech.UpdateBuildRate(i);
-            }
-
-            Crew.CrewHandler.Instance?.RecalculateBuildRates();
-
-            KCTEvents.OnRecalculateBuildRates.Fire();
-        }
-
+        #endregion
+                
         #region Persistence
 
         public override void OnSave(ConfigNode node)
@@ -716,9 +622,108 @@ namespace RP0
             }
         }
 
+        private void CheckMissingParts()
+        {
+            RP0Debug.Log("Checking vessels for missing parts.");
+            //check that all parts are valid in all ships. If not, warn the user and disable that vessel (once that code is written)
+            if (!VesselErrorAlerted)
+            {
+                var erroredVessels = new List<VesselProject>();
+                foreach (SpaceCenter KSC in KSCs)
+                {
+                    foreach (LaunchComplex currentLC in KSC.LaunchComplexes)
+                    {
+                        foreach (VesselProject blv in currentLC.BuildList)
+                        {
+                            if (!blv.AllPartsValid) // will cache for later use in this scene
+                            {
+                                RP0Debug.Log(blv.shipName + " contains invalid parts!");
+                                erroredVessels.Add(blv);
+                            }
+                        }
+                        foreach (VesselProject blv in currentLC.Warehouse)
+                        {
+                            if (!blv.AllPartsValid)
+                            {
+                                RP0Debug.Log(blv.shipName + " contains invalid parts!");
+                                erroredVessels.Add(blv);
+                            }
+                        }
+                    }
+                }
+                if (erroredVessels.Count > 0)
+                    PopUpVesselError(erroredVessels);
+                VesselErrorAlerted = true;
+            }
+        }
+
+        private void PopUpVesselError(List<VesselProject> errored)
+        {
+            DialogGUIBase[] options = new DialogGUIBase[2];
+            options[0] = new DialogGUIButton("Understood", () => { });
+            options[1] = new DialogGUIButton("Delete Vessels", () =>
+            {
+                foreach (VesselProject blv in errored)
+                {
+                    blv.RemoveFromBuildList(out _);
+                    KCTUtilities.AddFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
+                    //remove any associated recon_rollout
+                }
+            });
+
+            string txt = "The following stored/building vessels contain missing or invalid parts and have been quarantined. Either add the missing parts back into your game or delete the vessels. A file containing the ship names and missing parts has been added to your save folder.\n";
+            string txtToWrite = "";
+            foreach (VesselProject blv in errored)
+            {
+                txt += blv.shipName + "\n";
+                txtToWrite += blv.shipName + "\n";
+                txtToWrite += string.Join("\n", blv.GetMissingParts());
+                txtToWrite += "\n\n";
+            }
+
+            //make new file for missing ships
+            string filename = KSPUtil.ApplicationRootPath + "/saves/" + HighLogic.SaveFolder + "/missingParts.txt";
+            File.WriteAllText(filename, txtToWrite);
+
+            //remove all rollout and recon items since they're invalid without the ships
+            foreach (VesselProject blv in errored)
+            {
+                //remove any associated recon_rollout
+                foreach (SpaceCenter ksc in KSCs)
+                {
+                    foreach (LaunchComplex currentLC in ksc.LaunchComplexes)
+                    {
+                        for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
+                        {
+                            ReconRolloutProject rr = currentLC.Recon_Rollout[i];
+                            if (rr.associatedID == blv.shipID.ToString())
+                            {
+                                currentLC.Recon_Rollout.Remove(rr);
+                                i--;
+                            }
+                        }
+
+                        for (int i = 0; i < currentLC.Airlaunch_Prep.Count; i++)
+                        {
+                            AirlaunchProject ap = currentLC.Airlaunch_Prep[i];
+                            if (ap.associatedID == blv.shipID.ToString())
+                            {
+                                currentLC.Airlaunch_Prep.Remove(ap);
+                                i--;
+                            }
+                        }
+                    }
+                }
+            }
+
+            var diag = new MultiOptionDialog("missingPartsPopup", txt, "Vessels Contain Missing Parts", null, options);
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
+        }
+
         #endregion
 
         #region Tech
+
         public bool TechListHas(string techID)
         {
             return TechListIndex(techID) != -1;
@@ -731,6 +736,15 @@ namespace RP0
                     return i;
 
             return -1;
+        }
+
+        private void UpdateTechYearMults()
+        {
+            for (int i = TechList.Count - 1; i >= 0; i--)
+            {
+                var t = TechList[i];
+                t.UpdateBuildRate(i);
+            }
         }
 
         public void UpdateTechTimes()
@@ -845,7 +859,7 @@ namespace RP0
 
         #region KSC
 
-        public void SetActiveKSCToRSS()
+        private void SetActiveKSCToRSS()
         {
             string site = GetActiveRSSKSC();
             SetActiveKSC(site);
@@ -870,7 +884,7 @@ namespace RP0
             }
         }
 
-        public void SetActiveKSC(SpaceCenter ksc)
+        private void SetActiveKSC(SpaceCenter ksc)
         {
             if (ksc == null || ksc == ActiveSC)
                 return;
@@ -1078,20 +1092,80 @@ namespace RP0
         }
         #endregion
 
-        
+        #region Flight
 
-        
-
-        private static void AssignCrewToCurrentVessel()
+        private void ProcessNewFlight()
         {
-            if (!Instance.IsSimulatedFlight &&
-                FlightGlobals.ActiveVessel.GetCrewCount() == 0 && Instance.LaunchedCrew.Count > 0)
+            VesselProject blv = LaunchedVessel;
+            var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
+            if (dataModule != null)
+            {
+                if (string.IsNullOrWhiteSpace(dataModule.Data.LaunchID))
+                {
+                    dataModule.Data.LaunchID = Guid.NewGuid().ToString("N");
+                    RP0Debug.Log($"Assigned LaunchID: {dataModule.Data.LaunchID}");
+                }
+
+                // This will only fire the first time, because we make it invalid afterwards by clearing the BLV
+                if (blv.IsValid)
+                {
+                    dataModule.Data.FacilityBuiltIn = blv.FacilityBuiltIn;
+                    dataModule.Data.VesselID = blv.KCTPersistentID;
+                    dataModule.Data.LCID = blv.LCID;
+                    if (dataModule.Data.LCID != Guid.Empty)
+                        dataModule.Data.LCModID = blv.LC.ModID;
+                }
+            }
+
+            if (KCT_GUI.IsPrimarilyDisabled) return;
+
+            AssignCrewToCurrentVessel();
+
+            // This only fires the first time because we clear the BLV afterwards.
+            if (blv.IsValid)
+            {
+                LaunchComplex vesselLC = blv.LC;
+                RP0Debug.Log("Attempting to remove launched vessel from build list");
+                if (blv.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
+                {
+                    //Add the cost of the ship to the funds so it can be removed again by KSP
+                    FlightGlobals.ActiveVessel.vesselName = blv.shipName;
+                }
+                if (vesselLC == null) vesselLC = ActiveSC.ActiveLC;
+                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is ReconRolloutProject rollout)
+                    vesselLC.Recon_Rollout.Remove(rollout);
+
+                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is AirlaunchProject alPrep)
+                    vesselLC.Airlaunch_Prep.Remove(alPrep);
+
+                LaunchedVessel = new VesselProject();
+            }
+
+            var alParams = AirlaunchParams;
+            if ((blv.IsValid && alParams.KCTVesselId == blv.shipID) ||
+                alParams.KSPVesselId == FlightGlobals.ActiveVessel.id)
+            {
+                if (alParams.KSPVesselId == Guid.Empty)
+                    alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
+                StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
+
+                // Clear the KCT vessel ID but keep KSP's own ID.
+                // 'Revert To Launch' state is saved some frames after the scene got loaded so LaunchedVessel is no longer there.
+                // In this case we use KSP's own id to figure out if airlaunch should be done.
+                AirlaunchParams.KCTVesselId = Guid.Empty;
+            }
+        }
+
+        private void AssignCrewToCurrentVessel()
+        {
+            if (!IsSimulatedFlight &&
+                FlightGlobals.ActiveVessel.GetCrewCount() == 0 && LaunchedCrew.Count > 0)
             {
                 KerbalRoster roster = HighLogic.CurrentGame.CrewRoster;
                 foreach (Part p in FlightGlobals.ActiveVessel.parts)
                 {
                     RP0Debug.Log($"Part being tested: {p.partInfo.title}");
-                    if (p.CrewCapacity == 0 || !(Instance.LaunchedCrew.Find(part => part.PartID == p.craftID) is PartCrewAssignment cp))
+                    if (p.CrewCapacity == 0 || !(LaunchedCrew.Find(part => part.PartID == p.craftID) is PartCrewAssignment cp))
                         continue;
                     List<CrewMemberAssignment> crewList = cp.CrewList;
                     RP0Debug.Log($"cP.crewList.Count: {cp.CrewList.Count}");
@@ -1122,7 +1196,7 @@ namespace RP0
                         }
                     }
                 }
-                Instance.LaunchedCrew.Clear();
+                LaunchedCrew.Clear();
             }
         }
 
@@ -1176,98 +1250,6 @@ namespace RP0
             RP0Debug.Log($"Finished clobbering vessel situation of {FlightGlobals.ActiveVessel.name} to PRELAUNCH (for Prinicipia stability), now firing change event to FLYING.");
             FlightGlobals.ActiveVessel.situation = Vessel.Situations.FLYING;
             GameEvents.onVesselSituationChange.Fire(new GameEvents.HostedFromToAction<Vessel, Vessel.Situations>(FlightGlobals.ActiveVessel, Vessel.Situations.PRELAUNCH, Vessel.Situations.FLYING));
-        }
-
-        protected void EditorRecalculation()
-        {
-            if (IsEditorRecalcuationRequired)
-            {
-                if (EditorDriver.fetch != null && !EditorDriver.fetch.restartingEditor)
-                {
-                    _hasFirstRecalculated = true;
-                    IsEditorRecalcuationRequired = false;
-                    RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                }
-                // make sure we're not destructing
-                else if (!_hasFirstRecalculated && this != null)
-                {
-                    StartCoroutine(CallbackUtil.DelayedCallback(0.02f, EditorRecalculation));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Coroutine to reset the launch button handlers every 1/2 second
-        /// Needed because KSP seems to change them behind the scene sometimes
-        /// </summary>
-        /// <returns></returns>
-        IEnumerator HandleEditorButton_Coroutine()
-        {
-            while (true)
-            {
-                if (HighLogic.LoadedSceneIsEditor && EditorLogic.fetch != null)
-                    KCTUtilities.HandleEditorButton();
-                yield return _wfsHalf;
-            }
-        }
-
-        public void FixedUpdate()
-        {
-            if (KCTUtilities.CurrentGameIsMission()) return;
-            if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
-                return;
-            double UT = Planetarium.GetUniversalTime();
-            if (_lastRateUpdateUT == 0d)
-                _lastRateUpdateUT = UT;
-            double UTDiff = UT - _lastRateUpdateUT;
-            if (!KCT_GUI.IsPrimarilyDisabled && (TimeWarp.CurrentRateIndex > 0 || UTDiff > BUILD_TIME_INTERVAL))
-            {
-                // Drive this from RP-1: ProgressBuildTime(UTDiff);
-                _lastRateUpdateUT = UT;
-
-                if (UT - _lastYearMultUpdateUT > YEAR_MULT_TIME_INTERVAL)
-                {
-                    UpdateTechYearMults();
-                    _lastYearMultUpdateUT = UT;
-                }
-            }
-
-            if (HighLogic.LoadedSceneIsFlight && IsSimulatedFlight)
-            {
-                ProcessSimulation();
-            }
-        }
-
-        // Ran every 30 FixedUpdates, which we will treat as 0.5 seconds for now.
-        // First we update locked buildings, then we loop on pad.
-        // FIXME we could do this on event, but sometimes things get hinky.
-        private IEnumerator UpdateFacilityLevels()
-        {
-            // Only run during Space Center in career mode
-            // Also need to wait a bunch of frames until KSP has initialized Upgradable and Destructible facilities
-            yield return new WaitForFixedUpdate();
-            yield return new WaitForFixedUpdate();
-            yield return new WaitForFixedUpdate();
-            yield return new WaitForFixedUpdate();
-            yield return new WaitForFixedUpdate();
-
-            if (HighLogic.LoadedScene != GameScenes.SPACECENTER || !KCTUtilities.CurrentGameIsCareer())
-                yield break;
-
-            FacilityUpgradeProject.UpgradeLockedFacilities();
-
-            while (HighLogic.LoadedScene == GameScenes.SPACECENTER)
-            {
-                if (ActiveSC.ActiveLC.ActiveLPInstance is LCLaunchPad pad)
-                {
-                    if (KCTUtilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
-                    {
-                        ActiveSC.ActiveLC.SwitchLaunchPad(ActiveSC.ActiveLC.ActiveLaunchPadIndex, false);
-                        pad.UpdateLaunchpadDestructionState(false);
-                    }
-                }
-                yield return _wfsHalf;
-            }
         }
 
         private void ProcessSimulation()
@@ -1353,6 +1335,227 @@ namespace RP0
                 rectTransform.sizeDelta = new Vector2(300 * uiController.uiScale, 50 * uiController.uiScale);
             }
         }
+
+        private IEnumerator EaseSimulationUT_Coroutine(double startUT, double targetUT)
+        {
+            const double dayInSeconds = 86_400;
+
+            if (targetUT <= Planetarium.GetUniversalTime()) yield break;
+
+            RP0Debug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
+
+            int currentFrame = Time.frameCount;
+            double nextUT = startUT;
+            while (targetUT - nextUT > dayInSeconds)
+            {
+                nextUT += dayInSeconds;
+
+                FlightDriver.fetch.framesBeforeInitialSave += Time.frameCount - currentFrame;
+                currentFrame = Time.frameCount;
+                OrbitPhysicsManager.HoldVesselUnpack();
+                Planetarium.SetUniversalTime(nextUT);
+
+                yield return new WaitForFixedUpdate();
+            }
+
+            OrbitPhysicsManager.HoldVesselUnpack();
+            Planetarium.SetUniversalTime(targetUT);
+        }
+
+        #endregion
+
+        #region Editor
+
+        private void EditorRecalculation()
+        {
+            if (IsEditorRecalcuationRequired)
+            {
+                if (EditorDriver.fetch != null && !EditorDriver.fetch.restartingEditor)
+                {
+                    _hasFirstRecalculated = true;
+                    IsEditorRecalcuationRequired = false;
+                    RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                }
+                // make sure we're not destructing
+                else if (!_hasFirstRecalculated && this != null)
+                {
+                    StartCoroutine(CallbackUtil.DelayedCallback(0.02f, EditorRecalculation));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Coroutine to reset the launch button handlers every 1/2 second
+        /// Needed because KSP seems to change them behind the scene sometimes
+        /// </summary>
+        /// <returns></returns>
+        IEnumerator HandleEditorButton_Coroutine()
+        {
+            while (true)
+            {
+                if (HighLogic.LoadedSceneIsEditor && EditorLogic.fetch != null)
+                    KCTUtilities.HandleEditorButton();
+                yield return _wfsHalf;
+            }
+        }
+
+        public static void ShowLaunchAlert(string launchSite)
+        {
+            RP0Debug.Log("Showing Launch Alert");
+            if (KCT_GUI.IsPrimarilyDisabled)
+            {
+                EditorLogic.fetch.launchVessel();
+            }
+            else
+            {
+                KCTUtilities.TryAddVesselToBuildList(launchSite);
+                // We are recalculating because vessel validation might have changed state.
+                Instance.IsEditorRecalcuationRequired = true;
+            }
+        }
+
+        private void RecalculateEditorBuildTime(ShipConstruct ship)
+        {
+            if (!HighLogic.LoadedSceneIsEditor) return;
+
+            LaunchComplex oldLC = EditorVessel.LC;
+            var oldFac = EditorVessel.FacilityBuiltIn;
+
+            EditorVessel = new VesselProject(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
+            // override LC in case of vessel editing
+            if (EditorShipEditingMode)
+            {
+                EditorVessel.LCID = EditedVessel.LCID;
+            }
+            else
+            {
+                // Check if we switched editors
+                if (oldFac != EditorVessel.FacilityBuiltIn)
+                {
+                    if (oldFac == EditorFacility.VAB)
+                    {
+                        if (oldLC.LCType == LaunchComplexType.Pad)
+                        {
+                            // cache this off -- we swapped editors
+                            PreEditorSwapLCID = oldLC.ID;
+                        }
+                        // the BLV constructor sets our LC type to Hangar. But let's swap to it as well.
+                        if (ActiveSC.ActiveLC.LCType != LaunchComplexType.Hangar && ActiveSC.Hangar.IsOperational)
+                        {
+                            ActiveSC.SwitchLaunchComplex(SpaceCenter.HangarIndex);
+                        }
+                    }
+                    else
+                    {
+                        // Try to recover a pad LC
+                        bool swappedLC = false;
+                        if (ActiveSC.LaunchComplexCount > 1)
+                        {
+                            if (PreEditorSwapLCID != Guid.Empty && ActiveSC.SwitchToLaunchComplex(PreEditorSwapLCID))
+                            {
+                                swappedLC = true;
+                            }
+                            else
+                            {
+                                int idx = ActiveSC.GetLaunchComplexIdxToSwitchTo(true, true);
+                                if (idx != -1)
+                                {
+                                    ActiveSC.SwitchLaunchComplex(idx);
+                                    swappedLC = true;
+                                }
+                            }
+                            if (swappedLC)
+                            {
+                                EditorVessel.LC = ActiveSC.ActiveLC;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (EditorDriver.editorFacility == EditorFacility.VAB)
+            {
+                EditorRolloutCost = Formula.GetRolloutCost(EditorVessel);
+                EditorRolloutBP = Formula.GetRolloutBP(EditorVessel);
+            }
+            else
+            {
+                // SPH lacks rollout times and costs
+                EditorRolloutCost = 0;
+                EditorRolloutBP = 0;
+            }
+
+            Tuple<float, List<string>> unlockInfo = KCTUtilities.GetVesselUnlockInfo(ship);
+            EditorUnlockCosts = unlockInfo.Item1;
+            EditorRequiredTechs = unlockInfo.Item2;
+            ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
+            EditorToolingCosts = toolingCost;
+
+            // It would be better to only do this if necessary, but eh.
+            // It's not easy to know if various buried fields in the blv changed.
+            // It would *also* be nice to not run the ER before the blv is ready
+            // post craft-load, but...also eh. This is fine.
+            Harmony.PatchEngineersReport.UpdateCraftStats();
+        }
+
+        #endregion
+
+        #region Spacecenter
+
+        // Ran every 30 FixedUpdates, which we will treat as 0.5 seconds for now.
+        // First we update locked buildings, then we loop on pad.
+        // FIXME we could do this on event, but sometimes things get hinky.
+        private IEnumerator UpdateFacilityLevels()
+        {
+            // Only run during Space Center in career mode
+            // Also need to wait a bunch of frames until KSP has initialized Upgradable and Destructible facilities
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+
+            if (HighLogic.LoadedScene != GameScenes.SPACECENTER || !KCTUtilities.CurrentGameIsCareer())
+                yield break;
+
+            FacilityUpgradeProject.UpgradeLockedFacilities();
+
+            while (HighLogic.LoadedScene == GameScenes.SPACECENTER)
+            {
+                if (ActiveSC.ActiveLC.ActiveLPInstance is LCLaunchPad pad)
+                {
+                    if (KCTUtilities.GetBuildingUpgradeLevel(SpaceCenterFacility.LaunchPad) != pad.level)
+                    {
+                        ActiveSC.ActiveLC.SwitchLaunchPad(ActiveSC.ActiveLC.ActiveLaunchPadIndex, false);
+                        pad.UpdateLaunchpadDestructionState(false);
+                    }
+                }
+                yield return _wfsHalf;
+            }
+        }
+
+        #endregion
+
+        #region Build handling
+
+        public void RecalculateBuildRates()
+        {
+            LCEfficiency.RecalculateConstants();
+
+            foreach (var ksc in KSCs)
+                ksc.RecalculateBuildRates(true);
+
+            for (int i = TechList.Count; i-- > 0;)
+            {
+                ResearchProject tech = TechList[i];
+                tech.UpdateBuildRate(i);
+            }
+
+            Crew.CrewHandler.Instance?.RecalculateBuildRates();
+
+            KCTEvents.OnRecalculateBuildRates.Fire();
+        }
+
 
         public void ProgressBuildTime(double UTDiff)
         {
@@ -1450,118 +1653,9 @@ namespace RP0
             Profiler.EndSample();
         }
 
-        private void UpdateTechYearMults()
-        {
-            for (int i = TechList.Count - 1; i >= 0; i--)
-            {
-                var t = TechList[i];
-                t.UpdateBuildRate(i);
-            }
-        }
+        #endregion
 
-        private IEnumerator EaseSimulationUT_Coroutine(double startUT, double targetUT)
-        {
-            const double dayInSeconds = 86_400;
-
-            if (targetUT <= Planetarium.GetUniversalTime()) yield break;
-
-            RP0Debug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
-
-            int currentFrame = Time.frameCount;
-            double nextUT = startUT;
-            while (targetUT - nextUT > dayInSeconds)
-            {
-                nextUT += dayInSeconds;
-
-                FlightDriver.fetch.framesBeforeInitialSave += Time.frameCount - currentFrame;
-                currentFrame = Time.frameCount;
-                OrbitPhysicsManager.HoldVesselUnpack();
-                Planetarium.SetUniversalTime(nextUT);
-
-                yield return new WaitForFixedUpdate();
-            }
-
-            OrbitPhysicsManager.HoldVesselUnpack();
-            Planetarium.SetUniversalTime(targetUT);
-        }
-
-        public static void PopUpVesselError(List<VesselProject> errored)
-        {
-            DialogGUIBase[] options = new DialogGUIBase[2];
-            options[0] = new DialogGUIButton("Understood", () => { });
-            options[1] = new DialogGUIButton("Delete Vessels", () =>
-            {
-                foreach (VesselProject blv in errored)
-                {
-                    blv.RemoveFromBuildList(out _);
-                    KCTUtilities.AddFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
-                    //remove any associated recon_rollout
-                }
-            });
-
-            string txt = "The following stored/building vessels contain missing or invalid parts and have been quarantined. Either add the missing parts back into your game or delete the vessels. A file containing the ship names and missing parts has been added to your save folder.\n";
-            string txtToWrite = "";
-            foreach (VesselProject blv in errored)
-            {
-                txt += blv.shipName + "\n";
-                txtToWrite += blv.shipName + "\n";
-                txtToWrite += string.Join("\n", blv.GetMissingParts());
-                txtToWrite += "\n\n";
-            }
-
-            //make new file for missing ships
-            string filename = KSPUtil.ApplicationRootPath + "/saves/" + HighLogic.SaveFolder + "/missingParts.txt";
-            File.WriteAllText(filename, txtToWrite);
-
-            //remove all rollout and recon items since they're invalid without the ships
-            foreach (VesselProject blv in errored)
-            {
-                //remove any associated recon_rollout
-                foreach (SpaceCenter ksc in Instance.KSCs)
-                {
-                    foreach (LaunchComplex currentLC in ksc.LaunchComplexes)
-                    {
-                        for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
-                        {
-                            ReconRolloutProject rr = currentLC.Recon_Rollout[i];
-                            if (rr.associatedID == blv.shipID.ToString())
-                            {
-                                currentLC.Recon_Rollout.Remove(rr);
-                                i--;
-                            }
-                        }
-
-                        for (int i = 0; i < currentLC.Airlaunch_Prep.Count; i++)
-                        {
-                            AirlaunchProject ap = currentLC.Airlaunch_Prep[i];
-                            if (ap.associatedID == blv.shipID.ToString())
-                            {
-                                currentLC.Airlaunch_Prep.Remove(ap);
-                                i--;
-                            }
-                        }
-                    }
-                }
-            }
-
-            var diag = new MultiOptionDialog("missingPartsPopup", txt, "Vessels Contain Missing Parts", null, options);
-            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin);
-        }
-
-        public static void ShowLaunchAlert(string launchSite)
-        {
-            RP0Debug.Log("Showing Launch Alert");
-            if (KCT_GUI.IsPrimarilyDisabled)
-            {
-                EditorLogic.fetch.launchVessel();
-            }
-            else
-            {
-                KCTUtilities.TryAddVesselToBuildList(launchSite);
-                // We are recalculating because vessel validation might have changed state.
-                Instance.IsEditorRecalcuationRequired = true;
-            }
-        }
+        #region Recovery
 
         // TS code
         private void Fly()
@@ -1684,89 +1778,7 @@ namespace RP0
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        public void RecalculateEditorBuildTime(ShipConstruct ship)
-        {
-            if (!HighLogic.LoadedSceneIsEditor) return;
-
-            LaunchComplex oldLC = EditorVessel.LC;
-            var oldFac = EditorVessel.FacilityBuiltIn;
-
-            EditorVessel = new VesselProject(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
-            // override LC in case of vessel editing
-            if (EditorShipEditingMode)
-            {
-                EditorVessel.LCID = EditedVessel.LCID;
-            }
-            else
-            {
-                // Check if we switched editors
-                if (oldFac != EditorVessel.FacilityBuiltIn)
-                {
-                    if (oldFac == EditorFacility.VAB)
-                    {
-                        if (oldLC.LCType == LaunchComplexType.Pad)
-                        {
-                            // cache this off -- we swapped editors
-                            PreEditorSwapLCID = oldLC.ID;
-                        }
-                        // the BLV constructor sets our LC type to Hangar. But let's swap to it as well.
-                        if (ActiveSC.ActiveLC.LCType != LaunchComplexType.Hangar && ActiveSC.Hangar.IsOperational)
-                        {
-                            ActiveSC.SwitchLaunchComplex(SpaceCenter.HangarIndex);
-                        }
-                    }
-                    else
-                    {
-                        // Try to recover a pad LC
-                        bool swappedLC = false;
-                        if (ActiveSC.LaunchComplexCount > 1)
-                        {
-                            if (PreEditorSwapLCID != Guid.Empty && ActiveSC.SwitchToLaunchComplex(PreEditorSwapLCID))
-                            {
-                                swappedLC = true;
-                            }
-                            else
-                            {
-                                int idx = ActiveSC.GetLaunchComplexIdxToSwitchTo(true, true);
-                                if (idx != -1)
-                                {
-                                    ActiveSC.SwitchLaunchComplex(idx);
-                                    swappedLC = true;
-                                }
-                            }
-                            if (swappedLC)
-                            {
-                                EditorVessel.LC = ActiveSC.ActiveLC;
-                            }
-                        }
-                    }
-                }
-            }
-
-            if (EditorDriver.editorFacility == EditorFacility.VAB)
-            {
-                EditorRolloutCost = Formula.GetRolloutCost(EditorVessel);
-                EditorRolloutBP = Formula.GetRolloutBP(EditorVessel);
-            }
-            else
-            {
-                // SPH lacks rollout times and costs
-                EditorRolloutCost = 0;
-                EditorRolloutBP = 0;
-            }
-
-            Tuple<float, List<string>> unlockInfo = KCTUtilities.GetVesselUnlockInfo(ship);
-            EditorUnlockCosts = unlockInfo.Item1;
-            EditorRequiredTechs = unlockInfo.Item2;
-            ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
-            EditorToolingCosts = toolingCost;
-
-            // It would be better to only do this if necessary, but eh.
-            // It's not easy to know if various buried fields in the blv changed.
-            // It would *also* be nice to not run the ER before the blv is ready
-            // post craft-load, but...also eh. This is fine.
-            Harmony.PatchEngineersReport.UpdateCraftStats();
-        }
+        #endregion
     }
 }
 

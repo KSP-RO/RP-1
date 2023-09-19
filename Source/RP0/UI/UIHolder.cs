@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using KSP.UI.Screens;
+using System.Collections.Generic;
 
 namespace RP0
 {
@@ -7,7 +8,7 @@ namespace RP0
     public class UIHolder : MonoBehaviour
     {
         private bool _isGuiEnabled = false;
-        private bool _wasGuiEnabled = false;
+        private Stack<bool> _wasGuiEnabled = new Stack<bool>();
         private ApplicationLauncherButton _button;
         private TopWindow _tw;
 
@@ -55,14 +56,15 @@ namespace RP0
 
         public void HideIfShowing()
         {
-            _wasGuiEnabled = _isGuiEnabled;
+            _wasGuiEnabled.Push(_isGuiEnabled);
             if (_isGuiEnabled)
                 _button.toggleButton.Value = false;
         }
 
         public void ShowIfWasHidden()
         {
-            if(_wasGuiEnabled && !_isGuiEnabled)
+            var oldVal = _wasGuiEnabled.Pop();
+            if (oldVal && !_isGuiEnabled)
                 _button.toggleButton.Value = true;
         }
 

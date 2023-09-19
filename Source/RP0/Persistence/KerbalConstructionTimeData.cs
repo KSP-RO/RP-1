@@ -38,7 +38,10 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool AcceptedContract = false;
         public bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
 
-        [KSPField(isPersistant = true)] public int LoadedSaveVersion = -1;
+        public const int VERSION = 4;
+        [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
+
+        [KSPField(isPersistant = true)] public bool IsFirstStart = true;
 
         [KSPField(isPersistant = true)] public SimulationParams SimulationParams = new SimulationParams();
 
@@ -142,13 +145,6 @@ namespace RP0
 
                 TechList.Updated += techListUpdated;
 
-                // Check for stating a new game
-                if (LoadedSaveVersion == -1)
-                {
-                    KCTGameStates.IsFirstStart = true;
-                    LoadedSaveVersion = KCTGameStates.VERSION;
-                }
-
                 bool foundStockKSC = false;
                 foreach (var ksc in KSCs)
                 {
@@ -180,7 +176,7 @@ namespace RP0
 
                 LCEfficiency.RelinkAll();
 
-                if (LoadedSaveVersion < KCTGameStates.VERSION)
+                if (LoadedSaveVersion < VERSION)
                 {
                     if (LoadedSaveVersion < 4)
                     {
@@ -195,12 +191,12 @@ namespace RP0
                             }
                         }
                     }
-                    LoadedSaveVersion = KCTGameStates.VERSION;
+                    LoadedSaveVersion = VERSION;
                 }
             }
             catch (Exception ex)
             {
-                KCTGameStates.ErroredDuringOnLoad = true;
+                KerbalConstructionTime.ErroredDuringOnLoad = true;
                 RP0Debug.LogError("ERROR! An error while KCT loading data occurred. Things will be seriously broken!\n" + ex);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "Error Loading RP-1 Data", "ERROR! An error occurred while loading RP-1 data. Things will be seriously broken! Please report this error to RP-1 GitHub and attach the log file. The game will be UNPLAYABLE in this state!", "Understood", false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
@@ -435,7 +431,7 @@ namespace RP0
 
                 if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
                 {
-                    int num = System.Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
+                    int num = Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
                     return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.IdleSalaryMult;
                 }
 
@@ -450,7 +446,7 @@ namespace RP0
             // note NetUpkeepPerDay is negative or 0.
 
             double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
-            double fundDelta = System.Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
+            double fundDelta = Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
                 + GetConstructionCostOverTime(deltaTime) + GetRolloutCostOverTime(deltaTime) + GetAirlaunchCostOverTime(deltaTime)
                 + Programs.ProgramHandler.Instance.GetDisplayProgramFunding(deltaTime);
 

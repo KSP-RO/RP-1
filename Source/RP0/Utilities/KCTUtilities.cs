@@ -368,7 +368,7 @@ namespace RP0
             RP0Debug.Log($"Moved vessel {ship.shipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
 
             KCT_GUI.ResetBLWindow(false);
-            if (!KCTGameStates.Settings.DisableAllMessages)
+            if (!KerbalConstructionTime.Settings.DisableAllMessages)
             {
                 var Message = new StringBuilder();
                 Message.AppendLine("The following vessel is complete:");
@@ -411,7 +411,7 @@ namespace RP0
         public static void ProcessSciPointTotalChange(float changeDelta)
         {
             // Earned point totals shouldn't decrease. This would only make sense when done through the cheat menu.
-            if (changeDelta <= 0f || KCTGameStates.IsRefunding) return;
+            if (changeDelta <= 0f || KerbalConstructionTime.IsRefunding) return;
 
             EnsureCurrentSaveHasSciTotalsInitialized(changeDelta);
             float pointsBef = Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);
@@ -615,7 +615,7 @@ namespace RP0
 
             int oldIdx;
             editableShip.RemoveFromBuildList(out oldIdx);
-            if (KCTGameStates.Settings.InPlaceEdit && oldIdx >= 0)
+            if (KerbalConstructionTime.Settings.InPlaceEdit && oldIdx >= 0)
             {
                 // Remove and reinsert at right place.
                 // We *could* insert at the right place to start with, but
@@ -635,7 +635,7 @@ namespace RP0
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
-            KCTGameStates.ClearVesselEditMode();
+            KerbalConstructionTime.ClearVesselEditMode();
 
             RP0Debug.Log("Edits saved.");
 
@@ -901,7 +901,7 @@ namespace RP0
 
             KerbalConstructionTime.Instance.EditorVessel = new VesselProject(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
             // override LC in case of vessel editing
-            if (KCTGameStates.EditorShipEditingMode)
+            if (KerbalConstructionTime.EditorShipEditingMode)
             {
                 KerbalConstructionTime.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.EditedVessel.LCID;
             }
@@ -953,21 +953,21 @@ namespace RP0
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
-                KCTGameStates.EditorRolloutCost = Formula.GetRolloutCost(KerbalConstructionTime.Instance.EditorVessel);
-                KCTGameStates.EditorRolloutBP = Formula.GetRolloutBP(KerbalConstructionTime.Instance.EditorVessel);
+                KerbalConstructionTime.EditorRolloutCost = Formula.GetRolloutCost(KerbalConstructionTime.Instance.EditorVessel);
+                KerbalConstructionTime.EditorRolloutBP = Formula.GetRolloutBP(KerbalConstructionTime.Instance.EditorVessel);
             }
             else
             {
                 // SPH lacks rollout times and costs
-                KCTGameStates.EditorRolloutCost = 0;
-                KCTGameStates.EditorRolloutBP = 0;
+                KerbalConstructionTime.EditorRolloutCost = 0;
+                KerbalConstructionTime.EditorRolloutBP = 0;
             }
 
             Tuple<float, List<string>> unlockInfo = GetVesselUnlockInfo(ship);
-            KCTGameStates.EditorUnlockCosts = unlockInfo.Item1;
-            KCTGameStates.EditorRequiredTechs = unlockInfo.Item2;
+            KerbalConstructionTime.EditorUnlockCosts = unlockInfo.Item1;
+            KerbalConstructionTime.EditorRequiredTechs = unlockInfo.Item2;
             ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
-            KCTGameStates.EditorToolingCosts = toolingCost;
+            KerbalConstructionTime.EditorToolingCosts = toolingCost;
 
             // It would be better to only do this if necessary, but eh.
             // It's not easy to know if various buried fields in the blv changed.
@@ -1103,7 +1103,7 @@ namespace RP0
             int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facilityID);
             if (lvl < 0)
             {
-                if (!KCTGameStates.BuildingMaxLevelCache.TryGetValue(facilityID.Split('/').Last(), out lvl))
+                if (!KerbalConstructionTime.BuildingMaxLevelCache.TryGetValue(facilityID.Split('/').Last(), out lvl))
                 {
                     //screw it, let's call it 2
                     lvl = 2;
@@ -1118,7 +1118,7 @@ namespace RP0
             int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
             if (lvl < 0)
             {
-                if (!KCTGameStates.BuildingMaxLevelCache.TryGetValue(facility.ToString(), out lvl))
+                if (!KerbalConstructionTime.BuildingMaxLevelCache.TryGetValue(facility.ToString(), out lvl))
                 {
                     //screw it, let's call it 2
                     lvl = 2;
@@ -1198,9 +1198,9 @@ namespace RP0
             if (EditorLogic.fetch == null)
                 return;
 
-            if (KCTGameStates.Settings.OverrideLaunchButton)
+            if (KerbalConstructionTime.Settings.OverrideLaunchButton)
             {
-                if (KCTGameStates.EditorShipEditingMode)
+                if (KerbalConstructionTime.EditorShipEditingMode)
                 {
                     // Prevent switching between VAB and SPH in edit mode.
                     // Bad things will happen if the edits are saved in another mode than the initial one.
@@ -1476,7 +1476,7 @@ namespace RP0
 
         public static void CleanupDebris(string launchSiteName)
         {
-            if (KCTGameStates.Settings.CleanUpKSCDebris)
+            if (KerbalConstructionTime.Settings.CleanUpKSCDebris)
             {
                 PSystemSetup.SpaceCenterFacility launchFacility = PSystemSetup.Instance.GetSpaceCenterFacility(launchSiteName);
                 double lat = 0, lon = 0;

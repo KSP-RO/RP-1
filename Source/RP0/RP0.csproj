@@ -258,7 +258,6 @@
     <Compile Include="UI\KCT\GUI_BuildPlans.cs" />
     <Compile Include="SpaceCenter\KCTEvents.cs" />
     <Compile Include="Singletons\Database.cs" />
-    <Compile Include="KerbalConstructionTime\KCTGameStates.cs" />
     <Compile Include="UI\KCT\GUI_Main.cs" />
     <Compile Include="UI\KCT\GUI_BuildList.cs" />
     <Compile Include="UI\KCT\GUI_Presets.cs" />

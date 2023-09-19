@@ -19,7 +19,7 @@ namespace RP0.Programs
     {
         private const int VERSION = 2;
         [KSPField(isPersistant = true)]
-        public int LoadedSaveVersion = 0;
+        public int LoadedSaveVersion = VERSION;
 
         private bool _ready = false;
         public bool Ready => _ready;

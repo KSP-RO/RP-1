@@ -175,7 +175,7 @@ namespace RP0
             cmq.AddPostDelta(CurrencyRP0.Funds, spentCredit, true);
 
             int partCount = partList.Count;
-            string mode = KCTGameStates.EditorShipEditingMode ? "save edits" : "integrate vessel";
+            string mode = KerbalConstructionTime.EditorShipEditingMode ? "save edits" : "integrate vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
                 new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0d, -cmq.GetTotal(CurrencyRP0.Funds, true)):N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} unlock credit)", () =>

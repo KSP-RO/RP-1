@@ -25,7 +25,7 @@ namespace RP0
         public double NextPeriodStart = 0;
 
         [KSPField(isPersistant = true)]
-        public int LoadedSaveVersion = 0;
+        public int LoadedSaveVersion = CurrentVersion;
 
         public bool IsEnabled = false;
 

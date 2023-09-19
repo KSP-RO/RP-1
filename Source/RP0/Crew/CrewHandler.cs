@@ -31,9 +31,9 @@ namespace RP0.Crew
 
         public static CrewHandler Instance { get; private set; } = null;
 
-        [KSPField(isPersistant = true)]
-        public int LoadedSaveVersion = -1;
         public const int VERSION = 3;
+        [KSPField(isPersistant = true)]
+        public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)]
         private PersistentDictionaryValueTypes<string, double> _retireTimes = new PersistentDictionaryValueTypes<string, double>();

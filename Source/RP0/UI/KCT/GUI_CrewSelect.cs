@@ -226,7 +226,7 @@ namespace RP0
                 _possibleCrewForParts.Clear();
                 _possibleCrewForPart.Clear();
 
-                KCTGameStates.Settings.RandomizeCrew = AssignRandomCrew;
+                KerbalConstructionTime.Settings.RandomizeCrew = AssignRandomCrew;
             }
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
@@ -661,7 +661,7 @@ namespace RP0
                 }
             }
 
-            KCTGameStates.Settings.RandomizeCrew = AssignRandomCrew;
+            KerbalConstructionTime.Settings.RandomizeCrew = AssignRandomCrew;
             KerbalConstructionTimeData.Instance.LaunchedVessel.Launch(fillTanks);
 
             GUIStates.ShowShipRoster = false;

@@ -236,7 +236,7 @@ namespace RP0
             // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.
             KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
             // Just in case, let's set the LCID
-            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ID;
+            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance.ID;
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)

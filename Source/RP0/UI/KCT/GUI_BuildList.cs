@@ -209,14 +209,14 @@ namespace RP0
                     TimeWarp.SetRate(0, true);  // If the controller doesn't exist, stop warp anyway.
                 }
 
-                if (KCTGameStates.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
+                if (KerbalConstructionTime.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
-                    if (!KCTUtilities.IsApproximatelyEqual(KCTGameStates.KACAlarmUT - UT, buildItem.GetTimeLeft()))
+                    if (!KCTUtilities.IsApproximatelyEqual(KerbalConstructionTime.KACAlarmUT - UT, buildItem.GetTimeLeft()))
                     {
                         RP0Debug.Log("KAC Alarm being created!");
-                        KCTGameStates.KACAlarmUT = buildItem.GetTimeLeft() + UT;
-                        KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KCTGameStates.KACAlarmId);
+                        KerbalConstructionTime.KACAlarmUT = buildItem.GetTimeLeft() + UT;
+                        KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KerbalConstructionTime.KACAlarmId);
                         if (alarm == null)
                         {
                             alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.StartsWith("RP-1: "));
@@ -251,8 +251,8 @@ namespace RP0
                         }
                         else
                             txt += $"{buildItem.GetItemName()} Complete";
-                        KCTGameStates.KACAlarmId = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, txt, KCTGameStates.KACAlarmUT);
-                        RP0Debug.Log($"Alarm created with ID: {KCTGameStates.KACAlarmId}");
+                        KerbalConstructionTime.KACAlarmId = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, txt, KerbalConstructionTime.KACAlarmUT);
+                        RP0Debug.Log($"Alarm created with ID: {KerbalConstructionTime.KACAlarmId}");
                     }
                 }
             }
@@ -368,7 +368,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2 + 30));
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
+            GUILayout.Label(KerbalConstructionTime.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(20);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
@@ -466,7 +466,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
+            GUILayout.Label(KerbalConstructionTime.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(70);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
@@ -660,7 +660,7 @@ namespace RP0
             GUILayout.Label("Name:", GUILayout.Width(250));
             GUILayout.Label("Progress:");
             GUILayout.Space(18);
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KerbalConstructionTime.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350 - GUI.skin.label.lineHeight * 5));
 
@@ -827,7 +827,7 @@ namespace RP0
 
         private static void RenderBuildList()
         {
-            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             RenderBuildlistHeader();
 
@@ -849,13 +849,13 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KCTGameStates.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KerbalConstructionTime.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
         }
 
         private static void RenderRollouts()
         {
-            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             foreach (ReconRolloutProject reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRolloutProject.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
@@ -967,7 +967,7 @@ namespace RP0
 
         private static void RenderWarehouse()
         {
-            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             bool isPad = activeLC.LCType == LaunchComplexType.Pad;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
@@ -1378,11 +1378,11 @@ namespace RP0
 
         private static void RenderLaunchComplexControls()
         {
-            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginHorizontal();
             // Don't allow switching in edit mode
-            int lcCount = KCTGameStates.EditorShipEditingMode ? 1 : KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexCount;
+            int lcCount = KerbalConstructionTime.EditorShipEditingMode ? 1 : KerbalConstructionTimeData.Instance.ActiveKSC.LaunchComplexCount;
             if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
                 KerbalConstructionTimeData.Instance.ActiveKSC.SwitchToPrevLaunchComplex();
@@ -1442,7 +1442,7 @@ namespace RP0
 
         private static void RenderLaunchPadControls()
         {
-            LaunchComplex activeLC = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
+            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
 
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
@@ -1562,15 +1562,15 @@ namespace RP0
 
                 if (KCTUtilities.CurrentGameHasScience())
                 {
-                    bool valBef = KCTGameStates.IsRefunding;
-                    KCTGameStates.IsRefunding = true;
+                    bool valBef = KerbalConstructionTime.IsRefunding;
+                    KerbalConstructionTime.IsRefunding = true;
                     try
                     {
                         ResearchAndDevelopment.Instance.AddScience(node.scienceCost, TransactionReasons.RnDTechResearch);
                     }
                     finally
                     {
-                        KCTGameStates.IsRefunding = valBef;
+                        KerbalConstructionTime.IsRefunding = valBef;
                     }
                 }
                 KerbalConstructionTimeData.Instance.TechList.RemoveAt(index);
@@ -1655,7 +1655,7 @@ namespace RP0
                 b.UpdateNodeAndSave(tempFile);
                 KerbalConstructionTimeData.Instance.EditedVessel = b;
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
-                KCTGameStates.EditorShipEditingMode = true;
+                KerbalConstructionTime.EditorShipEditingMode = true;
                 KerbalConstructionTimeData.Instance.MergingAvailable = b.IsFinished;
 
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_EXIT, "KCTEditExit");

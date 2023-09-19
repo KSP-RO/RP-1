@@ -24,7 +24,7 @@ namespace RP0
             if (double.IsNaN(t) || double.IsInfinity(t))
                 return "(infinity)";
 
-            bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay;
+            bool shouldUseDate = KerbalConstructionTime.Settings.UseDates && t > MaxSecondsForDayDisplay;
             double timeCheck = (shouldUseDate ^ flip) ? extraTime + t : t;
             if (timeCheck > MaxTimeToDisplay)
                 return "(infinity)";
@@ -40,7 +40,7 @@ namespace RP0
             if (double.IsNaN(t) || double.IsInfinity(t))
                 return "(infinity)";
 
-            bool shouldUseDate = KCTGameStates.Settings.UseDates && t > MaxSecondsForDayDisplay && allowDate;
+            bool shouldUseDate = KerbalConstructionTime.Settings.UseDates && t > MaxSecondsForDayDisplay && allowDate;
             double timeCheck = shouldUseDate ? extraTime + t : t;
             if (timeCheck > MaxTimeToDisplay)
                 return "(infinity)";

@@ -223,8 +223,7 @@ namespace RP0
 
             if (scene == GameScenes.MAINMENU)
             {
-                KCTGameStates.Reset();
-                KCTGameStates.IsFirstStart = false;
+                KerbalConstructionTime.Reset();
                 KCTUtilities.DisableSimulationLocks();
                 InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTLaunchLock);
 

@@ -148,7 +148,7 @@ namespace RP0
         protected override void ProcessComplete()
         {
 
-            if (ScenarioUpgradeableFacilities.Instance != null && !KerbalConstructionTime.ErroredDuringOnLoad)
+            if (ScenarioUpgradeableFacilities.Instance != null && !KerbalConstructionTimeData.Instance.ErroredDuringOnLoad)
             {
                 Apply();
 

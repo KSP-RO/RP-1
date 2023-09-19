@@ -18,7 +18,6 @@ namespace RP0
         #region Statics
 
         // Per saveslot values
-        public static bool ErroredDuringOnLoad = false;
         public static bool VesselErrorAlerted = false;
 
         public static KCTSettings Settings = new KCTSettings();

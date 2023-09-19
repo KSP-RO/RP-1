@@ -32,7 +32,7 @@ namespace RP0
 
         protected override void ProcessComplete()
         {
-            if (!KerbalConstructionTime.ErroredDuringOnLoad)
+            if (!KerbalConstructionTimeData.Instance.ErroredDuringOnLoad)
             {
                 LaunchComplex lc = KSC.LaunchComplexes.Find(l => l.ID == lcID);
                 lc.IsOperational = true;

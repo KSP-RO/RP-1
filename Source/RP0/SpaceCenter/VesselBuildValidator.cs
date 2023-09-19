@@ -58,7 +58,7 @@ namespace RP0
                 _failureActions();
                 yield break;
             }
-            if (!KCTUtilities.CurrentGameIsCareer())
+            if (!KSPUtils.CurrentGameIsCareer())
             {
                 _successActions(blv);
                 yield break;

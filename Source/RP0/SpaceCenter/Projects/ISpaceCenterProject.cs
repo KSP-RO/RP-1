@@ -1,5 +1,17 @@
 ﻿namespace RP0
 {
+    public enum ProjectType
+    {
+        None,
+        VAB,
+        SPH,
+        TechNode,
+        Reconditioning,
+        KSC,
+        AirLaunch,
+        Crew
+    };
+
     public interface ISpaceCenterProject
     {
         string GetItemName();
@@ -7,7 +19,7 @@
         double GetFractionComplete();
         double GetTimeLeft();
         double GetTimeLeftEst(double offset);
-        VesselProject.ListType GetListType();
+        ProjectType GetProjectType();
         bool IsComplete();
         double IncrementProgress(double UTDiff);
     }

@@ -5,6 +5,26 @@ namespace RP0
 {
     public static class KSPUtils
     {
+        public static bool CurrentGameHasScience()
+        {
+            return HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX;
+        }
+
+        public static bool CurrentGameIsSandbox()
+        {
+            return HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX;
+        }
+
+        public static bool CurrentGameIsCareer()
+        {
+            return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
+        }
+
+        public static bool CurrentGameIsMission()
+        {
+            return HighLogic.CurrentGame.Mode == Game.Modes.MISSION || HighLogic.CurrentGame.Mode == Game.Modes.MISSION_BUILDER;
+        }
+
         /// <summary>
         /// Adds a way for a PopupDialog to perform actions on spawn/despawn, like locking input for a true modal.
         /// </summary>

@@ -184,7 +184,7 @@ namespace RP0
 
             Instance = this;
 
-            if (KCTUtilities.CurrentGameIsMission()) return;
+            if (KSPUtils.CurrentGameIsMission()) return;
 
             KCTSettings.Instance.Load();
 
@@ -221,7 +221,7 @@ namespace RP0
         {
             KCT_GUI.InitTooltips();
 
-            if (KCTUtilities.CurrentGameIsMission()) return;
+            if (KSPUtils.CurrentGameIsMission()) return;
 
             if (IsFirstStart)
             {
@@ -441,7 +441,7 @@ namespace RP0
 
         public void FixedUpdate()
         {
-            if (KCTUtilities.CurrentGameIsMission()) return;
+            if (KSPUtils.CurrentGameIsMission()) return;
             if (!PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled == true)
                 return;
             double UT = Planetarium.GetUniversalTime();
@@ -484,7 +484,7 @@ namespace RP0
 
         public void OnGUI()
         {
-            if (KCTUtilities.CurrentGameIsMission()) return;
+            if (KSPUtils.CurrentGameIsMission()) return;
 
             if (!_isGUIInitialized)
             {
@@ -500,7 +500,7 @@ namespace RP0
 
         public override void OnSave(ConfigNode node)
         {
-            if (KCTUtilities.CurrentGameIsMission()) return;
+            if (KSPUtils.CurrentGameIsMission()) return;
 
             RP0Debug.Log("Writing to persistence.");
             base.OnSave(node);
@@ -515,7 +515,7 @@ namespace RP0
                 base.OnLoad(node);
                 Database.LoadTree();
 
-                if (KCTUtilities.CurrentGameIsMission()) return;
+                if (KSPUtils.CurrentGameIsMission()) return;
 
                 RP0Debug.Log("Reading from persistence.");
 
@@ -1513,7 +1513,7 @@ namespace RP0
             yield return new WaitForFixedUpdate();
             yield return new WaitForFixedUpdate();
 
-            if (HighLogic.LoadedScene != GameScenes.SPACECENTER || !KCTUtilities.CurrentGameIsCareer())
+            if (HighLogic.LoadedScene != GameScenes.SPACECENTER || !KSPUtils.CurrentGameIsCareer())
                 yield break;
 
             FacilityUpgradeProject.UpgradeLockedFacilities();
@@ -1609,7 +1609,7 @@ namespace RP0
                             //Reset the associated launchpad id when rollback completes
                             Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindBLVesselByID");
                             if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollback && rr.IsComplete()
-                                && KCTUtilities.FindBLVesselByID(rr.LC, new Guid(rr.associatedID)) is VesselProject blv)
+                                && KCTUtilities.FindVPByID(rr.LC, new Guid(rr.associatedID)) is VesselProject blv)
                             {
                                 blv.launchSiteIndex = -1;
                             }
@@ -1679,7 +1679,7 @@ namespace RP0
                 return;
             }
 
-            if (!KCTUtilities.RecoverActiveVesselToStorage(VesselProject.ListType.VAB))
+            if (!KCTUtilities.RecoverActiveVesselToStorage(ProjectType.VAB))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
@@ -1693,7 +1693,7 @@ namespace RP0
                 return;
             }
 
-            if (!KCTUtilities.RecoverActiveVesselToStorage(VesselProject.ListType.SPH))
+            if (!KCTUtilities.RecoverActiveVesselToStorage(ProjectType.SPH))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "recoverShipErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
             }

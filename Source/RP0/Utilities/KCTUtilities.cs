@@ -22,7 +22,6 @@ namespace RP0
         private static Type _tlSettingsType;
         private static FieldInfo _fiTLSettingsDisabled;
 
-        private static DateTime _startedFlashing;
         internal const string _iconPath = "RP-1/PluginData/Icons/";
         internal const string _icon_KCT_Off_24 = _iconPath + "KCT_off-24";
         internal const string _icon_KCT_Off_38 = _iconPath + "KCT_off-38";
@@ -76,9 +75,9 @@ namespace RP0
             return useCap ? LC.RateHRCapped : LC.Rate;
         }
 
-        public static double GetBuildRate(int index, VesselProject.ListType type, LaunchComplex LC, bool isHumanRated, int upgradeDelta = 0)
+        public static double GetBuildRate(int index, ProjectType type, LaunchComplex LC, bool isHumanRated, int upgradeDelta = 0)
         {
-            if (type == VesselProject.ListType.VAB ? LC.LCType == LaunchComplexType.Hangar : LC.LCType == LaunchComplexType.Pad)
+            if (type == ProjectType.VAB ? LC.LCType == LaunchComplexType.Hangar : LC.LCType == LaunchComplexType.Pad)
                 return 0.0001d;
 
             return Formula.GetVesselBuildRate(index, LC, LC.IsHumanRated && !isHumanRated, upgradeDelta);
@@ -336,53 +335,9 @@ namespace RP0
             return true;
         }
 
-        public static bool CurrentGameHasScience()
-        {
-            return HighLogic.CurrentGame.Mode == Game.Modes.CAREER || HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX;
-        }
-
-        public static bool CurrentGameIsSandbox()
-        {
-            return HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX;
-        }
-
-        public static bool CurrentGameIsCareer()
-        {
-            return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
-        }
-
-        public static bool CurrentGameIsMission()
-        {
-            return HighLogic.CurrentGame.Mode == Game.Modes.MISSION || HighLogic.CurrentGame.Mode == Game.Modes.MISSION_BUILDER;
-        }
-
-        public static void MoveVesselToWarehouse(VesselProject ship)
-        {
-            KCTEvents.Instance.KCTButtonStockImportant = true;
-            _startedFlashing = DateTime.Now;    //Set the time to start flashing
-
-            ship.LC.BuildList.Remove(ship);
-            ship.LC.Warehouse.Add(ship);
-            ship.LC.RecalculateBuildRates();
-
-            RP0Debug.Log($"Moved vessel {ship.shipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
-
-            KCT_GUI.ResetBLWindow(false);
-            if (!KCTSettings.Instance.DisableAllMessages)
-            {
-                var Message = new StringBuilder();
-                Message.AppendLine("The following vessel is complete:");
-                Message.AppendLine(ship.shipName);
-                Message.AppendLine($"Please check the Storage at {ship.LC.Name} at {ship.KSC.KSCName} to launch it.");
-                DisplayMessage("Vessel Complete!", Message, MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.COMPLETE);
-            }
-
-            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
-        }
-
         public static double SpendFunds(double toSpend, TransactionReasons reason)
         {
-            if (!CurrentGameIsCareer())
+            if (!KSPUtils.CurrentGameIsCareer())
                 return 0;
             RP0Debug.Log($"Removing funds: {toSpend}, New total: {Funding.Instance.Funds - toSpend}");
             Funding.Instance.AddFunds(-toSpend, reason);
@@ -396,7 +351,7 @@ namespace RP0
 
         public static double AddFunds(double toAdd, TransactionReasons reason)
         {
-            if (!CurrentGameIsCareer())
+            if (!KSPUtils.CurrentGameIsCareer())
                 return 0;
             RP0Debug.Log($"Adding funds: {toAdd}, New total: {Funding.Instance.Funds + toAdd}");
             Funding.Instance.AddFunds(toAdd, reason);
@@ -413,63 +368,8 @@ namespace RP0
             // Earned point totals shouldn't decrease. This would only make sense when done through the cheat menu.
             if (changeDelta <= 0f || KerbalConstructionTimeData.IsRefundingScience) return;
 
-            EnsureCurrentSaveHasSciTotalsInitialized(changeDelta);
-            float pointsBef = Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);
-
             KerbalConstructionTimeData.Instance.SciPointsTotal += changeDelta;
             RP0Debug.Log("Total sci points earned is now: " + KerbalConstructionTimeData.Instance.SciPointsTotal);
-
-            //double upgradesBef = ApplicantPacketsForScience(pointsBef);
-            //double upgradesAft = ApplicantPacketsForScience(KerbalConstructionTimeData.Instance.SciPointsTotal);
-            //RP0Debug.Log($"Upg points bef: {upgradesBef}; aft: {upgradesAft}");
-
-            //int upgradesToAdd = (int)upgradesAft - (int)upgradesBef;
-            //if (upgradesToAdd > 0)
-            //{
-            //    int numWorkers = upgradesToAdd * LCItem.EngineersPerPacket;
-            //    KerbalConstructionTimeData.Instance.UnassignedPersonnel += numWorkers;
-            //    RP0Debug.Log($"Added {numWorkers} workers from science points");
-            //    ScreenMessages.PostScreenMessage($"Inspired by our latest scientific discoveries, {numWorkers} workers join the program!", 8f, ScreenMessageStyle.UPPER_LEFT);
-            //}
-        }
-
-        public static void EnsureCurrentSaveHasSciTotalsInitialized(float changeDelta)
-        {
-            if (KerbalConstructionTimeData.Instance.SciPointsTotal == -1f)
-            {
-                RP0Debug.Log("Trying to determine total science points for current save...");
-
-                float totalSci = 0f;
-                foreach (ResearchProject t in KerbalConstructionTimeData.Instance.TechList)
-                {
-                    RP0Debug.Log($"Found tech in KCT list: {t.ProtoNode.techID} | {t.ProtoNode.state} | {t.ProtoNode.scienceCost}");
-                    if (t.ProtoNode.state == RDTech.State.Available) continue;
-
-                    totalSci += t.ProtoNode.scienceCost;
-                }
-
-                var techIDs = Database.TechNameToTitle.Keys;
-                foreach (var techId in techIDs)
-                {
-                    var ptn = ResearchAndDevelopment.Instance.GetTechState(techId);
-                    if (ptn == null)
-                    {
-                        RP0Debug.Log($"Failed to find tech with id {techId}");
-                        continue;
-                    }
-
-                    RP0Debug.Log($"Found tech {ptn.techID} | {ptn.state} | {ptn.scienceCost}");
-                    if (ptn.techID == "unlockParts") continue;    // This node in RP-1 is unlocked automatically but has a high science cost
-                    if (ptn.state != RDTech.State.Available) continue;
-
-                    totalSci += ptn.scienceCost;
-                }
-
-                totalSci += ResearchAndDevelopment.Instance.Science - changeDelta;
-
-                RP0Debug.Log("Calculated total: " + totalSci);
-                KerbalConstructionTimeData.Instance.SciPointsTotal = totalSci;
-            }
         }
 
         public static void TryAddVesselToBuildList() => TryAddVesselToBuildList(EditorLogic.fetch.launchSiteName);
@@ -481,12 +381,12 @@ namespace RP0
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
 
-            VesselProject.ListType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? VesselProject.ListType.VAB : VesselProject.ListType.SPH;
+            ProjectType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? ProjectType.VAB : ProjectType.SPH;
 
-            if ((type == VesselProject.ListType.VAB) != (KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad))
+            if ((type == ProjectType.VAB) != (KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad))
             {
                 string dialogStr;
-                if (type == VesselProject.ListType.VAB)
+                if (type == ProjectType.VAB)
                 {
                     if (KerbalConstructionTimeData.Instance.ActiveSC.IsAnyLCOperational)
                         dialogStr = $"a launch complex. Please switch to a launch complex and try again.";
@@ -540,7 +440,7 @@ namespace RP0
             if (spendFunds)
                 SpendFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
 
-            if (blv.Type == VesselProject.ListType.SPH)
+            if (blv.Type == ProjectType.SPH)
                 blv.launchSite = "Runway";
             else
                 blv.launchSite = "LaunchPad";
@@ -606,7 +506,7 @@ namespace RP0
         private static void SaveShipEdits(double oldCost, VesselProject editableShip, VesselProject newShip)
         {
             double costDelta;
-            if (CurrentGameIsCareer() && (costDelta = oldCost - newShip.cost) != 0d)
+            if (KSPUtils.CurrentGameIsCareer() && (costDelta = oldCost - newShip.cost) != 0d)
             {
                 Funding.Instance.AddFunds((float)costDelta, TransactionReasonsRP0.VesselPurchase.Stock());
             }
@@ -753,7 +653,7 @@ namespace RP0
 
         public static bool AddExperimentalPart(AvailablePart ap)
         {
-            if (ap is null || !CurrentGameIsCareer() || ResearchAndDevelopment.IsExperimentalPart(ap))
+            if (ap is null || !KSPUtils.CurrentGameIsCareer() || ResearchAndDevelopment.IsExperimentalPart(ap))
                 return false;
 
             ResearchAndDevelopment.AddExperimentalPart(ap);
@@ -762,7 +662,7 @@ namespace RP0
 
         public static bool RemoveExperimentalPart(AvailablePart ap)
         {
-            if (ap is null || !CurrentGameIsCareer())
+            if (ap is null || !KSPUtils.CurrentGameIsCareer())
                 return false;
 
             ResearchAndDevelopment.RemoveExperimentalPart(ap);
@@ -871,20 +771,14 @@ namespace RP0
             return Resources.FindObjectsOfTypeAll<PQSCity>().FirstOrDefault(x => x.name == "KSC");
         }
 
-        public static void DisplayMessage(string title, StringBuilder text, MessageSystemButton.MessageButtonColor color, MessageSystemButton.ButtonIcons icon)
-        {
-            var m = new MessageSystem.Message(title, text.ToString(), color, icon);
-            MessageSystem.Instance.AddMessage(m);
-        }
-
-        public static bool IsLaunchFacilityIntact(VesselProject.ListType type)
+        public static bool IsLaunchFacilityIntact(ProjectType type)
         {
             bool intact = true;
-            if (type == VesselProject.ListType.VAB)
+            if (type == ProjectType.VAB)
             {
                 intact = new PreFlightTests.FacilityOperational("LaunchPad", "LaunchPad").Test();
             }
-            else if (type == VesselProject.ListType.SPH)
+            else if (type == ProjectType.SPH)
             {
                 if (!new PreFlightTests.FacilityOperational("Runway", "Runway").Test())
                     intact = false;
@@ -903,26 +797,26 @@ namespace RP0
             return LC.GetReconditioning(launchSite) is ReconRolloutProject;
         }
 
-        public static VesselProject FindBLVesselByID(LaunchComplex hintLC, Guid id)
+        public static VesselProject FindVPByID(LaunchComplex hintLC, Guid id)
         {
             VesselProject b;
             if (hintLC != null)
             {
-                b = FindBLVesselByIDInLC(id, hintLC);
+                b = FindVPByIDInLC(id, hintLC);
                 if (b != null)
                     return b;
             }
 
             foreach (SpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
-                if (FindBLVesselByID(id, ksc) is VesselProject blv)
+                if (FindVPByID(id, ksc) is VesselProject blv)
                     return blv;
             }
 
             return null;
         }
 
-        public static VesselProject FindBLVesselByIDInLC(Guid id, LaunchComplex lc)
+        public static VesselProject FindVPByIDInLC(Guid id, LaunchComplex lc)
         {
 
             VesselProject ves = lc.Warehouse.Find(blv => blv.shipID == id);
@@ -936,13 +830,13 @@ namespace RP0
             return null;
         }
 
-        public static VesselProject FindBLVesselByID(Guid id, SpaceCenter ksc)
+        public static VesselProject FindVPByID(Guid id, SpaceCenter ksc)
         {
             if (ksc != null)
             {
                 foreach (LaunchComplex lc in ksc.LaunchComplexes)
                 {
-                    VesselProject ves = FindBLVesselByIDInLC(id, lc);
+                    VesselProject ves = FindVPByIDInLC(id, lc);
                     if (ves != null)
                         return ves;
                 }
@@ -1034,7 +928,7 @@ namespace RP0
             return lvl;
         }
 
-        public static bool RecoverActiveVesselToStorage(VesselProject.ListType listType)
+        public static bool RecoverActiveVesselToStorage(ProjectType listType)
         {
             try
             {
@@ -1050,7 +944,7 @@ namespace RP0
                 KerbalConstructionTimeData.Instance.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
 
                 //KCT_GameStates.recoveredVessel.type = listType;
-                if (listType == VesselProject.ListType.SPH)
+                if (listType == ProjectType.SPH)
                     KerbalConstructionTimeData.Instance.RecoveredVessel.launchSite = "Runway";
                 else
                     KerbalConstructionTimeData.Instance.RecoveredVessel.launchSite = "LaunchPad";

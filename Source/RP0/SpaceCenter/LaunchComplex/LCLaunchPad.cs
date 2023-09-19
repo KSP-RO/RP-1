@@ -219,7 +219,7 @@ namespace RP0
                 RP0Debug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
 
                 //set the level to this level
-                if (KCTUtilities.CurrentGameIsCareer())
+                if (KSPUtils.CurrentGameIsCareer())
                 {
                     UpgradeableFacility facility = GetUpgradeableFacilityReference();
                     facility.SetLevel(level);

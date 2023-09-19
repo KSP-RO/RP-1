@@ -124,11 +124,11 @@ namespace RP0
             if (buildItem != null)
             {
                 string txt = buildItem.GetItemName(), locTxt = "VAB";
-                if (buildItem.GetListType() == VesselProject.ListType.None)
+                if (buildItem.GetProjectType() == ProjectType.None)
                 {
                     locTxt = string.Empty;
                 }
-                else if (buildItem.GetListType() == VesselProject.ListType.Reconditioning)
+                else if (buildItem.GetProjectType() == ProjectType.Reconditioning)
                 {
                     ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
                     if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
@@ -159,7 +159,7 @@ namespace RP0
                         locTxt = "Storage";
                     }
                 }
-                else if (buildItem.GetListType() == VesselProject.ListType.AirLaunch)
+                else if (buildItem.GetProjectType() == ProjectType.AirLaunch)
                 {
                     AirlaunchProject ar = buildItem as AirlaunchProject;
                     VesselProject associated = ar.AssociatedBLV;
@@ -176,20 +176,20 @@ namespace RP0
                     locTxt = ar.LC.Name;
 
                 }
-                else if (buildItem.GetListType() == VesselProject.ListType.VAB || buildItem.GetListType() == VesselProject.ListType.SPH)
+                else if (buildItem.GetProjectType() == ProjectType.VAB || buildItem.GetProjectType() == ProjectType.SPH)
                 {
                     VesselProject blv = buildItem as VesselProject;
                     locTxt = blv == null || blv.LC == null ? "Vessel" : blv.LC.Name;
                 }
-                else if (buildItem.GetListType() == VesselProject.ListType.TechNode)
+                else if (buildItem.GetProjectType() == ProjectType.TechNode)
                 {
                     locTxt = "Tech";
                 }
-                else if (buildItem.GetListType() == VesselProject.ListType.KSC)
+                else if (buildItem.GetProjectType() == ProjectType.KSC)
                 {
                     locTxt = "KSC";
                 }
-                else if (buildItem.GetListType() == VesselProject.ListType.Crew)
+                else if (buildItem.GetProjectType() == ProjectType.Crew)
                 {
                     locTxt = txt;
                     txt = "Training";
@@ -227,7 +227,7 @@ namespace RP0
                             KACWrapper.KAC.DeleteAlarm(alarm.ID);
                         }
                         txt = "RP-1: ";
-                        if (buildItem.GetListType() == VesselProject.ListType.Reconditioning)
+                        if (buildItem.GetProjectType() == ProjectType.Reconditioning)
                         {
                             ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
                             if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
@@ -270,13 +270,13 @@ namespace RP0
                 SelectList("Integration");
 
             bool constructionSelectedNew = false;
-            if (KCTUtilities.CurrentGameIsCareer())
+            if (KSPUtils.CurrentGameIsCareer())
                 constructionSelectedNew = GUILayout.Toggle(_isConstructionSelected, "Construction", GUI.skin.button);
             if (constructionSelectedNew != _isConstructionSelected)
                 SelectList("Construction");
 
             bool techSelectedNew = false;
-            if (KCTUtilities.CurrentGameHasScience())
+            if (KSPUtils.CurrentGameHasScience())
                 techSelectedNew = GUILayout.Toggle(_isResearchSelected, "Research", GUI.skin.button);
             if (techSelectedNew != _isResearchSelected)
                 SelectList("Research");
@@ -780,15 +780,15 @@ namespace RP0
 
         private static GUIContent GetTypeIcon(ISpaceCenterProject b)
         {
-            switch (b.GetListType())
+            switch (b.GetProjectType())
             {
-                case VesselProject.ListType.VAB:
+                case ProjectType.VAB:
                     return _rocketTexture;
 
-                case VesselProject.ListType.SPH:
+                case ProjectType.SPH:
                     return _planeTexture;
 
-                case VesselProject.ListType.Reconditioning:
+                case ProjectType.Reconditioning:
                     if (b is ReconRolloutProject r)
                     {
                         switch (r.RRType)
@@ -805,15 +805,15 @@ namespace RP0
                     }
                     return _rocketTexture;
 
-                case VesselProject.ListType.AirLaunch:
+                case ProjectType.AirLaunch:
                     if (b is AirlaunchProject a && a.direction == AirlaunchProject.PrepDirection.Mount)
                         return _airlaunchTexture;
                     return _hangarTexture;
 
-                case VesselProject.ListType.KSC:
+                case ProjectType.KSC:
                     return _constructTexture;
 
-                case VesselProject.ListType.TechNode:
+                case ProjectType.TechNode:
                     return _techTexture;
             }
 
@@ -978,7 +978,7 @@ namespace RP0
                 (isPad ? KCTUtilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) : KCTUtilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) ) &&
                 GUILayout.Button("Recover Active Vessel To Warehouse"))
             {
-                if (!KCTUtilities.RecoverActiveVesselToStorage(isPad ? VesselProject.ListType.VAB : VesselProject.ListType.SPH))
+                if (!KCTUtilities.RecoverActiveVesselToStorage(isPad ? ProjectType.VAB : ProjectType.SPH))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
                 }
@@ -1327,7 +1327,7 @@ namespace RP0
                         List<string> facilityChecks = new List<string>();
                         if (b.MeetsFacilityRequirements(facilityChecks))
                         {
-                            bool operational = KCTUtilities.IsLaunchFacilityIntact(VesselProject.ListType.SPH);
+                            bool operational = KCTUtilities.IsLaunchFacilityIntact(ProjectType.SPH);
                             if (!operational)
                             {
                                 ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -1560,7 +1560,7 @@ namespace RP0
                     }
                 }
 
-                if (KCTUtilities.CurrentGameHasScience())
+                if (KSPUtils.CurrentGameHasScience())
                 {
                     bool valBef = KerbalConstructionTimeData.IsRefundingScience;
                     KerbalConstructionTimeData.IsRefundingScience = true;
@@ -1600,7 +1600,7 @@ namespace RP0
             Rect parentPos = HighLogic.LoadedSceneIsEditor ? EditorBuildListWindowPosition : BuildListWindowPosition;
             _blPlusPosition.yMin = parentPos.yMin;
             _blPlusPosition.height = 225;
-            VesselProject b = KCTUtilities.FindBLVesselByID(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC, _selectedVesselId);
+            VesselProject b = KCTUtilities.FindVPByID(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC, _selectedVesselId);
             GUILayout.BeginVertical();
             string launchSite = b.launchSite;
 
@@ -1619,9 +1619,9 @@ namespace RP0
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
-            if (b.Type == VesselProject.ListType.SPH && b.LC.Airlaunch_Prep.Find(a => a.associatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
+            if (b.Type == ProjectType.SPH && b.LC.Airlaunch_Prep.Find(a => a.associatedID == blvID) == null && GUILayout.Button("Select LaunchSite"))
             {
-                _launchSites = KCTUtilities.GetLaunchSites(b.Type == VesselProject.ListType.VAB);
+                _launchSites = KCTUtilities.GetLaunchSites(b.Type == ProjectType.VAB);
                 if (_launchSites.Any())
                 {
                     GUIStates.ShowBLPlus = false;
@@ -1662,7 +1662,7 @@ namespace RP0
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_NEW, "KCTEditNew");
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, "KCTEditLaunch");
 
-                EditorDriver.StartAndLoadVessel(tempFile, b.Type == VesselProject.ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB);
+                EditorDriver.StartAndLoadVessel(tempFile, b.Type == ProjectType.SPH ? EditorFacility.SPH : EditorFacility.VAB);
             }
 
             if (GUILayout.Button("Rename"))
@@ -1742,7 +1742,7 @@ namespace RP0
                     if (_isSelectingLaunchSiteForVessel)
                     {
                         //Set the chosen vessel's launch site to the selected site
-                        VesselProject blv = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
+                        VesselProject blv = KCTUtilities.FindVPByID(null, _selectedVesselId);
                         blv.launchSite = launchsite;
                     }
                     else
@@ -1760,7 +1760,7 @@ namespace RP0
 
         private static void ScrapVessel()
         {
-            VesselProject b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
+            VesselProject b = KCTUtilities.FindVPByID(null, _selectedVesselId);
             if (b == null)
             {
                 RP0Debug.Log("Tried to remove a vessel that doesn't exist!");

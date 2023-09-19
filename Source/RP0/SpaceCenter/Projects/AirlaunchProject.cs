@@ -36,7 +36,7 @@
         public override bool IsReversed => direction == PrepDirection.Unmount;
         public override bool HasCost => direction == PrepDirection.Mount;
 
-        public override VesselProject.ListType GetListType() => VesselProject.ListType.AirLaunch;
+        public override ProjectType GetProjectType() => ProjectType.AirLaunch;
 
         public void SwitchDirection()
         {

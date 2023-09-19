@@ -5,6 +5,7 @@ using UniLinq;
 using UnityEngine;
 using RP0.DataTypes;
 using UnityEngine.Profiling;
+using KSP.UI.Screens;
 
 namespace RP0
 {
@@ -43,8 +44,6 @@ namespace RP0
             }
         }
 
-        public enum ListType { None, VAB, SPH, TechNode, Reconditioning, KSC, AirLaunch, Crew };
-
         [Persistent]
         public double progress;
         [Persistent]
@@ -62,7 +61,7 @@ namespace RP0
         [Persistent]
         public int launchSiteIndex = -1;
         [Persistent]
-        public ListType Type = ListType.None;
+        public ProjectType Type = ProjectType.None;
         [Persistent]
         public Guid shipID;
         [Persistent]
@@ -120,7 +119,7 @@ namespace RP0
         public double BuildRate => _lc.CanIntegrate ? ( (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
             * (LC == null ? 1d : _lc.Efficiency * _lc.RushRate) ) : 0d;
 
-        public bool IsValid => Type != ListType.None;
+        public bool IsValid => Type != ProjectType.None;
 
         private List<ConfigNode> ExtractedPartNodes => ShipNodeCompressed.Node.GetNodes("PART").ToList();
 
@@ -240,13 +239,13 @@ namespace RP0
             // This is always called from within the editor, so the shipconstruct will have a facility.
             if (s.shipFacility == EditorFacility.SPH)
             {
-                Type = ListType.SPH;
+                Type = ProjectType.SPH;
                 FacilityBuiltIn = EditorFacility.SPH;
                 LC = KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
             }
             else
             {
-                Type = ListType.VAB;
+                Type = ProjectType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
                 LC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
                 if (_lc.LCType == LaunchComplexType.Hangar)
@@ -287,7 +286,7 @@ namespace RP0
             progress = 0;
             flag = flagURL;
             humanRated = isHuman;
-            Type = editorFacility == EditorFacility.VAB ? ListType.VAB : ListType.SPH;
+            Type = editorFacility == EditorFacility.VAB ? ProjectType.VAB : ProjectType.SPH;
             cannotEarnScience = false;
             cost = spentFunds;
             integrationCost = integrCost;
@@ -299,7 +298,7 @@ namespace RP0
         /// </summary>
         /// <param name="vessel"></param>
         /// <param name="listType"></param>
-        public VesselProject(Vessel vessel, ListType listType)
+        public VesselProject(Vessel vessel, ProjectType listType)
         {
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
@@ -308,7 +307,7 @@ namespace RP0
             ShipNodeCompressed.Node = FromInFlightVessel(vessel, listType);
             // don't compress and release, we need to make later changes
             Type = listType;
-            FacilityBuiltIn = listType == ListType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
+            FacilityBuiltIn = listType == ProjectType.SPH ? EditorFacility.SPH : EditorFacility.VAB;
 
             CacheClamps(vessel.parts);
             cost = KCTUtilities.GetTotalVesselCost(vessel.parts);
@@ -355,7 +354,7 @@ namespace RP0
 
         public override string ToString() => $"{Type}: {shipName}";
 
-        private ConfigNode FromInFlightVessel(Vessel VesselToSave, ListType listType)
+        private ConfigNode FromInFlightVessel(Vessel VesselToSave, ProjectType listType)
         {
             //This code is taken from InflightShipSave by Claw, using the CC-BY-NC-SA license.
             //This code thus is licensed under the same license, despite the GPLv3 license covering original KCT code
@@ -367,7 +366,7 @@ namespace RP0
             Quaternion OriginalRotation = VesselToSave.vesselTransform.rotation;
             Vector3 OriginalPosition = VesselToSave.vesselTransform.position;
 
-            if (listType == ListType.SPH)
+            if (listType == ProjectType.SPH)
             {
                 VesselToSave.SetRotation(new Quaternion((float)Math.Sqrt(0.5), 0, 0, (float)Math.Sqrt(0.5)));
             }
@@ -520,7 +519,7 @@ namespace RP0
 
         public EditorFacilities GetEditorFacility()
         {
-            return Type == ListType.SPH ? EditorFacilities.SPH : EditorFacilities.VAB;
+            return Type == ProjectType.SPH ? EditorFacilities.SPH : EditorFacilities.VAB;
         }
 
         /// <summary>
@@ -617,7 +616,7 @@ namespace RP0
             LaunchComplex selectedLC;
             if (LC == null)
             {
-                selectedLC = Type == ListType.VAB ? KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC : KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
+                selectedLC = Type == ProjectType.VAB ? KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC : KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
             }
             else
             {
@@ -629,7 +628,7 @@ namespace RP0
 
         public bool MeetsFacilityRequirements(LCData stats, List<string> failedReasons)
         {
-            if (!KCTUtilities.CurrentGameIsCareer())
+            if (!KSPUtils.CurrentGameIsCareer())
                 return true;
 
             double totalMass = GetTotalMass();
@@ -1299,7 +1298,7 @@ namespace RP0
             return timeLeft;
         }
 
-        public ListType GetListType() => Type;
+        public ProjectType GetProjectType() => Type;
 
         public bool IsComplete() => progress >= buildPoints + integrationPoints;
 
@@ -1314,12 +1313,37 @@ namespace RP0
             progress += bR * UTDiff;
             if (IsComplete())
             {
-                KCTUtilities.MoveVesselToWarehouse(this);
+                MoveVesselToWarehouse();
                 if (amt > toGo)
                     return (1d - toGo / amt) * UTDiff;
             }
 
             return 0d;
+        }
+
+        private void MoveVesselToWarehouse()
+        {
+            KCTEvents.Instance.KCTButtonStockImportant = true;
+
+            // use getter first just in case
+            LC.BuildList.Remove(this);
+            _lc.Warehouse.Add(this);
+            _lc.RecalculateBuildRates();
+
+            RP0Debug.Log($"Moved vessel {shipName} to {KSC.KSCName}'s {LC.Name} storage.");
+
+            KCT_GUI.ResetBLWindow(false);
+            if (!KCTSettings.Instance.DisableAllMessages)
+            {
+                var Message = StringBuilderCache.Acquire();
+                Message.AppendLine("The following vessel is complete:");
+                Message.AppendLine(shipName);
+                Message.AppendLine($"Please check the Storage at {_lc.Name} at {KSC.KSCName} to launch it.");
+                var m = new MessageSystem.Message("Vessel Complete!", Message.ToStringAndRelease(), MessageSystemButton.MessageButtonColor.GREEN, MessageSystemButton.ButtonIcons.COMPLETE);
+                MessageSystem.Instance.AddMessage(m);
+            }
+
+            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public void ReleaseShipNode()

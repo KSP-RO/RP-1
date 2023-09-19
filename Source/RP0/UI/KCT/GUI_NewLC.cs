@@ -564,7 +564,7 @@ namespace RP0
 
                 KerbalConstructionTimeData.Instance.StarterLCBuilding |= !isModify;
 
-                if (!KCTUtilities.CurrentGameIsCareer())
+                if (!KSPUtils.CurrentGameIsCareer())
                 {
                     RP0Debug.Log($"Building/Modifying launch complex {_newLCData.Name}");
                     if (isModify)
@@ -634,7 +634,7 @@ namespace RP0
                 if (!HighLogic.LoadedSceneIsEditor || _wasShowBuildList)
                     GUIStates.ShowBuildList = true;
 
-                if (KCTUtilities.CurrentGameIsCareer() && isModify)
+                if (KSPUtils.CurrentGameIsCareer() && isModify)
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
                                          new Vector2(0.5f, 0.5f),

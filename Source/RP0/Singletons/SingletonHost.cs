@@ -44,6 +44,10 @@ namespace RP0
                 KCTEvents.Instance.SubscribeToEvents();
             }
 
+            // Cache facility ID -> enum
+            foreach (var kvp in ScenarioUpgradeableFacilities.facilityStrings)
+                Database.FacilityIDToFacility[kvp.Value] = kvp.Key;
+
             _singletons.Add(new LocalizationHandler(this));
             _singletons.Add(new HideEmptyNodes(this));
             _singletons.Add(new DifficultyPresetChanger(this));

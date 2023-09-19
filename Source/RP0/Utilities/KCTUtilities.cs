@@ -1103,12 +1103,7 @@ namespace RP0
             int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facilityID);
             if (lvl < 0)
             {
-                if (!KerbalConstructionTime.BuildingMaxLevelCache.TryGetValue(facilityID.Split('/').Last(), out lvl))
-                {
-                    //screw it, let's call it 2
-                    lvl = 2;
-                    RP0Debug.Log($"Couldn't get actual max level or cached one for {facilityID}. Assuming 2.");
-                }
+                return Database.GetFacilityLevelCount(Database.FacilityIDToFacility.ValueOrDefault(facilityID));
             }
             return lvl;
         }
@@ -1118,12 +1113,7 @@ namespace RP0
             int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
             if (lvl < 0)
             {
-                if (!KerbalConstructionTime.BuildingMaxLevelCache.TryGetValue(facility.ToString(), out lvl))
-                {
-                    //screw it, let's call it 2
-                    lvl = 2;
-                    RP0Debug.Log($"Couldn't get actual max level or cached one for {facility}. Assuming 2.");
-                }
+                return Database.GetFacilityLevelCount(facility);
             }
             return lvl;
         }

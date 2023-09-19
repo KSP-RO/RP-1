@@ -147,7 +147,7 @@ namespace RP0
                 timeLeft = KCTUtilities.GetNextThingToFinish().GetTimeLeft();
             while ((newRate + 1 < TimeWarp.fetch.warpRates.Length) &&
                    (timeLeft > TimeWarp.fetch.warpRates[newRate + 1] * Planetarium.fetch.fixedDeltaTime) &&
-                   (newRate < KerbalConstructionTime.Settings.MaxTimeWarp))
+                   (newRate < KerbalConstructionTimeData.Settings.MaxTimeWarp))
             {
                 newRate++;
             }

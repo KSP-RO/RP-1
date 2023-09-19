@@ -119,16 +119,16 @@ namespace RP0
 
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     KCTUtilities.DisableModFunctionality();
-                KerbalConstructionTime.Settings.MaxTimeWarp = _newTimewarp;
-                KerbalConstructionTime.Settings.DisableAllMessages = _disableAllMsgs;
-                KerbalConstructionTime.Settings.ShowSimWatermark = _showSimWatermark;
-                KerbalConstructionTime.Settings.OverrideLaunchButton = _overrideLaunchBtn;
-                KerbalConstructionTime.Settings.AutoKACAlarms = _autoAlarms;
-                KerbalConstructionTime.Settings.CleanUpKSCDebris = _cleanUpKSCDebris;
-                KerbalConstructionTime.Settings.UseDates = _useDates;
-                KerbalConstructionTime.Settings.InPlaceEdit = _inPlaceEdit;
+                KerbalConstructionTimeData.Settings.MaxTimeWarp = _newTimewarp;
+                KerbalConstructionTimeData.Settings.DisableAllMessages = _disableAllMsgs;
+                KerbalConstructionTimeData.Settings.ShowSimWatermark = _showSimWatermark;
+                KerbalConstructionTimeData.Settings.OverrideLaunchButton = _overrideLaunchBtn;
+                KerbalConstructionTimeData.Settings.AutoKACAlarms = _autoAlarms;
+                KerbalConstructionTimeData.Settings.CleanUpKSCDebris = _cleanUpKSCDebris;
+                KerbalConstructionTimeData.Settings.UseDates = _useDates;
+                KerbalConstructionTimeData.Settings.InPlaceEdit = _inPlaceEdit;
 
-                KerbalConstructionTime.Settings.Save();
+                KerbalConstructionTimeData.Settings.Save();
                 GUIStates.ShowSettings = false;
                 if (!IsPrimarilyDisabled && !GUIStates.ShowFirstRun)
                 {
@@ -136,7 +136,7 @@ namespace RP0
                     GUIStates.ShowBuildList = true;
                     RefreshToolbarState();
                 }
-                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
+                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTKSCLock);
 
                 KerbalConstructionTimeData.Instance.RecalculateBuildRates();
 
@@ -298,14 +298,14 @@ namespace RP0
 
         private static void ShowSettings()
         {
-            _newTimewarp = KerbalConstructionTime.Settings.MaxTimeWarp;
-            _disableAllMsgs = KerbalConstructionTime.Settings.DisableAllMessages;
-            _showSimWatermark = KerbalConstructionTime.Settings.ShowSimWatermark;
-            _overrideLaunchBtn = KerbalConstructionTime.Settings.OverrideLaunchButton;
-            _autoAlarms = KerbalConstructionTime.Settings.AutoKACAlarms;
-            _cleanUpKSCDebris = KerbalConstructionTime.Settings.CleanUpKSCDebris;
-            _useDates = KerbalConstructionTime.Settings.UseDates;
-            _inPlaceEdit = KerbalConstructionTime.Settings.InPlaceEdit;
+            _newTimewarp = KerbalConstructionTimeData.Settings.MaxTimeWarp;
+            _disableAllMsgs = KerbalConstructionTimeData.Settings.DisableAllMessages;
+            _showSimWatermark = KerbalConstructionTimeData.Settings.ShowSimWatermark;
+            _overrideLaunchBtn = KerbalConstructionTimeData.Settings.OverrideLaunchButton;
+            _autoAlarms = KerbalConstructionTimeData.Settings.AutoKACAlarms;
+            _cleanUpKSCDebris = KerbalConstructionTimeData.Settings.CleanUpKSCDebris;
+            _useDates = KerbalConstructionTimeData.Settings.UseDates;
+            _inPlaceEdit = KerbalConstructionTimeData.Settings.InPlaceEdit;
 
             GUIStates.ShowSettings = !GUIStates.ShowSettings;
         }

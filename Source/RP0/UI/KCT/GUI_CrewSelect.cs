@@ -226,7 +226,7 @@ namespace RP0
                 _possibleCrewForParts.Clear();
                 _possibleCrewForPart.Clear();
 
-                KerbalConstructionTime.Settings.RandomizeCrew = AssignRandomCrew;
+                KerbalConstructionTimeData.Settings.RandomizeCrew = AssignRandomCrew;
             }
             GUILayout.EndHorizontal();
             GUILayout.EndVertical();
@@ -569,7 +569,7 @@ namespace RP0
             // then obviously we had crew trained.
             if (!anyFound)
             {
-                KerbalConstructionTime.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.001f, ShowUntrainedTip));
+                KerbalConstructionTimeData.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.001f, ShowUntrainedTip));
             }
         }
 
@@ -661,7 +661,7 @@ namespace RP0
                 }
             }
 
-            KerbalConstructionTime.Settings.RandomizeCrew = AssignRandomCrew;
+            KerbalConstructionTimeData.Settings.RandomizeCrew = AssignRandomCrew;
             KerbalConstructionTimeData.Instance.LaunchedVessel.Launch(fillTanks);
 
             GUIStates.ShowShipRoster = false;

@@ -151,9 +151,9 @@ namespace RP0
 
             if (HighLogic.LoadedSceneIsEditor)
             {
-                if (!KerbalConstructionTime.EditorShipEditingMode)
-                    KerbalConstructionTime.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ID;
-                KerbalConstructionTime.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, Harmony.PatchEngineersReport.UpdateCraftStats));
+                if (!KerbalConstructionTimeData.EditorShipEditingMode)
+                    KerbalConstructionTimeData.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ID;
+                KerbalConstructionTimeData.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, Harmony.PatchEngineersReport.UpdateCraftStats));
             }
 
             LaunchComplexes[LC_index].SwitchLaunchPad();

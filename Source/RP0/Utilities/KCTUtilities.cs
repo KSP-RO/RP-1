@@ -368,7 +368,7 @@ namespace RP0
             RP0Debug.Log($"Moved vessel {ship.shipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
 
             KCT_GUI.ResetBLWindow(false);
-            if (!KerbalConstructionTime.Settings.DisableAllMessages)
+            if (!KerbalConstructionTimeData.Settings.DisableAllMessages)
             {
                 var Message = new StringBuilder();
                 Message.AppendLine("The following vessel is complete:");
@@ -615,7 +615,7 @@ namespace RP0
 
             int oldIdx;
             editableShip.RemoveFromBuildList(out oldIdx);
-            if (KerbalConstructionTime.Settings.InPlaceEdit && oldIdx >= 0)
+            if (KerbalConstructionTimeData.Settings.InPlaceEdit && oldIdx >= 0)
             {
                 // Remove and reinsert at right place.
                 // We *could* insert at the right place to start with, but
@@ -635,7 +635,7 @@ namespace RP0
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
-            KerbalConstructionTime.ClearVesselEditMode();
+            KerbalConstructionTimeData.ClearVesselEditMode();
 
             RP0Debug.Log("Edits saved.");
 
@@ -664,7 +664,7 @@ namespace RP0
                 oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 
-            double newTotalBP = KerbalConstructionTime.Instance.EditorVessel.buildPoints + KerbalConstructionTime.Instance.EditorVessel.integrationPoints;
+            double newTotalBP = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints + KerbalConstructionTimeData.Instance.EditorVessel.integrationPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
@@ -701,7 +701,7 @@ namespace RP0
             EditorPartList.Instance?.Refresh();
             EditorPartList.Instance?.Refresh(EditorPartList.State.PartsList);
             if (HighLogic.LoadedSceneIsEditor)
-                KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
         }
 
@@ -837,7 +837,7 @@ namespace RP0
         public static void DisableModFunctionality()
         {
             DisableSimulationLocks();
-            InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTLaunchLock);
+            InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTLaunchLock);
             KCT_GUI.HideAll();
         }
 
@@ -896,26 +896,26 @@ namespace RP0
         {
             if (!HighLogic.LoadedSceneIsEditor) return;
 
-            LaunchComplex oldLC = KerbalConstructionTime.Instance.EditorVessel.LC;
-            var oldFac = KerbalConstructionTime.Instance.EditorVessel.FacilityBuiltIn;
+            LaunchComplex oldLC = KerbalConstructionTimeData.Instance.EditorVessel.LC;
+            var oldFac = KerbalConstructionTimeData.Instance.EditorVessel.FacilityBuiltIn;
 
-            KerbalConstructionTime.Instance.EditorVessel = new VesselProject(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
+            KerbalConstructionTimeData.Instance.EditorVessel = new VesselProject(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
             // override LC in case of vessel editing
-            if (KerbalConstructionTime.EditorShipEditingMode)
+            if (KerbalConstructionTimeData.EditorShipEditingMode)
             {
-                KerbalConstructionTime.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.EditedVessel.LCID;
+                KerbalConstructionTimeData.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.EditedVessel.LCID;
             }
             else
             {
                 // Check if we switched editors
-                if (oldFac != KerbalConstructionTime.Instance.EditorVessel.FacilityBuiltIn)
+                if (oldFac != KerbalConstructionTimeData.Instance.EditorVessel.FacilityBuiltIn)
                 {
                     if (oldFac == EditorFacility.VAB)
                     {
                         if (oldLC.LCType == LaunchComplexType.Pad)
                         {
                             // cache this off -- we swapped editors
-                            KerbalConstructionTime.Instance.PreEditorSwapLCID = oldLC.ID;
+                            KerbalConstructionTimeData.Instance.PreEditorSwapLCID = oldLC.ID;
                         }
                         // the BLV constructor sets our LC type to Hangar. But let's swap to it as well.
                         if (KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType != LaunchComplexType.Hangar && KerbalConstructionTimeData.Instance.ActiveSC.Hangar.IsOperational)
@@ -929,7 +929,7 @@ namespace RP0
                         bool swappedLC = false;
                         if (KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexCount > 1)
                         {
-                            if (KerbalConstructionTime.Instance.PreEditorSwapLCID != Guid.Empty && KerbalConstructionTimeData.Instance.ActiveSC.SwitchToLaunchComplex(KerbalConstructionTime.Instance.PreEditorSwapLCID))
+                            if (KerbalConstructionTimeData.Instance.PreEditorSwapLCID != Guid.Empty && KerbalConstructionTimeData.Instance.ActiveSC.SwitchToLaunchComplex(KerbalConstructionTimeData.Instance.PreEditorSwapLCID))
                             {
                                 swappedLC = true;
                             }
@@ -944,7 +944,7 @@ namespace RP0
                             }
                             if (swappedLC)
                             {
-                                KerbalConstructionTime.Instance.EditorVessel.LC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                                KerbalConstructionTimeData.Instance.EditorVessel.LC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
                             }
                         }
                     }
@@ -953,21 +953,21 @@ namespace RP0
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
-                KerbalConstructionTime.EditorRolloutCost = Formula.GetRolloutCost(KerbalConstructionTime.Instance.EditorVessel);
-                KerbalConstructionTime.EditorRolloutBP = Formula.GetRolloutBP(KerbalConstructionTime.Instance.EditorVessel);
+                KerbalConstructionTimeData.EditorRolloutCost = Formula.GetRolloutCost(KerbalConstructionTimeData.Instance.EditorVessel);
+                KerbalConstructionTimeData.EditorRolloutBP = Formula.GetRolloutBP(KerbalConstructionTimeData.Instance.EditorVessel);
             }
             else
             {
                 // SPH lacks rollout times and costs
-                KerbalConstructionTime.EditorRolloutCost = 0;
-                KerbalConstructionTime.EditorRolloutBP = 0;
+                KerbalConstructionTimeData.EditorRolloutCost = 0;
+                KerbalConstructionTimeData.EditorRolloutBP = 0;
             }
 
             Tuple<float, List<string>> unlockInfo = GetVesselUnlockInfo(ship);
-            KerbalConstructionTime.EditorUnlockCosts = unlockInfo.Item1;
-            KerbalConstructionTime.EditorRequiredTechs = unlockInfo.Item2;
+            KerbalConstructionTimeData.EditorUnlockCosts = unlockInfo.Item1;
+            KerbalConstructionTimeData.EditorRequiredTechs = unlockInfo.Item2;
             ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
-            KerbalConstructionTime.EditorToolingCosts = toolingCost;
+            KerbalConstructionTimeData.EditorToolingCosts = toolingCost;
 
             // It would be better to only do this if necessary, but eh.
             // It's not easy to know if various buried fields in the blv changed.
@@ -1188,9 +1188,9 @@ namespace RP0
             if (EditorLogic.fetch == null)
                 return;
 
-            if (KerbalConstructionTime.Settings.OverrideLaunchButton)
+            if (KerbalConstructionTimeData.Settings.OverrideLaunchButton)
             {
-                if (KerbalConstructionTime.EditorShipEditingMode)
+                if (KerbalConstructionTimeData.EditorShipEditingMode)
                 {
                     // Prevent switching between VAB and SPH in edit mode.
                     // Bad things will happen if the edits are saved in another mode than the initial one.
@@ -1210,14 +1210,14 @@ namespace RP0
                 }
 
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
-                EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
+                EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTimeData.ShowLaunchAlert(null); });
 
-                if (KerbalConstructionTime.Instance == null)
+                if (KerbalConstructionTimeData.Instance == null)
                     return;
 
-                if (!KerbalConstructionTime.Instance.IsLaunchSiteControllerDisabled)
+                if (!KerbalConstructionTimeData.Instance.IsLaunchSiteControllerDisabled)
                 {
-                    KerbalConstructionTime.Instance.IsLaunchSiteControllerDisabled = true;
+                    KerbalConstructionTimeData.Instance.IsLaunchSiteControllerDisabled = true;
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller == null)
                     {
@@ -1230,12 +1230,12 @@ namespace RP0
                     }
                 }
             }
-            else if(KerbalConstructionTime.Instance != null)
+            else if(KerbalConstructionTimeData.Instance != null)
             {
-                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, KerbalConstructionTime.KCTLaunchLock);
-                if (!KerbalConstructionTime.Instance.IsLaunchSiteControllerDisabled)
+                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, KerbalConstructionTimeData.KCTLaunchLock);
+                if (!KerbalConstructionTimeData.Instance.IsLaunchSiteControllerDisabled)
                 {
-                    KerbalConstructionTime.Instance.IsLaunchSiteControllerDisabled = true;
+                    KerbalConstructionTimeData.Instance.IsLaunchSiteControllerDisabled = true;
                     RP0Debug.Log("Attempting to disable launchsite specific buttons");
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller != null)
@@ -1248,7 +1248,7 @@ namespace RP0
 
         private static void OnEditorSwitch()
         {
-            KerbalConstructionTime.Instance.StartCoroutine(PostEditorSwitch());
+            KerbalConstructionTimeData.Instance.StartCoroutine(PostEditorSwitch());
         }
 
         private static System.Collections.IEnumerator PostEditorSwitch()
@@ -1259,7 +1259,7 @@ namespace RP0
             if (EditorDriver.fetch == null)
                 yield break;
 
-            KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
         }
 
         /// <summary>
@@ -1466,7 +1466,7 @@ namespace RP0
 
         public static void CleanupDebris(string launchSiteName)
         {
-            if (KerbalConstructionTime.Settings.CleanUpKSCDebris)
+            if (KerbalConstructionTimeData.Settings.CleanUpKSCDebris)
             {
                 PSystemSetup.SpaceCenterFacility launchFacility = PSystemSetup.Instance.GetSpaceCenterFacility(launchSiteName);
                 double lat = 0, lon = 0;

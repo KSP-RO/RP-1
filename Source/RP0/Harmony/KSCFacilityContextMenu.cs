@@ -92,7 +92,7 @@ namespace RP0.Harmony
                             double days = time / 86400d;
                             var cmqUpgrade = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StructureConstruction, -cost / days, 0d, 0d);
                             string costLine = cmqUpgrade.GetCostLineOverride(true, false, false, true);
-                            if (KerbalConstructionTime.Settings.UseDates)
+                            if (KerbalConstructionTimeData.Settings.UseDates)
                                 tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + Planetarium.GetUniversalTime(), false));
                             else
                                 tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, KSPUtil.PrintDateDelta(time, false));
@@ -107,7 +107,7 @@ namespace RP0.Harmony
                         double days = time / 86400d;
                         var cmqUpgrade = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StructureConstruction, -cost / days, 0d, 0d);
                         string costLine = cmqUpgrade.GetCostLineOverride(true, false, false, true);
-                        if (KerbalConstructionTime.Settings.UseDates)
+                        if (KerbalConstructionTimeData.Settings.UseDates)
                             tooltipDown = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + Planetarium.GetUniversalTime(), false));
                         else
                             tooltipDown = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, KSPUtil.PrintDateDelta(time, false));

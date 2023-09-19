@@ -272,7 +272,6 @@
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
     <Compile Include="Utilities\KCTUtilities.cs" />
     <Compile Include="Utilities\WindowHelper.cs" />
-    <Compile Include="KerbalConstructionTime\KerbalConstructionTime.cs" />
     <Compile Include="Persistence\KerbalConstructionTimeData.cs" />
     <Compile Include="ModIntegrations\StageRecoveryWrapper.cs" />
     <Compile Include="Utilities\TextureScale.cs" />

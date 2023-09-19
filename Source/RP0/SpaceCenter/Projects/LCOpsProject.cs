@@ -20,7 +20,7 @@ namespace RP0
         protected abstract TransactionReasonsRP0 transactionReason { get; }
         protected abstract TransactionReasonsRP0 transactionReasonTime { get; }
 
-        public VesselProject AssociatedBLV => KCTUtilities.FindBLVesselByID(LC, new Guid(associatedID));
+        public VesselProject AssociatedBLV => KCTUtilities.FindVPByID(LC, new Guid(associatedID));
 
         protected LaunchComplex _lc = null;
         public LaunchComplex LC
@@ -100,7 +100,7 @@ namespace RP0
                 rate = KCTUtilities.GetBuildRate(LC, mass, vesselBP, isHumanRated, delta);
             else
                 rate = delta == 0 ? KCTUtilities.GetBuildRate(0, LC, isHumanRated, false)
-                    : KCTUtilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? VesselProject.ListType.VAB : VesselProject.ListType.SPH, LC, isHumanRated, delta);
+                    : KCTUtilities.GetBuildRate(0, LC.LCType == LaunchComplexType.Pad ? ProjectType.VAB : ProjectType.SPH, LC, isHumanRated, delta);
 
             rate *= CurrencyUtils.Rate(transactionReasonTime);
 
@@ -334,7 +334,7 @@ namespace RP0
             return lcp;
         }
 
-        public virtual VesselProject.ListType GetListType() => VesselProject.ListType.Reconditioning;
+        public virtual ProjectType GetProjectType() => ProjectType.Reconditioning;
 
         public bool IsComplete() => IsReversed ? progress <= 0 : progress >= BP;
 
@@ -356,7 +356,7 @@ namespace RP0
 
             double cost = Math.Abs(progress - progBefore) / BP * this.cost;
 
-            if (KCTUtilities.CurrentGameIsCareer() && HasCost && this.cost > 0)
+            if (KSPUtils.CurrentGameIsCareer() && HasCost && this.cost > 0)
             {
                 var reason = transactionReason;
                 if (!CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d).CanAfford()) //If they can't afford to continue the rollout, progress stops

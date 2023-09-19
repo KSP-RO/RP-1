@@ -232,7 +232,7 @@ namespace RP0
             }
         }
 
-        public VesselProject.ListType GetListType() => VesselProject.ListType.TechNode;
+        public ProjectType GetProjectType() => ProjectType.TechNode;
 
         public bool IsComplete() => progress >= scienceCost;
 

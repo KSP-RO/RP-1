@@ -59,9 +59,9 @@ namespace RP0
             return $"Fund Target: {targetFunds:N0}";
         }
 
-        public VesselProject.ListType GetListType()
+        public ProjectType GetProjectType()
         {
-            return VesselProject.ListType.None;
+            return ProjectType.None;
         }
 
         public double GetTimeLeft()

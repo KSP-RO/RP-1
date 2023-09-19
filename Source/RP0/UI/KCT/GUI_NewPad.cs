@@ -70,7 +70,7 @@ namespace RP0
                 GUIStates.ShowBuildList = true;
 
                 Guid id = Guid.NewGuid();
-                if (!KCTUtilities.CurrentGameIsCareer())
+                if (!KSPUtils.CurrentGameIsCareer())
                 {
                     RP0Debug.Log("Building new launchpad!");
                     KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LaunchPads.Add(new LCLaunchPad(id, _newName, fractionalPadLvl)
@@ -130,7 +130,7 @@ namespace RP0
                 {
                     case RenameType.Vessel:
                     {
-                        VesselProject b = KCTUtilities.FindBLVesselByID(null, _selectedVesselId);
+                        VesselProject b = KCTUtilities.FindVPByID(null, _selectedVesselId);
                         b.shipName = _newName; //Change the name from our point of view
                         break;
                     }

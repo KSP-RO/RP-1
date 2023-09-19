@@ -62,7 +62,7 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
-            if (KCTUtilities.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
+            if (KSPUtils.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
             GUILayout.EndHorizontal();
 
             if (_personnelWindowHolder == 0)    //VAB
@@ -123,7 +123,7 @@ namespace RP0
             string unassignStr = GetAssignText(false, currentLC, out int unassignAmt);
 
             bool recalc = false;
-            VesselProject.ListType type = currentLC.LCType == LaunchComplexType.Pad ? VesselProject.ListType.VAB : VesselProject.ListType.SPH;
+            ProjectType type = currentLC.LCType == LaunchComplexType.Pad ? ProjectType.VAB : ProjectType.SPH;
             if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { KCTUtilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
             if (Event.current.type == EventType.Repaint)
             {
@@ -308,7 +308,7 @@ namespace RP0
 
         private static void RenderHireFire(bool research, out int fireAmount, out int hireAmount)
         {
-            if (KCTUtilities.CurrentGameIsCareer())
+            if (KSPUtils.CurrentGameIsCareer())
             {
                 GUILayout.BeginHorizontal();
 

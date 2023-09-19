@@ -138,9 +138,9 @@ namespace RP0
                 try
                 {
                     KCT_Preset newPreset = new KCT_Preset(file);
-                    if (KCTUtilities.CurrentGameIsCareer() && !newPreset.CareerEnabled) continue;    //Don't display presets that aren't designed for this game mode
+                    if (KSPUtils.CurrentGameIsCareer() && !newPreset.CareerEnabled) continue;    //Don't display presets that aren't designed for this game mode
                     if (HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX && !newPreset.ScienceEnabled) continue;
-                    if (KCTUtilities.CurrentGameIsSandbox() && !newPreset.SandboxEnabled) continue;
+                    if (KSPUtils.CurrentGameIsSandbox() && !newPreset.SandboxEnabled) continue;
                     KCT_Preset existing = FindPresetByShortName(newPreset.ShortName);
                     if (existing != null) //Ensure there is only one preset with a given name. Take the last one found as the final one.
                     {

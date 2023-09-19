@@ -265,9 +265,9 @@ namespace RP0.Crew
             return GetTimeLeft();
         }
 
-        public VesselProject.ListType GetListType()
+        public ProjectType GetProjectType()
         {
-            return VesselProject.ListType.Crew;
+            return ProjectType.Crew;
         }
 
         public bool IsComplete()

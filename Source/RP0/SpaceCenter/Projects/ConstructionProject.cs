@@ -58,7 +58,7 @@ namespace RP0
         public double GetFractionComplete() => progress / BP;
         public double GetTimeLeft() => (BP - progress) / GetBuildRate();
         public double GetTimeLeftEst(double offset) => GetTimeLeft();
-        public VesselProject.ListType GetListType() => VesselProject.ListType.KSC;
+        public ProjectType GetProjectType() => ProjectType.KSC;
         public bool IsComplete() => progress >= BP;
         public virtual double IncrementProgress(double UTDiff)
         {
@@ -111,7 +111,7 @@ namespace RP0
 
         public virtual void Cancel()
         {
-            if (KCTUtilities.CurrentGameIsCareer())
+            if (KSPUtils.CurrentGameIsCareer())
             {
                 // Nothing to reimburse - you don't get back what you've already paid.
 
@@ -153,7 +153,7 @@ namespace RP0
             {
                 double rushCostDelta = costDelta * RushMultiplier;
 
-                if (KCTUtilities.CurrentGameIsCareer() && !CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -(float)rushCostDelta, 0f, 0f).CanAfford())
+                if (KSPUtils.CurrentGameIsCareer() && !CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -(float)rushCostDelta, 0f, 0f).CanAfford())
                 {
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                     {

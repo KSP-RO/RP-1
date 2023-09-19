@@ -93,7 +93,7 @@ namespace RP0
             mass = vessel.GetTotalMass();
             try
             {
-                var blv = new VesselProject(vessel, VesselProject.ListType.VAB);
+                var blv = new VesselProject(vessel, ProjectType.VAB);
                 isHumanRated = blv.humanRated;
                 BP = Formula.GetReconditioningBP(blv);
                 vesselBP = blv.buildPoints + blv.integrationPoints;
@@ -165,7 +165,7 @@ namespace RP0
 
         public override bool HasCost => RRType == RolloutReconType.Rollout;
 
-        public override VesselProject.ListType GetListType() => VesselProject.ListType.Reconditioning;
+        public override ProjectType GetProjectType() => ProjectType.Reconditioning;
 
         public override void Load(ConfigNode node)
         {

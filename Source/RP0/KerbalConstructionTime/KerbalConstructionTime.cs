@@ -15,6 +15,53 @@ namespace RP0
     [KSPAddon(KSPAddon.Startup.AllGameScenes, false)]
     public class KerbalConstructionTime : MonoBehaviour
     {
+        #region Statics
+        
+        public static KCTSettings Settings = new KCTSettings();
+
+        public static bool EditorShipEditingMode = false;
+        public static double EditorRolloutCost = 0;
+        public static double EditorRolloutBP = 0;
+        public static double EditorUnlockCosts = 0;
+        public static double EditorToolingCosts = 0;
+        public static List<string> EditorRequiredTechs = new List<string>();
+
+        public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();
+
+        public static List<bool> ShowWindows = new List<bool> { false, true };    //build list, editor
+        public static string KACAlarmId = string.Empty;
+        public static double KACAlarmUT = 0;
+
+        public static bool ErroredDuringOnLoad = false;
+
+        public static bool VesselErrorAlerted = false;
+        public static bool IsRefunding = false;
+
+        public static void Reset()
+        {
+            VesselErrorAlerted = false;
+
+            KCT_GUI.ResetFormulaRateHolders();
+            KCT_GUI.ResetShowFirstRunAgain();
+
+            BuildingMaxLevelCache.Clear();
+        }
+
+        public static void ClearVesselEditMode()
+        {
+            EditorShipEditingMode = false;
+            KerbalConstructionTimeData.Instance.EditedVessel = new VesselProject();
+            KerbalConstructionTimeData.Instance.MergedVessels.Clear();
+
+            InputLockManager.RemoveControlLock("KCTEditExit");
+            InputLockManager.RemoveControlLock("KCTEditLoad");
+            InputLockManager.RemoveControlLock("KCTEditNew");
+            InputLockManager.RemoveControlLock("KCTEditLaunch");
+            EditorLogic.fetch?.Unlock("KCTEditorMouseLock");
+        }
+        
+        #endregion
+
         public static KerbalConstructionTime Instance { get; private set; }
 
         private Button.ButtonClickedEvent _recoverCallback, _flyCallback;
@@ -82,7 +129,7 @@ namespace RP0
 
             Instance = this;
 
-            KCTGameStates.Settings.Load();
+            Settings.Load();
 
             if (PresetManager.Instance == null)
             {
@@ -130,7 +177,7 @@ namespace RP0
                 KCTEvents.Instance.SubscribeToEvents();
             }
 
-            if (KCTGameStates.IsFirstStart)
+            if (KerbalConstructionTimeData.Instance.IsFirstStart)
             {
                 PresetManager.Instance.SaveActiveToSaveData();
             }
@@ -177,8 +224,8 @@ namespace RP0
                     KCT_GUI.HideAll();
                     if (!KCT_GUI.IsPrimarilyDisabled)
                     {
-                        KCT_GUI.GUIStates.ShowEditorGUI = KCTGameStates.ShowWindows[1];
-                        if (KCTGameStates.EditorShipEditingMode)
+                        KCT_GUI.GUIStates.ShowEditorGUI = ShowWindows[1];
+                        if (EditorShipEditingMode)
                             KCT_GUI.EnsureEditModeIsVisible();
                         else
                             KCT_GUI.ToggleVisibility(KCT_GUI.GUIStates.ShowEditorGUI);
@@ -187,17 +234,17 @@ namespace RP0
                 case GameScenes.SPACECENTER:
                     bool shouldStart = KCT_GUI.GUIStates.ShowFirstRun;
                     KCT_GUI.HideAll();
-                    KCTGameStates.ClearVesselEditMode();
+                    ClearVesselEditMode();
                     if (!shouldStart)
                     {
-                        KCT_GUI.GUIStates.ShowBuildList = KCTGameStates.ShowWindows[0];
+                        KCT_GUI.GUIStates.ShowBuildList = ShowWindows[0];
                         KCT_GUI.ToggleVisibility(KCT_GUI.GUIStates.ShowBuildList);
                     }
                     KCT_GUI.GUIStates.ShowFirstRun = shouldStart;
                     StartCoroutine(UpdateFacilityLevels());
                     break;
                 case GameScenes.TRACKSTATION:
-                    KCTGameStates.ClearVesselEditMode();
+                    ClearVesselEditMode();
                     break;
                 case GameScenes.FLIGHT:
                     KCT_GUI.HideAll();
@@ -500,8 +547,8 @@ namespace RP0
             {
                 foreach (SpaceCenterFacility facility in Enum.GetValues(typeof(SpaceCenterFacility)))
                 {
-                    KCTGameStates.BuildingMaxLevelCache[facility.ToString()] = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
-                    RP0Debug.Log($"Cached {facility} max at {KCTGameStates.BuildingMaxLevelCache[facility.ToString()]}");
+                    BuildingMaxLevelCache[facility.ToString()] = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
+                    RP0Debug.Log($"Cached {facility} max at {BuildingMaxLevelCache[facility.ToString()]}");
                 }
             }
         }
@@ -554,7 +601,7 @@ namespace RP0
 
         private void AddSimulationWatermark()
         {
-            if (!KCTGameStates.Settings.ShowSimWatermark) return;
+            if (!Settings.ShowSimWatermark) return;
 
             var uiController = KSP.UI.UIMasterController.Instance;
             if (uiController == null)
@@ -717,7 +764,7 @@ namespace RP0
 
             RP0Debug.Log("Checking vessels for missing parts.");
             //check that all parts are valid in all ships. If not, warn the user and disable that vessel (once that code is written)
-            if (!KCTGameStates.VesselErrorAlerted)
+            if (!VesselErrorAlerted)
             {
                 var erroredVessels = new List<VesselProject>();
                 foreach (SpaceCenter KSC in KerbalConstructionTimeData.Instance.KSCs) //this is faster on subsequent scene changes
@@ -744,10 +791,10 @@ namespace RP0
                 }
                 if (erroredVessels.Count > 0)
                     PopUpVesselError(erroredVessels);
-                KCTGameStates.VesselErrorAlerted = true;
+                VesselErrorAlerted = true;
             }
 
-            if (HighLogic.LoadedSceneIsEditor && KCTGameStates.EditorShipEditingMode)
+            if (HighLogic.LoadedSceneIsEditor && EditorShipEditingMode)
             {
                 RP0Debug.Log($"Editing {KerbalConstructionTimeData.Instance.EditedVessel.shipName}");
                 EditorLogic.fetch.shipNameField.text = KerbalConstructionTimeData.Instance.EditedVessel.shipName;
@@ -758,15 +805,15 @@ namespace RP0
                 RP0Debug.Log("SP Start");
                 if (!KCT_GUI.IsPrimarilyDisabled)
                 {
-                    if (ToolbarManager.ToolbarAvailable && KCTGameStates.Settings.PreferBlizzyToolbar)
+                    if (ToolbarManager.ToolbarAvailable && Settings.PreferBlizzyToolbar)
                     {
-                        if (KCTGameStates.ShowWindows[0])
+                        if (ShowWindows[0])
                             KCT_GUI.ToggleVisibility(true);
                         else
                         {
                             if (KCTEvents.Instance != null && KerbalConstructionTimeData.ToolbarControl != null)
                             {
-                                if (KCTGameStates.ShowWindows[0])
+                                if (ShowWindows[0])
                                     KCT_GUI.ToggleVisibility(true);
                             }
                         }
@@ -776,14 +823,14 @@ namespace RP0
                 else
                 {
                     KCT_GUI.GUIStates.ShowBuildList = false;
-                    KCTGameStates.ShowWindows[0] = false;
+                    ShowWindows[0] = false;
                 }
                 RP0Debug.Log("SP UI done");
 
-                if (KCTGameStates.IsFirstStart)
+                if (KerbalConstructionTimeData.Instance.IsFirstStart)
                 {
                     RP0Debug.Log("Showing first start.");
-                    KCTGameStates.IsFirstStart = false;
+                    KerbalConstructionTimeData.Instance.IsFirstStart = false;
                     KCT_GUI.GUIStates.ShowFirstRun = true;
                     foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
                         ksc.EnsureStartingLaunchComplexes();

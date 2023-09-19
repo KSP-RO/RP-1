@@ -32,7 +32,7 @@ namespace RP0
                 EditorWindowPosition.height = 1;
             }
             GUILayout.BeginVertical();
-            if (!KCTGameStates.EditorShipEditingMode)
+            if (!KerbalConstructionTime.EditorShipEditingMode)
             {
                 RenderBuildMode();
             }
@@ -72,9 +72,9 @@ namespace RP0
                     : 0d;
                 GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")}");
 
-                if (KCTGameStates.EditorRolloutBP > 0)
+                if (KerbalConstructionTime.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(KCTGameStates.EditorRolloutBP / bR, true, false) : "infinity")}");
+                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(KerbalConstructionTime.EditorRolloutBP / bR, true, false) : "infinity")}");
                 }
             }
             else
@@ -101,29 +101,29 @@ namespace RP0
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
             }
 
-            if (KCTGameStates.EditorRolloutCost > 0)
-                GUILayout.Label($"Rollout Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -KCTGameStates.EditorRolloutCost):N1}");
+            if (KerbalConstructionTime.EditorRolloutCost > 0)
+                GUILayout.Label($"Rollout Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -KerbalConstructionTime.EditorRolloutCost):N1}");
 
             bool showCredit = false;
-            if (KCTGameStates.EditorUnlockCosts > 0)
+            if (KerbalConstructionTime.EditorUnlockCosts > 0)
             {
                 showCredit = true;
-                GUILayout.Label($"Unlock Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -KCTGameStates.EditorUnlockCosts):N1}");
+                GUILayout.Label($"Unlock Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -KerbalConstructionTime.EditorUnlockCosts):N1}");
             }
 
-            if (KCTGameStates.EditorToolingCosts > 0)
+            if (KerbalConstructionTime.EditorToolingCosts > 0)
             {
                 showCredit = true;
-                GUILayout.Label($"Tooling Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -KCTGameStates.EditorToolingCosts):N1}");
+                GUILayout.Label($"Tooling Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -KerbalConstructionTime.EditorToolingCosts):N1}");
             }
 
             if (showCredit)
                 GUILayout.Label($"Unlock Credit: √{UnlockCreditHandler.Instance.TotalCredit:N1}");
 
-            if (KCTGameStates.EditorRequiredTechs.Count > 0)
+            if (KerbalConstructionTime.EditorRequiredTechs.Count > 0)
             {
                 string techLabel = string.Empty;
-                foreach (string techId in KCTGameStates.EditorRequiredTechs)
+                foreach (string techId in KerbalConstructionTime.EditorRequiredTechs)
                 {
                     string techName = ResearchAndDevelopment.GetTechnologyTitle(techId);
 
@@ -148,7 +148,7 @@ namespace RP0
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
             }
-            if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Integrate"))
+            if (!KerbalConstructionTime.Settings.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {
                 KCTUtilities.TryAddVesselToBuildList();
                 KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
@@ -332,9 +332,9 @@ namespace RP0
                     : double.NaN;
                 GUILayout.Label(DTUtils.GetFormattedTime(buildTime, 0, false));
 
-                if (KCTGameStates.EditorRolloutBP > 0)
+                if (KerbalConstructionTime.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {DTUtils.GetFormattedTime(KCTGameStates.EditorRolloutBP / bR, 0, false)}");
+                    GUILayout.Label($"Rollout Time: {DTUtils.GetFormattedTime(KerbalConstructionTime.EditorRolloutBP / bR, 0, false)}");
                 }
             }
             else
@@ -362,7 +362,7 @@ namespace RP0
             if (GUILayout.Button("Cancel Edits"))
             {
                 RP0Debug.Log("Edits cancelled.");
-                KCTGameStates.ClearVesselEditMode();
+                KerbalConstructionTime.ClearVesselEditMode();
 
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
             }

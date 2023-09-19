@@ -33,8 +33,8 @@ namespace RP0
 
             try
             {
-                buildListPositionSaved = new GUIPosition("buildList", KCT_GUI.BuildListWindowPosition.x, KCT_GUI.BuildListWindowPosition.y, KCTGameStates.ShowWindows[0]);
-                editorPositionSaved = new GUIPosition("editor", KCT_GUI.EditorWindowPosition.x, KCT_GUI.EditorWindowPosition.y, KCTGameStates.ShowWindows[1]);
+                buildListPositionSaved = new GUIPosition("buildList", KCT_GUI.BuildListWindowPosition.x, KCT_GUI.BuildListWindowPosition.y, KerbalConstructionTime.ShowWindows[0]);
+                editorPositionSaved = new GUIPosition("editor", KCT_GUI.EditorWindowPosition.x, KCT_GUI.EditorWindowPosition.y, KerbalConstructionTime.ShowWindows[1]);
                 editorBuildListPositionSaved = new GUIPosition("editorBuildList", KCT_GUI.EditorBuildListWindowPosition.x, KCT_GUI.EditorBuildListWindowPosition.y, false);
 
                 ConfigNode cnTemp = ConfigNode.CreateConfigFromObject(this, new ConfigNode());
@@ -60,14 +60,14 @@ namespace RP0
                 {
                     KCT_GUI.BuildListWindowPosition.x = buildListPositionSaved.xPos;
                     KCT_GUI.BuildListWindowPosition.y = buildListPositionSaved.yPos;
-                    KCTGameStates.ShowWindows[0] = buildListPositionSaved.visible;
+                    KerbalConstructionTime.ShowWindows[0] = buildListPositionSaved.visible;
                 }
 
                 if (editorPositionSaved != null)
                 {
                     KCT_GUI.EditorWindowPosition.x = editorPositionSaved.xPos;
                     KCT_GUI.EditorWindowPosition.y = editorPositionSaved.yPos;
-                    KCTGameStates.ShowWindows[1] = editorPositionSaved.visible;
+                    KerbalConstructionTime.ShowWindows[1] = editorPositionSaved.visible;
                 }
 
                 if (editorBuildListPositionSaved != null)

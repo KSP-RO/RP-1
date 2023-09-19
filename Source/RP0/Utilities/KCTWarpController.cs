@@ -62,7 +62,7 @@ namespace RP0
                 return;
             }
 
-            // These KCTGameStates fields should fade out.
+            // These KerbalConstructionTime fields should fade out.
             desiredWarpRate = RampUpWarp(warpTarget);
             warping = true;
         }
@@ -147,7 +147,7 @@ namespace RP0
                 timeLeft = KCTUtilities.GetNextThingToFinish().GetTimeLeft();
             while ((newRate + 1 < TimeWarp.fetch.warpRates.Length) &&
                    (timeLeft > TimeWarp.fetch.warpRates[newRate + 1] * Planetarium.fetch.fixedDeltaTime) &&
-                   (newRate < KCTGameStates.Settings.MaxTimeWarp))
+                   (newRate < KerbalConstructionTime.Settings.MaxTimeWarp))
             {
                 newRate++;
             }

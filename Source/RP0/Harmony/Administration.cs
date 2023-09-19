@@ -61,7 +61,7 @@ namespace RP0.Harmony
             foreach (var trf in trfs)
             {
                 if (trf.name == "DepartmentSpacer1" || trf.name == "DepartmentSpacer2")
-                    UnityEngine.Object.DestroyImmediate(trf.gameObject);
+                    Object.DestroyImmediate(trf.gameObject);
             }
         }
 
@@ -158,14 +158,14 @@ namespace RP0.Harmony
             // Create some spacers to make everything look nicer.
             __instance.scrollListStrategies.GetUilistItemAt(0).GetComponent<LayoutElement>().minWidth = 280f;
             var firstDep = __instance.scrollListKerbals.GetUilistItemAt(0);
-            GameObject spacer = UnityEngine.Object.Instantiate(firstDep.gameObject);
+            GameObject spacer = Object.Instantiate(firstDep.gameObject);
             spacer.name = "DepartmentSpacer1";
             for (int i = spacer.transform.childCount - 1; i >= 0; --i)
-                UnityEngine.Object.DestroyImmediate(spacer.transform.GetChild(i).gameObject);
+                Object.DestroyImmediate(spacer.transform.GetChild(i).gameObject);
 
-            UnityEngine.Object.DestroyImmediate(spacer.GetComponent<KerbalListItem>());
-            UnityEngine.Object.DestroyImmediate(spacer.GetComponent<Image>());
-            UnityEngine.Object.DestroyImmediate(spacer.GetComponent<UIListItem>());
+            Object.DestroyImmediate(spacer.GetComponent<KerbalListItem>());
+            Object.DestroyImmediate(spacer.GetComponent<Image>());
+            Object.DestroyImmediate(spacer.GetComponent<UIListItem>());
 
             spacer.GetComponent<LayoutElement>().minWidth = 70f;
             spacer.transform.SetParent(firstDep.transform.parent, false);
@@ -173,7 +173,7 @@ namespace RP0.Harmony
 
             firstDep.transform.SetAsFirstSibling();
 
-            GameObject spacer2 = UnityEngine.Object.Instantiate(spacer);
+            GameObject spacer2 = Object.Instantiate(spacer);
             spacer2.name = "DepartmentSpacer2";
             spacer2.transform.SetParent(spacer.transform.parent, false);
             spacer2.transform.SetAsFirstSibling();
@@ -231,7 +231,7 @@ namespace RP0.Harmony
             // Now we actually create the items. This broadly equates to stock code.
             foreach (Strategy strategy in _strategies)
             {
-                UIListItem item = UnityEngine.Object.Instantiate(__instance.prefabActiveStrat);
+                UIListItem item = Object.Instantiate(__instance.prefabActiveStrat);
                 ActiveStrategyListItem stratItem = item.GetComponent<ActiveStrategyListItem>();
                 UIRadioButton button = item.GetComponent<UIRadioButton>();
                 wrapper = new Administration.StrategyWrapper(strategy, button);

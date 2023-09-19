@@ -209,7 +209,7 @@ namespace RP0
                     TimeWarp.SetRate(0, true);  // If the controller doesn't exist, stop warp anyway.
                 }
 
-                if (KerbalConstructionTimeData.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
+                if (KCTSettings.Instance.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
                     if (!KCTUtilities.IsApproximatelyEqual(KerbalConstructionTimeData.Instance.KACAlarmUT - UT, buildItem.GetTimeLeft()))
@@ -368,7 +368,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2 + 30));
-            GUILayout.Label(KerbalConstructionTimeData.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
+            GUILayout.Label(KCTSettings.Instance.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(20);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
@@ -466,7 +466,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KerbalConstructionTimeData.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
+            GUILayout.Label(KCTSettings.Instance.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(70);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
@@ -660,7 +660,7 @@ namespace RP0
             GUILayout.Label("Name:", GUILayout.Width(250));
             GUILayout.Label("Progress:");
             GUILayout.Space(18);
-            GUILayout.Label(KerbalConstructionTimeData.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KCTSettings.Instance.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350 - GUI.skin.label.lineHeight * 5));
 
@@ -849,7 +849,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KerbalConstructionTimeData.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KCTSettings.Instance.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
         }
 

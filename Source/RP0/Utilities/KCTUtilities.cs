@@ -368,7 +368,7 @@ namespace RP0
             RP0Debug.Log($"Moved vessel {ship.shipName} to {ship.KSC.KSCName}'s {ship.LC.Name} storage.");
 
             KCT_GUI.ResetBLWindow(false);
-            if (!KerbalConstructionTimeData.Settings.DisableAllMessages)
+            if (!KCTSettings.Instance.DisableAllMessages)
             {
                 var Message = new StringBuilder();
                 Message.AppendLine("The following vessel is complete:");
@@ -615,7 +615,7 @@ namespace RP0
 
             int oldIdx;
             editableShip.RemoveFromBuildList(out oldIdx);
-            if (KerbalConstructionTimeData.Settings.InPlaceEdit && oldIdx >= 0)
+            if (KCTSettings.Instance.InPlaceEdit && oldIdx >= 0)
             {
                 // Remove and reinsert at right place.
                 // We *could* insert at the right place to start with, but
@@ -1104,7 +1104,7 @@ namespace RP0
             if (EditorLogic.fetch == null)
                 return;
 
-            if (KerbalConstructionTimeData.Settings.OverrideLaunchButton)
+            if (KCTSettings.Instance.OverrideLaunchButton)
             {
                 if (KerbalConstructionTimeData.EditorShipEditingMode)
                 {
@@ -1382,7 +1382,7 @@ namespace RP0
 
         public static void CleanupDebris(string launchSiteName)
         {
-            if (KerbalConstructionTimeData.Settings.CleanUpKSCDebris)
+            if (KCTSettings.Instance.CleanUpKSCDebris)
             {
                 PSystemSetup.SpaceCenterFacility launchFacility = PSystemSetup.Instance.GetSpaceCenterFacility(launchSiteName);
                 double lat = 0, lon = 0;

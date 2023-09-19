@@ -267,7 +267,7 @@
     <Compile Include="Utilities\Formula.cs" />
     <Compile Include="SpaceCenter\Presets\PresetManager.cs" />
     <Compile Include="SpaceCenter\Projects\ReconRolloutProject.cs" />
-    <Compile Include="SpaceCenter\Presets\KCTSettings.cs" />
+    <Compile Include="Settings\KCTSettings.cs" />
     <Compile Include="SpaceCenter\Projects\ResearchProject.cs" />
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
     <Compile Include="Utilities\KCTUtilities.cs" />

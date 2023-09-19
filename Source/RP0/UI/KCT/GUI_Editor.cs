@@ -148,7 +148,7 @@ namespace RP0
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
             }
-            if (!KerbalConstructionTimeData.Settings.OverrideLaunchButton && GUILayout.Button("Integrate"))
+            if (!KCTSettings.Instance.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {
                 KCTUtilities.TryAddVesselToBuildList();
                 KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;

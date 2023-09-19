@@ -52,6 +52,7 @@ namespace RP0
             _singletons.Add(new HideEmptyNodes(this));
             _singletons.Add(new DifficultyPresetChanger(this));
             _singletons.Add(new RFTagApplier(this));
+            _singletons.Add(new KCTSettings(this));
 
             foreach (var s in _singletons)
             {

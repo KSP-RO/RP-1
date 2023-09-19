@@ -42,6 +42,8 @@ namespace RP0
         public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
         public static readonly List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
         public static readonly Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
+        public static int GetFacilityLevelCount(SpaceCenterFacility fac) { return FacilityLevelCosts.ValueOrDefault(fac)?.Count ?? 0; }
+        public static readonly Dictionary<string, SpaceCenterFacility> FacilityIDToFacility = new Dictionary<string, SpaceCenterFacility>();
         public static readonly Dictionary<string, string> TechNameToTitle = new Dictionary<string, string>();
         public static readonly Dictionary<string, List<string>> TechNameToParents = new Dictionary<string, List<string>>();
 
@@ -177,7 +179,6 @@ namespace RP0
 
             foreach (ConfigNode node in rootNode.nodes)
             {
-                bool isFac = true;
                 SpaceCenterFacility fac = SpaceCenterFacility.Administration;
                 switch (node.name)
                 {
@@ -190,23 +191,20 @@ namespace RP0
                     case "LAUNCHPAD": fac = SpaceCenterFacility.LaunchPad; break;
                     case "RUNWAY": fac = SpaceCenterFacility.Runway; break;
                     case "RESEARCH": fac = SpaceCenterFacility.ResearchAndDevelopment; break;
-                    default: isFac = false; break;
+                    default: continue;
                 }
 
-                if (isFac)
-                {
-                    string up = string.Empty;
-                    node.TryGetValue("upgrades", ref up);
+                string up = string.Empty;
+                node.TryGetValue("upgrades", ref up);
 
-                    if (up == "1, 1, 1")
-                        Database.LockedFacilities.Add(fac);
+                if (up == "1, 1, 1")
+                    Database.LockedFacilities.Add(fac);
 
-                    string costs = string.Empty;
-                    node.TryGetValue("upgrades", ref costs);
-                    List<int> costList = new List<int>();
-                    costList.FromCommaString(costs);
-                    Database.FacilityLevelCosts[fac] = costList;
-                }
+                string costs = string.Empty;
+                node.TryGetValue("upgrades", ref costs);
+                List<int> costList = new List<int>();
+                costList.FromCommaString(costs);
+                Database.FacilityLevelCosts[fac] = costList;
             }
         }
 

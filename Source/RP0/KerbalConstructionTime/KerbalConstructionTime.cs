@@ -26,8 +26,6 @@ namespace RP0
         public static double EditorToolingCosts = 0;
         public static List<string> EditorRequiredTechs = new List<string>();
 
-        public static Dictionary<string, int> BuildingMaxLevelCache = new Dictionary<string, int>();
-
         public static List<bool> ShowWindows = new List<bool> { false, true };    //build list, editor
         public static string KACAlarmId = string.Empty;
         public static double KACAlarmUT = 0;
@@ -43,8 +41,6 @@ namespace RP0
 
             KCT_GUI.ResetFormulaRateHolders();
             KCT_GUI.ResetShowFirstRunAgain();
-
-            BuildingMaxLevelCache.Clear();
         }
 
         public static void ClearVesselEditMode()
@@ -251,8 +247,7 @@ namespace RP0
                     ProcessFlightStart();
                     break;
             }
-            // Need to do this in every scene.
-            StartCoroutine(CacheFacilityLevels());
+
             RP0Debug.Log("Start finished");
 
             DelayedStart();
@@ -532,24 +527,6 @@ namespace RP0
                     }
                 }
                 yield return _wfsHalf;
-            }
-        }
-
-        private IEnumerator CacheFacilityLevels()
-        {
-            do
-            {
-                yield return new WaitForFixedUpdate();    // No way to know when KSP has finally initialized the ScenarioUpgradeableFacilities data
-            } while (HighLogic.LoadedScene == GameScenes.SPACECENTER && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) < 0);
-
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER
-                && ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.VehicleAssemblyBuilding) >= 0)
-            {
-                foreach (SpaceCenterFacility facility in Enum.GetValues(typeof(SpaceCenterFacility)))
-                {
-                    BuildingMaxLevelCache[facility.ToString()] = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
-                    RP0Debug.Log($"Cached {facility} max at {BuildingMaxLevelCache[facility.ToString()]}");
-                }
             }
         }
 

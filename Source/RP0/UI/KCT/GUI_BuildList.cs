@@ -212,11 +212,11 @@ namespace RP0
                 if (KerbalConstructionTime.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
-                    if (!KCTUtilities.IsApproximatelyEqual(KerbalConstructionTime.KACAlarmUT - UT, buildItem.GetTimeLeft()))
+                    if (!KCTUtilities.IsApproximatelyEqual(KerbalConstructionTimeData.Instance.KACAlarmUT - UT, buildItem.GetTimeLeft()))
                     {
                         RP0Debug.Log("KAC Alarm being created!");
-                        KerbalConstructionTime.KACAlarmUT = buildItem.GetTimeLeft() + UT;
-                        KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KerbalConstructionTime.KACAlarmId);
+                        KerbalConstructionTimeData.Instance.KACAlarmUT = buildItem.GetTimeLeft() + UT;
+                        KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == KerbalConstructionTimeData.Instance.KACAlarmId);
                         if (alarm == null)
                         {
                             alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.StartsWith("RP-1: "));
@@ -251,8 +251,8 @@ namespace RP0
                         }
                         else
                             txt += $"{buildItem.GetItemName()} Complete";
-                        KerbalConstructionTime.KACAlarmId = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, txt, KerbalConstructionTime.KACAlarmUT);
-                        RP0Debug.Log($"Alarm created with ID: {KerbalConstructionTime.KACAlarmId}");
+                        KerbalConstructionTimeData.Instance.KACAlarmId = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Raw, txt, KerbalConstructionTimeData.Instance.KACAlarmUT);
+                        RP0Debug.Log($"Alarm created with ID: {KerbalConstructionTimeData.Instance.KACAlarmId}");
                     }
                 }
             }
@@ -1562,15 +1562,15 @@ namespace RP0
 
                 if (KCTUtilities.CurrentGameHasScience())
                 {
-                    bool valBef = KerbalConstructionTime.IsRefunding;
-                    KerbalConstructionTime.IsRefunding = true;
+                    bool valBef = KerbalConstructionTimeData.IsRefundingScience;
+                    KerbalConstructionTimeData.IsRefundingScience = true;
                     try
                     {
                         ResearchAndDevelopment.Instance.AddScience(node.scienceCost, TransactionReasons.RnDTechResearch);
                     }
                     finally
                     {
-                        KerbalConstructionTime.IsRefunding = valBef;
+                        KerbalConstructionTimeData.IsRefundingScience = valBef;
                     }
                 }
                 KerbalConstructionTimeData.Instance.TechList.RemoveAt(index);

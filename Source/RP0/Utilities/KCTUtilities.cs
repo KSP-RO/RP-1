@@ -411,7 +411,7 @@ namespace RP0
         public static void ProcessSciPointTotalChange(float changeDelta)
         {
             // Earned point totals shouldn't decrease. This would only make sense when done through the cheat menu.
-            if (changeDelta <= 0f || KerbalConstructionTime.IsRefunding) return;
+            if (changeDelta <= 0f || KerbalConstructionTimeData.IsRefundingScience) return;
 
             EnsureCurrentSaveHasSciTotalsInitialized(changeDelta);
             float pointsBef = Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);

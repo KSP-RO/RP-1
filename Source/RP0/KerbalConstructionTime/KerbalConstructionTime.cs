@@ -16,7 +16,11 @@ namespace RP0
     public class KerbalConstructionTime : MonoBehaviour
     {
         #region Statics
-        
+
+        // Per saveslot values
+        public static bool ErroredDuringOnLoad = false;
+        public static bool VesselErrorAlerted = false;
+
         public static KCTSettings Settings = new KCTSettings();
 
         public static bool EditorShipEditingMode = false;
@@ -27,13 +31,7 @@ namespace RP0
         public static List<string> EditorRequiredTechs = new List<string>();
 
         public static List<bool> ShowWindows = new List<bool> { false, true };    //build list, editor
-        public static string KACAlarmId = string.Empty;
-        public static double KACAlarmUT = 0;
-
-        public static bool ErroredDuringOnLoad = false;
-
-        public static bool VesselErrorAlerted = false;
-        public static bool IsRefunding = false;
+        
 
         public static void Reset()
         {

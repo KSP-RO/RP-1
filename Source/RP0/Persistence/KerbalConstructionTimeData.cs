@@ -397,7 +397,7 @@ namespace RP0
                 StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
 
                 // Clear the KCT vessel ID but keep KSP's own ID.
-                // 'Revert To Launch' state is saved some frames after the scene got loaded so KerbalConstructionTimeData.Instance.LaunchedVessel is no longer there.
+                // 'Revert To Launch' state is saved some frames after the scene got loaded so LaunchedVessel is no longer there.
                 // In this case we use KSP's own id to figure out if airlaunch should be done.
                 AirlaunchParams.KCTVesselId = Guid.Empty;
             }
@@ -1186,7 +1186,7 @@ namespace RP0
                 {
                     _hasFirstRecalculated = true;
                     IsEditorRecalcuationRequired = false;
-                    KCTUtilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                    RecalculateEditorBuildTime(EditorLogic.fetch.ship);
                 }
                 // make sure we're not destructing
                 else if (!_hasFirstRecalculated && this != null)
@@ -1682,6 +1682,90 @@ namespace RP0
                 "Recover vessel",
                 null, options: options.ToArray());
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
+        public void RecalculateEditorBuildTime(ShipConstruct ship)
+        {
+            if (!HighLogic.LoadedSceneIsEditor) return;
+
+            LaunchComplex oldLC = EditorVessel.LC;
+            var oldFac = EditorVessel.FacilityBuiltIn;
+
+            EditorVessel = new VesselProject(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
+            // override LC in case of vessel editing
+            if (EditorShipEditingMode)
+            {
+                EditorVessel.LCID = EditedVessel.LCID;
+            }
+            else
+            {
+                // Check if we switched editors
+                if (oldFac != EditorVessel.FacilityBuiltIn)
+                {
+                    if (oldFac == EditorFacility.VAB)
+                    {
+                        if (oldLC.LCType == LaunchComplexType.Pad)
+                        {
+                            // cache this off -- we swapped editors
+                            PreEditorSwapLCID = oldLC.ID;
+                        }
+                        // the BLV constructor sets our LC type to Hangar. But let's swap to it as well.
+                        if (ActiveSC.ActiveLC.LCType != LaunchComplexType.Hangar && ActiveSC.Hangar.IsOperational)
+                        {
+                            ActiveSC.SwitchLaunchComplex(SpaceCenter.HangarIndex);
+                        }
+                    }
+                    else
+                    {
+                        // Try to recover a pad LC
+                        bool swappedLC = false;
+                        if (ActiveSC.LaunchComplexCount > 1)
+                        {
+                            if (PreEditorSwapLCID != Guid.Empty && ActiveSC.SwitchToLaunchComplex(PreEditorSwapLCID))
+                            {
+                                swappedLC = true;
+                            }
+                            else
+                            {
+                                int idx = ActiveSC.GetLaunchComplexIdxToSwitchTo(true, true);
+                                if (idx != -1)
+                                {
+                                    ActiveSC.SwitchLaunchComplex(idx);
+                                    swappedLC = true;
+                                }
+                            }
+                            if (swappedLC)
+                            {
+                                EditorVessel.LC = ActiveSC.ActiveLC;
+                            }
+                        }
+                    }
+                }
+            }
+
+            if (EditorDriver.editorFacility == EditorFacility.VAB)
+            {
+                EditorRolloutCost = Formula.GetRolloutCost(EditorVessel);
+                EditorRolloutBP = Formula.GetRolloutBP(EditorVessel);
+            }
+            else
+            {
+                // SPH lacks rollout times and costs
+                EditorRolloutCost = 0;
+                EditorRolloutBP = 0;
+            }
+
+            Tuple<float, List<string>> unlockInfo = KCTUtilities.GetVesselUnlockInfo(ship);
+            EditorUnlockCosts = unlockInfo.Item1;
+            EditorRequiredTechs = unlockInfo.Item2;
+            ToolingGUI.GetUntooledPartsAndCost(out _, out float toolingCost);
+            EditorToolingCosts = toolingCost;
+
+            // It would be better to only do this if necessary, but eh.
+            // It's not easy to know if various buried fields in the blv changed.
+            // It would *also* be nice to not run the ER before the blv is ready
+            // post craft-load, but...also eh. This is fine.
+            Harmony.PatchEngineersReport.UpdateCraftStats();
         }
     }
 }

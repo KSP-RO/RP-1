@@ -30,8 +30,6 @@ namespace RP0
         // Per saveslot values
         public static bool VesselErrorAlerted = false;
 
-        public static KCTSettings Settings = new KCTSettings();
-
         public static bool EditorShipEditingMode = false;
         public static double EditorRolloutCost = 0;
         public static double EditorRolloutBP = 0;
@@ -188,7 +186,7 @@ namespace RP0
 
             if (KCTUtilities.CurrentGameIsMission()) return;
 
-            Settings.Load();
+            KCTSettings.Instance.Load();
 
             if (PresetManager.Instance == null)
             {
@@ -363,7 +361,7 @@ namespace RP0
                     if (!KCT_GUI.IsPrimarilyDisabled)
                     {
                         // TODO: This looks like a duplicate of the code in Start's switch, can we combine?
-                        if (ToolbarManager.ToolbarAvailable && Settings.PreferBlizzyToolbar)
+                        if (ToolbarManager.ToolbarAvailable && KCTSettings.Instance.PreferBlizzyToolbar)
                         {
                             if (ShowWindows[0])
                                 KCT_GUI.ToggleVisibility(true);
@@ -1300,7 +1298,7 @@ namespace RP0
 
         private void AddSimulationWatermark()
         {
-            if (!Settings.ShowSimWatermark) return;
+            if (!KCTSettings.Instance.ShowSimWatermark) return;
 
             var uiController = KSP.UI.UIMasterController.Instance;
             if (uiController == null)

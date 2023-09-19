@@ -119,16 +119,16 @@ namespace RP0
 
                 if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                     KCTUtilities.DisableModFunctionality();
-                KerbalConstructionTimeData.Settings.MaxTimeWarp = _newTimewarp;
-                KerbalConstructionTimeData.Settings.DisableAllMessages = _disableAllMsgs;
-                KerbalConstructionTimeData.Settings.ShowSimWatermark = _showSimWatermark;
-                KerbalConstructionTimeData.Settings.OverrideLaunchButton = _overrideLaunchBtn;
-                KerbalConstructionTimeData.Settings.AutoKACAlarms = _autoAlarms;
-                KerbalConstructionTimeData.Settings.CleanUpKSCDebris = _cleanUpKSCDebris;
-                KerbalConstructionTimeData.Settings.UseDates = _useDates;
-                KerbalConstructionTimeData.Settings.InPlaceEdit = _inPlaceEdit;
+                KCTSettings.Instance.MaxTimeWarp = _newTimewarp;
+                KCTSettings.Instance.DisableAllMessages = _disableAllMsgs;
+                KCTSettings.Instance.ShowSimWatermark = _showSimWatermark;
+                KCTSettings.Instance.OverrideLaunchButton = _overrideLaunchBtn;
+                KCTSettings.Instance.AutoKACAlarms = _autoAlarms;
+                KCTSettings.Instance.CleanUpKSCDebris = _cleanUpKSCDebris;
+                KCTSettings.Instance.UseDates = _useDates;
+                KCTSettings.Instance.InPlaceEdit = _inPlaceEdit;
 
-                KerbalConstructionTimeData.Settings.Save();
+                KCTSettings.Instance.Save();
                 GUIStates.ShowSettings = false;
                 if (!IsPrimarilyDisabled && !GUIStates.ShowFirstRun)
                 {
@@ -298,14 +298,14 @@ namespace RP0
 
         private static void ShowSettings()
         {
-            _newTimewarp = KerbalConstructionTimeData.Settings.MaxTimeWarp;
-            _disableAllMsgs = KerbalConstructionTimeData.Settings.DisableAllMessages;
-            _showSimWatermark = KerbalConstructionTimeData.Settings.ShowSimWatermark;
-            _overrideLaunchBtn = KerbalConstructionTimeData.Settings.OverrideLaunchButton;
-            _autoAlarms = KerbalConstructionTimeData.Settings.AutoKACAlarms;
-            _cleanUpKSCDebris = KerbalConstructionTimeData.Settings.CleanUpKSCDebris;
-            _useDates = KerbalConstructionTimeData.Settings.UseDates;
-            _inPlaceEdit = KerbalConstructionTimeData.Settings.InPlaceEdit;
+            _newTimewarp = KCTSettings.Instance.MaxTimeWarp;
+            _disableAllMsgs = KCTSettings.Instance.DisableAllMessages;
+            _showSimWatermark = KCTSettings.Instance.ShowSimWatermark;
+            _overrideLaunchBtn = KCTSettings.Instance.OverrideLaunchButton;
+            _autoAlarms = KCTSettings.Instance.AutoKACAlarms;
+            _cleanUpKSCDebris = KCTSettings.Instance.CleanUpKSCDebris;
+            _useDates = KCTSettings.Instance.UseDates;
+            _inPlaceEdit = KCTSettings.Instance.InPlaceEdit;
 
             GUIStates.ShowSettings = !GUIStates.ShowSettings;
         }

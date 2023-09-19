@@ -1,11 +1,14 @@
 ﻿using System.IO;
+using UnityEngine;
 
 namespace RP0
 {
-    public class KCTSettings
+    public class KCTSettings : HostedSingleton
     {
         private const string _fileName = "KCT_Config.txt";
         private readonly string _directory = KSPUtil.ApplicationRootPath + "GameData/RP-1/PluginData/";
+
+        public static new KCTSettings Instance { get; private set; }
 
         [Persistent]
         public int MaxTimeWarp;
@@ -30,7 +33,7 @@ namespace RP0
         [Persistent]
         public bool InPlaceEdit;
 
-        public KCTSettings()
+        public KCTSettings(MonoBehaviour host) : base(host)
         {
             DisableAllMessages = true;
             ShowSimWatermark = true;
@@ -40,6 +43,17 @@ namespace RP0
             CleanUpKSCDebris = true;
             UseDates = true;
             InPlaceEdit = false;
+        }
+
+        public override void Awake()
+        {
+            Instance = this;
+        }
+
+        public override void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
         }
 
         public void Load()

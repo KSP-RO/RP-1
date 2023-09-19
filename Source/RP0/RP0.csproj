@@ -277,7 +277,6 @@
     <Compile Include="Persistence\KerbalConstructionTimeData.cs" />
     <Compile Include="ModIntegrations\StageRecoveryWrapper.cs" />
     <Compile Include="Utilities\TextureScale.cs" />
-    <Compile Include="ModIntegrations\ToolbarRegistration.cs" />
     <Compile Include="Persistence\KCTVesselTracker.cs" />
     <Compile Include="Persistence\KCTVesselTrackerEventHandler.cs" />
     <Compile Include="SpaceCenter\VesselBuildValidator.cs" />

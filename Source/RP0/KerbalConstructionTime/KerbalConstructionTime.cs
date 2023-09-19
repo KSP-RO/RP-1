@@ -48,10 +48,10 @@ namespace RP0
         {
             _simWatermark?.DestroyGameObject();
 
-            if (KCTGameStates.ToolbarControl != null)
+            if (KerbalConstructionTimeData.ToolbarControl != null)
             {
-                KCTGameStates.ToolbarControl.OnDestroy();
-                Destroy(KCTGameStates.ToolbarControl);
+                KerbalConstructionTimeData.ToolbarControl.OnDestroy();
+                Destroy(KerbalConstructionTimeData.ToolbarControl);
             }
             KCT_GUI.ClearTooltips();
             KCT_GUI.OnDestroy();
@@ -97,20 +97,20 @@ namespace RP0
             }
 
             var obj = new GameObject("KCTToolbarControl");
-            KCTGameStates.ToolbarControl = obj.AddComponent<ToolbarControl>();
-            KCTGameStates.ToolbarControl.AddToAllToolbars(null, null,
+            KerbalConstructionTimeData.ToolbarControl = obj.AddComponent<ToolbarControl>();
+            KerbalConstructionTimeData.ToolbarControl.AddToAllToolbars(null, null,
                 null, null, null, null,
                 ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW | ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.SPH | ApplicationLauncher.AppScenes.TRACKSTATION | ApplicationLauncher.AppScenes.VAB,
-                KCTGameStates._modId,
+                KerbalConstructionTimeData._modId,
                 "MainButton",
                 KCTUtilities._icon_KCT_On_38,
                 KCTUtilities._icon_KCT_Off_38,
                 KCTUtilities._icon_KCT_On_24,
                 KCTUtilities._icon_KCT_Off_24,
-                KCTGameStates._modName
+                KerbalConstructionTimeData._modName
                 );
 
-            KCTGameStates.ToolbarControl.AddLeftRightClickCallbacks(KCT_GUI.ClickToggle, KCT_GUI.OnRightClick);
+            KerbalConstructionTimeData.ToolbarControl.AddLeftRightClickCallbacks(KCT_GUI.ClickToggle, KCT_GUI.OnRightClick);
         }
 
         public void Start()
@@ -764,7 +764,7 @@ namespace RP0
                             KCT_GUI.ToggleVisibility(true);
                         else
                         {
-                            if (KCTEvents.Instance != null && KCTGameStates.ToolbarControl != null)
+                            if (KCTEvents.Instance != null && KerbalConstructionTimeData.ToolbarControl != null)
                             {
                                 if (KCTGameStates.ShowWindows[0])
                                     KCT_GUI.ToggleVisibility(true);

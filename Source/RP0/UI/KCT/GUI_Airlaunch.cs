@@ -169,7 +169,7 @@ namespace RP0
                     else
                     {
                         GUIStates.ShowAirlaunch = false;
-                        KCTGameStates.ToolbarControl?.SetFalse();
+                        KerbalConstructionTimeData.ToolbarControl?.SetFalse();
                         _centralWindowPosition.height = 1;
                         AssignInitialCrew();
                         GUIStates.ShowShipRoster = true;

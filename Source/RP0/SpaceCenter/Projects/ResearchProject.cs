@@ -301,7 +301,7 @@ namespace RP0
             string blockingTech = null;
 
             List<string> parentList;
-            if (!KerbalConstructionTimeData.techNameToParents.TryGetValue(techID, out parentList))
+            if (!Database.TechNameToParents.TryGetValue(techID, out parentList))
             {
                 RP0Debug.LogError($"Could not find techToParent for tech {techID}");
                 return null;

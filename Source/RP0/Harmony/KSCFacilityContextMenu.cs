@@ -82,7 +82,7 @@ namespace RP0.Harmony
                         kctUpgradeBlocked = gate != null && ResearchAndDevelopment.GetTechnologyState(gate) != RDTech.State.Available;
                         if (kctUpgradeBlocked)
                         {
-                            tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_TechGate", KerbalConstructionTimeData.techNameToTitle[gate]);
+                            tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_TechGate", Database.TechNameToTitle[gate]);
                         }
                         else
                         {

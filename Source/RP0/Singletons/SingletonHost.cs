@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
+using ToolbarControl_NS;
+using System;
 
 namespace RP0
 {
@@ -11,7 +13,9 @@ namespace RP0
         protected static HostedSingleton _instance = null;
         public static HostedSingleton Instance => _instance;
 
-        public abstract void Awake();
+        public virtual void Awake() { }
+
+        public virtual void Start() { }
 
         public virtual void OnDestroy() { }
 
@@ -19,7 +23,6 @@ namespace RP0
         {
             _host = host;
             _instance = this;
-            Awake();
         }
     }
 
@@ -45,13 +48,49 @@ namespace RP0
             _singletons.Add(new HideEmptyNodes(this));
             _singletons.Add(new DifficultyPresetChanger(this));
             _singletons.Add(new RFTagApplier(this));
+
+            foreach (var s in _singletons)
+            {
+                try
+                {
+                    s.Awake();
+                }
+                catch (Exception e)
+                {
+                    RP0Debug.LogError($"Exception awaking {s.GetType()}: {e}");
+                }
+            }
+        }
+
+        public void Start()
+        {
+            ToolbarControl.RegisterMod(KerbalConstructionTimeData._modId, KerbalConstructionTimeData._modName);
+
+            foreach (var s in _singletons)
+            {
+                try
+                {
+                    s.Awake();
+                }
+                catch (Exception e)
+                {
+                    RP0Debug.LogError($"Exception starting {s.GetType()}: {e}");
+                }
+            }
         }
 
         public void OnDestroy()
         {
             for (int i = _singletons.Count; i-- > 0;)
             {
-                _singletons[i].OnDestroy();
+                try
+                {
+                    _singletons[i].OnDestroy();
+                }
+                catch (Exception e)
+                {
+                    RP0Debug.LogError($"Exception starting {(_singletons[i]).GetType()}: {e}");
+                }
                 _singletons[i] = null;
             }
             _singletons.Clear();

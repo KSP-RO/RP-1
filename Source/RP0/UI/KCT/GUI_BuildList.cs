@@ -493,11 +493,11 @@ namespace RP0
                 }
 
                 // Can move up if item above is not a parent.
-                List<string> parentList = KerbalConstructionTimeData.techNameToParents[t.techID];
+                List<string> parentList = Database.TechNameToParents[t.techID];
                 bool canMoveUp = i > 0 && (parentList == null || !parentList.Contains(techList[i - 1].techID));
 
                 // Can move down if item below is not a child.
-                List<string> nextParentList = i < techList.Count - 1 ? KerbalConstructionTimeData.techNameToParents[techList[i + 1].techID] : null;
+                List<string> nextParentList = i < techList.Count - 1 ? Database.TechNameToParents[techList[i + 1].techID] : null;
                 bool canMoveDown = nextParentList == null || !nextParentList.Contains(t.techID);
 
                 if (i > 0 && t.BuildRate != techList[0].BuildRate)
@@ -541,7 +541,7 @@ namespace RP0
                             int newLocation = i + 1;
                             while (newLocation < techList.Count)
                             {
-                                nextParentList = KerbalConstructionTimeData.techNameToParents[techList[newLocation].techID];
+                                nextParentList = Database.TechNameToParents[techList[newLocation].techID];
                                 if (nextParentList != null && nextParentList.Contains(t.techID))
                                     break;
                                 ++newLocation;
@@ -1261,7 +1261,7 @@ namespace RP0
                                         {
                                             GUIStates.ShowBuildList = false;
 
-                                            KCTGameStates.ToolbarControl?.SetFalse();
+                                            KerbalConstructionTimeData.ToolbarControl?.SetFalse();
 
                                             _centralWindowPosition.height = 1;
                                             AssignInitialCrew();
@@ -1351,7 +1351,7 @@ namespace RP0
                                     else
                                     {
                                         GUIStates.ShowBuildList = false;
-                                        KCTGameStates.ToolbarControl?.SetFalse();
+                                        KerbalConstructionTimeData.ToolbarControl?.SetFalse();
                                         _centralWindowPosition.height = 1;
                                         AssignInitialCrew();
                                         GUIStates.ShowShipRoster = true;
@@ -1538,7 +1538,7 @@ namespace RP0
         {
             if (initialCancel)
             {
-                KerbalConstructionTimeData.Instance.TechIgnoreUpdates = true;
+                KerbalConstructionTimeData.TechListIgnoreUpdates = true;
                 KCTUtilities.RemoveResearchedPartsFromExperimental();
             }
 
@@ -1550,7 +1550,7 @@ namespace RP0
                 // cancel children
                 for (int i = 0; i < KerbalConstructionTimeData.Instance.TechList.Count; i++)
                 {
-                    List<string> parentList = KerbalConstructionTimeData.techNameToParents[KerbalConstructionTimeData.Instance.TechList[i].techID];
+                    List<string> parentList = Database.TechNameToParents[KerbalConstructionTimeData.Instance.TechList[i].techID];
                     if (parentList.Contains(node.techID))
                     {
                         CancelTechNode(i, false);
@@ -1579,7 +1579,7 @@ namespace RP0
                 if (initialCancel) // do this only once
                 {
                     KerbalConstructionTimeData.Instance.TechListUpdated();
-                    KerbalConstructionTimeData.Instance.TechIgnoreUpdates = false;
+                    KerbalConstructionTimeData.TechListIgnoreUpdates = false;
                     KCTUtilities.AddResearchedPartsToExperimental();
                 }
             }

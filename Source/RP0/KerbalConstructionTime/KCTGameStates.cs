@@ -1,18 +1,13 @@
 ﻿using System.Collections.Generic;
-using ToolbarControl_NS;
+
 
 namespace RP0
 {
     public static class KCTGameStates
     {
-        internal const string _modId = "KCT_NS";
-        internal const string _modName = "Kerbal Construction Time";
-
         public static KCTSettings Settings = new KCTSettings();
         
         public const int VERSION = 4;
-
-        public static ToolbarControl ToolbarControl;
 
         public static bool EditorShipEditingMode = false;
         public static bool IsFirstStart = false;

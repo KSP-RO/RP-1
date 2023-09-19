@@ -12,8 +12,10 @@ namespace RP0
     public class KerbalConstructionTimeData : ScenarioModule
     {
         #region Statics
+
+        // global flags
+        public static bool IsRefundingScience = false;
         public static bool TechListIgnoreUpdates = false;
-        public static bool VesselErrorAlerted = false;
 
         internal const string _modId = "KCT_NS";
         internal const string _modName = "Kerbal Construction Time";
@@ -32,11 +34,17 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DisableFailuresInSim = true;
         [KSPField(isPersistant = true)] public int Researchers = 0;
         [KSPField(isPersistant = true)] public int Applicants = 0;
+
+        [KSPField(isPersistant = true)] public string KACAlarmId = string.Empty;
+        [KSPField(isPersistant = true)] public double KACAlarmUT = 0;
+
+        #region First Run
         [KSPField(isPersistant = true)] public bool StarterLCBuilding = false;
         [KSPField(isPersistant = true)] public bool HiredStarterApplicants = false;
         [KSPField(isPersistant = true)] public bool StartedProgram = false;
         [KSPField(isPersistant = true)] public bool AcceptedContract = false;
         public bool FirstRunNotComplete => !(StarterLCBuilding && HiredStarterApplicants && StartedProgram && AcceptedContract);
+        #endregion
 
         public const int VERSION = 4;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;

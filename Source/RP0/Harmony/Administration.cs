@@ -268,7 +268,11 @@ namespace RP0.Harmony
                 if (stratItem.toggleButton.Data is Administration.StrategyWrapper sw)
                 {
                     if (sw.strategy.Department.Name == "Programs")
-                        return;
+                    {
+                        stratItem.title = Localizer.Format("#rp0_Admin_ProgramTitle", sw.strategy.Config.Title, (sw.strategy as ProgramStrategy).Program.slots);
+                        stratItem.updateTitle(stratItem.title, stratItem.toggleStateChanger.currentState == "ok" ? stratItem.validColor : stratItem.invalidColor);
+                        continue;
+                    }
                 }
                 stratItem.transform.FindDeepChild("Text").GetComponent<RectTransform>().anchorMin = new Vector2(0.05f, 0f);
             }

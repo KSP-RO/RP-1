@@ -287,7 +287,7 @@ namespace RP0
             }
             if (!isHangar)
             {
-                bool isMinBad = HighLogic.LoadedSceneIsEditor && KerbalConstructionTime.Instance.EditorVessel.mass < minTonnage;
+                bool isMinBad = HighLogic.LoadedSceneIsEditor && KerbalConstructionTimeData.Instance.EditorVessel.mass < minTonnage;
                 GUILayout.BeginHorizontal();
                 if (isMinBad)
                     GUILayout.Label("Minimum tonnage:", GetLabelStyleYellow());
@@ -495,7 +495,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
-                if (HighLogic.LoadedSceneIsEditor && !KerbalConstructionTime.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
+                if (HighLogic.LoadedSceneIsEditor && !KerbalConstructionTimeData.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("LCModifyVesselConfirm",
@@ -725,7 +725,7 @@ namespace RP0
             //    {
             //        for (int i = 0; i < _resourceCount; i++)
             //        {
-            //            if (KerbalConstructionTime.Instance.EditorVessel.resourceAmounts.TryGetValue(_allResourceKeys[i], out double oldVal))
+            //            if (KerbalConstructionTimeData.Instance.EditorVessel.resourceAmounts.TryGetValue(_allResourceKeys[i], out double oldVal))
             //            {
             //                if (string.IsNullOrEmpty(_allResourceValues[i]) || (double.TryParse(_allResourceValues[i], out double newVal) && newVal < oldVal))
             //                {

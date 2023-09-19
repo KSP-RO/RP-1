@@ -209,7 +209,7 @@ namespace RP0
                     TimeWarp.SetRate(0, true);  // If the controller doesn't exist, stop warp anyway.
                 }
 
-                if (KerbalConstructionTime.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
+                if (KerbalConstructionTimeData.Settings.AutoKACAlarms && KACWrapper.APIReady && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
                     if (!KCTUtilities.IsApproximatelyEqual(KerbalConstructionTimeData.Instance.KACAlarmUT - UT, buildItem.GetTimeLeft()))
@@ -368,7 +368,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2 + 30));
-            GUILayout.Label(KerbalConstructionTime.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
+            GUILayout.Label(KerbalConstructionTimeData.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(20);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
@@ -466,7 +466,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KerbalConstructionTime.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
+            GUILayout.Label(KerbalConstructionTimeData.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width1));
             GUILayout.Space(70);
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350));
@@ -660,7 +660,7 @@ namespace RP0
             GUILayout.Label("Name:", GUILayout.Width(250));
             GUILayout.Label("Progress:");
             GUILayout.Space(18);
-            GUILayout.Label(KerbalConstructionTime.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KerbalConstructionTimeData.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(350 - GUI.skin.label.lineHeight * 5));
 
@@ -827,7 +827,7 @@ namespace RP0
 
         private static void RenderBuildList()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = KerbalConstructionTimeData.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             RenderBuildlistHeader();
 
@@ -849,13 +849,13 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");
             GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KerbalConstructionTime.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(KerbalConstructionTimeData.Settings.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
             GUILayout.EndHorizontal();
         }
 
         private static void RenderRollouts()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = KerbalConstructionTimeData.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
             foreach (ReconRolloutProject reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRolloutProject.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
@@ -967,7 +967,7 @@ namespace RP0
 
         private static void RenderWarehouse()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = KerbalConstructionTimeData.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
             bool isPad = activeLC.LCType == LaunchComplexType.Pad;
             GUILayout.Label("__________________________________________________");
             GUILayout.BeginHorizontal();
@@ -1378,11 +1378,11 @@ namespace RP0
 
         private static void RenderLaunchComplexControls()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = KerbalConstructionTimeData.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             GUILayout.BeginHorizontal();
             // Don't allow switching in edit mode
-            int lcCount = KerbalConstructionTime.EditorShipEditingMode ? 1 : KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexCount;
+            int lcCount = KerbalConstructionTimeData.EditorShipEditingMode ? 1 : KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexCount;
             if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
             {
                 KerbalConstructionTimeData.Instance.ActiveSC.SwitchToPrevLaunchComplex();
@@ -1442,7 +1442,7 @@ namespace RP0
 
         private static void RenderLaunchPadControls()
         {
-            LaunchComplex activeLC = KerbalConstructionTime.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = KerbalConstructionTimeData.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
 
             GUILayout.BeginHorizontal();
             bool oldRushing = activeLC.IsRushing;
@@ -1655,7 +1655,7 @@ namespace RP0
                 b.UpdateNodeAndSave(tempFile);
                 KerbalConstructionTimeData.Instance.EditedVessel = b;
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
-                KerbalConstructionTime.EditorShipEditingMode = true;
+                KerbalConstructionTimeData.EditorShipEditingMode = true;
                 KerbalConstructionTimeData.Instance.MergingAvailable = b.IsFinished;
 
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_EXIT, "KCTEditExit");

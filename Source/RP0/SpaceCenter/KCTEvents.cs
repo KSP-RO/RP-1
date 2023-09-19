@@ -199,22 +199,22 @@ namespace RP0
 
         private void ShipModifiedEvent(ShipConstruct vessel)
         {
-            KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
         }
 
         private void StageCountChangedEvent(int num)
         {
-            KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
         }
 
         private void StagingOrderChangedEvent()
         {
-            KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
         }
 
         private void PartStageabilityChangedEvent(Part p)
         {
-            KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
+            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
         }
 
         public void GameSceneEvent(GameScenes scene)
@@ -223,9 +223,9 @@ namespace RP0
 
             if (scene == GameScenes.MAINMENU)
             {
-                KerbalConstructionTime.Reset();
+                KerbalConstructionTimeData.Reset();
                 KCTUtilities.DisableSimulationLocks();
-                InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTLaunchLock);
+                InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTLaunchLock);
 
                 if (PresetManager.Instance != null)
                 {

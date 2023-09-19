@@ -43,7 +43,7 @@ namespace RP0.Harmony
             {
                 ResearchProject item = KerbalConstructionTimeData.Instance.TechList[techItemIndex];
                 double prevTime = 0d;
-                if (KerbalConstructionTime.Settings.UseDates)
+                if (KerbalConstructionTimeData.Settings.UseDates)
                 {
                     for (int i = 0; i < techItemIndex; ++i)
                         prevTime += KerbalConstructionTimeData.Instance.TechList[i].GetTimeLeftEst(prevTime);

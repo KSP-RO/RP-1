@@ -557,7 +557,7 @@ namespace RP0
             }
 
             // Finally, update all builds
-            KerbalConstructionTime.Instance.ProgressBuildTime(UTDiff);
+            KerbalConstructionTimeData.Instance.ProgressBuildTime(UTDiff);
         }
 
         public void OnDestroy()

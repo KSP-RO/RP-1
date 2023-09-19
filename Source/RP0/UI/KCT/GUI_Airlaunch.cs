@@ -152,7 +152,7 @@ namespace RP0
                     _errorMsg = null;
                     if (isSim)
                     {
-                        var kct = KerbalConstructionTime.Instance;
+                        var kct = KerbalConstructionTimeData.Instance;
                         kct.StartCoroutine(kct.AirlaunchRoutine(_airlaunchParams, _airlaunchParams.KCTVesselId, skipCountdown: true));
                         ToggleVisibility(false);
                         return;

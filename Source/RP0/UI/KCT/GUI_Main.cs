@@ -120,13 +120,13 @@ namespace RP0
             {
                 if (!_isKSCLocked)
                 {
-                    InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, KerbalConstructionTime.KCTKSCLock);
+                    InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, KerbalConstructionTimeData.KCTKSCLock);
                     _isKSCLocked = true;
                 }
             }
             else if (_isKSCLocked)
             {
-                InputLockManager.RemoveControlLock(KerbalConstructionTime.KCTKSCLock);
+                InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTKSCLock);
                 _isKSCLocked = false;
             }
 
@@ -166,7 +166,7 @@ namespace RP0
                 GUIStates.ShowEditorGUI = isVisible;
                 if (!isVisible)
                     GUIStates.ShowBuildList = false;
-                KerbalConstructionTime.ShowWindows[1] = isVisible;
+                KerbalConstructionTimeData.ShowWindows[1] = isVisible;
             }
             else if ((HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.TRACKSTATION) && !IsPrimarilyDisabled)
             {
@@ -175,7 +175,7 @@ namespace RP0
                 GUIStates.ShowBuildPlansWindow = false;
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow();
-                KerbalConstructionTime.ShowWindows[0] = isVisible;
+                KerbalConstructionTimeData.ShowWindows[0] = isVisible;
             }
 
             RefreshToolbarState();
@@ -203,7 +203,7 @@ namespace RP0
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.EDITOR)
             {
                 int idx = HighLogic.LoadedScene == GameScenes.SPACECENTER ? 0 : 1;
-                KerbalConstructionTime.ShowWindows[idx] = GUIStates.IsMainGuiVisible;
+                KerbalConstructionTimeData.ShowWindows[idx] = GUIStates.IsMainGuiVisible;
             }
 
             RefreshToolbarState();

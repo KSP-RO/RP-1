@@ -219,6 +219,7 @@ namespace RP0
 
         public void GameSceneEvent(GameScenes scene)
         {
+            KCT_GUI.PrevGUIStates.Clear();
             KCT_GUI.HideAll();
 
             if (scene == GameScenes.MAINMENU)

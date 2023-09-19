@@ -6,7 +6,7 @@ namespace RP0
     public static partial class KCT_GUI
     {
         public static GUIStates GUIStates = new GUIStates();
-        public static GUIStates PrevGUIStates = null;
+        public static Stack<GUIStates> PrevGUIStates = new Stack<GUIStates>();
         public static GUIDataSaver GuiDataSaver = new GUIDataSaver();
 
         private static Rect _centralWindowPosition = new Rect((Screen.width - 150) / 2, (Screen.height - 50) / 2, 150, 50);
@@ -195,10 +195,9 @@ namespace RP0
 
         public static void RestorePrevUIState()
         {
-            if (PrevGUIStates == null) return;
+            if (PrevGUIStates.Count == 0) return;
 
-            GUIStates = PrevGUIStates;
-            PrevGUIStates = null;
+            GUIStates = PrevGUIStates.Pop();
 
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.EDITOR)
             {
@@ -211,7 +210,7 @@ namespace RP0
 
         public static void BackupUIState()
         {
-            PrevGUIStates = GUIStates.Clone();
+            PrevGUIStates.Push(GUIStates.Clone());
         }
 
         public static void EnsureEditModeIsVisible()

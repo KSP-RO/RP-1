@@ -207,6 +207,7 @@
     <Compile Include="Utilities\ContinuousLogger.cs" />
     <Compile Include="Utilities\ContractUtils.cs" />
     <Compile Include="Utilities\CurrencyUtils.cs" />
+    <Compile Include="Utilities\KerbalismUtils.cs" />
     <Compile Include="ModIntegrations\KACWrapper.cs" />
     <Compile Include="Utilities\KSPUtils.cs" />
     <Compile Include="Utilities\MathUtils.cs" />
@@ -305,6 +306,11 @@
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\Ionic.Zip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Kerbalism112, Version=3.17.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\temp\dlls\Kerbalism112.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KSPCommunityFixes">

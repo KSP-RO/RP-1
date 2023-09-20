@@ -55,29 +55,13 @@ namespace RP0
 
         private static void MarkExperimentsAsDone()
         {
-            foreach (ConfigNode rootCN in GameDatabase.Instance.GetConfigNodes("IGNORED_EXPERIMENTS"))
-            {
-                foreach (ConfigNode bodyCN in rootCN.GetNodes("BODY"))
-                {
-                    string bodyName = bodyCN.GetValue("name");
-
-                    foreach (ConfigNode expCN in bodyCN.GetNodes("EXPERIMENT"))
-                    {
-                        string experimentName = expCN.GetValue("name");
-
-                        foreach (ConfigNode sitCN in expCN.GetNodes("SITUATIONS"))
-                        {
-                            foreach (string sitName in sitCN.GetValues("name"))
-                            {
-                                MarkExperimentAsDone(experimentName, sitName, bodyName);
-                            }
-                        }
-                    }
-                }
-            }
+            foreach (var bodyKVP in Database.StartCompletedExperiments)
+                foreach (var expKVP in bodyKVP.Value)
+                    foreach (var sit in expKVP.Value)
+                        MarkExperimentAsDone(expKVP.Key, sit, bodyKVP.Key);
         }
 
-        private static void MarkExperimentAsDone(string experimentID, string situationName, string bodyName)
+        private static void MarkExperimentAsDone(string experimentID, ExperimentSituations situation, string bodyName)
         {
             ScienceExperiment experiment = ResearchAndDevelopment.GetExperiment(experimentID);
             if (experiment == null)
@@ -86,11 +70,6 @@ namespace RP0
                 return;
             }
             CelestialBody body = FlightGlobals.GetBodyByName(bodyName);
-            if (!Enum.TryParse(situationName, out ExperimentSituations situation))
-            {
-                RP0Debug.LogError($"MarkExperimentAsDone: Invalid situation {situationName}");
-                return;
-            }
 
             if (experiment.BiomeIsRelevantWhile(situation))
             {

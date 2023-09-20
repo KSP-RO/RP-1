@@ -46,6 +46,7 @@ namespace RP0
         public static readonly Dictionary<string, SpaceCenterFacility> FacilityIDToFacility = new Dictionary<string, SpaceCenterFacility>();
         public static readonly Dictionary<string, string> TechNameToTitle = new Dictionary<string, string>();
         public static readonly Dictionary<string, List<string>> TechNameToParents = new Dictionary<string, List<string>>();
+        public static readonly Dictionary<string, Dictionary<string, HashSet<ExperimentSituations>>> StartCompletedExperiments = new Dictionary<string, Dictionary<string, HashSet<ExperimentSituations>>>();
 
         public static readonly SpaceCenterSettings SettingsSC = new SpaceCenterSettings();
         public static readonly CrewSettings SettingsCrew = new CrewSettings();
@@ -111,7 +112,7 @@ namespace RP0
 
     public class KCTDataLoader : LoadingSystem
     {
-        private const float NumLoaders = 6f;
+        private const float NumLoaders = 7f;
 
         private IEnumerator LoadRoutine()
         {
@@ -127,6 +128,8 @@ namespace RP0
             _progress = 5f;
             yield return StartCoroutine(LoadCrewSettings());
             _progress = 6f;
+            yield return StartCoroutine(LoadExperiments());
+            _progress = 7f;
             yield return null;
 
             isReady = true;
@@ -223,6 +226,46 @@ namespace RP0
             {
                 Database.SettingsCrew.Load(stg);
                 yield return null;
+            }
+        }
+
+        private IEnumerator LoadExperiments()
+        {
+            foreach (ConfigNode rootCN in GameDatabase.Instance.GetConfigNodes("IGNORED_EXPERIMENTS"))
+            {
+                foreach (ConfigNode bodyCN in rootCN.GetNodes("BODY"))
+                {
+                    string bodyName = bodyCN.GetValue("name");
+                    if (!Database.StartCompletedExperiments.TryGetValue(bodyName, out var dict))
+                    {
+                        dict = new Dictionary<string, HashSet<ExperimentSituations>>();
+                        Database.StartCompletedExperiments[bodyName] = dict;
+                    }
+
+                    foreach (ConfigNode expCN in bodyCN.GetNodes("EXPERIMENT"))
+                    {
+                        string experimentName = expCN.GetValue("name");
+                        if (!dict.TryGetValue(experimentName, out var set))
+                        {
+                            set = new HashSet<ExperimentSituations>();
+                            dict[experimentName] = set;
+                        }
+
+                        foreach (ConfigNode sitCN in expCN.GetNodes("SITUATIONS"))
+                        {
+                            foreach (string situationName in sitCN.GetValues("name"))
+                            {
+                                if (!System.Enum.TryParse(situationName, out ExperimentSituations situation))
+                                {
+                                    RP0Debug.LogError($"MarkExperimentAsDone: Invalid situation {situationName}");
+                                    continue;
+                                }
+                                set.Add(situation);
+                            }
+                        }
+                        yield return null;
+                    }
+                }
             }
         }
 

@@ -1,27 +1,26 @@
 ﻿using HarmonyLib;
 using System;
 using System.Reflection;
+using KERBALISM;
 
 namespace RP0.Harmony
 {
-    [HarmonyPatch]
+    [HarmonyPatch(typeof(PreferencesScience))]
     internal class PatchKerbalism_PreferencesScience
     {
-        static MethodBase TargetMethod() => AccessTools.TypeByName("KERBALISM.PreferencesScience").GetMethod("SetDifficultyPreset", AccessTools.all);
-
         [HarmonyPostfix]
+        [HarmonyPatch("SetDifficultyPreset")]
         internal static void Postfix_SetDifficultyPreset(ref bool ___sampleTransfer)
         {
             ___sampleTransfer = true;
         }
     }
 
-    [HarmonyPatch]
+    [HarmonyPatch(typeof(PreferencesRadiation))]
     internal class PatchKerbalism_PreferencesRadiation
     {
-        static MethodBase TargetMethod() => AccessTools.TypeByName("KERBALISM.PreferencesRadiation").GetMethod("SetDifficultyPreset", AccessTools.all);
-
         [HarmonyPostfix]
+        [HarmonyPatch("SetDifficultyPreset")]
         internal static void Postfix_SetDifficultyPreset(ref float ___shieldingEfficiency, ref float ___stormFrequency, ref float ___stormRadiation)
         {
             float shieldingEffic = 0.933f;
@@ -41,23 +40,43 @@ namespace RP0.Harmony
             ___stormFrequency = stormFreq;
             ___stormRadiation = stormRad;
         }
+    }
 
-        [HarmonyPatch]
-        internal class PatchKerbalism_CrewSpecs
+    [HarmonyPatch(typeof(CrewSpecs))]
+    internal class PatchKerbalism_CrewSpecs
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("Check", new Type[] { typeof(ProtoCrewMember) })]
+        internal static bool Prefix_Check(ProtoCrewMember c, ref bool __result)
         {
-            static MethodBase TargetMethod() => AccessTools.TypeByName("KERBALISM.CrewSpecs").GetMethod("Check", new Type[] { typeof(ProtoCrewMember) });
-
-            [HarmonyPrefix]
-            internal static bool Prefix_Check(ProtoCrewMember c, ref bool __result)
+            if (c.type == ProtoCrewMember.KerbalType.Tourist)
             {
-                if (c.type == ProtoCrewMember.KerbalType.Tourist)
-                {
-                    __result = false;
-                    return false;
-                }
-
-                return true;
+                __result = false;
+                return false;
             }
+
+            return true;
+        }
+    }
+
+    [HarmonyPatch(typeof(Experiment))]
+    internal class PatchKerbalism_Experiment
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("RunningUpdate")]
+        internal static void Postfix_RunningUpdate(Vessel v, Situation vs, Experiment prefab, ref string mainIssue)
+        {
+            if (!v.loaded)
+                return;
+
+            if (!Database.StartCompletedExperiments.TryGetValue(vs.BodyName, out var exps))
+                return;
+
+            if (!exps.TryGetValue(prefab.experiment_id, out var sits))
+                return;
+
+            if (sits.Contains(vs.ScienceSituation.ToExperimentSituations()))
+                mainIssue = Local.Module_Experiment_issue1;
         }
     }
 }

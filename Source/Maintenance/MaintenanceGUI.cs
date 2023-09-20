@@ -544,7 +544,6 @@ namespace RP0
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" Nominal Deadline:", HighLogic.Skin.label, GUILayout.Width(160));
-                const double secsPerYear = 365.25d * 86400d;
                 GUILayout.Label(KSPUtil.PrintDate(p.deadlineUT, false), RightLabel, GUILayout.Width(160));
                 GUILayout.EndHorizontal();
 

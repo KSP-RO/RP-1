@@ -68,27 +68,5 @@ namespace RP0.Harmony
                 return true;
             }
         }
-
-        [HarmonyPatch]
-        internal class PatchKerbalism_Experiment
-        {
-            static MethodBase TargetMethod() => AccessTools.TypeByName("KERBALISM.Experiment").GetMethod("RunningUpdate", AccessTools.all);
-
-            static string invalidSitString = null;
-            static FieldInfo fi = AccessTools.Field("KERBALISM.Local:Module_Experiment_issue1");
-
-            [HarmonyPostfix]
-            internal static void Postfix_RunningUpdate(Vessel v, ref string mainIssue)
-            {
-                if (v.loaded && v.orbit.referenceBody.isHomeWorld && v.altitude < v.orbit.referenceBody.scienceValues.flyingAltitudeThreshold)
-                {
-                    if (invalidSitString == null)
-                    {
-                        invalidSitString = (string)fi.GetValue(null);
-                    }
-                    mainIssue = invalidSitString;
-                }
-            }
-        }
     }
 }

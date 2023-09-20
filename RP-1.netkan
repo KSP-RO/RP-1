@@ -1,120 +1,123 @@
-{
-	"spec_version" : "v1.26",
-	"identifier" : "RP-1",
-	"name"       : "Realistic Progression One (RP-1)",
-	"abstract"   : "Career for Realism Overhaul. Do not select/install this directly, instead select the RP-1 Express Install and let it install this automatically unless you know what you're doing and can fix it yourself.",
-	"license"    : "CC-BY-4.0",
-	"author"     : "RP-1 Group",
-	"$kref"      : "#/ckan/github/KSP-RO/RP-1",
-	"$vref"      : "#/ckan/ksp-avc",
-	"x_netkan_force_v": true,
-	"release_status" : "stable",
-	"resources": {
-		"homepage": "https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*",
-		"manual": "https://github.com/KSP-RO/RP-1/wiki"
-	},
-	"depends" : [
-		{ "name" : "ModuleManager" },
-		{
-			"name" : "RealismOverhaul",
-			"min_version" : "v16.0.0.0"
-		},
-		{ "name" : "SXTContinued" },
-		{ "name" : "ContractConfigurator" },
-		{ "name" : "CustomBarnKit" },
-		{ "name" : "VenStockRevamp-NewParts" },
-		{ "name" : "RealSolarSystem" },
-		{ "name" : "MagiCore" },
-		{ "name" : "ClickThroughBlocker" },
-		{ "name" : "ToolbarController" },
-		{ "name" : "Kerbalism-Config-RO" },
-		{ "name" : "KSPCommunityFixes" },
-		{ "name" : "KerbalChangelog" }
-	],
-	"recommends" : [
-        { "name" : "ROLoadingImages" },
-		{ "name" : "RSSDateTimeFormatter" },
-		{ "any_of": [
-			{ "name" : "ReStock" },
-			{ "name" : "VenStockRevamp" }
-		] },
-		{
-			"name" : "ROEngines",
-			"min_version" : "v2.0.0.0"
-		},
-		{ "name" : "ROTanks" },
-		{
-			"name" : "ROCapsules",
-			"min_version" : "v2.0.0.0"
-		},
-		{
-			"name" : "ROSolar",
-			"min_version" : "v2.0.0.0"
-		},
-		{ "name" : "ROHeatshields" },
-		{ "name" : "B9-PWings-Fork" },
-		{ "name" : "KSPWheel" },
-		{ "name" : "HangerExtenderExtended" },
-		{ "name" : "KerbalAlarmClock" },
-		{ "name" : "KerbalRenamer" },
-		{ "name" : "KSCSwitcher" },
-		{ "name" : "MechJeb2" },
-		{ "name" : "AtmosphereAutopilot" },
-		{ "name" : "ProceduralFairings" },
-		{ "name" : "ProceduralParts" },
-		{ "name" : "RCSBuildAid" },
-		{ "name" : "RCSBuildAidCont" },
-		{ "name" : "RealAntennas" },
-		{ "any_of": [
-			{ "name" : "TestFlight" },
-			{ "name" : "TestLite" }
-		] },
-		{ "name" : "RSSVE-Textures" },
-		{ "name" : "TransferWindowPlannerFork" },
-		{ "name" : "Waterfall" },
-		{ "name" : "ModularLaunchPads" }
-	],
-	"suggests" : [
-		{ "name" : "BluedogDB" },
-		{ "name" : "FASA" },
-		{ "name" : "TextureReplacer" },
-		{ "name" : "SemiSaturatableRW" },
-		{ "name" : "JanitorsCloset" },
-		{ "name" : "HyperEdit" },
-		{ "name" : "EditorExtensionsRedux" },
-		{ "name" : "KerbalEngineerRedux" },
-		{ "name" : "kOS" },
-		{ "name" : "RealScaleBoosters" },
-		{ "name" : "NearFutureSolar" },
-		{ "name" : "NearFutureConstruction" },
-		{ "name" : "InternalRCS" },
-		{ "name" : "ProbesPlus" },
-		{ "name" : "ATKPropulsionPack" },
-		{ "name" : "WaypointManager" },
-		{ "name" : "SCANsat" },
-		{ "name" : "NavHudRenewed" },
-		{ "name" : "ConformalDecals" },
-		{ "name" : "CanaveralPads" }
-	],
-	"conflicts" : [
-		{ "name" : "RP-0" },
-		{ "name" : "KerbalConstructionTime" },
-		{ "name" : "CrowdSourcedScience" },
-		{ "name" : "HideEmptyTechNodes" },
-		{ "name" : "MechJebForAll" },
-		{ "name" : "NearFutureElectrical-DecayingRTGs" },
-		{ "name" : "KRASH" },
-		{
-			"name": "ROCapsules",
-			"max_version" : "v1.99.0.0"
-		},
-		{
-			"name": "ROEngines",
-			"max_version" : "v1.99.0.0"
-		},
-		{
-			"name": "ROSolar",
-			"max_version" : "v1.99.0.0"
-		}
-	]
-}
+spec_version: v1.26
+identifier: RP-1
+name: Realistic Progression One (RP-1)
+abstract: >-
+  Career for Realism Overhaul. Do not select/install this directly, instead
+  select the RP-1 Express Install and let it install this automatically unless
+  you know what you're doing and can fix it yourself.
+license: CC-BY-NC-SA-4.0
+author:
+  - RP-1 Group
+$kref: '#/ckan/github/KSP-RO/RP-1'
+$vref: '#/ckan/ksp-avc'
+x_netkan_force_v: true
+release_status: stable
+resources:
+  homepage: https://forum.kerbalspaceprogram.com/index.php?/topic/190040-*
+  manual: https://github.com/KSP-RO/RP-1/wiki
+depends:
+  - name: ModuleManager
+  - name: RealismOverhaul
+    min_version: v16.0.0.0
+  - name: SXTContinued
+    suppress_recommendations: true
+  - name: ContractConfigurator
+    suppress_recommendations: true
+  - name: CustomBarnKit
+    suppress_recommendations: true
+  - name: VenStockRevamp-NewParts
+    suppress_recommendations: true
+  - name: RealSolarSystem
+    suppress_recommendations: true
+  - name: MagiCore
+    suppress_recommendations: true
+  - name: ClickThroughBlocker
+    suppress_recommendations: true
+  - name: ToolbarController
+    suppress_recommendations: true
+  - name: Kerbalism-Config-RO
+    suppress_recommendations: true
+  - name: KSPCommunityFixes
+    suppress_recommendations: true
+  - name: KerbalChangelog
+    suppress_recommendations: true
+recommends:
+  - name: ROLoadingImages
+  - name: RSSDateTimeFormatter
+  - name: KSPBurst-Full
+  - any_of:
+    - name: ReStock
+    - name: VenStockRevamp
+  - name: ReStockPlus
+  - name: ROEngines
+    min_version: v2.0.0.0
+  - name: ROTanks
+  - name: ROCapsules
+    min_version: v2.0.0.0
+  - name: ROSolar
+    min_version: v2.0.0.0
+  - name: ROHeatshields
+  - name: B9-PWings-Fork
+  - name: KSPWheel
+  - name: KerbalRenamer
+  - name: KSCSwitcher
+  - name: AtmosphereAutopilot
+  - name: ProceduralFairings
+  - name: ProceduralParts
+  - name: RCSBuildAid
+  - name: RealAntennas
+  - any_of:
+      - name: TestFlight
+      - name: TestLite
+  - name: TextureReplacer
+  - name: MechJeb2
+  - name: Waterfall
+  - name: HangerExtenderExtended
+  - name: ModularLaunchPads
+  - name: ConformalDecals
+  - name: Shabby
+  - name: EditorExtensionsRedux
+  - name: KerbalAlarmClock
+  - name: TransferWindowPlannerFork
+  - name: LunarTransferPlanner
+  - name: Principia
+  - name: kOS
+  - name: DockingPortSoundFX
+suggests:
+  - name: CryoEngines
+  - name: KerbalAtomics
+  - name: NearFutureLaunchVehicles
+  - name: HullcamVDSContinued
+  - name: InternalRCS
+  - name: NearFutureConstruction
+  - name: NearFutureElectrical
+  - name: NearFutureExploration
+  - name: NearFutureSolar
+  - name: ShuttleOrbiterConstructionKit
+  - name: BuranEnergia
+  - name: RN-SovietSpacecraft
+  - name: RN-SalyutStations
+  - name: BetterTimeWarpCont
+  - name: DockingPortAlignmentIndicator
+  - name: Historian-expanded
+  - name: HyperEdit
+  - name: KVVContinued
+  - name: NavHudRenewed
+  - name: WasdEditorCameraContinued
+  - name: WaypointManager
+  - name: WernherCheckerContinued
+conflicts:
+  - name: RP-0
+  - name: KerbalConstructionTime
+  - name: CrowdSourcedScience
+  - name: HideEmptyTechNodes
+  - name: MechJebForAll
+  - name: NearFutureElectrical-DecayingRTGs
+  - name: KRASH
+  - name: ROCapsules
+    max_version: v1.99.0.0
+  - name: ROEngines
+    max_version: v1.99.0.0
+  - name: ROSolar
+    max_version: v1.99.0.0
+x_via: Generated by Metadata Webtool

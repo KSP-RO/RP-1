@@ -107,7 +107,7 @@ namespace KerbalConstructionTime
 
         public static bool IsClamp(Part part)
         {
-            return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag("PadInfrastructure");
+            return part.FindModuleImplementing<LaunchClamp>() != null || part.HasTag(ModuleTagList.PadInfrastructure);
         }
 
         public static bool IsClampOrChild(this ProtoPartSnapshot p)
@@ -897,9 +897,60 @@ namespace KerbalConstructionTime
         {
             if (!HighLogic.LoadedSceneIsEditor) return;
 
+            LCItem oldLC = KerbalConstructionTime.Instance.EditorVessel.LC;
+            var oldFac = KerbalConstructionTime.Instance.EditorVessel.FacilityBuiltIn;
+
             KerbalConstructionTime.Instance.EditorVessel = new BuildListVessel(ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
             // override LC in case of vessel editing
-            KerbalConstructionTime.Instance.EditorVessel.LCID = KCTGameStates.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.ID;
+            if (KCTGameStates.EditorShipEditingMode)
+            {
+                KerbalConstructionTime.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.EditedVessel.LCID;
+            }
+            else
+            {
+                // Check if we switched editors
+                if (oldFac != KerbalConstructionTime.Instance.EditorVessel.FacilityBuiltIn)
+                {
+                    if (oldFac == EditorFacility.VAB)
+                    {
+                        if (oldLC.LCType == LaunchComplexType.Pad)
+                        {
+                            // cache this off -- we swapped editors
+                            KerbalConstructionTime.Instance.PreEditorSwapLCID = oldLC.ID;
+                        }
+                        // the BLV constructor sets our LC type to Hangar. But let's swap to it as well.
+                        if (KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance.LCType != LaunchComplexType.Hangar && KCTGameStates.ActiveKSC.Hangar.IsOperational)
+                        {
+                            KCTGameStates.ActiveKSC.SwitchLaunchComplex(KSCItem.HangarIndex);
+                        }
+                    }
+                    else
+                    {
+                        // Try to recover a pad LC
+                        bool swappedLC = false;
+                        if (KCTGameStates.ActiveKSC.LaunchComplexCount > 1)
+                        {
+                            if (KerbalConstructionTime.Instance.PreEditorSwapLCID != Guid.Empty && KCTGameStates.ActiveKSC.SwitchToLaunchComplex(KerbalConstructionTime.Instance.PreEditorSwapLCID))
+                            {
+                                swappedLC = true;
+                            }
+                            else
+                            {
+                                int idx = KCTGameStates.ActiveKSC.GetLaunchComplexIdxToSwitchTo(true, true);
+                                if (idx != -1)
+                                {
+                                    KCTGameStates.ActiveKSC.SwitchLaunchComplex(idx);
+                                    swappedLC = true;
+                                }
+                            }
+                            if (swappedLC)
+                            {
+                                KerbalConstructionTime.Instance.EditorVessel.LC = KCTGameStates.ActiveKSC.ActiveLaunchComplexInstance;
+                            }
+                        }
+                    }
+                }
+            }
 
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
@@ -1164,6 +1215,11 @@ namespace KerbalConstructionTime
                             "Acknowledged", false, HighLogic.UISkin);
                     });
                 }
+                else
+                {
+                    EditorLogic.fetch.switchEditorBtn.onClick.RemoveListener(OnEditorSwitch);
+                    EditorLogic.fetch.switchEditorBtn.onClick.AddListener(OnEditorSwitch);
+                }
 
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
                 EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTime.ShowLaunchAlert(null); });
@@ -1200,6 +1256,22 @@ namespace KerbalConstructionTime
                     }
                 }
             }
+        }
+
+        private static void OnEditorSwitch()
+        {
+            KerbalConstructionTime.Instance.StartCoroutine(PostEditorSwitch());
+        }
+
+        private static System.Collections.IEnumerator PostEditorSwitch()
+        {
+            yield return new WaitForSeconds(0.1f);
+            while (EditorDriver.fetch != null && EditorDriver.fetch.restartingEditor)
+                yield return null;
+            if (EditorDriver.fetch == null)
+                yield break;
+
+            KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
         }
 
         /// <summary>

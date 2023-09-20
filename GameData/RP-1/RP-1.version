@@ -1,13 +1,13 @@
 {
     "NAME": "Realistic Progression One",
     "URL": "https://raw.githubusercontent.com/KSP-RO/RP-1/master/GameData/RP-1/RP-1.version",
-    "DOWNLOAD": "https://github.com/KSP-RO/RP-1/releases/download/v2.11.0.1/RP-1-v2.11.0.1.zip",
+    "DOWNLOAD": "https://github.com/KSP-RO/RP-1/releases/download/v2.12.0.0/RP-1-v2.12.0.0.zip",
     "HOMEPAGE": "https://github.com/KSP-RO/RP-1/",
     "VERSION": {
         "MAJOR": 2,
-        "MINOR": 11,
+        "MINOR": 12,
         "PATCH": 0,
-        "BUILD": 1
+        "BUILD": 0
     },
     "KSP_VERSION": {
         "MAJOR": "1",

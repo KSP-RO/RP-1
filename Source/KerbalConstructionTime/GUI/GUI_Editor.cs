@@ -153,7 +153,7 @@ namespace KerbalConstructionTime
             if (!KCTGameStates.Settings.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {
                 Utilities.TryAddVesselToBuildList();
-                Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                KerbalConstructionTime.Instance.IsEditorRecalcuationRequired = true;
             }
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Show/Hide Management"))

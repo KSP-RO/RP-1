@@ -16,7 +16,8 @@ namespace KerbalConstructionTime
     {
         public static KerbalConstructionTime Instance { get; private set; }
 
-        public bool IsEditorRecalcuationRequired;
+        public bool IsEditorRecalcuationRequired = false;
+        private bool _hasFirstRecalculated = false;
 
         private static bool _isGUIInitialized = false;
 
@@ -32,8 +33,9 @@ namespace KerbalConstructionTime
         public static readonly Dictionary<string, KCTTechNodePeriod> TechNodePeriods = new Dictionary<string, KCTTechNodePeriod>();
         public static readonly RP0.DataTypes.PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new RP0.DataTypes.PersistentDictionaryValueTypes<string, NodeType>();
 
-        // This should live in the EditorAddon but we can't easily access it then.
+        // These should live in the EditorAddon but we can't easily access it then.
         public BuildListVessel EditorVessel = new BuildListVessel("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
+        public Guid PreEditorSwapLCID = Guid.Empty;
 
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
@@ -134,13 +136,12 @@ namespace KerbalConstructionTime
             // Ghetto event queue
             if (HighLogic.LoadedScene == GameScenes.EDITOR)
             {
-                InvokeRepeating("EditorRecalculation", 1, 1);
-
                 KCT_GUI.BuildRateForDisplay = null;
                 if (!KCT_GUI.IsPrimarilyDisabled)
                 {
-                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                    IsEditorRecalcuationRequired = true;
                 }
+                InvokeRepeating("EditorRecalculation", 0.02f, 1f);
             }
 
             if (KCT_GUI.IsPrimarilyDisabled &&
@@ -374,8 +375,17 @@ namespace KerbalConstructionTime
         {
             if (IsEditorRecalcuationRequired)
             {
-                Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
-                IsEditorRecalcuationRequired = false;
+                if (EditorDriver.fetch != null && !EditorDriver.fetch.restartingEditor)
+                {
+                    _hasFirstRecalculated = true;
+                    IsEditorRecalcuationRequired = false;
+                    Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                }
+                // make sure we're not destructing
+                else if (!_hasFirstRecalculated && this != null)
+                {
+                    StartCoroutine(CallbackUtil.DelayedCallback(0.02f, EditorRecalculation));
+                }
             }
         }
 
@@ -896,7 +906,7 @@ namespace KerbalConstructionTime
             {
                 Utilities.TryAddVesselToBuildList(launchSite);
                 // We are recalculating because vessel validation might have changed state.
-                Utilities.RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                Instance.IsEditorRecalcuationRequired = true;
             }
         }
     }

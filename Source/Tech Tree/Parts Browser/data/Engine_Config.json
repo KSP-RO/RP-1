@@ -4682,7 +4682,9 @@
         "upgrade": true,
         "entry_cost_mods": "5000, S5-2",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "J-2-200K",
@@ -15031,7 +15033,9 @@
         "upgrade": false,
         "entry_cost_mods": "10000, Wasserfall",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "S3.42T",
@@ -15052,7 +15056,9 @@
         "upgrade": true,
         "entry_cost_mods": "10000, S2-253, HypergolicPumps",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "S5.2",
@@ -15073,7 +15079,9 @@
         "upgrade": true,
         "entry_cost_mods": "5000, S3-42T",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "S5.23",

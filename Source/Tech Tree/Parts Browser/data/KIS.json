@@ -295,8 +295,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": [
-        ]
+        "module_tags": []
     },
     {
         "name": "KIS_ghettoblaster",

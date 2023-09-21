@@ -296,8 +296,7 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "Apollo LEM Descent",
-        "module_tags": [
-        ]
+        "module_tags": []
     },
     {
         "name": "LEM_D_ENGINE",

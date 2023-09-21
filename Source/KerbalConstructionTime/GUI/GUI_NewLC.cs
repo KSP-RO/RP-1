@@ -64,9 +64,11 @@ namespace KerbalConstructionTime
 
         private static void SetFieldsFromVessel(BuildListVessel blv, LCItem lc = null)
         {
-            _newLCData.sizeMax.z = Mathf.Ceil(blv.ShipSize.z * 1.2f);
-            _newLCData.sizeMax.x = Mathf.Ceil(blv.ShipSize.x * 1.2f);
-            _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);
+            // Large hangars have no downsides, so don't reduce their size
+            var maintainSize = _newLCData.lcType != LaunchComplexType.Pad;
+            _newLCData.sizeMax.z = Mathf.Max(Mathf.Ceil(blv.ShipSize.z * 1.2f), maintainSize ? _newLCData.sizeMax.z : 0.0f);
+            _newLCData.sizeMax.x = Mathf.Max(Mathf.Ceil(blv.ShipSize.x * 1.2f), maintainSize ? _newLCData.sizeMax.x : 0.0f);
+            _newLCData.sizeMax.y = Mathf.Max(Mathf.Ceil(blv.ShipSize.y * 1.1f), maintainSize ? _newLCData.sizeMax.y : 0.0f);
             _newLCData.isHumanRated = blv.humanRated;
             if (lc == null)
             {

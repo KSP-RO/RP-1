@@ -3926,7 +3926,7 @@
         "title": "LR89 Series",
         "description": "Kerolox gas-generator engine that served as booster for Atlas. Late model LR89s were upgraded with RS-27 components for higher efficiency. Very similar to LR79 (this was the pure-booster variant). Diameter: [1.0 m]. Plume configured by RealPlume.",
         "mod": "FASA",
-        "cost": 330,
+        "cost": 370,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",

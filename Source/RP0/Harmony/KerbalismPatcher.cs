@@ -88,15 +88,28 @@ namespace RP0.Harmony
         [HarmonyPatch("ShadowPeriod", new Type[] { typeof(Vessel) })]
         internal static bool Prefix_ShadowPeriod(Vessel v, ref double __result)
         {
-            if (Lib.Landed(v) || v.orbit is not Orbit obt || double.IsNaN(obt.inclination))
+            Orbit obt = v.orbitDriver?.orbit;
+            if (obt == null)
+            {
+                __result = 0d;
+                return false;
+            }
+
+            bool incNaN = double.IsNaN(obt.inclination);
+            if(Lib.Landed(v) || incNaN)
             {
                 var sun = Planetarium.fetch.Sun;
                 var mb = v.mainBody;
-                if (mb.referenceBody == sun && mb.tidallyLocked)
+                if(sun == mb)
                 {
-                    Vector3 sunV = sun.transform.position - v.transform.position;
-                    Vector3 bodyV = mb.transform.position - v.transform.position;
-                    __result = Vector3.Dot(sunV, bodyV) > 0f ? mb.rotationPeriod : 0d;
+                    __result = 0d;
+                }
+                else if (mb.referenceBody == sun && mb.tidallyLocked)
+                {
+                    Vector3d vPos = incNaN ? v.transform.position : v.orbitDriver.pos + mb.position;
+                    Vector3d sunV = sun.position - vPos;
+                    // We have to refind orbit pos in case inc is NaN
+                    __result = Vector3d.Dot(sunV, mb.position - vPos) > 0d ? mb.rotationPeriod : 0d;
                 }
                 else
                 {
@@ -113,9 +126,8 @@ namespace RP0.Harmony
                 __result = 0d;
                 return false;
             }
-
-            Vector3d planeNormal = Vector3d.Cross(v.velocityD, v.orbit.referenceBody.position - v.transform.position);
-            double sunDot = Math.Abs(Vector3d.Dot(Planetarium.fetch.Sun.transform.position - v.transform.position, planeNormal));
+            Vector3d planeNormal = Vector3d.Cross(v.orbitDriver.vel, -v.orbitDriver.pos).normalized;
+            double sunDot = Math.Abs(Vector3d.Dot(Planetarium.fetch.Sun.position - (v.mainBody.position + v.orbitDriver.pos).normalized, planeNormal));
             double betaAngle = Math.PI * 0.5d - Math.Acos(sunDot);
 
             double a = obt.semiMajorAxis;
@@ -192,6 +204,7 @@ namespace RP0.Harmony
             // We've likely avoided this already due to the eccentricity check in the main call, though
             if (a < b || b < R)
                 return 0d;
+
 
             double betaStar = Math.Asin(R / a);
             if (Math.Abs(betaAngle) >= betaStar)

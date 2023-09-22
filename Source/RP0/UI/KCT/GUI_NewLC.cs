@@ -513,14 +513,18 @@ namespace RP0
                     ProcessNewLC(isModify, curPadCost, totalCost, oldTotalCost);
                 }
             }
-            if (HighLogic.LoadedSceneIsEditor)
+            //if (HighLogic.LoadedSceneIsEditor)
+            //{
+            //    if (GUILayout.Button(new GUIContent("Vessels", "Show/hide the Plans list. Clicking on a vessel there will merge the current LC stats with those needed to support that vessel, if possible.")))
+            //    {
+            //        _overrideShowBuildPlans = !_overrideShowBuildPlans;
+            //    }
+            //}
+            if (isModify && !isHangar && GUILayout.Button("Clean", "Set the LC stats to support only the current vessel, removing support for other vessels to reduce maintenance costs in exchange for a longer renovation time"))
             {
-                if (GUILayout.Button(new GUIContent("Vessels", "Show/hide the Plans list. Clicking on a vessel there will merge the current LC stats with those needed to support that vessel, if possible.")))
-                {
-                    _overrideShowBuildPlans = !_overrideShowBuildPlans;
-                }
+                SetFieldsFromVessel(KerbalConstructionTimeData.Instance.EditorVessel, activeLC);
             }
-            if (isModify && GUILayout.Button("Existing"))
+            if (isModify && GUILayout.Button("Existing", "Set the LC stats to match the currently existing LC"))
             {
                 SetFieldsFromLC(activeLC);
             }

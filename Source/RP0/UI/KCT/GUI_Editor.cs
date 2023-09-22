@@ -261,27 +261,27 @@ namespace RP0
                 bool canModify = activeLC.CanModifyButton;
 
                 const string modifyFailTooltip = "\n\nCurrently in use! Only modifications that leave any in-progress vessels capable of being serviced by this complex will be permitted.";
-                if (GUILayout.Button(new GUIContent("Reconstruct",
-                    $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants.{(canModify ? string.Empty : modifyFailTooltip)}"),
-                    canModify ? GUI.skin.button : _yellowButton))
-                {
-                    if (EditorLogic.fetch.ship.parts.Count == 0)
-                    {
-                        ShowBuildVesselFirstDialog();
-                    }
-                    else
-                    {
-                        SetFieldsFromVessel(KerbalConstructionTimeData.Instance.EditorVessel, activeLC);
+                //if (GUILayout.Button(new GUIContent("Reconstruct",
+                //    $"Perform a large reconstruction of the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to best support the current vessel, removing support for any other variants.{(canModify ? string.Empty : modifyFailTooltip)}"),
+                //    canModify ? GUI.skin.button : _yellowButton))
+                //{
+                //    if (EditorLogic.fetch.ship.parts.Count == 0)
+                //    {
+                //        ShowBuildVesselFirstDialog();
+                //    }
+                //    else
+                //    {
+                //        SetFieldsFromVessel(KerbalConstructionTimeData.Instance.EditorVessel, activeLC);
 
-                        _wasShowBuildList = GUIStates.ShowBuildList;
-                        GUIStates.ShowModifyLC = true;
-                        GUIStates.ShowBuildList = false;
-                        GUIStates.ShowBLPlus = false;
-                        GUIStates.ShowNewLC = false;
-                        GUIStates.ShowLCResources = false;
-                        _centralWindowPosition.width = 300;
-                    }
-                }
+                //        _wasShowBuildList = GUIStates.ShowBuildList;
+                //        GUIStates.ShowModifyLC = true;
+                //        GUIStates.ShowBuildList = false;
+                //        GUIStates.ShowBLPlus = false;
+                //        GUIStates.ShowNewLC = false;
+                //        GUIStates.ShowLCResources = false;
+                //        _centralWindowPosition.width = 300;
+                //    }
+                //}
                 if (GUILayout.Button(new GUIContent("Upgrade",
                     $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible.{(canModify ? string.Empty : modifyFailTooltip)}"),
                     canModify ? GUI.skin.button : _yellowButton))

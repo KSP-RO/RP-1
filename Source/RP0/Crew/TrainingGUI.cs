@@ -15,6 +15,7 @@ namespace RP0.Crew
         private GUIStyle _courseBtnStyle = null;
         private GUIStyle _courseBtnUnavailStyle = null;
         private GUIStyle _tempCourseLblStyle = null;
+        private GUIStyle _lockedCourseLblStyle = null;
         private readonly GUIContent _nautRowAlarmBtnContent = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/KACIcon15", false), "Add alarm");
         private bool _showAllTrainings = false;
         private static readonly Color _colorUnavailable = new Color(1f, 176f / 255f, 153f / 255f);
@@ -224,21 +225,7 @@ namespace RP0.Crew
                     var c = new GUIContent(course.name, isLocked ? $"Requires level {reqLevel + 1} AC.\n{course.PartsTooltip}" : course.PartsTooltip);
                     if (GUILayout.Button(c, style))
                     {
-                        if (isLocked)
-                        {
-                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                         new Vector2(0.5f, 0.5f),
-                                         "CourseLocked",
-                                         "Upgrade Astronaut Complex",
-                                         $"This training requires an Astronaut Complex of level {reqLevel + 1} or higher. Upgrade the Astronaut Complex.",
-                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
-                                         false,
-                                         HighLogic.UISkin).HideGUIsWhilePopup();
-                        }
-                        else
-                        {
-                            _selectedCourse = new TrainingCourse(course);
-                        }
+                        _selectedCourse = new TrainingCourse(course);
                     }
                 }
             }
@@ -267,6 +254,12 @@ namespace RP0.Crew
                 _tempCourseLblStyle.normal.textColor = Color.yellow;
             }
 
+            if (_lockedCourseLblStyle == null)
+            {
+                _lockedCourseLblStyle = new GUIStyle(GUI.skin.label);
+                _lockedCourseLblStyle.normal.textColor = _colorUnavailable;
+            }
+
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.Label(_selectedCourse.GetItemName());
@@ -275,6 +268,13 @@ namespace RP0.Crew
 
             if (!string.IsNullOrEmpty(_selectedCourse.Description))
                 GUILayout.Label(_selectedCourse.Description);
+
+            int acLevel = KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex);
+            int reqLevel = _selectedCourse.ACLevelRequirement;
+            bool isLocked = reqLevel > acLevel;
+            if (isLocked)
+                GUILayout.Label($"This training requires an Astronaut Complex of level {reqLevel + 1} or higher. Upgrade the Astronaut Complex.", _lockedCourseLblStyle);
+
             if (_selectedCourse.IsTemporary)
                 GUILayout.Label("Tech for this part is still being researched", _tempCourseLblStyle);
 
@@ -292,7 +292,8 @@ namespace RP0.Crew
             {
                 GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.AverageRetireExtension(), true, false)}");
             }
-            if (!underMin && GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+
+            if (!isLocked && !underMin && GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
             {
                 if (_selectedCourse.StartCourse())
                 {

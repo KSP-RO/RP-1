@@ -65,12 +65,18 @@ namespace RP0.Harmony
     {
         [HarmonyPostfix]
         [HarmonyPatch("RunningUpdate")]
-        internal static void Postfix_RunningUpdate(Vessel v, Situation vs, Experiment prefab, ref string mainIssue)
+        internal static void Postfix_RunningUpdate(Vessel v, Situation vs, Experiment prefab, Experiment.RunningState expState, ref string mainIssue)
         {
-            if (!v.loaded)
+            if (expState != Experiment.RunningState.Running && expState != Experiment.RunningState.Forced)
                 return;
 
-            if (!Database.StartCompletedExperiments.TryGetValue(vs.BodyName, out var exps))
+            if (mainIssue.Length > 0)
+                return;
+
+            if (!v.loaded || vs == null || prefab == null)
+                return;
+
+            if (!Database.StartCompletedExperiments.TryGetValue(v.mainBody.name, out var exps))
                 return;
 
             if (!exps.TryGetValue(prefab.experiment_id, out var sits))

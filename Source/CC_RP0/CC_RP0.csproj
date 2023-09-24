@@ -55,33 +55,33 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AcceptContractBehaviour.cs" />
-    <Compile Include="AcceptContractBehaviourFactory.cs" />
-    <Compile Include="AvionicsCheckVesselParam.cs" />
-    <Compile Include="AvionicsCheckFactory.cs" />
+    <Compile Include="Behaviour\AcceptContractBehaviour.cs" />
+    <Compile Include="BehaviourFactory\AcceptContractBehaviourFactory.cs" />
+    <Compile Include="Parameter\AvionicsCheckVesselParam.cs" />
+    <Compile Include="ParameterFactory\AvionicsCheckFactory.cs" />
     <Compile Include="ContractClobberer.cs" />
     <Compile Include="CustomExpressionParserRegistrer.cs" />
-    <Compile Include="HasCompleted.cs" />
-    <Compile Include="HasCompletedFactory.cs" />
-    <Compile Include="RP1CollectScience.cs" />
-    <Compile Include="RP1CollectScienceFactory.cs" />
-    <Compile Include="DownrangeDistanceFactory.cs" />
-    <Compile Include="DownrangeDistanceVesselParam.cs" />
-    <Compile Include="HorizontalLandingFactory.cs" />
-    <Compile Include="HorizontalLandingVesselParam.cs" />
-    <Compile Include="ProgramActiveRequirement.cs" />
+    <Compile Include="Parameter\HasCompleted.cs" />
+    <Compile Include="ParameterFactory\HasCompletedFactory.cs" />
+    <Compile Include="Parameter\RP1CollectScience.cs" />
+    <Compile Include="ParameterFactory\RP1CollectScienceFactory.cs" />
+    <Compile Include="ParameterFactory\DownrangeDistanceFactory.cs" />
+    <Compile Include="Parameter\DownrangeDistanceVesselParam.cs" />
+    <Compile Include="ParameterFactory\HorizontalLandingFactory.cs" />
+    <Compile Include="Parameter\HorizontalLandingVesselParam.cs" />
+    <Compile Include="Requirement\ProgramActiveRequirement.cs" />
     <Compile Include="RP1ContractTracker.cs" />
-    <Compile Include="RP1NoDocking.cs" />
-    <Compile Include="RP1NoDockingFactory.cs" />
-    <Compile Include="RP1RendezvousFactory.cs" />
-    <Compile Include="RP1RendezvousVesselParam.cs" />
-    <Compile Include="ImpactCBFactory.cs" />
-    <Compile Include="ImpactCBParam.cs" />
-    <Compile Include="ReachMachFactory.cs" />
-    <Compile Include="ReachMachVesselParam.cs" />
+    <Compile Include="Parameter\RP1NoDocking.cs" />
+    <Compile Include="ParameterFactory\RP1NoDockingFactory.cs" />
+    <Compile Include="ParameterFactory\RP1RendezvousFactory.cs" />
+    <Compile Include="Parameter\RP1RendezvousVesselParam.cs" />
+    <Compile Include="ParameterFactory\ImpactCBFactory.cs" />
+    <Compile Include="Parameter\ImpactCBParam.cs" />
+    <Compile Include="ParameterFactory\ReachMachFactory.cs" />
+    <Compile Include="Parameter\ReachMachVesselParam.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RP1ReturnHome.cs" />
-    <Compile Include="RP1ReturnHomeFactory.cs" />
+    <Compile Include="Parameter\RP1ReturnHome.cs" />
+    <Compile Include="ParameterFactory\RP1ReturnHomeFactory.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\RP0\RP0.csproj">

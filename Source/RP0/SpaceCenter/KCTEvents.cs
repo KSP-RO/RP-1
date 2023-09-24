@@ -262,7 +262,8 @@ namespace RP0
         {
             if (ev.from == Vessel.Situations.PRELAUNCH && ev.host == FlightGlobals.ActiveVessel)
             {
-                if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+                KCT_Preset_General settings = PresetManager.Instance.ActivePreset.GeneralSettings;
+                if (settings.Enabled && settings.BuildTimes)
                 {
                     var dataModule = FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker) as KCTVesselTracker;
                     if (dataModule != null && dataModule.Data.FacilityBuiltIn == EditorFacility.VAB && !dataModule.Data.HasStartedReconditioning)

@@ -312,6 +312,9 @@ namespace RP0
 
             foreach (var t in techList)
             {
+                if (t == this)
+                    break;
+
                 if (parentList.Contains(t.techID))
                 {
                     blockingTech = t.techName;

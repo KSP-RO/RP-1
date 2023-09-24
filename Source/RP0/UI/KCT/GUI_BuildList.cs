@@ -717,9 +717,8 @@ namespace RP0
 
                 if (t.GetBuildRate() > 0d)
                 {
-                    if (t is ResearchProject rp)
+                    if (t is ResearchProject rp && rp.GetBlockingTech() != null)
                     {
-                        string blockingPrereq = rp.GetBlockingTech();
                         GUILayout.Label("Waiting for PreReq", GUILayout.Width(_width1));
                     }
                     else

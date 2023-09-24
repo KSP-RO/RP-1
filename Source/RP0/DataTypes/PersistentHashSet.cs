@@ -6,14 +6,31 @@ namespace RP0.DataTypes
 {
     public class PersistentHashSet<T> : HashSet<T>, IConfigNode where T : IConfigNode
     {
-        private static string typeName = typeof(T).Name;
+        private static readonly Type _type = typeof(T);
+        private static readonly string _typeName = typeof(T).Name;
+        private static readonly Dictionary<string, Type> _typeCache = new Dictionary<string, Type>();
 
         public void Load(ConfigNode node)
         {
             Clear();
             foreach (ConfigNode n in node.nodes)
             {
-                T item = Activator.CreateInstance<T>();
+                T item;
+                if (n.name == "ITEM" || n.name == _typeName)
+                {
+                    item = Activator.CreateInstance<T>();
+                }
+                else
+                {
+                    if (!_typeCache.TryGetValue(n.name, out var type))
+                        type = HarmonyLib.AccessTools.TypeByName(n.name);
+                    if (type == null || !_type.IsAssignableFrom(type))
+                        type = _type;
+                    else
+                        _typeCache[n.name] = type;
+
+                    item = (T)Activator.CreateInstance(type);
+                }
                 item.Load(n);
                 Add(item);
             }
@@ -21,9 +38,11 @@ namespace RP0.DataTypes
 
         public void Save(ConfigNode node)
         {
+            node.AddValue("version", 2);
             foreach (var item in this)
             {
-                ConfigNode n = new ConfigNode(typeName);
+                var type = item.GetType();
+                ConfigNode n = new ConfigNode(type == _type ? _typeName : type.FullName);
                 item.Save(n);
                 node.AddNode(n);
             }

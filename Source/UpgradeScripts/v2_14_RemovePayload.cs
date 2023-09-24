@@ -7,7 +7,7 @@ namespace RP0.UpgradeScripts
 {
 
     [UpgradeModule(LoadContext.Craft, craftNodeUrl = "PART/RESOURCE")]
-    public class v2_12_1RemovePayload : UpgradeScript
+    public class v2_14_1RemovePayload : UpgradeScript
     {
         public override string Name { get => "RP-1 Payload Upgrader"; }
         public override string Description { get => "Removes WeatherSatPayload, ComSatPayload and NavSatPayload from older Tanks"; }

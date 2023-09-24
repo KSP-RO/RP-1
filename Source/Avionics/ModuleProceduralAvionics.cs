@@ -1,6 +1,5 @@
 ﻿using KSPAPIExtensions;
 using RealFuels.Tanks;
-using RP0.Utilities;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -16,8 +15,6 @@ namespace RP0.ProceduralAvionics
         private const string KwFormat = "{0:0.##}";
         private const string WFormat = "{0:0}";
         private const float FloatTolerance = 1.00001f;
-        internal const float InternalTanksTotalVolumeUtilization = 0.246f; //Max utilization for 2 spheres within a cylindrical container worst case scenario
-        internal const float InternalTanksAvailableVolumeUtilization = 0.5f;
 
         #region Fields and properties
 
@@ -89,8 +86,6 @@ namespace RP0.ProceduralAvionics
 
         private float MaxAvionicsMass => (_cachedVolume - CurrentProceduralAvionicsTechNode.reservedRFTankVolume) * 
                                          CurrentProceduralAvionicsTechNode.avionicsDensity;
-
-        public float InternalTanksVolume { get; private set; }
 
         public bool CanSeekVolume => _seekVolumeMethod != null && _seekVolumeMethod.GetParameters().Length == 2;
 
@@ -471,9 +466,8 @@ namespace RP0.ProceduralAvionics
             {
                 Events[nameof(OnPartVolumeChanged)].active = false;
                 float availVol = GetAvailableVolume();
-                InternalTanksVolume = SphericalTankUtilities.GetSphericalTankVolume(availVol);
-                Log($"SendRemainingVolume():  Cached Volume: {_cachedVolume}. AvionicsVolume: {GetAvionicsVolume()}.  AvailableVolume: {availVol}.  Internal Tanks: {InternalTanksVolume}");
-                SendVolumeChangedEvent(InternalTanksVolume);
+                Log($"SendRemainingVolume():  Cached Volume: {_cachedVolume}. AvionicsVolume: {GetAvionicsVolume()}.  AvailableVolume: {availVol}.");
+                SendVolumeChangedEvent(availVol);
                 _rfPM?.CalculateMass();
                 Events[nameof(OnPartVolumeChanged)].active = true;
             }
@@ -504,7 +498,7 @@ namespace RP0.ProceduralAvionics
                 _window.ControllableMass = $"{controllableMass:0.###}";
         }
 
-        internal float GetAvailableVolume() => Math.Max(Math.Min((_cachedVolume - GetAvionicsVolume()) * InternalTanksAvailableVolumeUtilization, _cachedVolume * InternalTanksTotalVolumeUtilization), 0);
+        internal float GetAvailableVolume() => Math.Max(_cachedVolume - GetAvionicsVolume(), 0);
 
         internal bool SetProcPartVolumeLimit()
         {

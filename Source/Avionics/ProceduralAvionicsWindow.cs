@@ -1,6 +1,5 @@
 ﻿using ClickThroughFix;
 using RealFuels.Tanks;
-using RP0.Utilities;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -11,9 +10,6 @@ namespace RP0.ProceduralAvionics
 {
     public class ProceduralAvionicsWindow : MonoBehaviour
     {
-        private const float InternalTanksAvailableVolumeUtilization = ModuleProceduralAvionics.InternalTanksAvailableVolumeUtilization;
-        private const float InternalTanksTotalVolumeUtilization = ModuleProceduralAvionics.InternalTanksTotalVolumeUtilization;
-
         private static readonly int _windowId = "RP0ProcAviWindow".GetHashCode();
 
         private Rect _windowRect = new Rect(267, 104, 400, 300);
@@ -204,9 +200,9 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginHorizontal(GUILayout.Width(250));
             _gc ??= new GUIContent();
             _gc.text = "Additional tank volume: ";
-            _gc.tooltip = "How much tank volume will be left for other resources after applying the desired controllable mass and amount of EC.";
+            _gc.tooltip = "Amount of excess tank volume";
             GUILayout.Label(_gc, HighLogic.Skin.label, GUILayout.Width(150));
-            GUI.enabled = _module.CanSeekVolume;
+            GUI.enabled = false;
             _sExtraVolume = GUILayout.TextField(_sExtraVolume, HighLogic.Skin.textField);
             GUI.enabled = true;
             GUILayout.Label("l", HighLogic.Skin.label);
@@ -225,7 +221,7 @@ namespace RP0.ProceduralAvionics
 
             GUILayout.BeginHorizontal();
             _gc.text = "Apply (resize to fit)";
-            _gc.tooltip = "Applies the parameters above and resizes the part to have the correct amount of volume";
+            _gc.tooltip = "Applies the parameters above and resizes the part to have the optimal amount of volume";
             if (GUILayout.Button(_gc, HighLogic.Skin.button))
             {
                 ApplyAvionicsSettings(shouldSeekVolume: true);
@@ -366,14 +362,6 @@ namespace RP0.ProceduralAvionics
                 return;
             }
 
-            float extraVolumeLiters = 0;
-            if (_module.CanSeekVolume && (!float.TryParse(_sExtraVolume, out extraVolumeLiters) || extraVolumeLiters < 0))
-            {
-                ScreenMessages.PostScreenMessage("Invalid Additional volume value");
-                _sExtraVolume = "0";
-                return;
-            }
-
             if (!float.TryParse(_sECAmount, out float ecAmount) || ecAmount <= 0)
             {
                 ScreenMessages.PostScreenMessage("EC amount needs to be larger than 0");
@@ -381,28 +369,11 @@ namespace RP0.ProceduralAvionics
                 return;
             }
 
-            // Store and sum together the volume of all resources other than EC on this part
-            double otherFuelVolume = 0;
-            var otherTanks = new List<KeyValuePair<FuelTank, double>>();
-            foreach (FuelTank t in _tanksDict.Values)
-            {
-                if (t == _ecTank || t.maxAmount == 0) continue;
-                otherTanks.Add(new KeyValuePair<FuelTank, double>(t, t.maxAmount));
-                otherFuelVolume += t.maxAmount / t.utilization;
-            }
-
             _module.controllableMass = newControlMass;
             if (shouldSeekVolume && _module.CanSeekVolume)
             {
                 _module.SetProcPartVolumeLimit();
-                ApplyCorrectProcTankVolume(extraVolumeLiters + (float)otherFuelVolume, ecAmount);
-
-                // Restore all the pre-resize amounts in tanks
-                foreach (KeyValuePair<FuelTank, double> kvp in otherTanks)
-                {
-                    FuelTank t = kvp.Key;
-                    t.amount = t.maxAmount = kvp.Value;
-                }
+                ApplyCorrectProcTankVolume(0, ecAmount);
             }
             else
             {
@@ -422,13 +393,13 @@ namespace RP0.ProceduralAvionics
                 // In this case need to clamp EC amount to ensure that it stays within the available volume
                 float avVolume = _module.GetAvionicsVolume();
                 float m3AvailVol = _module.GetAvailableVolume();
-                double m3CurVol = avVolume + _rfPM.totalVolume / InternalTanksAvailableVolumeUtilization / 1000;    // l to m³, assume 100% RF utilization but do account for the ProcAvi internal utilization
-                double m3MinVol = GetNeededProcTankVolume((float)otherFuelVolume, ecAmount);
+                double m3CurVol = avVolume + _rfPM.totalVolume / 1000;    // l to m³, assume 100% RF utilization
+                double m3MinVol = GetNeededProcTankVolume(0, ecAmount);
                 double m3MissingVol = m3MinVol - m3CurVol;
                 if (m3MissingVol > 0.0001)
                 {
                     ecAmount = 1;    // Never remove the EC resource entirely
-                    double m3AvailVolForEC = m3AvailVol - otherFuelVolume;
+                    double m3AvailVolForEC = m3AvailVol;
                     if (m3AvailVolForEC > 0)
                     {
                         ecAmount = GetECAmountForVolume((float)m3AvailVolForEC);
@@ -458,20 +429,18 @@ namespace RP0.ProceduralAvionics
             float utilization = utilizationPercent / 100;
             float avVolume = _module.GetAvionicsVolume();
 
-            // The amount of final available volume that RF tanks get is calculated in 4 steps:
+            // The amount of final available volume that RF tanks get is calculated in 3 steps:
             // 1) ModuleProceduralAvionics.GetAvailableVolume()
-            // 2) SphericalTankUtilities.GetSphericalTankVolume()
-            // 3) RF tank's utilization (the slider in the PAW)
-            // 4) RF (internal) tank's per-resource utilization value.
+            // 2) RF tank's utilization (the slider in the PAW)
+            // 3) RF (internal) tank's per-resource utilization value.
             //    This is currently set at 1000 for EC which means that 1l of volume can hold 1000 units of EC.
             // The code below runs all these but in reversed order.
 
-            float lVolStep4 = ecAmount / _ecTank.utilization;
-            float lVolStep3 = (lVolStep4 + extraVolumeLiters) / utilization;
-            float m3VolStep3 = lVolStep3 / 1000;    // RF volumes are in liters but avionics uses m³
-            float m3VolStep2 = SphericalTankUtilities.GetRequiredVolumeFromSphericalTankVolume(m3VolStep3);
-            float m3TotalVolume = Math.Max((InternalTanksAvailableVolumeUtilization * avVolume + m3VolStep2) / InternalTanksAvailableVolumeUtilization,
-                                           m3VolStep2 / InternalTanksTotalVolumeUtilization);
+            float lVolStep3 = ecAmount / _ecTank.utilization;
+            float lVolStep2 = (lVolStep3 + extraVolumeLiters) / utilization;
+            lVolStep2 = Math.Max(lVolStep2, _module.CurrentProceduralAvionicsTechNode.reservedRFTankVolume);
+            float m3VolStep2 = lVolStep2 / 1000;    // RF volumes are in liters but avionics uses m³
+            float m3TotalVolume = Math.Max(avVolume + m3VolStep2, m3VolStep2);
             return m3TotalVolume;
         }
 
@@ -480,8 +449,7 @@ namespace RP0.ProceduralAvionics
             float utilizationPercent = _rfPM.utilization;
             float utilization = utilizationPercent / 100;
 
-            float m3VolStep2 = SphericalTankUtilities.GetSphericalTankVolume(m3Volume);
-            float step3 = m3VolStep2 * 1000 * utilization;
+            float step3 = m3Volume * 1000 * utilization;
             float ecAmount = step3 * _ecTank.utilization;
             return ecAmount;
         }

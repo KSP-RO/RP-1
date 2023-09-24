@@ -120,10 +120,14 @@ namespace RP0
                     if (node.GetValue("name") != "ModuleTagList")
                         continue;
 
-                    _tempTags.Load(node.GetNode(nameof(engineTags)));
-                    combinedTags.AddRange(_tempTags);
-                    _tempTags.Load(node.GetNode(nameof(tankTags)));
-                    combinedTags.AddRange(_tempTags);
+                    foreach (var n in node.nodes.nodes)
+                    {
+                        if (n.name != nameof(engineTags) && n.name != nameof(tankTags))
+                            continue;
+                        _tempTags.Load(n);
+                        combinedTags.AddRange(_tempTags);
+                    }
+                    
                     _tempTags.Clear();
                     combinedTags.Sort();
                     return combinedTags;

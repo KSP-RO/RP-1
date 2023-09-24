@@ -143,7 +143,7 @@ namespace RP0
             {
                 launchSite = EditorLogic.fetch.launchSiteName;
             }
-            VesselProject blv = new VesselProject(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL, true)
+            VesselProject vp = new VesselProject(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL, true)
             {
                 shipName = EditorLogic.fetch.shipNameField.text,
                 LCID = System.Guid.Empty
@@ -155,23 +155,23 @@ namespace RP0
                 CheckAvailableFunds = false,
                 BypassFacilityRequirements = true
             };
-            v.ProcessVessel(blv);
+            v.ProcessVessel(vp);
         }
 
-        public static void AddVesselToPlansList(VesselProject blv)
+        public static void AddVesselToPlansList(VesselProject vp)
         {
             ScreenMessage message;
-            if (KerbalConstructionTimeData.Instance.BuildPlans.ContainsKey(blv.shipName))
+            if (KerbalConstructionTimeData.Instance.BuildPlans.ContainsKey(vp.shipName))
             {
-                KerbalConstructionTimeData.Instance.BuildPlans.Remove(blv.shipName);
-                message = new ScreenMessage($"Replacing previous plan for {blv.shipName} in the Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
+                KerbalConstructionTimeData.Instance.BuildPlans.Remove(vp.shipName);
+                message = new ScreenMessage($"Replacing previous plan for {vp.shipName} in the Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
             }
-            KerbalConstructionTimeData.Instance.BuildPlans.Add(blv.shipName, blv);
+            KerbalConstructionTimeData.Instance.BuildPlans.Add(vp.shipName, vp);
 
-            RP0Debug.Log($"Added {blv.shipName} to plans list at KSC {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {blv.cost}");
-            RP0Debug.Log($"Launch site is {blv.launchSite}");
-            string text = $"Added {blv.shipName} to plans list.";
+            RP0Debug.Log($"Added {vp.shipName} to plans list at KSC {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {vp.cost}");
+            RP0Debug.Log($"Launch site is {vp.launchSite}");
+            string text = $"Added {vp.shipName} to plans list.";
             message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
         }

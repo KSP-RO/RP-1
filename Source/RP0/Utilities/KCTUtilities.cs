@@ -411,18 +411,18 @@ namespace RP0
                 return;
             }
 
-            var blv = new VesselProject(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL, true)
+            var vp = new VesselProject(EditorLogic.fetch.ship, launchSite, EditorLogic.FlagURL, true)
             {
                 shipName = EditorLogic.fetch.shipNameField.text
             };
 
-            TryAddVesselToBuildList(blv);
+            TryAddVesselToBuildList(vp);
         }
 
-        public static void TryAddVesselToBuildList(VesselProject blv, bool skipPartChecks = false, LaunchComplex overrideLC = null)
+        public static void TryAddVesselToBuildList(VesselProject vp, bool skipPartChecks = false, LaunchComplex overrideLC = null)
         {
             if (overrideLC != null)
-                blv.LCID = overrideLC.ID;
+                vp.LCID = overrideLC.ID;
 
             var v = new VesselBuildValidator
             {
@@ -430,44 +430,44 @@ namespace RP0
                 CheckPartConfigs = !skipPartChecks,
                 SuccessAction = AddVesselToBuildList
             };
-            v.ProcessVessel(blv);
+            v.ProcessVessel(vp);
         }
 
-        public static void AddVesselToBuildList(VesselProject blv) => AddVesselToBuildList(blv, true);
+        public static void AddVesselToBuildList(VesselProject vp) => AddVesselToBuildList(vp, true);
 
-        public static void AddVesselToBuildList(VesselProject blv, bool spendFunds)
+        public static void AddVesselToBuildList(VesselProject vp, bool spendFunds)
         {
             if (spendFunds)
-                SpendFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
+                SpendFunds(vp.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
 
-            if (blv.Type == ProjectType.SPH)
-                blv.launchSite = "Runway";
+            if (vp.Type == ProjectType.SPH)
+                vp.launchSite = "Runway";
             else
-                blv.launchSite = "LaunchPad";
+                vp.launchSite = "LaunchPad";
 
-            LaunchComplex lc = blv.LC;
+            LaunchComplex lc = vp.LC;
             if (lc != null)
             {
-                lc.BuildList.Add(blv);
+                lc.BuildList.Add(vp);
             }
             else
             {
-                RP0Debug.LogError($"Error! Tried to add {blv.shipName} to build list but couldn't find LC! KSC {KerbalConstructionTimeData.Instance.ActiveSC.KSCName} and active LC {KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC}");
+                RP0Debug.LogError($"Error! Tried to add {vp.shipName} to build list but couldn't find LC! KSC {KerbalConstructionTimeData.Instance.ActiveSC.KSCName} and active LC {KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC}");
                 return;
             }
 
             try
             {
-                KCTEvents.OnVesselAddedToBuildQueue.Fire(blv);
+                KCTEvents.OnVesselAddedToBuildQueue.Fire(vp);
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
             }
 
-            RP0Debug.Log($"Added {blv.shipName} to build list at {lc.Name} at {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {blv.cost}. IntegrationCost: {blv.integrationCost}");
-            RP0Debug.Log("Launch site is " + blv.launchSite);
-            string text = $"Added {blv.shipName} to integration list at {lc.Name}.";
+            RP0Debug.Log($"Added {vp.shipName} to build list at {lc.Name} at {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {vp.cost}. IntegrationCost: {vp.integrationCost}");
+            RP0Debug.Log("Launch site is " + vp.launchSite);
+            string text = $"Added {vp.shipName} to integration list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
             ScreenMessages.PostScreenMessage(message);
         }
@@ -711,8 +711,8 @@ namespace RP0
                 {
                     if (!LC.IsOperational)
                         continue;
-                    foreach (ISpaceCenterProject blv in LC.BuildList)
-                        _checkTime(blv, ref shortestTime, ref thing);
+                    foreach (ISpaceCenterProject vp in LC.BuildList)
+                        _checkTime(vp, ref shortestTime, ref thing);
                     foreach (ISpaceCenterProject rr in LC.Recon_Rollout)
                         _checkTime(rr, ref shortestTime, ref thing);
                     foreach (ISpaceCenterProject ap in LC.Airlaunch_Prep)
@@ -809,8 +809,8 @@ namespace RP0
 
             foreach (SpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
-                if (FindVPByID(id, ksc) is VesselProject blv)
-                    return blv;
+                if (FindVPByID(id, ksc) is VesselProject vp)
+                    return vp;
             }
 
             return null;
@@ -819,11 +819,11 @@ namespace RP0
         public static VesselProject FindVPByIDInLC(Guid id, LaunchComplex lc)
         {
 
-            VesselProject ves = lc.Warehouse.Find(blv => blv.shipID == id);
+            VesselProject ves = lc.Warehouse.Find(vp => vp.shipID == id);
             if (ves != null)
                 return ves;
 
-            ves = lc.BuildList.Find(blv => blv.shipID == id);
+            ves = lc.BuildList.Find(vp => vp.shipID == id);
             if (ves != null)
                 return ves;
 

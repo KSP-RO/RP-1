@@ -32,7 +32,7 @@ namespace RP0
         private Action<VesselProject> _successActions;
         private Action _failureActions;
 
-        public void ProcessVessel(VesselProject blv)
+        public void ProcessVessel(VesselProject vp)
         {
             _successActions = SuccessAction + ((_) =>
             {
@@ -47,24 +47,24 @@ namespace RP0
                 KerbalConstructionTimeData.Instance.StopCoroutine(_routine);
 
             InputLockManager.SetControlLock(ControlTypes.EDITOR_UI, InputLockID);
-            _routine = RunValidationRoutine(blv);
+            _routine = RunValidationRoutine(vp);
             KerbalConstructionTimeData.Instance.StartCoroutine(_routine);
         }
 
-        private IEnumerator RunValidationRoutine(VesselProject blv)
+        private IEnumerator RunValidationRoutine(VesselProject vp)
         {
-            if (ProcessFacilityChecks(blv) != ValidationResult.Success)
+            if (ProcessFacilityChecks(vp) != ValidationResult.Success)
             {
                 _failureActions();
                 yield break;
             }
             if (!KSPUtils.CurrentGameIsCareer())
             {
-                _successActions(blv);
+                _successActions(vp);
                 yield break;
             }
 
-            ProcessPartAvailability(blv);
+            ProcessPartAvailability(vp);
             while (_validationResult == ValidationResult.Undecided)
                 yield return null;
 
@@ -77,7 +77,7 @@ namespace RP0
 
             do
             {
-                ProcessPartConfigs(blv);
+                ProcessPartConfigs(vp);
                 while (_validationResult == ValidationResult.Undecided)
                     yield return null;
             }
@@ -90,22 +90,22 @@ namespace RP0
                 yield break;
             }
 
-            if (ProcessFundsChecks(blv) != ValidationResult.Success)
+            if (ProcessFundsChecks(vp) != ValidationResult.Success)
             {
                 _failureActions();
                 yield break;
             }
 
-            _successActions(blv);
+            _successActions(vp);
         }
 
-        private ValidationResult ProcessFacilityChecks(VesselProject blv)
+        private ValidationResult ProcessFacilityChecks(VesselProject vp)
         {
             if (CheckFacilityRequirements)
             {
                 //Check if vessel fails facility checks but can still be built
                 List<string> facilityChecks = new List<string>();
-                if (!blv.MeetsFacilityRequirements(facilityChecks))
+                if (!vp.MeetsFacilityRequirements(facilityChecks))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "editorChecksFailedPopup",
                         "Failed editor checks!",
@@ -128,7 +128,7 @@ namespace RP0
             return ValidationResult.Success;
         }
 
-        private void ProcessPartAvailability(VesselProject blv)
+        private void ProcessPartAvailability(VesselProject vp)
         {
             _validationResult = ValidationResult.Undecided;
             if (!CheckPartAvailability)
@@ -138,11 +138,11 @@ namespace RP0
             }
 
             // Check if vessel contains locked parts, and therefore cannot be built
-            Dictionary<AvailablePart, PartPurchasability> partStatuses = blv.GetPartsWithPurchasability();
+            Dictionary<AvailablePart, PartPurchasability> partStatuses = vp.GetPartsWithPurchasability();
             IEnumerable<KeyValuePair<AvailablePart, PartPurchasability>> lockedParts = partStatuses.Where(kvp => kvp.Value.Status == PurchasabilityStatus.Unavailable);
             if (lockedParts.Any())
             {
-                RP0Debug.Log($"Tried to add {blv.shipName} to build list but it contains locked parts.");
+                RP0Debug.Log($"Tried to add {vp.shipName} to build list but it contains locked parts.");
 
                 // Simple ScreenMessage since there's not much you can do other than removing the locked parts manually.
                 string lockedMsg = ConstructLockedPartsWarning(lockedParts);
@@ -204,7 +204,7 @@ namespace RP0
                 HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        private void ProcessPartConfigs(VesselProject blv)
+        private void ProcessPartConfigs(VesselProject vp)
         {
             _validationResult = ValidationResult.Undecided;
             if (!CheckPartConfigs)
@@ -213,7 +213,7 @@ namespace RP0
                 return;
             }
 
-            Dictionary<Part, List<PartConfigValidationError>> dict = GetConfigErrorsDict(blv);
+            Dictionary<Part, List<PartConfigValidationError>> dict = GetConfigErrorsDict(vp);
             if (dict == null || dict.Count == 0)
             {
                 _validationResult = ValidationResult.Success;
@@ -234,17 +234,17 @@ namespace RP0
                 HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        private ValidationResult ProcessFundsChecks(VesselProject blv)
+        private ValidationResult ProcessFundsChecks(VesselProject vp)
         {
             if (CheckAvailableFunds)
             {
-                double totalCost = blv.GetTotalCost();
+                double totalCost = vp.GetTotalCost();
                 if (CostOffset != null)
                     totalCost -= CostOffset.Value;
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.VesselPurchase, -totalCost, 0d, 0d);
                 if (!cmq.CanAfford())
                 {
-                    RP0Debug.Log($"Tried to add {blv.shipName} to integration list but not enough funds.");
+                    RP0Debug.Log($"Tried to add {vp.shipName} to integration list but not enough funds.");
                     RP0Debug.Log($"Vessel cost: {cmq.GetTotal(CurrencyRP0.Funds, true)}, Current funds: {Funding.Instance.Funds}");
                     var msg = new ScreenMessage("Not Enough Funds To Integrate!", 4f, ScreenMessageStyle.UPPER_CENTER);
                     ScreenMessages.PostScreenMessage(msg);
@@ -289,9 +289,9 @@ namespace RP0
             return sb.ToStringAndRelease();
         }
 
-        private Dictionary<Part, List<PartConfigValidationError>> GetConfigErrorsDict(VesselProject blv)
+        private Dictionary<Part, List<PartConfigValidationError>> GetConfigErrorsDict(VesselProject vp)
         {
-            ShipConstruct sc = blv.GetShip();
+            ShipConstruct sc = vp.GetShip();
             if (sc == null)
                 return null;
 

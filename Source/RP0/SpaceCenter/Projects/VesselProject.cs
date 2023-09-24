@@ -392,7 +392,7 @@ namespace RP0
         {
             if (s == null)
             {
-                RP0Debug.LogError("BLV: Tried to store a null shipconstruct. Probably copying a vessel outside the editor and the source had a null shipnode.");
+                RP0Debug.LogError("VP: Tried to store a null shipconstruct. Probably copying a vessel outside the editor and the source had a null shipnode.");
                 return;
             }
 
@@ -537,7 +537,7 @@ namespace RP0
             }
             else if (HighLogic.LoadedSceneIsEditor)
             {
-                RP0Debug.LogError("BLV tried to get ShipConstruct from within editor but _ship was null! Returning EditorLogic's shipconstruct.");
+                RP0Debug.LogError("VP tried to get ShipConstruct from within editor but _ship was null! Returning EditorLogic's shipconstruct.");
                 return EditorLogic.fetch.ship;
             }
             return _ship;
@@ -612,7 +612,7 @@ namespace RP0
 
         public bool MeetsFacilityRequirements(List<string> failedReasons)
         {
-            // Use blv's existing LC if available, else use active complex
+            // Use vp's existing LC if available, else use active complex
             LaunchComplex selectedLC;
             if (LC == null)
             {
@@ -847,15 +847,15 @@ namespace RP0
             if (!removed)
             {
                 // This will happen when we launch the vessel (or we remove an edited vessel)
-                // because the BLV instance is not the same instance as what's stored in the LC, just a copy.
+                // because the VP instance is not the same instance as what's stored in the LC, just a copy.
                 // We could try to be smarter, but eh. At least we're going to check warehouse first
                 // since launching is the usual case.
                 RP0Debug.Log("Failed to remove ship from list! Performing direct comparison of ids...");
 
                 for (int i = _lc.Warehouse.Count; i-- > 0;)
                 {
-                    VesselProject blv = _lc.Warehouse[i];
-                    if (blv.shipID == shipID)
+                    VesselProject vp = _lc.Warehouse[i];
+                    if (vp.shipID == shipID)
                     {
                         RP0Debug.Log("Ship found in Warehouse list. Removing...");
                         oldIndex = -1; // report notfound for removed from warehouse
@@ -868,8 +868,8 @@ namespace RP0
                 {
                     for (int i = _lc.BuildList.Count; i-- > 0;)
                     {
-                        VesselProject blv = _lc.BuildList[i];
-                        if (blv.shipID == shipID)
+                        VesselProject vp = _lc.BuildList[i];
+                        if (vp.shipID == shipID)
                         {
                             RP0Debug.Log("Ship found in BuildList. Removing...");
                             removed = true;

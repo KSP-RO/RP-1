@@ -58,6 +58,7 @@
     <Compile Include="Crew\TrainingCourse.cs" />
     <Compile Include="Crew\TrainingTemplate.cs" />
     <Compile Include="Harmony\CrewTransfer.cs" />
+    <Compile Include="Harmony\EditorLogic.cs" />
     <Compile Include="Harmony\KerbalEVA.cs" />
     <Compile Include="Settings\CrewSettings.cs" />
     <Compile Include="Crew\TrainingDatabase.cs" />

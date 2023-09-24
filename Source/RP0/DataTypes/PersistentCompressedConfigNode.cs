@@ -208,32 +208,41 @@ namespace RP0.DataTypes
         {
             get
             {
-                if (_node == null)
-                {
-                    if (!Decompress())
-                        return _node;
-
-                    Version gameVersion = new Version(Versioning.version_major, Versioning.version_minor, Versioning.Revision);
-                    _IsUpgradingCraft = true;
-                    ConfigNode newNode = KSPUpgradePipeline.Pipeline.Run(_node, SaveUpgradePipeline.LoadContext.Craft, gameVersion, out bool runSuccess, out string runInfo);
-                    _IsUpgradingCraft = false;
-                    if (!runSuccess)
-                    {
-                        RP0Debug.LogError($"Error upgrading craft node with ship name {_node.GetValue("ship") ?? "<unknown"}. Information from the upgrade run: {runInfo}");
-                        return _node;
-                    }
-                    if (newNode != _node)
-                    {
-                        base.Node = newNode;
-                        RP0Debug.Log($"Upgraded craft node with ship name {_node.GetValue("ship") ?? "<unknown>"}.");
-                    }
-                }
+                GetAndUpgradeNode();
                 return _node;
             }
             set
             {
                 base.Node = value;
             }
+        }
+
+        public bool GetAndUpgradeNode()
+        {
+            if (_node == null)
+            {
+                if (!Decompress())
+                    return false;
+
+                Version gameVersion = new Version(Versioning.version_major, Versioning.version_minor, Versioning.Revision);
+                _IsUpgradingCraft = true;
+                ConfigNode newNode = KSPUpgradePipeline.Pipeline.Run(_node, SaveUpgradePipeline.LoadContext.Craft, gameVersion, out bool runSuccess, out string runInfo);
+                _IsUpgradingCraft = false;
+                
+                if (!runSuccess)
+                {
+                    RP0Debug.LogError($"Error upgrading craft node with ship name {_node.GetValue("ship") ?? "<unknown"}. Information from the upgrade run: {runInfo}");
+                    return false;
+                }
+                
+                if (newNode != _node)
+                {
+                    base.Node = newNode;
+                    RP0Debug.Log($"Upgraded craft node with ship name {_node.GetValue("ship") ?? "<unknown>"}.");
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }

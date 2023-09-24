@@ -551,6 +551,11 @@ namespace RP0
                 ShipNodeCompressed.CompressAndRelease();
         }
 
+        public bool UpgradeShipNode()
+        {
+            return ShipNodeCompressed.GetAndUpgradeNode();
+        }
+
         public void Launch(bool fillFuel = false)
         {
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;

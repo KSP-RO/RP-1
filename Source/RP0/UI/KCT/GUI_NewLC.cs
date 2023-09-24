@@ -61,16 +61,16 @@ namespace RP0
             SetResources();
         }
 
-        private static void SetFieldsFromVessel(VesselProject blv, LaunchComplex lc = null)
+        private static void SetFieldsFromVessel(VesselProject vp, LaunchComplex lc = null)
         {
-            _newLCData.sizeMax.z = Mathf.Ceil(blv.ShipSize.z * 1.2f);
-            _newLCData.sizeMax.x = Mathf.Ceil(blv.ShipSize.x * 1.2f);
-            _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);
-            _newLCData.isHumanRated = blv.humanRated;
+            _newLCData.sizeMax.z = Mathf.Ceil(vp.ShipSize.z * 1.2f);
+            _newLCData.sizeMax.x = Mathf.Ceil(vp.ShipSize.x * 1.2f);
+            _newLCData.sizeMax.y = Mathf.Ceil(vp.ShipSize.y * 1.1f);
+            _newLCData.isHumanRated = vp.humanRated;
             if (lc == null)
             {
-                _newLCData.massMax = Mathf.Ceil(blv.mass * 1.1f);
-                if (blv.mass < 1f) // special case
+                _newLCData.massMax = Mathf.Ceil(vp.mass * 1.1f);
+                if (vp.mass < 1f) // special case
                     _newLCData.massMax = 1f;
 
                 _newLCData.Name = _newName = $"Launch Complex {(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Count)}";
@@ -88,79 +88,79 @@ namespace RP0
                 }
                 else
                 {
-                    _newLCData.massMax = Mathf.Ceil(blv.mass * 1.1f);
+                    _newLCData.massMax = Mathf.Ceil(vp.mass * 1.1f);
 
                     if (_newLCData.massMax > _newLCData.MaxPossibleMass)
                     {
-                        if (blv.mass <= _newLCData.MaxPossibleMass)
+                        if (vp.mass <= _newLCData.MaxPossibleMass)
                             _newLCData.massMax = _newLCData.MaxPossibleMass;
                     }
                     else if (_newLCData.massMax < _newLCData.MinPossibleMass)
                     {
                         _newLCData.massMax = lc.MassMax;
-                        if (blv.mass < _newLCData.MassMin)
+                        if (vp.mass < _newLCData.MassMin)
                         {
                             _newLCData.massMax = _newLCData.MinPossibleMass;
-                            if (blv.mass < _newLCData.MassMin)
+                            if (vp.mass < _newLCData.MassMin)
                             {
                                 // oh well. Set what we want, and let the user see the validate fail.
-                                _newLCData.massMax = Mathf.Ceil((float)(blv.mass * 1.1d));
+                                _newLCData.massMax = Mathf.Ceil((float)(vp.mass * 1.1d));
                             }
                         }
                     }
-                    if (blv.mass < 1f) // special case
+                    if (vp.mass < 1f) // special case
                         _newLCData.massMax = 1f;
                 }
             }
 
             _newLCData.resourcesHandled.Clear();
-            foreach (var kvp in blv.resourceAmounts)
+            foreach (var kvp in vp.resourceAmounts)
             {
-                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
+                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > vp.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
                     _newLCData.resourcesHandled.Add(kvp.Key, Math.Max(_MinResourceVolume, kvp.Value * 1.1d));
             }
             SetStrings();
             SetResources();
         }
 
-        private static void SetFieldsFromVesselKeepOld(VesselProject blv, LaunchComplex lc)
+        private static void SetFieldsFromVesselKeepOld(VesselProject vp, LaunchComplex lc)
         {
             if (lc == null)
             {
-                if (blv.mass < _newLCData.MassMin && LCData.CalcMassMaxFromMin(blv.mass) < _requiredTonnage)
+                if (vp.mass < _newLCData.MassMin && LCData.CalcMassMaxFromMin(vp.mass) < _requiredTonnage)
                     return;
-                _newLCData.isHumanRated |= blv.humanRated;
+                _newLCData.isHumanRated |= vp.humanRated;
             }
             else
             {
                 SetFieldsFromLC(lc);
             }
 
-            if(_newLCData.sizeMax.z < blv.ShipSize.z)
-                _newLCData.sizeMax.z = Mathf.Ceil(blv.ShipSize.z * 1.1f);
-            if (_newLCData.sizeMax.x < blv.ShipSize.x)
-                _newLCData.sizeMax.x = Mathf.Ceil(blv.ShipSize.x * 1.1f);
-            if (_newLCData.sizeMax.y < blv.ShipSize.y)
-                _newLCData.sizeMax.y = Mathf.Ceil(blv.ShipSize.y * 1.1f);
+            if(_newLCData.sizeMax.z < vp.ShipSize.z)
+                _newLCData.sizeMax.z = Mathf.Ceil(vp.ShipSize.z * 1.1f);
+            if (_newLCData.sizeMax.x < vp.ShipSize.x)
+                _newLCData.sizeMax.x = Mathf.Ceil(vp.ShipSize.x * 1.1f);
+            if (_newLCData.sizeMax.y < vp.ShipSize.y)
+                _newLCData.sizeMax.y = Mathf.Ceil(vp.ShipSize.y * 1.1f);
 
-            if (_newLCData.massMax < blv.mass)
+            if (_newLCData.massMax < vp.mass)
             {
-                float desiredMass = Mathf.Ceil(blv.mass * 1.1f);
+                float desiredMass = Mathf.Ceil(vp.mass * 1.1f);
                 _newLCData.massMax = Math.Min(desiredMass, _newLCData.MaxPossibleMass);
                 // If we still fail, just set it.
-                if (_newLCData.massMax < blv.mass)
+                if (_newLCData.massMax < vp.mass)
                     _newLCData.massMax = desiredMass;
             }
-            else if (_newLCData.MassMin > blv.mass)
+            else if (_newLCData.MassMin > vp.mass)
             {
-                _newLCData.massMax = Math.Max(_newLCData.MinPossibleMass, LCData.CalcMassMaxFromMin(blv.mass * 0.9f));
-                if (blv.mass < _newLCData.MassMin)
+                _newLCData.massMax = Math.Max(_newLCData.MinPossibleMass, LCData.CalcMassMaxFromMin(vp.mass * 0.9f));
+                if (vp.mass < _newLCData.MassMin)
                 {
                     _newLCData.massMax = _newLCData.MinPossibleMass;
-                    if (blv.mass < _newLCData.MassMin)
+                    if (vp.mass < _newLCData.MassMin)
                     {
                         // oh well. Set what we want, and let the user see the validate fail.
-                        _newLCData.massMax = Mathf.Ceil((float)(blv.mass * 1.1d));
+                        _newLCData.massMax = Mathf.Ceil((float)(vp.mass * 1.1d));
                     }
                 }
             }
@@ -168,10 +168,10 @@ namespace RP0
             if (lc != null)
                 _requiredTonnage = _newLCData.massMax;
 
-            _newLCData.isHumanRated |= blv.humanRated;
-            foreach (var kvp in blv.resourceAmounts)
+            _newLCData.isHumanRated |= vp.humanRated;
+            foreach (var kvp in vp.resourceAmounts)
             {
-                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > blv.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
+                if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > vp.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
                 {
                     _newLCData.resourcesHandled.TryGetValue(kvp.Key, out double oldAmount);
                     if (oldAmount < kvp.Value)
@@ -765,15 +765,15 @@ namespace RP0
         {
             failedVessels = string.Empty;
             LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
-            foreach (var blv in activeLC.BuildList)
+            foreach (var vp in activeLC.BuildList)
             {
-                if (!blv.MeetsFacilityRequirements(_newLCData, null))
-                    failedVessels += "\n" + blv.shipName;
+                if (!vp.MeetsFacilityRequirements(_newLCData, null))
+                    failedVessels += "\n" + vp.shipName;
             }
-            foreach (var blv in activeLC.Warehouse)
+            foreach (var vp in activeLC.Warehouse)
             {
-                if (!blv.MeetsFacilityRequirements(_newLCData, null))
-                    failedVessels += "\n" + blv.shipName;
+                if (!vp.MeetsFacilityRequirements(_newLCData, null))
+                    failedVessels += "\n" + vp.shipName;
             }
 
             return failedVessels != string.Empty;

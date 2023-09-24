@@ -543,8 +543,8 @@ namespace RP0
                         KSCs.RemoveAt(i);
                 }
 
-                foreach (var blv in BuildPlans.Values)
-                    blv.LinkToLC(null);
+                foreach (var vp in BuildPlans.Values)
+                    vp.LinkToLC(null);
 
                 LaunchedVessel.LinkToLC(LC(LaunchedVessel.LCID));
                 RecoveredVessel.LinkToLC(LC(RecoveredVessel.LCID));
@@ -560,10 +560,10 @@ namespace RP0
                         {
                             foreach (var lc in ksc.LaunchComplexes)
                             {
-                                foreach (var blv in lc.BuildList)
-                                    blv.RecalculateFromNode(true);
-                                foreach (var blv in lc.Warehouse)
-                                    blv.RecalculateFromNode(true);
+                                foreach (var vp in lc.BuildList)
+                                    vp.RecalculateFromNode(true);
+                                foreach (var vp in lc.Warehouse)
+                                    vp.RecalculateFromNode(true);
                             }
                         }
                     }
@@ -631,20 +631,20 @@ namespace RP0
                 {
                     foreach (LaunchComplex currentLC in KSC.LaunchComplexes)
                     {
-                        foreach (VesselProject blv in currentLC.BuildList)
+                        foreach (VesselProject vp in currentLC.BuildList)
                         {
-                            if (!blv.AllPartsValid) // will cache for later use in this scene
+                            if (!vp.AllPartsValid) // will cache for later use in this scene
                             {
-                                RP0Debug.Log(blv.shipName + " contains invalid parts!");
-                                erroredVessels.Add(blv);
+                                RP0Debug.Log(vp.shipName + " contains invalid parts!");
+                                erroredVessels.Add(vp);
                             }
                         }
-                        foreach (VesselProject blv in currentLC.Warehouse)
+                        foreach (VesselProject vp in currentLC.Warehouse)
                         {
-                            if (!blv.AllPartsValid)
+                            if (!vp.AllPartsValid)
                             {
-                                RP0Debug.Log(blv.shipName + " contains invalid parts!");
-                                erroredVessels.Add(blv);
+                                RP0Debug.Log(vp.shipName + " contains invalid parts!");
+                                erroredVessels.Add(vp);
                             }
                         }
                     }
@@ -661,21 +661,21 @@ namespace RP0
             options[0] = new DialogGUIButton("Understood", () => { });
             options[1] = new DialogGUIButton("Delete Vessels", () =>
             {
-                foreach (VesselProject blv in errored)
+                foreach (VesselProject vp in errored)
                 {
-                    blv.RemoveFromBuildList(out _);
-                    KCTUtilities.AddFunds(blv.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
+                    vp.RemoveFromBuildList(out _);
+                    KCTUtilities.AddFunds(vp.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
                     //remove any associated recon_rollout
                 }
             });
 
             string txt = "The following stored/building vessels contain missing or invalid parts and have been quarantined. Either add the missing parts back into your game or delete the vessels. A file containing the ship names and missing parts has been added to your save folder.\n";
             string txtToWrite = "";
-            foreach (VesselProject blv in errored)
+            foreach (VesselProject vp in errored)
             {
-                txt += blv.shipName + "\n";
-                txtToWrite += blv.shipName + "\n";
-                txtToWrite += string.Join("\n", blv.GetMissingParts());
+                txt += vp.shipName + "\n";
+                txtToWrite += vp.shipName + "\n";
+                txtToWrite += string.Join("\n", vp.GetMissingParts());
                 txtToWrite += "\n\n";
             }
 
@@ -684,7 +684,7 @@ namespace RP0
             File.WriteAllText(filename, txtToWrite);
 
             //remove all rollout and recon items since they're invalid without the ships
-            foreach (VesselProject blv in errored)
+            foreach (VesselProject vp in errored)
             {
                 //remove any associated recon_rollout
                 foreach (SpaceCenter ksc in KSCs)
@@ -694,7 +694,7 @@ namespace RP0
                         for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
                         {
                             ReconRolloutProject rr = currentLC.Recon_Rollout[i];
-                            if (rr.associatedID == blv.shipID.ToString())
+                            if (rr.associatedID == vp.shipID.ToString())
                             {
                                 currentLC.Recon_Rollout.Remove(rr);
                                 i--;
@@ -704,7 +704,7 @@ namespace RP0
                         for (int i = 0; i < currentLC.Airlaunch_Prep.Count; i++)
                         {
                             AirlaunchProject ap = currentLC.Airlaunch_Prep[i];
-                            if (ap.associatedID == blv.shipID.ToString())
+                            if (ap.associatedID == vp.shipID.ToString())
                             {
                                 currentLC.Airlaunch_Prep.Remove(ap);
                                 i--;
@@ -1094,7 +1094,7 @@ namespace RP0
 
         private void ProcessNewFlight()
         {
-            VesselProject blv = LaunchedVessel;
+            VesselProject vp = LaunchedVessel;
             var dataModule = (KCTVesselTracker)FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
             if (dataModule != null)
             {
@@ -1104,14 +1104,14 @@ namespace RP0
                     RP0Debug.Log($"Assigned LaunchID: {dataModule.Data.LaunchID}");
                 }
 
-                // This will only fire the first time, because we make it invalid afterwards by clearing the BLV
-                if (blv.IsValid)
+                // This will only fire the first time, because we make it invalid afterwards by clearing the VP
+                if (vp.IsValid)
                 {
-                    dataModule.Data.FacilityBuiltIn = blv.FacilityBuiltIn;
-                    dataModule.Data.VesselID = blv.KCTPersistentID;
-                    dataModule.Data.LCID = blv.LCID;
+                    dataModule.Data.FacilityBuiltIn = vp.FacilityBuiltIn;
+                    dataModule.Data.VesselID = vp.KCTPersistentID;
+                    dataModule.Data.LCID = vp.LCID;
                     if (dataModule.Data.LCID != Guid.Empty)
-                        dataModule.Data.LCModID = blv.LC.ModID;
+                        dataModule.Data.LCModID = vp.LC.ModID;
                 }
             }
 
@@ -1119,28 +1119,28 @@ namespace RP0
 
             AssignCrewToCurrentVessel();
 
-            // This only fires the first time because we clear the BLV afterwards.
-            if (blv.IsValid)
+            // This only fires the first time because we clear the VP afterwards.
+            if (vp.IsValid)
             {
-                LaunchComplex vesselLC = blv.LC;
+                LaunchComplex vesselLC = vp.LC;
                 RP0Debug.Log("Attempting to remove launched vessel from build list");
-                if (blv.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
+                if (vp.RemoveFromBuildList(out _)) //Only do these when the vessel is first removed from the list
                 {
                     //Add the cost of the ship to the funds so it can be removed again by KSP
-                    FlightGlobals.ActiveVessel.vesselName = blv.shipName;
+                    FlightGlobals.ActiveVessel.vesselName = vp.shipName;
                 }
                 if (vesselLC == null) vesselLC = ActiveSC.ActiveLC;
-                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is ReconRolloutProject rollout)
+                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == vp.shipID.ToString()) is ReconRolloutProject rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
 
-                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == blv.shipID.ToString()) is AirlaunchProject alPrep)
+                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == vp.shipID.ToString()) is AirlaunchProject alPrep)
                     vesselLC.Airlaunch_Prep.Remove(alPrep);
 
                 LaunchedVessel = new VesselProject();
             }
 
             var alParams = AirlaunchParams;
-            if ((blv.IsValid && alParams.KCTVesselId == blv.shipID) ||
+            if ((vp.IsValid && alParams.KCTVesselId == vp.shipID) ||
                 alParams.KSPVesselId == FlightGlobals.ActiveVessel.id)
             {
                 if (alParams.KSPVesselId == Guid.Empty)
@@ -1437,7 +1437,7 @@ namespace RP0
                             // cache this off -- we swapped editors
                             PreEditorSwapLCID = oldLC.ID;
                         }
-                        // the BLV constructor sets our LC type to Hangar. But let's swap to it as well.
+                        // the VP constructor sets our LC type to Hangar. But let's swap to it as well.
                         if (ActiveSC.ActiveLC.LCType != LaunchComplexType.Hangar && ActiveSC.Hangar.IsOperational)
                         {
                             ActiveSC.SwitchLaunchComplex(SpaceCenter.HangarIndex);
@@ -1490,8 +1490,8 @@ namespace RP0
             EditorToolingCosts = toolingCost;
 
             // It would be better to only do this if necessary, but eh.
-            // It's not easy to know if various buried fields in the blv changed.
-            // It would *also* be nice to not run the ER before the blv is ready
+            // It's not easy to know if various buried fields in the vp changed.
+            // It would *also* be nice to not run the ER before the vp is ready
             // post craft-load, but...also eh. This is fine.
             Harmony.PatchEngineersReport.UpdateCraftStats();
         }
@@ -1607,11 +1607,11 @@ namespace RP0
                             var rr = currentLC.Recon_Rollout[i];
                             rr.IncrementProgress(UTDiff);
                             //Reset the associated launchpad id when rollback completes
-                            Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindBLVesselByID");
+                            Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindVPesselByID");
                             if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollback && rr.IsComplete()
-                                && KCTUtilities.FindVPByID(rr.LC, new Guid(rr.associatedID)) is VesselProject blv)
+                                && KCTUtilities.FindVPByID(rr.LC, new Guid(rr.associatedID)) is VesselProject vp)
                             {
-                                blv.launchSiteIndex = -1;
+                                vp.launchSiteIndex = -1;
                             }
                             Profiler.EndSample();
                         }

@@ -73,7 +73,7 @@ namespace RP0
             double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
             return Math.Max(MinEngineersConst, (int)Math.Ceiling((tngMax * 0.25d + bpMax * 0.75d) * EngineersPerPacket));
         }
-        public int MaxEngineersFor(VesselProject blv) => blv == null ? MaxEngineers : MaxEngineersFor(blv.GetTotalMass(), blv.buildPoints + blv.integrationPoints, blv.humanRated);
+        public int MaxEngineersFor(VesselProject vp) => vp == null ? MaxEngineers : MaxEngineersFor(vp.GetTotalMass(), vp.buildPoints + vp.integrationPoints, vp.humanRated);
 
         private double _strategyRateMultiplier = 1d;
         public double StrategyRateMultiplier => _strategyRateMultiplier;
@@ -255,8 +255,8 @@ namespace RP0
         public void RecalculateBuildRates()
         {
             CalculateAndSetRates();
-            foreach (var blv in BuildList)
-                blv.UpdateBuildRate();
+            foreach (var vp in BuildList)
+                vp.UpdateBuildRate();
 
             foreach (var rr in Recon_Rollout)
                 rr.UpdateBuildRate();
@@ -404,10 +404,10 @@ namespace RP0
             foreach (var al in Airlaunch_Prep)
                 al.LC = this;
 
-            foreach (var blv in BuildList)
-                blv.LinkToLC(this);
-            foreach (var blv in Warehouse)
-                blv.LinkToLC(this);
+            foreach (var vp in BuildList)
+                vp.LinkToLC(this);
+            foreach (var vp in Warehouse)
+                vp.LinkToLC(this);
 
             AddListeners();
         }

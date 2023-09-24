@@ -20,7 +20,7 @@ namespace RP0
         protected abstract TransactionReasonsRP0 transactionReason { get; }
         protected abstract TransactionReasonsRP0 transactionReasonTime { get; }
 
-        public VesselProject AssociatedBLV => KCTUtilities.FindVPByID(LC, new Guid(associatedID));
+        public VesselProject AssociatedVP => KCTUtilities.FindVPByID(LC, new Guid(associatedID));
 
         protected LaunchComplex _lc = null;
         public LaunchComplex LC

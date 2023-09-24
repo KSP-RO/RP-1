@@ -93,10 +93,10 @@ namespace RP0
             mass = vessel.GetTotalMass();
             try
             {
-                var blv = new VesselProject(vessel, ProjectType.VAB);
-                isHumanRated = blv.humanRated;
-                BP = Formula.GetReconditioningBP(blv);
-                vesselBP = blv.buildPoints + blv.integrationPoints;
+                var vp = new VesselProject(vessel, ProjectType.VAB);
+                isHumanRated = vp.humanRated;
+                BP = Formula.GetReconditioningBP(vp);
+                vesselBP = vp.buildPoints + vp.integrationPoints;
             }
             catch
             {

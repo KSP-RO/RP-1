@@ -214,7 +214,7 @@ namespace RP0
                 if (lcp != null)
                 {
                     int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.mass, lcp.vesselBP, lcp.isHumanRated) : int.MaxValue;
-                    GUILayout.Label($"Current Project: {lcp.Name} {(lcp.AssociatedBLV == null ? string.Empty : lcp.AssociatedBLV.shipName)}");
+                    GUILayout.Label($"Current Project: {lcp.Name} {(lcp.AssociatedVP == null ? string.Empty : lcp.AssociatedVP.shipName)}");
                     
                     int delta = assignDelta;
                     if (engCap < currentLC.Engineers + assignDelta)

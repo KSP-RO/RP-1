@@ -12,7 +12,7 @@ namespace RP0.UpgradeScripts
         public override string Name { get => "RP-1 Payload Upgrader"; }
         public override string Description { get => "Removes WeatherSatPayload, ComSatPayload and NavSatPayload from older Tanks"; }
         public override Version EarliestCompatibleVersion { get => new Version(2, 0, 0); }
-        protected static Version _targetVersion = new Version(2, 12, 1);
+        protected static Version _targetVersion = new Version(2, 14, 0);
         public override Version TargetVersion => _targetVersion;
 
         public override TestResult OnTest(ConfigNode node, LoadContext loadContext, ref string nodeName)

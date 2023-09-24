@@ -11,6 +11,7 @@ using System.IO;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
 using RP0.UI;
+using KSP.Localization;
 
 namespace RP0
 {
@@ -94,7 +95,7 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
-        public const int VERSION = 4;
+        public const int VERSION = 5;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
@@ -554,6 +555,47 @@ namespace RP0
 
                 if (LoadedSaveVersion < VERSION)
                 {
+                    // This upgrades to new payloads
+                    // NOTE this upgrade has to come before other upgrades
+                    // that touch ship nodes, because they will do the UpgradePipeline
+                    // and lose the resources with no signal to the player
+                    if (LoadedSaveVersion < 5)
+                    {
+                        List<VesselProject> upgradedVessels = new List<VesselProject>();
+                        foreach (var ksc in KSCs)
+                        {
+                            foreach (var lc in ksc.LaunchComplexes)
+                            {
+                                foreach (var vp in lc.BuildList)
+                                    if (FixVesselSatPayload(vp))
+                                        upgradedVessels.Add(vp);
+                                foreach (var vp in lc.Warehouse)
+                                    if (FixVesselSatPayload(vp))
+                                        upgradedVessels.Add(vp);
+                            }
+                        }
+                        if (upgradedVessels.Count > 0)
+                        {
+                            string vesselStr = string.Empty;
+                            foreach (var vp in upgradedVessels)
+                                vesselStr += Localizer.Format("#rp0_Persistence_UpgradedSatPayload_Vessel", vp.shipName, vp.LC.LCType == LaunchComplexType.Pad ? vp.LC.Name : Localizer.GetStringByTag("#rp0_Hangar"));
+
+                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         "RP0VesselsUpgradedPayload",
+                                         Localizer.GetStringByTag("#rp0_Persistence_UpgradedSatPayload_Title"),
+                                         Localizer.Format("#rp0_Persistence_UpgradedSatPayload_Text", vesselStr),
+                                         Localizer.GetStringByTag("#autoLOC_190905"),
+                                         false,
+                                         HighLogic.UISkin,
+                                         false);
+                            // Note: not hiding GUIs because this is during load
+                        }
+                    }
+
+                    // This upgrades to leader effect tracking
+                    // Note that if the vessel had a payload resource, the BP
+                    // will now be a bit wrong for editing to use the new part
                     if (LoadedSaveVersion < 4)
                     {
                         foreach (var ksc in KSCs)
@@ -567,6 +609,7 @@ namespace RP0
                             }
                         }
                     }
+                    
                     LoadedSaveVersion = VERSION;
                 }
             }
@@ -576,6 +619,29 @@ namespace RP0
                 RP0Debug.LogError("ERROR! An error while KCT loading data occurred. Things will be seriously broken!\n" + ex);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "Error Loading RP-1 Data", "ERROR! An error occurred while loading RP-1 data. Things will be seriously broken! Please report this error to RP-1 GitHub and attach the log file. The game will be UNPLAYABLE in this state!", "Understood", false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
+        }
+
+        private bool FixVesselSatPayload(VesselProject vp)
+        {
+            if (vp.resourceAmounts.ContainsKey("ComSatPayload")
+                || vp.resourceAmounts.ContainsKey("NavSatPayload")
+                || vp.resourceAmounts.ContainsKey("WeatherSatPayload"))
+            {
+                if (!vp.UpgradeShipNode())
+                {
+                    RP0Debug.LogError(vp.shipName + " has sat payload but upgrade failed! Either was already upgraded or something else went wrong. Aborting.");
+                    return false;
+                }
+
+                vp.resourceAmounts.Remove("ComSatPayload");
+                vp.resourceAmounts.Remove("NavSatPayload");
+                vp.resourceAmounts.Remove("WeatherSatPayload");
+
+                RP0Debug.Log(vp.shipName + " contains sat payload resources!");
+                return true;
+            }
+
+            return false;
         }
 
         private void TryMigrateStockKSC()

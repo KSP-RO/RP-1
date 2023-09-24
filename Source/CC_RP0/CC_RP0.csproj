@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="Behaviour\AcceptContractBehaviour.cs" />
     <Compile Include="BehaviourFactory\AcceptContractBehaviourFactory.cs" />
+    <Compile Include="ParameterFactory\VesselBuiltAtFactory.cs" />
     <Compile Include="Parameter\AvionicsCheckVesselParam.cs" />
     <Compile Include="ParameterFactory\AvionicsCheckFactory.cs" />
     <Compile Include="ContractClobberer.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Parameter\DownrangeDistanceVesselParam.cs" />
     <Compile Include="ParameterFactory\HorizontalLandingFactory.cs" />
     <Compile Include="Parameter\HorizontalLandingVesselParam.cs" />
+    <Compile Include="Parameter\VesselBuiltAt.cs" />
     <Compile Include="Requirement\ProgramActiveRequirement.cs" />
     <Compile Include="RP1ContractTracker.cs" />
     <Compile Include="Parameter\RP1NoDocking.cs" />

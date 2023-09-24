@@ -102,7 +102,8 @@ namespace RP0
             double massToUse = vLC.LCType == LaunchComplexType.Pad ? vLC.MassMax : vessel.GetTotalMass();
             double lcPortion = Math.Pow(massToUse, 0.75d) * 20d * multHR;
             double result = vesselPortion + lcPortion;
-            return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            return result * 0.5d;
         }
 
         public static double GetIntegrationCost(VesselProject vessel)
@@ -131,7 +132,8 @@ namespace RP0
                 return 0;
 
             double result = vessel.effectiveCost * 0.25d;
-            return result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetAirlaunchBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetAirlaunchBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            return result * 0.5d;
         }
 
         public static double GetAirlaunchBP(VesselProject vessel)

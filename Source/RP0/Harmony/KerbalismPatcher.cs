@@ -1,8 +1,8 @@
 ﻿using HarmonyLib;
 using System;
-using System.Reflection;
 using KERBALISM;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace RP0.Harmony
 {
@@ -202,6 +202,230 @@ namespace RP0.Harmony
             // as beta approaches zero, at the same time as the proportional increase in
             // occlusion *area* tapers off as the plane approaches the body's horizon.
             return eclipseFrac * absBeta / betaStar;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("SampleSunFactor")]
+        internal static bool Prefix_SampleSunFactor(Vessel v, double elapsedSeconds, ref double __result)
+        {
+            __result = SampleSunFactor(v, elapsedSeconds);
+            return false;
+        }
+
+        private static readonly List<Vector3d> _cbPositions = new List<Vector3d>();
+        private static readonly List<int> _cbParents = new List<int>();
+        private static readonly List<int> _occluderToPos = new List<int>();
+        private static readonly List<double> _cbSLRs = new List<double>();
+        private static bool _isBodiesInited = false;
+
+        private static void InitBodies()
+        {
+            if (_isBodiesInited)
+                return;
+
+            _isBodiesInited = true;
+
+            int c = FlightGlobals.Bodies.Count; ;
+            _cbPositions.Capacity = c;
+            _cbParents.Capacity = c;
+            _cbSLRs.Capacity = c;
+            for (int i = 0; i < c; ++i)
+            {
+                var cb = FlightGlobals.Bodies[i];
+                var parent = cb.orbitDriver?.orbit?.referenceBody;
+                if (parent != null && parent != cb)
+                {
+                    _cbParents.Add(FlightGlobals.GetBodyIndex(parent));
+                    _cbSLRs.Add(cb.orbit.semiLatusRectum);
+                }
+                else
+                {
+                    _cbParents.Add(-1);
+                    _cbSLRs.Add(1d);
+                }
+                _cbPositions.Add(new Vector3d());
+            }
+        }
+
+        internal static void FillCBPositionsAtUT(double ut, List<CelestialBody> occluders)
+        {
+            // Start from unknown positions
+            for (int i = _cbPositions.Count; i-- > 0;)
+                _cbPositions[i] = new Vector3d(double.MaxValue, double.MaxValue);
+
+            // Fill positions at UT, recursively (skipping calculated parents)
+            for (int i = occluders.Count; i-- > 0;)
+                _FillCBPositionAtUT(_occluderToPos[i], ut);
+
+            
+        }
+        internal static void _FillCBPositionAtUT(int i, double ut)
+        {
+            if (_cbPositions[i].x != double.MaxValue)
+                return;
+            
+            var cb = FlightGlobals.Bodies[i];
+            int pIdx = _cbParents[i];
+            if (pIdx == -1)
+            {
+                _cbPositions[i] = cb.position;
+                return;
+            }
+            _FillCBPositionAtUT(pIdx, ut);
+            _cbPositions[i] = _cbPositions[pIdx] + fastGetRelativePositionAtUT(cb.orbit, ut, _cbSLRs[i]);
+        }
+
+        internal static double SampleSunFactor(Vessel v, double elapsedSeconds)
+        {
+            bool isSurf = Lib.Landed(v);
+            if (v.orbitDriver == null || (!isSurf && (v.orbit == null || double.IsNaN(v.orbit.inclination))))
+                return 1d; // fail safe
+
+            UnityEngine.Profiling.Profiler.BeginSample("Kerbalism.Sim.SunFactor2");
+
+            int sunSamples = 0;
+
+            var now = Planetarium.GetUniversalTime();
+
+            var vd = v.KerbalismData();
+            var sun = vd.EnvMainSun.SunData.body;
+            var occluders = vd.EnvVisibleBodies;
+
+            // set up CB position caches
+            InitBodies();
+            foreach (var cb in occluders)
+            {
+                _occluderToPos.Add(FlightGlobals.GetBodyIndex(cb));
+            }
+
+            // Set max time to calc
+            double maxCalculation = elapsedSeconds * 1.01d;
+
+            // cache values for speed
+            double semiLatusRectum = 0d;
+            int bodyIdx = FlightGlobals.GetBodyIndex(v.orbit.referenceBody);
+            CelestialBody mb;
+            Vector3d surfPos = new Vector3d();
+            if (isSurf)
+            {
+                mb = v.mainBody;
+                surfPos = v.mainBody.GetRelSurfacePosition(v.latitude, v.longitude, v.altitude);
+            }
+            else
+            {
+                mb = null;
+                semiLatusRectum = v.orbit.semiLatusRectum;
+                maxCalculation = Math.Min(maxCalculation, v.orbit.period);
+            }
+
+            // Set up timimg
+            double stepLength = Math.Max(120d, elapsedSeconds * (1d / 40d));
+            int sampleCount;
+            if (stepLength > maxCalculation)
+            {
+                stepLength = maxCalculation;
+                sampleCount = 1;
+            }
+            else
+            {
+                sampleCount = (int)Math.Ceiling(maxCalculation / stepLength);
+                stepLength = maxCalculation / (double)sampleCount;
+            }
+
+            for (int i = sampleCount; i-- > 0;)
+            {
+                double ut = now - i * stepLength;
+                FillCBPositionsAtUT(ut, occluders);
+                Vector3d pos;
+                if (!isSurf)
+                {
+                    pos = _cbPositions[bodyIdx] + fastGetRelativePositionAtUT(v.orbit, ut, semiLatusRectum);
+                }
+                else
+                {
+                    // Doing this manually instead of calling LocalToWorld avoids a double swizzle (was LocalToWorld(surfPos.xzy).xzy )
+                    pos = surfPos.x * mb.BodyFrame.X + surfPos.y * mb.BodyFrame.Z + surfPos.z * mb.BodyFrame.Y;
+                    // Now rotate the pos based on where the body would have rotated in the past
+                    pos = QuaternionD.AngleAxis(mb.rotPeriodRecip * -i * stepLength * 360d, mb.transform.up) * pos;
+                    pos += _cbPositions[bodyIdx]; // and apply the position
+                }
+                bool vis = IsSunVisibleAtTime(v, pos, sun, occluders, ut);
+                if (vis)
+                    ++sunSamples;
+            }
+            _occluderToPos.Clear();
+
+            UnityEngine.Profiling.Profiler.EndSample();
+
+            double sunFactor = (double)sunSamples / (double)sampleCount;
+            return sunFactor;
+        }
+        
+        // We have to reimplement this code because we need to check at a specific time
+        internal static bool IsSunVisibleAtTime(Vessel vessel, Vector3d vesselPos, CelestialBody sun, List<CelestialBody> occluders, double UT)
+        {
+            // generate ray parameters
+            Vector3d sunPos = _cbPositions[FlightGlobals.GetBodyIndex(sun)] - vesselPos;
+            var sunDir = sunPos;
+            var sunDist = sunDir.magnitude;
+            sunDir /= sunDist;
+            sunDist -= sun.Radius;
+
+            // for very small bodies the analytic method is very unreliable at high latitudes
+            // So we use a modified version of the analytic method
+            bool ignoreMainbody = false;
+            if (Lib.Landed(vessel) && vessel.mainBody.Radius < 100000.0)
+            {
+                ignoreMainbody = true;
+                Vector3d mainBodyPos = _cbPositions[FlightGlobals.GetBodyIndex(vessel.mainBody)];
+                Vector3d mainBodyDir = (mainBodyPos - vesselPos).normalized;
+                double dotSunBody = Vector3d.Dot(mainBodyDir, sunDir);
+                Vector3d mainBodyDirProjected = mainBodyDir * dotSunBody;
+
+                // Assume the sun is far enough away that we can treat the line from the vessel
+                // to the sine as parallel to the line from the body center to the sun, which means
+                // we can ignore testing further if we're very close to the plane orthogonal to the
+                // sun vector, and we only care if the dot is positive
+                if (mainBodyDirProjected.sqrMagnitude > 0.0001d && dotSunBody > 0d) // approx half a degree from the pole
+                {
+                    return false;
+                }
+            }
+
+            // check if the ray intersect one of the provided bodies
+            for (int i = 0; i < occluders.Count; ++i)
+            {
+                CelestialBody occludingBody = occluders[i];
+                if (occludingBody == sun)
+                    continue;
+                if (ignoreMainbody && occludingBody == vessel.mainBody)
+                    continue;
+                
+                Vector3d toBody = _cbPositions[_occluderToPos[i]] - vesselPos;
+                // projection of origin->body center ray over the raytracing direction
+                double k = Vector3d.Dot(toBody, sunDir);
+                // the ray doesn't hit body if its minimal analytical distance along the ray is less than its radius
+                // simplified from 'start + dir * k - body.position'
+                bool hit = k > 0d && k < sunDist && (sunDir * k - toBody).magnitude < sun.Radius;
+                if (hit)
+                    return false;
+            }
+
+            return true;
+        }
+
+        internal static Vector3d fastGetRelativePositionAtUT(Orbit orbit, double UT, double semiLatusRectum)
+        {
+            double T = orbit.getObtAtUT(UT);
+
+            double M = T * orbit.meanMotion;
+            double E = orbit.solveEccentricAnomaly(M, orbit.eccentricity);
+            double v = orbit.GetTrueAnomaly(E);
+
+            double cos = Math.Cos(v);
+            double sin = Math.Sin(v);
+            Vector3d pos = semiLatusRectum / (1.0 + orbit.eccentricity * cos) * (orbit.OrbitFrame.X * cos + orbit.OrbitFrame.Y * sin);
+            return Planetarium.Zup.WorldToLocal(pos).xzy;
         }
     }
 }

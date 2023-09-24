@@ -44,6 +44,9 @@ namespace RP0
                 KCTEvents.Instance.SubscribeToEvents();
             }
 
+            // Poke Kerbalism
+            KERBALISM.Settings.UseSamplingSunFactor = true;
+
             // Cache facility ID -> enum
             foreach (var kvp in ScenarioUpgradeableFacilities.facilityStrings)
                 Database.FacilityIDToFacility[kvp.Value] = kvp.Key;

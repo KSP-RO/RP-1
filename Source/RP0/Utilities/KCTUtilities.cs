@@ -723,7 +723,7 @@ namespace RP0
             }
             foreach (ResearchProject tech in KerbalConstructionTimeData.Instance.TechList)
             {
-                if (tech.GetBlockingTech(KerbalConstructionTimeData.Instance.TechList) == null)   // Ignore items that are blocked
+                if (tech.GetBlockingTech() == null)   // Ignore items that are blocked
                     _checkTime(tech, ref shortestTime, ref thing);
             }
             foreach (ISpaceCenterProject course in Crew.CrewHandler.Instance.TrainingCourses)

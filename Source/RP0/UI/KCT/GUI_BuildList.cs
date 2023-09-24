@@ -564,7 +564,7 @@ namespace RP0
                     KerbalConstructionTimeData.Instance.UpdateTechTimes();
                 }
 
-                string blockingPrereq = t.GetBlockingTech(techList);
+                string blockingPrereq = t.GetBlockingTech();
 
                 DrawTypeIcon(t);
                 GUILayout.Label(t.techName);
@@ -716,7 +716,15 @@ namespace RP0
                     GUILayout.Space(18);
 
                 if (t.GetBuildRate() > 0d)
-                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                {
+                    if (t is ResearchProject rp)
+                    {
+                        string blockingPrereq = rp.GetBlockingTech();
+                        GUILayout.Label("Waiting for PreReq", GUILayout.Width(_width1));
+                    }
+                    else
+                        GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                }
                 else if (t is VesselProject b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else

@@ -239,7 +239,7 @@ namespace RP0
         public double IncrementProgress(double UTDiff)
         {
             // Don't progress blocked items
-            if (GetBlockingTech(KerbalConstructionTimeData.Instance.TechList) != null)
+            if (GetBlockingTech() != null)
                 return 0d;
 
             double bR = BuildRate;
@@ -296,8 +296,9 @@ namespace RP0
             return 0d;
         }
 
-        public string GetBlockingTech(PersistentObservableList<ResearchProject> techList)
+        public string GetBlockingTech()
         {
+            var techList = KerbalConstructionTimeData.Instance.TechList;
             string blockingTech = null;
 
             List<string> parentList;
@@ -306,10 +307,12 @@ namespace RP0
                 RP0Debug.LogError($"Could not find techToParent for tech {techID}");
                 return null;
             }
+            if (parentList == null)
+                return null;
 
             foreach (var t in techList)
             {
-                if (parentList != null && parentList.Contains(t.techID))
+                if (parentList.Contains(t.techID))
                 {
                     blockingTech = t.techName;
                     break;

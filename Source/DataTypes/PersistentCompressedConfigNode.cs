@@ -205,6 +205,9 @@ namespace RP0.DataTypes
 
     public class PersistentCompressedCraftNode : PersistentCompressedConfigNode
     {
+        private static bool _IsUpgradingCraft = false;
+        public static bool IsUpgradingCraft => _IsUpgradingCraft;
+
         public override ConfigNode Node
         {
             get
@@ -215,8 +218,9 @@ namespace RP0.DataTypes
                         return _node;
 
                     Version gameVersion = new Version(Versioning.version_major, Versioning.version_minor, Versioning.Revision);
-
+                    _IsUpgradingCraft = true;
                     ConfigNode newNode = KSPUpgradePipeline.Pipeline.Run(_node, SaveUpgradePipeline.LoadContext.Craft, gameVersion, out bool runSuccess, out string runInfo);
+                    _IsUpgradingCraft = false;
                     if (!runSuccess)
                     {
                         UnityEngine.Debug.LogError($"[RP-0] Error upgrading craft node with ship name {_node.GetValue("ship") ?? "<unknown"}. Information from the upgrade run: {runInfo}");

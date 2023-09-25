@@ -263,7 +263,7 @@
         "title": "G-1",
         "description": "",
         "mod": "ROEnginesExtended",
-        "cost": 149,
+        "cost": 136,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
@@ -1145,10 +1145,10 @@
     },
     {
         "name": "ROEE-XLR99A",
-        "title": "XLR99A",
+        "title": "XLR99-RM-2A",
         "description": "",
         "mod": "ROEnginesExtended",
-        "cost": 354,
+        "cost": 315,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
@@ -1160,7 +1160,7 @@
         "spacecraft": "",
         "engine_config": "XLR99",
         "upgrade": false,
-        "entry_cost_mods": "XLR99A",
+        "entry_cost_mods": "XLR99-RM-2A",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

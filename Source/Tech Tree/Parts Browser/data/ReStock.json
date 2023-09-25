@@ -4,7 +4,7 @@
         "title": "RD-0124",
         "description": "An upper stage Kerosene/LOX engine designed for new versions of the Soyuz-2 launchers. To also be used with the Angara family of launchers. Diameter: [1.7 m]. Plume configured by RealPlume.",
         "mod": "ReStock",
-        "cost": "500",
+        "cost": 364,
         "entry_cost": "0",
         "category": "STAGED",
         "info": "",

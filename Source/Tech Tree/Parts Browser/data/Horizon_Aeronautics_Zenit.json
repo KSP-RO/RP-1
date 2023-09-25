@@ -96,7 +96,7 @@
         "title": "RD-120",
         "description": "High altitude engine used in the Zenit second stage. First production Russian engine to be test fired in the United States (3 test burns were made).",
         "mod": "Horizon Aeronautics Zenit",
-        "cost": 750,
+        "cost": 587,
         "entry_cost": 3500,
         "category": "STAGED",
         "info": "",

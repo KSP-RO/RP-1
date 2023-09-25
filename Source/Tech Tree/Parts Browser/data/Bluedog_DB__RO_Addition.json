@@ -4,7 +4,7 @@
         "title": "M-1 Series",
         "description": "The massive M-1 engine. The largest, most powerful, LH2/LOX engine ever designed. Individual components have been tested. Generally designed as an upper stage engine, first stages designs with expanding nozzles were being worked on. Diameter: [4.28 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB (RO Addition)",
-        "cost": "9200",
+        "cost": 5002,
         "entry_cost": "0",
         "category": "HYDROLOX",
         "info": "",

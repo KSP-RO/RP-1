@@ -1441,7 +1441,7 @@
         "title": "TD-339",
         "description": "Single version of the surveyor engine, can be used for anything. Do NOT use on my surveyor, use the cluster of 3. Plume configured by RealPlume.",
         "mod": "RN US Probes",
-        "cost": "103",
+        "cost": 105,
         "entry_cost": "0",
         "category": "EDL",
         "info": "",

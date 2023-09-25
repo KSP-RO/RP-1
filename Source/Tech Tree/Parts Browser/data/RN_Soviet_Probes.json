@@ -257,7 +257,7 @@
         "title": "Luna 9-10 KTDU",
         "description": "Propulsion unit for Luna 9 and 10. EXTEND AND RETRACT ANTENNAS IF ANY LAG OCCURS AND THAT SHOULD FIX IT! Plume configured by RealPlume.",
         "mod": "RN Soviet Probes",
-        "cost": 100,
+        "cost": 73,
         "entry_cost": 50000,
         "category": "ORBITAL",
         "info": "Engines",

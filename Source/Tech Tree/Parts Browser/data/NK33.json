@@ -4,7 +4,7 @@
         "title": "NK-15/33",
         "description": "The NK-15 and NK-33 were originally built in the 1960s/early 1970s for the Soviet N1 and then N1F rocket, respectively. Though the N1F was scrapped, the engines survived. Aerojet acquired several NK-33 engines in the 1990s and refurbished them as AJ26-62 engines for Orbital Science's Antares launch vehicle. Modifications made by Aerojet included increasing rated thrust and equipping the engines to support gimballing. Diameter: [1.83 m]. Plume configured by RealPlume.",
         "mod": "NK33",
-        "cost": "670",
+        "cost": 584,
         "entry_cost": "13400",
         "category": "STAGED",
         "info": "",

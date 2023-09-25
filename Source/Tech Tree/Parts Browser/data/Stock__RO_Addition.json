@@ -4,7 +4,7 @@
         "title": "E-1",
         "description": "Pump-fed kerolox open cycle (gas generator) booster engine developed from LR79/89. Backup proposal for the first stage engine on the Titan 1 ICBM, and proposed first stage engine on the Saturn 1 but ultimately never flown (4 E-1s replaced with 8 H-1s). Diameter: [2.14 m]. Plume configured by RealPlume.",
         "mod": "Stock (RO Addition)",
-        "cost": 600,
+        "cost": 639,
         "entry_cost": "60000",
         "category": "ORBITAL",
         "info": "",

@@ -515,7 +515,7 @@
     },
     {
         "name": "RP0Cherenkov",
-        "title": "CR01_5 - Cherenkov Detector",
+        "title": "CD01 - Cherenkov Detector",
         "description": "",
         "mod": "RP-1 (Bluedog Model)",
         "cost": "200",

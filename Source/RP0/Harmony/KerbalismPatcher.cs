@@ -60,32 +60,32 @@ namespace RP0.Harmony
         }
     }
 
-    [HarmonyPatch(typeof(Experiment))]
-    internal class PatchKerbalism_Experiment
-    {
-        [HarmonyPostfix]
-        [HarmonyPatch("RunningUpdate")]
-        internal static void Postfix_RunningUpdate(Vessel v, Situation vs, Experiment prefab, Experiment.RunningState expState, ref string mainIssue)
-        {
-            if (expState != Experiment.RunningState.Running && expState != Experiment.RunningState.Forced)
-                return;
+    //[HarmonyPatch(typeof(Experiment))]
+    //internal class PatchKerbalism_Experiment
+    //{
+    //    [HarmonyPostfix]
+    //    [HarmonyPatch("RunningUpdate")]
+    //    internal static void Postfix_RunningUpdate(Vessel v, Situation vs, Experiment prefab, Experiment.RunningState expState, ref string mainIssue)
+    //    {
+    //        if (expState != Experiment.RunningState.Running && expState != Experiment.RunningState.Forced)
+    //            return;
 
-            if (mainIssue.Length > 0)
-                return;
+    //        if (mainIssue.Length > 0)
+    //            return;
 
-            if (!v.loaded || vs == null || prefab == null)
-                return;
+    //        if (!v.loaded || vs == null || prefab == null)
+    //            return;
 
-            if (!Database.StartCompletedExperiments.TryGetValue(v.mainBody.name, out var exps))
-                return;
+    //        if (!Database.StartCompletedExperiments.TryGetValue(v.mainBody.name, out var exps))
+    //            return;
 
-            if (!exps.TryGetValue(prefab.experiment_id, out var sits))
-                return;
+    //        if (!exps.TryGetValue(prefab.experiment_id, out var sits))
+    //            return;
 
-            if (sits.Contains(vs.ScienceSituation.ToExperimentSituations()))
-                mainIssue = Local.Module_Experiment_issue1;
-        }
-    }
+    //        if (sits.Contains(vs.ScienceSituation.ToExperimentSituations()))
+    //            mainIssue = Local.Module_Experiment_issue1;
+    //    }
+    //}
 
     [HarmonyPatch(typeof(Sim))]
     internal class PatchKerbalism_Sim

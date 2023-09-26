@@ -157,7 +157,7 @@
         "title": "Astris",
         "description": "German pressure-fed vacuum engine burning Aerozine50 and NTO. Used on the stage of the same name on the Europa I and II launch vehicles. Diameter: [2.0 m]. Plume configured by RealPlume.",
         "mod": "Ven Stock Revamp",
-        "cost": 65,
+        "cost": 33,
         "entry_cost": "6000",
         "category": "ORBITAL",
         "info": "Vernier",

@@ -1053,7 +1053,7 @@
         "title": "R-40 Series",
         "description": "A bipropellant rocket motor burning either MMH and MON3 (R-40A/B and R-42) or Hydrazine and MON3 (R-42DM). Used for attitude control, orbital insertion or as an apogee motor. Plume configured by RealPlume.",
         "mod": "Coatl Aerospace",
-        "cost": 25,
+        "cost": 16,
         "entry_cost": "3000",
         "category": "RCS",
         "info": "",
@@ -1314,7 +1314,7 @@
         "title": "TD-339",
         "description": "The Vernier System as used on the Surveyor Probes. Uses storable hypergolic propellants, has infinite restarts and is not subject to ullage. Throttleable down to 30%. Historically 3 of them were used on the Surveyor probes which landed on the Moon. Diameter: [0.13 m]. Plume configured by RealPlume.",
         "mod": "Coatl Aerospace",
-        "cost": 35,
+        "cost": 27,
         "entry_cost": "0",
         "category": "EDL",
         "info": "",
@@ -2027,7 +2027,7 @@
         "title": "KTDU-425A",
         "description": "A gas generator hypergolic vacuum engine designed for use in the 3MV, 4MV and 5MV spacecraft buses of the Mars and Venera probes.",
         "mod": "Coatl Aerospace",
-        "cost": 100,
+        "cost": 107,
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "SM Engine",
@@ -2397,7 +2397,7 @@
         "title": "Cassini Main Engine Assembly",
         "description": "",
         "mod": "Coatl Aerospace",
-        "cost": 150,
+        "cost": 20,
         "entry_cost": 3000,
         "category": "RCS",
         "info": "R-4D-11 x 2 (Cassini) 490 N each",
@@ -2409,11 +2409,13 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
-        "engine_config": "",
+        "engine_config": "R4D11",
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags":
+        [
+        ]
     },
     {
         "name": "mer_mag",

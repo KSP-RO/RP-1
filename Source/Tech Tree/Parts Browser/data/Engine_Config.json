@@ -13137,7 +13137,7 @@
         "title": "RD-8",
         "description": "",
         "mod": "Engine_Config",
-        "cost": 240,
+        "cost": 0,
         "entry_cost": "0",
         "category": "STAGED",
         "info": "",

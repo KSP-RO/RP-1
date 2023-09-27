@@ -381,7 +381,7 @@
         "description": "",
         "mod": "RP-1 (Bluedog Model)",
         "cost": "100",
-        "entry_cost": "",
+        "entry_cost": "0",
         "category": "SCIENCE",
         "info": "Micrometeorite",
         "year": "1958",

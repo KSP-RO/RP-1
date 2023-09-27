@@ -48,7 +48,7 @@
         "title": "CA-A01 Ground Plane Antenna",
         "description": "A simple omnidirectional antenna for telemetry purposes.",
         "mod": "Coatl Aerospace",
-        "cost": 2.5,
+        "cost": 3,
         "entry_cost": 250,
         "category": "COMMS",
         "info": "Omni",

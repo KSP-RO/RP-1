@@ -17,7 +17,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -42,7 +42,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_275",
         "module_tags": [
@@ -67,7 +67,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -92,7 +92,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
         "module_tags": [
@@ -117,7 +117,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -142,7 +142,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -167,7 +167,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_275",
         "module_tags": [
@@ -192,7 +192,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -217,7 +217,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
         "module_tags": [
@@ -242,7 +242,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -267,7 +267,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -292,7 +292,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_275",
         "module_tags": [
@@ -317,7 +317,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -342,7 +342,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
         "module_tags": [
@@ -367,7 +367,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -392,7 +392,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -417,7 +417,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_275",
         "module_tags": [
@@ -442,7 +442,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -467,7 +467,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
         "module_tags": [
@@ -492,7 +492,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -517,7 +517,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -542,7 +542,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_275",
         "module_tags": [
@@ -567,7 +567,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [
@@ -592,7 +592,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1000, rcsMult",
         "identical_part_name": "RCS_550",
         "module_tags": [
@@ -617,7 +617,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": "",
+        "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": [

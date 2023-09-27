@@ -4648,7 +4648,7 @@
         "description": "",
         "mod": "Engine_Config",
         "cost": 17,
-        "entry_cost": "",
+        "entry_cost": "0",
         "category": "RCS",
         "info": "",
         "year": "1968",

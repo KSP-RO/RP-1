@@ -1525,7 +1525,7 @@
         "title": "CST-100 Launch Abort Engines (LAE)",
         "description": "",
         "mod": "ROCapsules",
-        "cost": 177,
+        "cost": 166,
         "entry_cost": "0",
         "category": "COMMAND",
         "info": "",

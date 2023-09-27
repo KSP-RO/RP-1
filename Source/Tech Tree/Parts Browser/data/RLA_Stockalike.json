@@ -482,7 +482,7 @@
         "title": "RS-88 Series",
         "description": "High thrust pressure-fed hypergolic engine. Initially designed and built as a part of the NASA Bantam System Technology program, aiming for a low cost, high power propulsion system. It was later modified by Lockheed Martin for use as a launch abort engine. A derivative of the RS-88 is used by the Boeing CST-100 \"Starliner\" spacecraft for launch aborts under the name \"Launch Abort Engine - LAE\". Diameter: [1.9 m]. Plume configured by RealPlume.",
         "mod": "RLA Stockalike",
-        "cost": 175,
+        "cost": 166,
         "entry_cost": "1640",
         "category": "COMMAND",
         "info": "LES",

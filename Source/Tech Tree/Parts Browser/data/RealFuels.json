@@ -851,7 +851,7 @@
         "title": "Aestus II",
         "description": "Smaller MMH/NTO upper stage rocket engine that can also be used for orbital manuevers. [1.5 m] Plume configured by RealPlume.",
         "mod": "RealFuels",
-        "cost": 107,
+        "cost": 77,
         "entry_cost": 14000,
         "category": "ORBITAL",
         "info": "US Engine",

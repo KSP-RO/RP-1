@@ -457,7 +457,7 @@
         "title": "RD-859",
         "description": "LK lander backup engine, attach on the bottom of the lander module. Plume configured by RealPlume.",
         "mod": "RN Soyuz",
-        "cost": 126,
+        "cost": 128,
         "entry_cost": 0,
         "category": "EDL",
         "info": "Engine",

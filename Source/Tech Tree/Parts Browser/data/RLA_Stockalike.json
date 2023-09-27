@@ -209,7 +209,7 @@
         "title": "RL60 Vacuum Engine",
         "description": "Next generation cryogenic upper stage engine designed to replace the RL10, providing higher performance while maintaining the same installation envelope.  Also available in a lower 180kN thrust Vinci-180 model. Diameter: [1.5 m]. Plume configured by RealPlume.",
         "mod": "RLA Stockalike",
-        "cost": 1124,
+        "cost": 1050,
         "entry_cost": 0,
         "category": "HYDROLOX",
         "info": "",

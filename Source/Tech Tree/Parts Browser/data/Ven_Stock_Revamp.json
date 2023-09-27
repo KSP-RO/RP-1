@@ -576,7 +576,7 @@
         "title": "BE-4",
         "description": "The BE-4 is an oxidizer-rich staged combustion engine that burns LNG/LOX. Though initially developed for use on a Blue Origin launch vehicle, in 2014 United Launch Alliance announced that their new Vulcan booster, the successor to the Atlas V and Delta IV, will be powered by a pair of BE-4 engines. Plume configured by RealPlume.",
         "mod": "Ven Stock Revamp",
-        "cost": 869,
+        "cost": 1332,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "FS Engine",

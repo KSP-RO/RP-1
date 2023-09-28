@@ -865,7 +865,7 @@
         "title": "LR87-LH2 Vacuum",
         "description": "Aerojet developed the LR87 engine (used for the Titan series) into a liquid hydrogen/oxygen engine for prospective USAF contracts in the 1958-1960 period, at the same time Aerojet was converting the LR87 to burn Aerozine and NTO. NASA selected the J-2 over the LR87-LH2, however, and it was canceled in 1961. This version represents a version of the engine with a larger nozzle optimized for vacuum use. Plume configured by RealPlume.",
         "mod": "Stock (RO Config)",
-        "cost": 700,
+        "cost": 974,
         "entry_cost": 0,
         "category": "HYDROLOX",
         "info": "",

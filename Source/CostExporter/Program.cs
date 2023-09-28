@@ -101,8 +101,11 @@ namespace CostExporter
                 bool missing = true;
                 foreach (var sub in parts)
                 {
-                    if (string.Equals(sub.engine_config, c.config, StringComparison.InvariantCultureIgnoreCase)
+                    if (string.Equals(sub.engine_config, c.name, StringComparison.InvariantCultureIgnoreCase)
                         || string.Equals(sub.title, c.name, StringComparison.InvariantCultureIgnoreCase)
+                        || string.Equals(sub.entry_cost_mods, c.name, StringComparison.InvariantCultureIgnoreCase)
+                        || string.Equals(sub.engine_config, c.config, StringComparison.InvariantCultureIgnoreCase)
+                        || string.Equals(sub.title, c.config, StringComparison.InvariantCultureIgnoreCase)
                         || string.Equals(sub.entry_cost_mods, c.config, StringComparison.InvariantCultureIgnoreCase))
                     {
 
@@ -138,8 +141,11 @@ namespace CostExporter
                 {
                     foreach (var sub in data)
                     {
-                        if (string.Equals(sub.engine_config, c.config, StringComparison.InvariantCultureIgnoreCase)
+                        if (string.Equals(sub.engine_config, c.name, StringComparison.InvariantCultureIgnoreCase)
                             || string.Equals(sub.title, c.name, StringComparison.InvariantCultureIgnoreCase)
+                            || string.Equals(sub.entry_cost_mods, c.name, StringComparison.InvariantCultureIgnoreCase)
+                            || string.Equals(sub.engine_config, c.config, StringComparison.InvariantCultureIgnoreCase)
+                            || string.Equals(sub.title, c.config, StringComparison.InvariantCultureIgnoreCase)
                             || string.Equals(sub.entry_cost_mods, c.config, StringComparison.InvariantCultureIgnoreCase))
                         {
                             if (sub.cost != c.cost)

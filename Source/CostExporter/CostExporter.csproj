@@ -12,6 +12,8 @@
   
   <PropertyGroup>
     <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+    <ApplicationIcon />
+    <StartupObject />
   </PropertyGroup>
 
 </Project>

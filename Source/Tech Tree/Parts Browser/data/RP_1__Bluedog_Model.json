@@ -523,7 +523,7 @@
         "category": "SCIENCE",
         "info": "Cosmic Ray",
         "year": "1963",
-        "technology": "basicScience",
+        "technology": "scienceHuman",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

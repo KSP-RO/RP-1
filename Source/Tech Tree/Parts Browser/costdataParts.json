@@ -550,7 +550,7 @@
 "cost": 163
 },
 {
-"name": "R-4D-11-164",
+"name": "R-4D-11",
 "config": "R4D11",
 "cost": 10
 },
@@ -625,7 +625,7 @@
 "cost": 2650
 },
 {
-"name": "AJ23-151-OMS",
+"name": "AJ10-151-OMS",
 "config": "AJ10_Transtar",
 "cost": 138
 },

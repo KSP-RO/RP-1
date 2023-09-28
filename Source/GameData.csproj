@@ -1055,6 +1055,9 @@
     <Content Include="..\GameData\RP-1\Tree\TREE-Parts.cfg">
       <Link>Tree\TREE-Parts.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Tree\TREE-SubConfigs.cfg">
+      <Link>Tree\TREE-SubConfigs.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Tree\UpgradeCleanup.cfg">
       <Link>Tree\UpgradeCleanup.cfg</Link>
     </Content>

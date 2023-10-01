@@ -105,7 +105,7 @@ namespace RP0
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
                                          HighLogic.UISkin,
-                                         false).HideGUIsWhilePopup();
+                                         false);
         }
 
         private void ShowAirlaunchTip()

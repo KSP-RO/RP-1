@@ -95,7 +95,7 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
-        public const int VERSION = 5;
+        public const int VERSION = 6;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
@@ -766,16 +766,6 @@ namespace RP0
                                 i--;
                             }
                         }
-
-                        for (int i = 0; i < currentLC.Airlaunch_Prep.Count; i++)
-                        {
-                            AirlaunchProject ap = currentLC.Airlaunch_Prep[i];
-                            if (ap.associatedID == vp.shipID.ToString())
-                            {
-                                currentLC.Airlaunch_Prep.Remove(ap);
-                                i--;
-                            }
-                        }
                     }
                 }
             }
@@ -997,7 +987,7 @@ namespace RP0
 
             double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
             double fundDelta = Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
-                + GetConstructionCostOverTime(deltaTime) + GetRolloutCostOverTime(deltaTime) + GetAirlaunchCostOverTime(deltaTime)
+                + GetConstructionCostOverTime(deltaTime) + GetRolloutCostOverTime(deltaTime)
                 + Programs.ProgramHandler.Instance.GetDisplayProgramFunding(deltaTime);
 
             return fundDelta;
@@ -1059,7 +1049,7 @@ namespace RP0
             double delta = 0;
             foreach (var rr in lc.Recon_Rollout)
             {
-                if (rr.RRType != ReconRolloutProject.RolloutReconType.Rollout)
+                if (rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount)
                     continue;
 
                 double t = rr.GetTimeLeft();
@@ -1067,36 +1057,7 @@ namespace RP0
                 if (t > time)
                     fac = time / t;
 
-                delta += CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -rr.cost * (1d - rr.progress / rr.BP) * fac);
-            }
-
-            return delta;
-        }
-
-        public double GetAirlaunchCostOverTime(double time)
-        {
-            double delta = 0;
-            foreach (var ksc in KSCs)
-            {
-                delta += GetAirlaunchCostOverTime(time, ksc);
-            }
-            return delta;
-        }
-
-        public double GetAirlaunchCostOverTime(double time, SpaceCenter ksc)
-        {
-            double delta = 0;
-            foreach (var al in ksc.Hangar.Airlaunch_Prep)
-            {
-                if (al.direction == AirlaunchProject.PrepDirection.Mount)
-                {
-                    double t = al.GetTimeLeft();
-                    double fac = 1d;
-                    if (t > time)
-                        fac = time / t;
-
-                    delta += CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -al.cost * (1d - al.progress / al.BP) * fac);
-                }
+                delta += CurrencyUtils.Funds(rr.TransactionReason, -rr.cost * (1d - rr.progress / rr.BP) * fac);
             }
 
             return delta;
@@ -1198,9 +1159,6 @@ namespace RP0
                 if (vesselLC == null) vesselLC = ActiveSC.ActiveLC;
                 if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == vp.shipID.ToString()) is ReconRolloutProject rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
-
-                if (vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == vp.shipID.ToString()) is AirlaunchProject alPrep)
-                    vesselLC.Airlaunch_Prep.Remove(alPrep);
 
                 LaunchedVessel = new VesselProject();
             }
@@ -1670,6 +1628,9 @@ namespace RP0
                         for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
                         {
                             // These work in parallel so no need to track excess time
+                            // FIXME: that's not _quite_ true, but it's close enough: when one
+                            // completes, the others speed up, but that's hard to deal with here
+                            // so I think we just eat the cost.
                             var rr = currentLC.Recon_Rollout[i];
                             rr.IncrementProgress(UTDiff);
                             //Reset the associated launchpad id when rollback completes
@@ -1682,13 +1643,7 @@ namespace RP0
                             Profiler.EndSample();
                         }
 
-                        currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.IsComplete());
-
-                        // These also are in parallel
-                        for (int i = currentLC.Airlaunch_Prep.Count; i-- > 0;)
-                            currentLC.Airlaunch_Prep[i].IncrementProgress(UTDiff);
-
-                        currentLC.Airlaunch_Prep.RemoveAll(ap => ap.direction != AirlaunchProject.PrepDirection.Mount && ap.IsComplete());
+                        currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount && rr.IsComplete());
                     }
 
                     for (int i = ksc.Constructions.Count; i-- > 0;)

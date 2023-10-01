@@ -44,8 +44,6 @@ namespace RP0
         public PersistentObservableList<PadConstructionProject> PadConstructions = new PersistentObservableList<PadConstructionProject>();
         [Persistent]
         public PersistentObservableList<ReconRolloutProject> Recon_Rollout = new PersistentObservableList<ReconRolloutProject>();
-        [Persistent]
-        public PersistentObservableList<AirlaunchProject> Airlaunch_Prep = new PersistentObservableList<AirlaunchProject>();
 
         private double _rate;
         private double _rateHRCapped;
@@ -140,7 +138,6 @@ namespace RP0
             BuildList.Updated += updated;
             Warehouse.Updated += updated;
             Recon_Rollout.Updated += lcpUpdated;
-            Airlaunch_Prep.Updated += lcpUpdated;
         }
         #endregion
 
@@ -204,12 +201,12 @@ namespace RP0
             }
         }
 
-        public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Airlaunch_Prep.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
+        public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
 
-        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0 || Airlaunch_Prep.Count > 0;
-        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning) && Airlaunch_Prep.Count == 0;
-        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0 && Airlaunch_Prep.Count == 0;
-        public bool CanModifyReal => Recon_Rollout.Count == 0 && Airlaunch_Prep.Count == 0;
+        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0;
+        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning);
+        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0;
+        public bool CanModifyReal => Recon_Rollout.Count == 0;
         public bool CanIntegrate => ProjectBPTotal == 0d;
 
         private double _projectBPTotal = -1d;
@@ -219,15 +216,6 @@ namespace RP0
         {
             _projectBPTotal = 0d;
             foreach (var r in Recon_Rollout)
-            {
-                if (!r.IsBlocking || r.IsComplete())
-                    continue;
-                double amt = r.BP;
-                if (amt < 0d)
-                    amt = -amt;
-                _projectBPTotal += amt;
-            }
-            foreach (var r in Airlaunch_Prep)
             {
                 if (!r.IsBlocking || r.IsComplete())
                     continue;
@@ -260,9 +248,6 @@ namespace RP0
 
             foreach (var rr in Recon_Rollout)
                 rr.UpdateBuildRate();
-
-            foreach (var al in Airlaunch_Prep)
-                al.UpdateBuildRate();
 
             RecalculateProjectBP();
 
@@ -398,11 +383,31 @@ namespace RP0
         {
             ConfigNode.LoadObjectFromConfig(this, node);
 
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KerbalConstructionTimeData.VERSION)
+            {
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 6)
+                {
+                    var alNode = node.GetNode("Airlaunch_Prep");
+                    if (alNode.nodes.Count > 0)
+                    {
+                        PersistentList<ReconRolloutProject> temp = new PersistentList<ReconRolloutProject>();
+                        foreach (ConfigNode item in alNode.nodes)
+                        {
+                            ReconRolloutProject.RolloutReconType rrType = ReconRolloutProject.RolloutReconType.AirlaunchMount;
+                            if (item.GetValue("direction") == "Unmount")
+                                rrType = ReconRolloutProject.RolloutReconType.AirlaunchUnmount;
+
+                            item.AddValue("RRType", rrType);
+                            item.AddValue("launchPadID", "");
+                        }
+                        temp.Load(alNode);
+                        Recon_Rollout.AddRange(temp);
+                    }
+                }
+            }
+
             foreach (var rr in Recon_Rollout)
                 rr.LC = this;
-
-            foreach (var al in Airlaunch_Prep)
-                al.LC = this;
 
             foreach (var vp in BuildList)
                 vp.LinkToLC(this);

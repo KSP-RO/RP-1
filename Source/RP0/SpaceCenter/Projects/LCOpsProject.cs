@@ -17,7 +17,7 @@ namespace RP0
         private bool _wasComplete;
         protected double _buildRate = -1;
 
-        protected abstract TransactionReasonsRP0 transactionReason { get; }
+        public abstract TransactionReasonsRP0 TransactionReason { get; }
         protected abstract TransactionReasonsRP0 transactionReasonTime { get; }
 
         public VesselProject AssociatedVP => KCTUtilities.FindVPByID(LC, new Guid(associatedID));
@@ -36,14 +36,6 @@ namespace RP0
                             if (this is ReconRolloutProject r)
                             {
                                 if (lc.Recon_Rollout.Contains(r))
-                                {
-                                    _lc = lc;
-                                    break;
-                                }
-                            }
-                            else if(this is AirlaunchProject a)
-                            {
-                                if (lc.Airlaunch_Prep.Contains(a))
                                 {
                                     _lc = lc;
                                     break;
@@ -199,13 +191,6 @@ namespace RP0
 
                 AddLCP(r);
             }
-            foreach (var r in _lc.Airlaunch_Prep)
-            {
-                if (r == this || !r.IsBlocking || r.IsComplete())
-                    continue;
-
-                AddLCP(r);
-            }
 
             double accumTime = 0d;
             while (_lcpData.Count > 0)
@@ -254,11 +239,6 @@ namespace RP0
         public static double GetTotalBlockingProjectTime(LaunchComplex lc)
         {
             foreach (var r in lc.Recon_Rollout)
-            {
-                if (r.IsBlocking && !r.IsComplete())
-                    AddLCP(r);
-            }
-            foreach (var r in lc.Airlaunch_Prep)
             {
                 if (r.IsBlocking && !r.IsComplete())
                     AddLCP(r);
@@ -319,18 +299,6 @@ namespace RP0
                     lcp = r;
                 }
             }
-            foreach (var r in lc.Airlaunch_Prep)
-            {
-                if (r.IsComplete())
-                    continue;
-
-                double time = r.GetBaseTimeLeft();
-                if (time < minTime)
-                {
-                    minTime = time;
-                    lcp = r;
-                }
-            }
             return lcp;
         }
 
@@ -358,7 +326,7 @@ namespace RP0
 
             if (KSPUtils.CurrentGameIsCareer() && HasCost && this.cost > 0)
             {
-                var reason = transactionReason;
+                var reason = TransactionReason;
                 if (!CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d).CanAfford()) //If they can't afford to continue the rollout, progress stops
                 {
                     progress = progBefore;

@@ -5,21 +5,16 @@ namespace RP0
 {
     public class ReconRolloutProject : LCOpsProject
     {
-        public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None };
+        public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None, AirlaunchMount, AirlaunchUnmount };
 
-        public const string ReconditioningStr = "Reconditioning";
-        public const string RolloutStr = "Rollout";
-        public const string RollbackStr = "Rollback";
-        public const string RecoveryStr = "Recover";
-        public const string UnknownStr = "Unknown Situation";
-
-        public override string Name => RRInverseDict[RRType];
+        public override string Name => KSP.Localization.Localizer.Format("#rp0_LCOps_Type_" + RRType.ToString())
+            ;
         [Persistent]
         public string launchPadID = "LaunchPad";
         [Persistent]
         public RolloutReconType RRType = RolloutReconType.None;
 
-        protected override TransactionReasonsRP0 transactionReason
+        public override TransactionReasonsRP0 TransactionReason
         {
             get
             {
@@ -32,6 +27,9 @@ namespace RP0
                         return TransactionReasonsRP0.VesselRecovery;
                     case RolloutReconType.Reconditioning:
                         return TransactionReasonsRP0.StructureRepair;
+                    case RolloutReconType.AirlaunchMount:
+                    case RolloutReconType.AirlaunchUnmount:
+                        return TransactionReasonsRP0.AirLaunchRollout;
 
                     default:
                         return TransactionReasonsRP0.None;
@@ -52,6 +50,9 @@ namespace RP0
                         return TransactionReasonsRP0.RateRecovery;
                     case RolloutReconType.Reconditioning:
                         return TransactionReasonsRP0.RateReconditioning;
+                    case RolloutReconType.AirlaunchMount:
+                    case RolloutReconType.AirlaunchUnmount:
+                        return TransactionReasonsRP0.RateAirlaunch;
 
                     default:
                         return TransactionReasonsRP0.None;
@@ -59,28 +60,19 @@ namespace RP0
             }
         }
 
-        public static readonly Dictionary<string, RolloutReconType> RRDict = new Dictionary<string, RolloutReconType>()
-        {
-            {  ReconditioningStr, RolloutReconType.Reconditioning },
-            {  RolloutStr, RolloutReconType.Rollout },
-            {  RollbackStr, RolloutReconType.Rollback },
-            {  RecoveryStr, RolloutReconType.Recovery },
-            {  UnknownStr, RolloutReconType.None }
-        };
-
-        public static readonly Dictionary<RolloutReconType, string> RRInverseDict = new Dictionary<RolloutReconType, string>()
-        {
-            {  RolloutReconType.Reconditioning, ReconditioningStr },
-            {  RolloutReconType.Rollout, RolloutStr },
-            {  RolloutReconType.Rollback, RollbackStr },
-            {  RolloutReconType.Recovery, RecoveryStr },
-            {  RolloutReconType.None, UnknownStr }
-        };
-
         public ReconRolloutProject() : base()
         {
         }
 
+        /// <summary>
+        /// Only used for non-airlaunch cases
+        /// (either recovery or reconditioning)
+        /// </summary>
+        /// <param name="vessel"></param>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <param name="launchSite"></param>
+        /// <param name="lc"></param>
         public ReconRolloutProject(Vessel vessel, RolloutReconType type, string id, string launchSite, LaunchComplex lc)
         {
             RRType = type;
@@ -111,6 +103,14 @@ namespace RP0
                 BP += BP * (KSCDistance / maxDist);
             }
         }
+
+        /// <summary>
+        /// Called for everything but reconditioning and recovery
+        /// </summary>
+        /// <param name="vessel"></param>
+        /// <param name="type"></param>
+        /// <param name="id"></param>
+        /// <param name="launchSite"></param>
         public ReconRolloutProject(VesselProject vessel, RolloutReconType type, string id, string launchSite = "")
         {
             RRType = type;
@@ -136,11 +136,18 @@ namespace RP0
                 case RolloutReconType.Recovery:
                     BP = vessel.FacilityBuiltIn == EditorFacility.SPH ? Formula.GetRecoveryBPSPH(vessel) : Formula.GetRecoveryBPVAB(vessel);
                     break;
+
+                case RolloutReconType.AirlaunchMount:
+                case RolloutReconType.AirlaunchUnmount:
+                    BP = Formula.GetAirlaunchBP(vessel);
+                    break;
             }
 
             if (type == RolloutReconType.Rollout)
                 cost = Formula.GetRolloutCost(vessel);
-            else if (type == RolloutReconType.Rollback)
+            else if (type == RolloutReconType.AirlaunchMount)
+                cost = Formula.GetAirlaunchCost(vessel);
+            else if (type == RolloutReconType.Rollback || type == RolloutReconType.AirlaunchUnmount)
                 progress = BP;
             else if (type == RolloutReconType.Recovery)
             {
@@ -150,22 +157,36 @@ namespace RP0
             } 
         }
 
-        public void SwapRolloutType()
+        public void SwitchDirection()
         {
-            if (RRType == RolloutReconType.Rollout)
-                RRType = RolloutReconType.Rollback;
-            else if (RRType == RolloutReconType.Rollback)
-                RRType = RolloutReconType.Rollout;
+            switch (RRType)
+            {
+                case RolloutReconType.Rollout: RRType = RolloutReconType.Rollback; break;
+                case RolloutReconType.Rollback: RRType = RolloutReconType.Rollout; break;
+                case RolloutReconType.AirlaunchMount: RRType = RolloutReconType.AirlaunchUnmount; break;
+                case RolloutReconType.AirlaunchUnmount: RRType = RolloutReconType.AirlaunchMount; break;
+            }
         }
 
         public override bool IsCapped => RRType != RolloutReconType.Reconditioning;
         public override bool IsBlocking => RRType != RolloutReconType.Reconditioning;
 
-        public override bool IsReversed => RRType == RolloutReconType.Rollback;
+        public override bool IsReversed => RRType == RolloutReconType.Rollback || RRType == RolloutReconType.AirlaunchUnmount;
 
-        public override bool HasCost => RRType == RolloutReconType.Rollout;
+        public override bool HasCost => RRType == RolloutReconType.Rollout || RRType == RolloutReconType.AirlaunchMount;
 
-        public override ProjectType GetProjectType() => ProjectType.Reconditioning;
+        public override ProjectType GetProjectType()
+        {
+            switch (RRType)
+            {
+                case RolloutReconType.AirlaunchMount:
+                case RolloutReconType.AirlaunchUnmount:
+                    return ProjectType.AirLaunch;
+
+                default:
+                    return ProjectType.Reconditioning;
+            }
+        }
 
         public override void Load(ConfigNode node)
         {

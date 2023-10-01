@@ -715,8 +715,6 @@ namespace RP0
                         _checkTime(vp, ref shortestTime, ref thing);
                     foreach (ISpaceCenterProject rr in LC.Recon_Rollout)
                         _checkTime(rr, ref shortestTime, ref thing);
-                    foreach (ISpaceCenterProject ap in LC.Airlaunch_Prep)
-                        _checkTime(ap, ref shortestTime, ref thing);
                 }
                 foreach (ISpaceCenterProject ub in KSC.Constructions)
                     _checkTime(ub, ref shortestTime, ref thing);

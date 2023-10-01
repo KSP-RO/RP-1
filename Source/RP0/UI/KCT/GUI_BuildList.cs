@@ -161,11 +161,11 @@ namespace RP0
                 }
                 else if (buildItem.GetProjectType() == ProjectType.AirLaunch)
                 {
-                    AirlaunchProject ar = buildItem as AirlaunchProject;
+                    ReconRolloutProject ar = buildItem as ReconRolloutProject;
                     VesselProject associated = ar.AssociatedVP;
                     if (associated != null)
                     {
-                        if (ar.direction == AirlaunchProject.PrepDirection.Mount)
+                        if (ar.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
                             txt = $"{associated.shipName} Mounting";
                         else
                             txt = $"{associated.shipName} Unmounting";
@@ -630,7 +630,6 @@ namespace RP0
                         _allItems.Add(b);
                     }
                     _allItems.AddRange(l.Recon_Rollout);
-                    _allItems.AddRange(l.Airlaunch_Prep);
                 }
                 accTime = 0d;
                 foreach (var c in k.Constructions)
@@ -681,14 +680,14 @@ namespace RP0
                     {
                         if (r.RRType == ReconRolloutProject.RolloutReconType.Rollout)
                             GUILayout.Label($"{vp.LC.Name}: Rollout {vp.shipName} to {r.launchPadID}");
+                        else if(r.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount || r.RRType == ReconRolloutProject.RolloutReconType.AirlaunchUnmount)
+                            GUILayout.Label($"{r.GetItemName()}: {vp.shipName}");
                         else
                             GUILayout.Label($"{vp.LC.Name}: {r.GetItemName()} {vp.shipName}");
                     }
                     else
                         GUILayout.Label(r.GetItemName());
                 }
-                else if (t is AirlaunchProject a && (vp = a.AssociatedVP) != null)
-                    GUILayout.Label($"{a.GetItemName()}: {vp.shipName}");
                 else if (t is VesselProject b)
                     GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
                 else if (t is ConstructionProject constr)
@@ -813,7 +812,7 @@ namespace RP0
                     return _rocketTexture;
 
                 case ProjectType.AirLaunch:
-                    if (b is AirlaunchProject a && a.direction == AirlaunchProject.PrepDirection.Mount)
+                    if (b is ReconRolloutProject a && a.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
                         return _airlaunchTexture;
                     return _hangarTexture;
 
@@ -1036,7 +1035,7 @@ namespace RP0
                 else if (isPad && rr.RRType == ReconRolloutProject.RolloutReconType.Rollout && rr.launchPadID == launchSite)
                     padRollout = rr; // something else is being rollout out to this launchsite.
             }
-            AirlaunchProject airlaunchPrep = !isPad ? vesselLC.Airlaunch_Prep.FirstOrDefault(r => r.associatedID == vpID) : null;
+            ReconRolloutProject airlaunchPrep = !isPad ? vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == vpID) : null;
 
             ISpaceCenterProject typeIcon = rollout ?? rollback ?? recovery ?? null;
             typeIcon = typeIcon ?? airlaunchPrep;
@@ -1197,14 +1196,14 @@ namespace RP0
                     else if (!HighLogic.LoadedSceneIsEditor && rollback == null && rollout != null && !rollout.IsComplete() &&
                              GUILayout.Button(DTUtils.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+ vpID), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
                     {
-                        rollout.SwapRolloutType();
+                        rollout.SwitchDirection();
                     }
                     else if (!HighLogic.LoadedSceneIsEditor && rollback != null && !rollback.IsComplete())
                     {
                         if (rollout == null && padRollout == null)
                         {
                             if (GUILayout.Button(DTUtils.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ vpID), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
-                                rollback.SwapRolloutType();
+                                rollback.SwitchDirection();
                         }
                         else
                         {
@@ -1230,7 +1229,7 @@ namespace RP0
                         }
                         if (GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button("Roll Back", GUILayout.ExpandWidth(false)))
                         {
-                            rollout.SwapRolloutType();
+                            rollout.SwitchDirection();
                         }
                         else if (!GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button(launchTxt, btnColor, GUILayout.ExpandWidth(false)))
                         {
@@ -1295,7 +1294,7 @@ namespace RP0
                     {
                         if (airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
                         {
-                            var tmpPrep = new AirlaunchProject(b, vpID);
+                            var tmpPrep = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.AirlaunchMount, vpID);
                             if (tmpPrep.cost > 0d)
                                 GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
                             GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ vpID) : new GUIContent("Prep for airlaunch");
@@ -1308,7 +1307,7 @@ namespace RP0
                                 }
                                 else
                                 {
-                                    vesselLC.Airlaunch_Prep.Add(tmpPrep);
+                                    vesselLC.Recon_Rollout.Add(tmpPrep);
                                 }
                             }
                             if (Event.current.type == EventType.Repaint)
@@ -1626,7 +1625,7 @@ namespace RP0
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
-            if (b.Type == ProjectType.SPH && b.LC.Airlaunch_Prep.Find(a => a.associatedID == vpID) == null && GUILayout.Button("Select LaunchSite"))
+            if (b.Type == ProjectType.SPH && b.LC.Recon_Rollout.Find(a => a.associatedID == vpID) == null && GUILayout.Button("Select LaunchSite"))
             {
                 _launchSites = KCTUtilities.GetLaunchSites(b.Type == ProjectType.VAB);
                 if (_launchSites.Any())
@@ -1700,7 +1699,7 @@ namespace RP0
             ReconRolloutProject vpRollout = b.LC.Recon_Rollout.Find(rr => rr.RRType == ReconRolloutProject.RolloutReconType.Rollout && rr.associatedID == vpID);
             if (vpRollout != null && GUILayout.Button("Rollback"))
             {
-                vpRollout.SwapRolloutType();
+                vpRollout.SwitchDirection();
                 GUIStates.ShowBLPlus = false;
             }
 

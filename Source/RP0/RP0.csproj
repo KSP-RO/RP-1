@@ -255,7 +255,6 @@
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="Utilities\ECMHelper.cs" />
     <Compile Include="SpaceCenter\Projects\ISpaceCenterProject.cs" />
-    <Compile Include="SpaceCenter\Projects\AirlaunchProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselProject.cs" />
     <Compile Include="UI\KCT\GUI_BuildPlans.cs" />
     <Compile Include="SpaceCenter\KCTEvents.cs" />

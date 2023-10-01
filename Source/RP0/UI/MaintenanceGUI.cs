@@ -185,8 +185,7 @@ namespace RP0
             double rolloutCost = 0d;
             try
             {
-                rolloutCost = KerbalConstructionTimeData.Instance.GetRolloutCostOverTime(PeriodFactor * 86400d)
-                    + KerbalConstructionTimeData.Instance.GetAirlaunchCostOverTime(PeriodFactor * 86400d);
+                rolloutCost = KerbalConstructionTimeData.Instance.GetRolloutCostOverTime(PeriodFactor * 86400d);
                 GUILayout.Label("Rollout/Airlaunch Prep", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label(FormatCost(rolloutCost), RightLabel, GUILayout.Width(160));
             }

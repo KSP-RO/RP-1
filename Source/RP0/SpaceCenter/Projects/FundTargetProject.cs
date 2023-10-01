@@ -75,6 +75,8 @@ namespace RP0
             double timeUpper = MaxTime;
             
             double bestTime = -1d;
+            double lastFunds = 0d;
+            bool lastDir = false;
             for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > epsilonTime;)
             {
                 double time = (timeUpper + timeLower) * 0.5d;
@@ -89,8 +91,44 @@ namespace RP0
                 }
                 else
                 {
-                    timeLower = time;
+                    // On the first iteration, check if delta
+                    // is negative and if so lower upper bound
+                    if (i == (MaxIterations - 1))
+                    {
+                        if (fundDelta < 0d)
+                            timeUpper = time;
+                        else
+                            timeLower = time;
+                    }
+                    else
+                    {
+                        // moving in right direction
+                        if (lastFunds < fundDelta)
+                        {
+                            if (lastDir)
+                                timeLower = time;
+                            else
+                                timeUpper = time;
+                        }
+                        else
+                        {
+                            // moving in wrong direction--last iteration
+                            // was better
+                            if (lastDir)
+                            {
+                                timeUpper = time;
+                                timeLower = timeLower - (time - timeLower) * 0.75d;
+                            }
+                            else
+                            {
+                                timeLower = time;
+                                timeUpper = timeUpper + (timeUpper - time) * 0.75d;
+                            }
+                        }
+                    }
                 }
+                lastFunds = fundDelta;
+                lastDir = timeLower == time;
             }
 
             if (bestTime > 0d)

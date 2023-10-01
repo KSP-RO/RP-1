@@ -208,6 +208,12 @@ namespace RP0.Harmony
         [HarmonyPatch("SampleSunFactor")]
         internal static bool Prefix_SampleSunFactor(Vessel v, double elapsedSeconds, ref double __result)
         {
+            double oldRes = __result;
+            if (v.vesselName == "Gemini dockingtarget/scisat")
+            {
+                __result = 0d;
+            }
+            __result = oldRes;
             __result = SampleSunFactor(v, elapsedSeconds);
             return false;
         }
@@ -288,8 +294,9 @@ namespace RP0.Harmony
             var now = Planetarium.GetUniversalTime();
 
             var vd = v.KerbalismData();
-            var sun = vd.EnvMainSun.SunData.body;
-            var occluders = vd.EnvVisibleBodies;
+            CelestialBody sun = vd.EnvMainSun.SunData.body;
+            int sunIdx = FlightGlobals.GetBodyIndex(sun);
+            List<CelestialBody> occluders = vd.EnvVisibleBodies;
 
             // set up CB position caches
             InitBodies();
@@ -349,7 +356,7 @@ namespace RP0.Harmony
                     pos = QuaternionD.AngleAxis(mb.rotPeriodRecip * -i * stepLength * 360d, mb.transform.up) * pos;
                     pos += _cbPositions[bodyIdx]; // and apply the position
                 }
-                bool vis = IsSunVisibleAtTime(v, pos, sun, occluders, ut);
+                bool vis = IsSunVisibleAtTime(v, pos, sun, sunIdx, occluders, ut);
                 if (vis)
                     ++sunSamples;
             }
@@ -362,10 +369,10 @@ namespace RP0.Harmony
         }
         
         // We have to reimplement this code because we need to check at a specific time
-        internal static bool IsSunVisibleAtTime(Vessel vessel, Vector3d vesselPos, CelestialBody sun, List<CelestialBody> occluders, double UT)
+        internal static bool IsSunVisibleAtTime(Vessel vessel, Vector3d vesselPos, CelestialBody sun, int sunIdx, List<CelestialBody> occluders, double UT)
         {
             // generate ray parameters
-            Vector3d sunPos = _cbPositions[FlightGlobals.GetBodyIndex(sun)] - vesselPos;
+            Vector3d sunPos = _cbPositions[sunIdx] - vesselPos;
             var sunDir = sunPos;
             var sunDist = sunDir.magnitude;
             sunDir /= sunDist;
@@ -406,7 +413,7 @@ namespace RP0.Harmony
                 double k = Vector3d.Dot(toBody, sunDir);
                 // the ray doesn't hit body if its minimal analytical distance along the ray is less than its radius
                 // simplified from 'start + dir * k - body.position'
-                bool hit = k > 0d && k < sunDist && (sunDir * k - toBody).magnitude < sun.Radius;
+                bool hit = k > 0d && k < sunDist && (sunDir * k - toBody).magnitude < occludingBody.Radius;
                 if (hit)
                     return false;
             }

@@ -38,12 +38,12 @@
   <ItemGroup>
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
-    <Compile Include="Avionics\ProceduralAvionicsWindow.cs" />
+    <Compile Include="UI\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />
     <Compile Include="CareerLog\CareerEventScope.cs" />
     <Compile Include="CareerLog\CareerLog.cs" />
     <Compile Include="CareerLog\CareerLogDto.cs" />
-    <Compile Include="CareerLog\CareerLogGUI.cs" />
+    <Compile Include="UI\CareerLogGUI.cs" />
     <Compile Include="CareerLog\ContractEvent.cs" />
     <Compile Include="CareerLog\FacilityConstruction.cs" />
     <Compile Include="CareerLog\FacilityConstructionEvent.cs" />
@@ -62,7 +62,7 @@
     <Compile Include="Harmony\KerbalEVA.cs" />
     <Compile Include="Settings\CrewSettings.cs" />
     <Compile Include="Crew\TrainingDatabase.cs" />
-    <Compile Include="Crew\TrainingGUI.cs" />
+    <Compile Include="UI\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="DataTypes\PersistentCompressedConfigNode.cs" />
     <Compile Include="DataTypes\PersistentSortedList.cs" />
@@ -119,7 +119,7 @@
     <Compile Include="Milestones\Milestone.cs" />
     <Compile Include="Milestones\MilestoneHandler.cs" />
     <Compile Include="Milestones\NewspaperLoader.cs" />
-    <Compile Include="Milestones\NewspaperUI.cs" />
+    <Compile Include="UI\NewspaperUI.cs" />
     <Compile Include="Programs\ProgramFundingOverview.cs" />
     <Compile Include="Requirements\LogicOps.cs" />
     <Compile Include="Requirements\RequirementBlock.cs" />
@@ -213,14 +213,14 @@
     <Compile Include="Utilities\KSPUtils.cs" />
     <Compile Include="Utilities\MathUtils.cs" />
     <Compile Include="Utilities\ObjectSerializer.cs" />
-    <Compile Include="Maintenance\MaintenanceGUI.cs" />
+    <Compile Include="UI\MaintenanceGUI.cs" />
     <Compile Include="UI\TopWindow.cs" />
     <Compile Include="UI\UIBase.cs" />
     <Compile Include="UI\UIHolder.cs" />
     <Compile Include="UI\ContractGUI.cs" />
     <Compile Include="UI\Tooltip.cs" />
-    <Compile Include="Tooling\ToolingGUI.cs" />
-    <Compile Include="Avionics\AvionicsGUI.cs" />
+    <Compile Include="UI\ToolingGUI.cs" />
+    <Compile Include="UI\AvionicsGUI.cs" />
     <Compile Include="Utilities\MiscUtils.cs" />
     <Compile Include="Utilities\TransformUtils.cs" />
     <Compile Include="SpaceCenter\AirlaunchParams.cs" />
@@ -275,7 +275,6 @@
     <Compile Include="Utilities\KCTUtilities.cs" />
     <Compile Include="Utilities\WindowHelper.cs" />
     <Compile Include="SpaceCenter\KerbalConstructionTimeData.cs" />
-    <Compile Include="ModIntegrations\StageRecoveryWrapper.cs" />
     <Compile Include="Utilities\TextureScale.cs" />
     <Compile Include="Persistence\KCTVesselTracker.cs" />
     <Compile Include="Singletons\KCTVesselTrackerEventHandler.cs" />

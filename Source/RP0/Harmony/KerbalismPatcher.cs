@@ -60,32 +60,38 @@ namespace RP0.Harmony
         }
     }
 
-    //[HarmonyPatch(typeof(Experiment))]
-    //internal class PatchKerbalism_Experiment
-    //{
-    //    [HarmonyPostfix]
-    //    [HarmonyPatch("RunningUpdate")]
-    //    internal static void Postfix_RunningUpdate(Vessel v, Situation vs, Experiment prefab, Experiment.RunningState expState, ref string mainIssue)
-    //    {
-    //        if (expState != Experiment.RunningState.Running && expState != Experiment.RunningState.Forced)
-    //            return;
+    [HarmonyPatch(typeof(Experiment))]
+    internal class PatchKerbalism_Experiment
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("Update")]
+        internal static void Postfix_Update(Experiment __instance)
+        {
+            if (!HighLogic.LoadedSceneIsFlight)
+                return;
 
-    //        if (mainIssue.Length > 0)
-    //            return;
+            var v = __instance.vessel;
+            if (v == null || !v.loaded)
+                return;
 
-    //        if (!v.loaded || vs == null || prefab == null)
-    //            return;
+            if (!__instance.Running)
+                return;
 
-    //        if (!Database.StartCompletedExperiments.TryGetValue(v.mainBody.name, out var exps))
-    //            return;
+            if (__instance.issue.Length > 0 || __instance.Status != Experiment.ExpStatus.Waiting)
+                return;
 
-    //        if (!exps.TryGetValue(prefab.experiment_id, out var sits))
-    //            return;
+            // we have to use the gameobject because the experiments are tied to the original
+            // body name, not the nameLater name. The GO for Earth is still Kerbin so we use that.
+            if (!Database.StartCompletedExperiments.TryGetValue(v.mainBody.gameObject.name, out var exps))
+                return;
 
-    //        if (sits.Contains(vs.ScienceSituation.ToExperimentSituations()))
-    //            mainIssue = Local.Module_Experiment_issue1;
-    //    }
-    //}
+            if (!exps.TryGetValue(__instance.experiment_id, out var sits))
+                return;
+
+            if (sits.Contains(ScienceUtil.GetExperimentSituation(v)))
+                __instance.Events["ToggleEvent"].guiName = Lib.StatusToggle(Lib.Ellipsis(__instance.ExpInfo.Title, Styles.ScaleStringLength(25)), Experiment.StatusInfo(Experiment.ExpStatus.Issue, Local.Module_Experiment_issue1));
+        }
+    }
 
     [HarmonyPatch(typeof(Sim))]
     internal class PatchKerbalism_Sim

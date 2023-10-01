@@ -208,12 +208,6 @@ namespace RP0.Harmony
         [HarmonyPatch("SampleSunFactor")]
         internal static bool Prefix_SampleSunFactor(Vessel v, double elapsedSeconds, ref double __result)
         {
-            double oldRes = __result;
-            if (v.vesselName == "Gemini dockingtarget/scisat")
-            {
-                __result = 0d;
-            }
-            __result = oldRes;
             __result = SampleSunFactor(v, elapsedSeconds);
             return false;
         }
@@ -222,19 +216,22 @@ namespace RP0.Harmony
         private static readonly List<int> _cbParents = new List<int>();
         private static readonly List<int> _occluderToPos = new List<int>();
         private static readonly List<double> _cbSLRs = new List<double>();
-        private static bool _isBodiesInited = false;
 
         private static void InitBodies()
         {
-            if (_isBodiesInited)
+            int c = FlightGlobals.Bodies.Count;
+            if (_cbPositions.Count == c)
                 return;
 
-            _isBodiesInited = true;
-
-            int c = FlightGlobals.Bodies.Count; ;
-            _cbPositions.Capacity = c;
-            _cbParents.Capacity = c;
-            _cbSLRs.Capacity = c;
+            _cbPositions.Clear();
+            _cbParents.Clear();
+            _cbSLRs.Clear();
+            if (_cbPositions.Capacity < c)
+                _cbPositions.Capacity = c;
+            if (_cbParents.Capacity < c)
+                _cbParents.Capacity = c;
+            if (_cbSLRs.Capacity < c)
+                _cbSLRs.Capacity = c;
             for (int i = 0; i < c; ++i)
             {
                 var cb = FlightGlobals.Bodies[i];

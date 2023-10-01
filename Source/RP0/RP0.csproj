@@ -278,7 +278,7 @@
     <Compile Include="ModIntegrations\StageRecoveryWrapper.cs" />
     <Compile Include="Utilities\TextureScale.cs" />
     <Compile Include="Persistence\KCTVesselTracker.cs" />
-    <Compile Include="Persistence\KCTVesselTrackerEventHandler.cs" />
+    <Compile Include="Singletons\KCTVesselTrackerEventHandler.cs" />
     <Compile Include="SpaceCenter\VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>

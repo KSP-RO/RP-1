@@ -6,7 +6,7 @@ namespace RP0
 {
     public class DifficultyPresetChanger : HostedSingleton
     {
-        public DifficultyPresetChanger(MonoBehaviour host) : base(host) { }
+        public DifficultyPresetChanger(SingletonHost host) : base(host) { }
 
         public override void Awake()
         {

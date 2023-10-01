@@ -7,7 +7,7 @@ namespace RP0
 {
     public class LocalizationHandler : HostedSingleton
     {
-        public LocalizationHandler(MonoBehaviour host) : base(host) { }
+        public LocalizationHandler(SingletonHost host) : base(host) { }
 
         public override void Awake()
         {

@@ -33,7 +33,7 @@ namespace RP0
         [Persistent]
         public bool InPlaceEdit;
 
-        public KCTSettings(MonoBehaviour host) : base(host)
+        public KCTSettings(SingletonHost host) : base(host)
         {
             DisableAllMessages = true;
             ShowSimWatermark = true;

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 namespace RP0
 {
@@ -23,6 +24,26 @@ namespace RP0
         public static bool CurrentGameIsMission()
         {
             return HighLogic.CurrentGame.Mode == Game.Modes.MISSION || HighLogic.CurrentGame.Mode == Game.Modes.MISSION_BUILDER;
+        }
+
+        /// <summary>
+        /// Returns a list containing all types that can be casted to T,
+        /// by default returning only instantiable types
+        /// </summary>
+        /// <typeparam name="T">T can be a regular type or an interface</typeparam>
+        /// <param name="instantiableOnly">by default, ignore abstract types</param>
+        /// <returns></returns>
+        public static List<Type> GetAllLoadedTypes<T>(bool instantiableOnly = true)
+        {
+            var list = new List<Type>();
+            var type = typeof(T);
+            AssemblyLoader.loadedAssemblies.TypeOperation(a =>
+            {
+                if (type.IsAssignableFrom(a) && (!instantiableOnly || (!a.IsAbstract && !a.IsInterface)))
+                    list.Add(a);
+            });
+
+            return list;
         }
 
         /// <summary>

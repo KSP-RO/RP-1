@@ -5,33 +5,32 @@ using UnityEngine;
 
 namespace RP0
 {
-    [KSPAddon(KSPAddon.Startup.MainMenu, true)]
-    public class KCTVesselTrackerEventHandler : MonoBehaviour
+    public class KCTVesselTrackerEventHandler : HostedSingleton
     {
         private bool _isDockingInProgress = false;
         private bool _isUnDockingInProgress = false;
 
-        private void Awake()
+        public KCTVesselTrackerEventHandler(SingletonHost host) : base(host) { }
+
+        public override void Awake()
         {
             GameEvents.onPartDeCoupleNewVesselComplete.Add(OnPartDeCoupleNewVesselComplete);
             GameEvents.onPartCouple.Add(OnPartCouple);
             GameEvents.onPartUndock.Add(OnPartUndock);
             GameEvents.onVesselDocking.Add(OnVesselDocking);
             GameEvents.onVesselsUndocking.Add(OnVesselsUndocking);
-
-            DontDestroyOnLoad(this);
         }
 
         private void OnPartUndock(Part data)
         {
             _isUnDockingInProgress = true;
-            StartCoroutine(ResetUnDockingInProgress());
+            _host.StartCoroutine(ResetUnDockingInProgress());
         }
 
         private void OnVesselDocking(uint persistentId1, uint persistentId2)
         {
             _isDockingInProgress = true;
-            StartCoroutine(ResetDockingInProgress());
+            _host.StartCoroutine(ResetDockingInProgress());
         }
 
         private IEnumerator ResetUnDockingInProgress()

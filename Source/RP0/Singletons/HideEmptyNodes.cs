@@ -18,7 +18,7 @@ namespace RP0
         // This is filled during Awake rather than each run
         private HashSet<string> nodeNamesFromKerbalism = new HashSet<string>();
 
-        public HideEmptyNodes(MonoBehaviour host) : base(host) { }
+        public HideEmptyNodes(SingletonHost host) : base(host) { }
 
         public override void Awake()
         {

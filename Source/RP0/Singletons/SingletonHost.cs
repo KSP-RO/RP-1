@@ -13,17 +13,18 @@ namespace RP0
         protected static HostedSingleton _instance = null;
         public static HostedSingleton Instance => _instance;
 
+        public HostedSingleton(SingletonHost host)
+        {
+            _host = host;
+            _instance = this;
+        }
+        
+        
         public virtual void Awake() { }
 
         public virtual void Start() { }
 
         public virtual void OnDestroy() { }
-
-        public HostedSingleton(MonoBehaviour host)
-        {
-            _host = host;
-            _instance = this;
-        }
     }
 
     [KSPAddon(KSPAddon.Startup.MainMenu, true)]
@@ -51,11 +52,16 @@ namespace RP0
             foreach (var kvp in ScenarioUpgradeableFacilities.facilityStrings)
                 Database.FacilityIDToFacility[kvp.Value] = kvp.Key;
 
-            _singletons.Add(new LocalizationHandler(this));
-            _singletons.Add(new HideEmptyNodes(this));
-            _singletons.Add(new DifficultyPresetChanger(this));
-            _singletons.Add(new RFTagApplier(this));
-            _singletons.Add(new KCTSettings(this));
+            List<Type> singletonTypes = KSPUtils.GetAllLoadedTypes<HostedSingleton>();
+            foreach (var t in singletonTypes)
+            {
+                HostedSingleton s = (HostedSingleton)Activator.CreateInstance(t, new System.Object[] { this });
+                _singletons.Add(s);
+            }
+            string logstr = "Found and added " + _singletons.Count + " singletons:";
+            foreach (var s in singletonTypes)
+                logstr += "\n" + s.FullName;
+            RP0Debug.Log(logstr, true);
 
             foreach (var s in _singletons)
             {

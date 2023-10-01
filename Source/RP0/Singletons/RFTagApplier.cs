@@ -9,7 +9,7 @@ namespace RP0
     {
         private ResourceTagType _lastTag;
         
-        public RFTagApplier(MonoBehaviour host) : base(host) { }
+        public RFTagApplier(SingletonHost host) : base(host) { }
 
         public override void Awake()
         {

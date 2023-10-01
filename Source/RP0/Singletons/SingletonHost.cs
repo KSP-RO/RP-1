@@ -84,7 +84,7 @@ namespace RP0
             {
                 try
                 {
-                    s.Awake();
+                    s.Start();
                 }
                 catch (Exception e)
                 {
@@ -103,7 +103,7 @@ namespace RP0
                 }
                 catch (Exception e)
                 {
-                    RP0Debug.LogError($"Exception starting {(_singletons[i]).GetType()}: {e}");
+                    RP0Debug.LogError($"Exception destroying {(_singletons[i]).GetType()}: {e}");
                 }
                 _singletons[i] = null;
             }

@@ -120,8 +120,8 @@ namespace RP0
         public PersistentSortedListValueTypeKey<string, VesselProject> BuildPlans = new PersistentSortedListValueTypeKey<string, VesselProject>();
 
         [KSPField(isPersistant = true)]
-        public PersistentList<SpaceCenter> KSCs = new PersistentList<SpaceCenter>();
-        public SpaceCenter ActiveSC = null;
+        public PersistentList<LCSpaceCenter> KSCs = new PersistentList<LCSpaceCenter>();
+        public LCSpaceCenter ActiveSC = null;
 
         [KSPField(isPersistant = true)]
         public VesselProject LaunchedVessel = new VesselProject();
@@ -539,7 +539,7 @@ namespace RP0
                 // Prune bad or inactive KSCs.
                 for (int i = KSCs.Count; i-- > 0;)
                 {
-                    SpaceCenter ksc = KSCs[i];
+                    LCSpaceCenter ksc = KSCs[i];
                     if (ksc.KSCName == null || ksc.KSCName.Length == 0 || (ksc.IsEmpty && ksc != ActiveSC))
                         KSCs.RemoveAt(i);
                 }
@@ -646,7 +646,7 @@ namespace RP0
 
         private void TryMigrateStockKSC()
         {
-            SpaceCenter stockKsc = KSCs.Find(k => string.Equals(k.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
+            LCSpaceCenter stockKsc = KSCs.Find(k => string.Equals(k.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
             if (KSCs.Count == 1)
             {
                 // Rename the stock KSC to the new default (Cape)
@@ -667,7 +667,7 @@ namespace RP0
             if (numOtherUsedKSCs == 0)
             {
                 string kscName = GetActiveRSSKSC() ?? _defaultKscId;
-                SpaceCenter newDefault = KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
+                LCSpaceCenter newDefault = KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
                 if (newDefault != null)
                 {
                     // Stock KSC isn't empty but the new default one is - safe to rename the stock and remove the old default item
@@ -693,7 +693,7 @@ namespace RP0
             if (!VesselErrorAlerted)
             {
                 var erroredVessels = new List<VesselProject>();
-                foreach (SpaceCenter KSC in KSCs)
+                foreach (LCSpaceCenter KSC in KSCs)
                 {
                     foreach (LaunchComplex currentLC in KSC.LaunchComplexes)
                     {
@@ -753,7 +753,7 @@ namespace RP0
             foreach (VesselProject vp in errored)
             {
                 //remove any associated recon_rollout
-                foreach (SpaceCenter ksc in KSCs)
+                foreach (LCSpaceCenter ksc in KSCs)
                 {
                     foreach (LaunchComplex currentLC in ksc.LaunchComplexes)
                     {
@@ -926,10 +926,10 @@ namespace RP0
             if (ActiveSC == null || site != ActiveSC.KSCName)
             {
                 RP0Debug.Log($"Setting active site to {site}");
-                SpaceCenter newKsc = KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
+                LCSpaceCenter newKsc = KSCs.FirstOrDefault(ksc => ksc.KSCName == site);
                 if (newKsc == null)
                 {
-                    newKsc = new SpaceCenter(site);
+                    newKsc = new LCSpaceCenter(site);
                     newKsc.EnsureStartingLaunchComplexes();
                     KSCs.Add(newKsc);
                 }
@@ -938,7 +938,7 @@ namespace RP0
             }
         }
 
-        private void SetActiveKSC(SpaceCenter ksc)
+        private void SetActiveKSC(LCSpaceCenter ksc)
         {
             if (ksc == null || ksc == ActiveSC)
                 return;
@@ -952,7 +952,7 @@ namespace RP0
 
         #region Budget
 
-        public double GetEffectiveIntegrationEngineersForSalary(SpaceCenter ksc)
+        public double GetEffectiveIntegrationEngineersForSalary(LCSpaceCenter ksc)
         {
             double engineers = 0d;
             foreach (var lc in ksc.LaunchComplexes)
@@ -960,7 +960,7 @@ namespace RP0
             return engineers + ksc.UnassignedEngineers * Database.SettingsSC.IdleSalaryMult;
         }
 
-        public double GetEffectiveEngineersForSalary(SpaceCenter ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
+        public double GetEffectiveEngineersForSalary(LCSpaceCenter ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
 
         public double GetEffectiveEngineersForSalary(LaunchComplex lc)
         {
@@ -1003,7 +1003,7 @@ namespace RP0
             return delta;
         }
 
-        public double GetConstructionCostOverTime(double time, SpaceCenter ksc)
+        public double GetConstructionCostOverTime(double time, LCSpaceCenter ksc)
         {
             double delta = 0;
             foreach (var c in ksc.Constructions)
@@ -1035,7 +1035,7 @@ namespace RP0
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, SpaceCenter ksc)
+        public double GetRolloutCostOverTime(double time, LCSpaceCenter ksc)
         {
             double delta = 0;
             for (int i = 1; i < ksc.LaunchComplexes.Count; ++i)
@@ -1464,7 +1464,7 @@ namespace RP0
                         // the VP constructor sets our LC type to Hangar. But let's swap to it as well.
                         if (ActiveSC.ActiveLC.LCType != LaunchComplexType.Hangar && ActiveSC.Hangar.IsOperational)
                         {
-                            ActiveSC.SwitchLaunchComplex(SpaceCenter.HangarIndex);
+                            ActiveSC.SwitchLaunchComplex(LCSpaceCenter.HangarIndex);
                         }
                     }
                     else
@@ -1596,7 +1596,7 @@ namespace RP0
                 int rushingEngs = 0;
 
                 int totalEngineers = 0;
-                foreach (SpaceCenter ksc in KSCs)
+                foreach (LCSpaceCenter ksc in KSCs)
                 {
                     totalEngineers += ksc.Engineers;
 

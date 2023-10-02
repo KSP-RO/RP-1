@@ -93,7 +93,7 @@ namespace RP0
             return GetBuildRate(ship.LC.BuildList.IndexOf(ship), ship.Type, ship.LC, ship.humanRated, delta);
         }
 
-        public static double GetConstructionRate(int index, SpaceCenter KSC, SpaceCenterFacility facilityType)
+        public static double GetConstructionRate(int index, LCSpaceCenter KSC, SpaceCenterFacility facilityType)
         {
             return Formula.GetConstructionBuildRate(index, KSC, facilityType);
         }
@@ -705,7 +705,7 @@ namespace RP0
             if (KerbalConstructionTimeData.Instance.ActiveSC == null)
                 return null;
             double shortestTime = double.PositiveInfinity;
-            foreach (SpaceCenter KSC in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (LCSpaceCenter KSC in KerbalConstructionTimeData.Instance.KSCs)
             {
                 foreach (LaunchComplex LC in KSC.LaunchComplexes)
                 {
@@ -805,7 +805,7 @@ namespace RP0
                     return b;
             }
 
-            foreach (SpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (LCSpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
                 if (FindVPByID(id, ksc) is VesselProject vp)
                     return vp;
@@ -828,7 +828,7 @@ namespace RP0
             return null;
         }
 
-        public static VesselProject FindVPByID(Guid id, SpaceCenter ksc)
+        public static VesselProject FindVPByID(Guid id, LCSpaceCenter ksc)
         {
             if (ksc != null)
             {
@@ -1494,7 +1494,7 @@ namespace RP0
             KCT_GUI.BuildRateForDisplay = null;
         }
 
-        public static void ChangeEngineers(SpaceCenter ksc, int delta)
+        public static void ChangeEngineers(LCSpaceCenter ksc, int delta)
         {
             ksc.Engineers += delta;
             KCTEvents.OnPersonnelChange.Fire();

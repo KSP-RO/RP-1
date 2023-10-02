@@ -208,7 +208,7 @@ namespace RP0
         {
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
             IntegrationSalaries.Clear();
-            foreach (SpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (LCSpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
             {
                 IntegrationSalaries[ksc.KSCName] = KerbalConstructionTimeData.Instance.GetEffectiveIntegrationEngineersForSalary(ksc);
             }

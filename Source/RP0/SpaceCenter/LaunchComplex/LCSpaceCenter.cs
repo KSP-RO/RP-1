@@ -4,7 +4,7 @@ using RP0.DataTypes;
 
 namespace RP0
 {
-    public class SpaceCenter : IConfigNode
+    public class LCSpaceCenter : IConfigNode
     {
         [Persistent]
         public string KSCName;
@@ -47,12 +47,12 @@ namespace RP0
             FacilityUpgrades.Updated += updated;
         }
 
-        public SpaceCenter()
+        public LCSpaceCenter()
         {
             AddListeners();
         }
 
-        public SpaceCenter(string name)
+        public LCSpaceCenter(string name)
         {
             KSCName = name;
 

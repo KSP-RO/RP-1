@@ -89,7 +89,7 @@ namespace RP0
 
         private static void RenderEngineersSection(bool isCostCacheInvalid)
         {
-            SpaceCenter KSC = KerbalConstructionTimeData.Instance.ActiveSC;
+            LCSpaceCenter KSC = KerbalConstructionTimeData.Instance.ActiveSC;
             LaunchComplex currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
@@ -331,7 +331,7 @@ namespace RP0
                     }
                     else
                     {
-                        SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
+                        LCSpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
                         KCTUtilities.ChangeEngineers(ksc, -workers);
                         ksc.RecalculateBuildRates(false);
                     }
@@ -377,7 +377,7 @@ namespace RP0
                     }
                     else
                     {
-                        SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
+                        LCSpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
                         KCTUtilities.ChangeEngineers(ksc, workers);
                         ksc.RecalculateBuildRates(false);
                     }

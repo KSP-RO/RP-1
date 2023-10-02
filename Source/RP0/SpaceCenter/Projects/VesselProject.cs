@@ -125,7 +125,7 @@ namespace RP0
 
         public bool IsFinished => progress >= buildPoints + integrationPoints;
 
-        public SpaceCenter KSC
+        public LCSpaceCenter KSC
         {
             get
             {
@@ -344,7 +344,7 @@ namespace RP0
             buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
             flag = HighLogic.CurrentGame.flagURL;
 
-            kscDistance = (float)global::SpaceCenter.Instance.GreatCircleDistance(global::SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
+            kscDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
 
             integrationPoints = Formula.GetIntegrationBP(this);
             integrationCost = (float)Formula.GetIntegrationCost(this);

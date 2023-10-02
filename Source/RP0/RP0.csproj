@@ -262,7 +262,7 @@
     <Compile Include="UI\KCT\GUI_Main.cs" />
     <Compile Include="UI\KCT\GUI_BuildList.cs" />
     <Compile Include="UI\KCT\GUI_Presets.cs" />
-    <Compile Include="SpaceCenter\LaunchComplex\SpaceCenter.cs" />
+    <Compile Include="SpaceCenter\LaunchComplex\LCSpaceCenter.cs" />
     <Compile Include="SpaceCenter\LaunchComplex\LCLaunchPad.cs" />
     <Compile Include="Utilities\KCTWarpController.cs" />
     <Compile Include="Utilities\Formula.cs" />

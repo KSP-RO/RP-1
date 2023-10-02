@@ -65,7 +65,7 @@ namespace RP0
                 {
                     KCTUtilities.ScrapVessel(activeLC.Warehouse[i]);
                 }
-                SpaceCenter ksc = activeLC.KSC;
+                LCSpaceCenter ksc = activeLC.KSC;
                 ksc.SwitchToPrevLaunchComplex();
                 activeLC.Delete();
 

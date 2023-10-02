@@ -119,9 +119,9 @@ namespace RP0
         public static string SupportedSizeAsPrettyTextCalc(Vector3 size) => size.y == float.MaxValue ? "unlimited" : $"{size.z:N0}x{size.x:N0}x{size.y:N0}m";
         public string SupportedSizeAsPrettyText => SupportedSizeAsPrettyTextCalc(SizeMax);
 
-        private SpaceCenter _ksc = null;
+        private LCSpaceCenter _ksc = null;
 
-        public SpaceCenter KSC => _ksc;
+        public LCSpaceCenter KSC => _ksc;
 
         #region Observable funcs
         void added(int idx, ConstructionProject pc) { _ksc.Constructions.Add(pc); }
@@ -143,7 +143,7 @@ namespace RP0
 
         public LaunchComplex() { } // does not add listeners, instead adds them in Load.
 
-        public LaunchComplex(LCData lcData, SpaceCenter ksc)
+        public LaunchComplex(LCData lcData, LCSpaceCenter ksc)
         {
             _ksc = ksc;
             _id = Guid.NewGuid();
@@ -417,7 +417,7 @@ namespace RP0
             AddListeners();
         }
 
-        public void PostLoad(SpaceCenter ksc)
+        public void PostLoad(LCSpaceCenter ksc)
         {
             _ksc = ksc;
             int i = 0;

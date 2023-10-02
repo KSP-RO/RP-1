@@ -363,7 +363,7 @@ namespace RP0
 
         private static void RenderConstructionList()
         {
-            SpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
+            LCSpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:");

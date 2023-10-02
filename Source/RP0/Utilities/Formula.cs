@@ -48,7 +48,7 @@ namespace RP0
             return personnel * _EngineerBPRate * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
         }
 
-        public static double GetConstructionBuildRate(int index, SpaceCenter KSC, SpaceCenterFacility facilityType)
+        public static double GetConstructionBuildRate(int index, LCSpaceCenter KSC, SpaceCenterFacility facilityType)
         {
             double rate = 1d / 86400d;
             TransactionReasonsRP0 reason = facilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction;

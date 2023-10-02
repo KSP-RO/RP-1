@@ -67,7 +67,7 @@ namespace RP0
         {
             get
             {
-                foreach (SpaceCenter currentKSC in KerbalConstructionTimeData.Instance.KSCs)
+                foreach (LCSpaceCenter currentKSC in KerbalConstructionTimeData.Instance.KSCs)
                 {
                     if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LaunchComplex currentLC)
                     {
@@ -128,7 +128,7 @@ namespace RP0
 
         public bool Delete(out string failReason)
         {
-            foreach (SpaceCenter currentKSC in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (LCSpaceCenter currentKSC in KerbalConstructionTimeData.Instance.KSCs)
             {
                 foreach (LaunchComplex currentLC in currentKSC.LaunchComplexes)
                 {

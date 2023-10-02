@@ -98,8 +98,8 @@ namespace RP0
                 progress = BP;
             else if (type == RolloutReconType.Recovery)
             {
-                double KSCDistance = (float)global::SpaceCenter.Instance.GreatCircleDistance(global::SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
-                double maxDist = global::SpaceCenter.Instance.cb.Radius * Math.PI;
+                double KSCDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
+                double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
                 BP += BP * (KSCDistance / maxDist);
             }
         }
@@ -151,7 +151,7 @@ namespace RP0
                 progress = BP;
             else if (type == RolloutReconType.Recovery)
             {
-                double maxDist = global::SpaceCenter.Instance.cb.Radius * Math.PI;
+                double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
                 BP += BP * (vessel.kscDistance / maxDist);
                 BP *= (vessel.LandedAt?.Contains("Runway") ?? false) ? .75 : 1;
             } 

@@ -38,9 +38,9 @@ namespace RP0
 
         public double EstimatedTimeLeft => GetTimeLeft();
 
-        private SpaceCenter _ksc = null;
+        private LCSpaceCenter _ksc = null;
 
-        public SpaceCenter KSC
+        public LCSpaceCenter KSC
         {
             get
             {
@@ -128,7 +128,7 @@ namespace RP0
             BP = Formula.GetConstructionBP(cost, oldCost, FacilityType);
         }
 
-        public static double CalculateBuildTime(double cost, double oldCost, SpaceCenterFacility facilityType, SpaceCenter KSC = null)
+        public static double CalculateBuildTime(double cost, double oldCost, SpaceCenterFacility facilityType, LCSpaceCenter KSC = null)
         {
             double bp = Formula.GetConstructionBP(cost, oldCost, facilityType);
             double rateTotal = KCTUtilities.GetConstructionRate(0, KSC, facilityType);

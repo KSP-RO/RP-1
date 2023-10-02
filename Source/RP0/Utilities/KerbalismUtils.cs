@@ -15,11 +15,12 @@ namespace RP0
         private static bool _needRateStrings = true;
         private static string[] _rateStrings = new string[5];
         private static bool[] _rateMatches = new bool[5] { true, true, true, true, true };
-        private static readonly double[] _rateMults = new double[] {
+        private static readonly double[] _rateMults = new double[5] {
             1d,
-            1d/60d,
-            1d/(60d*60d),
-            1d/(86400d * 365d) };
+            1d / 60d,
+            1d / (60d * 60d),
+            1d / 86400d,
+            1d / (86400d * 365d) };
 
         public static bool HumanRateToSI(ref string rate, string unit, double baseMult = 1d, int sigFigs = 3)
         {

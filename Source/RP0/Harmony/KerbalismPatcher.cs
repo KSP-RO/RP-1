@@ -3,9 +3,13 @@ using System;
 using KERBALISM;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Reflection;
 
 namespace RP0.Harmony
 {
+    /// <summary>
+    /// Force sample transfer to be allowed at all difficulty levels
+    /// </summary>
     [HarmonyPatch(typeof(PreferencesScience))]
     internal class PatchKerbalism_PreferencesScience
     {
@@ -17,6 +21,9 @@ namespace RP0.Harmony
         }
     }
 
+    /// <summary>
+    /// Apply the radiation settings from the profile regardless of difficulty level
+    /// </summary>
     [HarmonyPatch(typeof(PreferencesRadiation))]
     internal class PatchKerbalism_PreferencesRadiation
     {
@@ -43,6 +50,9 @@ namespace RP0.Harmony
         }
     }
 
+    /// <summary>
+    /// Patch CrewSpecs to ignore tourists (until PR to Kerbalism is merged)
+    /// </summary>
     [HarmonyPatch(typeof(CrewSpecs))]
     internal class PatchKerbalism_CrewSpecs
     {
@@ -60,6 +70,13 @@ namespace RP0.Harmony
         }
     }
 
+    /// <summary>
+    /// Patch Experiment's PAW status to show 'invalid situation'
+    /// if you're trying to use an experiment landed/splashed/low
+    /// on Earth. Note the info panel will still say it's Waiting
+    /// and the science is collected, this is just the status by
+    /// the togglebutton in the PAW itself.
+    /// </summary>
     [HarmonyPatch(typeof(Experiment))]
     internal class PatchKerbalism_Experiment
     {
@@ -93,6 +110,8 @@ namespace RP0.Harmony
         }
     }
 
+    #region Solar Panel Exposure
+
     [HarmonyPatch(typeof(Sim))]
     internal class PatchKerbalism_Sim
     {
@@ -108,11 +127,11 @@ namespace RP0.Harmony
             }
 
             bool incNaN = double.IsNaN(obt.inclination);
-            if(Lib.Landed(v) || incNaN)
+            if (Lib.Landed(v) || incNaN)
             {
                 var sun = Planetarium.fetch.Sun;
                 var mb = v.mainBody;
-                if(sun == mb)
+                if (sun == mb)
                 {
                     __result = 0d;
                 }
@@ -266,13 +285,13 @@ namespace RP0.Harmony
             for (int i = occluders.Count; i-- > 0;)
                 _FillCBPositionAtUT(_occluderToPos[i], ut);
 
-            
+
         }
         internal static void _FillCBPositionAtUT(int i, double ut)
         {
             if (_cbPositions[i].x != double.MaxValue)
                 return;
-            
+
             var cb = FlightGlobals.Bodies[i];
             int pIdx = _cbParents[i];
             if (pIdx == -1)
@@ -370,7 +389,7 @@ namespace RP0.Harmony
             double sunFactor = (double)sunSamples / (double)sampleCount;
             return sunFactor;
         }
-        
+
         // We have to reimplement this code because we need to check at a specific time
         internal static bool IsSunVisibleAtTime(Vessel vessel, Vector3d vesselPos, CelestialBody sun, int sunIdx, List<CelestialBody> occluders, double UT)
         {
@@ -410,7 +429,7 @@ namespace RP0.Harmony
                     continue;
                 if (ignoreMainbody && occludingBody == vessel.mainBody)
                     continue;
-                
+
                 Vector3d toBody = _cbPositions[_occluderToPos[i]] - vesselPos;
                 // projection of origin->body center ray over the raytracing direction
                 double k = Vector3d.Dot(toBody, sunDir);
@@ -438,4 +457,304 @@ namespace RP0.Harmony
             return Planetarium.Zup.WorldToLocal(pos).xzy;
         }
     }
+    #endregion
+
+    #region ElectricCharge display conversion from humanreadable rate to SI Watts
+
+    /// <summary>
+    /// Postfix the UI update for the solar panel module to find the unit display
+    /// and replace it and the output with the SI rate
+    /// </summary>
+    [HarmonyPatch(typeof(SolarPanelFixer))]
+    internal class PatchKerbalism_SolarPanelFixer
+    {
+        [HarmonyPostfix]
+        [HarmonyPatch("Update")]
+        internal static void Postfix_Update(SolarPanelFixer __instance)
+        {
+            int idx = __instance.panelStatus.IndexOf(__instance.EcUIUnit);
+            if (idx == -1)
+                return;
+
+            int offset = __instance.EcUIUnit.Length;
+            if (__instance.panelStatus.Length > idx + offset)
+                __instance.panelStatus = KSPUtil.PrintSI(__instance.currentOutput * 1000d, "W", 3) + __instance.panelStatus.Substring(idx + offset);
+            else
+                __instance.panelStatus = KSPUtil.PrintSI(__instance.currentOutput * 1000d, "W", 3);
+        }
+    }
+
+    /// <summary>
+    /// Blanket-patch adding to Specifics: whenever the label
+    /// is one of the ones where we know the value will be EC,
+    /// replace the value with the SI version
+    /// </summary>
+    [HarmonyPatch(typeof(Specifics))]
+    internal class PatchKerbalism_Specifics
+    {
+        private static string _ecName;
+        private static bool _needName = true;
+
+        [HarmonyPrefix]
+        [HarmonyPatch("Add")]
+        internal static void Prefix_Add(ref string label, ref string value)
+        {
+            if (_needName)
+            {
+                _ecName = PartResourceLibrary.Instance.GetDefinition("ElectricCharge").displayName;
+                _needName = false;
+            }
+
+            if (string.IsNullOrEmpty(value))
+                return;
+
+            if (label == Local.Module_Experiment_Specifics_info9
+                || label == Local.Harvester_info7
+                || label == "EC/s"
+                || label == Local.Laboratory_ECrate
+                || label == Local.DataTransmitter_ECidle
+                || label == Local.DataTransmitter_ECTX
+                || label == _ecName)
+            {
+                KerbalismUtils.HumanRateToSI(ref value, "W", 1000d);
+            }
+        }
+    }
+
+    // The following patches don't work, and are done instead
+    // by the hacky workarounds below them
+#if disabled
+    // This throws:
+    // FormatException: Method static System.Void KERBALISM.Planner.Planner::AddSubPanelEC(KERBALISM.Panel p) cannot be patched. Reason: The type initializer for 'KERBALISM.Planner.Planner' threw an exception.
+    //    HarmonyLib.PatchFunctions.UpdateWrapper
+    [HarmonyPatch(typeof(KERBALISM.Planner.Planner))]
+    internal class PatchKerbalism_Planner
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("AddSubPanelEC")]
+        internal static bool Prefix_AddSubPanelEC(Panel p, KERBALISM.Planner.ResourceSimulator ___resource_sim)
+        {
+            KERBALISM.Planner.SimulatedResource simulatedResource = ___resource_sim.Resource("ElectricCharge");
+            string tooltip = simulatedResource.Tooltip();
+            p.AddSection(Local.Planner_ELECTRICCHARGE);
+            p.AddContent(Local.Planner_storage, Lib.HumanReadableAmount(simulatedResource.storage), tooltip);
+            p.AddContent(Local.Planner_consumed, KSPUtil.PrintSI(simulatedResource.consumed * 1000d, "W", 3), tooltip);
+            p.AddContent(Local.Planner_produced, KSPUtil.PrintSI(simulatedResource.produced * 1000d, "W", 3), tooltip);
+            p.AddContent(Local.Planner_duration, Lib.HumanReadableDuration(simulatedResource.Lifetime()));
+
+            return false;
+        }
+    }
+
+    // This fails the same way.
+
+    [HarmonyPatch(typeof(KERBALISM.Planner.Planner))]
+    internal class PatchKerbalism_Planner
+    {
+        private static readonly FieldInfo _resSimField = typeof(KERBALISM.Planner.Planner).GetField("resource_sim", AccessTools.all);
+        private static bool _needField = true;
+        private static KERBALISM.Planner.ResourceSimulator _resource_sim;
+
+        private static readonly MethodInfo _addSubECMethod = typeof(KERBALISM.Planner.Planner).GetMethod("AddSubPanelEC", AccessTools.all);
+        private static readonly MethodInfo _replaceMethod = typeof(PatchKerbalism_Planner).GetMethod("ReplacementAddSubPanelEC", AccessTools.all);
+
+        [HarmonyTranspiler]
+        [HarmonyPatch("Update")]
+        internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            List<CodeInstruction> code = new List<CodeInstruction>(instructions);
+            for (int i = 0; i < code.Count; ++i)
+            {
+                if (code[i].Calls(_addSubECMethod))
+                {
+                    code[i] = new CodeInstruction(System.Reflection.Emit.OpCodes.Call, _replaceMethod);
+                    break;
+                }
+            }
+            return code;
+        }
+
+        internal static void ReplacementAddSubPanelEC(Panel p)
+        {
+            if (_needField)
+            {
+                _resource_sim = (KERBALISM.Planner.ResourceSimulator)_resSimField.GetValue(null);
+                _needField = false;
+            }
+
+            KERBALISM.Planner.SimulatedResource simulatedResource = _resource_sim.Resource("ElectricCharge");
+            string tooltip = simulatedResource.Tooltip();
+            string[] splitTip = tooltip.Split('\n');
+            for (int i = 0; i < splitTip.Length; ++i)
+            {
+                if (splitTip[i].Length > 0)
+                    KerbalismUtils.HumanRateToSI(ref splitTip[i], "W", 1000d);
+            }
+            tooltip = string.Join("\n", splitTip);
+
+            p.AddSection(Local.Planner_ELECTRICCHARGE);
+            p.AddContent(Local.Planner_storage, Lib.HumanReadableAmount(simulatedResource.storage), tooltip);
+            p.AddContent(Local.Planner_consumed, KSPUtil.PrintSI(simulatedResource.consumed * 1000d, "W", 4), tooltip);
+            p.AddContent(Local.Planner_produced, KSPUtil.PrintSI(simulatedResource.produced * 1000d, "W", 4), tooltip);
+            p.AddContent(Local.Planner_duration, Lib.HumanReadableDuration(simulatedResource.Lifetime()));
+        }
+    }
+#endif
+
+    /// <summary>
+    /// This exists to signal that we just ran the Analyze method. It's
+    /// only run in one place, right before we create the EC subpanel
+    /// in the Planner. So we'll use that fact
+    /// </summary>
+    [HarmonyPatch(typeof(KERBALISM.Planner.ResourceSimulator))]
+    internal class PatchKerbalism_Planner_ResourceSimulator
+    {
+        public static bool JustRanAnalyze = false;
+        [HarmonyPostfix]
+        [HarmonyPatch("Analyze")]
+        internal static void Postfix_Analyze()
+        {
+            JustRanAnalyze = true;
+        }
+    }
+
+    /// <summary>
+    /// If we know via the ResourceSimulator patch that we just entered
+    /// the AddSubPanelEC method, then replace Panel's AddContent behavior
+    /// until we hit the last AddContent of the method. We skip the storage
+    /// one because it's not a rate, but replace the value in the other two
+    /// cases.
+    /// </summary>
+    [HarmonyPatch(typeof(KERBALISM.Panel))]
+    internal class PatchKerbalism_Panel
+    {
+        [HarmonyPrefix]
+        [HarmonyPatch("AddContent")]
+        internal static void Prefix_AddContent(string label, ref string value)
+        {
+            if (PatchKerbalism_Planner_ResourceSimulator.JustRanAnalyze)
+            {
+                if (label == Local.Planner_duration)
+                {
+                    PatchKerbalism_Planner_ResourceSimulator.JustRanAnalyze = false;
+                    return;
+                }
+
+                if (label == Local.Planner_storage)
+                    return;
+
+                KerbalismUtils.HumanRateToSI(ref value, "W", 1000d);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Because we can't just prefix-replace Tooltip without publicizing Kerbalism
+    /// (it uses private classes...) we instead signal that the method has begun
+    /// and is targeting EC, and then record when it ends. We'll use that when
+    /// printing rates.
+    /// </summary>
+    [HarmonyPatch(typeof(KERBALISM.Planner.SimulatedResource))]
+    internal class PatchKerbalism_Planner_SimulatedResource
+    {
+        public static bool IsEC = false;
+
+        [HarmonyPrefix]
+        [HarmonyPatch("Tooltip")]
+        internal static void Prefix_Tooltip(KERBALISM.Planner.SimulatedResource __instance)
+        {
+            IsEC = __instance.resource_name == "ElectricCharge";
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("Tooltip")]
+        internal static void Postfix_Tooltip()
+        {
+            IsEC = false;
+        }
+    }
+
+    /// <summary>
+    /// Render_supplies is complicated and uses private classes. Instead
+    /// of replacing it, we just mark when it begins and ends. We'll also
+    /// use this class to hold the state of whether we're dealing with EC
+    /// or not.
+    /// </summary>
+    [HarmonyPatch(typeof(Telemetry))]
+    internal class PatchKerbalism_Telemetry
+    {
+        public static bool IsRenderSupplies = false;
+        public static bool IsEC = false;
+
+        [HarmonyPrefix]
+        [HarmonyPatch("Render_supplies")]
+        internal static void Prefix_Render_supplies()
+        {
+            IsRenderSupplies = true;
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("Render_supplies")]
+        internal static void Postfix_Render_supplies()
+        {
+            IsRenderSupplies = false;
+            IsEC = false;
+        }
+    }
+
+    /// <summary>
+    /// This replaces HumanReadableRate itself, changing its behavior
+    /// when we know (per the above patches) that we're dealing with EC.
+    /// This also has the dirtiest hack: SpacesOnCaps is called in very few
+    /// places, so it's cheap to prefix and use it as a marker for when
+    /// to replace rate-printing. If we hit that method while we're already
+    /// in Render_supplies, and the string we're operating on is EC (so we
+    /// know that's the resource), we mark it.
+    /// The HumanReadableRate is simple: if we know we're dealing with EC,
+    /// just SI-print it. We preserve the 'precision' passed to it by
+    /// using that for the significant figures passed to PrintSI.
+    /// </summary>
+    [HarmonyPatch(typeof(Lib))]
+    internal class PatchKerbalism_Lib
+    {
+        private static string _ecName;
+        private static bool _needName = true;
+
+        [HarmonyPrefix]
+        [HarmonyPatch("HumanReadableRate")]
+        internal static bool Prefix_HumanReadableRate(double rate, string precision, ref string __result)
+        {
+            if (!(PatchKerbalism_Planner_SimulatedResource.IsEC || PatchKerbalism_Telemetry.IsEC))
+                return true;
+
+            // The method takes precision as a format string. We need
+            // to grab the digit in it to know how many significant figures
+            // to use. Note that we don't support double-digit significant
+            // figures, but then again that's kinda nuts.
+            int sigfigs = 3;
+            char c = precision[precision.Length - 1];
+            if (char.IsDigit(c))
+                sigfigs = (int)char.GetNumericValue(c);
+
+            __result = KSPUtil.PrintSI(rate * 1000d, "W", sigfigs);
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("SpacesOnCaps")]
+        internal static void Prefix_SpacesOnCaps(string s)
+        {
+            if (!PatchKerbalism_Telemetry.IsRenderSupplies)
+                return;
+
+            if (_needName)
+            {
+                _ecName = PartResourceLibrary.Instance.GetDefinition("ElectricCharge").displayName;
+                _needName = false;
+            }
+
+            PatchKerbalism_Telemetry.IsEC = s == _ecName;
+        }
+    }
+    #endregion
 }

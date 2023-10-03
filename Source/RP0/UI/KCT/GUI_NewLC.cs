@@ -7,6 +7,8 @@ namespace RP0
     public static partial class KCT_GUI
     {
         private static readonly GUIContent _extraPadsContent = new GUIContent("Extra Pad Cost:", "Cost to build additional pads past the first once LC is constructed");
+        private static readonly GUIContent _cleanButtonContent = new GUIContent("Clean", "Set the LC stats to support only the current vessel, removing support for other vessels to reduce maintenance costs in exchange for a longer renovation time");
+        private static readonly GUIContent _existingButtonContent = new GUIContent("Existing", "Set the LC stats to match the currently existing LC");
         private static string _tonnageLimit = "1";
         private static string _heightLimit = "10";
         private static string _widthLimit = "2";
@@ -520,11 +522,11 @@ namespace RP0
             //        _overrideShowBuildPlans = !_overrideShowBuildPlans;
             //    }
             //}
-            if (isModify && !isHangar && GUILayout.Button("Clean", "Set the LC stats to support only the current vessel, removing support for other vessels to reduce maintenance costs in exchange for a longer renovation time"))
+            if (isModify && !isHangar && GUILayout.Button(_cleanButtonContent))
             {
                 SetFieldsFromVessel(KerbalConstructionTimeData.Instance.EditorVessel, activeLC);
             }
-            if (isModify && GUILayout.Button("Existing", "Set the LC stats to match the currently existing LC"))
+            if (isModify && GUILayout.Button(_existingButtonContent))
             {
                 SetFieldsFromLC(activeLC);
             }

@@ -4,7 +4,7 @@ using System.Reflection;
 namespace RP0.Harmony
 {
     [HarmonyPatch]
-    internal class PatchCBK
+    internal class PatchCustomBarnKit_LoadUpgradesPrices
     {
         static MethodBase TargetMethod() => AccessTools.TypeByName("CustomBarnKit.CustomBarnKit").GetMethod("LoadUpgradesPrices", AccessTools.all);
 

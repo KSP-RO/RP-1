@@ -1042,19 +1042,37 @@ namespace RP0
 
         private double GetEffectiveCostInternal(object o)
         {
-            if (!(o is Part) && !(o is ConfigNode))
+            ConfigNode partNode = o as ConfigNode;
+            Part partRef = o as Part;
+            bool isNode = partNode != null;
+            if (!isNode && partRef == null)
                 return 0;
 
-            string name = (o as Part)?.partInfo.name ?? KCTUtilities.GetPartNameFromNode(o as ConfigNode);
-            Part partRef = o as Part ?? KCTUtilities.GetAvailablePartByName(name).partPrefab;
+            string name;
+            if (isNode)
+            {
+                name = KCTUtilities.GetPartNameFromNode(partNode);
+                partRef = KCTUtilities.GetAvailablePartByName(name).partPrefab;
+            }
+            else
+            {
+                name = partRef.partInfo.name;
+            }
 
             float dryCost;
             float fuelCost;
             float dryMass;
             float fuelMass;
 
-            if (o is ConfigNode)
-                ShipConstruction.GetPartCostsAndMass(o as ConfigNode, KCTUtilities.GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
+            if (isNode)
+            {
+                ShipConstruction.GetPartCostsAndMass(partNode, KCTUtilities.GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
+                foreach (ConfigNode rNode in partNode.GetNodes("RESOURCE"))
+                {
+                    string rName = rNode.GetValue("name");
+                    _tempResourceAmounts[rName] = double.Parse(rNode.GetValue("maxAmount"));
+                }
+            }
             else
             {
                 GetPartCostsAndMass(partRef, out dryCost, out fuelCost, out dryMass, out fuelMass, _tempResourceAmounts);
@@ -1064,18 +1082,6 @@ namespace RP0
             float cost = dryCost + fuelCost;
 
             double partMultiplier = Database.SettingsSC.GetPartVariable(name);
-
-            // Resource contents may not match the prefab (ie, ModularFuelTanks implementation)
-            double resourceMultiplier = 1d;
-
-            if (o is ConfigNode)
-            {
-                foreach (ConfigNode rNode in (o as ConfigNode).GetNodes("RESOURCE"))
-                {
-                    string rName = rNode.GetValue("name");
-                    _tempResourceAmounts[rName] = double.Parse(rNode.GetValue("maxAmount"));
-                }
-            }
 
             // TODO: Add support for upgraded tags here
             double moduleMultiplier = FindApplyTags(o);
@@ -1087,39 +1093,70 @@ namespace RP0
                 resourceAmounts[kvp.Key] = amt;
             }
             
-            double effectiveCost = partMultiplier * resourceMultiplier * moduleMultiplier * cost;
+            double effectiveCost = partMultiplier * moduleMultiplier * cost;
 
-            if (HighLogic.LoadedSceneIsEditor)
+            if (partRef.FindModuleImplementing<ModuleEngines>() != null)
             {
+                RealFuels.ModuleEngineConfigsBase mecb = partRef.FindModuleImplementing<RealFuels.ModuleEngineConfigsBase>();
+
                 double runTime = 0;
-                if (o is Part)
+                double ratedBurnTime = 0;
+                if (!isNode)
                 {
-                    foreach (PartModule modNode in (o as Part).Modules)
+                    foreach (PartModule module in partRef.Modules)
                     {
-                        string s = modNode.moduleName;
+                        string s = module.moduleName;
                         if (s == "TestFlightReliability_EngineCycle")
-                            runTime = Convert.ToDouble(modNode.Fields.GetValue("engineOperatingTime"));
+                            runTime = Convert.ToDouble(module.Fields.GetValue("engineOperatingTime"));
                         else if (s == "ModuleTestLite")
-                            runTime = Convert.ToDouble(modNode.Fields.GetValue("runTime"));
+                            runTime = Convert.ToDouble(module.Fields.GetValue("runTime"));
                         if (runTime > 0)  //There can be more than one TestLite module per part
                             break;
                     }
+                    if (mecb != null)
+                        mecb.config.TryGetValue("ratedBurnTime", ref ratedBurnTime);
                 }
                 else
                 {
-                    foreach (ConfigNode modNode in (o as ConfigNode).GetNodes("MODULE"))
+                    bool lacksRBT;
+                    string mecbName;
+                    if (mecb == null)
+                    {
+                        lacksRBT = true;
+                        mecbName = null;
+                    }
+                    else
+                    {
+                        lacksRBT = false;
+                        mecbName = mecb.moduleName;
+                    }
+
+                    foreach (ConfigNode modNode in partNode.GetNodes("MODULE"))
                     {
                         string s = modNode.GetValue("name");
                         if (s == "TestFlightReliability_EngineCycle")
                             double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
                         else if (s == "ModuleTestLite")
                             double.TryParse(modNode.GetValue("runTime"), out runTime);
-                        if (runTime > 0) //There can be more than one TestLite module per part
+                        else if (s == mecbName)
+                        {
+                            string config = modNode.GetValue("configuration");
+                            // ignore patches/subconfigs for now
+                            foreach (var cn in mecb.configs)
+                            {
+                                if (cn.GetValue("name") == config)
+                                {
+                                    cn.TryGetValue("ratedBurnTime", ref ratedBurnTime);
+                                    break;
+                                }
+                            }
+                        }
+                        if (runTime > 0 && (lacksRBT || ratedBurnTime > 0)) //There can be more than one TestLite module per part
                             break;
                     }
                 }
                 if (runTime > 0)
-                    effectiveCost = Formula.GetEngineRefurbBPMultiplier(runTime) * effectiveCost;
+                    effectiveCost = Formula.GetEngineRefurbBPMultiplier(runTime, ratedBurnTime) * effectiveCost;
             }
 
             if (effectiveCost < 0)
@@ -1127,7 +1164,7 @@ namespace RP0
 
             UpdateTagECs(effectiveCost);
 
-            RP0Debug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; resourceMultiplier: {resourceMultiplier}; moduleMultiplier: {moduleMultiplier})");
+            RP0Debug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; moduleMultiplier: {moduleMultiplier})");
 
             _tempTags = null;
             _tempResourceAmounts.Clear();

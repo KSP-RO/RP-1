@@ -144,12 +144,21 @@ namespace RP0
             return (vessel.effectiveCost - (vessel.cost * 0.5d)) * 12d;
         }
 
-        public static double GetEngineRefurbBPMultiplier(double runTime)
+        public static double GetEngineRefurbBPMultiplier(double runTime, double ratedBurnTime)
         {
             double runFactor = 1d - runTime * 0.1d;
             if (runFactor < 0d)
                 runFactor = 0d;
-            return 0.5d * (1 + runFactor);
+            double retVal = 0.5d * (1d + runFactor);
+
+            if (ratedBurnTime > 0d && runFactor == 0d)
+            {
+                double ratio = runTime / ratedBurnTime;
+                if (ratio > 1d)
+                    ratio *= ratio;
+                retVal *= 1d - Math.Min(0.75d, ratio * 0.5d);
+            }
+            return retVal;
         }
 
         public static double GetRolloutBP(VesselProject vessel)

@@ -112,24 +112,33 @@ namespace RP0
 
     public class KCTDataLoader : LoadingSystem
     {
-        private const float NumLoaders = 7f;
+        private const int NumLoaders = 7;
 
         private IEnumerator LoadRoutine()
         {
+            int idx = 0;
+
             yield return StartCoroutine(LoadResources());
-            _progress = 1f;
+            _progress = ++idx;
+            
             yield return StartCoroutine(LoadTags());
-            _progress = 2f;
+            _progress = ++idx;
+            
             yield return StartCoroutine(LoadTechs());
-            _progress = 3f;
+            _progress = ++idx;
+            
             yield return StartCoroutine(LoadFacilityData());
-            _progress = 4f;
+            _progress = ++idx;
+            
             yield return StartCoroutine(LoadSpaceCenterSettings());
-            _progress = 5f;
+            _progress = ++idx;
+            
             yield return StartCoroutine(LoadCrewSettings());
-            _progress = 6f;
+            _progress = ++idx;
+            
             yield return StartCoroutine(LoadExperiments());
-            _progress = 7f;
+            _progress = ++idx;
+            
             yield return null;
 
             isReady = true;

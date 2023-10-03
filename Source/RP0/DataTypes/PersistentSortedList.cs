@@ -19,13 +19,16 @@ namespace RP0.DataTypes
             Clear();
             ConfigNode keyNode = node.nodes[0];
             ConfigNode valueNode = node.nodes[1];
+            int version = 1;
+            node.TryGetValue("version", ref version);
+
             for (int i = 0; i < keyNode.values.Count; ++i)
             {
                 TKey key = ParseKey(keyNode.values[i].value);
 
                 var n = valueNode.nodes[i];
                 TValue value;
-                if (n.name == "VALUE" || n.name == _typeName)
+                if (version == 1 || n.name == "VALUE" || n.name == _typeName)
                 {
                     value = Activator.CreateInstance<TValue>();
                 }

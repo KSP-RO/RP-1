@@ -13,10 +13,13 @@ namespace RP0.DataTypes
         public virtual void Load(ConfigNode node)
         {
             Clear();
+            int version = 1;
+            node.TryGetValue("version", ref version);
+
             foreach (ConfigNode n in node.nodes)
             {
                 T item;
-                if (n.name == "ITEM" || n.name == _typeName)
+                if (version == 1 || n.name == "ITEM" || n.name == _typeName)
                 {
                     item = Activator.CreateInstance<T>();
                 }

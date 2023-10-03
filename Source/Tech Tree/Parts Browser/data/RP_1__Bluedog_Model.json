@@ -512,5 +512,28 @@
         "entry_cost_mods": "7500,RO-IRIS",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "RP0Cherenkov",
+        "title": "CD01 - Cherenkov Detector",
+        "description": "",
+        "mod": "RP-1 (Bluedog Model)",
+        "cost": "200",
+        "entry_cost": "2500",
+        "category": "SCIENCE",
+        "info": "Cosmic Ray",
+        "year": "1963",
+        "technology": "scienceHuman",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "CD-1",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "Cherenkov",
+        "module_tags": [
+            "Instruments"
+        ]
     }
 ]

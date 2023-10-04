@@ -101,6 +101,30 @@
     <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg">
       <Link>Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyComSat-CA.cfg">
+      <Link>Contracts\Commercial Applications 1\EarlyComSat-CA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyMolniyaSat.cfg">
+      <Link>Contracts\Commercial Applications 1\EarlyMolniyaSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyNavNetwork3.cfg">
+      <Link>Contracts\Commercial Applications 1\EarlyNavNetwork3.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyNavNetwork4.cfg">
+      <Link>Contracts\Commercial Applications 1\EarlyNavNetwork4.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyNavSat-CA.cfg">
+      <Link>Contracts\Commercial Applications 1\EarlyNavSat-CA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\FirstComSat-CA.cfg">
+      <Link>Contracts\Commercial Applications 1\FirstComSat-CA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\FirstMolniyaSat-CA.cfg">
+      <Link>Contracts\Commercial Applications 1\FirstMolniyaSat-CA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\FirstNavSat-CA.cfg">
+      <Link>Contracts\Commercial Applications 1\FirstNavSat-CA.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Early Lunar Probes\LunarFlyby.cfg">
       <Link>Contracts\Early Lunar Probes\LunarFlyby.cfg</Link>
     </Content>
@@ -199,6 +223,27 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed Adv\Rendezvous.cfg">
       <Link>Contracts\Earth Crewed Adv\Rendezvous.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSCherenkov.cfg">
+      <Link>Contracts\Earth Observation 1\EOSCherenkov.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSCorona.cfg">
+      <Link>Contracts\Earth Observation 1\EOSCorona.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSCoronaRep.cfg">
+      <Link>Contracts\Earth Observation 1\EOSCoronaRep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSCosmicRay1.cfg">
+      <Link>Contracts\Earth Observation 1\EOSCosmicRay1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSGrav1.cfg">
+      <Link>Contracts\Earth Observation 1\EOSGrav1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSIRRad1.cfg">
+      <Link>Contracts\Earth Observation 1\EOSIRRad1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSMagScan1.cfg">
+      <Link>Contracts\Earth Observation 1\EOSMagScan1.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Satellites\ComTestSat.cfg">
       <Link>Contracts\Earth Satellites\ComTestSat.cfg</Link>
@@ -710,6 +755,9 @@
     <Content Include="..\GameData\RP-1\Parts\SampleReturnCapsule\RP0SampleReturnCommand.cfg">
       <Link>Parts\SampleReturnCapsule\RP0SampleReturnCommand.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Parts\Science\CD01-CherenkovCounter.cfg">
+      <Link>Parts\Science\CD01-CherenkovCounter.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Parts\Science\CR01-GeigerMuller.cfg">
       <Link>Parts\Science\CR01-GeigerMuller.cfg</Link>
     </Content>
@@ -856,6 +904,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Science\Experiments\BioSample.cfg">
       <Link>Science\Experiments\BioSample.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Science\Experiments\Cherenkov.cfg">
+      <Link>Science\Experiments\Cherenkov.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Science\Experiments\CosmicRay.cfg">
       <Link>Science\Experiments\CosmicRay.cfg</Link>

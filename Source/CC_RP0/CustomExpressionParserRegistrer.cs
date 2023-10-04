@@ -49,7 +49,7 @@ namespace ContractConfigurator.RP0
 
         private static void RegisterMethods()
         {
-            Debug.Log("[RP0] CustomExpressionParserRegistrer registering methods");
+            RP0Debug.Log("CustomExpressionParserRegistrer registering methods");
             RegisterGlobalFunction(new Function<int>("RP1CommsPayload", GetCommsPayload, false));
             RegisterGlobalFunction(new Function<int>("RP1WeatherPayload", GetWeatherPayload, false));
         }

@@ -11,9 +11,11 @@ Instruments,Tag
 Nuclear,Tag
 Reentry,Tag
 Toxic,Tag
+Cryogenic,Tag
 Hydrolox,Tag
 TankBalloon,Tag
 TankServiceModule,Tag
 NonReentryRated,
 UnpressurizedCockpit,
 NuclearRTG,Tag
+isDynamic,TagSetting

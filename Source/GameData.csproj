@@ -44,14 +44,12 @@
   <ItemGroup>
     <Content Include="..\GameData\RP-1\Avionics.cfg" />
     <Content Include="..\GameData\RP-1\changelog.cfg" />
-    <Content Include="..\GameData\RP-1\CrewHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-1\CrewSettings.cfg" />
     <Content Include="..\GameData\RP-1\CrewTrainingTimes.cfg" />
     <Content Include="..\GameData\RP-1\CustomBarnKit.cfg" />
     <Content Include="..\GameData\RP-1\Deprecation.cfg" />
     <Content Include="..\GameData\RP-1\GameParameters.cfg" />
     <Content Include="..\GameData\RP-1\KSPCommunityFixes.cfg" />
-    <Content Include="..\GameData\RP-1\MaintenanceSettings.cfg" />
     <Content Include="..\GameData\RP-1\ModuleStationParts.cfg" />
     <Content Include="..\GameData\RP-1\NonRP0.cfg" />
     <Content Include="..\GameData\RP-1\PartHacks.cfg" />
@@ -59,6 +57,7 @@
     <Content Include="..\GameData\RP-1\ProgramHandlerSettings.cfg" />
     <Content Include="..\GameData\RP-1\RealFuelsSettings.cfg" />
     <Content Include="..\GameData\RP-1\ResourceCosts.cfg" />
+    <Content Include="..\GameData\RP-1\SpaceCenterSettings.cfg" />
     <Content Include="..\GameData\RP-1\TestFlightRnD.cfg" />
     <Content Include="..\GameData\RP-1\ToolingDefinitions.cfg" />
     <Content Include="..\GameData\RP-1\zFinal.cfg" />
@@ -618,9 +617,6 @@
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\BreakSoundBarrier.cfg">
       <Link>Contracts\X-Plane Research\BreakSoundBarrier.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\RocketPlaneDevelopment.cfg">
-      <Link>Contracts\X-Plane Research\RocketPlaneDevelopment.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\RocketPlaneDevelopmentOptional.cfg">
       <Link>Contracts\X-Plane Research\RocketPlaneDevelopmentOptional.cfg</Link>
     </Content>
@@ -630,14 +626,23 @@
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHighAltitudeOptional.cfg">
       <Link>Contracts\X-Plane Research\XPlanesHighAltitudeOptional.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHypersonic.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesHypersonic.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHypersonicOptional.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesHypersonicOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesKarman.cfg">
       <Link>Contracts\X-Plane Research\XPlanesKarman.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesStratosphericResearch.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesStratosphericResearch.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesStratosphericResearchOptional.cfg">
+      <Link>Contracts\X-Plane Research\XPlanesStratosphericResearchOptional.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSuborbital.cfg">
       <Link>Contracts\X-Plane Research\XPlanesSuborbital.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonic.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSupersonic.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg">
       <Link>Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg</Link>
@@ -647,9 +652,6 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalLow.cfg">
       <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalLow.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalMid.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalMid.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>
@@ -689,6 +691,18 @@
     </Content>
     <Content Include="..\GameData\RP-1\Parts\RFProcTanks.cfg">
       <Link>Parts\RFProcTanks.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Parts\ContractSat\CommunicationSat.cfg">
+      <Link>Parts\ContractSat\CommunicationSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Parts\ContractSat\ContractSatTanks.cfg">
+      <Link>Parts\ContractSat\ContractSatTanks.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Parts\ContractSat\NavigationSat.cfg">
+      <Link>Parts\ContractSat\NavigationSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Parts\ContractSat\ROL-ContractSat.cfg">
+      <Link>Parts\ContractSat\ROL-ContractSat.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Parts\SampleReturnCapsule\RP0SampleReturnCapsule.cfg">
       <Link>Parts\SampleReturnCapsule\RP0SampleReturnCapsule.cfg</Link>
@@ -753,14 +767,17 @@
     <Content Include="..\GameData\RP-1\Parts\Science\PHOTO01-EarlyFilmCamera.cfg">
       <Link>Parts\Science\PHOTO01-EarlyFilmCamera.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Parts\Science\PHOTO02-ImprovedFilmCamera.cfg">
-      <Link>Parts\Science\PHOTO02-ImprovedFilmCamera.cfg</Link>
+    <Content Include="..\GameData\RP-1\Parts\Science\PHOTO02-BasicFilmCamera.cfg">
+      <Link>Parts\Science\PHOTO02-BasicFilmCamera.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Parts\Science\PHOTO03-HighResFilmCamera.cfg">
-      <Link>Parts\Science\PHOTO03-HighResFilmCamera.cfg</Link>
+    <Content Include="..\GameData\RP-1\Parts\Science\PHOTO03-ImprovedFilmCamera.cfg">
+      <Link>Parts\Science\PHOTO03-ImprovedFilmCamera.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Parts\Science\PHOTO04-DigitalCamera.cfg">
-      <Link>Parts\Science\PHOTO04-DigitalCamera.cfg</Link>
+    <Content Include="..\GameData\RP-1\Parts\Science\PHOTO04-HighResFilmCamera.cfg">
+      <Link>Parts\Science\PHOTO04-HighResFilmCamera.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Parts\Science\PHOTO05-DigitalCamera.cfg">
+      <Link>Parts\Science\PHOTO05-DigitalCamera.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Parts\Science\RPWS01-PlasmaWave.cfg">
       <Link>Parts\Science\RPWS01-PlasmaWave.cfg</Link>
@@ -999,6 +1016,9 @@
     <Content Include="..\GameData\RP-1\Tree\OrphanNode.cfg">
       <Link>Tree\OrphanNode.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Tree\PayloadLevels.cfg">
+      <Link>Tree\PayloadLevels.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Tree\PFTechLevels.cfg">
       <Link>Tree\PFTechLevels.cfg</Link>
     </Content>
@@ -1034,6 +1054,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Tree\TREE-Parts.cfg">
       <Link>Tree\TREE-Parts.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Tree\TREE-SubConfigs.cfg">
+      <Link>Tree\TREE-SubConfigs.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Tree\UpgradeCleanup.cfg">
       <Link>Tree\UpgradeCleanup.cfg</Link>

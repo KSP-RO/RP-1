@@ -1,0 +1,1072 @@
+[
+{
+"name": "ORM-65",
+"config": "ORM65",
+"cost": 34
+},
+{
+"name": "A-4",
+"config": "A-4",
+"cost": 320
+},
+{
+"name": "RD-1",
+"config": "RD1",
+"cost": 42
+},
+{
+"name": "WAC-Corporal",
+"config": "Aerobee",
+"cost": 18
+},
+{
+"name": "U-1250",
+"config": "U1250",
+"cost": 26
+},
+{
+"name": "RD-100",
+"config": "RD100",
+"cost": 320
+},
+{
+"name": "Veronique",
+"config": "Veronique",
+"cost": 80
+},
+{
+"name": "XLR11-RM-3",
+"config": "XLR11",
+"cost": 163
+},
+{
+"name": "XLR41-NA-1",
+"config": "XLR41",
+"cost": 330
+},
+{
+"name": "XLR10-RM-2",
+"config": "XLR10",
+"cost": 114
+},
+{
+"name": "RD-200",
+"config": "RD200",
+"cost": 109
+},
+{
+"name": "XLR43-NA-1",
+"config": "NAA75_110",
+"cost": 270
+},
+{
+"name": "S2.253",
+"config": "S2.253",
+"cost": 184
+},
+{
+"name": "Stentor",
+"config": "Stentor",
+"cost": 135
+},
+{
+"name": "XLR25-CW-1",
+"config": "XLR25",
+"cost": 200
+},
+{
+"name": "XLR43-NA-3",
+"config": "LR89",
+"cost": 248
+},
+{
+"name": "AJ10-37",
+"config": "AJ10_Early",
+"cost": 52
+},
+{
+"name": "Gamma-201",
+"config": "Gamma301",
+"cost": 108
+},
+{
+"name": "LR101-NA-3",
+"config": "LR101",
+"cost": 38
+},
+{
+"name": "LR43-NA-5",
+"config": "LR105",
+"cost": 276
+},
+{
+"name": "RD-107-8D74",
+"config": "RD107-117",
+"cost": 606
+},
+{
+"name": "RD-108-8D75",
+"config": "RD108-118",
+"cost": 620
+},
+{
+"name": "RD-211-8D57",
+"config": "RD211",
+"cost": 278
+},
+{
+"name": "S-155",
+"config": "S155",
+"cost": 138
+},
+{
+"name": "S-3",
+"config": "LR79",
+"cost": 387
+},
+{
+"name": "X-405",
+"config": "X405",
+"cost": 152
+},
+{
+"name": "Gamma-2",
+"config": "Gamma2",
+"cost": 106
+},
+{
+"name": "Gamma-8",
+"config": "Gamma8",
+"cost": 174
+},
+{
+"name": "LR83-NA-1",
+"config": "LR83",
+"cost": 530
+},
+{
+"name": "Model117",
+"config": "Agena",
+"cost": 51
+},
+{
+"name": "RD-0105",
+"config": "RD0105",
+"cost": 115
+},
+{
+"name": "RZ.1",
+"config": "RZ.2",
+"cost": 373
+},
+{
+"name": "Viking-2",
+"config": "VIking",
+"cost": 373
+},
+{
+"name": "LR87-AJ-3",
+"config": "LR87",
+"cost": 364
+},
+{
+"name": "LR91-AJ-3",
+"config": "LR91",
+"cost": 325
+},
+{
+"name": "XLR99-RM-2",
+"config": "XLR99",
+"cost": 315
+},
+{
+"name": "AJ10-104",
+"config": "AJ10_Mid",
+"cost": 63
+},
+{
+"name": "Juno45k-BI",
+"config": "Juno45k",
+"cost": 163
+},
+{
+"name": "Juno6k-BI",
+"config": "Juno6k",
+"cost": 59
+},
+{
+"name": "RD-0107",
+"config": "RD0110",
+"cost": 304
+},
+{
+"name": "RD-109-8D711",
+"config": "RD109",
+"cost": 196
+},
+{
+"name": "RD-215-8D513",
+"config": "RD215",
+"cost": 392
+},
+{
+"name": "G-1",
+"config": "G1",
+"cost": 136
+},
+{
+"name": "H-1-165k",
+"config": "H1",
+"cost": 392
+},
+{
+"name": "KDU-414",
+"config": "KDU414",
+"cost": 22
+},
+{
+"name": "MC-4-610",
+"config": "RangerRetro",
+"cost": 17
+},
+{
+"name": "RD-111-8D716",
+"config": "RD111",
+"cost": 576
+},
+{
+"name": "RD-219-8D713",
+"config": "RD219",
+"cost": 367
+},
+{
+"name": "RD-851",
+"config": "RD855",
+"cost": 96
+},
+{
+"name": "RD-852",
+"config": "RD856",
+"cost": 50
+},
+{
+"name": "S1.5400",
+"config": "RD58",
+"cost": 165
+},
+{
+"name": "Model8250",
+"config": "Agena SPS",
+"cost": 41
+},
+{
+"name": "RL10A-1",
+"config": "RL10",
+"cost": 294
+},
+{
+"name": "E-1",
+"config": "E1",
+"cost": 624
+},
+{
+"name": "LR87-LH2-TitanC",
+"config": "LR87LH2",
+"cost": 974
+},
+{
+"name": "RZ20-Mk1",
+"config": "RZ20",
+"cost": 301
+},
+{
+"name": "KTDU-5A",
+"config": "KTDU5A",
+"cost": 68
+},
+{
+"name": "AJ10-138",
+"config": "AJ10_Adv",
+"cost": 73
+},
+{
+"name": "NK-9",
+"config": "NK9",
+"cost": 401
+},
+{
+"name": "NK-9V",
+"config": "NK9V",
+"cost": 429
+},
+{
+"name": "RD-0203",
+"config": "RD0203",
+"cost": 362
+},
+{
+"name": "RD-0205",
+"config": "RD0212",
+"cost": 435
+},
+{
+"name": "RD-0206",
+"config": "RD0213",
+"cost": 419
+},
+{
+"name": "RD-0207",
+"config": "RD0214",
+"cost": 91
+},
+{
+"name": "RD-220",
+"config": "RD220",
+"cost": 542
+},
+{
+"name": "RD-221",
+"config": "RD221",
+"cost": 738
+},
+{
+"name": "S5.23",
+"config": "S5_23",
+"cost": 198
+},
+{
+"name": "Vesta",
+"config": "Vexin",
+"cost": 100
+},
+{
+"name": "RD-0208",
+"config": "RD0210",
+"cost": 489
+},
+{
+"name": "RD-0216",
+"config": "RD0216",
+"cost": 180
+},
+{
+"name": "RD-253",
+"config": "RD253",
+"cost": 728
+},
+{
+"name": "TD-339",
+"config": "TD339",
+"cost": 27
+},
+{
+"name": "HM-7",
+"config": "HM7",
+"cost": 428
+},
+{
+"name": "J-2-200k",
+"config": "J2",
+"cost": 1444
+},
+{
+"name": "RD-254",
+"config": "RD254",
+"cost": 796
+},
+{
+"name": "S5_35",
+"config": "KTDU35",
+"cost": 58
+},
+{
+"name": "F-1-1.5M",
+"config": "F1",
+"cost": 1855
+},
+{
+"name": "11D423",
+"config": "15D13",
+"cost": 152
+},
+{
+"name": "AJ10-137",
+"config": "AJ10_137",
+"cost": 159
+},
+{
+"name": "AstrisI",
+"config": "Astris",
+"cost": 33
+},
+{
+"name": "C-1",
+"config": "C1",
+"cost": 8
+},
+{
+"name": "11D417",
+"config": "KTDU417",
+"cost": 159
+},
+{
+"name": "LMAE",
+"config": "LMAE",
+"cost": 63
+},
+{
+"name": "LMDE-H",
+"config": "LMDE",
+"cost": 142
+},
+{
+"name": "NK-15",
+"config": "NK33",
+"cost": 781
+},
+{
+"name": "NK-15V",
+"config": "NK43",
+"cost": 653
+},
+{
+"name": "KTDU-425",
+"config": "KTDU425A",
+"cost": 107
+},
+{
+"name": "MR-80-TDE",
+"config": "MR-80-TDE",
+"cost": 27
+},
+{
+"name": "RD-858",
+"config": "RD858",
+"cost": 126
+},
+{
+"name": "RD-859",
+"config": "RD859",
+"cost": 128
+},
+{
+"name": "KTDU-416",
+"config": "KTDU416",
+"cost": 123
+},
+{
+"name": "M-1-Spec",
+"config": "M1",
+"cost": 4914
+},
+{
+"name": "AJ1200",
+"config": "AJ1200",
+"cost": 1132
+},
+{
+"name": "RD-0233-15D95",
+"config": "RD0233",
+"cost": 392
+},
+{
+"name": "RD-0236",
+"config": "RD0236",
+"cost": 90
+},
+{
+"name": "RD-57",
+"config": "RD57",
+"cost": 1601
+},
+{
+"name": "RD-270-8D420",
+"config": "RD270",
+"cost": 2185
+},
+{
+"name": "XLR129-P-1",
+"config": "LR129",
+"cost": 3263
+},
+{
+"name": "RD-0228",
+"config": "RD0228",
+"cost": 606
+},
+{
+"name": "RD-0229",
+"config": "RD0229",
+"cost": 571
+},
+{
+"name": "RD-0230",
+"config": "RD0230",
+"cost": 100
+},
+{
+"name": "RD-263-15D117",
+"config": "RD263",
+"cost": 721
+},
+{
+"name": "RD-56",
+"config": "KVD1",
+"cost": 480
+},
+{
+"name": "KRD-442",
+"config": "KRD442",
+"cost": 79
+},
+{
+"name": "KRD-61",
+"config": "KRD61",
+"cost": 85
+},
+{
+"name": "KRD-79",
+"config": "KRD79",
+"cost": 45
+},
+{
+"name": "HG-3",
+"config": "HG3",
+"cost": 2265
+},
+{
+"name": "F-1A_ETS",
+"config": "F-1A_ETS",
+"cost": 1969
+},
+{
+"name": "J-2T-200k",
+"config": "J2T",
+"cost": 2020
+},
+{
+"name": "RD-864-15D177",
+"config": "RD864",
+"cost": 163
+},
+{
+"name": "R-4D-11",
+"config": "R4D11",
+"cost": 10
+},
+{
+"name": "RD-301",
+"config": "RD301",
+"cost": 477
+},
+{
+"name": "RS-30",
+"config": "RS30",
+"cost": 994
+},
+{
+"name": "AJ10-190",
+"config": "AJ10_190",
+"cost": 88
+},
+{
+"name": "R-40A",
+"config": "R40",
+"cost": 18
+},
+{
+"name": "RS-25",
+"config": "SSME",
+"cost": 5704
+},
+{
+"name": "LE-3",
+"config": "LE3",
+"cost": 66
+},
+{
+"name": "RD-120",
+"config": "RD120",
+"cost": 789
+},
+{
+"name": "RD-8",
+"config": "RD8",
+"cost": 194
+},
+{
+"name": "RD-805",
+"config": "RD805",
+"cost": 88
+},
+{
+"name": "LE-5",
+"config": "LE5",
+"cost": 652
+},
+{
+"name": "RD-0243",
+"config": "RD0243",
+"cost": 584
+},
+{
+"name": "RD-0410MID",
+"config": "RD0410MID",
+"cost": 2278
+},
+{
+"name": "RD-0120",
+"config": "RD0120",
+"cost": 5549
+},
+{
+"name": "RD-170",
+"config": "RD170",
+"cost": 2650
+},
+{
+"name": "AJ10-151-OMS",
+"config": "AJ10_Transtar",
+"cost": 138
+},
+{
+"name": "R-42",
+"config": "R42",
+"cost": 15
+},
+{
+"name": "LRBE",
+"config": "LRBE",
+"cost": 2216
+},
+{
+"name": "RS-44-Core",
+"config": "RS44",
+"cost": 784
+},
+{
+"name": "LE-7",
+"config": "LE7",
+"cost": 2727
+},
+{
+"name": "Vikas-1",
+"config": "Vikas",
+"cost": 394
+},
+{
+"name": "STBE-1A",
+"config": "STBE1",
+"cost": 1200
+},
+{
+"name": "STME",
+"config": "STME",
+"cost": 4809
+},
+{
+"name": "XLR132",
+"config": "XLR132",
+"cost": 110
+},
+{
+"name": "Aestus",
+"config": "Aestus",
+"cost": 77
+},
+{
+"name": "LEROS-1b",
+"config": "LEROS1b",
+"cost": 13
+},
+{
+"name": "STBE",
+"config": "STBE",
+"cost": 3024
+},
+{
+"name": "Vulcain",
+"config": "Vulcain",
+"cost": 2095
+},
+{
+"name": "S5.98M",
+"config": "S5_98M",
+"cost": 136
+},
+{
+"name": "XRS-2200",
+"config": "XRS2200",
+"cost": 3236
+},
+{
+"name": "S5.92",
+"config": "S5_92",
+"cost": 119
+},
+{
+"name": "RD-0146",
+"config": "RD0146",
+"cost": 820
+},
+{
+"name": "RS-76",
+"config": "RS76",
+"cost": 2912
+},
+{
+"name": "RD-180",
+"config": "RD180",
+"cost": 1700
+},
+{
+"name": "RS-68",
+"config": "RS68",
+"cost": 3953
+},
+{
+"name": "ALCE",
+"config": "ALCE",
+"cost": 4527
+},
+{
+"name": "RD-701",
+"config": "RD701",
+"cost": 2493
+},
+{
+"name": "RD-704",
+"config": "RD704",
+"cost": 1634
+},
+{
+"name": "AMBR-623N",
+"config": "AMBR",
+"cost": 17
+},
+{
+"name": "MB-XX-Demo",
+"config": "MB45",
+"cost": 1410
+},
+{
+"name": "RD-0124",
+"config": "RD0124",
+"cost": 521
+},
+{
+"name": "ATCRE",
+"config": "ATCRE",
+"cost": 4349
+},
+{
+"name": "RS-2100",
+"config": "RS2100",
+"cost": 5097
+},
+{
+"name": "COBRA",
+"config": "COBRA",
+"cost": 5801
+},
+{
+"name": "Kestrel",
+"config": "Kestrel",
+"cost": 54
+},
+{
+"name": "Merlin1A",
+"config": "Merlin1",
+"cost": 327
+},
+{
+"name": "MR-80B",
+"config": "MR-80B",
+"cost": 26
+},
+{
+"name": "Kestrel-1B",
+"config": "Kestrel_1B",
+"cost": 65
+},
+{
+"name": "RD-0242M2",
+"config": "RD0242M2",
+"cost": 135
+},
+{
+"name": "COBRAH",
+"config": "COBRAH",
+"cost": 7796
+},
+{
+"name": "MB-35",
+"config": "MB35",
+"cost": 1252
+},
+{
+"name": "MB-60",
+"config": "MB60",
+"cost": 1752
+},
+{
+"name": "RD-151",
+"config": "RD191",
+"cost": 1100
+},
+{
+"name": "RS-83",
+"config": "RS83",
+"cost": 6910
+},
+{
+"name": "RS-84",
+"config": "RS84",
+"cost": 2713
+},
+{
+"name": "TR-107",
+"config": "TR107",
+"cost": 2180
+},
+{
+"name": "J-2X",
+"config": "J2X",
+"cost": 3458
+},
+{
+"name": "DFMMHPE-1",
+"config": "DFMMHPE",
+"cost": 1665
+},
+{
+"name": "RD-0110R",
+"config": "RD0110R",
+"cost": 188
+},
+{
+"name": "BE3",
+"config": "BE3",
+"cost": 917
+},
+{
+"name": "YF-77",
+"config": "YF77",
+"cost": 1600
+},
+{
+"name": "BNTR25k",
+"config": "BNTR25k",
+"cost": 4639
+},
+{
+"name": "Rutherford-SL",
+"config": "Rutherford",
+"cost": 60
+},
+{
+"name": "Rutherford-Vac",
+"config": "RutherfordVac",
+"cost": 72
+},
+{
+"name": "AR-1",
+"config": "AR1",
+"cost": 1852
+},
+{
+"name": "LAE",
+"config": "RS88",
+"cost": 166
+},
+{
+"name": "LEROS-4",
+"config": "LEROS4",
+"cost": 19
+},
+{
+"name": "SuperDraco",
+"config": "SuperDraco",
+"cost": 89
+},
+{
+"name": "INsTAR",
+"config": "INsTAR",
+"cost": 11489
+},
+{
+"name": "ISE-100",
+"config": "ISE100",
+"cost": 7
+},
+{
+"name": "AR-22",
+"config": "AR22",
+"cost": 5294
+},
+{
+"name": "BE-4",
+"config": "BE4",
+"cost": 1332
+},
+{
+"name": "RD-0162",
+"config": "RD0162",
+"cost": 1561
+},
+{
+"name": "RD-0164",
+"config": "RD0164",
+"cost": 1523
+},
+{
+"name": "RD-0169",
+"config": "RD0169",
+"cost": 912
+},
+{
+"name": "RL60",
+"config": "RL60",
+"cost": 1050
+},
+{
+"name": "BNTR",
+"config": "BNTR",
+"cost": 4316
+},
+{
+"name": "F-1B",
+"config": "F1B",
+"cost": 2125
+},
+{
+"name": "LE-9",
+"config": "LE9",
+"cost": 2812
+},
+{
+"name": "Aeon1-SL",
+"config": "Aeon1",
+"cost": 156
+},
+{
+"name": "Raptor",
+"config": "Raptor",
+"cost": 1608
+},
+{
+"name": "M10",
+"config": "M10",
+"cost": 293
+},
+{
+"name": "KIWIA24",
+"config": "KIWIA24",
+"cost": 1345
+},
+{
+"name": "KIWIB48",
+"config": "KIWIB48",
+"cost": 5437
+},
+{
+"name": "LPNTR-3200HP",
+"config": "LPNTR",
+"cost": 1485
+},
+{
+"name": "LRCLNTR",
+"config": "LRCLNTR",
+"cost": 17200
+},
+{
+"name": "NERVA_NRX",
+"config": "NERVA_NRX",
+"cost": 5976
+},
+{
+"name": "NERVA_XE",
+"config": "NERVA_XE",
+"cost": 5788
+},
+{
+"name": "NERVA-I",
+"config": "NERVA",
+"cost": 7304
+},
+{
+"name": "NERVA-II",
+"config": "NERVAII",
+"cost": 11596
+},
+{
+"name": "PEWEE100",
+"config": "PEWEE100",
+"cost": 3965
+},
+{
+"name": "Phoebus1N50",
+"config": "Phoebus1N50",
+"cost": 6048
+},
+{
+"name": "Phoebus2N100",
+"config": "Phoebus2N100",
+"cost": 10924
+},
+{
+"name": "PrincetonLNTR-WCH",
+"config": "PrincetonLNTR",
+"cost": 7441
+},
+{
+"name": "RD-0120T",
+"config": "RD0120T",
+"cost": 4149
+},
+{
+"name": "RD-0225",
+"config": "RD0225",
+"cost": 26
+},
+{
+"name": "RD-510",
+"config": "RD510",
+"cost": 383
+},
+{
+"name": "RL200-200k",
+"config": "RL200",
+"cost": 1436
+},
+{
+"name": "RS-25-650",
+"config": "SSME650",
+"cost": 6229
+},
+{
+"name": "RS-25A-50X",
+"config": "SSME50X",
+"cost": 6802
+},
+{
+"name": "SmallEngine",
+"config": "SmallEngine",
+"cost": 2836
+},
+{
+"name": "SNTPPFE100-Hydrogen",
+"config": "SNTPPFE100",
+"cost": 7102
+},
+{
+"name": "SSBE",
+"config": "SSBE",
+"cost": 2427
+},
+{
+"name": "TR-308",
+"config": "TR308",
+"cost": 13
+}
+]

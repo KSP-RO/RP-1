@@ -1,0 +1,412 @@
+Missing parts:
+RD1 : RD-1
+LR83 : LR83-NA-1
+KTDU5A : KTDU-5A
+RD220 : RD-220
+RD221 : RD-221
+15D13 : 11D423
+KTDU416 : KTDU-416
+RD0228 : RD-0228
+KRD442 : KRD-442
+KRD61 : KRD-61
+KRD79 : KRD-79
+RD805 : RD-805
+RD0243 : RD-0243
+LRBE : LRBE
+LEROS1b : LEROS-1b
+Kestrel_1B : Kestrel-1B
+RD0242M2 : RD-0242M2
+DFMMHPE : DFMMHPE-1
+BNTR25k : BNTR25k
+LEROS4 : LEROS-4
+INsTAR : INsTAR
+RD0120T : RD-0120T
+RD0225 : RD-0225
+RD510 : RD-510
+SSME650 : RS-25-650
+SSME50X : RS-25A-50X
+SmallEngine : SmallEngine
+SSBE : SSBE
+
+Missing Configs:
+S5.92-l.n.
+LRBE-BlockII
+AMBR-890N
+DFMMHPE-2
+Aeon1-Vac
+Raptor 2
+Raptor 3
+RD-112
+RD-113
+RD-114
+RD-115
+RD-222
+RD-223
+RS-25D-50X
+SSBE-BlockII
+Valois-B
+Vexin-A
+Vikas-X
+
+Changes:
+Configs changed:
+Larch-2 : was 6, now 3
+Larch-4 : was 20, now 13
+Larch-8 : was 10, now 6
+RD-0106 : was 0, now -6
+RD-119-8D710 : was -7, now 42
+RD-217-8D515 : was -14, now -26
+S5.2 : was 58, now -50
+X-405H-2 : was 32, now 10
+XLR81-BA-7 : was 8, now 50
+AJ10-118 : was 4, now 6
+AJ10-118D : was 6, now 8
+Juno45k-BII : was 3, now 5
+Juno6k-BII : was 2, now 3
+LR101-NA-11 : was -2, now -5
+LR105-NA-6 : was 3, now -3
+LR87-AJ-5 : was -9, now 1
+LR89-NA-6 : was 32, now 124
+LR91-AJ-5 : was -27, now -23
+S-3FH : was 27, now 4
+X-405H-3 : was 46, now 39
+XLR81-BA-11 : was 14, now 57
+LR79-NA-13 : was 19, now -9
+RD-0108 : was 3, now 2
+RD-111-8D716A : was 66, now 129
+RD-250-8D518 : was -21, now -16
+RD-252-8D724 : was 10, now 59
+RL10A-3-1 : was 40, now 56
+Viking-4B : was 64, now 14
+Viking-5B : was 37, now 26
+11D33 : was 3, now 10
+H-1-188k : was 5, now 15
+LR87-AJ-7 : was -8, now 7
+LR91-AJ-7 : was -3, now 1
+RD-855 : was 18, now 22
+RD-856 : was -3, now -2
+XLR11-RM-13-10k : was 213, now -4
+AJ10-118E : was 3, now 4
+G-1A : was 18, now 36
+Isayev-R17 : was 61, now -48
+LR105-NA-7.1 : was 30, now 34
+LR87-AJ-9 : was -8, now 8
+LR89-NA-7.1 : was 75, now 163
+LR91-AJ-9 : was 6, now 10
+Model8096-39 : was 17, now 62
+RD-0110 : was 34, now 76
+RD-107-8D728 : was -5, now -52
+RD-108-8D727 : was -14, now -60
+Vexin : was 0, now -12
+XLR81-BA-13 : was 16, now 59
+11D33M : was 1, now 10
+AJ10-133-LH : was 152, now 133
+E-1-468k : was 12, now 28
+H-1-200k : was 6, now 21
+LR87-LH2-Vacuum : was 153, now 179
+RL10A-3-3 : was 54, now 145
+S5_60 : was 0, now 1
+XLR81-LF2-SPS : was 695, now 401
+J-2-225k : was 26, now 99
+LR105-NA-7.2 : was 30, now 34
+LR89-NA-7.2 : was 77, now 171
+Model8096A : was 24, now 73
+RD-0203U : was 16, now 23
+RD-0210 : was 21, now -41
+RD-0212 : was 7, now 36
+RD-0213 : was 6, now 20
+RD-0214 : was 1, now 4
+RD-253-Mk2 : was 1, now 4
+RD-58 : was 51, now 76
+Viking-4C : was 65, now 16
+Viking-5C : was 38, now 27
+Viking-6 : was 38, now 27
+11D23 : was 34, now 69
+15D13 : was 0, now -8
+AstrisII : was 5, now 9
+ISPS : was 17, now 10
+ISPS-HDA : was 17, now 11
+LR87-LH2-SustainerUpgrade : was 145, now 225
+RD-215M-8D613 : was -2, now -9
+RZ20-Mk2 : was 13, now 74
+11D417B : was 0, now -79
+E-1-500k : was 15, now 38
+F-1-1.52M : was 12, now 34
+J-2-230k : was 67, now 201
+NK-19 : was 33, now 51
+NK-21 : was -18, now -23
+NK-9-1969 : was 11, now 31
+RD-254-11D44-Mk2 : was 2, now 7
+E-1-Upgrade : was 100, now 22
+LR87-AJ-11 : was 12, now 33
+LR87-LH2-VacuumUpgrade : was 216, now 447
+RD-250PM : was -17, now -14
+RD-262-11D26 : was 17, now 71
+RL10A-3-7 : was 501, now 524
+Valois-A : was 0, now 29
+LMDE-J : was 1, now 2
+LR91-AJ-11 : was 9, now 21
+5D22 : was 12, now 40
+AJ10-118F : was -4, now 4
+H-1-205k : was 7, now 22
+HM-7B : was 36, now 86
+KTDU-425A : was 2, now 6
+LR87-AJ-11A : was 14, now 40
+NK-9-1972 : was 12, now 34
+RL10A-3-9 : was 503, now 405
+TR-201 : was -90, now -72
+NK-31 : was 46, now 108
+NK-39 : was -5, now 39
+RD-0235 : was 37, now 57
+RD-107-11D512 : was 11, now -32
+RD-108-11D511 : was 19, now -11
+RD-254-11D44-Mk3 : was 3, now 10
+RD-270M-8D420M : was 85, now 841
+RD-58M : was 60, now 111
+RS-27 : was 52, now 67
+J-2S : was 336, now 527
+NK-33 : was 6, now 69
+NK-43 : was 56, now 232
+RL10A-3-3A : was 61, now 188
+E-1-575k : was 22, now 63
+E-1-Upgrade2 : was 50, now 45
+E-1A_KS : was 47, now 113
+H-1-250k : was 14, now 46
+HG-3-SL : was -50, now 383
+HM-7B+ : was 45, now 117
+LR129-P-1 : was -154, now 177
+M-1 : was 84, now 261
+M-1SL : was -54, now 108
+Model8096C : was -6, now 67
+RD-116-8D420K : was 41, now 100
+F-1A : was 69, now 188
+KVD-1 : was -57, now 60
+RD-0210-Mk2 : was 21, now -39
+RD-0212-Mk2 : was 8, now 41
+RD-0213-Mk2 : was 7, now 22
+RD-253-Mk3 : was 2, now 5
+RD-268-15D168 : was -31, now -39
+17D12 : was 63, now 127
+HG-3A : was 44, now 120
+HG-3A-SL : was -8, now 523
+J-2T-250k : was 186, now 83
+LR129-P-2 : was 525, now 649
+RD-107-11D512P : was 13, now -19
+RD-108-11D511P : was 21, now 2
+LR91-AJ-11A : was 14, now 42
+RL10A-3-3B : was 57, now 154
+M-1U : was 825, now 478
+M-1U-SL : was 659, now 391
+RD-0255 : was -3, now -11
+RD-0256 : was -2, now -6
+RD-0257 : was 0, now -1
+RD-253-Mk4 : was 2, now 6
+RD-273-15D286 : was 11, now 27
+RD-869-15D300 : was 0, now 2
+Model8096L : was 33, now 91
+HG-3B : was 624, now 697
+HG-3B-2 : was 618, now 682
+HG-3B-SL : was 551, now 1106
+HG-3B-SL-2 : was 493, now 1089
+RD-171 : was -25, now 450
+RS-25A : was 273, now 67
+AJ10-118K : was -3, now 5
+RS-27A : was 80, now 100
+HM-7B++ : was 47, now 118
+LR101-NA-15 : was -6, now -11
+RS-56-OBA : was 216, now 327
+RS-56-OSA : was 31, now 39
+RD-0120M : was 43, now 138
+RL10A-4 : was 73, now 230
+RL10A-4N : was 85, now 288
+RD-0210-Mk3 : was 29, now 11
+RD-0212-Mk3 : was 8, now 41
+RD-0213-Mk3 : was 7, now 22
+RD-275 : was 3, now 15
+RL10A-4-1N : was 85, now 298
+RL10A-5 : was 468, now 93
+RS-44-Incremental : was 54, now 303
+LE-5A : was 4, now 25
+RD-120K : was -17, now -92
+RD-57M : was 133, now 238
+LR129-P-3 : was 618, now 853
+RD-58S : was 61, now 120
+RD-172-173 : was 71, now 1303
+RS-25C : was 356, now 54
+RD-0411-Hydrogen : was 5470, now 6836
+RD-0122 : was 270, now 571
+RL10B-2 : was 141, now 596
+RS-44-Full : was 78, now 429
+RL10A-4-1-2 : was 72, now 231
+RL10A-4-2N : was 86, now 303
+STBE-1B : was 28, now 124
+STBE-3 : was 89, now 516
+LE-5B : was 31, now 64
+LE-7A : was 83, now 23
+RD-107A-14D22 : was -2, now -26
+RD-108A-14D21 : was -29, now -60
+Agena-2000 : was 26, now 101
+Vulcain-2 : was 462, now 561
+LE-7A-2 : was 183, now 181
+RD-120F : was 7, now 16
+RD-171M : was 59, now 650
+RD-58M-CCN : was 118, now 197
+Vikas-1+ : was 17, now 18
+Vikas-2 : was 21, now -28
+RD-275M : was 7, now 28
+Merlin1B : was 47, now 69
+Merlin1BVac : was 116, now 162
+Merlin1C : was 10, now 37
+RD-57A-1 : was -126, now -156
+R-42DM : was 6, now 3
+AJ26-58 : was 73, now 178
+AJ26-59 : was 87, now 199
+AJ26-60 : was 59, now 139
+LE-5B-2 : was 42, now 92
+MB-45 : was 92, now 109
+NK-9-2009 : was 16, now 49
+RD-277M-14D16M : was 9, now 29
+RS-76A : was -37, now -56
+CE-7.5 : was -44, now 20
+Merlin1CVac : was 59, now 91
+RS-68A : was 66, now 89
+Vikas-2B : was 37, now 5
+AJ26-62 : was 74, now 195
+Merlin1D : was -25, now 43
+Merlin1DVac : was -4, now 86
+RD-193 : was -75, now 327
+RD-0146D : was -29, now 182
+RD-191 : was 24, now 503
+RL10C-1 : was 99, now 340
+RS-68B : was 140, now 218
+ATCRE-BlockII : was 225, now 1203
+Merlin1D+ : was -20, now 56
+Merlin1DVac+ : was 6, now 121
+RS-68K : was -193, now 37
+CECE-Base : was 546, now 810
+CECE-High : was 138, now 572
+CECE-Methane : was 528, now 167
+Merlin1D++ : was -20, now 56
+Aestus-II : was 40, now 106
+RD-181 : was 4, now 482
+RS-88 : was 0, now -2
+RD-0162A : was 42, now -68
+RS-18 : was 20, now 46
+RS-800 : was 713, now 1040
+Vinci-180 : was -44, now -60
+RL10C-1-1 : was 98, now 360
+RL10C-2-1 : was 144, now 602
+LE-5B-3 : was 45, now 108
+RL10C-3 : was 120, now 479
+PrincetonLNTR-ZrC : was 0, now -813
+RL200-225k : was 3, now 65
+RL200-230k : was 8, now 179
+RL200S : was 194, now 554
+SNTPPFE100-Prototype : was 0, now -779
+TR-312-100MN : was 3, now 2
+
+Parts changed:
+bluedog_Atlas_LR105(LR105 Series) : was 275, now 276
+bluedog_Vega_Engine(X-405H) : was 151, now 152
+bluedog_LR87_mod1(LR87 Series) : was 728, now 364
+bluedog_ablestarEngine(AJ10 Series (Mid)) : was 41, now 63
+bluedog_H1C(H-1/RS-27 Series) : was 372, now 392
+bluedog_Titan_TranstageEngine(AJ10-138) : was 2150, now 73
+KIWIA24(LV-NKA24 "KIWI A24" Atomic Rocket Motor) : was 3240, now 1345
+KIWIB48(LV-NKB48 "KIWI B48" Atomic Rocket Motor) : was 7582, now 5437
+NERVA_NRX(LV-NRX50 "NERVA NRX 50" Atomic Rocket Motor) : was 6825, now 5976
+NERVA_XE(LV-NXE100 "NERVA XE 100" Atomic Rocket Motor) : was 5946, now 5788
+PEWEE100(LV-NPW100 "Pewee 100" Atomic Rocket Motor) : was 2191, now 3965
+Phoebus1N50(LV-NPO50 "Pheobus One 50" Atomic Rocket Motor) : was 5213, now 6048
+Phoebus2N100(LV-NPT100 "Pheobus Two 100" Atomic Rocket Motor) : was 8756, now 10924
+SNTPPFE100(LV-NSNTP-PFE100 "Partial Flow Expander Cycle Space Nuclear Thermal Propulsion" Atomic Rocket Motor) : was 2254, now 7102
+mer_engine(Cassini Main Engine Assembly) : was 20, now 10
+ca_lahar(R-40 Series) : was 16, now 18
+ca_linkor(Fregat-M Upper Stage) : was 110, now 119
+constellationBNTR(Bimodal Nuclear Thermal Rocket Engine) : was 4926, now 4316
+cryoengine-hawk-1(RS-18) : was 88, now 63
+cryoengine-iguanodon-1(BE-4) : was 869, now 1332
+cryoengine-pavonis-1(RL60/Vinci) : was 1124, now 1050
+cryoengine-tharsis-1(RL60/Vinci) : was 2248, now 1050
+cryoengine-fuji-1(LE-9) : was 2446, now 2812
+cryoengine-deinonychus-1(Raptor) : was 245, now 1608
+cryoengine-eagle-1(Raptor (Vacuum Variant)) : was 245, now 1608
+cryoengine-tyrannosaur-1(Raptor (Surface Variant)(x9)) : was 2205, now 1608
+cryoengine-buzzard-1(M10) : was 222, now 293
+LEM_ASCENT_STAGE(LEM Ascent Stage) : was 8550, now 63
+RD_0110(RD-0110) : was 285, now 304
+ntr-sc-25-1(Bimodal NTR) : was 4926, now 4316
+ntr-gc-25-1(Low Pressure NTR) : was 1051, now 1485
+RO-KA-LRCNTR(Lewis Research Center LNTR) : was 29355, now 17200
+ntr-sc-125-1(NERVA I) : was 5209, now 7304
+ntr-sc-125-2(NERVA II) : was 7882, now 11596
+RO-KA-PrincetonLNTR(Princeton LNTR) : was 7719, now 7441
+nflv-engine-ar1c-1(6x AR-1) : was 6480, now 1852
+R_40B_4kN(R-40B Bipropellant Engine) : was 25, now 18
+SuperDraco_Double(Twin SuperDraco) : was 180, now 89
+SuperDraco_Single(SuperDraco) : was 90, now 89
+liquidEngineMiniRescale(Aestus II) : was 107, now 77
+RSBengineF1B(F-1B) : was 1888, now 2125
+restock-engine-375-corgi(Exploration Upper Stage Engines) : was 4000, now 294
+restock-engine-125-pug(Aestus Vacuum Engine) : was 107, now 77
+restock-engine-boar(F-1B) : was 1888, now 2125
+RLA_mp_large_vac(RL60 Vacuum Engine) : was 1124, now 1050
+rn_r7_blok_i_4(R7 Block I (11A511L)) : was 1800, now 304
+rn_r7_blok_i_5(R7 Block I (11A511U, 11A511U-FG)) : was 1800, now 304
+rn_r7_blok_i_7(R7 Block I (14A14A)) : was 1800, now 304
+rn_kosmos3_rd216(dual-RD-215 Series) : was 784, now 392
+rn_lk_lander_859(LK Lander RD-859 Secondary Engine) : was 126, now 128
+rn_dnepr1_rd0255_vernier(RD-0257 Vernier) : was 110, now 100
+rn_dnepr1_rd264(RD-264 Rocket Engine) : was 507, now 721
+rn_lk_rd858_vernier(RD-858 Vernier) : was 4, now 126
+rn_lk_rd859(RD-859) : was 126, now 128
+rn_surveyor_s_engine(TD-339) : was 105, now 27
+rn_s3(S-3) : was 300, now 387
+rn_lr87_11(LR87 Booster) : was 728, now 364
+ROE-A4-RE(A-4 Series Engine) : was 332, now 320
+ROE-LR105(LR105 Series Engine) : was 275, now 276
+ROE-LR105-BDB(LR105 Series Engine) : was 275, now 276
+ROE-X405H-BDB(X-405H Vega) : was 151, now 152
+ROE-LR87(LR87 Engine) : was 728, now 364
+ROE-LR87-RN(LR87 Engine) : was 728, now 364
+ROE-LR87_11(LR87 (Shielded)) : was 728, now 364
+ROE-RD215(dual-RD-215 Series) : was 784, now 392
+ROE-H1C(H-1C Engine (No Gimbal)) : was 372, now 392
+ROE-H1C-SSTU(H-1C Engine (No Gimbal)) : was 372, now 392
+ROE-R40B(R-40B Bipropellant Engine) : was 25, now 18
+ROE-R40B-NicheParts(R-40B Bipropellant Engine) : was 25, now 18
+ROE-SuperDraco(SuperDraco) : was 90, now 89
+ROE-SuperDraco-NicheParts(SuperDraco) : was 90, now 89
+ROE-SuperDracoDouble(Twin SuperDraco) : was 180, now 89
+ROE-SuperDracoDouble-NicheParts(Twin SuperDraco) : was 180, now 89
+ROE-BE4(BE-4) : was 869, now 1332
+ROE-BNTR(Bimodal NTR) : was 4926, now 4316
+ROE-F1B(F-1B) : was 1888, now 2125
+ROE-Raptor(Raptor Engine) : was 245, now 1608
+ROE-RaptorVac(Raptor Engine (Vacuum)) : was 245, now 1608
+ROE-NERVAXE(NERVA XE) : was 5946, now 5788
+ROE-NERVA(NERVA) : was 5209, now 7304
+ROE-NERVAII(NERVA II) : was 7882, now 11596
+ROE-SNTPPFE100(SNTP-PFE100) : was 2254, now 7102
+ROEE-STME(STME) : was 5274, now 4809
+ROEE-XLR132(XLR132) : was 92, now 110
+ROEE-STBE(STBE) : was 2187, now 3024
+ROEE-ISE100(ISE-100) : was 8, now 7
+ROEE-AR22(AR-22) : was 5245, now 5294
+ROEE-RD0162(RD-0162) : was 882, now 1561
+ROEE-RD0164(RD-0164) : was 1019, now 1523
+ROEE-RD0169(RD-0169) : was 569, now 912
+ROEE-Aeon1(Aeon 1) : was 138, now 156
+ROEE-RL200(RL200) : was 1233, now 1436
+ROEE-TR308(TR-308) : was 16, now 13
+RO-LR105(LR105 Series) : was 275, now 276
+liquidEngine(LR105 Series) : was 275, now 276
+Size3EngineCluster(RS-25D/E 4 Engine mount) : was 22816, now 5704
+Size2LFB(Pyrios Booster) : was 0, now 2125
+nuclearEngine(NERVA I) : was 5209, now 7304
+SXTNERVA(Bimodal NTR) : was 4926, now 4316
+SXTNERVAB(NERVA II) : was 7882, now 11596
+corvus_lv_bare_engine_s1_1(RD-216) : was 784, now 392
+corvus_lv_engine_s1_1(RD-216) : was 784, now 392
+ALV_2_Engine_1(RD-0210 x4) : was 1956, now 489
+liquidEngineMiniTurbo(BE-4) : was 869, now 1332

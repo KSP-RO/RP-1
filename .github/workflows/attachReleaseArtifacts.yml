@@ -32,10 +32,20 @@ jobs:
         with:
           KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
 
+      # Install .NET SDKs
+      - name: Setup .NET Core 3.1
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 3.1.x
+      - name: Setup .NET 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@master
         with:
-          path: ${GITHUB_WORKSPACE}/Source/Properties/AssemblyInfo.cs
+          path: ${GITHUB_WORKSPACE}/Source/RP0/Properties/AssemblyInfo.cs
           tag: ${{ github.event.release.tag_name }}
 
       - name: Build mod solution

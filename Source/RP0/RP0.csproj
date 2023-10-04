@@ -1,0 +1,416 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Krafs.Publicizer.1.0.3\build\Krafs.Publicizer.props" Condition="Exists('..\packages\Krafs.Publicizer.1.0.3\build\Krafs.Publicizer.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{997854F8-4EFB-4A78-87BC-F7C8CEA64669}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>RP0</RootNamespace>
+    <AssemblyName>RP0</AssemblyName>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>..\..\GameData\RP-1\Plugins\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;ENABLE_PROFILER</DefineConstants>
+    <DebugType>portable</DebugType>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>preview</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <OutputPath>..\..\GameData\RP-1\Plugins\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>preview</LangVersion>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Avionics\ControlLockerUtils.cs" />
+    <Compile Include="Avionics\EditorBinder.cs" />
+    <Compile Include="Harmony\KSPWheel.cs" />
+    <Compile Include="UI\ProceduralAvionicsWindow.cs" />
+    <Compile Include="CareerLog\CareerEvent.cs" />
+    <Compile Include="CareerLog\CareerEventScope.cs" />
+    <Compile Include="CareerLog\CareerLog.cs" />
+    <Compile Include="CareerLog\CareerLogDto.cs" />
+    <Compile Include="UI\CareerLogGUI.cs" />
+    <Compile Include="CareerLog\ContractEvent.cs" />
+    <Compile Include="CareerLog\FacilityConstruction.cs" />
+    <Compile Include="CareerLog\FacilityConstructionEvent.cs" />
+    <Compile Include="CareerLog\FailureEvent.cs" />
+    <Compile Include="CareerLog\LaunchEvent.cs" />
+    <Compile Include="CareerLog\LCLogItem.cs" />
+    <Compile Include="CareerLog\LogPeriod.cs" />
+    <Compile Include="CareerLog\LPConstruction.cs" />
+    <Compile Include="CareerLog\LeaderEvent.cs" />
+    <Compile Include="CareerLog\TechResearchEvent.cs" />
+    <Compile Include="Crew\TrainingFlightEntry.cs" />
+    <Compile Include="Crew\TrainingCourse.cs" />
+    <Compile Include="Crew\TrainingTemplate.cs" />
+    <Compile Include="Harmony\CrewTransfer.cs" />
+    <Compile Include="Harmony\EditorLogic.cs" />
+    <Compile Include="Harmony\KerbalEVA.cs" />
+    <Compile Include="Settings\CrewSettings.cs" />
+    <Compile Include="Crew\TrainingDatabase.cs" />
+    <Compile Include="UI\TrainingGUI.cs" />
+    <Compile Include="Crew\TrainingExpiration.cs" />
+    <Compile Include="DataTypes\PersistentCompressedConfigNode.cs" />
+    <Compile Include="DataTypes\PersistentSortedList.cs" />
+    <Compile Include="DesignConcerns\UntooledParts.cs" />
+    <Compile Include="Utilities\DTUtils.cs" />
+    <Compile Include="Harmony\MainMenu.cs" />
+    <Compile Include="Harmony\CrewListItem.cs" />
+    <Compile Include="Harmony\EditorDriver.cs" />
+    <Compile Include="Harmony\EditorPartIcon.cs" />
+    <Compile Include="Harmony\KerbalRoster.cs" />
+    <Compile Include="Harmony\KSCSwitcher.cs" />
+    <Compile Include="Harmony\EngineersReport.cs" />
+    <Compile Include="Harmony\CostWidget.cs" />
+    <Compile Include="Harmony\AstronautComplex.cs" />
+    <Compile Include="Harmony\LoadGameDialog.cs" />
+    <Compile Include="Harmony\PlayerProfileInfo.cs" />
+    <Compile Include="Harmony\KSCFacilityContextMenu.cs" />
+    <Compile Include="Harmony\LaunchSiteFacility.cs" />
+    <Compile Include="Harmony\RDTechTree.cs" />
+    <Compile Include="Harmony\RDTech.cs" />
+    <Compile Include="Harmony\ScienceSubjectWidget.cs" />
+    <Compile Include="Harmony\RDNode.cs" />
+    <Compile Include="Singletons\DifficultyPresetChanger.cs" />
+    <Compile Include="Singletons\RFTagApplier.cs" />
+    <Compile Include="UI\KCT\GUI_AbMcButton.cs" />
+    <Compile Include="UI\KCT\GUI_DevPartsButton.cs" />
+    <Compile Include="UI\KCT\GUI_TopRightButton.cs" />
+    <Compile Include="UI\KCT\GUI_TopRightButtons.cs" />
+    <Compile Include="SpaceCenter\LaunchComplex\LCEfficiency.cs" />
+    <Compile Include="SpaceCenter\LaunchComplex\LCData.cs" />
+    <Compile Include="Leaders\CurrencyModifierQueryRP0.cs" />
+    <Compile Include="DataTypes\PersistentDictionary.cs" />
+    <Compile Include="DataTypes\PersistentHashSet.cs" />
+    <Compile Include="DataTypes\Misc.cs" />
+    <Compile Include="DataTypes\PersistentList.cs" />
+    <Compile Include="Harmony\EnumExtensions.cs" />
+    <Compile Include="Harmony\GameSettings.cs" />
+    <Compile Include="Harmony\CurrencyModifierQuery.cs" />
+    <Compile Include="Harmony\ProgressTracking.cs" />
+    <Compile Include="Harmony\Contract.cs" />
+    <Compile Include="Harmony\MissionControl.cs" />
+    <Compile Include="Harmony\ContractParameter.cs" />
+    <Compile Include="Harmony\Funding.cs" />
+    <Compile Include="Harmony\ModuleTripLogger.cs" />
+    <Compile Include="Harmony\StrategyConfig.cs" />
+    <Compile Include="SpaceCenter\Projects\FundTargetProject.cs" />
+    <Compile Include="Leaders\Effects\BaseEffect.cs" />
+    <Compile Include="Leaders\Effects\IntegrationRateModifier.cs" />
+    <Compile Include="Leaders\Effects\CurrencyModifier.cs" />
+    <Compile Include="Leaders\Effects\ResearchRateModifier.cs" />
+    <Compile Include="Leaders\LeaderUtils.cs" />
+    <Compile Include="Leaders\StrategyConfigRP0.cs" />
+    <Compile Include="Leaders\StrategyRP0.cs" />
+    <Compile Include="Milestones\Milestone.cs" />
+    <Compile Include="Milestones\MilestoneHandler.cs" />
+    <Compile Include="Milestones\NewspaperLoader.cs" />
+    <Compile Include="UI\NewspaperUI.cs" />
+    <Compile Include="Programs\ProgramFundingOverview.cs" />
+    <Compile Include="Requirements\LogicOps.cs" />
+    <Compile Include="Requirements\RequirementBlock.cs" />
+    <Compile Include="UI\ConfidenceWidget.cs" />
+    <Compile Include="ScenarioModules\Confidence.cs" />
+    <Compile Include="Debug.cs" />
+    <Compile Include="Harmony\Administration.cs" />
+    <Compile Include="Harmony\RDController.cs" />
+    <Compile Include="Harmony\PartListTooltip.cs" />
+    <Compile Include="Harmony\RDPartList.cs" />
+    <Compile Include="Harmony\ScienceWidget.cs" />
+    <Compile Include="Harmony\FundsWidget.cs" />
+    <Compile Include="Harmony\RealFuels.cs" />
+    <Compile Include="Harmony\Strategy.cs" />
+    <Compile Include="Harmony\StrategySystemConfig.cs" />
+    <Compile Include="ScenarioModules\UnlockCreditHandler.cs" />
+    <Compile Include="Singletons\LocalizationHandler.cs" />
+    <Compile Include="ScenarioModules\EntryCostStorage.cs" />
+    <Compile Include="ScenarioModules\FirstStart.cs" />
+    <Compile Include="Harmony\ApplicationLauncher.cs" />
+    <Compile Include="Harmony\KerbalismPatcher.cs" />
+    <Compile Include="Harmony\ContractsApp.cs" />
+    <Compile Include="Harmony\DifficultyOptionsMenu.cs" />
+    <Compile Include="Harmony\ReputationWidget.cs" />
+    <Compile Include="Harmony\Reputation.cs" />
+    <Compile Include="Harmony\ContractSystem.cs" />
+    <Compile Include="Harmony\ResearchAndDevelopment.cs" />
+    <Compile Include="Addons\GameplayTips.cs" />
+    <Compile Include="HarmonyPatcher.cs" />
+    <Compile Include="Harmony\BaseCrewAssignmentDialog.cs" />
+    <Compile Include="Addons\StartupPopup.cs" />
+    <Compile Include="Harmony\FlightEVA.cs" />
+    <Compile Include="Harmony\CustomBarnKit.cs" />
+    <Compile Include="Addons\LoadingScreenChanger.cs" />
+    <Compile Include="Settings\SpaceCenterSettings.cs" />
+    <Compile Include="Maintenance\MaintenanceHandler.cs" />
+    <Compile Include="Crew\CrewHandler.cs" />
+    <Compile Include="Settings\GameParameters.cs" />
+    <Compile Include="PartModules\ModuleNonRecharge.cs" />
+    <Compile Include="PartModules\ModuleNonReentryRated.cs" />
+    <Compile Include="PartModules\ModuleNoEVA.cs" />
+    <Compile Include="Singletons\HideEmptyNodes.cs" />
+    <Compile Include="PartModules\ModuleUnpressurizedCockpit.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsConfig.cs" />
+    <Compile Include="Avionics\ControlLocker.cs" />
+    <Compile Include="Avionics\ModuleProceduralAvionics.cs" />
+    <Compile Include="PartModules\ModuleRangeSafety.cs" />
+    <Compile Include="Avionics\ModuleAvionics.cs" />
+    <Compile Include="Avionics\ModuleScienceCore.cs" />
+    <Compile Include="PartModules\ModuleShowInfo.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsTechManager.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsTechNode.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsUnlockedNodes.cs" />
+    <Compile Include="Avionics\ProceduralAvionicsUtils.cs" />
+    <Compile Include="Harmony\StrategySystem.cs" />
+    <Compile Include="Programs\ProgramSpeedListItem.cs" />
+    <Compile Include="Programs\AdminExtender.cs" />
+    <Compile Include="Programs\ProgramStrategy.cs" />
+    <Compile Include="Requirements\PredicateBuilder.cs" />
+    <Compile Include="Programs\Program.cs" />
+    <Compile Include="Programs\ProgramHandler.cs" />
+    <Compile Include="Programs\ProgramHandlerSettings.cs" />
+    <Compile Include="Requirements\Requirements.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Tooling\ModuleToolingDiamLen.cs" />
+    <Compile Include="Tooling\ModuleTooling.cs" />
+    <Compile Include="Tooling\ModuleToolingProcAvionics.cs" />
+    <Compile Include="Tooling\ModuleToolingStockFairing.cs" />
+    <Compile Include="Tooling\ModuleToolingPFSide.cs" />
+    <Compile Include="Tooling\ModuleToolingGeneric.cs" />
+    <Compile Include="Tooling\ModuleToolingSSTUTank.cs" />
+    <Compile Include="Tooling\Parameter.cs" />
+    <Compile Include="Tooling\ParameterUnits.cs" />
+    <Compile Include="Tooling\ToolingDatabase.cs" />
+    <Compile Include="Tooling\ToolingDefinition.cs" />
+    <Compile Include="Tooling\ToolingScenario.cs" />
+    <Compile Include="Tooling\ModuleToolingPTank.cs" />
+    <Compile Include="UI\TooltipController_TextFunc.cs" />
+    <Compile Include="UpgradeScripts\v2_14_RemovePayload.cs" />
+    <Compile Include="UpgradeScripts\v3_0_ACRnD.cs" />
+    <Compile Include="UpgradeScripts\v2_8_1_RP0CrewScience.cs" />
+    <Compile Include="UpgradeScripts\v2_4_AdminLevels.cs" />
+    <Compile Include="UpgradeScripts\v2_3_UpgradeUnlockCredit.cs" />
+    <Compile Include="Utilities\BypassCertificateHandler.cs" />
+    <Compile Include="Utilities\CSV\CsvWriter.cs" />
+    <Compile Include="Utilities\ContinuousLogger.cs" />
+    <Compile Include="Utilities\ContractUtils.cs" />
+    <Compile Include="Utilities\CurrencyUtils.cs" />
+    <Compile Include="Utilities\KerbalismUtils.cs" />
+    <Compile Include="ModIntegrations\KACWrapper.cs" />
+    <Compile Include="Utilities\KSPUtils.cs" />
+    <Compile Include="Utilities\MathUtils.cs" />
+    <Compile Include="Utilities\ObjectSerializer.cs" />
+    <Compile Include="UI\MaintenanceGUI.cs" />
+    <Compile Include="UI\TopWindow.cs" />
+    <Compile Include="UI\UIBase.cs" />
+    <Compile Include="UI\UIHolder.cs" />
+    <Compile Include="UI\ContractGUI.cs" />
+    <Compile Include="UI\Tooltip.cs" />
+    <Compile Include="UI\ToolingGUI.cs" />
+    <Compile Include="UI\AvionicsGUI.cs" />
+    <Compile Include="Utilities\MiscUtils.cs" />
+    <Compile Include="Utilities\TransformUtils.cs" />
+    <Compile Include="SpaceCenter\AirlaunchParams.cs" />
+    <Compile Include="SpaceCenter\AirlaunchTechLevel.cs" />
+    <Compile Include="SpaceCenter\Projects\ConstructionProject.cs" />
+    <Compile Include="SpaceCenter\Projects\LCConstructionProject.cs" />
+    <Compile Include="SpaceCenter\Projects\LCOpsProject.cs" />
+    <Compile Include="UI\KCT\GUI_NewLC.cs" />
+    <Compile Include="UI\KCT\GUI_Personnel.cs" />
+    <Compile Include="SpaceCenter\LaunchComplex\LaunchComplex.cs" />
+    <Compile Include="SpaceCenter\PartCrewAssignment.cs" />
+    <Compile Include="SpaceCenter\Projects\PadConstructionProject.cs" />
+    <Compile Include="UI\DialogGUIButtonWithTooltip.cs" />
+    <Compile Include="UI\KCT\GUI_Tooltip.cs" />
+    <Compile Include="UI\KCT\GUIStates.cs" />
+    <Compile Include="UI\KCT\GUI_Airlaunch.cs" />
+    <Compile Include="UI\KCT\GUI_ClearLaunch.cs" />
+    <Compile Include="UI\KCT\GUI_CrewSelect.cs" />
+    <Compile Include="UI\KCT\GUI_DismantlePad.cs" />
+    <Compile Include="UI\KCT\GUI_Editor.cs" />
+    <Compile Include="UI\KCT\GUI_FirstRun.cs" />
+    <Compile Include="UI\KCT\GUI_NewPad.cs" />
+    <Compile Include="UI\KCT\GUI_VesselMerge.cs" />
+    <Compile Include="UI\KCT\GUI_Simulation.cs" />
+    <Compile Include="SpaceCenter\KCTCostModifier.cs" />
+    <Compile Include="ModIntegrations\CTIWrapper.cs" />
+    <Compile Include="PartModules\ModuleTagList.cs" />
+    <Compile Include="Persistence\GUIPosition.cs" />
+    <Compile Include="Persistence\KCTVesselData.cs" />
+    <Compile Include="Singletons\SingletonHost.cs" />
+    <Compile Include="SpaceCenter\SimulationParams.cs" />
+    <Compile Include="Utilities\HyperEdit_Utilities.cs" />
+    <Compile Include="Utilities\ECMHelper.cs" />
+    <Compile Include="SpaceCenter\Projects\ISpaceCenterProject.cs" />
+    <Compile Include="SpaceCenter\Projects\VesselProject.cs" />
+    <Compile Include="UI\KCT\GUI_BuildPlans.cs" />
+    <Compile Include="SpaceCenter\KCTEvents.cs" />
+    <Compile Include="Singletons\Database.cs" />
+    <Compile Include="UI\KCT\GUI_Main.cs" />
+    <Compile Include="UI\KCT\GUI_BuildList.cs" />
+    <Compile Include="UI\KCT\GUI_Presets.cs" />
+    <Compile Include="SpaceCenter\LaunchComplex\LCSpaceCenter.cs" />
+    <Compile Include="SpaceCenter\LaunchComplex\LCLaunchPad.cs" />
+    <Compile Include="Utilities\KCTWarpController.cs" />
+    <Compile Include="Utilities\Formula.cs" />
+    <Compile Include="SpaceCenter\Presets\PresetManager.cs" />
+    <Compile Include="SpaceCenter\Projects\ReconRolloutProject.cs" />
+    <Compile Include="Settings\KCTSettings.cs" />
+    <Compile Include="SpaceCenter\Projects\ResearchProject.cs" />
+    <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
+    <Compile Include="Utilities\KCTUtilities.cs" />
+    <Compile Include="Utilities\WindowHelper.cs" />
+    <Compile Include="SpaceCenter\KerbalConstructionTimeData.cs" />
+    <Compile Include="Utilities\TextureScale.cs" />
+    <Compile Include="Persistence\KCTVesselTracker.cs" />
+    <Compile Include="Singletons\KCTVesselTrackerEventHandler.cs" />
+    <Compile Include="SpaceCenter\VesselBuildValidator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Assembly-CSharp-firstpass">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ClickThroughBlocker">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ContractConfigurator, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ContractConfigurator\source\ContractConfigurator\bin\Release\ContractConfigurator.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ferramGraph">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\Ionic.Zip.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="Kerbalism112, Version=3.17.0.0, Culture=neutral, processorArchitecture=AMD64">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\temp\dlls\Kerbalism112.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="KSPCommunityFixes">
+      <HintPath>..\..\..\..\..\..\Games\R112\GameData\KSPCommunityFixes\Plugins\KSPCommunityFixes.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ModularFlightIntegrator">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RealFuels">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="System">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ToolbarControl">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\KSP DLL\1.12.3\UnityEngine.AssetBundleModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.ScreenCaptureModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\ContractConfigurator\source\ContractConfigurator\bin\Release\UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.UnityWebRequestModule">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="UnityEngine.JSONSerializeModule">
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <!--Krafs.Publicizer items-->
+  <ItemGroup>
+    <Publicize Include="Assembly-CSharp" />
+    <DoNotPublicize Include="Assembly-CSharp:BaseField`1.OnValueModified" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Krafs.Publicizer.1.0.3\build\Krafs.Publicizer.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Krafs.Publicizer.1.0.3\build\Krafs.Publicizer.props'))" />
+    <Error Condition="!Exists('..\packages\Krafs.Publicizer.1.0.3\build\Krafs.Publicizer.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Krafs.Publicizer.1.0.3\build\Krafs.Publicizer.targets'))" />
+  </Target>
+  <Import Project="..\packages\Krafs.Publicizer.1.0.3\build\Krafs.Publicizer.targets" Condition="Exists('..\packages\Krafs.Publicizer.1.0.3\build\Krafs.Publicizer.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

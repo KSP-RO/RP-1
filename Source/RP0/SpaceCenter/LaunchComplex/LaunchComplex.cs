@@ -388,7 +388,7 @@ namespace RP0
                 if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 6)
                 {
                     var alNode = node.GetNode("Airlaunch_Prep");
-                    if (alNode.nodes.Count > 0)
+                    if (alNode != null && alNode.nodes.Count > 0)
                     {
                         PersistentList<ReconRolloutProject> temp = new PersistentList<ReconRolloutProject>();
                         foreach (ConfigNode item in alNode.nodes)

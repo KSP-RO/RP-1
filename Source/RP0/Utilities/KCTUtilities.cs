@@ -593,9 +593,6 @@ namespace RP0
                     ap.costsFunds = true;
                     HandlePurchase(ap);
                 }
-
-                RP0Debug.Log($"{ap.title} is no longer an experimental part. Part was unlocked.");
-                RemoveExperimentalPart(ap);
             }
 
             EditorPartList.Instance?.Refresh();

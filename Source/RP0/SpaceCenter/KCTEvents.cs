@@ -60,6 +60,7 @@ namespace RP0
             // Global events
             GameEvents.onGameSceneLoadRequested.Add(GameSceneEvent);
             GameEvents.onGameStateLoad.Add(OnGameStateLoad);
+            GameEvents.OnPartPurchased.Add(OnPartPurchased);
             GameEvents.Modifiers.OnCurrencyModified.Add(OnCurrenciesModified);
 
             // Flight
@@ -317,6 +318,11 @@ namespace RP0
         {
             // Run this after all scenariomodules have loaded (i.e. both us *and* RnD)
             KCTUtilities.AddResearchedPartsToExperimental();
+        }
+
+        public void OnPartPurchased(AvailablePart ap)
+        {
+            KCTUtilities.RemoveExperimentalPart(ap);
         }
     }
 }

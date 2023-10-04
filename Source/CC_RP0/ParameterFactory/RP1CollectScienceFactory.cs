@@ -13,6 +13,7 @@ namespace ContractConfigurator.RP0
         protected List<ScienceSubject> subjects { get; set; }
         protected double fractionComplete { get; set; }
         protected int? minSubjectsToComplete { get; set; }
+        protected double? fractionCompleteBiome { get; set; }
 
         public override bool Load(ConfigNode configNode)
         {
@@ -26,6 +27,7 @@ namespace ContractConfigurator.RP0
                 x.All(Validation.NotNull));
             valid &= ConfigNodeUtil.ParseValue(configNode, "fractionComplete", x => fractionComplete = x, this, 1d);
             valid &= ConfigNodeUtil.ParseValue(configNode, "minSubjectsToComplete", x => minSubjectsToComplete = x, this, (int?)null);
+            valid &= ConfigNodeUtil.ParseValue(configNode, "fractionCompleteBiome", x => fractionCompleteBiome = x, this, (double?)null);
 
             valid &= ConfigNodeUtil.ParseValue(configNode, "subject", x => subjects = x, this, new List<ScienceSubject>());
 
@@ -60,12 +62,12 @@ namespace ContractConfigurator.RP0
                 ExperimentSituations es = Util.Science.GetSituation(subjects[0]);
 
                 return new RP1CollectScience(b == null ? targetBody : b.body, b == null ? "" : b.biome, es, location,
-                    subjects.Select(s => Util.Science.GetExperiment(s).id).ToList(), fractionComplete, minSubjectsToComplete, title);
+                    subjects.Select(s => Util.Science.GetExperiment(s).id).ToList(), fractionComplete, minSubjectsToComplete, fractionCompleteBiome, title);
             }
             else
             {
                 return new RP1CollectScience(biome == null ? targetBody : biome.body, biome == null ? "" : biome.biome, situation, location,
-                    experiment.Select(e => e.id).ToList(), fractionComplete, minSubjectsToComplete, title);
+                    experiment.Select(e => e.id).ToList(), fractionComplete, minSubjectsToComplete, fractionCompleteBiome, title);
             }
         }
     }

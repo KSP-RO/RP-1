@@ -16,6 +16,7 @@ namespace ContractConfigurator.RP0
         protected BodyLocation? location { get; set; }
         protected List<string> experiment { get; set; }
         protected double fractionComplete { get; set; }
+        protected double? fractionCompleteBiome { get; set; }
         protected int? minSubjectsToComplete { get; set; }
 
         protected bool _expandedBiomes = false;
@@ -35,7 +36,7 @@ namespace ContractConfigurator.RP0
         }
 
         public RP1CollectScience(CelestialBody targetBody, string biome, ExperimentSituations? situation,
-            BodyLocation? location, List<string> experiment, double fractionComplete, int? minSubjectsToComplete, string title)
+            BodyLocation? location, List<string> experiment, double fractionComplete, int? minSubjectsToComplete, double? fractionCompleteBiome, string title)
             : base(title)
         {
             lastUpdate = UnityEngine.Time.fixedTime;
@@ -47,6 +48,7 @@ namespace ContractConfigurator.RP0
             this.experiment = experiment;
             this.fractionComplete = fractionComplete;
             this.minSubjectsToComplete = minSubjectsToComplete;
+            this.fractionCompleteBiome = fractionCompleteBiome;
 
             disableOnStateChange = true;
 
@@ -77,6 +79,10 @@ namespace ContractConfigurator.RP0
             }
 
             node.AddValue("fractionComplete", fractionComplete);
+            if (fractionCompleteBiome.HasValue)
+            {
+                node.AddValue("fractionCompleteBiome", fractionCompleteBiome);
+            }
 
             if (minSubjectsToComplete.HasValue)
             {
@@ -103,6 +109,7 @@ namespace ContractConfigurator.RP0
                 experiment = ConfigNodeUtil.ParseValue(node, "experiment", new List<string>(0));
                 fractionComplete = ConfigNodeUtil.ParseValue(node, "fractionComplete", 1d);
                 minSubjectsToComplete = ConfigNodeUtil.ParseValue(node, "minSubjectsToComplete", (int?)null);
+                fractionCompleteBiome = ConfigNodeUtil.ParseValue(node, "fractionCompleteBiome", (double?)null);
 
                 if (State == ParameterState.Incomplete)
                 {
@@ -132,16 +139,17 @@ namespace ContractConfigurator.RP0
                     string situationStr = situation != null ? situation.Value.Print().ToLower() :
                         location != null ? Localizer.GetStringByTag(location.Value == BodyLocation.Surface ? "#cc.science.location.Surface" : "#cc.science.location.Space") : null;
                     string fractionStr = $"{Math.Round(fractionComplete):P0} ";
+                    string fracBiomeStr = fractionCompleteBiome.HasValue ? $" (each {Math.Round(fractionCompleteBiome.Value):P0} complete)" : string.Empty;
 
                     if (_expandedBiomes)
                     {
                         if (minSubjectsToComplete > 1)
                         {
-                            output = $"Collect science: {fractionStr} of {experimentStr} from at least {minSubjectsToComplete} biomes while {situationStr}";
+                            output = $"Collect science: {fractionStr} of {experimentStr} from at least {minSubjectsToComplete} biomes{fracBiomeStr} while {situationStr}";
                         }
                         else
                         {
-                            output = $"Collect science: {fractionStr} of {experimentStr} from any biome while {situationStr}";
+                            output = $"Collect science: {fractionStr} of {experimentStr} from any biome{fracBiomeStr} while {situationStr}";
                         }
                     }
                     else
@@ -152,11 +160,11 @@ namespace ContractConfigurator.RP0
                         }
                         else if (situationStr == null)
                         {
-                            output = $"Collect science: {fractionStr} of {experimentStr} from {biomeStr}";
+                            output = $"Collect science: {fractionStr} of {experimentStr} from {biomeStr} {fracBiomeStr}";
                         }
                         else
                         {
-                            output = $"Collect science: {fractionStr} of {experimentStr} from {biomeStr} while {situationStr}";
+                            output = $"Collect science: {fractionStr} of {experimentStr} from {biomeStr}{fracBiomeStr} while {situationStr}";
                         }
                     }
                 }
@@ -177,13 +185,19 @@ namespace ContractConfigurator.RP0
                 lastUpdate = UnityEngine.Time.fixedTime;
                 int numToComplete = minSubjectsToComplete ?? 1;
                 int completeSubjCount = 0;
+                float totalFrac = 0f;
                 foreach (ScienceSubject subj in subjects)
                 {
                     float curFraction = subj.science / subj.scienceCap;
-                    if (curFraction >= fractionComplete && ++completeSubjCount >= numToComplete)
-                    {
-                        SetState(ParameterState.Complete);
-                    }
+                    totalFrac += curFraction;
+                    if (curFraction >= (fractionCompleteBiome.HasValue ? fractionCompleteBiome.Value : fractionComplete))
+                        ++completeSubjCount;
+                    
+                }
+                totalFrac /= subjects.Count;
+                if (totalFrac >= fractionComplete && completeSubjCount >= numToComplete)
+                {
+                    SetState(ParameterState.Complete);
                 }
 
                 UpdateDelegates();
@@ -229,7 +243,7 @@ namespace ContractConfigurator.RP0
                         ContractsWindow.SetParameterTitle(param, param.Title);
                     }
 
-                    if (curFraction >= fractionComplete)
+                    if (curFraction >= (fractionCompleteBiome.HasValue ? fractionCompleteBiome.Value : fractionComplete))
                     {
                         param.SetState(ParameterState.Complete);
                     }

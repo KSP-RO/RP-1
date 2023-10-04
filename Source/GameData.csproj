@@ -242,6 +242,12 @@
     <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSIRRad1.cfg">
       <Link>Contracts\Earth Observation 1\EOSIRRad1.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSIRRad2.cfg">
+      <Link>Contracts\Earth Observation 1\EOSIRRad2.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSIRRad3.cfg">
+      <Link>Contracts\Earth Observation 1\EOSIRRad3.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSMagScan1.cfg">
       <Link>Contracts\Earth Observation 1\EOSMagScan1.cfg</Link>
     </Content>

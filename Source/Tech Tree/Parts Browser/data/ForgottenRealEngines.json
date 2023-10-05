@@ -154,7 +154,7 @@
     {
         "name": "FRERUTHERFORD",
         "title": "Rutherford",
-        "description": "Rocket Lab\u00C3\u00A2\u00E2\u201A\u00AC\u00E2\u201E\u00A2s flagship engine, the 4,900lbf Rutherford, is an electrical turbo-pumped LOX/RP-1 engine specifically designed for the Electron Launch Vehicle. [0.3m] Plume configured by RealPlume.",
+        "description": "Rocket Lab\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s flagship engine, the 4,900lbf Rutherford, is an electrical turbo-pumped LOX/RP-1 engine specifically designed for the Electron Launch Vehicle. [0.3m] Plume configured by RealPlume.",
         "mod": "ForgottenRealEngines",
         "cost": 60,
         "entry_cost": 0,
@@ -279,7 +279,7 @@
     {
         "name": "FREZEFIRO23",
         "title": "Zefiro 23",
-        "description": "The Zephiro 23 is an high performance upper stage solid rocket motor. It powers Vega\u0027s second stage. Burn time ~77s. [1.9m] Plume configured by RealPlume.",
+        "description": "The Zephiro 23 is an high performance upper stage solid rocket motor. It powers Vega's second stage. Burn time ~77s. [1.9m] Plume configured by RealPlume.",
         "mod": "ForgottenRealEngines",
         "cost": 810,
         "entry_cost": 8000,
@@ -304,7 +304,7 @@
     {
         "name": "FREZEFIRO9",
         "title": "Zefiro 9",
-        "description": "The Zephiro 9 is an high performance upper stage solid rocket motor. It powers Vega\u0027s third stage. Burn time ~120s. [1.9m] Plume configured by RealPlume.",
+        "description": "The Zephiro 9 is an high performance upper stage solid rocket motor. It powers Vega's third stage. Burn time ~120s. [1.9m] Plume configured by RealPlume.",
         "mod": "ForgottenRealEngines",
         "cost": 450,
         "entry_cost": 4500,

@@ -89,7 +89,7 @@
     },
     {
         "name": "KIS.Container8",
-        "title": "IWC-3K \u0022Wyvern\u0022",
+        "title": "IWC-3K \"Wyvern\"",
         "description": "",
         "mod": "KIS",
         "cost": 30,
@@ -221,7 +221,7 @@
     },
     {
         "name": "KIS_beer",
-        "title": "Bub\u0027s Beer",
+        "title": "Bub's Beer",
         "description": "",
         "mod": "KIS",
         "cost": 1,
@@ -337,7 +337,7 @@
     },
     {
         "name": "KIS_golfclub",
-        "title": "Alpard Kerman\u0027s Golf club",
+        "title": "Alpard Kerman's Golf club",
         "description": "",
         "mod": "KIS",
         "cost": 1,
@@ -403,7 +403,7 @@
     },
     {
         "name": "KIS_taco",
-        "title": "Chradfield Kerman\u0027s Taco",
+        "title": "Chradfield Kerman's Taco",
         "description": "",
         "mod": "KIS",
         "cost": 0,

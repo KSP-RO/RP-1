@@ -1546,7 +1546,7 @@
         "module_tags": []
     },
     {
-        "name": "Aerozine50\u002BNTO",
+        "name": "Aerozine50+NTO",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -2426,7 +2426,7 @@
         "module_tags": []
     },
     {
-        "name": "CH4\u002BO2",
+        "name": "CH4+O2",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -3262,7 +3262,7 @@
         "module_tags": []
     },
     {
-        "name": "Ethanol\u002BO2",
+        "name": "Ethanol+O2",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -3279,7 +3279,7 @@
         "spacecraft": "",
         "engine_config": "RCS",
         "upgrade": true,
-        "entry_cost_mods": "RP-1\u002BO2",
+        "entry_cost_mods": "RP-1+O2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -4164,7 +4164,7 @@
         "module_tags": []
     },
     {
-        "name": "H2\u002BO2",
+        "name": "H2+O2",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -4428,8 +4428,8 @@
         "module_tags": []
     },
     {
-        "name": "HM-7B\u002B",
-        "title": "HM-7B\u002B",
+        "name": "HM-7B+",
+        "title": "HM-7B+",
         "description": "",
         "mod": "Engine_Config",
         "cost": 117,
@@ -4450,8 +4450,8 @@
         "module_tags": []
     },
     {
-        "name": "HM-7B\u002B\u002B",
-        "title": "HM-7B\u002B\u002B",
+        "name": "HM-7B++",
+        "title": "HM-7B++",
         "description": "",
         "mod": "Engine_Config",
         "cost": 118,
@@ -4467,7 +4467,7 @@
         "spacecraft": "Ariane 5",
         "engine_config": "HM7",
         "upgrade": true,
-        "entry_cost_mods": "5000,HM-7B\u002B",
+        "entry_cost_mods": "5000,HM-7B+",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -7736,7 +7736,7 @@
         "module_tags": []
     },
     {
-        "name": "MMH\u002BMON10",
+        "name": "MMH+MON10",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -7758,7 +7758,7 @@
         "module_tags": []
     },
     {
-        "name": "MMH\u002BMON3",
+        "name": "MMH+MON3",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -7780,7 +7780,7 @@
         "module_tags": []
     },
     {
-        "name": "MMH\u002BNTO",
+        "name": "MMH+NTO",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -8044,8 +8044,8 @@
         "module_tags": []
     },
     {
-        "name": "Merlin1D\u002B",
-        "title": "Merlin1D\u002B",
+        "name": "Merlin1D+",
+        "title": "Merlin1D+",
         "description": "",
         "mod": "Engine_Config",
         "cost": 56,
@@ -8066,8 +8066,8 @@
         "module_tags": []
     },
     {
-        "name": "Merlin1D\u002B\u002B",
-        "title": "Merlin1D\u002B\u002B",
+        "name": "Merlin1D++",
+        "title": "Merlin1D++",
         "description": "",
         "mod": "Engine_Config",
         "cost": 56,
@@ -8110,8 +8110,8 @@
         "module_tags": []
     },
     {
-        "name": "Merlin1DVac\u002B",
-        "title": "Merlin1DVac\u002B",
+        "name": "Merlin1DVac+",
+        "title": "Merlin1DVac+",
         "description": "",
         "mod": "Engine_Config",
         "cost": 121,
@@ -8127,7 +8127,7 @@
         "spacecraft": "",
         "engine_config": "Merlin1",
         "upgrade": true,
-        "entry_cost_mods": "30000,Merlin1D\u002B",
+        "entry_cost_mods": "30000,Merlin1D+",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -14048,7 +14048,7 @@
         "module_tags": []
     },
     {
-        "name": "RP-1\u002BO2",
+        "name": "RP-1+O2",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -14930,7 +14930,7 @@
     {
         "name": "S-3",
         "title": "S-3",
-        "description": "Development version of the LR79 engine. Used on Thor R\u0026D missiles.",
+        "description": "Development version of the LR79 engine. Used on Thor R&D missiles.",
         "mod": "Engine_Config",
         "cost": 0,
         "entry_cost": 0,
@@ -14942,7 +14942,7 @@
         "ro": true,
         "orphan": false,
         "rp0_conf": false,
-        "spacecraft": "Thor DM-18 R\u0026D",
+        "spacecraft": "Thor DM-18 R&D",
         "engine_config": "LR79",
         "upgrade": false,
         "entry_cost_mods": "23000, Navaho-TP",
@@ -16283,7 +16283,7 @@
         "module_tags": []
     },
     {
-        "name": "Syntin\u002BO2",
+        "name": "Syntin+O2",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -16300,7 +16300,7 @@
         "spacecraft": "",
         "engine_config": "RCS",
         "upgrade": true,
-        "entry_cost_mods": "SyntinFuel,RP-1\u002BO2",
+        "entry_cost_mods": "SyntinFuel,RP-1+O2",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -16723,7 +16723,7 @@
         "module_tags": []
     },
     {
-        "name": "UDMH\u002BNTO",
+        "name": "UDMH+NTO",
         "title": "",
         "description": "",
         "mod": "Engine_Config",
@@ -17009,8 +17009,8 @@
         "module_tags": []
     },
     {
-        "name": "Vikas-1\u002B",
-        "title": "Vikas-1\u002B",
+        "name": "Vikas-1+",
+        "title": "Vikas-1+",
         "description": "",
         "mod": "Engine_Config",
         "cost": 18,
@@ -17429,7 +17429,7 @@
     {
         "name": "X-405H",
         "title": "X-405H",
-        "description": "Engine for proposed Vega stage for NASA Atlas-Vega LV. Superceded by Atlas-Agena once NASA became aware of the USAF\u0027s Agena stage.",
+        "description": "Engine for proposed Vega stage for NASA Atlas-Vega LV. Superceded by Atlas-Agena once NASA became aware of the USAF's Agena stage.",
         "mod": "Engine_Config",
         "cost": -4,
         "entry_cost": 0,

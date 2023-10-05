@@ -2,7 +2,7 @@
     {
         "name": "inlineCmdPod",
         "title": "PPD-1 Heavy Command Module",
-        "description": "This large command module is optimized for use with Kerlington\u0027s PPD series of products. Its seats 2 pilots and 4 passengers. No reaction wheels, but plenty of storage make it an excellent choice for large craft.",
+        "description": "This large command module is optimized for use with Kerlington's PPD series of products. Its seats 2 pilots and 4 passengers. No reaction wheels, but plenty of storage make it an excellent choice for large craft.",
         "mod": "Near Future Spacecraft",
         "cost": 5144,
         "entry_cost": 13500,

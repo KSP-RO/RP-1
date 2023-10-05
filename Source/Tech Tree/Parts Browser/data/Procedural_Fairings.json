@@ -278,7 +278,7 @@
     {
         "name": "KzProcFairingConeEgg",
         "title": "FW - Cone-Egg Side Fairing",
-        "description": "Cone on the bottom, egg on top, Everyone\u0027s happy! Except the protestors, something about upsetting the natural order of fairings...",
+        "description": "Cone on the bottom, egg on top, Everyone's happy! Except the protestors, something about upsetting the natural order of fairings...",
         "mod": "Procedural Fairings",
         "cost": 1,
         "entry_cost": 1,
@@ -416,7 +416,7 @@
     {
         "name": "KzProcFairingJupiter",
         "title": "Payload Fairing - Jupiter [Procedural]",
-        "description": "This fairing is designed with a more curved shape for the Jupiter craft.  The blunted nose provides a better drag profile at lower velocities, and is thus suited for a steeper ascent, where the atmosphere quickly becomes a minimal design factor.  The engineers ran the calculations to see how steep the ascent would have to be before they didn\u0027t have to design any fairings.  The budget office laughed at their design proposal.",
+        "description": "This fairing is designed with a more curved shape for the Jupiter craft.  The blunted nose provides a better drag profile at lower velocities, and is thus suited for a steeper ascent, where the atmosphere quickly becomes a minimal design factor.  The engineers ran the calculations to see how steep the ascent would have to be before they didn't have to design any fairings.  The budget office laughed at their design proposal.",
         "mod": "Procedural Fairings",
         "cost": 1,
         "entry_cost": 1,
@@ -738,7 +738,7 @@
     {
         "name": "KzProcFairingTitan",
         "title": "Payload Fairing - Titan [Procedural]",
-        "description": "An old fairing design, but it still checks out.  Straight sections make the fairing easy and cheap to produce, while the varying angle of the segments make the aerodynamic drag profile ideal.  At least, that\u0027s what we told the bean-counters.  We just think it looks cool.",
+        "description": "An old fairing design, but it still checks out.  Straight sections make the fairing easy and cheap to produce, while the varying angle of the segments make the aerodynamic drag profile ideal.  At least, that's what we told the bean-counters.  We just think it looks cool.",
         "mod": "Procedural Fairings",
         "cost": 1,
         "entry_cost": 1,
@@ -807,7 +807,7 @@
     {
         "name": "KzThrustPlate",
         "title": "Thrust Plate [Procedural]",
-        "description": "When quad-adapter just isn\u0027t enough, Keramzit Engineering has you covered with its wonderful Multi-adapter! Designed for bulding engine clusters, it also found its uses in multiple payload attachment and space bars.",
+        "description": "When quad-adapter just isn't enough, Keramzit Engineering has you covered with its wonderful Multi-adapter! Designed for bulding engine clusters, it also found its uses in multiple payload attachment and space bars.",
         "mod": "Procedural Fairings",
         "cost": 1,
         "entry_cost": 1,

@@ -2,7 +2,7 @@
     {
         "name": "RO-AdvancedImager",
         "title": "VI04 - Advanced Visible Imaging Device",
-        "description": "The Advanced Visible Imaging Device is used to take images in the visibile wavelength of planetary bodies from space. Historically, this type of camera was flown on Galileo and took images of Jupiter and it\u0027s moons.\\nThe images can be transmitted for full science value. Level 4 Visible Imaging Experiment can gather 75% of Visible Imaging Science. You can keep up to 5 different images in the storage available.",
+        "description": "The Advanced Visible Imaging Device is used to take images in the visibile wavelength of planetary bodies from space. Historically, this type of camera was flown on Galileo and took images of Jupiter and it's moons.\\nThe images can be transmitted for full science value. Level 4 Visible Imaging Experiment can gather 75% of Visible Imaging Science. You can keep up to 5 different images in the storage available.",
         "mod": "RP-1 (Bluedog Model)",
         "cost": 1000,
         "entry_cost": 2500,

@@ -186,7 +186,7 @@
     },
     {
         "name": "ROT-reDIRECTTank-Integral",
-        "title": "Modular reDIRECT Integral Tank",
+        "title": "Modular reDIRECT Isogrid Tank",
         "description": "",
         "mod": "reDIRECT",
         "cost": 0,
@@ -204,7 +204,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-reDIRECTTank-Separate",

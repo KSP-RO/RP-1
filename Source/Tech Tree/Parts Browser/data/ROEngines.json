@@ -25,7 +25,7 @@
     },
     {
         "name": "ROE-1204sepMotor",
-        "title": "UA1204 Nosecone \u0026 Separation Motor",
+        "title": "UA1204 Nosecone & Separation Motor",
         "description": "",
         "mod": "ROEngines",
         "cost": 50,
@@ -47,7 +47,7 @@
     },
     {
         "name": "ROE-1205sepMotor",
-        "title": "UA1205 Nosecone \u0026 Separation Motor",
+        "title": "UA1205 Nosecone & Separation Motor",
         "description": "",
         "mod": "ROEngines",
         "cost": 50,
@@ -71,7 +71,7 @@
     },
     {
         "name": "ROE-1206sepMotor",
-        "title": "UA1206 Nosecone \u0026 Separation Motor",
+        "title": "UA1206 Nosecone & Separation Motor",
         "description": "",
         "mod": "ROEngines",
         "cost": 50,
@@ -93,7 +93,7 @@
     },
     {
         "name": "ROE-1207sepMotor",
-        "title": "UA1207 Nosecone \u0026 Separation Motor",
+        "title": "UA1207 Nosecone & Separation Motor",
         "description": "",
         "mod": "ROEngines",
         "cost": 50,
@@ -115,7 +115,7 @@
     },
     {
         "name": "ROE-1208sepMotor",
-        "title": "UA1208 Nosecone \u0026 Separation Motor",
+        "title": "UA1208 Nosecone & Separation Motor",
         "description": "",
         "mod": "ROEngines",
         "cost": 50,
@@ -434,7 +434,7 @@
     {
         "name": "ROE-AJ10Adv",
         "title": "AJ10 Series (Advanced Short Nozzle)",
-        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US\u0027s first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents advanced era AJ10s with a nozzle extension and restart capability. Used on Transtage as AJ10-138; similar models but back with the -118 designation were used on the Delta F and Delta K upper stages. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
+        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents advanced era AJ10s with a nozzle extension and restart capability. Used on Transtage as AJ10-138; similar models but back with the -118 designation were used on the Delta F and Delta K upper stages. Using the patented SSTU Engine-Clustering technology the number of engines, engine layout, mounting or shroud type, and mount/shroud size are configurable, and each set of engines are built to your specifications. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 73,
         "entry_cost": 0,
@@ -846,7 +846,7 @@
     },
     {
         "name": "ROE-Agena8096",
-        "title": "ROEngines XLR81 Agena D\u002B Engine Series",
+        "title": "ROEngines XLR81 Agena D+ Engine Series",
         "description": "",
         "mod": "ROEngines",
         "cost": 51,
@@ -1085,7 +1085,7 @@
     {
         "name": "ROE-Altair",
         "title": "Altair",
-        "description": "A small solid kick motor. Developed for Vanguard\u0027s third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",
+        "description": "A small solid kick motor. Developed for Vanguard's third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 180,
         "entry_cost": 3400,
@@ -1110,7 +1110,7 @@
     {
         "name": "ROE-Altair-RN",
         "title": "Altair",
-        "description": "A small solid kick motor. Developed for Vanguard\u0027s third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",
+        "description": "A small solid kick motor. Developed for Vanguard's third stage but, with the second stage, reused as Able/Delta. Used to circularize at apogee or perform final payload kick. Diameter: [0.45 m]. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 180,
         "entry_cost": 3400,
@@ -2188,7 +2188,7 @@
     },
     {
         "name": "ROE-CastorDecoupler",
-        "title": "Castor I \u0026 II Radial Decoupler",
+        "title": "Castor I & II Radial Decoupler",
         "description": "",
         "mod": "ROEngines",
         "cost": 150,
@@ -2728,7 +2728,7 @@
     {
         "name": "ROE-HiPAT",
         "title": "R-4D HiPAT (445N)",
-        "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world\u0027s communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini\u0027s orbit insertion of Saturn.",
+        "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world's communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini's orbit insertion of Saturn.",
         "mod": "ROEngines",
         "cost": 10,
         "entry_cost": 3000,
@@ -2753,7 +2753,7 @@
     {
         "name": "ROE-HiPAT-NicheParts",
         "title": "R-4D HiPAT (445N)",
-        "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world\u0027s communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini\u0027s orbit insertion of Saturn.",
+        "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world's communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini's orbit insertion of Saturn.",
         "mod": "ROEngines",
         "cost": 10,
         "entry_cost": 3000,
@@ -4433,7 +4433,7 @@
     {
         "name": "ROE-NK33",
         "title": "NK-15/33",
-        "description": "The NK-15 and NK-33 were originally built in the 1960s/early 1970s for the Soviet N1 and then N1F rocket, respectively. Though the N1F was scrapped, the engines survived. Aerojet acquired several NK-33 engines in the 1990s and refurbished them as AJ26-62 engines for Orbital Science\u0027s Antares launch vehicle. Modifications made by Aerojet included increasing rated thrust and equipping the engines to support gimballing. Diameter: [1.83 m]. Plume configured by RealPlume.",
+        "description": "The NK-15 and NK-33 were originally built in the 1960s/early 1970s for the Soviet N1 and then N1F rocket, respectively. Though the N1F was scrapped, the engines survived. Aerojet acquired several NK-33 engines in the 1990s and refurbished them as AJ26-62 engines for Orbital Science's Antares launch vehicle. Modifications made by Aerojet included increasing rated thrust and equipping the engines to support gimballing. Diameter: [1.83 m]. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 781,
         "entry_cost": 0,
@@ -4458,7 +4458,7 @@
     {
         "name": "ROE-NK33-RE",
         "title": "NK-15/33",
-        "description": "The NK-15 and NK-33 were originally built in the 1960s/early 1970s for the Soviet N1 and then N1F rocket, respectively. Though the N1F was scrapped, the engines survived. Aerojet acquired several NK-33 engines in the 1990s and refurbished them as AJ26-62 engines for Orbital Science\u0027s Antares launch vehicle. Modifications made by Aerojet included increasing rated thrust and equipping the engines to support gimballing. Diameter: [1.83 m]. Plume configured by RealPlume.",
+        "description": "The NK-15 and NK-33 were originally built in the 1960s/early 1970s for the Soviet N1 and then N1F rocket, respectively. Though the N1F was scrapped, the engines survived. Aerojet acquired several NK-33 engines in the 1990s and refurbished them as AJ26-62 engines for Orbital Science's Antares launch vehicle. Modifications made by Aerojet included increasing rated thrust and equipping the engines to support gimballing. Diameter: [1.83 m]. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 781,
         "entry_cost": 0,
@@ -5787,7 +5787,7 @@
     {
         "name": "ROE-RD58",
         "title": "S1.5400/RD-58 Series",
-        "description": "World\u0027s first closed-cycle kerolox vacuum engine. The S1.5400 served as an R-7 upper stage and the RD-58 (an upgrade) as upper stage / OMS for many Soviet and Russian launchers and spacecraft (Proton, N1, Zenit, Buran...). The S1.5400 was designed for the Blok L stage which was the final stage for the Molniya configuration of the R-7, used to launch communication satellites and interplanetary probes. Unlike prior upper stages, it was restartable (this was needed to perform apogee kick to place Molniya satellites in their final orbits). It was given the industry designation 11D33. An upgraded version, termed 11D33M, had slightly improved performance. The RD-58 is a derivative of the 11D33M engine with higher performance (industry designation 11D58); it has been used on many Russian launchers and is still in use today on Proton and Zenit. In comparison to hydrolox upper stages, kerolox ones do not suffer boiloff as badly and need far less volume (kerosene being far denser than liquid hydrogen), but have much lower specific impulse. Diameter: [2.0 m]. Plume configured by RealPlume.",
+        "description": "World's first closed-cycle kerolox vacuum engine. The S1.5400 served as an R-7 upper stage and the RD-58 (an upgrade) as upper stage / OMS for many Soviet and Russian launchers and spacecraft (Proton, N1, Zenit, Buran...). The S1.5400 was designed for the Blok L stage which was the final stage for the Molniya configuration of the R-7, used to launch communication satellites and interplanetary probes. Unlike prior upper stages, it was restartable (this was needed to perform apogee kick to place Molniya satellites in their final orbits). It was given the industry designation 11D33. An upgraded version, termed 11D33M, had slightly improved performance. The RD-58 is a derivative of the 11D33M engine with higher performance (industry designation 11D58); it has been used on many Russian launchers and is still in use today on Proton and Zenit. In comparison to hydrolox upper stages, kerolox ones do not suffer boiloff as badly and need far less volume (kerosene being far denser than liquid hydrogen), but have much lower specific impulse. Diameter: [2.0 m]. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 165,
         "entry_cost": 0,
@@ -5812,7 +5812,7 @@
     {
         "name": "ROE-RD58-RE",
         "title": "S1.5400/RD-58 Series",
-        "description": "World\u0027s first closed-cycle kerolox vacuum engine. The S1.5400 served as an R-7 upper stage and the RD-58 (an upgrade) as upper stage / OMS for many Soviet and Russian launchers and spacecraft (Proton, N1, Zenit, Buran...). The S1.5400 was designed for the Blok L stage which was the final stage for the Molniya configuration of the R-7, used to launch communication satellites and interplanetary probes. Unlike prior upper stages, it was restartable (this was needed to perform apogee kick to place Molniya satellites in their final orbits). It was given the industry designation 11D33. An upgraded version, termed 11D33M, had slightly improved performance. The RD-58 is a derivative of the 11D33M engine with higher performance (industry designation 11D58); it has been used on many Russian launchers and is still in use today on Proton and Zenit. In comparison to hydrolox upper stages, kerolox ones do not suffer boiloff as badly and need far less volume (kerosene being far denser than liquid hydrogen), but have much lower specific impulse. Diameter: [2.0 m]. Plume configured by RealPlume.",
+        "description": "World's first closed-cycle kerolox vacuum engine. The S1.5400 served as an R-7 upper stage and the RD-58 (an upgrade) as upper stage / OMS for many Soviet and Russian launchers and spacecraft (Proton, N1, Zenit, Buran...). The S1.5400 was designed for the Blok L stage which was the final stage for the Molniya configuration of the R-7, used to launch communication satellites and interplanetary probes. Unlike prior upper stages, it was restartable (this was needed to perform apogee kick to place Molniya satellites in their final orbits). It was given the industry designation 11D33. An upgraded version, termed 11D33M, had slightly improved performance. The RD-58 is a derivative of the 11D33M engine with higher performance (industry designation 11D58); it has been used on many Russian launchers and is still in use today on Proton and Zenit. In comparison to hydrolox upper stages, kerolox ones do not suffer boiloff as badly and need far less volume (kerosene being far denser than liquid hydrogen), but have much lower specific impulse. Diameter: [2.0 m]. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 165,
         "entry_cost": 0,
@@ -6692,7 +6692,7 @@
     {
         "name": "ROE-S400-NicheParts",
         "title": "0.4kN Engine (S400)",
-        "description": "The S400 400N bipropellant Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes. Notable missions include Galileo, Mars Express, Venus Express \u0026 the ExoMars Trace Gas Orbiter. Plume configured by RealPlume.",
+        "description": "The S400 400N bipropellant Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes. Notable missions include Galileo, Mars Express, Venus Express & the ExoMars Trace Gas Orbiter. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 40,
         "entry_cost": 800,
@@ -7170,7 +7170,7 @@
     {
         "name": "ROE-Star8",
         "title": "STAR 8 (RAD)",
-        "description": "The STAR 8 was developed and qualified as the rocket assisted deceleration (RAD) motor for the Mars Exploration Rover (MER) program. The motor is based on the STAR 5D motor technology developed for JPL\u00C3\u00A2\u00E2\u201A\u00AC\u00E2\u201E\u00A2s Mars Pathfinder program. The STAR 8 first flew in January 2004 when three motors were used to decelerate each of the Spirit and Opportunity rovers for landing at Gusev Crater and Meridiani Planum on Mars. Plume configured by RealPlume.",
+        "description": "The STAR 8 was developed and qualified as the rocket assisted deceleration (RAD) motor for the Mars Exploration Rover (MER) program. The motor is based on the STAR 5D motor technology developed for JPL\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s Mars Pathfinder program. The STAR 8 first flew in January 2004 when three motors were used to decelerate each of the Spirit and Opportunity rovers for landing at Gusev Crater and Meridiani Planum on Mars. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 50,
         "entry_cost": 1000,
@@ -7195,7 +7195,7 @@
     {
         "name": "ROE-Star8-NicheParts",
         "title": "STAR 8 (RAD)",
-        "description": "The STAR 8 was developed and qualified as the rocket assisted deceleration (RAD) motor for the Mars Exploration Rover (MER) program. The motor is based on the STAR 5D motor technology developed for JPL\u00C3\u00A2\u00E2\u201A\u00AC\u00E2\u201E\u00A2s Mars Pathfinder program. The STAR 8 first flew in January 2004 when three motors were used to decelerate each of the Spirit and Opportunity rovers for landing at Gusev Crater and Meridiani Planum on Mars. Plume configured by RealPlume.",
+        "description": "The STAR 8 was developed and qualified as the rocket assisted deceleration (RAD) motor for the Mars Exploration Rover (MER) program. The motor is based on the STAR 5D motor technology developed for JPL\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s Mars Pathfinder program. The STAR 8 first flew in January 2004 when three motors were used to decelerate each of the Spirit and Opportunity rovers for landing at Gusev Crater and Meridiani Planum on Mars. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 50,
         "entry_cost": 1000,
@@ -7294,7 +7294,7 @@
     {
         "name": "ROE-SuperDracoDouble",
         "title": "Twin SuperDraco",
-        "description": "SuperDraco is a hypergolic propellant liquid rocket engine designed and built by SpaceX. It is part of SpaceX\u0027s Draco family of rocket engines. A redundant array of eight SuperDraco engines provides fault-tolerant propulsion for use as a launch escape system and propulsive-landing thrust for the Dragon V2 passenger-carrying space capsule. Plume configured by RealPlume.",
+        "description": "SuperDraco is a hypergolic propellant liquid rocket engine designed and built by SpaceX. It is part of SpaceX's Draco family of rocket engines. A redundant array of eight SuperDraco engines provides fault-tolerant propulsion for use as a launch escape system and propulsive-landing thrust for the Dragon V2 passenger-carrying space capsule. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 178,
         "entry_cost": 1240,
@@ -7319,7 +7319,7 @@
     {
         "name": "ROE-SuperDracoDouble-NicheParts",
         "title": "Twin SuperDraco",
-        "description": "SuperDraco is a hypergolic propellant liquid rocket engine designed and built by SpaceX. It is part of SpaceX\u0027s Draco family of rocket engines. A redundant array of eight SuperDraco engines provides fault-tolerant propulsion for use as a launch escape system and propulsive-landing thrust for the Dragon V2 passenger-carrying space capsule. Plume configured by RealPlume.",
+        "description": "SuperDraco is a hypergolic propellant liquid rocket engine designed and built by SpaceX. It is part of SpaceX's Draco family of rocket engines. A redundant array of eight SuperDraco engines provides fault-tolerant propulsion for use as a launch escape system and propulsive-landing thrust for the Dragon V2 passenger-carrying space capsule. Plume configured by RealPlume.",
         "mod": "ROEngines",
         "cost": 178,
         "entry_cost": 1240,

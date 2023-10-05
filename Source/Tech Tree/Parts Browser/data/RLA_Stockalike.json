@@ -24,7 +24,7 @@
     {
         "name": "RLA_lfo_medium_linearspike",
         "title": "XRS-2200",
-        "description": "A linear aerospike engine developed for NASA\u0027s X-33 sub-scale SSTO technology demonstrator. Like the toroidal J-2T engines, the XRS-2200 used machinery derived from the J-2S. Diameter: [2.5 m]. Plume configured by RealPlume.",
+        "description": "A linear aerospike engine developed for NASA's X-33 sub-scale SSTO technology demonstrator. Like the toroidal J-2T engines, the XRS-2200 used machinery derived from the J-2S. Diameter: [2.5 m]. Plume configured by RealPlume.",
         "mod": "RLA Stockalike",
         "cost": 3236,
         "entry_cost": 13000,
@@ -112,7 +112,7 @@
     {
         "name": "RLA_medium_frame",
         "title": "M-MF Medium Construction Frame",
-        "description": "A small frame with Maxo\u0027s brand new, patent-pending EZ Constructo-Grid that allows bolt on attachment of anything you can imagine. Please see Volume 12, Chapter 22, Page 516, Paragraph 8 of the Maxo Construction Builders Guide (on sale now!) for a full list of the parts you are allowed to imagine.",
+        "description": "A small frame with Maxo's brand new, patent-pending EZ Constructo-Grid that allows bolt on attachment of anything you can imagine. Please see Volume 12, Chapter 22, Page 516, Paragraph 8 of the Maxo Construction Builders Guide (on sale now!) for a full list of the parts you are allowed to imagine.",
         "mod": "RLA Stockalike",
         "cost": 75,
         "entry_cost": 1200,
@@ -375,7 +375,7 @@
     {
         "name": "RLA_small_decoupler_radial",
         "title": "TT-16 Radial Decoupler",
-        "description": "The TT-16 Radial Decoupler, like most other decouplers, is equipped with a small explosive charge, that will sever the structural linkage between itself and whatever it\u0027s connected to.",
+        "description": "The TT-16 Radial Decoupler, like most other decouplers, is equipped with a small explosive charge, that will sever the structural linkage between itself and whatever it's connected to.",
         "mod": "RLA Stockalike",
         "cost": 250,
         "entry_cost": 750,
@@ -468,7 +468,7 @@
     {
         "name": "RLA_small_ntr",
         "title": "RS-88 Series",
-        "description": "High thrust pressure-fed hypergolic engine. Initially designed and built as a part of the NASA Bantam System Technology program, aiming for a low cost, high power propulsion system. It was later modified by Lockheed Martin for use as a launch abort engine. A derivative of the RS-88 is used by the Boeing CST-100 \u0022Starliner\u0022 spacecraft for launch aborts under the name \u0022Launch Abort Engine - LAE\u0022. Diameter: [1.9 m]. Plume configured by RealPlume.",
+        "description": "High thrust pressure-fed hypergolic engine. Initially designed and built as a part of the NASA Bantam System Technology program, aiming for a low cost, high power propulsion system. It was later modified by Lockheed Martin for use as a launch abort engine. A derivative of the RS-88 is used by the Boeing CST-100 \"Starliner\" spacecraft for launch aborts under the name \"Launch Abort Engine - LAE\". Diameter: [1.9 m]. Plume configured by RealPlume.",
         "mod": "RLA Stockalike",
         "cost": 166,
         "entry_cost": 1640,
@@ -562,7 +562,7 @@
     {
         "name": "RLA_solid_small_long",
         "title": "Castor 4AXL",
-        "description": "Small booster attached to larger rockets to give that extra thrust needed to get off the ground and/or with larger payloads. Slightly larger than it\u0027s siblings produces a bit more thrust. Plume configured by RealPlume.",
+        "description": "Small booster attached to larger rockets to give that extra thrust needed to get off the ground and/or with larger payloads. Slightly larger than it's siblings produces a bit more thrust. Plume configured by RealPlume.",
         "mod": "RLA Stockalike",
         "cost": 500,
         "entry_cost": 20000,

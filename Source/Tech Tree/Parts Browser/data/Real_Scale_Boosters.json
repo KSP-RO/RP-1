@@ -331,8 +331,8 @@
     },
     {
         "name": "RSB_PLF_DeltaIV4m1",
-        "title": "Delta IV Medium 4\u002B 11.75m PLF",
-        "description": "A standard 4 meter graphite epoxy composite payload fairing for the Delta IV Medium 4\u002B configurations.",
+        "title": "Delta IV Medium 4+ 11.75m PLF",
+        "description": "A standard 4 meter graphite epoxy composite payload fairing for the Delta IV Medium 4+ configurations.",
         "mod": "Real Scale Boosters",
         "cost": 1000,
         "entry_cost": 1000,
@@ -353,8 +353,8 @@
     },
     {
         "name": "RSB_PLF_DeltaIV5m1",
-        "title": "Delta IV Medium 5\u002B 14.3m PLF",
-        "description": "The short version of the 5 meter graphite epoxy composite payload fairing for the Delta IV Medium 5\u002B configurations.",
+        "title": "Delta IV Medium 5+ 14.3m PLF",
+        "description": "The short version of the 5 meter graphite epoxy composite payload fairing for the Delta IV Medium 5+ configurations.",
         "mod": "Real Scale Boosters",
         "cost": 1000,
         "entry_cost": 1000,
@@ -375,8 +375,8 @@
     },
     {
         "name": "RSB_PLF_DeltaIV5m2",
-        "title": "Delta IV Medium 5\u002B 19.1m PLF",
-        "description": "The long version of the 5 meter graphite epoxy composite payload fairing for the Delta IV Medium 5\u002B configurations.",
+        "title": "Delta IV Medium 5+ 19.1m PLF",
+        "description": "The long version of the 5 meter graphite epoxy composite payload fairing for the Delta IV Medium 5+ configurations.",
         "mod": "Real Scale Boosters",
         "cost": 1000,
         "entry_cost": 1000,
@@ -510,7 +510,7 @@
     {
         "name": "RSBadapterDeltaIV5m3m",
         "title": "Delta IV Payload Adapter",
-        "description": "A 5 meter generic structural payload adapter for the Delta IV Medium 5\u002B and Heavy configurations. Note: it does not include a decoupler!",
+        "description": "A 5 meter generic structural payload adapter for the Delta IV Medium 5+ and Heavy configurations. Note: it does not include a decoupler!",
         "mod": "Real Scale Boosters",
         "cost": 1200,
         "entry_cost": 3500,
@@ -642,7 +642,7 @@
     },
     {
         "name": "RSBclamp02",
-        "title": "Tail Service Mast \u0026 Clamp",
+        "title": "Tail Service Mast & Clamp",
         "description": "Launch pad tail service mast and stability clamp, designed specifically to keep your rocket from going anywhere, until full thrust is achieved.",
         "mod": "Real Scale Boosters",
         "cost": 1,
@@ -951,8 +951,8 @@
     },
     {
         "name": "RSBdecouplerDeltaIV4m",
-        "title": "Delta IV Medium 4\u002B Interstage Adapter",
-        "description": "The CBC/DCSS interstage adapter for the Delta IV Medium 4\u002B configurations.",
+        "title": "Delta IV Medium 4+ Interstage Adapter",
+        "description": "The CBC/DCSS interstage adapter for the Delta IV Medium 4+ configurations.",
         "mod": "Real Scale Boosters",
         "cost": 7500,
         "entry_cost": 10500,
@@ -974,7 +974,7 @@
     {
         "name": "RSBdecouplerDeltaIV4mPayload",
         "title": "Delta IV PAF 1575-4",
-        "description": "A 4 meter Payload Attach Fitting (PAF) for the Delta IV Medium 4\u002B configurations.",
+        "description": "A 4 meter Payload Attach Fitting (PAF) for the Delta IV Medium 4+ configurations.",
         "mod": "Real Scale Boosters",
         "cost": 7500,
         "entry_cost": 10500,
@@ -995,8 +995,8 @@
     },
     {
         "name": "RSBdecouplerDeltaIV5m",
-        "title": "Delta IV Medium 5\u002B/Heavy Interstage Adapter",
-        "description": "The CBC/DCSS interstage adapter for the Delta IV Medium 5\u002B and Heavy configurations.",
+        "title": "Delta IV Medium 5+/Heavy Interstage Adapter",
+        "description": "The CBC/DCSS interstage adapter for the Delta IV Medium 5+ and Heavy configurations.",
         "mod": "Real Scale Boosters",
         "cost": 7500,
         "entry_cost": 10500,
@@ -1018,7 +1018,7 @@
     {
         "name": "RSBdecouplerDeltaIV5mPayload",
         "title": "Delta IV PAF 1575-5",
-        "description": "A 5 meter Payload Attach Fitting (PAF) for the Delta IV Medium 5\u002B and Heavy configurations.",
+        "description": "A 5 meter Payload Attach Fitting (PAF) for the Delta IV Medium 5+ and Heavy configurations.",
         "mod": "Real Scale Boosters",
         "cost": 7500,
         "entry_cost": 10500,
@@ -1480,7 +1480,7 @@
     {
         "name": "RSBengineAtlasSRB",
         "title": "AJ-60A",
-        "description": "AJ-60A is a solid rocket booster produced by Aerojet Rocketdyne. They are currently used as strap-on boosters on United Launch Alliance\u0027s Atlas V rocket. Diameter: [1.6 m]. Plume configured by RealPlume.",
+        "description": "AJ-60A is a solid rocket booster produced by Aerojet Rocketdyne. They are currently used as strap-on boosters on United Launch Alliance's Atlas V rocket. Diameter: [1.6 m]. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": 2400,
         "entry_cost": 0,
@@ -1580,7 +1580,7 @@
     {
         "name": "RSBengineF1A",
         "title": "F-1A Series (ETS)",
-        "description": "The massive Rocketdyne F-1 engine. One of the largest, most powerful rocket engines ever built. Ensure you enable roll capability or disable gimbal as required for your application. Represents the throttlable F-1A engine as found in \u0027Eyes Turned Skyward\u0027. Diameter: [3.61 m]. Plume configured by RealPlume.",
+        "description": "The massive Rocketdyne F-1 engine. One of the largest, most powerful rocket engines ever built. Ensure you enable roll capability or disable gimbal as required for your application. Represents the throttlable F-1A engine as found in 'Eyes Turned Skyward'. Diameter: [3.61 m]. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": 1969,
         "entry_cost": 409361,
@@ -1733,7 +1733,7 @@
     {
         "name": "RSBengineLR101",
         "title": "LR101 Series",
-        "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MA-x system (2x LR89 \u002B LR105 \u002B 2x LR101) on Atlas, and MB-x system (LR79 or RS-27 \u002B 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
+        "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MA-x system (2x LR89 + LR105 + 2x LR101) on Atlas, and MB-x system (LR79 or RS-27 + 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": 38,
         "entry_cost": 1000,
@@ -1758,7 +1758,7 @@
     {
         "name": "RSBenginePSLVps1",
         "title": "PSLV PS1-S129",
-        "description": "The first stage of the Polar Satellite Launch Vehicle, designated PS1. Using a solid propellant, it provides a large bulk of the vehicle\u0027s launch thrust. Plume configured by RealPlume.",
+        "description": "The first stage of the Polar Satellite Launch Vehicle, designated PS1. Using a solid propellant, it provides a large bulk of the vehicle's launch thrust. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": 25000,
         "entry_cost": 120000,
@@ -2110,7 +2110,7 @@
     {
         "name": "RSBengineXLR81",
         "title": "XLR81 (Agena) Vacuum Engine",
-        "description": "Gas-generator nitric acid/UDMH vacuum engine used on Agena. The XLR81 family was derived from the Bell Hustler Rocket Engine, which was developed for use on an air-to-surface missile. Early engines were nearly identical to the Hustler engine, while later variants offered new capabilities and improved performance. Engine restart was introduced on the Agena B\u0027s XLR81-BA-7 (Model 8081). The XLR81-BA-11 (Model 8096) used on Agena D used propellant sumps to eliminate the need for ullage thrust. The XLR81-BA-13 (Model 8247) powered the Gemini Agena Target Vehicle (a modified Agena D) and was rated for up to 14 restarts. Diameter: [0.9 m]. Plume configured by RealPlume.",
+        "description": "Gas-generator nitric acid/UDMH vacuum engine used on Agena. The XLR81 family was derived from the Bell Hustler Rocket Engine, which was developed for use on an air-to-surface missile. Early engines were nearly identical to the Hustler engine, while later variants offered new capabilities and improved performance. Engine restart was introduced on the Agena B's XLR81-BA-7 (Model 8081). The XLR81-BA-11 (Model 8096) used on Agena D used propellant sumps to eliminate the need for ullage thrust. The XLR81-BA-13 (Model 8247) powered the Gemini Agena Target Vehicle (a modified Agena D) and was rated for up to 14 restarts. Diameter: [0.9 m]. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": 51,
         "entry_cost": 0,
@@ -2179,7 +2179,7 @@
     {
         "name": "RSBfairingAtlas500",
         "title": "Atlas V 500 Series Aft CIA (Procedural)",
-        "description": "The procedural fairing version of the aft Centaur Interstage Adapter (CIA) for the Atlas V 500 series. Typically used with a 500 series Atlas V fairing base encapsulating the entire Centaur upper stage. Place this interstage first, then snap the 500 series fairing base onto the \u0022gap\u0022.",
+        "description": "The procedural fairing version of the aft Centaur Interstage Adapter (CIA) for the Atlas V 500 series. Typically used with a 500 series Atlas V fairing base encapsulating the entire Centaur upper stage. Place this interstage first, then snap the 500 series fairing base onto the \"gap\".",
         "mod": "Real Scale Boosters",
         "cost": 2500,
         "entry_cost": 9500,
@@ -2663,7 +2663,7 @@
     {
         "name": "RSBinterstageAtlasCentaur500",
         "title": "Atlas V 500 Series Aft CIA",
-        "description": "The aft Centaur Interstage Adapter (CIA) for the Atlas V 500 series. Typically used with a 500 series Atlas V fairing base encapsulating the entire Centaur upper stage. Place this interstage first, then snap the 500 series fairing base onto the \u0022gap\u0022.",
+        "description": "The aft Centaur Interstage Adapter (CIA) for the Atlas V 500 series. Typically used with a 500 series Atlas V fairing base encapsulating the entire Centaur upper stage. Place this interstage first, then snap the 500 series fairing base onto the \"gap\".",
         "mod": "Real Scale Boosters",
         "cost": 7500,
         "entry_cost": 10500,
@@ -3222,7 +3222,7 @@
     {
         "name": "RSBtankDelta3thor",
         "title": "Delta III EELT",
-        "description": "The first stage of the Delta III launch vehicle, based on the Delta II\u0027s Extra Extended Long Tank structure (Thor 8000 series).",
+        "description": "The first stage of the Delta III launch vehicle, based on the Delta II's Extra Extended Long Tank structure (Thor 8000 series).",
         "mod": "Real Scale Boosters",
         "cost": 20500,
         "entry_cost": 45000,
@@ -3266,7 +3266,7 @@
     {
         "name": "RSBtankDeltaIVdcss4m",
         "title": "Delta Cryogenic Second Stage 4M (Delta IV)",
-        "description": "The 4 meter variant of the Delta Cryogenic Second Stage (DCSS-4) used on the Delta IV Medium 4, 4\u002B and 5\u002B. Contains guidance capability.",
+        "description": "The 4 meter variant of the Delta Cryogenic Second Stage (DCSS-4) used on the Delta IV Medium 4, 4+ and 5+. Contains guidance capability.",
         "mod": "Real Scale Boosters",
         "cost": 25000,
         "entry_cost": 125000,
@@ -3752,7 +3752,7 @@
     {
         "name": "RSBtowerDelta",
         "title": "Delta Fixed Umbilical Tower (FUT)",
-        "description": "The Delta II Fixed Umbilical Tower (FUT). Supplies all the required resources to the launch vehicle and it\u0027s payload.",
+        "description": "The Delta II Fixed Umbilical Tower (FUT). Supplies all the required resources to the launch vehicle and it's payload.",
         "mod": "Real Scale Boosters",
         "cost": 10,
         "entry_cost": 1,
@@ -3822,7 +3822,7 @@
     {
         "name": "RSBullageSaturnSII",
         "title": "S-II Ullage Motor",
-        "description": "After stage separation, the Saturn\u0027s S-II stage needs ullage motors to provide a small amount of thrust, to settle the main fuels down into the fuel feeds. The S-II is usually equipped with four or eight of these. Plume configured by RealPlume.",
+        "description": "After stage separation, the Saturn's S-II stage needs ullage motors to provide a small amount of thrust, to settle the main fuels down into the fuel feeds. The S-II is usually equipped with four or eight of these. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": 10,
         "entry_cost": 200,
@@ -3847,7 +3847,7 @@
     {
         "name": "RSBullageSaturnSIVB",
         "title": "S-IVB Ullage Motor",
-        "description": "After stage separation, the Saturn\u0027s S-IVB stage needs ullage motors to provide a small amount of thrust, to settle the main fuels down into the fuel feeds. The S-IVB is usually equipped with two or three of these. Plume configured by RealPlume.",
+        "description": "After stage separation, the Saturn's S-IVB stage needs ullage motors to provide a small amount of thrust, to settle the main fuels down into the fuel feeds. The S-IVB is usually equipped with two or three of these. Plume configured by RealPlume.",
         "mod": "Real Scale Boosters",
         "cost": 10,
         "entry_cost": 200,

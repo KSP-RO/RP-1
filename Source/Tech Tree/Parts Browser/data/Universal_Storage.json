@@ -94,7 +94,7 @@
     {
         "name": "US_1P120_Wedge_Elektron",
         "title": "Universal Storage: Elektron",
-        "description": "An ISS Elektron unit miniaturized to halve it\u0027s size and capacity. Provides breathable oxygen by breaking down water, but at the price of a massive electrical load.",
+        "description": "An ISS Elektron unit miniaturized to halve it's size and capacity. Provides breathable oxygen by breaking down water, but at the price of a massive electrical load.",
         "mod": "Universal Storage",
         "cost": 250,
         "entry_cost": 20000,
@@ -163,7 +163,7 @@
     {
         "name": "US_1R330_Wedge_Hydrogen",
         "title": "Universal Storage: Hydrogen Tank",
-        "description": "Contains a large spherical canister of liquid hydrogen. Use with the fuel cell, or to inflate flammable exploding balloon animals. Please keep away from birthday candles or Jeb\u0027s ego.",
+        "description": "Contains a large spherical canister of liquid hydrogen. Use with the fuel cell, or to inflate flammable exploding balloon animals. Please keep away from birthday candles or Jeb's ego.",
         "mod": "Universal Storage",
         "cost": 20,
         "entry_cost": 400,

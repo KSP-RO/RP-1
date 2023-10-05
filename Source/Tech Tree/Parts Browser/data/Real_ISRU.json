@@ -240,7 +240,7 @@
     {
         "name": "RealISRU_BoschReaction",
         "title": "Bosch Reactor Unit",
-        "description": "A small Bosch reaction unit. CO2 \u002B 2 H2 --\u003E C \u002B 2 H2O. Includes installation of hydrogen heaters in attached liquid hydrogen tanks.",
+        "description": "A small Bosch reaction unit. CO2 + 2 H2 --> C + 2 H2O. Includes installation of hydrogen heaters in attached liquid hydrogen tanks.",
         "mod": "Real ISRU",
         "cost": 375,
         "entry_cost": 7500,
@@ -378,7 +378,7 @@
     {
         "name": "RealISRU_Hex_Elektron",
         "title": "Elektron Water Electrolyser",
-        "description": "Quite big water electrolysis unit. 2 H2O --\u003E 2 H2 \u002B O2",
+        "description": "Quite big water electrolysis unit. 2 H2O --> 2 H2 + O2",
         "mod": "Real ISRU",
         "cost": 250,
         "entry_cost": 5000,
@@ -424,7 +424,7 @@
     {
         "name": "RealISRU_Hex_HaberBosch",
         "title": "Haber-Bosch Reactor Assembly",
-        "description": "(N2 \u002B 3H2 -\u003E NH3)  Includes installation of hydrogen heaters in attached liquid hydrogen tanks.",
+        "description": "(N2 + 3H2 -> NH3)  Includes installation of hydrogen heaters in attached liquid hydrogen tanks.",
         "mod": "Real ISRU",
         "cost": 375,
         "entry_cost": 7500,
@@ -470,7 +470,7 @@
     {
         "name": "RealISRU_Hex_Sabatier",
         "title": "Sabatier Reactor Assembly",
-        "description": "This asssembly includes two Sabatier reactors for high ald low temperature conversion along with thermal exchangers to ensure most energy effective procession. (CO2 \u002B H2 -\u003E CH4 \u002B H2O)  Includes installation of hydrogen heaters in attached liquid hydrogen tanks.",
+        "description": "This asssembly includes two Sabatier reactors for high ald low temperature conversion along with thermal exchangers to ensure most energy effective procession. (CO2 + H2 -> CH4 + H2O)  Includes installation of hydrogen heaters in attached liquid hydrogen tanks.",
         "mod": "Real ISRU",
         "cost": 160,
         "entry_cost": 3200,
@@ -585,7 +585,7 @@
     {
         "name": "RealISRU_MethanePyrolyzer",
         "title": "Methane Pyrolysis Unit",
-        "description": "A small methane pyrolysis unit. CH4 --\u003E C \u002B 2 H2",
+        "description": "A small methane pyrolysis unit. CH4 --> C + 2 H2",
         "mod": "Real ISRU",
         "cost": 440,
         "entry_cost": 8800,
@@ -608,7 +608,7 @@
     {
         "name": "RealISRU_SabatierReactor",
         "title": "Sabatier Reactor Unit",
-        "description": "A small Sabatier reactor unit. CO2 \u002B 4 H2 --\u003E CH4 \u002B 2 H2O. Includes installation of hydrogen heaters in attached liquid hydrogen tanks.",
+        "description": "A small Sabatier reactor unit. CO2 + 4 H2 --> CH4 + 2 H2O. Includes installation of hydrogen heaters in attached liquid hydrogen tanks.",
         "mod": "Real ISRU",
         "cost": 160,
         "entry_cost": 3200,
@@ -631,7 +631,7 @@
     {
         "name": "RealISRU_SolidOxideElectrolyzer",
         "title": "Solid Oxide Electrolysis Unit",
-        "description": "A small Solid Oxide electrolysis unit. 2 CO2 --\u003E 2 CO \u002B O2",
+        "description": "A small Solid Oxide electrolysis unit. 2 CO2 --> 2 CO + O2",
         "mod": "Real ISRU",
         "cost": 390,
         "entry_cost": 7800,
@@ -654,7 +654,7 @@
     {
         "name": "RealISRU_WaterElectrolyzer",
         "title": "Water Electrolysis Unit",
-        "description": "A small water electrolysis unit. 2 H2O --\u003E 2 H2 \u002B O2",
+        "description": "A small water electrolysis unit. 2 H2O --> 2 H2 + O2",
         "mod": "Real ISRU",
         "cost": 200,
         "entry_cost": 4000,
@@ -677,7 +677,7 @@
     {
         "name": "RealISRU_WaterGasShift",
         "title": "Water Gas Shift Unit",
-        "description": "A small Water Gas Shift unit.  Can be run in reverse mode as well. CO \u002B H2O --\u003E CO2 \u002B H2. REVERSE: CO2 \u002B H2 --\u003E CO \u002B H2O",
+        "description": "A small Water Gas Shift unit.  Can be run in reverse mode as well. CO + H2O --> CO2 + H2. REVERSE: CO2 + H2 --> CO + H2O",
         "mod": "Real ISRU",
         "cost": 340,
         "entry_cost": 6800,

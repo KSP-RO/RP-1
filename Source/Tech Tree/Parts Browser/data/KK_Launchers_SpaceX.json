@@ -24,7 +24,7 @@
     {
         "name": "KK_SPXF1_S1FT_ALT1C",
         "title": "Falcon 1 S1 Fuel Tank (Merlin 1C version)",
-        "description": "The Falcon 1 first stage fuel tank is a simple design using a common bulkhead and a lightweight structure. It also is the most reliable part of Falcon 1\u002B, not being a direct cause of any of its failures.",
+        "description": "The Falcon 1 first stage fuel tank is a simple design using a common bulkhead and a lightweight structure. It also is the most reliable part of Falcon 1+, not being a direct cause of any of its failures.",
         "mod": "KK Launchers SpaceX",
         "cost": 3500,
         "entry_cost": 19000,
@@ -46,7 +46,7 @@
     {
         "name": "KK_SPXF1_S2FT_ALT1e",
         "title": "Falcon 1e S2 Tank",
-        "description": "The second stage of SpaceX\u0027s Falcon 1 launch vehicle, equipped with a 3 axis attitude control system.",
+        "description": "The second stage of SpaceX's Falcon 1 launch vehicle, equipped with a 3 axis attitude control system.",
         "mod": "KK Launchers SpaceX",
         "cost": 520,
         "entry_cost": 1800,
@@ -68,7 +68,7 @@
     {
         "name": "KK_SPX_F1Fairing",
         "title": "Falcon 1 Fairing",
-        "description": "The Fairing protects the Falcon 1\u0027s payload during ascent. The fairing gets jettisonned after ignition of the Kestrel second stage\u0027s engine.",
+        "description": "The Fairing protects the Falcon 1's payload during ascent. The fairing gets jettisonned after ignition of the Kestrel second stage's engine.",
         "mod": "KK Launchers SpaceX",
         "cost": 750,
         "entry_cost": 2800,
@@ -112,7 +112,7 @@
     {
         "name": "KK_SPX_F1S1FT",
         "title": "Falcon 1 S1 Fuel Tank (Merlin 1A version)",
-        "description": "The Falcon 1 first stage fuel tank is a simple design using a common bulkhead and a lightweight structure. It also is the most reliable part of Falcon 1\u002B, not being a direct cause of any of its failures.",
+        "description": "The Falcon 1 first stage fuel tank is a simple design using a common bulkhead and a lightweight structure. It also is the most reliable part of Falcon 1+, not being a direct cause of any of its failures.",
         "mod": "KK Launchers SpaceX",
         "cost": 3500,
         "entry_cost": 19000,
@@ -134,7 +134,7 @@
     {
         "name": "KK_SPX_F1S2FT",
         "title": "Falcon 1 S2 Tank",
-        "description": "The second stage of SpaceX\u0027s Falcon 1 launch vehicle, equipped with a 3 axis attitude control system.",
+        "description": "The second stage of SpaceX's Falcon 1 launch vehicle, equipped with a 3 axis attitude control system.",
         "mod": "KK Launchers SpaceX",
         "cost": 520,
         "entry_cost": 1800,
@@ -366,7 +366,7 @@
     {
         "name": "KK_SPX_Merlin1Ci",
         "title": "Merlin 1A/1C",
-        "description": "Merlin 1Ci was the first successful engine designed by SpaceX. It was flown on the Falcon 1\u002B, the first Falcon rocket to attain orbit. A moderately powerful engine with a gimbaled turbopump exhaust for roll control, it is well suited for launching small payloads into low orbits. Plume configured by RealPlume.",
+        "description": "Merlin 1Ci was the first successful engine designed by SpaceX. It was flown on the Falcon 1+, the first Falcon rocket to attain orbit. A moderately powerful engine with a gimbaled turbopump exhaust for roll control, it is well suited for launching small payloads into low orbits. Plume configured by RealPlume.",
         "mod": "KK Launchers SpaceX",
         "cost": 205,
         "entry_cost": 17050,

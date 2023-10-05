@@ -49,7 +49,7 @@
     },
     {
         "name": "ROT-AtlasTank-Integral",
-        "title": "Atlas Modular Tank (Integral)",
+        "title": "Atlas Modular Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 0,
@@ -68,7 +68,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-AtlasTank-Separate",
@@ -168,7 +170,7 @@
     },
     {
         "name": "ROT-BoosterTank-Integral",
-        "title": "Modular Booster Tank (Integral)",
+        "title": "Modular Booster Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 0,
@@ -187,7 +189,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-BoosterTank-Separate",
@@ -238,7 +242,7 @@
     },
     {
         "name": "ROT-CMES-Tank-Integral",
-        "title": "CMES Modular Tank (Integral)",
+        "title": "CMES Modular Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 1,
@@ -256,7 +260,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-CMES-Tank-Separate",
@@ -305,7 +311,7 @@
     },
     {
         "name": "ROT-GenericTank-Integral",
-        "title": "Modular Tank (Integral)",
+        "title": "Modular Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 0,
@@ -324,7 +330,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-GenericTank-Separate",
@@ -375,7 +383,7 @@
     },
     {
         "name": "ROT-KatnissTank-Integral",
-        "title": "Katniss Modular Tank (Integral)",
+        "title": "Katniss Modular Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 1,
@@ -393,7 +401,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-KatnissTank-Separate",
@@ -419,7 +429,7 @@
     },
     {
         "name": "ROT-LanderTank-Integral",
-        "title": "Modular Lander Tank (Integral)",
+        "title": "Modular Lander Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 0,
@@ -438,7 +448,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-LanderTank-SM",
@@ -514,7 +526,7 @@
     },
     {
         "name": "ROT-MiscTank-Integral",
-        "title": "Another Modular Tank (Integral)",
+        "title": "Another Modular Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 1,
@@ -532,11 +544,13 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-MiscTank-Radial-Integral",
-        "title": "Another Radial Modular Tank (Integral)",
+        "title": "Another Radial Modular Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 1,
@@ -554,7 +568,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-MiscTank-Radial-Separate",
@@ -713,7 +729,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-Nose-Separate",
@@ -835,7 +853,7 @@
     },
     {
         "name": "ROT-RadialTank-Integral",
-        "title": "Modular Radial Tank (Integral)",
+        "title": "Modular Radial Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 0,
@@ -854,7 +872,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-RadialTank-Separate",
@@ -952,7 +972,7 @@
     },
     {
         "name": "ROT-SphericalTank-Integral",
-        "title": "Modular Spherical Tank (Integral)",
+        "title": "Modular Spherical Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 0,
@@ -971,7 +991,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-SphericalTank-Separate",
@@ -1021,7 +1043,7 @@
     },
     {
         "name": "ROT-ToroidalTank-Integral",
-        "title": "Modular Toroidal Tank (Integral)",
+        "title": "Modular Toroidal Tank (Isogrid)",
         "description": "",
         "mod": "ROTanks",
         "cost": 0,
@@ -1040,7 +1062,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "ROT-ToroidalTank-Separate",

@@ -356,7 +356,7 @@
     {
         "name": "aje_avon",
         "title": "Avon Turbojet",
-        "description": "The Avon was Rolls-Royce\u0027s first axial-flow turbojet, introduced in 1950. The RB.146, an early 1960s model, was the ultimate military Avon, an afterburning turbojet powering the English Electric Lightning F.6. 72.77kN wet, 56.45kN dry. SFC 0.85/1.85 lb/lbf-hr static. Temperature limit Mach 2.4.",
+        "description": "The Avon was Rolls-Royce's first axial-flow turbojet, introduced in 1950. The RB.146, an early 1960s model, was the ultimate military Avon, an afterburning turbojet powering the English Electric Lightning F.6. 72.77kN wet, 56.45kN dry. SFC 0.85/1.85 lb/lbf-hr static. Temperature limit Mach 2.4.",
         "mod": "Advanced Jet Engines",
         "cost": 220,
         "entry_cost": 0,
@@ -425,7 +425,7 @@
     {
         "name": "aje_j75",
         "title": "J75 Turbojet",
-        "description": "Essentially a larger J57, the P\u0026W J75 saw extensive military and civilian use. This afterburning variant powered the F-106 A/B. 109.0kN wet, 76.5kN dry. SFC 0.8/2.15 lb/lbf-hr static. Temperature limit Mach 2.5.",
+        "description": "Essentially a larger J57, the P&W J75 saw extensive military and civilian use. This afterburning variant powered the F-106 A/B. 109.0kN wet, 76.5kN dry. SFC 0.8/2.15 lb/lbf-hr static. Temperature limit Mach 2.5.",
         "mod": "Advanced Jet Engines",
         "cost": 459,
         "entry_cost": 0,
@@ -448,7 +448,7 @@
     {
         "name": "aje_j79",
         "title": "J79 Turbojet",
-        "description": "The first US \u0022Mach 2\u0022 engine, the J79 saw extensive service, powering the B-58 Hustler and the F-4 Phantom and F-104 Starfighter among others. This mid-1960s model powered the USAF F-4E and G, and with minor mounting differences (as the -19) the final development of the Starfighter line, the F-104S.79.63kN wet, 52.8kN dry. SFC 0.84/1.97 lb/lbf-hr static. Temperature limit Mach 2.6.",
+        "description": "The first US \"Mach 2\" engine, the J79 saw extensive service, powering the B-58 Hustler and the F-4 Phantom and F-104 Starfighter among others. This mid-1960s model powered the USAF F-4E and G, and with minor mounting differences (as the -19) the final development of the Starfighter line, the F-104S.79.63kN wet, 52.8kN dry. SFC 0.84/1.97 lb/lbf-hr static. Temperature limit Mach 2.6.",
         "mod": "Advanced Jet Engines",
         "cost": 395,
         "entry_cost": 0,

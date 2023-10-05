@@ -52,7 +52,7 @@
     {
         "name": "InflatableHAB",
         "title": "IKU-03 Kerbal Safety Bubble",
-        "description": "One of the biggest crew storage solutions available to any space program, the IKU-03 is able to inflate to nearly double it\u0027s initial size, letting it hold a total of 10 kerbals comfortably. If it isn\u0027t inflated, however... let\u0027s just say that they\u0027ll have very little to no room to do anything.",
+        "description": "One of the biggest crew storage solutions available to any space program, the IKU-03 is able to inflate to nearly double it's initial size, letting it hold a total of 10 kerbals comfortably. If it isn't inflated, however... let's just say that they'll have very little to no room to do anything.",
         "mod": "Ven Stock Revamp",
         "cost": 20700,
         "entry_cost": 414000,
@@ -277,7 +277,7 @@
     {
         "name": "RO-AgenaEngine",
         "title": "XLR81 (Agena) Vacuum Engine",
-        "description": "Gas-generator nitric acid/UDMH vacuum engine used on Agena. The XLR81 family was derived from the Bell Hustler Rocket Engine, which was developed for use on an air-to-surface missile. Early engines were nearly identical to the Hustler engine, while later variants offered new capabilities and improved performance. Engine restart was introduced on the Agena B\u0027s XLR81-BA-7 (Model 8081). The XLR81-BA-11 (Model 8096) used on Agena D used propellant sumps to eliminate the need for ullage thrust. The XLR81-BA-13 (Model 8247) powered the Gemini Agena Target Vehicle (a modified Agena D) and was rated for up to 14 restarts. Diameter: [0.9 m]. Plume configured by RealPlume.",
+        "description": "Gas-generator nitric acid/UDMH vacuum engine used on Agena. The XLR81 family was derived from the Bell Hustler Rocket Engine, which was developed for use on an air-to-surface missile. Early engines were nearly identical to the Hustler engine, while later variants offered new capabilities and improved performance. Engine restart was introduced on the Agena B's XLR81-BA-7 (Model 8081). The XLR81-BA-11 (Model 8096) used on Agena D used propellant sumps to eliminate the need for ullage thrust. The XLR81-BA-13 (Model 8247) powered the Gemini Agena Target Vehicle (a modified Agena D) and was rated for up to 14 restarts. Diameter: [0.9 m]. Plume configured by RealPlume.",
         "mod": "Ven Stock Revamp",
         "cost": 51,
         "entry_cost": 0,
@@ -451,7 +451,7 @@
     {
         "name": "RT1",
         "title": "Castor 4",
-        "description": "The Castor 4 was developed as the second stage of the Athena H missile and first flew in 1971. It was later adapted to replace Delta\u0027s Castor 2 boosters, increasing GTO capacity from 1593 lb (723 kg) to nearly 2000 lb (900 kg). The resulting Delta 3000-series launched in 1975 and was the first to adopt a staggered booster staging sequence. Previous Delta vehicles burned their motors in a 6-3 sequence and then jettisoned all SRMs at once. The heavier and longer-burning Castor 4 required that the ground-lit motors be jettisoned immediately after depletion to reduce dead weight. Early launches used a less efficient 5-4 sequence to reduce acceleration but returned to a 6-3 sequence after Delta was strengthened in the early 80s. Diameter: [1.02 m]. Plume configured by RealPlume.",
+        "description": "The Castor 4 was developed as the second stage of the Athena H missile and first flew in 1971. It was later adapted to replace Delta's Castor 2 boosters, increasing GTO capacity from 1593 lb (723 kg) to nearly 2000 lb (900 kg). The resulting Delta 3000-series launched in 1975 and was the first to adopt a staggered booster staging sequence. Previous Delta vehicles burned their motors in a 6-3 sequence and then jettisoned all SRMs at once. The heavier and longer-burning Castor 4 required that the ground-lit motors be jettisoned immediately after depletion to reduce dead weight. Early launches used a less efficient 5-4 sequence to reduce acceleration but returned to a 6-3 sequence after Delta was strengthened in the early 80s. Diameter: [1.02 m]. Plume configured by RealPlume.",
         "mod": "Ven Stock Revamp",
         "cost": 361,
         "entry_cost": 0,

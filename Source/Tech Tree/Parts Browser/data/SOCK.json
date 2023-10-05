@@ -2,7 +2,7 @@
     {
         "name": "benjee10_shuttle_ODS",
         "title": "OV-100 Payload Bay Docking Adapter",
-        "description": "This pressurised compartment attaches aft of the Shuttle Orbiter\u0027s crew cabin, and provides an attachment point for a 0.9375m docking mechanism, as well as EVA access to the payload bay. Available in multiple configurations (not all have hatches!)",
+        "description": "This pressurised compartment attaches aft of the Shuttle Orbiter's crew cabin, and provides an attachment point for a 0.9375m docking mechanism, as well as EVA access to the payload bay. Available in multiple configurations (not all have hatches!)",
         "mod": "SOCK",
         "cost": 2000,
         "entry_cost": 0,
@@ -24,7 +24,7 @@
     {
         "name": "benjee10_shuttle_aftFuselage",
         "title": "OV-100 Aft Fuselage Module",
-        "description": "This module forms the rear of the Shuttle Orbiter, attaching aft of the payload bay. It features integrated RCS thrusters divided into three arrays, allowing precision control of each thruster group. Attachment points are also provided for the OMS engines and main engines, as well as containing an RCS \u0026 OMS fuel reserve for orbital flight.",
+        "description": "This module forms the rear of the Shuttle Orbiter, attaching aft of the payload bay. It features integrated RCS thrusters divided into three arrays, allowing precision control of each thruster group. Attachment points are also provided for the OMS engines and main engines, as well as containing an RCS & OMS fuel reserve for orbital flight.",
         "mod": "SOCK",
         "cost": 25361,
         "entry_cost": 0,
@@ -196,7 +196,7 @@
     {
         "name": "benjee10_shuttle_kuBand",
         "title": "OV-100 Ku Band Antenna",
-        "description": "This short-range antenna allows the Orbiter to communicate with \u0026 track rendezvous targets and payloads.",
+        "description": "This short-range antenna allows the Orbiter to communicate with & track rendezvous targets and payloads.",
         "mod": "SOCK",
         "cost": 1000,
         "entry_cost": 0,
@@ -218,7 +218,7 @@
     {
         "name": "benjee10_shuttle_longeron",
         "title": "OV-100 Payload Bay Longeron Attachment Point",
-        "description": "This small structural element allows the attachment of equipment to the side of the Orbiter\u0027s payload bay.",
+        "description": "This small structural element allows the attachment of equipment to the side of the Orbiter's payload bay.",
         "mod": "SOCK",
         "cost": 250,
         "entry_cost": 0,
@@ -240,7 +240,7 @@
     {
         "name": "benjee10_shuttle_mainGear",
         "title": "OV-100 Main Gear",
-        "description": "The Shuttle Orbiter\u0027s main gear are equipped to bring it to a stop safely after touchdown.",
+        "description": "The Shuttle Orbiter's main gear are equipped to bring it to a stop safely after touchdown.",
         "mod": "SOCK",
         "cost": 2536,
         "entry_cost": 0,
@@ -313,7 +313,7 @@
     {
         "name": "benjee10_shuttle_payloadTruss",
         "title": "OV-100 Payload Bay Structural Truss",
-        "description": "This structural girder element attaches to nodes at the bottom of the Shuttle Orbiter\u0027s payload bay in order to provide additional attachment points for cargo and payloads.",
+        "description": "This structural girder element attaches to nodes at the bottom of the Shuttle Orbiter's payload bay in order to provide additional attachment points for cargo and payloads.",
         "mod": "SOCK",
         "cost": 1000,
         "entry_cost": 0,

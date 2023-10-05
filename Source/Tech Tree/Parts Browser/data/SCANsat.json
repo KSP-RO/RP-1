@@ -101,7 +101,7 @@
     {
         "name": "SCANsat_Scanner32",
         "title": "SCAN Anomaly Scanner",
-        "description": "This small sensor can automatically identify nearby anomalies. Since it only works over very short distances and at very low altitudes, it\u0027s primarily useful to track identified anomalies that have been visited. Min Alt: 0, Max Alt: 5km, Best Alt: 0, FOV: 1",
+        "description": "This small sensor can automatically identify nearby anomalies. Since it only works over very short distances and at very low altitudes, it's primarily useful to track identified anomalies that have been visited. Min Alt: 0, Max Alt: 5km, Best Alt: 0, FOV: 1",
         "mod": "SCANsat",
         "cost": 500,
         "entry_cost": 10000,
@@ -125,7 +125,7 @@
     },
     {
         "name": "SCANsat_Tracker",
-        "title": "SCAN MapTraq\u00C3\u201A\u00C2\u00AE",
+        "title": "SCAN MapTraq\u00c3\u201a\u00c2\u00ae",
         "description": "Originally intended for the consumer market, this small device can communicate with a mapping satellite network and display a map and your position on it. Since nobody has actually built such a satellite network, these devices can currently be acquired very cheaply in bulk.",
         "mod": "SCANsat",
         "cost": 500,

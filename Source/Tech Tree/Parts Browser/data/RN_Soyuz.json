@@ -1060,7 +1060,7 @@
     {
         "name": "rn_zond_asas",
         "title": "Zond ASAS",
-        "description": "Tiny ASAS for Zond(also use on VA capsule). Attach radially on the top of the Zond descent capsule, put it inside the black \u0022ring\u0022 on top of the pod. Allows the craft to be controlled remotely since it was launched unmanned.",
+        "description": "Tiny ASAS for Zond(also use on VA capsule). Attach radially on the top of the Zond descent capsule, put it inside the black \"ring\" on top of the pod. Allows the craft to be controlled remotely since it was launched unmanned.",
         "mod": "RN Soyuz",
         "cost": 1250,
         "entry_cost": 42000,

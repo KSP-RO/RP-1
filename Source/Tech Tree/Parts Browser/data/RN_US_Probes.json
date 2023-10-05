@@ -350,7 +350,7 @@
     },
     {
         "name": "gdish_actual",
-        "title": "Galileo Dish \u0022Actual\u0022",
+        "title": "Galileo Dish \"Actual\"",
         "description": "Actual broken version of the galileo dish.",
         "mod": "RN US Probes",
         "cost": 30,
@@ -375,7 +375,7 @@
     },
     {
         "name": "gdish_intended",
-        "title": "Galileo Dish \u0022Intended\u0022",
+        "title": "Galileo Dish \"Intended\"",
         "description": "Intended unbroken version of Galileo dish.",
         "mod": "RN US Probes",
         "cost": 30,
@@ -1478,7 +1478,7 @@
     {
         "name": "rn_tdrs_ag",
         "title": "Tracking and Data Relay Satellite A-G",
-        "description": "Earth Observing System TDRS-A/B/C/D/E/F/G. WARNING: IF YOU DON\u0027T HAVE FIRESPITTER, THE DISHES WILL APPEAR OPEN IN THE VAB, THEY WILL BE FINE ONCE YOU LOAD ON TO THE LAUNCH PAD.",
+        "description": "Earth Observing System TDRS-A/B/C/D/E/F/G. WARNING: IF YOU DON'T HAVE FIRESPITTER, THE DISHES WILL APPEAR OPEN IN THE VAB, THEY WILL BE FINE ONCE YOU LOAD ON TO THE LAUNCH PAD.",
         "mod": "RN US Probes",
         "cost": 8500,
         "entry_cost": 500,

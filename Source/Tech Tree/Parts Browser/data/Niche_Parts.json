@@ -2,7 +2,7 @@
     {
         "name": "400N_Engine",
         "title": "S-400 Bipropellant Engine (400N)",
-        "description": "The S400 400N bipropellant Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes. Notable missions include Galileo, Mars Express, Venus Express \u0026 the ExoMars Trace Gas Orbiter. Plume configured by RealPlume.",
+        "description": "The S400 400N bipropellant Engine is designed for apogee orbit injection of geostationary satellites and for trajectory and planetary orbit manoeuvres of deep space probes. Notable missions include Galileo, Mars Express, Venus Express & the ExoMars Trace Gas Orbiter. Plume configured by RealPlume.",
         "mod": "Niche Parts",
         "cost": 200,
         "entry_cost": 2800,
@@ -145,7 +145,7 @@
     {
         "name": "Draco",
         "title": "Draco",
-        "description": "The Draco thruster is a small rocket engine for use on the Dragon spacecraft. The Draco\u0027s thrust is comparable to the Marquardt R-4D engine developed for the Apollo Service and Lunar Modules in 1960s. The Draco thruster is used for apogee/perigee maneuvers, orbit adjustment, and attitude control. Plume configured by RealPlume.",
+        "description": "The Draco thruster is a small rocket engine for use on the Dragon spacecraft. The Draco's thrust is comparable to the Marquardt R-4D engine developed for the Apollo Service and Lunar Modules in 1960s. The Draco thruster is used for apogee/perigee maneuvers, orbit adjustment, and attitude control. Plume configured by RealPlume.",
         "mod": "Niche Parts",
         "cost": 200,
         "entry_cost": 2800,
@@ -169,7 +169,7 @@
     {
         "name": "HiPAT",
         "title": "R-4D HiPAT (445N)",
-        "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world\u00C3\u00A2\u00E2\u201A\u00AC\u00E2\u201E\u00A2s communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini\u0027s orbit insertion of Saturn. Plume configured by RealPlume.",
+        "description": "The HiPAT or High Performance Liquid Apogee Thruster. The HiPAT performs orbit-raising manoeuvres for many of the world\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s communication satellite platforms, including the Astrium Eurostar 3000, Boeing Space Systems 702HP, MELCO DS-2000 and Loral LS-1300. The R-4D has also played a critical role in NASA missions such as Cassini's orbit insertion of Saturn. Plume configured by RealPlume.",
         "mod": "Niche Parts",
         "cost": 20,
         "entry_cost": 2800,
@@ -289,7 +289,7 @@
     {
         "name": "MR106Axial",
         "title": "MR-106 Axial (40N)",
-        "description": "The MR-106 40N monopropellant thruster is a small rocket engine designed for spacecraft and upper stage attitude control and velocity corrections, used on Radarsat, GPS Block 2R, HAS/Peace Courage, Titan Centaur, Atlas Centaur \u0026 many more.",
+        "description": "The MR-106 40N monopropellant thruster is a small rocket engine designed for spacecraft and upper stage attitude control and velocity corrections, used on Radarsat, GPS Block 2R, HAS/Peace Courage, Titan Centaur, Atlas Centaur & many more.",
         "mod": "Niche Parts",
         "cost": 280,
         "entry_cost": 4200,
@@ -337,7 +337,7 @@
     {
         "name": "MR107",
         "title": "MR-107 (270N)",
-        "description": "MR-107 Monopropellant Engine family. A small dV correction engine used on many space probes and second stage vehicles. Also used as the landing engines for the Phoenix Mars Lander \u0026 the Mars Polar Lander. Plume configured by RealPlume.",
+        "description": "MR-107 Monopropellant Engine family. A small dV correction engine used on many space probes and second stage vehicles. Also used as the landing engines for the Phoenix Mars Lander & the Mars Polar Lander. Plume configured by RealPlume.",
         "mod": "Niche Parts",
         "cost": 200,
         "entry_cost": 2800,
@@ -361,7 +361,7 @@
     {
         "name": "MR111",
         "title": "MR-111 (4N)",
-        "description": "The MR-111 4N Rocket Engine Assembly is a hydrazine monopropellant rocket engine, flight proven as attitude control thruster for the Mars Observer, Juno spacecraft \u0026 to be used on the OSIRIS-REx Asteroid sample return mission.",
+        "description": "The MR-111 4N Rocket Engine Assembly is a hydrazine monopropellant rocket engine, flight proven as attitude control thruster for the Mars Observer, Juno spacecraft & to be used on the OSIRIS-REx Asteroid sample return mission.",
         "mod": "Niche Parts",
         "cost": 280,
         "entry_cost": 4200,
@@ -409,7 +409,7 @@
     {
         "name": "MRM106D",
         "title": "MRM-106D (2 Engine 40N)",
-        "description": "The MRM-106D monopropellent rocket engine assembly is a small set of thrusters used for attitude control \u0026 propellent settling for upper stages. Used on the Atlas-Centaur upper stage as well as the Delta Cryogenic Second Stage (DCSS).",
+        "description": "The MRM-106D monopropellent rocket engine assembly is a small set of thrusters used for attitude control & propellent settling for upper stages. Used on the Atlas-Centaur upper stage as well as the Delta Cryogenic Second Stage (DCSS).",
         "mod": "Niche Parts",
         "cost": 1400,
         "entry_cost": 4200,
@@ -433,7 +433,7 @@
     {
         "name": "MRM106D4",
         "title": "MRM-106D (4 Engine 40N)",
-        "description": "The MRM-106D monopropellent rocket engine assembly is a small set of thrusters used for attitude control \u0026 propellent settling for upper stages. Used on the Delta Cryogenic Second Stage (DCSS).",
+        "description": "The MRM-106D monopropellent rocket engine assembly is a small set of thrusters used for attitude control & propellent settling for upper stages. Used on the Delta Cryogenic Second Stage (DCSS).",
         "mod": "Niche Parts",
         "cost": 1400,
         "entry_cost": 4200,
@@ -457,7 +457,7 @@
     {
         "name": "MRM106F",
         "title": "MRM-106F (40N)",
-        "description": "The MRM-106F monopropellent rocket engine assembly is a small set of thrusters used for attitude control \u0026 propellent settling for upper stages. Used on the Atlas-Centaur upper stage.",
+        "description": "The MRM-106F monopropellent rocket engine assembly is a small set of thrusters used for attitude control & propellent settling for upper stages. Used on the Atlas-Centaur upper stage.",
         "mod": "Niche Parts",
         "cost": 1400,
         "entry_cost": 4200,
@@ -721,7 +721,7 @@
     {
         "name": "S200_Block",
         "title": "S200 ATV Aft Thruster Cluster",
-        "description": "The S200 ATV Aft Thruster Cluster was developed for attitude control, orbital manoeuvring and braking of ESA\u0027s Automated Transfer Vehicle (ATV). The thruster clusters deliver both steady state thrust and impulse bit and can also be used as back-up in the event of main engine failure.",
+        "description": "The S200 ATV Aft Thruster Cluster was developed for attitude control, orbital manoeuvring and braking of ESA's Automated Transfer Vehicle (ATV). The thruster clusters deliver both steady state thrust and impulse bit and can also be used as back-up in the event of main engine failure.",
         "mod": "Niche Parts",
         "cost": 280,
         "entry_cost": 4200,
@@ -745,7 +745,7 @@
     {
         "name": "S200_Thruster",
         "title": "S200 Bipropellant Thruster (200N)",
-        "description": "The S200 Bipropellant Thruster was developed for attitude control, orbital manoeuvring and braking of ESA\u0027s Automated Transfer Vehicle (ATV). The thruster has been selected to fly in the future NASA Programme ORION Multi Purpose Crew Vehicle, NASA\u0027s new spacecraft built to send humans further than ever before.",
+        "description": "The S200 Bipropellant Thruster was developed for attitude control, orbital manoeuvring and braking of ESA's Automated Transfer Vehicle (ATV). The thruster has been selected to fly in the future NASA Programme ORION Multi Purpose Crew Vehicle, NASA's new spacecraft built to send humans further than ever before.",
         "mod": "Niche Parts",
         "cost": 280,
         "entry_cost": 4200,
@@ -793,7 +793,7 @@
     {
         "name": "STAR8",
         "title": "STAR 8 (RAD)",
-        "description": "The STAR 8 was developed and qualified as the rocket assisted deceleration (RAD) motor for the Mars Exploration Rover (MER) program. The motor is based on the STAR 5D motor technology developed for JPL\u00C3\u00A2\u00E2\u201A\u00AC\u00E2\u201E\u00A2s Mars Pathfinder program. The STAR 8 first flew in January 2004 when three motors were used to decelerate each of the Spirit and Opportunity rovers for landing at Gusev Crater and Meridiani Planum on Mars. Plume configured by RealPlume.",
+        "description": "The STAR 8 was developed and qualified as the rocket assisted deceleration (RAD) motor for the Mars Exploration Rover (MER) program. The motor is based on the STAR 5D motor technology developed for JPL\u00c3\u00a2\u00e2\u201a\u00ac\u00e2\u201e\u00a2s Mars Pathfinder program. The STAR 8 first flew in January 2004 when three motors were used to decelerate each of the Spirit and Opportunity rovers for landing at Gusev Crater and Meridiani Planum on Mars. Plume configured by RealPlume.",
         "mod": "Niche Parts",
         "cost": 50,
         "entry_cost": 1000,
@@ -817,7 +817,7 @@
     {
         "name": "SuperDraco_Double",
         "title": "Twin SuperDraco",
-        "description": "SuperDraco is a hypergolic propellant liquid rocket engine designed and built by SpaceX. It is part of SpaceX\u0027s Draco family of rocket engines. A redundant array of eight SuperDraco engines provides fault-tolerant propulsion for use as a launch escape system and propulsive-landing thrust for the Dragon V2 passenger-carrying space capsule. Plume configured by RealPlume.",
+        "description": "SuperDraco is a hypergolic propellant liquid rocket engine designed and built by SpaceX. It is part of SpaceX's Draco family of rocket engines. A redundant array of eight SuperDraco engines provides fault-tolerant propulsion for use as a launch escape system and propulsive-landing thrust for the Dragon V2 passenger-carrying space capsule. Plume configured by RealPlume.",
         "mod": "Niche Parts",
         "cost": 178,
         "entry_cost": 1240,

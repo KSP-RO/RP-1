@@ -133,13 +133,13 @@
     },
     {
         "name": "ca_ELIX",
-        "title": "CA-ELIX Electrostatic \u0026 Ionization Experiment",
+        "title": "CA-ELIX Electrostatic & Ionization Experiment",
         "description": "The ELIX is an electrostatic analyzer for analyzing the synthesis of charged particles. By employing electric and magnetic fields ELIX concentrates and separates the different particles by their mass and charge, allowing for very precise measurements of plasma density, velocity and distribution.",
         "mod": "Coatl Aerospace",
         "cost": 3250,
         "entry_cost": 4100,
         "category": "SCIENCE",
-        "info": "Electrostatic \u0026 Ionization",
+        "info": "Electrostatic & Ionization",
         "year": "1961",
         "technology": "scienceHuman",
         "era": "03-HUMAN",
@@ -156,7 +156,7 @@
     {
         "name": "ca_ESM",
         "title": "Pioneer 10/11 Science Package",
-        "description": "An integrated science package originally designed for the Pioneer 10 \u0026 11 deep space probes. Includes a thermal control system with a thermal rejection capability of 50 Watts.",
+        "description": "An integrated science package originally designed for the Pioneer 10 & 11 deep space probes. Includes a thermal control system with a thermal rejection capability of 50 Watts.",
         "mod": "Coatl Aerospace",
         "cost": 980,
         "entry_cost": 8100,
@@ -516,7 +516,7 @@
     },
     {
         "name": "ca_argo-mk2",
-        "title": "Mariner Mars \u0026 Venus Spacecraft Bus",
+        "title": "Mariner Mars & Venus Spacecraft Bus",
         "description": "",
         "mod": "Coatl Aerospace",
         "cost": 950,
@@ -538,7 +538,7 @@
     },
     {
         "name": "ca_argo-mk2-hga",
-        "title": "Mariner Mars \u0026 Venus High Gain Antenna (HGA)",
+        "title": "Mariner Mars & Venus High Gain Antenna (HGA)",
         "description": "",
         "mod": "Coatl Aerospace",
         "cost": 400,
@@ -560,7 +560,7 @@
     },
     {
         "name": "ca_argo-mk2-mast",
-        "title": "Mariner Mars \u0026 Venus Low Gain Antenna (LGA)",
+        "title": "Mariner Mars & Venus Low Gain Antenna (LGA)",
         "description": "",
         "mod": "Coatl Aerospace",
         "cost": 200,
@@ -856,7 +856,7 @@
     {
         "name": "ca_fom_drogue",
         "title": "Venera Lander Drogue Parachute",
-        "description": "Some Fomalhaut atmospheric entry profiles call for earlier and/or more gentle braking. For those, we\u0027ve designed this massive and resilient drogue chute. Warning: This chute is not rated for low touch-down velocities. Prepare for harsh, bumpy landings (PART NOT SUPPORTED BY RP-1 OR RO)",
+        "description": "Some Fomalhaut atmospheric entry profiles call for earlier and/or more gentle braking. For those, we've designed this massive and resilient drogue chute. Warning: This chute is not rated for low touch-down velocities. Prepare for harsh, bumpy landings (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": 0,
         "entry_cost": 1,
@@ -902,7 +902,7 @@
     {
         "name": "ca_fom_lander",
         "title": "Venera Lander Bus",
-        "description": "The CAE Planetary Science Division has produced this rugged \u0027metal tank\u0027, and crammed it with batteries, radiation lining, a thermometer, a camera to image the landing site, and an antenna wrapped around the top. It is designed to survive rough landings in extreme environments (PART NOT SUPPORTED BY RP-1 OR RO)",
+        "description": "The CAE Planetary Science Division has produced this rugged 'metal tank', and crammed it with batteries, radiation lining, a thermometer, a camera to image the landing site, and an antenna wrapped around the top. It is designed to survive rough landings in extreme environments (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": 4600,
         "entry_cost": 92000,
@@ -1043,7 +1043,7 @@
     {
         "name": "ca_landv_battery",
         "title": "Surveyor Battery Pack",
-        "description": "The main battery pack of the Surveyor lunar lander. Capacity: \u003Ccolor=orange\u003E3650\u003C/color\u003E Wh.",
+        "description": "The main battery pack of the Surveyor lunar lander. Capacity: <color=orange>3650</color> Wh.",
         "mod": "Coatl Aerospace",
         "cost": 65,
         "entry_cost": 600,
@@ -1740,7 +1740,7 @@
     },
     {
         "name": "ca_startrack",
-        "title": "CA-ACS \u0027StarTrack\u0027 Attitude Control System",
+        "title": "CA-ACS 'StarTrack' Attitude Control System",
         "description": "",
         "mod": "Coatl Aerospace",
         "cost": 1000,
@@ -1810,7 +1810,7 @@
     {
         "name": "ca_telescope_a",
         "title": "CA-HiRISE Telescope",
-        "description": "The High Resolution Imaging Science Experiment (HiRISE) is a Cassegrain - type visible spectrum telescope and one of the biggest to ever fly in a deep space probe. With it\u0027s high resolution capability it can acquire high definition color surface images.",
+        "description": "The High Resolution Imaging Science Experiment (HiRISE) is a Cassegrain - type visible spectrum telescope and one of the biggest to ever fly in a deep space probe. With it's high resolution capability it can acquire high definition color surface images.",
         "mod": "Coatl Aerospace",
         "cost": 500,
         "entry_cost": 10000,
@@ -1905,7 +1905,7 @@
     {
         "name": "ca_vor_comm",
         "title": "CAE-A03 Vorona Communication Array",
-        "description": "Vorona\u0027s Comm Array mounts dual conic antennae for short range, low-gain communication. The system also has a mount for a high-gain dish, designed for the Vorona CAE-102 dish (Sold separately). (PART NOT SUPPORTED BY RP-1 OR RO)",
+        "description": "Vorona's Comm Array mounts dual conic antennae for short range, low-gain communication. The system also has a mount for a high-gain dish, designed for the Vorona CAE-102 dish (Sold separately). (PART NOT SUPPORTED BY RP-1 OR RO)",
         "mod": "Coatl Aerospace",
         "cost": 300,
         "entry_cost": 1000,
@@ -2068,7 +2068,7 @@
     },
     {
         "name": "ca_vor_sp",
-        "title": "4MV Spacecraft Bus SAW \u0026 TCS (Standard)",
+        "title": "4MV Spacecraft Bus SAW & TCS (Standard)",
         "description": "",
         "mod": "Coatl Aerospace",
         "cost": 500,
@@ -2090,7 +2090,7 @@
     },
     {
         "name": "ca_vor_sp2",
-        "title": "4MV Spacecraft Bus SAW \u0026 TCS (Small)",
+        "title": "4MV Spacecraft Bus SAW & TCS (Small)",
         "description": "",
         "mod": "Coatl Aerospace",
         "cost": 500,
@@ -2135,7 +2135,7 @@
     },
     {
         "name": "dish_L",
-        "title": "Voyager 1 \u0026 2 Parabolic Antenna",
+        "title": "Voyager 1 & 2 Parabolic Antenna",
         "description": "The main parabolic telecommunications antenna of the Voyager spacecraft.",
         "mod": "Coatl Aerospace",
         "cost": 100,
@@ -2245,7 +2245,7 @@
     },
     {
         "name": "dish_quetzal",
-        "title": "Pioneer 10 \u0026 11 Parabolic Antenna",
+        "title": "Pioneer 10 & 11 Parabolic Antenna",
         "description": "The main parabolic telecommunications antenna of the Pioneer spacecraft.",
         "mod": "Coatl Aerospace",
         "cost": 30,
@@ -2604,7 +2604,7 @@
     {
         "name": "sp_odyssey_a",
         "title": "Mars Odyssey Solar Array Wing (SAW)",
-        "description": "A very efficient Gallium Arsenide (GaAs) photovoltaic array with an eccentric pivot point to minimize it\u0027s stowed footprint. 5.88 m2",
+        "description": "A very efficient Gallium Arsenide (GaAs) photovoltaic array with an eccentric pivot point to minimize it's stowed footprint. 5.88 m2",
         "mod": "Coatl Aerospace",
         "cost": 410,
         "entry_cost": 4300,

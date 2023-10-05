@@ -467,7 +467,7 @@
     {
         "name": "CXA_Quest_Airlock",
         "title": "Quest Joint Airlock System",
-        "description": "|2M Series Airlock Module| The Quest Airlock provides a means for EVAs. Built with an \u0022Equipment Lock\u0022 section for space suit and equipment storage, and a \u0022Crew Lock\u0022 from which kerbalnauts can exit into space.",
+        "description": "|2M Series Airlock Module| The Quest Airlock provides a means for EVAs. Built with an \"Equipment Lock\" section for space suit and equipment storage, and a \"Crew Lock\" from which kerbalnauts can exit into space.",
         "mod": "CxAerospace",
         "cost": 6500,
         "entry_cost": 15000,
@@ -533,7 +533,7 @@
     {
         "name": "CXA_SAW",
         "title": "Solar Array Wing(SAW)",
-        "description": "When normal solar panels can\u0027t cut it. The Solar Array Wing (SAW) contains 2 massive solar blankets that are deployed with the help of a collapsable mast (don\u0027t ask us how it works. Our best bet is black magic). Single-axis sun tracking functionality included.",
+        "description": "When normal solar panels can't cut it. The Solar Array Wing (SAW) contains 2 massive solar blankets that are deployed with the help of a collapsable mast (don't ask us how it works. Our best bet is black magic). Single-axis sun tracking functionality included.",
         "mod": "CxAerospace",
         "cost": 25250,
         "entry_cost": 175000,

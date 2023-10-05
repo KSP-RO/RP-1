@@ -232,7 +232,7 @@
     },
     {
         "name": "ROC-ApolloCMBDBBlockIII",
-        "title": "Apollo Block III\u002B Command Module (CM)",
+        "title": "Apollo Block III+ Command Module (CM)",
         "description": "",
         "mod": "ROCapsules",
         "cost": 13500,
@@ -249,7 +249,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "capsulesApolloBIII",
-        "identical_part_name": "Apollo Block III\u002B CM",
+        "identical_part_name": "Apollo Block III+ CM",
         "module_tags": [
             "HumanRated",
             "NoResourceCostMult",
@@ -258,7 +258,7 @@
     },
     {
         "name": "ROC-ApolloCMBlockIII",
-        "title": "Apollo Block III\u002B Command Module (CM)",
+        "title": "Apollo Block III+ Command Module (CM)",
         "description": "",
         "mod": "ROCapsules",
         "cost": 13500,
@@ -275,7 +275,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "capsulesApolloBIII",
-        "identical_part_name": "Apollo Block III\u002B CM",
+        "identical_part_name": "Apollo Block III+ CM",
         "module_tags": [
             "HumanRated",
             "NoResourceCostMult",
@@ -776,7 +776,7 @@
     },
     {
         "name": "ROC-ApolloHSBDBBlockIII",
-        "title": "Apollo Block III\u002B Heatshield",
+        "title": "Apollo Block III+ Heatshield",
         "description": "",
         "mod": "ROCapsules",
         "cost": 1500,
@@ -799,8 +799,8 @@
         ]
     },
     {
-        "name": "ROC-ApolloHSBlockIII\u002B",
-        "title": "Apollo Block III\u002B Heatshield",
+        "name": "ROC-ApolloHSBlockIII+",
+        "title": "Apollo Block III+ Heatshield",
         "description": "",
         "mod": "ROCapsules",
         "cost": 1500,
@@ -898,7 +898,7 @@
     },
     {
         "name": "ROC-ApolloMissionModule",
-        "title": "Apollo Block III\u002B Mission Module",
+        "title": "Apollo Block III+ Mission Module",
         "description": "",
         "mod": "ROCapsules",
         "cost": 6750,
@@ -1044,7 +1044,7 @@
     {
         "name": "ROC-ApolloRCS",
         "title": "Apollo Service Module RCS Quad Pod",
-        "description": "This is the RCS Quad Pods for the Apollo Service Module. Each contains it\u0027s own pressurization and fuel. Place 4 pods 90 degrees apart. 2:1 O/F Ratio.",
+        "description": "This is the RCS Quad Pods for the Apollo Service Module. Each contains it's own pressurization and fuel. Place 4 pods 90 degrees apart. 2:1 O/F Ratio.",
         "mod": "ROCapsules",
         "cost": 80,
         "entry_cost": 3500,
@@ -1117,7 +1117,7 @@
     },
     {
         "name": "ROC-ApolloSMBlockIII",
-        "title": "Apollo Block III\u002B Service Module",
+        "title": "Apollo Block III+ Service Module",
         "description": "Significant changes were made to better adapt Apollo to its new role as a crew shuttle for LEO and the Service Module was decreased in size and weight. FICTIONAL (Eyes Turned Skyward)",
         "mod": "ROCapsules",
         "cost": 4000,
@@ -2972,7 +2972,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "GeminiSM, MMH\u002BNTO",
+        "entry_cost_mods": "GeminiSM, MMH+NTO",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -2996,7 +2996,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "GeminiSM, MMH\u002BNTO",
+        "entry_cost_mods": "GeminiSM, MMH+NTO",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
@@ -3130,7 +3130,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000,MMH\u002BNTO,rcsMult",
+        "entry_cost_mods": "1000,MMH+NTO,rcsMult",
         "identical_part_name": "GeminiReentryControl",
         "module_tags": []
     },
@@ -3331,7 +3331,7 @@
     {
         "name": "ROC-LEMDecoupler",
         "title": "Apollo Lunar Module Stage Separator",
-        "description": "This part splits the Ascent Module and Descent Module into two.  Hope you remembered everything, you won\u0027t be going back this trip.",
+        "description": "This part splits the Ascent Module and Descent Module into two.  Hope you remembered everything, you won't be going back this trip.",
         "mod": "ROCapsules",
         "cost": 100,
         "entry_cost": 3500,
@@ -3775,7 +3775,7 @@
     },
     {
         "name": "ROC-MercuryNose",
-        "title": "Mercury Nose Fairing \u0026 Antenna",
+        "title": "Mercury Nose Fairing & Antenna",
         "description": "",
         "mod": "ROCapsules",
         "cost": 50,
@@ -3988,7 +3988,7 @@
     },
     {
         "name": "ROC-MercuryRetroDecoupler",
-        "title": "Mercury Retro Strap \u0026 Decoupler",
+        "title": "Mercury Retro Strap & Decoupler",
         "description": "",
         "mod": "ROCapsules",
         "cost": 10,
@@ -4322,7 +4322,7 @@
         "spacecraft": "Gemini",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "capsulesGemini, MMH\u002BNTO",
+        "entry_cost_mods": "capsulesGemini, MMH+NTO",
         "identical_part_name": "GeminiReentryControlSystem",
         "module_tags": []
     },

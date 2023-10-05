@@ -305,7 +305,7 @@
     },
     {
         "name": "rtg-0625",
-        "title": "NASA \u0026 DOE Advanced Sterling RG",
+        "title": "NASA & DOE Advanced Sterling RG",
         "description": "A much lighter and more efficient radioisotope generator by using the sterling cycle.",
         "mod": "Near Future Electrical",
         "cost": 20045,

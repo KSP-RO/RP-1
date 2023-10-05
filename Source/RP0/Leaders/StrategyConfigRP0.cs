@@ -139,7 +139,11 @@ namespace RP0
         /// <returns></returns>
         public virtual bool IsUnlocked()
         {
+#if DEBUG
+            return true;
+#else
             return requirementsPredicate == null || requirementsPredicate();
+#endif
         }
 
         /// <summary>

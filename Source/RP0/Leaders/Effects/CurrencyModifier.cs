@@ -81,7 +81,11 @@ namespace RP0.Leaders
 
             if (qry is CurrencyModifierQueryRP0 qryRP0)
             {
-                if ((listeningReasons & qryRP0.reasonRP0) != 0)
+                var reason = qryRP0.reasonRP0;
+                // Work around a Kerbalism issue: it uses reason None for science transmission
+                if (reason == TransactionReasonsRP0.None && qry.GetInput(Currency.Science) > 0f && !KerbalConstructionTimeData.IsRefundingScience)
+                    reason = TransactionReasonsRP0.ScienceTransmission;
+                if ((listeningReasons & reason) != 0)
                     qryRP0.Multiply(currency, multToUse);
             }
             else

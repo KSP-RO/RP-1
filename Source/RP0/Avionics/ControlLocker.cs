@@ -36,6 +36,8 @@ namespace RP0
         private static PropertyInfo _mjDeactivateControl = null;
         private object _masterMechJeb = null;
 
+        public static ControlLocker Instance { get; private set; }
+
         private void Awake()
         {
             if (!_isFirstLoad) return;
@@ -52,6 +54,11 @@ namespace RP0
                 RP0Debug.Log($"{ModTag} MechJeb methods found", true);
             else
                 RP0Debug.Log($"{ModTag} MJ assembly or methods NOT found", true);
+
+            if (Instance != null)
+                Destroy(Instance);
+
+            Instance = this;
         }
 
         private void Start()
@@ -175,6 +182,9 @@ namespace RP0
             GameEvents.onVesselSwitching.Remove(OnVesselSwitchingHandler);
             GameEvents.onVesselGoOnRails.Remove(OnRailsHandler);
             GameEvents.onVesselGoOffRails.Remove(OffRailsHandler);
+
+            if (Instance == this)
+                Instance = null;
         }
 
         private void DisableAutopilot()

@@ -88,7 +88,7 @@ namespace RP0
                 var vp = new VesselProject(vessel, ProjectType.VAB);
                 isHumanRated = vp.humanRated;
                 BP = Formula.GetReconditioningBP(vp);
-                vesselBP = vp.buildPoints + vp.integrationPoints;
+                vesselBP = vp.buildPoints;
             }
             catch
             {
@@ -119,7 +119,7 @@ namespace RP0
             progress = 0;
             mass = vessel.GetTotalMass();
             _lc = vessel.LC;
-            vesselBP = vessel.buildPoints + vessel.integrationPoints;
+            vesselBP = vessel.buildPoints;
             isHumanRated = vessel.humanRated;
             
             switch (type)

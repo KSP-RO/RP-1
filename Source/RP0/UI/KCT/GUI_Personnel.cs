@@ -205,7 +205,7 @@ namespace RP0
                     delta = engCap - currentLC.Engineers;
                 double buildRate = KCTUtilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, delta)
                     * efficiency * stratMult;
-                double bpLeft = b.buildPoints + b.integrationPoints - b.progress;
+                double bpLeft = b.buildPoints - b.progress;
                 GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else

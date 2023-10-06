@@ -95,7 +95,7 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
-        public const int VERSION = 6;
+        public const int VERSION = 7;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
@@ -162,7 +162,7 @@ namespace RP0
         private const float YEAR_MULT_TIME_INTERVAL = 86400 * 7;
 
         // Editor fields
-        public VesselProject EditorVessel = new VesselProject("temp", "LaunchPad", 0d, 0d, 0d, string.Empty, 0f, 0f, EditorFacility.VAB, false);
+        public VesselProject EditorVessel = new VesselProject("temp", "LaunchPad", 0d, 0d, string.Empty, 0f, EditorFacility.VAB, false);
         public Guid PreEditorSwapLCID = Guid.Empty;
         public bool IsLaunchSiteControllerDisabled;
 

@@ -51,8 +51,6 @@ namespace RP0
         [Persistent]
         public double buildPoints;
         [Persistent]
-        public double integrationPoints;
-        [Persistent]
         public string launchSite;
         [Persistent]
         public string flag;
@@ -70,8 +68,6 @@ namespace RP0
         public bool humanRated;
         [Persistent]
         public float cost = 0;
-        [Persistent]
-        public float integrationCost;
         [Persistent]
         public float mass = 0;
         [Persistent]
@@ -123,7 +119,7 @@ namespace RP0
 
         private List<ConfigNode> ExtractedPartNodes => ShipNodeCompressed.Node.GetNodes("PART").ToList();
 
-        public bool IsFinished => progress >= buildPoints + integrationPoints;
+        public bool IsFinished => progress >= buildPoints;
 
         public LCSpaceCenter KSC
         {
@@ -271,25 +267,21 @@ namespace RP0
                 }
             }
 
-            integrationPoints = Formula.GetIntegrationBP(this);
-            integrationCost = (float)Formula.GetIntegrationCost(this);
             Profiler.EndSample();
         }
 
-        public VesselProject(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, EditorFacility editorFacility, bool isHuman)
+        public VesselProject(string name, string ls, double effCost, double bP, string flagURL, float spentFunds, EditorFacility editorFacility, bool isHuman)
         {
             launchSite = ls;
             shipName = name;
             effectiveCost = effCost;
             buildPoints = bP;
-            integrationPoints = integrP;
             progress = 0;
             flag = flagURL;
             humanRated = isHuman;
             Type = editorFacility == EditorFacility.VAB ? ProjectType.VAB : ProjectType.SPH;
             cannotEarnScience = false;
             cost = spentFunds;
-            integrationCost = integrCost;
             FacilityBuiltIn = editorFacility;
         }
 
@@ -346,10 +338,7 @@ namespace RP0
 
             kscDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
 
-            integrationPoints = Formula.GetIntegrationBP(this);
-            integrationCost = (float)Formula.GetIntegrationCost(this);
-
-            progress = buildPoints + integrationPoints;
+            progress = buildPoints;
         }
 
         public override string ToString() => $"{Type}: {shipName}";
@@ -410,7 +399,6 @@ namespace RP0
             {
                 effectiveCost = ec;
                 buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
-                integrationPoints = Formula.GetIntegrationBP(this);
             }
             else
             {
@@ -482,7 +470,7 @@ namespace RP0
 
         public VesselProject CreateCopy()
         {
-            VesselProject ret = new VesselProject(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated);
+            VesselProject ret = new VesselProject(shipName, launchSite, effectiveCost, buildPoints, flag, cost, FacilityBuiltIn, humanRated);
             ret._lc = _lc;
             ret._lcID = _lcID;
             ret.globalTags = globalTags.Clone() as PersistentHashSetValueType<string>;
@@ -498,7 +486,6 @@ namespace RP0
             ret.mass = mass;
             ret.emptyMass = emptyMass;
             ret.cost = cost;
-            ret.integrationCost = integrationCost;
             ret.emptyCost = emptyCost;
             ret.numStageParts = numStageParts;
             ret.numStages = numStages;
@@ -511,8 +498,6 @@ namespace RP0
 
             // Safe to always do these, they're cheap.
             ret.buildPoints = Formula.GetVesselBuildPoints(ret.effectiveCost);
-            ret.integrationPoints = Formula.GetIntegrationBP(ret);
-            ret.integrationCost = (float)Formula.GetIntegrationCost(ret);
 
             return ret;
         }
@@ -805,11 +790,10 @@ namespace RP0
             {
                 cost = KCTUtilities.GetTotalVesselCost(ShipNodeCompressed.Node);
                 emptyCost = KCTUtilities.GetTotalVesselCost(ShipNodeCompressed.Node, false);
-                integrationCost = (float)Formula.GetIntegrationCost(this);
                 ShipNodeCompressed.CompressAndRelease();
             }
 
-            return cost + integrationCost;
+            return cost;
         }
 
         public double GetRushEfficiencyCost()
@@ -1274,7 +1258,7 @@ namespace RP0
             return _buildRate;
         }
 
-        public double GetFractionComplete() => progress / (buildPoints + integrationPoints);
+        public double GetFractionComplete() => progress / buildPoints;
 
         public double GetTimeLeft()
         {
@@ -1286,7 +1270,7 @@ namespace RP0
             newEff = LC.Efficiency;
             if (BuildRate > 0)
             {
-                double bpLeft = integrationPoints + buildPoints - progress;
+                double bpLeft = buildPoints - progress;
                 if (LC.Efficiency == LCEfficiency.MaxEfficiency)
                     return bpLeft / BuildRate;
 
@@ -1308,7 +1292,7 @@ namespace RP0
                 return GetTimeLeft(out newEff);
             }
             newEff = LC.Efficiency;
-            double bp = buildPoints + integrationPoints;
+            double bp = buildPoints;
             double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
             double bpLeft = bp - progress;
             if (newEff == LCEfficiency.MaxEfficiency)
@@ -1342,7 +1326,7 @@ namespace RP0
 
         public ProjectType GetProjectType() => Type;
 
-        public bool IsComplete() => progress >= buildPoints + integrationPoints;
+        public bool IsComplete() => progress >= buildPoints;
 
         public double IncrementProgress(double UTDiff)
         {
@@ -1350,7 +1334,7 @@ namespace RP0
             if (bR == 0)
                 return 0d;
 
-            double toGo = buildPoints + integrationPoints - progress;
+            double toGo = buildPoints - progress;
             double amt = bR * UTDiff;
             progress += bR * UTDiff;
             if (IsComplete())
@@ -1441,6 +1425,20 @@ namespace RP0
             {
                 _buildRate = 0d;
                 return;
+            }
+        }
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KerbalConstructionTimeData.VERSION)
+            {
+                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 7)
+                {
+                    double intPoints = 0d;
+                    node.TryGetValue("integrationPoints", ref intPoints);
+                    buildPoints += intPoints;
+                }
             }
         }
     }

@@ -106,26 +106,6 @@ namespace RP0
             return result * 0.5d;
         }
 
-        public static double GetIntegrationCost(VesselProject vessel)
-        {
-            // set to 0 -- handled by salaries
-            return 0d;
-        }
-
-        public static double GetIntegrationBP(VesselProject vessel, List<VesselProject> mergedVessels = null)
-        {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
-                return 0d;
-            
-            double BP = vessel.buildPoints;
-            if (mergedVessels != null)
-            {
-                foreach (var v in mergedVessels)
-                    BP += v.buildPoints;
-            }
-            return BP;
-        }
-
         public static double GetAirlaunchCost(VesselProject vessel)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)

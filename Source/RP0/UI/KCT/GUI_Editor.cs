@@ -51,7 +51,7 @@ namespace RP0
 
         private static void RenderBuildMode()
         {
-            double buildPoints = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints + KerbalConstructionTimeData.Instance.EditorVessel.integrationPoints;
+            double buildPoints = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints;
             double bpLeaderEffect = KerbalConstructionTimeData.Instance.EditorVessel.LeaderEffect;
             double effic = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Efficiency;
             double rateWithCurEngis = KCTUtilities.GetBuildRate(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC, KerbalConstructionTimeData.Instance.EditorVessel.mass, KerbalConstructionTimeData.Instance.EditorVessel.buildPoints, KerbalConstructionTimeData.Instance.EditorVessel.humanRated, 0)
@@ -89,9 +89,6 @@ namespace RP0
                 GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? KerbalConstructionTimeData.Instance.ActiveSC.Hangar : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC).MaxEngineersFor(KerbalConstructionTimeData.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
             }
-
-            if (KerbalConstructionTimeData.Instance.EditorVessel.integrationCost > 0)
-                GUILayout.Label($"Integration Cost: √{KerbalConstructionTimeData.Instance.EditorVessel.integrationCost:N1}");
 
             if (bR > 0d && rateWithCurEngis > 0d)
             {
@@ -310,7 +307,7 @@ namespace RP0
         private static void RenderEditMode()
         {
             VesselProject editedVessel = KerbalConstructionTimeData.Instance.EditedVessel;
-            double fullVesselBP = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints + KerbalConstructionTimeData.Instance.EditorVessel.integrationPoints;
+            double fullVesselBP = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints;
             double bpLeaderEffect = KerbalConstructionTimeData.Instance.EditorVessel.LeaderEffect;
             double effic = editedVessel.LC.Efficiency;
             KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
@@ -325,6 +322,7 @@ namespace RP0
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
                 double startingEff = effic;
+                double rolloutEff = effic;
                 int idx = editedVessel.LC.BuildList.IndexOf(editedVessel);
                 if (idx != -1 && bR > 0d && effic < LCEfficiency.MaxEfficiency)
                 {
@@ -337,7 +335,7 @@ namespace RP0
                 double buildTime = bR > 0d
                     ? (effic >= LCEfficiency.MaxEfficiency
                         ? buildPoints / (bR * bpLeaderEffect)
-                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, startingEff, out _))
+                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, startingEff, out rolloutEff))
                     : double.NaN;
                 GUILayout.Label(new GUIContent($"Remaining: {DTUtils.GetFormattedTime(buildTime, 0, false)}", 
                     idx == -1 ? "Time left takes efficiency increase into account based on assuming vessel will be placed at head of integration list" :
@@ -345,7 +343,7 @@ namespace RP0
 
                 if (KerbalConstructionTimeData.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {DTUtils.GetFormattedTime(KerbalConstructionTimeData.EditorRolloutBP / bR, 0, false)} at {effic:P0}");
+                    GUILayout.Label($"Rollout Time: {DTUtils.GetFormattedTime(KerbalConstructionTimeData.EditorRolloutBP / (bR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
                 }
             }
             else

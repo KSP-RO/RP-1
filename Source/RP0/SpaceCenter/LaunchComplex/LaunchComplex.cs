@@ -71,7 +71,7 @@ namespace RP0
             double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
             return Math.Max(MinEngineersConst, (int)Math.Ceiling((tngMax * 0.25d + bpMax * 0.75d) * EngineersPerPacket));
         }
-        public int MaxEngineersFor(VesselProject vp) => vp == null ? MaxEngineers : MaxEngineersFor(vp.GetTotalMass(), vp.buildPoints + vp.integrationPoints, vp.humanRated);
+        public int MaxEngineersFor(VesselProject vp) => vp == null ? MaxEngineers : MaxEngineersFor(vp.GetTotalMass(), vp.buildPoints, vp.humanRated);
 
         private double _strategyRateMultiplier = 1d;
         public double StrategyRateMultiplier => _strategyRateMultiplier;

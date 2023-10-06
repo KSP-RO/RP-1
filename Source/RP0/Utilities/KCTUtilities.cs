@@ -465,7 +465,7 @@ namespace RP0
                 Debug.LogException(ex);
             }
 
-            RP0Debug.Log($"Added {vp.shipName} to build list at {lc.Name} at {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {vp.cost}. IntegrationCost: {vp.integrationCost}");
+            RP0Debug.Log($"Added {vp.shipName} to build list at {lc.Name} at {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {vp.cost}.");
             RP0Debug.Log("Launch site is " + vp.launchSite);
             string text = $"Added {vp.shipName} to integration list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -549,7 +549,7 @@ namespace RP0
 
             if (KerbalConstructionTimeData.Instance.MergedVessels.Count == 0)
             {
-                origTotalBP = ship.buildPoints + ship.integrationPoints;
+                origTotalBP = ship.buildPoints;
                 oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
             }
             else
@@ -560,11 +560,11 @@ namespace RP0
                     totalEffectiveCost += v.effectiveCost;
                 }
 
-                origTotalBP = oldProgressBP = Formula.GetIntegrationBP(ship, KerbalConstructionTimeData.Instance.MergedVessels) + Formula.GetVesselBuildPoints(totalEffectiveCost);
+                origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
                 oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 
-            double newTotalBP = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints + KerbalConstructionTimeData.Instance.EditorVessel.integrationPoints;
+            double newTotalBP = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;

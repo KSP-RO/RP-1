@@ -1,6 +1,6 @@
 ﻿namespace RP0
 {
-    public class KCTCostModifier : DataTypes.ConfigNodePersistenceBase
+    public class PartEffectiveCostModifier : DataTypes.ConfigNodePersistenceBase
     {
         [Persistent] public string name;
         [Persistent] public string displayName;

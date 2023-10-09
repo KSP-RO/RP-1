@@ -410,7 +410,10 @@ namespace RP0
         {
             //PART, MODULE -> clean experiments, repack chutes, disable engines
             string filePath = $"{KSPUtil.ApplicationRootPath}GameData/RP-1/KCT/KCT_ModuleTemplates.cfg";
-            ConfigNode ModuleTemplates = ConfigNode.Load(filePath);
+            ConfigNode ModuleTemplates = GameDatabase.Instance.GetConfigNodes("SCMModuleTemplates").FirstOrDefault();
+            if (ModuleTemplates == null)
+                return node;
+
             ConfigNode[] templates = ModuleTemplates.GetNodes("MODULE");
 
             foreach(ConfigNode part in node.GetNodes("PART"))
@@ -1349,7 +1352,7 @@ namespace RP0
 
         private void MoveVesselToWarehouse()
         {
-            KCTEvents.Instance.KCTButtonStockImportant = true;
+            SCMEvents.Instance.KCTButtonStockImportant = true;
 
             // use getter first just in case
             LC.BuildList.Remove(this);

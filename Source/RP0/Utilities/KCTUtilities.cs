@@ -458,7 +458,7 @@ namespace RP0
 
             try
             {
-                KCTEvents.OnVesselAddedToBuildQueue.Fire(vp);
+                SCMEvents.OnVesselAddedToBuildQueue.Fire(vp);
             }
             catch (Exception ex)
             {
@@ -1486,7 +1486,7 @@ namespace RP0
         public static void ChangeEngineers(LaunchComplex currentLC, int delta)
         {
             currentLC.Engineers += delta;
-            KCTEvents.OnPersonnelChange.Fire();
+            SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
             KCT_GUI.BuildRateForDisplay = null;
         }
@@ -1494,14 +1494,14 @@ namespace RP0
         public static void ChangeEngineers(LCSpaceCenter ksc, int delta)
         {
             ksc.Engineers += delta;
-            KCTEvents.OnPersonnelChange.Fire();
+            SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public static void ChangeResearchers(int delta)
         {
             KerbalConstructionTimeData.Instance.Researchers += delta;
-            KCTEvents.OnPersonnelChange.Fire();
+            SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 

@@ -71,7 +71,7 @@ namespace RP0
 
                 try
                 {
-                    KCTEvents.OnLCDismantled?.Fire(activeLC);
+                    SCMEvents.OnLCDismantled?.Fire(activeLC);
                 }
                 catch (Exception ex)
                 {

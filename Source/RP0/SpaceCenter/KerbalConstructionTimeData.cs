@@ -196,9 +196,9 @@ namespace RP0
             PresetManager.Instance.SetActiveFromSaveData();
 
             // Create events for other mods
-            if (!KCTEvents.Instance.CreatedEvents)
+            if (!SCMEvents.Instance.CreatedEvents)
             {
-                KCTEvents.Instance.CreateEvents();
+                SCMEvents.Instance.CreateEvents();
             }
 
             var obj = new GameObject("KCTToolbarControl");
@@ -368,7 +368,7 @@ namespace RP0
                                 KCT_GUI.ToggleVisibility(true);
                             else
                             {
-                                if (KCTEvents.Instance != null && ToolbarControl != null)
+                                if (SCMEvents.Instance != null && ToolbarControl != null)
                                 {
                                     if (ShowWindows[0])
                                         KCT_GUI.ToggleVisibility(true);
@@ -1575,7 +1575,7 @@ namespace RP0
 
             Crew.CrewHandler.Instance?.RecalculateBuildRates();
 
-            KCTEvents.OnRecalculateBuildRates.Fire();
+            SCMEvents.OnRecalculateBuildRates.Fire();
         }
 
 

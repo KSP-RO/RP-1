@@ -392,7 +392,7 @@ namespace RP0.Harmony
 
                 try
                 {
-                    KCTEvents.OnFacilityUpgradeQueued?.Fire(upgrading);
+                    SCMEvents.OnFacilityUpgradeQueued?.Fire(upgrading);
                 }
                 catch (Exception ex)
                 {

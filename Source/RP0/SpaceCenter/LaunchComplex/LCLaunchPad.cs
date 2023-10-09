@@ -158,7 +158,7 @@ namespace RP0
                     
                     try
                     {
-                        KCTEvents.OnPadDismantled?.Fire(this);
+                        SCMEvents.OnPadDismantled?.Fire(this);
                     }
                     catch (Exception ex)
                     {

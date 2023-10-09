@@ -125,14 +125,14 @@ namespace RP0
         private static void EnterAdmin()
         {
             GameEvents.onGUIAdministrationFacilitySpawn.Fire();
-            GameEvents.onGUIAdministrationFacilityDespawn.Add(KCTEvents.Instance.OnExitAdmin);
+            GameEvents.onGUIAdministrationFacilityDespawn.Add(SCMEvents.Instance.OnExitAdmin);
             GUIStates.ShowFirstRun = false;
         }
 
         private static void EnterMC()
         {
             GameEvents.onGUIMissionControlSpawn.Fire();
-            GameEvents.onGUIMissionControlDespawn.Add(KCTEvents.Instance.OnExitMC);
+            GameEvents.onGUIMissionControlDespawn.Add(SCMEvents.Instance.OnExitMC);
             GUIStates.ShowFirstRun = false;
         }
 

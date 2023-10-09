@@ -713,21 +713,6 @@
     <Content Include="..\GameData\RP-1\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\KCT\AirlaunchLevels.cfg">
-      <Link>KCT\AirlaunchLevels.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\KCT\FuelResources.cfg">
-      <Link>KCT\FuelResources.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\KCT\KCTTags.cfg">
-      <Link>KCT\KCTTags.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\KCT\KCT_ModuleTemplates.cfg">
-      <Link>KCT\KCT_ModuleTemplates.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\KCT\TechNodeData.cfg">
-      <Link>KCT\TechNodeData.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\KCT_Presets\RP1_KCT_Presets.cfg">
       <Link>KCT_Presets\RP1_KCT_Presets.cfg</Link>
     </Content>
@@ -1006,6 +991,21 @@
     </Content>
     <Content Include="..\GameData\RP-1\Science\Results\TemperatureScan.cfg">
       <Link>Science\Results\TemperatureScan.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\SCMData\AirlaunchLevels.cfg">
+      <Link>SCMData\AirlaunchLevels.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\SCMData\CostModifiers.cfg">
+      <Link>SCMData\CostModifiers.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\SCMData\FuelResources.cfg">
+      <Link>SCMData\FuelResources.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\SCMData\ModuleResetTemplates.cfg">
+      <Link>SCMData\ModuleResetTemplates.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\SCMData\TechNodeData.cfg">
+      <Link>SCMData\TechNodeData.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Strategies\Departments.cfg">
       <Link>Strategies\Departments.cfg</Link>

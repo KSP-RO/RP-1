@@ -140,8 +140,8 @@ namespace RP0
 
         public static void ToggleVisibility(bool isVisible)
         {
-            if (KCTEvents.Instance.KCTButtonStockImportant)
-                KCTEvents.Instance.KCTButtonStockImportant = false;
+            if (SCMEvents.Instance.KCTButtonStockImportant)
+                SCMEvents.Instance.KCTButtonStockImportant = false;
 
             if (HighLogic.LoadedScene == GameScenes.FLIGHT && !IsPrimarilyDisabled)
             {

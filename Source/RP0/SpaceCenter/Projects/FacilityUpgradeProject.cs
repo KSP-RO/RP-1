@@ -135,7 +135,7 @@ namespace RP0
 
             try
             {
-                KCTEvents.OnFacilityUpgradeCancel?.Fire(this);
+                SCMEvents.OnFacilityUpgradeCancel?.Fire(this);
             }
             catch (Exception ex)
             {
@@ -154,7 +154,7 @@ namespace RP0
 
                 try
                 {
-                    KCTEvents.OnFacilityUpgradeComplete?.Fire(this);
+                    SCMEvents.OnFacilityUpgradeComplete?.Fire(this);
                 }
                 catch (Exception ex)
                 {

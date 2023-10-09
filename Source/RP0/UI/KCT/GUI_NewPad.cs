@@ -95,7 +95,7 @@ namespace RP0
 
                     try
                     {
-                        KCTEvents.OnPadConstructionQueued?.Fire(padConstr, lp);
+                        SCMEvents.OnPadConstructionQueued?.Fire(padConstr, lp);
                     }
                     catch (Exception ex)
                     {

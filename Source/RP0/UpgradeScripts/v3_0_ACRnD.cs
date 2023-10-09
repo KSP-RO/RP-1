@@ -134,4 +134,79 @@ namespace RP0.UpgradeScripts
             }
         }
     }
+
+    [UpgradeModule(LoadContext.SFS, sfsNodeUrl = "GAME/SCENARIO")]
+    public class v3_0_KCTSCM : UpgradeScript
+    {
+        public override string Name { get => "RP-1 Astronaut Complex and RnD Construction Upgrader"; }
+        public override string Description { get => "Updates AC and RnD building levels in constructions"; }
+        public override Version EarliestCompatibleVersion { get => new Version(2, 0, 0); }
+        protected static Version _targetVersion = new Version(3, 0, 0);
+        public override Version TargetVersion => _targetVersion;
+
+        public override TestResult OnTest(ConfigNode node, LoadContext loadContext, ref string nodeName)
+        {
+            foreach (ConfigNode n in node.nodes)
+            {
+                nodeName = n.GetValue("id");
+                if (nodeName == "SpaceCenter/AstronautComplex" || nodeName == "SpaceCenter/ResearchAndDevelopment")
+                    return TestResult.Upgradeable;
+            }
+            return TestResult.Pass;
+        }
+
+        public override void OnUpgrade(ConfigNode node, LoadContext loadContext, ConfigNode parentNode)
+        {
+            for (int i = node.nodes.Count; i-- > 0;)
+            {
+                var n = node.nodes[i];
+                string name = n.GetValue("id");
+
+                // Nuke RnD upgrades
+                if (name == "SpaceCenter/ResearchAndDevelopment")
+                {
+                    node.nodes.nodes.RemoveAt(i);
+                    continue;
+                }
+
+                // Handle AC upgrades
+                if (name != "SpaceCenter/AstronautComplex")
+                    continue;
+
+                int oldCur = 0;
+                int oldUp = 0;
+                double oldSpentCost = 0d;
+                n.TryGetValue("currentLevel", ref oldCur);
+                n.TryGetValue("upgradeLevel", ref oldUp);
+                n.TryGetValue("spentCost", ref oldSpentCost);
+
+                int newCur = 0;
+                int newUp = 0;
+                switch (oldUp)
+                {
+                    case 1:
+                        newCur = 2;
+                        newUp = 3;
+                        break;
+
+                    case 2:
+                        newCur = 3;
+                        newUp = 4;
+                        break;
+                }
+                // We rejigger BP and total cost. Ignore fundsloss parameter here
+                double cost = Database.FacilityLevelCosts[SpaceCenterFacility.AstronautComplex][newUp];
+                double oldCost = Database.FacilityLevelCosts[SpaceCenterFacility.AstronautComplex].SumThrough(newUp - 1);
+                double bp = Formula.GetConstructionBP(cost, oldCost, SpaceCenterFacility.AstronautComplex);
+                double oldBP = 0d;
+                n.TryGetValue("BP", ref oldBP);
+                n.SetValue("BP", Math.Min(bp, oldBP));
+                n.SetValue("cost", cost.ToString("N0"));
+                n.SetValue("currentLevel", newCur);
+                n.SetValue("upgradeLevel", newUp);
+
+                RP0Debug.Log($"UpgradePipeline context {loadContext} updated KCT Admin Building upgrade to target level {newUp} (was {oldUp})");
+            }
+        }
+    }
 }

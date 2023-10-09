@@ -55,7 +55,7 @@ namespace RP0
 
             try
             {
-                KCTEvents.OnPadConstructionCancel?.Fire(this, lp);
+                SCMEvents.OnPadConstructionCancel?.Fire(this, lp);
             }
             catch (Exception ex)
             {
@@ -77,7 +77,7 @@ namespace RP0
 
                 try
                 {
-                    KCTEvents.OnPadConstructionComplete?.Fire(this, lp);
+                    SCMEvents.OnPadConstructionComplete?.Fire(this, lp);
                 }
                 catch (Exception ex)
                 {

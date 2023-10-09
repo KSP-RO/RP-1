@@ -44,7 +44,7 @@ namespace RP0
 
                 try
                 {
-                    KCTEvents.OnLCConstructionComplete?.Fire(this, lc);
+                    SCMEvents.OnLCConstructionComplete?.Fire(this, lc);
                 }
                 catch (Exception ex)
                 {
@@ -94,7 +94,7 @@ namespace RP0
 
             try
             {
-                KCTEvents.OnLCConstructionCancel?.Fire(this, lc);
+                SCMEvents.OnLCConstructionCancel?.Fire(this, lc);
             }
             catch (Exception ex)
             {

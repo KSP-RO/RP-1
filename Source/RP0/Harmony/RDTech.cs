@@ -22,7 +22,7 @@ namespace RP0.Harmony
             KerbalConstructionTimeData.Instance.TechList.Add(tech);
             tech.UpdateBuildRate(KerbalConstructionTimeData.Instance.TechList.Count - 1);
 
-            KCTEvents.OnTechQueued.Fire(__instance);
+            SCMEvents.OnTechQueued.Fire(__instance);
 
             KCTUtilities.AddNodePartsToExperimental(__instance.techID);
 

@@ -40,9 +40,9 @@ namespace RP0
 
             // Subscribe to events from KSP and other mods.
             // This is done as early as possible for the scene change events to work when loading into a save from main menu.
-            if (!KCTEvents.Instance.SubscribedToEvents)
+            if (!SCMEvents.Instance.SubscribedToEvents)
             {
-                KCTEvents.Instance.SubscribeToEvents();
+                SCMEvents.Instance.SubscribeToEvents();
             }
 
             // Poke Kerbalism

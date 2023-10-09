@@ -37,7 +37,7 @@ namespace RP0
     public class Database : MonoBehaviour
     {
         public static readonly ResourceInfo ResourceInfo = new ResourceInfo();
-        public static readonly PersistentDictionaryNodeKeyed<KCTCostModifier> KCTCostModifiers = new PersistentDictionaryNodeKeyed<KCTCostModifier>();
+        public static readonly PersistentDictionaryNodeKeyed<PartEffectiveCostModifier> KCTCostModifiers = new PersistentDictionaryNodeKeyed<PartEffectiveCostModifier>();
         public static readonly PersistentDictionaryNodeKeyed<TechPeriod> TechNodePeriods = new PersistentDictionaryNodeKeyed<TechPeriod>("id");
         public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
         public static readonly List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();

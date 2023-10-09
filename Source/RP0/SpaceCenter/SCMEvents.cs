@@ -3,9 +3,9 @@ using RP0.DataTypes;
 
 namespace RP0
 {
-    public class KCTEvents
+    public class SCMEvents
     {
-        public static KCTEvents Instance { get; private set; } = new KCTEvents();
+        public static SCMEvents Instance { get; private set; } = new SCMEvents();
 
         public bool SubscribedToEvents { get; private set; }
         public bool CreatedEvents { get; private set; }
@@ -45,7 +45,7 @@ namespace RP0
         /// </summary>
         public static EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>> ApplyGlobalEffectiveCostMultiplier;
 
-        public KCTEvents()
+        public SCMEvents()
         {
             RP0Debug.Log("KCT_Events constructor");
             SubscribedToEvents = false;

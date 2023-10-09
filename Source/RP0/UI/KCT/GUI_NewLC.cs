@@ -623,7 +623,7 @@ namespace RP0
 
                     try
                     {
-                        KCTEvents.OnLCConstructionQueued?.Fire(lcConstr, lc);
+                        SCMEvents.OnLCConstructionQueued?.Fire(lcConstr, lc);
                     }
                     catch (Exception ex)
                     {

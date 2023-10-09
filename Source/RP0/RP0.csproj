@@ -247,7 +247,7 @@
     <Compile Include="UI\KCT\GUI_NewPad.cs" />
     <Compile Include="UI\KCT\GUI_VesselMerge.cs" />
     <Compile Include="UI\KCT\GUI_Simulation.cs" />
-    <Compile Include="SpaceCenter\KCTCostModifier.cs" />
+    <Compile Include="SpaceCenter\PartEffectiveCostModifier.cs" />
     <Compile Include="ModIntegrations\CTIWrapper.cs" />
     <Compile Include="PartModules\ModuleTagList.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
@@ -259,7 +259,7 @@
     <Compile Include="SpaceCenter\Projects\ISpaceCenterProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselProject.cs" />
     <Compile Include="UI\KCT\GUI_BuildPlans.cs" />
-    <Compile Include="SpaceCenter\KCTEvents.cs" />
+    <Compile Include="SpaceCenter\SCMEvents.cs" />
     <Compile Include="Singletons\Database.cs" />
     <Compile Include="UI\KCT\GUI_Main.cs" />
     <Compile Include="UI\KCT\GUI_BuildList.cs" />

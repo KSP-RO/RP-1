@@ -275,7 +275,7 @@ namespace RP0
                     GameEvents.OnTechnologyResearched.Fire(new GameEvents.HostTargetAction<RDTech, RDTech.OperationResult>(rdt, RDTech.OperationResult.Successful));
 
                     // fire our own event
-                    KCTEvents.OnTechCompleted.Fire(this);
+                    SCMEvents.OnTechCompleted.Fire(this);
                 }
                 catch (Exception ex)
                 {

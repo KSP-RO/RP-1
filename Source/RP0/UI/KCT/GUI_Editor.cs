@@ -61,7 +61,10 @@ namespace RP0
             RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
 
             if (KSP.UI.Screens.DebugToolbar.DebugScreenSpawner.Instance?.screen?.isShown ?? false)
+            {
                 GUILayout.Label($"BP Cost: {buildPoints:N0}");
+                GUILayout.Label($"EC: {KerbalConstructionTimeData.Instance.EditorVessel.effectiveCost:N0}");
+            }
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {

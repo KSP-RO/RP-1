@@ -101,6 +101,12 @@
     <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg">
       <Link>Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyComNetwork3-CA.cfg">
+      <Link>Contracts\Commercial Applications 1\EarlyComNetwork3-CA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyComNetwork4-CA.cfg">
+      <Link>Contracts\Commercial Applications 1\EarlyComNetwork4-CA.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyComSat-CA.cfg">
       <Link>Contracts\Commercial Applications 1\EarlyComSat-CA.cfg</Link>
     </Content>

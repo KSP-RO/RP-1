@@ -11,13 +11,14 @@ using System.Reflection;
 using System.Reflection.Emit;
 using KSP.UI.Screens.DebugToolbar;
 using KSP.Localization;
+using RP0.DataTypes;
 
 namespace RP0.Programs
 {
     [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class ProgramHandler : ScenarioModule
     {
-        private const int VERSION = 2;
+        private const int VERSION = 3;
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = VERSION;
 
@@ -51,6 +52,10 @@ namespace RP0.Programs
         public List<Program> CompletedPrograms { get; private set; } = new List<Program>();
 
         public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
+
+        // Put here since we can't add to StrategySystem
+        [KSPField(isPersistant = true)]
+        public PersistentDictionaryValueTypes<string, double> ActivatedStrategies = new PersistentDictionaryValueTypes<string, double>();
 
         public int MaxProgramSlots => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
 
@@ -184,6 +189,17 @@ namespace RP0.Programs
                     _ready = false;
                     _upgrade_v02 = true;
                     // handled in OnLoadStrategiesComplete because we need to know what leaders are active
+                }
+                if (LoadedSaveVersion < 3)
+                {
+                    foreach (var psm in ScenarioRunner.Instance.protoModules)
+                    {
+                        if (psm.moduleName == "StrategySystem" && psm.moduleValues.GetNode("DEACTIVATIONDATES") is ConfigNode cn)
+                        {
+                            ActivatedStrategies.Load(cn);
+                            break;
+                        }
+                    }
                 }
             }
 

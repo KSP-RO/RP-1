@@ -134,11 +134,11 @@ namespace RP0
             // Update ActivatedStrategies to show that this strategy is currently active (and clobber
             // the UT it was last deactivated, if any).
             dateDeactivated = -1d;
-            StrategyConfigRP0.ActivatedStrategies[ConfigRP0.Name] = -1d;
+            Programs.ProgramHandler.Instance.ActivatedStrategies[ConfigRP0.Name] = -1d;
             // If there's a tag for this strategy, do the same for that tag as well.
             // Some sets of strategies have the same tag.
             if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
-                StrategyConfigRP0.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = -1d;
+                Programs.ProgramHandler.Instance.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = -1d;
 
             if (useCurrency)
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
@@ -173,9 +173,9 @@ namespace RP0
 
             // Update the UT at which this strategy (and this strategy group) was deactivated
             dateDeactivated = Planetarium.GetUniversalTime();
-            StrategyConfigRP0.ActivatedStrategies[ConfigRP0.Name] = dateDeactivated;
+            Programs.ProgramHandler.Instance.ActivatedStrategies[ConfigRP0.Name] = dateDeactivated;
             if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
-                StrategyConfigRP0.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = dateDeactivated; // will stomp the previous one.
+                Programs.ProgramHandler.Instance.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = dateDeactivated; // will stomp the previous one.
 
 
             Unregister();

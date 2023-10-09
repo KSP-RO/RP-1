@@ -9,8 +9,6 @@ namespace RP0
 {
     public class StrategyConfigRP0 : StrategyConfig
     {
-        public static Dictionary<string, double> ActivatedStrategies = new Dictionary<string, double>();
-
         [Persistent]
         protected bool isDisabled;
         public bool IsDisabled => isDisabled;
@@ -159,10 +157,10 @@ namespace RP0
                 return false;
 
             // Check deactivation
-            double nameDeactivate = removeOnDeactivate ? ActivatedStrategies.ValueOrDefault(Name) : 0d;
+            double nameDeactivate = removeOnDeactivate ? Programs.ProgramHandler.Instance.ActivatedStrategies.ValueOrDefault(Name) : 0d;
             double tagDeactivate = 0d;
             if (!string.IsNullOrEmpty(removeOnDeactivateTag))
-                tagDeactivate = ActivatedStrategies.ValueOrDefault(removeOnDeactivateTag);
+                tagDeactivate = Programs.ProgramHandler.Instance.ActivatedStrategies.ValueOrDefault(removeOnDeactivateTag);
 
             // we are skipping the case where the strategy or its tag is active, but 
             // groupTags will take care of that.

@@ -74,11 +74,8 @@ namespace RP0
 
         public static double GetVesselBuildPoints(double totalEffectiveCost)
         {
-            double bpScalar = UtilMath.Clamp((totalEffectiveCost - 500d) / 1500d, 0.5d, 1d);
-            double finalBP = 1000d + Math.Pow(totalEffectiveCost, 0.95) * 216 * bpScalar;
-            double powScalar = totalEffectiveCost - 50000d;
-            if (powScalar > 0)
-                finalBP += Math.Pow(powScalar, 1.4d) * 0.864d;
+            double bpScalar = UtilMath.Clamp((totalEffectiveCost - 200d) / 4000d, 0.5d, 1d);
+            double finalBP = 1000d + Math.Pow(totalEffectiveCost, 1.1d) * 100d * bpScalar;
 
             RP0Debug.Log($"BP: {finalBP}");
             return finalBP;

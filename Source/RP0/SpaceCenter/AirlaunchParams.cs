@@ -36,7 +36,7 @@ namespace RP0
 
         public bool Validate(out string errorMsg)
         {
-            AirlaunchTechLevel lvl = KerbalConstructionTimeData.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
+            AirlaunchTechLevel lvl = SpaceCenterManagement.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
                                                                     AirlaunchTechLevel.GetCurrentLevel();
             if (lvl == null)
             {

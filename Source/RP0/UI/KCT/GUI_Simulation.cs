@@ -23,7 +23,7 @@ namespace RP0
                 GUIStates.ShowSimulationGUI = false;
                 KCTUtilities.EnableSimulationLocks();
                 FlightDriver.RevertToLaunch();
-                KerbalConstructionTimeData.Instance.SimulationParams.Reset();
+                SpaceCenterManagement.Instance.SimulationParams.Reset();
                 _centralWindowPosition.height = 1;
             }
 
@@ -50,11 +50,11 @@ namespace RP0
 
         public static void DrawSimulationConfigure(int windowID)
         {
-            SimulationParams simParams = KerbalConstructionTimeData.Instance.SimulationParams;
+            SimulationParams simParams = SpaceCenterManagement.Instance.SimulationParams;
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Body: ");
-            if (simParams == null) simParams = KerbalConstructionTimeData.Instance.SimulationParams = new SimulationParams();
+            if (simParams == null) simParams = SpaceCenterManagement.Instance.SimulationParams = new SimulationParams();
             if (simParams.SimulationBody == null)
             {
                 simParams.SimulationBody = Planetarium.fetch.Home;
@@ -144,7 +144,7 @@ namespace RP0
             {
                 if (GUILayout.Button(body.bodyName))
                 {
-                    KerbalConstructionTimeData.Instance.SimulationParams.SimulationBody = body;
+                    SpaceCenterManagement.Instance.SimulationParams.SimulationBody = body;
                     GUIStates.ShowSimBodyChooser = false;
                     GUIStates.ShowSimConfig = true;
                     _centralWindowPosition.height = 1;
@@ -159,7 +159,7 @@ namespace RP0
 
         private static void StartSim(SimulationParams simParams)
         {
-            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+            if (SpaceCenterManagement.Instance.IsSimulatedFlight)
             {
                 string msg = "Current save already appears to be a simulation. Starting a simulation inside a simulation isn't allowed.";
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "simErrorPopup", "Simulation error", msg, "Understood", false, HighLogic.UISkin).HideGUIsWhilePopup();
@@ -234,9 +234,9 @@ namespace RP0
 
             // Create the LaunchedVessel fresh instead of cloning the EditorVessel, since it's possible that the player
             // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.
-            KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
+            SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
             // Just in case, let's set the LCID
-            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KerbalConstructionTimeData.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ID;
+            SpaceCenterManagement.Instance.LaunchedVessel.LCID = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LCID : SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ID;
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)
@@ -244,11 +244,11 @@ namespace RP0
                 manifest = HighLogic.CurrentGame.CrewRoster.DefaultCrewForVessel(EditorLogic.fetch.ship.SaveShip(), null, true);
             }
             EditorLogic.fetch.ship.SaveShip().Save(tempFile);
-            KerbalConstructionTimeData.Instance.IsSimulatedFlight = true;
+            SpaceCenterManagement.Instance.IsSimulatedFlight = true;
             string launchSiteName = EditorLogic.fetch.launchSiteName;
-            if (launchSiteName == "LaunchPad" && KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad)
+            if (launchSiteName == "LaunchPad" && SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad)
             {
-                launchSiteName = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName;
+                launchSiteName = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName;
             }
             FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
         }

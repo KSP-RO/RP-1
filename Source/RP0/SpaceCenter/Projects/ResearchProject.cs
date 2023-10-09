@@ -100,7 +100,7 @@ namespace RP0
             {
                 if (_buildRate < 0)
                 {
-                    UpdateBuildRate(Math.Max(KerbalConstructionTimeData.Instance.TechList.IndexOf(this), 0));
+                    UpdateBuildRate(Math.Max(SpaceCenterManagement.Instance.TechList.IndexOf(this), 0));
                 }
                 return _buildRate;
             }
@@ -202,7 +202,7 @@ namespace RP0
 
         public bool IsInList()
         {
-            return KerbalConstructionTimeData.Instance.TechListHas(techID);
+            return SpaceCenterManagement.Instance.TechListHas(techID);
         }
 
         public string GetItemName() => techName;
@@ -283,9 +283,9 @@ namespace RP0
                 }
                 go.DestroyGameObject();
 
-                KerbalConstructionTimeData.Instance.TechList.Remove(this);
+                SpaceCenterManagement.Instance.TechList.Remove(this);
 
-                KerbalConstructionTimeData.Instance.RecalculateBuildRates(); // this might change other rates
+                SpaceCenterManagement.Instance.RecalculateBuildRates(); // this might change other rates
 
                 double portion = toGo / increment;
                 UnlockCreditHandler.Instance.IncrementCreditTime(techID, portion * UTDiff);
@@ -298,7 +298,7 @@ namespace RP0
 
         public string GetBlockingTech()
         {
-            var techList = KerbalConstructionTimeData.Instance.TechList;
+            var techList = SpaceCenterManagement.Instance.TechList;
             string blockingTech = null;
 
             List<string> parentList;

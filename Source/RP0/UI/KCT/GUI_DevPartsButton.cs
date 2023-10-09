@@ -24,7 +24,7 @@ namespace RP0
 
         protected override void OnClick()
         {
-            KerbalConstructionTimeData.Instance.ExperimentalPartsEnabled = IsOn;
+            SpaceCenterManagement.Instance.ExperimentalPartsEnabled = IsOn;
 
             if (IsOn)
             {

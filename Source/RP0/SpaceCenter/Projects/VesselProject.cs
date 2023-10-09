@@ -146,7 +146,7 @@ namespace RP0
                 if (_lcID == Guid.Empty)
                     _lc = null;
                 else
-                    _lc = KerbalConstructionTimeData.Instance.LC(_lcID);
+                    _lc = SpaceCenterManagement.Instance.LC(_lcID);
             }
         }
 
@@ -157,7 +157,7 @@ namespace RP0
             {
                 if (_lc == null)
                 {
-                    _lc = KerbalConstructionTimeData.Instance.LC(_lcID);
+                    _lc = SpaceCenterManagement.Instance.LC(_lcID);
                 }
                 return _lc;
             }
@@ -237,13 +237,13 @@ namespace RP0
             {
                 Type = ProjectType.SPH;
                 FacilityBuiltIn = EditorFacility.SPH;
-                LC = KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
+                LC = SpaceCenterManagement.Instance.ActiveSC.Hangar;
             }
             else
             {
                 Type = ProjectType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
-                LC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                LC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
                 if (_lc.LCType == LaunchComplexType.Hangar)
                 {
                     RP0Debug.LogError($"ERROR: Tried to link vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
@@ -548,11 +548,11 @@ namespace RP0
         {
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
-            LaunchComplex lc = KerbalConstructionTimeData.Instance.FindLCFromID(_lcID);
+            LaunchComplex lc = SpaceCenterManagement.Instance.FindLCFromID(_lcID);
             if (lc == null)
-                lc = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                lc = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
             else
-                KerbalConstructionTimeData.Instance.ActiveSC.SwitchLaunchComplex(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.IndexOf(lc));
+                SpaceCenterManagement.Instance.ActiveSC.SwitchLaunchComplex(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.IndexOf(lc));
 
             string tempFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/temp.craft";
             UpdateRFTanks();
@@ -571,7 +571,7 @@ namespace RP0
             }
 
             KCTUtilities.CleanupDebris(launchSiteName);
-            KerbalConstructionTimeData.Instance.AirlaunchParams.KSPVesselId = Guid.Empty;
+            SpaceCenterManagement.Instance.AirlaunchParams.KSPVesselId = Guid.Empty;
             FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
         }
 
@@ -609,7 +609,7 @@ namespace RP0
             LaunchComplex selectedLC;
             if (LC == null)
             {
-                selectedLC = Type == ProjectType.VAB ? KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC : KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
+                selectedLC = Type == ProjectType.VAB ? SpaceCenterManagement.Instance.ActiveSC.ActiveLC : SpaceCenterManagement.Instance.ActiveSC.Hangar;
             }
             else
             {
@@ -1434,9 +1434,9 @@ namespace RP0
         public override void Load(ConfigNode node)
         {
             base.Load(node);
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KerbalConstructionTimeData.VERSION)
+            if (SpaceCenterManagement.Instance.LoadedSaveVersion < SpaceCenterManagement.VERSION)
             {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 7)
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 7)
                 {
                     double intPoints = 0d;
                     node.TryGetValue("integrationPoints", ref intPoints);

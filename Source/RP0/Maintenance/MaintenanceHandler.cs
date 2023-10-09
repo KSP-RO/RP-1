@@ -44,7 +44,7 @@ namespace RP0
         public MaintenanceGUI.MaintenancePeriod guiSelectedPeriod = MaintenanceGUI.MaintenancePeriod.Day;
 
         public readonly Dictionary<string, double> IntegrationSalaries = new Dictionary<string, double>();
-        public double Researchers => KerbalConstructionTimeData.Instance.Researchers;
+        public double Researchers => SpaceCenterManagement.Instance.Researchers;
 
         private bool _wasWarpingHigh = false;
         private int _frameCount = 0;
@@ -208,9 +208,9 @@ namespace RP0
         {
             Profiler.BeginSample("RP0Maintenance UpdateKCTSalaries");
             IntegrationSalaries.Clear();
-            foreach (LCSpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (LCSpaceCenter ksc in SpaceCenterManagement.Instance.KSCs)
             {
-                IntegrationSalaries[ksc.KSCName] = KerbalConstructionTimeData.Instance.GetEffectiveIntegrationEngineersForSalary(ksc);
+                IntegrationSalaries[ksc.KSCName] = SpaceCenterManagement.Instance.GetEffectiveIntegrationEngineersForSalary(ksc);
             }
             Profiler.EndSample();
         }
@@ -339,7 +339,7 @@ namespace RP0
 
         private double GetFacilityUpgradeRatio(SpaceCenterFacility facility)
         {
-            foreach (var fac in KerbalConstructionTimeData.Instance.ActiveSC.FacilityUpgrades)
+            foreach (var fac in SpaceCenterManagement.Instance.ActiveSC.FacilityUpgrades)
                 if (fac.FacilityType == facility)
                     return fac.progress / fac.BP;
 
@@ -357,7 +357,7 @@ namespace RP0
             EnsureFacilityLvlCostsLoaded();
 
             LCsCostPerDay = 0d;
-            foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (var ksc in SpaceCenterManagement.Instance.KSCs)
             {
                 foreach (var lc in ksc.LaunchComplexes)
                     LCsCostPerDay += LCUpkeep(lc);
@@ -557,7 +557,7 @@ namespace RP0
             }
 
             // Finally, update all builds
-            KerbalConstructionTimeData.Instance.ProgressBuildTime(UTDiff);
+            SpaceCenterManagement.Instance.ProgressBuildTime(UTDiff);
         }
 
         public void OnDestroy()

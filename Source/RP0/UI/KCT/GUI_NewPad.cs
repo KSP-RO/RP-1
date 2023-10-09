@@ -10,7 +10,7 @@ namespace RP0
 
         public static void DrawNewPadWindow(int windowID)
         {
-            LaunchComplex curLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex curLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
 
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
@@ -73,7 +73,7 @@ namespace RP0
                 if (!KSPUtils.CurrentGameIsCareer())
                 {
                     RP0Debug.Log("Building new launchpad!");
-                    KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LaunchPads.Add(new LCLaunchPad(id, _newName, fractionalPadLvl)
+                    SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LaunchPads.Add(new LCLaunchPad(id, _newName, fractionalPadLvl)
                     {
                         isOperational = true
                     });
@@ -82,7 +82,7 @@ namespace RP0
                 {
                     RP0Debug.Log("Building new launchpad!");
                     var lp = new LCLaunchPad(id, _newName, fractionalPadLvl);
-                    KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LaunchPads.Add(lp);
+                    SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LaunchPads.Add(lp);
 
                     var padConstr = new PadConstructionProject
                     {
@@ -91,7 +91,7 @@ namespace RP0
                         name = _newName
                     };
                     padConstr.SetBP(curPadCost, 0d);
-                    KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.PadConstructions.Add(padConstr);
+                    SpaceCenterManagement.Instance.ActiveSC.ActiveLC.PadConstructions.Add(padConstr);
 
                     try
                     {
@@ -136,13 +136,13 @@ namespace RP0
                     }
                     case RenameType.Pad:
                     {
-                        LCLaunchPad lp = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance;
+                        LCLaunchPad lp = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance;
                         lp.Rename(_newName);
                         break;
                     }
                     case RenameType.LaunchComplex:
                     {
-                        LaunchComplex lc = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                        LaunchComplex lc = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
                         lc.Rename(_newName);
                         break;
                     }
@@ -171,9 +171,9 @@ namespace RP0
                 return false;
             }
 
-            for (int i = 0; i < KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LaunchPads.Count; i++)
+            for (int i = 0; i < SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LaunchPads.Count; i++)
             {
-                var lp = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LaunchPads[i];
+                var lp = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LaunchPads[i];
                 if (string.Equals(lp.name, _newName, StringComparison.OrdinalIgnoreCase))
                 {
                     ScreenMessages.PostScreenMessage("Another launchpad with the same name already exists");

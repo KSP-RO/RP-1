@@ -13,7 +13,7 @@ namespace RP0.Harmony
         internal static void PatchUpdate(EditorPartIcon __instance)
         {
             // stock's experimental display is broken and we want to replace it anyways, so use its state variables
-            if (__instance.checkedExperimental || KerbalConstructionTimeData.Instance == null)
+            if (__instance.checkedExperimental || SpaceCenterManagement.Instance == null)
                 return;
 
             AvailablePart part = __instance.AvailPart;
@@ -22,7 +22,7 @@ namespace RP0.Harmony
             if (btnImage == null || part == null)
                 return;
 
-            if (KerbalConstructionTimeData.Instance.TechList.Any(tech => tech.techID == part.TechRequired))
+            if (SpaceCenterManagement.Instance.TechList.Any(tech => tech.techID == part.TechRequired))
                 btnImage.color = __instance.experimentalPartColor;
 
             __instance.checkedExperimental = true;

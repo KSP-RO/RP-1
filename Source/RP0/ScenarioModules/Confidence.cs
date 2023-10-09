@@ -57,11 +57,11 @@ namespace RP0
             float sciDelta = query.GetInput(Currency.Science);
             float conf = 0f;
             // Annoyingly Kerbalism uses TransactionReason.None for science transmission
-            if (!KerbalConstructionTimeData.IsRefundingScience && sciDelta > 0f 
+            if (!SpaceCenterManagement.IsRefundingScience && sciDelta > 0f 
                 && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
             {
                 if (Programs.ProgramHandler.Settings != null)
-                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTimeData.Instance.SciPointsTotal)) * sciDelta;
+                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)SpaceCenterManagement.Instance.SciPointsTotal)) * sciDelta;
                 else
                     conf = sciDelta * 2f;
 

@@ -78,13 +78,13 @@ namespace RP0
                 GUILayout.EndHorizontal();
                 _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
 
-                if (KerbalConstructionTimeData.Instance.BuildPlans.Count == 0)
+                if (SpaceCenterManagement.Instance.BuildPlans.Count == 0)
                 {
                     GUILayout.Label("No vessels in plans.");
                 }
-                for (int i = 0; i < KerbalConstructionTimeData.Instance.BuildPlans.Count; i++)
+                for (int i = 0; i < SpaceCenterManagement.Instance.BuildPlans.Count; i++)
                 {
-                    VesselProject b = KerbalConstructionTimeData.Instance.BuildPlans.Values[i];
+                    VesselProject b = SpaceCenterManagement.Instance.BuildPlans.Values[i];
                     if (!b.AllPartsValid)
                         continue;
                     GUILayout.BeginHorizontal();
@@ -112,7 +112,7 @@ namespace RP0
                             }
                             else
                             {
-                                KCTUtilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true, KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC);
+                                KCTUtilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true, SpaceCenterManagement.Instance.ActiveSC.ActiveLC);
                             }
                         }
                     }
@@ -161,15 +161,15 @@ namespace RP0
         public static void AddVesselToPlansList(VesselProject vp)
         {
             ScreenMessage message;
-            if (KerbalConstructionTimeData.Instance.BuildPlans.ContainsKey(vp.shipName))
+            if (SpaceCenterManagement.Instance.BuildPlans.ContainsKey(vp.shipName))
             {
-                KerbalConstructionTimeData.Instance.BuildPlans.Remove(vp.shipName);
+                SpaceCenterManagement.Instance.BuildPlans.Remove(vp.shipName);
                 message = new ScreenMessage($"Replacing previous plan for {vp.shipName} in the Plans list.", 4f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
             }
-            KerbalConstructionTimeData.Instance.BuildPlans.Add(vp.shipName, vp);
+            SpaceCenterManagement.Instance.BuildPlans.Add(vp.shipName, vp);
 
-            RP0Debug.Log($"Added {vp.shipName} to plans list at KSC {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {vp.cost}");
+            RP0Debug.Log($"Added {vp.shipName} to plans list at KSC {SpaceCenterManagement.Instance.ActiveSC.KSCName}. Cost: {vp.cost}");
             RP0Debug.Log($"Launch site is {vp.launchSite}");
             string text = $"Added {vp.shipName} to plans list.";
             message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -178,7 +178,7 @@ namespace RP0
 
         private static void RemoveVesselFromPlans()
         {
-            KerbalConstructionTimeData.Instance.BuildPlans.RemoveAt(_planToDelete);
+            SpaceCenterManagement.Instance.BuildPlans.RemoveAt(_planToDelete);
         }
     }
 }

@@ -319,8 +319,8 @@ namespace RP0.Programs
 
         private void OnContractAccept(Contract data)
         {
-            if (KerbalConstructionTimeData.Instance.StartedProgram)
-                KerbalConstructionTimeData.Instance.AcceptedContract = true;
+            if (SpaceCenterManagement.Instance.StartedProgram)
+                SpaceCenterManagement.Instance.AcceptedContract = true;
         }
 
         private void OnContractComplete(Contract data)
@@ -349,7 +349,7 @@ namespace RP0.Programs
                 // Handle KCT applicants
                 int applicants = Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
                 if (applicants > 0)
-                    KerbalConstructionTimeData.Instance.Applicants += applicants;
+                    SpaceCenterManagement.Instance.Applicants += applicants;
 
                 // Handle Confidence
                 float repToConf = RepToConfidenceForContract(cc, true);
@@ -523,7 +523,7 @@ namespace RP0.Programs
                 ps.SetProgram(activeP);
 
 
-            KerbalConstructionTimeData.Instance.StartedProgram = true;
+            SpaceCenterManagement.Instance.StartedProgram = true;
         }
 
         public void CompleteProgram(Program p)

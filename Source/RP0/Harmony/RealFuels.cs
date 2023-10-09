@@ -48,9 +48,9 @@ namespace RP0.Harmony
         [HarmonyPatch("SetConfiguration", new Type[] { typeof(ConfigNode), typeof(bool) })]
         internal static void Postfix_SetConfiguration(RealFuels.ModuleEngineConfigsBase __instance, ConfigNode newConfig)
         {
-            if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTimeData.Instance != null)
+            if (HighLogic.LoadedSceneIsEditor && SpaceCenterManagement.Instance != null)
             {
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
             }
             if (HighLogic.LoadedScene != GameScenes.LOADING && __instance.part != null)
             {
@@ -73,9 +73,9 @@ namespace RP0.Harmony
         [HarmonyPatch("RaiseTankDefinitionChanged")]
         internal static void Postfix_RaiseTankDefinitionChanged(RealFuels.Tanks.ModuleFuelTanks __instance)
         {
-            if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTimeData.Instance != null)
+            if (HighLogic.LoadedSceneIsEditor && SpaceCenterManagement.Instance != null)
             {
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
             }
             if (HighLogic.LoadedScene != GameScenes.LOADING && __instance.part != null)
             {
@@ -131,7 +131,7 @@ namespace RP0.Harmony
             techNode = null;
 
             if (HighLogic.LoadedSceneIsEditor)
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
 
             return true;
         }

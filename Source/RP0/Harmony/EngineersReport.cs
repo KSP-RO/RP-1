@@ -155,17 +155,17 @@ namespace RP0.Harmony
             bool resourcesOK = true;
             if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
             {
-                totalMass = KerbalConstructionTimeData.Instance.EditorVessel.mass;
-                craftSize = KerbalConstructionTimeData.Instance.EditorVessel.ShipSize;
-                vesselHumanRated = KerbalConstructionTimeData.Instance.EditorVessel.humanRated;
+                totalMass = SpaceCenterManagement.Instance.EditorVessel.mass;
+                craftSize = SpaceCenterManagement.Instance.EditorVessel.ShipSize;
+                vesselHumanRated = SpaceCenterManagement.Instance.EditorVessel.humanRated;
 
-                resourcesOK = KerbalConstructionTimeData.Instance.EditorVessel.ResourcesOK(KerbalConstructionTimeData.Instance.EditorVessel.LC.Stats);
+                resourcesOK = SpaceCenterManagement.Instance.EditorVessel.ResourcesOK(SpaceCenterManagement.Instance.EditorVessel.LC.Stats);
 
-                massLimit = KerbalConstructionTimeData.Instance.EditorVessel.LC.MassMax;
-                minMassLimit = KerbalConstructionTimeData.Instance.EditorVessel.LC.MassMin;
-                maxSize = KerbalConstructionTimeData.Instance.EditorVessel.LC.SizeMax;
-                lcHumanRated = KerbalConstructionTimeData.Instance.EditorVessel.LC.IsHumanRated;
-                vesselHumanRated = KerbalConstructionTimeData.Instance.EditorVessel.humanRated;
+                massLimit = SpaceCenterManagement.Instance.EditorVessel.LC.MassMax;
+                minMassLimit = SpaceCenterManagement.Instance.EditorVessel.LC.MassMin;
+                maxSize = SpaceCenterManagement.Instance.EditorVessel.LC.SizeMax;
+                lcHumanRated = SpaceCenterManagement.Instance.EditorVessel.LC.IsHumanRated;
+                vesselHumanRated = SpaceCenterManagement.Instance.EditorVessel.humanRated;
             }
             else
             {

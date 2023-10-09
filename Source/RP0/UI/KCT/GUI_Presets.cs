@@ -136,9 +136,9 @@ namespace RP0
                     GUIStates.ShowBuildList = true;
                     RefreshToolbarState();
                 }
-                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTKSCLock);
+                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTKSCLock);
 
-                KerbalConstructionTimeData.Instance.RecalculateBuildRates();
+                SpaceCenterManagement.Instance.RecalculateBuildRates();
 
                 ResetFormulaRateHolders();
                 Harmony.PatchKSCFacilityContextMenu.AreTextsUpdated = false;
@@ -154,7 +154,7 @@ namespace RP0
                     RefreshToolbarState();
                 }
 
-                KerbalConstructionTimeData.Instance.RecalculateBuildRates();
+                SpaceCenterManagement.Instance.RecalculateBuildRates();
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();

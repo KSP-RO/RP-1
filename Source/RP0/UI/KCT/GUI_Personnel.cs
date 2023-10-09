@@ -41,13 +41,13 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Applicants:", GUILayout.Width(120));
-            GUILayout.Label(KerbalConstructionTimeData.Instance.Applicants.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.Label(SpaceCenterManagement.Instance.Applicants.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             double salaryE = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(KerbalConstructionTimeData.Instance.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+            GUILayout.Label(SpaceCenterManagement.Instance.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
             GUILayout.Label($"√{salaryE:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -55,7 +55,7 @@ namespace RP0
             double salaryR = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d);
             GUILayout.BeginHorizontal();
             GUILayout.Label("Total Researchers:", GUILayout.Width(120));
-            GUILayout.Label(KerbalConstructionTimeData.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+            GUILayout.Label(SpaceCenterManagement.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
             GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
             GUILayout.Label($"√{salaryR:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
@@ -80,7 +80,7 @@ namespace RP0
             if (GUILayout.Button("Close"))
             {
                 GUIStates.ShowPersonnelWindow = false;
-                _LCIndex = KerbalConstructionTimeData.Instance.ActiveSC.LCIndex; // reset to current active LC
+                _LCIndex = SpaceCenterManagement.Instance.ActiveSC.LCIndex; // reset to current active LC
             }
             GUILayout.EndVertical();
             if (!Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
@@ -89,7 +89,7 @@ namespace RP0
 
         private static void RenderEngineersSection(bool isCostCacheInvalid)
         {
-            LCSpaceCenter KSC = KerbalConstructionTimeData.Instance.ActiveSC;
+            LCSpaceCenter KSC = SpaceCenterManagement.Instance.ActiveSC;
             LaunchComplex currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
@@ -242,7 +242,7 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Researchers:", GUILayout.Width(90));
-            GUILayout.Label(KerbalConstructionTimeData.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.Label(SpaceCenterManagement.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -291,9 +291,9 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (KerbalConstructionTimeData.Instance.TechList.Count > 0)
+            if (SpaceCenterManagement.Instance.TechList.Count > 0)
             {
-                ResearchProject t = KerbalConstructionTimeData.Instance.TechList[0];
+                ResearchProject t = SpaceCenterManagement.Instance.TechList[0];
                 GUILayout.Label($"Current Research: {t.techName}");
                 double techRate = Formula.GetResearchRate(t.scienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
                 double timeLeft = (t.scienceCost - t.progress) / techRate;
@@ -315,7 +315,7 @@ namespace RP0
                 string title = research ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                fireAmount = research ? KerbalConstructionTimeData.Instance.Researchers : KerbalConstructionTimeData.Instance.ActiveSC.UnassignedEngineers;
+                fireAmount = research ? SpaceCenterManagement.Instance.Researchers : SpaceCenterManagement.Instance.ActiveSC.UnassignedEngineers;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = fireAmount;
@@ -327,11 +327,11 @@ namespace RP0
                     if (research)
                     {
                         KCTUtilities.ChangeResearchers(-workers);
-                        KerbalConstructionTimeData.Instance.UpdateTechTimes();
+                        SpaceCenterManagement.Instance.UpdateTechTimes();
                     }
                     else
                     {
-                        LCSpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
+                        LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
                         KCTUtilities.ChangeEngineers(ksc, -workers);
                         ksc.RecalculateBuildRates(false);
                     }
@@ -348,7 +348,7 @@ namespace RP0
                 double modifiedHireCost = -CurrencyUtils.Funds(research ? TransactionReasonsRP0.HiringResearchers : TransactionReasonsRP0.HiringEngineers, -Database.SettingsSC.HireCost);
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
-                    workers = Math.Max(_buyModifierMultsPersonnel[0], KerbalConstructionTimeData.Instance.Applicants + (int)(Funding.Instance.Funds / modifiedHireCost));
+                    workers = Math.Max(_buyModifierMultsPersonnel[0], SpaceCenterManagement.Instance.Applicants + (int)(Funding.Instance.Funds / modifiedHireCost));
 
                 if (research)
                 {
@@ -356,10 +356,10 @@ namespace RP0
                     if (maxRes < 0)
                         maxRes = int.MaxValue;
 
-                    workers = Math.Max(0, Math.Min(workers, maxRes - KerbalConstructionTimeData.Instance.Researchers));
+                    workers = Math.Max(0, Math.Min(workers, maxRes - SpaceCenterManagement.Instance.Researchers));
                 }
 
-                double workersToHire = Math.Max(0, workers - KerbalConstructionTimeData.Instance.Applicants);
+                double workersToHire = Math.Max(0, workers - SpaceCenterManagement.Instance.Applicants);
                 _fundsCost = modifiedHireCost * workersToHire;
                 // Show the result for whatever you're asking for, even if you can't afford it.
                 hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / Database.SettingsSC.HireCost) + KerbalConstructionTimeData.Instance.UnassignedPersonnel);
@@ -373,17 +373,17 @@ namespace RP0
                     if (research)
                     {
                         KCTUtilities.ChangeResearchers(workers);
-                        KerbalConstructionTimeData.Instance.UpdateTechTimes();
+                        SpaceCenterManagement.Instance.UpdateTechTimes();
                     }
                     else
                     {
-                        LCSpaceCenter ksc = KerbalConstructionTimeData.Instance.ActiveSC;
+                        LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
                         KCTUtilities.ChangeEngineers(ksc, workers);
                         ksc.RecalculateBuildRates(false);
                     }
-                    KerbalConstructionTimeData.Instance.Applicants = Math.Max(0, KerbalConstructionTimeData.Instance.Applicants - workers);
-                    if (KerbalConstructionTimeData.Instance.Applicants == 0)
-                        KerbalConstructionTimeData.Instance.HiredStarterApplicants = true;
+                    SpaceCenterManagement.Instance.Applicants = Math.Max(0, SpaceCenterManagement.Instance.Applicants - workers);
+                    if (SpaceCenterManagement.Instance.Applicants == 0)
+                        SpaceCenterManagement.Instance.HiredStarterApplicants = true;
 
                     _fundsCost = int.MinValue;
                 }

@@ -9,12 +9,12 @@ namespace RP0
 
         private static void RenderMergeSection(VesselProject ship)
         {
-            if (!_showMergeSelectionList && KerbalConstructionTimeData.Instance.MergingAvailable && GUILayout.Button("Merge Built Vessel"))
+            if (!_showMergeSelectionList && SpaceCenterManagement.Instance.MergingAvailable && GUILayout.Button("Merge Built Vessel"))
             {
                 _showMergeSelectionList = true;
             }
 
-            if (_showMergeSelectionList && KerbalConstructionTimeData.Instance.MergingAvailable)
+            if (_showMergeSelectionList && SpaceCenterManagement.Instance.MergingAvailable)
             {
                 if (GUILayout.Button("Hide Merge Selection"))
                 {
@@ -26,16 +26,16 @@ namespace RP0
 
                 _activeLCMergeScroll = GUILayout.BeginScrollView(_activeLCMergeScroll, GUILayout.Height(5 * 26 + 5), GUILayout.MaxHeight(1 * Screen.height / 4));
 
-                LaunchComplex lc = KerbalConstructionTimeData.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LC : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                LaunchComplex lc = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LC : SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
                 foreach (VesselProject vessel in lc.Warehouse)
                 {
-                    if (vessel.shipID != ship.shipID && !KerbalConstructionTimeData.Instance.MergedVessels.Exists(x => x.shipID == vessel.shipID) && GUILayout.Button(vessel.shipName))
+                    if (vessel.shipID != ship.shipID && !SpaceCenterManagement.Instance.MergedVessels.Exists(x => x.shipID == vessel.shipID) && GUILayout.Button(vessel.shipName))
                     {
                         vessel.RecalculateFromNode();
                         ShipConstruct mergedShip = vessel.CreateShipConstructAndRelease();
                         EditorLogic.fetch.SpawnConstruct(mergedShip);
 
-                        KerbalConstructionTimeData.Instance.MergedVessels.Add(vessel);
+                        SpaceCenterManagement.Instance.MergedVessels.Add(vessel);
                     }
                 }
                 GUILayout.EndScrollView();

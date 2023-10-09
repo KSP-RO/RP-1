@@ -51,7 +51,7 @@ namespace RP0
         private static void SetFieldsFromStartingLCData(LCData old)
         {
             _newLCData.SetFrom(old);
-            _newLCData.Name = _newName = $"Launch Complex {(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Count)}";
+            _newLCData.Name = _newName = $"Launch Complex {(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count)}";
             SetStrings();
             SetResources();
         }
@@ -75,7 +75,7 @@ namespace RP0
                 if (vp.mass < 1f) // special case
                     _newLCData.massMax = 1f;
 
-                _newLCData.Name = _newName = $"Launch Complex {(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Count)}";
+                _newLCData.Name = _newName = $"Launch Complex {(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count)}";
                 _newLCData.massOrig = _newLCData.massMax;
                 _newLCData.lcType = LaunchComplexType.Pad;
             }
@@ -201,7 +201,7 @@ namespace RP0
 
         public static void DrawNewLCWindow(int windowID)
         {
-            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
             double oldVABCost = 0, oldPadCost = 0, oldResCost = 0, lpMult = 1;
 
             bool isModify = GUIStates.ShowModifyLC;
@@ -289,7 +289,7 @@ namespace RP0
             }
             if (!isHangar)
             {
-                bool isMinBad = HighLogic.LoadedSceneIsEditor && KerbalConstructionTimeData.Instance.EditorVessel.mass < minTonnage;
+                bool isMinBad = HighLogic.LoadedSceneIsEditor && SpaceCenterManagement.Instance.EditorVessel.mass < minTonnage;
                 GUILayout.BeginHorizontal();
                 if (isMinBad)
                     GUILayout.Label("Minimum tonnage:", GetLabelStyleYellow());
@@ -497,7 +497,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
-                if (HighLogic.LoadedSceneIsEditor && !KerbalConstructionTimeData.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
+                if (HighLogic.LoadedSceneIsEditor && !SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
                 {
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("LCModifyVesselConfirm",
@@ -524,7 +524,7 @@ namespace RP0
             //}
             if (isModify && !isHangar && GUILayout.Button(_cleanButtonContent))
             {
-                SetFieldsFromVessel(KerbalConstructionTimeData.Instance.EditorVessel, activeLC);
+                SetFieldsFromVessel(SpaceCenterManagement.Instance.EditorVessel, activeLC);
             }
             if (isModify && GUILayout.Button(_existingButtonContent))
             {
@@ -552,7 +552,7 @@ namespace RP0
 
         private static void ProcessNewLC(bool isModify, double curPadCost, double totalCost, double oldTotalCost)
         {
-            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
 
             if (isModify && ModifyFailure(out string failedVessels))
             {
@@ -568,7 +568,7 @@ namespace RP0
             else
             {
 
-                KerbalConstructionTimeData.Instance.StarterLCBuilding |= !isModify;
+                SpaceCenterManagement.Instance.StarterLCBuilding |= !isModify;
 
                 if (!KSPUtils.CurrentGameIsCareer())
                 {
@@ -576,7 +576,7 @@ namespace RP0
                     if (isModify)
                         activeLC.Modify(_newLCData, Guid.NewGuid());
                     else
-                        KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Add(new LaunchComplex(_newLCData, KerbalConstructionTimeData.Instance.ActiveSC));
+                        SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Add(new LaunchComplex(_newLCData, SpaceCenterManagement.Instance.ActiveSC));
                 }
                 else
                 {
@@ -587,7 +587,7 @@ namespace RP0
                     {
                         lc = activeLC;
                         KCTUtilities.ChangeEngineers(lc, -engineers);
-                        KerbalConstructionTimeData.Instance.ActiveSC.SwitchToPrevLaunchComplex();
+                        SpaceCenterManagement.Instance.ActiveSC.SwitchToPrevLaunchComplex();
 
                         // We have to update any ongoing pad constructions too
                         foreach (var pc in lc.PadConstructions)
@@ -600,9 +600,9 @@ namespace RP0
                     }
                     else
                     {
-                        lc = new LaunchComplex(_newLCData, KerbalConstructionTimeData.Instance.ActiveSC);
+                        lc = new LaunchComplex(_newLCData, SpaceCenterManagement.Instance.ActiveSC);
                         lc.IsOperational = false;
-                        KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Add(lc);
+                        SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Add(lc);
                     }
 
                     var modData = new LCData();
@@ -619,7 +619,7 @@ namespace RP0
                     lcConstr.SetBP(totalCost, oldTotalCost);
                     if (_assignEngOnComplete)
                         lcConstr.engineersToReadd = engineers;
-                    KerbalConstructionTimeData.Instance.ActiveSC.LCConstructions.Add(lcConstr);
+                    SpaceCenterManagement.Instance.ActiveSC.LCConstructions.Add(lcConstr);
 
                     try
                     {
@@ -766,7 +766,7 @@ namespace RP0
         private static bool ModifyFailure(out string failedVessels)
         {
             failedVessels = string.Empty;
-            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
             foreach (var vp in activeLC.BuildList)
             {
                 if (!vp.MeetsFacilityRequirements(_newLCData, null))
@@ -816,9 +816,9 @@ namespace RP0
                 return false;
             }
 
-            for (int i = 0; i < KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Count; i++)
+            for (int i = 0; i < SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count; i++)
             {
-                var lp = KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes[i];
+                var lp = SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes[i];
                 if (string.Equals(lp.Name, newName, StringComparison.OrdinalIgnoreCase))
                 {
                     ScreenMessages.PostScreenMessage("Another launch complex with the same name already exists");

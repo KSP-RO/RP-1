@@ -45,7 +45,7 @@ namespace RP0.Harmony
                     techID = availablePart.TechRequired;
                     eCost = availablePart.entryCost;
                 }
-                if (KerbalConstructionTimeData.Instance.TechListHas(techID))
+                if (SpaceCenterManagement.Instance.TechListHas(techID))
                 {
                     __instance.buttonPurchaseContainer.SetActive(false);
                     __instance.costPanel.SetActive(true);

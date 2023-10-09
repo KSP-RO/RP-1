@@ -23,7 +23,7 @@ namespace RP0.Harmony
             }
 
             CurrencyModifierQueryRP0 cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.RnDTechResearch, 0d, -__instance.tech.scienceCost, 0d);
-            if (KerbalConstructionTimeData.Instance?.TechListHas(__instance.tech.techID) == true)
+            if (SpaceCenterManagement.Instance?.TechListHas(__instance.tech.techID) == true)
             {
                 __result = cmq.GetCostLineOverride(true, true, false) + "\n" + _ColorGreen + Localizer.GetStringByTag("#rp0_RnD_TechResearching") + "</color>";
             }
@@ -61,7 +61,7 @@ namespace RP0.Harmony
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled
                 || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes
                 || !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes
-                || KerbalConstructionTimeData.Instance == null)
+                || SpaceCenterManagement.Instance == null)
                 return true;
 
             if (__instance.tech == null)
@@ -74,7 +74,7 @@ namespace RP0.Harmony
             {
                 __instance.SetButtonState(RDNode.State.RESEARCHED);
             }
-            else if (KerbalConstructionTimeData.Instance.TechListHas(__instance.tech.techID))
+            else if (SpaceCenterManagement.Instance.TechListHas(__instance.tech.techID))
             {
                 __instance.SetButtonState(RDNode.State.RESEARCHED);
                 __instance.graphics.SetIconColor(XKCDColors.KSPNotSoGoodOrange); // replaces the white
@@ -110,7 +110,7 @@ namespace RP0.Harmony
                 else
                 {
                     //allResearched = false;
-                    if (KerbalConstructionTimeData.Instance.TechListHas(parent.parent.node.tech.techID))
+                    if (SpaceCenterManagement.Instance.TechListHas(parent.parent.node.tech.techID))
                     {
                         listReasearchedOrQueued.Add(parent);
                         anyResearchedOrQueued = true;

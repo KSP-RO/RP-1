@@ -167,7 +167,7 @@ namespace RP0
             if (KCT_GUI.IsPrimarilyDisabled) return;
 
             RP0Debug.Log($"Facility {facility.id} upgraded to lvl {lvl}");
-            KerbalConstructionTimeData.Instance.RecalculateBuildRates();
+            SpaceCenterManagement.Instance.RecalculateBuildRates();
         }
 
         public void FaciliyRepaired(DestructibleBuilding facility)
@@ -175,8 +175,8 @@ namespace RP0
             if (facility.id.Contains("LaunchPad"))
             {
                 RP0Debug.Log("LaunchPad was repaired.");
-                KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance.RefreshDestructionNode();
-                KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance.CompletelyRepairNode();
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.RefreshDestructionNode();
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.CompletelyRepairNode();
             }
         }
 
@@ -185,7 +185,7 @@ namespace RP0
             if (facility.id.Contains("LaunchPad"))
             {
                 RP0Debug.Log("LaunchPad was damaged.");
-                KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance.RefreshDestructionNode();
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.RefreshDestructionNode();
             }
         }
 
@@ -200,22 +200,22 @@ namespace RP0
 
         private void ShipModifiedEvent(ShipConstruct vessel)
         {
-            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+            SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
         }
 
         private void StageCountChangedEvent(int num)
         {
-            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+            SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
         }
 
         private void StagingOrderChangedEvent()
         {
-            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+            SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
         }
 
         private void PartStageabilityChangedEvent(Part p)
         {
-            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+            SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
         }
 
         public void GameSceneEvent(GameScenes scene)
@@ -225,9 +225,9 @@ namespace RP0
 
             if (scene == GameScenes.MAINMENU)
             {
-                KerbalConstructionTimeData.Reset();
+                SpaceCenterManagement.Reset();
                 KCTUtilities.DisableSimulationLocks();
-                InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTLaunchLock);
+                InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTLaunchLock);
 
                 if (PresetManager.Instance != null)
                 {
@@ -270,7 +270,7 @@ namespace RP0
                     if (dataModule != null && dataModule.Data.FacilityBuiltIn == EditorFacility.VAB && !dataModule.Data.HasStartedReconditioning)
                     {
                         string launchSite = FlightDriver.LaunchSiteName;
-                        LaunchComplex lc = KerbalConstructionTimeData.Instance.FindLCFromID(dataModule.Data.LCID);
+                        LaunchComplex lc = SpaceCenterManagement.Instance.FindLCFromID(dataModule.Data.LCID);
                         if (lc != null)
                         {
                             if (lc.LCType == LaunchComplexType.Pad && lc.ActiveLPInstance != null
@@ -293,13 +293,13 @@ namespace RP0
 
             RP0Debug.Log($"VesselRecoverEvent for {v.vesselName}");
 
-            LaunchComplex targetLC = KerbalConstructionTimeData.Instance.RecoveredVessel.LC;
+            LaunchComplex targetLC = SpaceCenterManagement.Instance.RecoveredVessel.LC;
             if (targetLC == null)
-                targetLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                targetLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
 
-            targetLC.Warehouse.Add(KerbalConstructionTimeData.Instance.RecoveredVessel);
-            targetLC.Recon_Rollout.Add(new ReconRolloutProject(KerbalConstructionTimeData.Instance.RecoveredVessel, ReconRolloutProject.RolloutReconType.Recovery, KerbalConstructionTimeData.Instance.RecoveredVessel.shipID.ToString()));
-            KerbalConstructionTimeData.Instance.RecoveredVessel = new VesselProject();
+            targetLC.Warehouse.Add(SpaceCenterManagement.Instance.RecoveredVessel);
+            targetLC.Recon_Rollout.Add(new ReconRolloutProject(SpaceCenterManagement.Instance.RecoveredVessel, ReconRolloutProject.RolloutReconType.Recovery, SpaceCenterManagement.Instance.RecoveredVessel.shipID.ToString()));
+            SpaceCenterManagement.Instance.RecoveredVessel = new VesselProject();
         }
 
         public void OnExitAdmin()

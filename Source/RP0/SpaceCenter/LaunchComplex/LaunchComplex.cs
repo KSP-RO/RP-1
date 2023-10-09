@@ -161,7 +161,7 @@ namespace RP0
 
             AddListeners();
 
-            KerbalConstructionTimeData.Instance.RegisterLC(this);
+            SpaceCenterManagement.Instance.RegisterLC(this);
         }
 
         public void Modify(LCData data, Guid modId)
@@ -357,16 +357,16 @@ namespace RP0
         public void Delete()
         {
             if (_efficiencySource == null)
-                KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(this, out _efficiencySource);
+                SpaceCenterManagement.Instance.LCToEfficiency.TryGetValue(this, out _efficiencySource);
             if (_efficiencySource != null)
                 _efficiencySource.RemoveLC(this);
             else
                 LCEfficiency.ClearEmpty();
 
             foreach (var lp in LaunchPads)
-                KerbalConstructionTimeData.Instance.UnregsiterLP(lp);
+                SpaceCenterManagement.Instance.UnregsiterLP(lp);
 
-            KerbalConstructionTimeData.Instance.UnregisterLC(this);
+            SpaceCenterManagement.Instance.UnregisterLC(this);
 
             int index = KSC.LaunchComplexes.IndexOf(this);
             KSC.LaunchComplexes.RemoveAt(index);
@@ -383,9 +383,9 @@ namespace RP0
         {
             ConfigNode.LoadObjectFromConfig(this, node);
 
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KerbalConstructionTimeData.VERSION)
+            if (SpaceCenterManagement.Instance.LoadedSaveVersion < SpaceCenterManagement.VERSION)
             {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 6)
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 6)
                 {
                     var alNode = node.GetNode("Airlaunch_Prep");
                     if (alNode != null && alNode.nodes.Count > 0)
@@ -424,9 +424,9 @@ namespace RP0
             foreach (var pc in PadConstructions)
                 added(i++, pc);
 
-            KerbalConstructionTimeData.Instance.RegisterLC(this);
+            SpaceCenterManagement.Instance.RegisterLC(this);
             foreach(var lp in LaunchPads)
-                KerbalConstructionTimeData.Instance.RegisterLP(lp);
+                SpaceCenterManagement.Instance.RegisterLP(lp);
 
             if (HighLogic.LoadedSceneIsEditor)
             {

@@ -19,7 +19,7 @@ namespace RP0
             double sum = 0d;
             double mult = UT * Database.SettingsSC.salaryResearchers * (1d / (86400d * 365.25d));
             
-            int res = KerbalConstructionTimeData.Instance.Researchers;
+            int res = SpaceCenterManagement.Instance.Researchers;
             int totalCounted = 0;
             
             foreach (var kvp in Database.SettingsSC.researchersToUnlockCreditSalaryMultipliers)
@@ -218,7 +218,7 @@ namespace RP0
                 int remainingCost = (int)ProcessCredit(ap.entryCost, ap.TechRequired);
                 ap.SetEntryCost(remainingCost);
                 if(HighLogic.LoadedSceneIsEditor)
-                    KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                    SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
             }
         }
 
@@ -228,7 +228,7 @@ namespace RP0
             float remainingCost = ProcessCredit(up.entryCost, up.techRequired);
             up.entryCost = remainingCost;
             if (HighLogic.LoadedSceneIsEditor)
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
         }
 
         public override void OnLoad(ConfigNode node)

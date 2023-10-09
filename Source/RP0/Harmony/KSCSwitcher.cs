@@ -19,9 +19,9 @@ namespace RP0.Harmony
         [HarmonyPostfix]
         internal static void Postfix_SetSite(ConfigNode KSC, bool __result)
         {
-            if (__result && KerbalConstructionTimeData.Instance != null)
+            if (__result && SpaceCenterManagement.Instance != null)
             {
-                KerbalConstructionTimeData.Instance.SetActiveKSC(KSC.name);
+                SpaceCenterManagement.Instance.SetActiveKSC(KSC.name);
             }
         }
     }

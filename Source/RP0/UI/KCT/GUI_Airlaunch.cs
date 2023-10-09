@@ -16,7 +16,7 @@ namespace RP0
 
         private static void ResetToMax()
         {
-            AirlaunchTechLevel lvl = KerbalConstructionTimeData.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
+            AirlaunchTechLevel lvl = SpaceCenterManagement.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
                                                                         AirlaunchTechLevel.GetCurrentLevel();
             if (lvl != null)
             {
@@ -42,7 +42,7 @@ namespace RP0
         {
             if (_airlaunchParams == null)
             {
-                _airlaunchParams = new AirlaunchParams(KerbalConstructionTimeData.Instance.AirlaunchParams);
+                _airlaunchParams = new AirlaunchParams(SpaceCenterManagement.Instance.AirlaunchParams);
 
                 if (_airlaunchParams.Altitude == 0)
                     ResetToMax();
@@ -143,8 +143,8 @@ namespace RP0
         {
             try
             {
-                bool isSim = KerbalConstructionTimeData.Instance.IsSimulatedFlight;
-                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : KerbalConstructionTimeData.Instance.LaunchedVessel.shipID;
+                bool isSim = SpaceCenterManagement.Instance.IsSimulatedFlight;
+                _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : SpaceCenterManagement.Instance.LaunchedVessel.shipID;
                 
                 bool valid = _airlaunchParams.Validate(out _errorMsg);
                 if (valid)
@@ -152,16 +152,16 @@ namespace RP0
                     _errorMsg = null;
                     if (isSim)
                     {
-                        var kct = KerbalConstructionTimeData.Instance;
+                        var kct = SpaceCenterManagement.Instance;
                         kct.StartCoroutine(kct.AirlaunchRoutine(_airlaunchParams, _airlaunchParams.KCTVesselId, skipCountdown: true));
                         ToggleVisibility(false);
                         return;
                     }
 
-                    KerbalConstructionTimeData.Instance.AirlaunchParams = _airlaunchParams;
+                    SpaceCenterManagement.Instance.AirlaunchParams = _airlaunchParams;
                     _airlaunchParams = null;
 
-                    VesselProject b = KerbalConstructionTimeData.Instance.LaunchedVessel;
+                    VesselProject b = SpaceCenterManagement.Instance.LaunchedVessel;
                     if (!b.IsCrewable())
                     {
                         b.Launch();
@@ -169,7 +169,7 @@ namespace RP0
                     else
                     {
                         GUIStates.ShowAirlaunch = false;
-                        KerbalConstructionTimeData.ToolbarControl?.SetFalse();
+                        SpaceCenterManagement.ToolbarControl?.SetFalse();
                         _centralWindowPosition.height = 1;
                         AssignInitialCrew();
                         GUIStates.ShowShipRoster = true;

@@ -78,7 +78,7 @@ namespace RP0
 
         public void Start()
         {
-            ToolbarControl.RegisterMod(KerbalConstructionTimeData._modId, KerbalConstructionTimeData._modName);
+            ToolbarControl.RegisterMod(SpaceCenterManagement._modId, SpaceCenterManagement._modName);
 
             foreach (var s in _singletons)
             {

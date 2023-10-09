@@ -53,7 +53,7 @@ namespace RP0
             {
                 var vessel = FlightGlobals.ActiveVessel;
                 if (!_airlaunchTipShown && vessel &&
-                    KerbalConstructionTimeData.Instance.IsSimulatedFlight &&
+                    SpaceCenterManagement.Instance.IsSimulatedFlight &&
                     vessel.GetVesselBuiltAt() == EditorFacility.SPH &&
                     vessel.FindPartModuleImplementing<ModuleEngineConfigs>() != null)    // Does the vessel have a rocket engine?
                 {

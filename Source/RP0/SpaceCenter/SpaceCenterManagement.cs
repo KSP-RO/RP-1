@@ -16,7 +16,7 @@ using KSP.Localization;
 namespace RP0
 {
     [KSPScenario(ScenarioCreationOptions.AddToAllGames, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
-    public class KerbalConstructionTimeData : ScenarioModule
+    public class SpaceCenterManagement : ScenarioModule
     {
         #region Statics
 
@@ -173,7 +173,7 @@ namespace RP0
 
         #endregion
 
-        public static KerbalConstructionTimeData Instance { get; private set; }
+        public static SpaceCenterManagement Instance { get; private set; }
 
         #region Lifecycle
 

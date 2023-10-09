@@ -38,7 +38,7 @@ namespace RP0
         public static void DrawShipRoster(int windowID)
         {
             // This window can stay alive during scene transition
-            if (KerbalConstructionTimeData.Instance == null)
+            if (SpaceCenterManagement.Instance == null)
                 return;
 
             GUILayout.BeginVertical(GUILayout.ExpandHeight(true), GUILayout.MaxHeight(Screen.height / 2));
@@ -85,11 +85,11 @@ namespace RP0
                 Part p = _parts[j];
                 if (p.CrewCapacity == 0) continue;
 
-                List<CrewMemberAssignment> launchedCrew = KerbalConstructionTimeData.Instance.LaunchedCrew[j]?.CrewList;
+                List<CrewMemberAssignment> launchedCrew = SpaceCenterManagement.Instance.LaunchedCrew[j]?.CrewList;
                 if (launchedCrew == null)
                 {
                     launchedCrew = new List<CrewMemberAssignment>();
-                    KerbalConstructionTimeData.Instance.LaunchedCrew.Add(new PartCrewAssignment(p.craftID, launchedCrew));
+                    SpaceCenterManagement.Instance.LaunchedCrew.Add(new PartCrewAssignment(p.craftID, launchedCrew));
                 }
 
                 
@@ -207,7 +207,7 @@ namespace RP0
             {
                 CheckTanksAndLaunch(false);
             }
-            if (KerbalConstructionTimeData.Instance.LaunchedVessel.IsValid && !KerbalConstructionTimeData.Instance.LaunchedVessel.AreTanksFull())
+            if (SpaceCenterManagement.Instance.LaunchedVessel.IsValid && !SpaceCenterManagement.Instance.LaunchedVessel.AreTanksFull())
             {
                 if (GUILayout.Button("Fill Tanks & Launch"))
                 {
@@ -219,8 +219,8 @@ namespace RP0
             {
                 GUIStates.ShowShipRoster = false;
                 GUIStates.ShowBuildList = true;
-                KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject();
-                KerbalConstructionTimeData.Instance.LaunchedCrew.Clear();
+                SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject();
+                SpaceCenterManagement.Instance.LaunchedCrew.Clear();
                 _crewListWindowPosition.height = 1;
                 _availableCrew = null;
                 _possibleCrewForParts.Clear();
@@ -235,7 +235,7 @@ namespace RP0
 
         private static void RemoveAllCrewFromPods()
         {
-            foreach (PartCrewAssignment cp in KerbalConstructionTimeData.Instance.LaunchedCrew)
+            foreach (PartCrewAssignment cp in SpaceCenterManagement.Instance.LaunchedCrew)
             {
                 cp.CrewList.Clear();
             }
@@ -264,7 +264,7 @@ namespace RP0
 
                     for (int i = 0; i < p.CrewCapacity; i++)
                     {
-                        if (KerbalConstructionTimeData.Instance.LaunchedCrew[j].CrewList.Count <= i)
+                        if (SpaceCenterManagement.Instance.LaunchedCrew[j].CrewList.Count <= i)
                         {
                             if (_possibleCrewForPart.Count > 0)
                             {
@@ -273,14 +273,14 @@ namespace RP0
                                 ProtoCrewMember crewMember = _possibleCrewForPart[index];
                                 if (crewMember != null)
                                 {
-                                    KerbalConstructionTimeData.Instance.LaunchedCrew[j].CrewList.Add(new CrewMemberAssignment(crewMember));
+                                    SpaceCenterManagement.Instance.LaunchedCrew[j].CrewList.Add(new CrewMemberAssignment(crewMember));
                                     _possibleCrewForPart.RemoveAt(index);
                                     _availableCrew.Remove(crewMember);
                                     _possibleCrewForParts.Remove(crewMember);
                                 }
                             }
                         }
-                        else if (KerbalConstructionTimeData.Instance.LaunchedCrew[j].CrewList[i].PCM == null)
+                        else if (SpaceCenterManagement.Instance.LaunchedCrew[j].CrewList[i].PCM == null)
                         {
                             if (_possibleCrewForPart.Count > 0)
                             {
@@ -289,7 +289,7 @@ namespace RP0
                                 ProtoCrewMember crewMember = _possibleCrewForPart[index];
                                 if (crewMember != null)
                                 {
-                                    KerbalConstructionTimeData.Instance.LaunchedCrew[j].CrewList[i] = new CrewMemberAssignment(crewMember);
+                                    SpaceCenterManagement.Instance.LaunchedCrew[j].CrewList[i] = new CrewMemberAssignment(crewMember);
                                     _possibleCrewForPart.RemoveAt(index);
                                     _availableCrew.Remove(crewMember);
                                     _possibleCrewForParts.Remove(crewMember);
@@ -413,7 +413,7 @@ namespace RP0
 
                 if (clickedNautButton)
                 {
-                    List<CrewMemberAssignment> activeCrew = KerbalConstructionTimeData.Instance.LaunchedCrew[_partIndexToCrew].CrewList;
+                    List<CrewMemberAssignment> activeCrew = SpaceCenterManagement.Instance.LaunchedCrew[_partIndexToCrew].CrewList;
                     if (activeCrew.Count > _indexToCrew)
                     {
                         activeCrew.Insert(_indexToCrew, new CrewMemberAssignment(crew));
@@ -429,7 +429,7 @@ namespace RP0
                         activeCrew.Insert(_indexToCrew, new CrewMemberAssignment(crew));
                     }
                     _rosterForCrewSelect.Remove(crew);
-                    KerbalConstructionTimeData.Instance.LaunchedCrew[_partIndexToCrew].CrewList = activeCrew;
+                    SpaceCenterManagement.Instance.LaunchedCrew[_partIndexToCrew].CrewList = activeCrew;
                     GUIStates.ShowCrewSelect = false;
                     GUIStates.ShowShipRoster = true;
                     _crewListWindowPosition.height = 1;
@@ -551,15 +551,15 @@ namespace RP0
         public static void AssignInitialCrew()
         {
             RefreshInventoryAvailability();
-            KerbalConstructionTimeData.Instance.LaunchedCrew.Clear();
-            _pseudoParts = KerbalConstructionTimeData.Instance.LaunchedVessel.GetPseudoParts();
+            SpaceCenterManagement.Instance.LaunchedCrew.Clear();
+            _pseudoParts = SpaceCenterManagement.Instance.LaunchedVessel.GetPseudoParts();
             _parts.Clear();
             foreach (PseudoPart pp in _pseudoParts)
             {
                 Part p = KCTUtilities.GetAvailablePartByName(pp.Name).partPrefab;
                 p.craftID = pp.Uid;
                 _parts.Add(p);
-                KerbalConstructionTimeData.Instance.LaunchedCrew.Add(new PartCrewAssignment(pp.Uid, new List<CrewMemberAssignment>()));
+                SpaceCenterManagement.Instance.LaunchedCrew.Add(new PartCrewAssignment(pp.Uid, new List<CrewMemberAssignment>()));
             }
 
             //get all available crew from the roster and then fill all crewable parts with 'nauts that finished proficiency and mission training
@@ -569,7 +569,7 @@ namespace RP0
             // then obviously we had crew trained.
             if (!anyFound)
             {
-                KerbalConstructionTimeData.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.001f, ShowUntrainedTip));
+                SpaceCenterManagement.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.001f, ShowUntrainedTip));
             }
         }
 
@@ -603,7 +603,7 @@ namespace RP0
                 bool available = true;
                 if (crewMember.rosterStatus == ProtoCrewMember.RosterStatus.Available && !crewMember.inactive)
                 {
-                    foreach (PartCrewAssignment cP in KerbalConstructionTimeData.Instance.LaunchedCrew)
+                    foreach (PartCrewAssignment cP in SpaceCenterManagement.Instance.LaunchedCrew)
                     {
                         if (cP.CrewList.Any(c => c?.PCM == crewMember))
                         {
@@ -623,7 +623,7 @@ namespace RP0
                 bool available = true;
                 if (crewMember.rosterStatus == ProtoCrewMember.RosterStatus.Available && !crewMember.inactive)
                 {
-                    foreach (PartCrewAssignment cP in KerbalConstructionTimeData.Instance.LaunchedCrew)
+                    foreach (PartCrewAssignment cP in SpaceCenterManagement.Instance.LaunchedCrew)
                     {
                         if (cP.CrewList.Any(c => c?.PCM == crewMember))
                         {
@@ -643,7 +643,7 @@ namespace RP0
 
         private static void CheckTanksAndLaunch(bool fillTanks)
         {
-            foreach (PartCrewAssignment crewedPart in KerbalConstructionTimeData.Instance.LaunchedCrew)
+            foreach (PartCrewAssignment crewedPart in SpaceCenterManagement.Instance.LaunchedCrew)
             {
                 foreach (CrewMemberAssignment assign in crewedPart.CrewList)
                 {
@@ -662,7 +662,7 @@ namespace RP0
             }
 
             KCTSettings.Instance.RandomizeCrew = AssignRandomCrew;
-            KerbalConstructionTimeData.Instance.LaunchedVessel.Launch(fillTanks);
+            SpaceCenterManagement.Instance.LaunchedVessel.Launch(fillTanks);
 
             GUIStates.ShowShipRoster = false;
             _crewListWindowPosition.height = 1;

@@ -57,7 +57,7 @@ namespace RP0
 
         public static double GetResearchRate(double ScienceValue, int index, int upgradeDelta)
         {
-            int Personnel = KerbalConstructionTimeData.Instance.Researchers + upgradeDelta;
+            int Personnel = SpaceCenterManagement.Instance.Researchers + upgradeDelta;
             
             if (index > 0)
                 return 0d;
@@ -88,7 +88,7 @@ namespace RP0
 
             LaunchComplex vLC = vessel.LC;
             if (vLC == null)
-                vLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                vLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
 
             double multHR = 1d;
             if (vLC.IsHumanRated)

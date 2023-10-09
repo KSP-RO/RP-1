@@ -227,7 +227,7 @@ namespace RP0.Crew
                 ap.partPrefab.Modules.Contains<KerbalSeat>() || KCTUtils.IsClamp(ap.partPrefab)) return;
 
             bool hasTech = !string.IsNullOrEmpty(ap.TechRequired);
-            bool isKCTExperimentalNode = hasTech && KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired);
+            bool isKCTExperimentalNode = hasTech && SpaceCenterManagement.Instance.TechListHas(ap.TechRequired);
             bool isPartUnlocked = !hasTech || (!isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available);
 
             if (!isKCTExperimentalNode && !isPartUnlocked)
@@ -288,7 +288,7 @@ namespace RP0.Crew
                 return false;
 
             if (!HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled
-                || KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+                || SpaceCenterManagement.Instance.IsSimulatedFlight)
                 return true;
 
             // If part doesn't have a training associated with it, abort
@@ -1023,7 +1023,7 @@ namespace RP0.Crew
             if (!HighLogic.LoadedSceneIsFlight) yield return null;
             yield return new WaitForFixedUpdate();
 
-            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight && FlightGlobals.ActiveVessel != null)
+            if (SpaceCenterManagement.Instance.IsSimulatedFlight && FlightGlobals.ActiveVessel != null)
             {
                 foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
                 {

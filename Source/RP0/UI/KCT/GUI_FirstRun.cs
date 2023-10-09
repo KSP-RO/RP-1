@@ -12,7 +12,7 @@ namespace RP0
 
         public static void DrawFirstRun(int windowID)
         {
-            if (IsPrimarilyDisabled || KerbalConstructionTimeData.Instance.DontShowFirstRunAgain)
+            if (IsPrimarilyDisabled || SpaceCenterManagement.Instance.DontShowFirstRunAgain)
             {
                 GUIStates.ShowFirstRun = false;
                 return;
@@ -37,7 +37,7 @@ namespace RP0
             }
             GUILayout.Label("");
 
-            if (!KerbalConstructionTimeData.Instance.StartedProgram)
+            if (!SpaceCenterManagement.Instance.StartedProgram)
             {
                 GUILayout.Label($"{step++}) Choose your starting Programs.");
                 GUILayout.Label("These provide you with funds over time, and allow you to select relevant contracts in Mission Control. Go to the Admin Building to select them. Note that if you're selecting a crewed program like X-Planes, you'll need to hire some nauts!");
@@ -48,7 +48,7 @@ namespace RP0
                 GUILayout.Label("");
             }
 
-            if (!KerbalConstructionTimeData.Instance.AcceptedContract)
+            if (!SpaceCenterManagement.Instance.AcceptedContract)
             {
                 GUILayout.Label($"{step++}) Accept a Contract.");
                 GUILayout.Label("With a Program selected, you now have access to the Contracts associated with that Program. Programs have some number of optional and some number of required contracts. Optional contracts aren't necessary to complete the program, but award Confidence.");
@@ -59,7 +59,7 @@ namespace RP0
                 GUILayout.Label("");
             }
 
-            if (!KerbalConstructionTimeData.Instance.StarterLCBuilding)
+            if (!SpaceCenterManagement.Instance.StarterLCBuilding)
             {
                 GUILayout.Label($"{step++}) Build a starting Launch Complex.");
                 GUILayout.Label("With a contract accepted, now it's time to create and integrate a vessel to complete it. If it's a rocket, you'll need a launch complex to launch it. Go to the VAB and make your rocket, then click New the Integration Info (was KCT) window. The LC properties will be set to support that vessel. Once you have LCs built you can also modify them the same way, either a simple Upgrade or a bigger Reconstruction. Reconstructions remove support for any vessel but the current, but lead to lower maintenance over time.");
@@ -70,9 +70,9 @@ namespace RP0
                 GUILayout.Label("");
             }
             
-            if (!KerbalConstructionTimeData.Instance.HiredStarterApplicants)
+            if (!SpaceCenterManagement.Instance.HiredStarterApplicants)
             {
-                GUILayout.Label($"{step++}) Assign your {KerbalConstructionTimeData.Instance.Applicants} starting Applicants");
+                GUILayout.Label($"{step++}) Assign your {SpaceCenterManagement.Instance.Applicants} starting Applicants");
                 if (GUILayout.Button($"Go to Staffing", HighLogic.Skin.button))
                 {
                     GUIStates.ShowPersonnelWindow = true;
@@ -85,7 +85,7 @@ namespace RP0
             {
                 if (_dontShowFirstRunAgain)
                 {
-                    KerbalConstructionTimeData.Instance.DontShowFirstRunAgain = true;
+                    SpaceCenterManagement.Instance.DontShowFirstRunAgain = true;
                 }
                 GUIStates.ShowFirstRun = false;
             }

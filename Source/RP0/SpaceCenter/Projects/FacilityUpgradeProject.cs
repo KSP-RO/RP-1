@@ -126,7 +126,7 @@ namespace RP0
 
         public static bool AlreadyInProgressByID(string id)
         {
-            return KerbalConstructionTimeData.Instance.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == id) != null) != null;
+            return SpaceCenterManagement.Instance.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == id) != null) != null;
         }
 
         protected override void ProcessCancel()
@@ -148,7 +148,7 @@ namespace RP0
         protected override void ProcessComplete()
         {
 
-            if (ScenarioUpgradeableFacilities.Instance != null && !KerbalConstructionTimeData.Instance.ErroredDuringOnLoad)
+            if (ScenarioUpgradeableFacilities.Instance != null && !SpaceCenterManagement.Instance.ErroredDuringOnLoad)
             {
                 Apply();
 

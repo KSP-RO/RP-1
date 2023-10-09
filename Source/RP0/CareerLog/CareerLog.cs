@@ -618,10 +618,10 @@ namespace RP0
             {
                 _prevPeriod.CurrentFunds = Funding.Instance.Funds;
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
-                _prevPeriod.RnDQueueLength = KerbalConstructionTimeData.Instance.TechList.Sum(t => t.scienceCost);
-                _prevPeriod.NumEngineers = KerbalConstructionTimeData.Instance.TotalEngineers;
-                _prevPeriod.NumResearchers = KerbalConstructionTimeData.Instance.Researchers;
-                _prevPeriod.EfficiencyEngineers = KerbalConstructionTimeData.Instance.WeightedAverageEfficiencyEngineers;
+                _prevPeriod.RnDQueueLength = SpaceCenterManagement.Instance.TechList.Sum(t => t.scienceCost);
+                _prevPeriod.NumEngineers = SpaceCenterManagement.Instance.TotalEngineers;
+                _prevPeriod.NumResearchers = SpaceCenterManagement.Instance.Researchers;
+                _prevPeriod.EfficiencyEngineers = SpaceCenterManagement.Instance.WeightedAverageEfficiencyEngineers;
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
                 _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmount(_prevPeriod.StartUT, _prevPeriod.EndUT);
@@ -889,7 +889,7 @@ namespace RP0
             try
             {
                 // KCT returns -1 if the player hasn't earned any sci yet
-                return Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);
+                return Math.Max(0, SpaceCenterManagement.Instance.SciPointsTotal);
             }
             catch (Exception ex)
             {

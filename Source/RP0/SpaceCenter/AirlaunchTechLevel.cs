@@ -71,7 +71,7 @@ namespace RP0
 
         public bool IsUnlocked => ResearchAndDevelopment.GetTechnologyState(TechRequired) == RDTech.State.Available;
 
-        public bool IsUnderResearch => KerbalConstructionTimeData.Instance.TechListHas(TechRequired);
+        public bool IsUnderResearch => SpaceCenterManagement.Instance.TechListHas(TechRequired);
 
         public static bool AnyUnlocked()
         {
@@ -81,7 +81,7 @@ namespace RP0
         public static bool AnyUnderResearch()
         {
             EnsureLevelsLoaded();
-            return _techLevels.Any(tl => KerbalConstructionTimeData.Instance.TechListHas(tl.TechRequired));
+            return _techLevels.Any(tl => SpaceCenterManagement.Instance.TechListHas(tl.TechRequired));
         }
 
         public static AirlaunchTechLevel GetCurrentLevel()

@@ -24,7 +24,7 @@ namespace RP0.Harmony
             string techID = node.tech.techID;
             bool showCredit = node.tech.state == RDTech.State.Available;
             int techItemIndex = -1;
-            bool showProgress = !showCredit && (techItemIndex = KerbalConstructionTimeData.Instance.TechListIndex(techID)) != -1;
+            bool showProgress = !showCredit && (techItemIndex = SpaceCenterManagement.Instance.TechListIndex(techID)) != -1;
             showCredit |= showProgress;
             var type = Database.NodeTypes.ValueOrDefault(node.tech.techID);
             string extraText = Localizer.Format("#rp0_RnD_NodeType", Localizer.Format("#rp0_RnD_NodeType_" + type.ToStringCached())) + "\n";
@@ -41,12 +41,12 @@ namespace RP0.Harmony
 
             if (showProgress)
             {
-                ResearchProject item = KerbalConstructionTimeData.Instance.TechList[techItemIndex];
+                ResearchProject item = SpaceCenterManagement.Instance.TechList[techItemIndex];
                 double prevTime = 0d;
                 if (KCTSettings.Instance.UseDates)
                 {
                     for (int i = 0; i < techItemIndex; ++i)
-                        prevTime += KerbalConstructionTimeData.Instance.TechList[i].GetTimeLeftEst(prevTime);
+                        prevTime += SpaceCenterManagement.Instance.TechList[i].GetTimeLeftEst(prevTime);
                 }
                 extraText += Localizer.Format(item.BuildRate > 0 ? "#rp0_RnD_Progress" : "#rp0_RnD_ProgressEst",
                     (item.GetFractionComplete() * 100d).ToString("N0"),
@@ -58,14 +58,14 @@ namespace RP0.Harmony
             __instance.node_description.text = extraText + __instance.node_description.text;
 
             // we could patch RDNodeList...or we could just handle this as a postfix.
-            if (KerbalConstructionTimeData.Instance == null)
+            if (SpaceCenterManagement.Instance == null)
                 return;
             for (int i = 0; i < __instance.requiresList.scrollList.list.Count; ++i)
             {
                 // Items are added to this list in order from the parents so these will be in sync.
                 var nodeItem = __instance.requiresList.scrollList.list[i].listItem.GetComponent<RDNodeListItem>();
                 var parent = node.parents[i];
-                if (parent.parent.node.state != RDNode.State.RESEARCHED && KerbalConstructionTimeData.Instance.TechListHas(parent.parent.node.tech.techID))
+                if (parent.parent.node.state != RDNode.State.RESEARCHED && SpaceCenterManagement.Instance.TechListHas(parent.parent.node.tech.techID))
                 {
                     nodeItem.node.SetButtonState(RDNode.State.RESEARCHED);
                     nodeItem.node.graphics.SetIconColor(XKCDColors.KSPNotSoGoodOrange); // replaces the white
@@ -84,7 +84,7 @@ namespace RP0.Harmony
         [HarmonyPatch("UpdatePanel")]
         internal static bool Prefix_UpdatePanel(RDController __instance)
         {
-            if (KerbalConstructionTimeData.Instance.TechListHas(__instance.node_selected.tech.techID))
+            if (SpaceCenterManagement.Instance.TechListHas(__instance.node_selected.tech.techID))
             {
                 __instance.node_inPanel.SetButtonState(RDNode.State.RESEARCHED);
                 __instance.node_inPanel.SetIconState(__instance.node_selected.icon);
@@ -102,9 +102,9 @@ namespace RP0.Harmony
         [HarmonyPatch("ActionButtonClick")]
         internal static bool Prefix_ActionButtonClick(RDController __instance)
         {
-            if (KerbalConstructionTimeData.Instance.TechListHas(__instance.node_selected.tech.techID))
+            if (SpaceCenterManagement.Instance.TechListHas(__instance.node_selected.tech.techID))
             {
-                KCT_GUI.CancelTechNode(KerbalConstructionTimeData.Instance.TechList.FindIndex(t => t.techID == __instance.node_selected.tech.techID));
+                KCT_GUI.CancelTechNode(SpaceCenterManagement.Instance.TechList.FindIndex(t => t.techID == __instance.node_selected.tech.techID));
                 return false;
             }
 

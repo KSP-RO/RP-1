@@ -44,11 +44,11 @@ namespace RP0
             });
 
             if (_routine != null)
-                KerbalConstructionTimeData.Instance.StopCoroutine(_routine);
+                SpaceCenterManagement.Instance.StopCoroutine(_routine);
 
             InputLockManager.SetControlLock(ControlTypes.EDITOR_UI, InputLockID);
             _routine = RunValidationRoutine(vp);
-            KerbalConstructionTimeData.Instance.StartCoroutine(_routine);
+            SpaceCenterManagement.Instance.StartCoroutine(_routine);
         }
 
         private IEnumerator RunValidationRoutine(VesselProject vp)
@@ -175,7 +175,7 @@ namespace RP0
             cmq.AddPostDelta(CurrencyRP0.Funds, spentCredit, true);
 
             int partCount = partList.Count;
-            string mode = KerbalConstructionTimeData.EditorShipEditingMode ? "save edits" : "integrate vessel";
+            string mode = SpaceCenterManagement.EditorShipEditingMode ? "save edits" : "integrate vessel";
             var buttons = new DialogGUIButton[] {
                 new DialogGUIButton("Acknowledged", () => { _validationResult = ValidationResult.Fail; }),
                 new DialogGUIButton($"Unlock {partCount} part{(partCount > 1? "s":"")} for <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{Math.Max(0d, -cmq.GetTotal(CurrencyRP0.Funds, true)):N0} and {mode} (spending <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{spentCredit:N0} unlock credit)", () =>
@@ -423,7 +423,7 @@ namespace RP0
             if (ret)
             {
                 if (HighLogic.LoadedSceneIsEditor)
-                    KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                    SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
             }
             return ret;
         }

@@ -21,7 +21,7 @@ namespace RP0.Harmony
 
         private static string GetTooltipText()
         {
-            double pts = KerbalConstructionTimeData.Instance.SciPointsTotal;
+            double pts = SpaceCenterManagement.Instance.SciPointsTotal;
             if (pts < 0d)
                 pts = 0d;
             return Localizer.Format("#rp0_Widgets_Science_Tooltip",

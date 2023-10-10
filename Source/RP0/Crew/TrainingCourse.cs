@@ -41,7 +41,7 @@ namespace RP0.Crew
 
         public List<AvailablePart> PartsCovered => _template?.partsCovered;
 
-        protected double _buildRate = 1d;
+        protected double _buildRate = -1d;
 
         public TrainingCourse()
         {

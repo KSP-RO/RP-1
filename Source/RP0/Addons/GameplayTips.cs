@@ -127,7 +127,7 @@ namespace RP0
 
         private void OnKctVesselAddedToBuildQueue(VesselProject data)
         {
-            if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders) return;
+            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders) return;
 
             bool hasUntooledParts = EditorLogic.fetch.ship.Parts.Any(p => p.FindModuleImplementing<ModuleTooling>()?.IsUnlocked() == false);
             if (hasUntooledParts)

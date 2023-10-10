@@ -1,0 +1,125 @@
+CONTRACT_TYPE
+{
+	name = GOLargeSpaceTelescope	
+	title = Large Space Telescope
+	group = GreatObservatories
+	agent = Federation Aeronautique Internationale
+	
+	description = <b>Program: Great Observatories<br>Type: <color=green>Required</color></b><br><br>Weather forecasting today would be impossible without the numerous weather satellites constantly observing our atmosphere from orbit.  Launch the very first dedicated weather satellite to measure temperatures in the atmosphere and correlate those with real-time video.<br><br><b><color="green">Make sure your craft contains an Infrared Radiometer 1 experiment and an Early TV camera.</color></b><br><br>Historical example: TIROS-1 (120kg, Thor-Able)
+
+	synopsis = Launch the first weather satellite with the Infrared Radiometry experiment and an Early TV camera.
+
+	completedMessage = Success! The images provided from this satellite have proven that weather satellites can be extremely effective in helping meteorologists predict the weather.
+
+	
+
+	cancellable = true
+	declinable = false
+	autoAccept = false
+	minExpiry = 0
+	maxExpiry = 0
+	maxCompletions = 1
+	maxSimultaneous = 1
+	deadline = 0
+
+	targetBody = HomeWorld()
+
+	// ************ REWARDS ************
+	prestige = Trivial       // 1.0x
+	advanceFunds = 0
+	rewardScience = 0
+	rewardFunds = 0
+	failureFunds = 0
+	rewardReputation = 40
+	failureReputation = 0 // was @rewardReputation
+
+	// ************ REQUIREMENTS ************
+
+	REQUIREMENT
+	{
+		name = ProgramActive
+		type = ProgramActive
+		program = GreatObservatories
+	}
+
+
+	PARAMETER
+	{
+		name = SpaceTelescopeBasic
+		type = VesselParameterGroup
+		title = First large space telescope
+		define = SpaceTelescopeBasic
+
+		PARAMETER
+		{
+			name = NewVessel
+			type = NewVessel
+			title = Launch a new vessel
+			hideChildren = true
+		}
+		PARAMETER 
+		{
+			name = Crewmembers
+			type = HasCrew
+			minCrew = 0
+			maxCrew = 0
+			title = Uncrewed
+			hideChildren = true
+		}
+              PARAMETER 
+		{
+			name = Space Telecope Mass
+			type = VesselMass
+			minMass = 11
+			title = Space telescope must mass at least 11,000 kg
+			hideChildren = true
+		}
+		PARAMETER
+		{
+			name = OrbitSequence
+			type = Sequence
+			title = Survive in orbit for 30 days and transmit science
+
+			PARAMETER
+			{
+				name = HasPower
+				type = HasResource
+				resource = ElectricCharge
+				minQuantity = 1.0
+				title = Craft must have Electric Charge for 30 days
+				hideChildren = true
+			}
+
+			PARAMETER
+			{
+				name = Orbit
+				type = Orbit
+        targetBody = HomeWorld()
+				minPeA = 500000
+				maxEccentricity = 0.005
+				disableOnStateChange = true
+				title = Orbit requirements
+			}
+
+			PARAMETER
+			{
+				name = Duration
+				type = Duration
+				duration = 30d
+				preWaitText = Check for stable orbit
+				waitingText = Checking for stable orbit
+				completionText = Stable orbit: Confirmed
+			}
+		}
+	}
+	PARAMETER
+	{
+		name = CollectBST
+		type = RP1CollectScience
+		targetBody = HomeWorld()
+		situation = InSpaceLow
+		experiment = RP0infraredRad1
+		fractionComplete = 0.0041
+		title = Transmit 30 days of infrared weather data from low orbit
+	}
+}

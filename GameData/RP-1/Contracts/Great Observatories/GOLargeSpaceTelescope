@@ -66,7 +66,7 @@ CONTRACT_TYPE
 			title = Uncrewed
 			hideChildren = true
 		}
-              PARAMETER 
+		PARAMETER 
 		{
 			name = Space Telecope Mass
 			type = VesselMass
@@ -94,7 +94,7 @@ CONTRACT_TYPE
 			{
 				name = Orbit
 				type = Orbit
-        targetBody = HomeWorld()
+        			targetBody = HomeWorld()
 				minPeA = 500000
 				maxEccentricity = 0.005
 				disableOnStateChange = true

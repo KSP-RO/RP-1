@@ -285,7 +285,6 @@ namespace RP0.Harmony
             var now = Planetarium.GetUniversalTime();
 
             var vd = v.KerbalismData();
-            int sunIdx = FlightGlobals.GetBodyIndex(sun);
             List<CelestialBody> occluders = vd.EnvVisibleBodies;
 
             // set up CB SunInfoposition caches
@@ -296,17 +295,14 @@ namespace RP0.Harmony
 
             // cache values for speed
             double semiLatusRectum = 0d;
-            int bodyIdx = FlightGlobals.GetBodyIndex(v.orbit.referenceBody);
-            CelestialBody mb;
+            CelestialBody mb = v.orbitDriver.orbit.referenceBody;
             Vector3d surfPos = new Vector3d();
             if (isSurf)
             {
-                mb = v.mainBody;
                 surfPos = v.mainBody.GetRelSurfacePosition(v.latitude, v.longitude, v.altitude);
             }
             else
             {
-                mb = null;
                 semiLatusRectum = v.orbit.semiLatusRectum;
                 maxCalculation = Math.Min(maxCalculation, v.orbit.period);
             }
@@ -329,7 +325,7 @@ namespace RP0.Harmony
             {
                 double ut = now - i * stepLength;
                 bodyCache.SetForUT(ut);
-                Vector3d bodyPos = bodyCache.GetBodyPosition(bodyIdx);
+                Vector3d bodyPos = bodyCache.GetBodyPosition(mb.flightGlobalsIndex);
                 Vector3d pos;
                 if (!isSurf)
                 {
@@ -343,7 +339,7 @@ namespace RP0.Harmony
                     pos = QuaternionD.AngleAxis(mb.rotPeriodRecip * -i * stepLength * 360d, mb.transform.up) * pos;
                     pos += bodyPos; // and apply the position
                 }
-                bool vis = IsSunVisibleAtTime(v, pos, sun, sunIdx, occluders, isSurf);
+                bool vis = IsSunVisibleAtTime(v, pos, sun, occluders, isSurf);
                 if (vis)
                     ++sunSamples;
             }
@@ -367,10 +363,10 @@ namespace RP0.Harmony
         /// <param name="UT"></param>
         /// <param name="isSurf">is the vessel landed</param>
         /// <returns></returns>
-        internal static bool IsSunVisibleAtTime(Vessel vessel, Vector3d vesselPos, CelestialBody sun, int sunIdx, List<CelestialBody> occluders, bool isSurf)
+        internal static bool IsSunVisibleAtTime(Vessel vessel, Vector3d vesselPos, CelestialBody sun, List<CelestialBody> occluders, bool isSurf)
         {
             // generate ray parameters
-            Vector3d sunPos = bodyCache.GetBodyPosition(sunIdx) - vesselPos;
+            Vector3d sunPos = bodyCache.GetBodyPosition(sun.flightGlobalsIndex) - vesselPos;
             var sunDir = sunPos;
             var sunDist = sunDir.magnitude;
             sunDir /= sunDist;
@@ -382,7 +378,7 @@ namespace RP0.Harmony
             if (isSurf && vessel.mainBody.Radius < 100000.0)
             {
                 ignoreMainbody = true;
-                Vector3d mainBodyPos = bodyCache.GetBodyPosition(FlightGlobals.GetBodyIndex(vessel.mainBody));
+                Vector3d mainBodyPos = bodyCache.GetBodyPosition(vessel.orbitDriver.orbit.referenceBody.flightGlobalsIndex);
                 Vector3d mainBodyDir = (mainBodyPos - vesselPos).normalized;
                 double dotSunBody = Vector3d.Dot(mainBodyDir, sunDir);
                 Vector3d mainBodyDirProjected = mainBodyDir * dotSunBody;
@@ -424,7 +420,7 @@ namespace RP0.Harmony
         {
             private readonly List<Vector3d> positions = new List<Vector3d>();
             private readonly List<int> parents = new List<int>();
-            private readonly List<int> occluderToBodyIndex = new List<int>();
+            private readonly List<int> occluderToBodyIndex = new List<int>(); // not strictly needed but a good way to store which occluders we have
             private readonly List<double> semiLatusRectums = new List<double>();
 
             public Vector3d GetBodyPosition(int idx) { return positions[idx]; }
@@ -457,7 +453,7 @@ namespace RP0.Harmony
                     var parent = cb.orbitDriver?.orbit?.referenceBody;
                     if (parent != null && parent != cb)
                     {
-                        parents.Add(FlightGlobals.GetBodyIndex(parent));
+                        parents.Add(parent.flightGlobalsIndex);
                     }
                     else
                     {
@@ -483,7 +479,7 @@ namespace RP0.Harmony
 
                 occluderToBodyIndex.Clear();
                 foreach (var cb in occluders)
-                    occluderToBodyIndex.Add(FlightGlobals.GetBodyIndex(cb));
+                    occluderToBodyIndex.Add(cb.flightGlobalsIndex);
 
                 // Now clear all SLRs and then set only the relevant ones
                 // (i.e. the occluders, their parents, their grandparents, etc)

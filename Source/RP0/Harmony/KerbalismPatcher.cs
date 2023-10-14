@@ -119,34 +119,47 @@ namespace RP0.Harmony
         [HarmonyPatch("ShadowPeriod", new Type[] { typeof(Vessel) })]
         internal static bool Prefix_ShadowPeriod(Vessel v, ref double __result)
         {
-            Orbit obt = v.orbitDriver?.orbit;
+            // We have only 1 sun so don't try to figure out what's the current sunData.
+            Vector3d sunVec = (Planetarium.fetch.Sun.position - Lib.VesselPosition(v)).normalized;
+            __result = EclipseFraction(v, Planetarium.fetch.Sun, sunVec) * Sim.OrbitalPeriod(v);
+            return false;
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("SampleSunFactor")]
+        internal static bool Prefix_SampleSunFactor(Vessel v, double elapsedSeconds, ref double __result)
+        {
+            // We have only 1 sun so don't try to figure out what's the current sunData.
+            __result = SampleSunFactor(v, elapsedSeconds, Planetarium.fetch.Sun);
+            return false;
+        }
+
+        public static double EclipseFraction(Vessel v, CelestialBody sun, Vector3d sunVec)
+        {
+            var obt = v.orbitDriver?.orbit;
             if (obt == null)
-            {
-                __result = 0d;
-                return false;
-            }
+                return 0;
 
             bool incNaN = double.IsNaN(obt.inclination);
             if (Lib.Landed(v) || incNaN)
             {
-                var sun = Planetarium.fetch.Sun;
                 var mb = v.mainBody;
                 if (sun == mb)
                 {
-                    __result = 0d;
+                    return 0;
                 }
-                else if (mb.referenceBody == sun && mb.tidallyLocked)
+
+                if (mb.referenceBody == sun && mb.tidallyLocked)
                 {
-                    Vector3d vPos = incNaN ? v.transform.position : v.orbitDriver.pos + mb.position;
-                    Vector3d sunV = sun.position - vPos;
+                    Vector3d vPos = incNaN ? (Vector3d)v.transform.position : v.orbitDriver.pos + mb.position;
                     // We have to refind orbit pos in case inc is NaN
-                    __result = Vector3d.Dot(sunV, mb.position - vPos) > 0d ? mb.rotationPeriod : 0d;
+                    return Vector3d.Dot(sunVec, mb.position - vPos) < 0 ? 0 : 1.0;
                 }
-                else
-                {
-                    __result = mb.rotationPeriod * 0.5d;
-                }
-                return false;
+
+                // Just assume half the body's rotation period (note that
+                // for landed vessels, the orbital period is considered the
+                // body's rotation period).
+                return 0.5 * mb.rotationPeriod;
             }
 
             double e = obt.eccentricity;
@@ -154,11 +167,9 @@ namespace RP0.Harmony
             {
                 // This is wrong, of course, but given the speed of an escape trajectory
                 // you'll be in shadow for a very miniscule fraction of the period.
-                __result = 0d;
-                return false;
+                return 0;
             }
             Vector3d planeNormal = Vector3d.Cross(v.orbitDriver.vel, -v.orbitDriver.pos).normalized;
-            Vector3d sunVec = Planetarium.fetch.Sun.position - (v.mainBody.position + v.orbitDriver.pos).normalized;
             double sunDot = Math.Abs(Vector3d.Dot(sunVec, planeNormal));
             double betaAngle = Math.PI * 0.5d - Math.Acos(sunDot);
 
@@ -167,60 +178,86 @@ namespace RP0.Harmony
 
             // Now, branch depending on if we're in a low-ecc orbit
             // We check locally for betaStar because we might bail early in the Kerbalism case
+            double frac;
             if (e < 0.1d)
-                __result = FracEclipseCirc(betaAngle, a, R);
+                frac = FracEclipseCircular(betaAngle, a, R);
             else
-                __result = FracEclipseKerbalism(v, betaAngle, a, R, e, sunVec);
+                frac = FracEclipseElliptical(v, betaAngle, a, R, e, sunVec);
 
-            __result *= obt.period;
-
-            return false;
+            return frac;
         }
 
-        internal static double FracEclipseCirc(double betaAngle, double sma, double R)
+        /// <summary>
+        /// This computes eclipse fraction for circular orbits
+        /// (well, realy circular _low_ orbits, but at higher altitudes
+        /// you're not spending much time in shadow anyway).
+        /// </summary>
+        /// <param name="betaAngle">The beta angle (angle between the solar normal and its projection on the orbital plane)</param>
+        /// <param name="sma">The semi-major axis</param>
+        /// <param name="R">The body's radius</param>
+        /// <returns></returns>
+        private static double FracEclipseCircular(double betaAngle, double sma, double R)
         {
             // from https://commons.erau.edu/cgi/viewcontent.cgi?article=1412&context=ijaaa
+            // beta* is the angle above which there is no occlusion of the orbit
             double betaStar = Math.Asin(R / sma);
             if (Math.Abs(betaAngle) >= betaStar)
-                return 0d;
+                return 0;
 
             double avgHeight = sma - R;
-            return (1d / Math.PI) * Math.Acos(Math.Sqrt(avgHeight * avgHeight + 2 * R * avgHeight) / (sma * Math.Cos(betaAngle)));
+            return (1.0 / Math.PI) * Math.Acos(Math.Sqrt(avgHeight * avgHeight + 2.0 * R * avgHeight) / (sma * Math.Cos(betaAngle)));
         }
 
-        internal static double FracEclipseKerbalism(Vessel v, double betaAngle, double a, double R, double e, Vector3d sunVec)
+        /// <summary>
+        /// An analytic solution to the fraction of an orbit eclipsed by its primary
+        /// </summary>
+        /// <param name="v">The vessel</param>
+        /// <param name="betaAngle">The beta angle (angle between the solar normal and its projection on the orbital plane)</param>
+        /// <param name="a">semi-major axis</param>
+        /// <param name="R">body radius</param>
+        /// <param name="e">eccentricity</param>
+        /// <param name="sunVec">The normalized vector to the sun</param>
+        /// <returns></returns>
+        private static double FracEclipseElliptical(Vessel v, double betaAngle, double a, double R, double e, Vector3d sunVec)
         {
             var obt = v.orbit;
             double b = obt.semiMinorAxis;
             // Just bail if we were going to report NaN, or we're in a weird state
             // We've likely avoided this already due to the eccentricity check in the main call, though
             if (a < b || b < R)
-                return 0d;
+                return 0;
 
             // Compute where the Pe is with respect to the sun
             Vector3d PeToBody = -Planetarium.Zup.WorldToLocal(obt.semiLatusRectum / (1d + e) * obt.OrbitFrame.X).xzy;
             Vector3d orthog = Vector3d.Cross(obt.referenceBody.GetFrameVel().xzy.normalized, sunVec);
             Vector3d PeToBodyProj = (PeToBody - orthog * Vector3d.Dot(PeToBody, orthog)).normalized;
+            // Use these to calculate true anomaly for this projected orbit
             double tA = Math.Acos(Vector3d.Dot(sunVec, PeToBodyProj));
 
             // Get distance to ellipse edge
-            double r = a * (1d - e * e) / (1 + e * Math.Cos(tA));
+            double r = a * (1.0 - e * e) / (1.0 + e * Math.Cos(tA));
 
             double betaStar = Math.Asin(R / r);
             double absBeta = Math.Abs(betaAngle);
             if (absBeta >= betaStar)
                 return 0d;
 
-            double halfEclipsedv = Math.Asin(R / r);
-            double vAhead = tA + halfEclipsedv;
-            double vBehind = tA - halfEclipsedv;
-            double sqrtep = Math.Sqrt(1d + e);
-            double sqrten = Math.Sqrt(1d - e);
-            double Eahead = 2d * Math.Atan2(sqrten * Math.Sin(vAhead * 0.5d), sqrtep * Math.Cos(vAhead * 0.5d));
-            double Mahead = Eahead - e * Math.Sin(Eahead);
-            double Ebehind = 2d * Math.Atan2(sqrten * Math.Sin(vBehind * 0.5d), sqrtep * Math.Cos(vBehind * 0.5d));
-            double Mbehind = Ebehind - e * Math.Sin(Ebehind);
-            double eclipseFrac = (Mahead - Mbehind) / (2d * Math.PI);
+            // Get the vector to the center of the eclipse
+            double vecToHalfEclipsePortion = Math.Asin(R / r);
+            // Get the true anomalies at the front and rear of the eclipse portion
+            double vAhead = tA + vecToHalfEclipsePortion;
+            double vBehind = tA - vecToHalfEclipsePortion;
+            vAhead *= 0.5;
+            vBehind *= 0.5;
+            double ePlusOneSqrt = Math.Sqrt(1 + e);
+            double eMinusOneSqrt = Math.Sqrt(1 - e);
+            // Calculate eccentric and mean anomalies
+            double EAAhead = 2.0 * Math.Atan2(eMinusOneSqrt * Math.Sin(vAhead), ePlusOneSqrt * Math.Cos(vAhead));
+            double MAhead = EAAhead - e * Math.Sin(EAAhead);
+            double EABehind = 2.0 * Math.Atan2(eMinusOneSqrt * Math.Sin(vBehind), ePlusOneSqrt * Math.Cos(vBehind));
+            double Mbehind = EABehind - e * Math.Sin(EABehind);
+            // Finally, calculate the eclipse fraction from mean anomalies
+            double eclipseFrac = (MAhead - Mbehind) / (2.0 * Math.PI);
             // This is not quite correct I think, but it'll be close enough.
             // We just lerp between 0 occlusion at beta = betaStar, and full occlusion
             // at beta = 0. This takes advantage of the difference 1 degree makes being larger
@@ -229,103 +266,30 @@ namespace RP0.Harmony
             return eclipseFrac * absBeta / betaStar;
         }
 
-        [HarmonyPrefix]
-        [HarmonyPatch("SampleSunFactor")]
-        internal static bool Prefix_SampleSunFactor(Vessel v, double elapsedSeconds, ref double __result)
+        /// <summary>
+        /// This expects to be called repeatedly
+        /// </summary>
+        public static double SampleSunFactor(Vessel v, double elapsedSeconds, CelestialBody sun)
         {
-            __result = SampleSunFactor(v, elapsedSeconds);
-            return false;
-        }
-
-        private static readonly List<Vector3d> _cbPositions = new List<Vector3d>();
-        private static readonly List<int> _cbParents = new List<int>();
-        private static readonly List<int> _occluderToPos = new List<int>();
-        private static readonly List<double> _cbSLRs = new List<double>();
-
-        private static void InitBodies()
-        {
-            int c = FlightGlobals.Bodies.Count;
-            if (_cbPositions.Count == c)
-                return;
-
-            _cbPositions.Clear();
-            _cbParents.Clear();
-            _cbSLRs.Clear();
-            if (_cbPositions.Capacity < c)
-                _cbPositions.Capacity = c;
-            if (_cbParents.Capacity < c)
-                _cbParents.Capacity = c;
-            if (_cbSLRs.Capacity < c)
-                _cbSLRs.Capacity = c;
-            for (int i = 0; i < c; ++i)
-            {
-                var cb = FlightGlobals.Bodies[i];
-                var parent = cb.orbitDriver?.orbit?.referenceBody;
-                if (parent != null && parent != cb)
-                {
-                    _cbParents.Add(FlightGlobals.GetBodyIndex(parent));
-                    _cbSLRs.Add(cb.orbit.semiLatusRectum);
-                }
-                else
-                {
-                    _cbParents.Add(-1);
-                    _cbSLRs.Add(1d);
-                }
-                _cbPositions.Add(new Vector3d());
-            }
-        }
-
-        internal static void FillCBPositionsAtUT(double ut, List<CelestialBody> occluders)
-        {
-            // Start from unknown positions
-            for (int i = _cbPositions.Count; i-- > 0;)
-                _cbPositions[i] = new Vector3d(double.MaxValue, double.MaxValue);
-
-            // Fill positions at UT, recursively (skipping calculated parents)
-            for (int i = occluders.Count; i-- > 0;)
-                _FillCBPositionAtUT(_occluderToPos[i], ut);
-
-
-        }
-        internal static void _FillCBPositionAtUT(int i, double ut)
-        {
-            if (_cbPositions[i].x != double.MaxValue)
-                return;
-
-            var cb = FlightGlobals.Bodies[i];
-            int pIdx = _cbParents[i];
-            if (pIdx == -1)
-            {
-                _cbPositions[i] = cb.position;
-                return;
-            }
-            _FillCBPositionAtUT(pIdx, ut);
-            _cbPositions[i] = _cbPositions[pIdx] + fastGetRelativePositionAtUT(cb.orbit, ut, _cbSLRs[i]);
-        }
-
-        internal static double SampleSunFactor(Vessel v, double elapsedSeconds)
-        {
-            bool isSurf = Lib.Landed(v);
-            if (v.orbitDriver == null || (!isSurf && (v.orbit == null || double.IsNaN(v.orbit.inclination))))
-                return 1d; // fail safe
-
             UnityEngine.Profiling.Profiler.BeginSample("Kerbalism.Sim.SunFactor2");
+
+            bool isSurf = Lib.Landed(v);
+            if (v.orbitDriver == null || v.orbitDriver.orbit == null || (!isSurf && double.IsNaN(v.orbit.inclination)))
+            {
+                UnityEngine.Profiling.Profiler.EndSample();
+                return 1d; // fail safe
+            }
 
             int sunSamples = 0;
 
             var now = Planetarium.GetUniversalTime();
 
             var vd = v.KerbalismData();
-            CelestialBody sun = vd.EnvMainSun.SunData.body;
             int sunIdx = FlightGlobals.GetBodyIndex(sun);
             List<CelestialBody> occluders = vd.EnvVisibleBodies;
 
-            // set up CB position caches
-            InitBodies();
-            foreach (var cb in occluders)
-            {
-                _occluderToPos.Add(FlightGlobals.GetBodyIndex(cb));
-            }
+            // set up CB SunInfoposition caches
+            bodyCache.SetForOccluders(occluders);
 
             // Set max time to calc
             double maxCalculation = elapsedSeconds * 1.01d;
@@ -364,11 +328,12 @@ namespace RP0.Harmony
             for (int i = sampleCount; i-- > 0;)
             {
                 double ut = now - i * stepLength;
-                FillCBPositionsAtUT(ut, occluders);
+                bodyCache.SetForUT(ut);
+                Vector3d bodyPos = bodyCache.GetBodyPosition(bodyIdx);
                 Vector3d pos;
                 if (!isSurf)
                 {
-                    pos = _cbPositions[bodyIdx] + fastGetRelativePositionAtUT(v.orbit, ut, semiLatusRectum);
+                    pos = bodyPos + FastGetRelativePositionAtUT(v.orbit, ut, semiLatusRectum);
                 }
                 else
                 {
@@ -376,53 +341,65 @@ namespace RP0.Harmony
                     pos = surfPos.x * mb.BodyFrame.X + surfPos.y * mb.BodyFrame.Z + surfPos.z * mb.BodyFrame.Y;
                     // Now rotate the pos based on where the body would have rotated in the past
                     pos = QuaternionD.AngleAxis(mb.rotPeriodRecip * -i * stepLength * 360d, mb.transform.up) * pos;
-                    pos += _cbPositions[bodyIdx]; // and apply the position
+                    pos += bodyPos; // and apply the position
                 }
-                bool vis = IsSunVisibleAtTime(v, pos, sun, sunIdx, occluders, ut);
+                bool vis = IsSunVisibleAtTime(v, pos, sun, sunIdx, occluders, isSurf);
                 if (vis)
                     ++sunSamples;
             }
-            _occluderToPos.Clear();
 
             UnityEngine.Profiling.Profiler.EndSample();
 
             double sunFactor = (double)sunSamples / (double)sampleCount;
+            //Lib.Log("Vessel " + v + " sun factor: " + sunFactor + " " + sunSamples + "/" + sampleCount + " #s=" + sampleCount + " e=" + elapsedSeconds + " step=" + stepLength);
             return sunFactor;
         }
 
-        // We have to reimplement this code because we need to check at a specific time
-        internal static bool IsSunVisibleAtTime(Vessel vessel, Vector3d vesselPos, CelestialBody sun, int sunIdx, List<CelestialBody> occluders, double UT)
+        /// <summary>
+        /// A version of IsBodyVisibleAt that is optimized for suns
+        /// and supports using arbitrary time (assuming bodyCache is set)
+        /// </summary>
+        /// <param name="vessel"></param>
+        /// <param name="vesselPos">Vessel position at time</param>
+        /// <param name="sun"></param>
+        /// <param name="sunIdx">The body index of the sun</param>
+        /// <param name="occluders"></param>
+        /// <param name="UT"></param>
+        /// <param name="isSurf">is the vessel landed</param>
+        /// <returns></returns>
+        internal static bool IsSunVisibleAtTime(Vessel vessel, Vector3d vesselPos, CelestialBody sun, int sunIdx, List<CelestialBody> occluders, bool isSurf)
         {
             // generate ray parameters
-            Vector3d sunPos = _cbPositions[sunIdx] - vesselPos;
+            Vector3d sunPos = bodyCache.GetBodyPosition(sunIdx) - vesselPos;
             var sunDir = sunPos;
             var sunDist = sunDir.magnitude;
             sunDir /= sunDist;
             sunDist -= sun.Radius;
 
             // for very small bodies the analytic method is very unreliable at high latitudes
-            // So we use a modified version of the analytic method
+            // So we use a modified version of the analytic method (unlike IsBodyVisible)
             bool ignoreMainbody = false;
-            if (Lib.Landed(vessel) && vessel.mainBody.Radius < 100000.0)
+            if (isSurf && vessel.mainBody.Radius < 100000.0)
             {
                 ignoreMainbody = true;
-                Vector3d mainBodyPos = _cbPositions[FlightGlobals.GetBodyIndex(vessel.mainBody)];
+                Vector3d mainBodyPos = bodyCache.GetBodyPosition(FlightGlobals.GetBodyIndex(vessel.mainBody));
                 Vector3d mainBodyDir = (mainBodyPos - vesselPos).normalized;
                 double dotSunBody = Vector3d.Dot(mainBodyDir, sunDir);
                 Vector3d mainBodyDirProjected = mainBodyDir * dotSunBody;
 
                 // Assume the sun is far enough away that we can treat the line from the vessel
-                // to the sine as parallel to the line from the body center to the sun, which means
+                // to the sun as parallel to the line from the body center to the sun, which means
                 // we can ignore testing further if we're very close to the plane orthogonal to the
-                // sun vector, and we only care if the dot is positive
-                if (mainBodyDirProjected.sqrMagnitude > 0.0001d && dotSunBody > 0d) // approx half a degree from the pole
+                // sun vector but on the opposite side of the body from the sun.
+                // We don't strictly test dot to give ourselves approx half a degree of slop
+                if (mainBodyDirProjected.sqrMagnitude > 0.0001d && dotSunBody > 0d)
                 {
                     return false;
                 }
             }
 
             // check if the ray intersect one of the provided bodies
-            for (int i = 0; i < occluders.Count; ++i)
+            for (int i = occluders.Count; i-- > 0;)
             {
                 CelestialBody occludingBody = occluders[i];
                 if (occludingBody == sun)
@@ -430,7 +407,7 @@ namespace RP0.Harmony
                 if (ignoreMainbody && occludingBody == vessel.mainBody)
                     continue;
 
-                Vector3d toBody = _cbPositions[_occluderToPos[i]] - vesselPos;
+                Vector3d toBody = bodyCache.GetOccluderPosition(i) - vesselPos;
                 // projection of origin->body center ray over the raytracing direction
                 double k = Vector3d.Dot(toBody, sunDir);
                 // the ray doesn't hit body if its minimal analytical distance along the ray is less than its radius
@@ -443,7 +420,146 @@ namespace RP0.Harmony
             return true;
         }
 
-        internal static Vector3d fastGetRelativePositionAtUT(Orbit orbit, double UT, double semiLatusRectum)
+        public class BodyCache
+        {
+            private readonly List<Vector3d> positions = new List<Vector3d>();
+            private readonly List<int> parents = new List<int>();
+            private readonly List<int> occluderToBodyIndex = new List<int>();
+            private readonly List<double> semiLatusRectums = new List<double>();
+
+            public Vector3d GetBodyPosition(int idx) { return positions[idx]; }
+            public Vector3d GetOccluderPosition(int occluderIdx) { return positions[occluderToBodyIndex[occluderIdx]]; }
+
+            /// <summary>
+            /// Check and, if uninitialized, setup the body caches
+            /// </summary>
+            private void CheckInitBodies()
+            {
+                int c = FlightGlobals.Bodies.Count;
+                if (positions.Count == c)
+                    return;
+
+                positions.Clear();
+                parents.Clear();
+                semiLatusRectums.Clear();
+                // Avoid growing the lists bit by bit
+                if (positions.Capacity < c)
+                    positions.Capacity = c;
+                if (parents.Capacity < c)
+                    parents.Capacity = c;
+                if (semiLatusRectums.Capacity < c)
+                    semiLatusRectums.Capacity = c;
+
+                for (int i = 0; i < c; ++i)
+                {
+                    var cb = FlightGlobals.Bodies[i];
+                    // Set parent index lookup
+                    var parent = cb.orbitDriver?.orbit?.referenceBody;
+                    if (parent != null && parent != cb)
+                    {
+                        parents.Add(FlightGlobals.GetBodyIndex(parent));
+                    }
+                    else
+                    {
+                        parents.Add(-1);
+                    }
+
+                    // Filled every time
+                    positions.Add(new Vector3d());
+                    semiLatusRectums.Add(1d);
+                }
+            }
+
+            /// <summary>
+            /// Initialize the cache for a set of occluders. This
+            /// will set up the lookups for the occluder bodies and
+            /// cache the semi-latus recturm for each body and its
+            /// parents
+            /// </summary>
+            /// <param name="occluders"></param>
+            public void SetForOccluders(List<CelestialBody> occluders)
+            {
+                CheckInitBodies();
+
+                occluderToBodyIndex.Clear();
+                foreach (var cb in occluders)
+                    occluderToBodyIndex.Add(FlightGlobals.GetBodyIndex(cb));
+
+                // Now clear all SLRs and then set only the relevant ones
+                // (i.e. the occluders, their parents, their grandparents, etc)
+                for (int i = semiLatusRectums.Count; i-- > 0;)
+                    semiLatusRectums[i] = -1d;
+                for (int i = occluderToBodyIndex.Count; i-- > 0;)
+                    SetSLRs(occluderToBodyIndex[i]);
+            }
+
+            private void SetSLRs(int i)
+            {
+                // Check if set
+                if (semiLatusRectums[i] >= 0d)
+                    return;
+
+                // Check if no parent
+                int pIdx = parents[i];
+                if (pIdx == -1)
+                {
+                    semiLatusRectums[i] = 1d;
+                    return;
+                }
+
+                // set SLR and recurse
+                semiLatusRectums[i] = FlightGlobals.Bodies[i].orbit.semiLatusRectum;
+                SetSLRs(pIdx);
+            }
+
+            /// <summary>
+            /// Set the occluder body positions at the given UT
+            /// </summary>
+            /// <param name="ut"></param>
+            public void SetForUT(double ut)
+            {
+                // Start from unknown positions
+                for (int i = positions.Count; i-- > 0;)
+                    positions[i] = new Vector3d(double.MaxValue, double.MaxValue);
+
+                // Fill positions at UT, recursively (skipping calculated parents)
+                for (int i = occluderToBodyIndex.Count; i-- > 0;)
+                    SetForUTInternal(occluderToBodyIndex[i], ut);
+
+
+            }
+
+            private void SetForUTInternal(int i, double ut)
+            {
+                // If we've already been here, bail
+                if (positions[i].x != double.MaxValue)
+                    return;
+
+                // Check if we have a parent. If not
+                // position is just the body's position
+                var cb = FlightGlobals.Bodies[i];
+                int pIdx = parents[i];
+                if (pIdx == -1)
+                {
+                    positions[i] = cb.position;
+                    return;
+                }
+                // If we do have a parent, recurse and then
+                // set position based on newly-set parent's pos
+                SetForUTInternal(pIdx, ut);
+                positions[i] = positions[pIdx] + FastGetRelativePositionAtUT(cb.orbit, ut, semiLatusRectums[i]);
+            }
+        }
+
+        /// <summary>
+        /// A fast version of KSP's GetRelativePositionAtUT.
+        /// It skips a bunch of steps and uses cached values
+        /// </summary>
+        /// <param name="orbit"></param>
+        /// <param name="UT"></param>
+        /// <param name="semiLatusRectum"></param>
+        /// <returns></returns>
+        private static Vector3d FastGetRelativePositionAtUT(Orbit orbit, double UT, double semiLatusRectum)
         {
             double T = orbit.getObtAtUT(UT);
 
@@ -456,6 +572,8 @@ namespace RP0.Harmony
             Vector3d pos = semiLatusRectum / (1.0 + orbit.eccentricity * cos) * (orbit.OrbitFrame.X * cos + orbit.OrbitFrame.Y * sin);
             return Planetarium.Zup.WorldToLocal(pos).xzy;
         }
+
+        static readonly BodyCache bodyCache = new BodyCache();
     }
     #endregion
 

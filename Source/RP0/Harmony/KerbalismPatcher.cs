@@ -267,9 +267,9 @@ namespace RP0.Harmony
         }
 
         /// <summary>
-        /// This expects to be called repeatedly
-        /// </summary>
-        public static double SampleSunFactor(Vessel v, double elapsedSeconds, CelestialBody sun)
+		/// This expects to be called repeatedly
+		/// </summary>
+		public static double SampleSunFactor(Vessel v, double elapsedSeconds, CelestialBody sun)
         {
             UnityEngine.Profiling.Profiler.BeginSample("Kerbalism.Sim.SunFactor2");
 
@@ -287,7 +287,7 @@ namespace RP0.Harmony
             var vd = v.KerbalismData();
             List<CelestialBody> occluders = vd.EnvVisibleBodies;
 
-            // set up CB SunInfoposition caches
+            // set up CB position caches
             bodyCache.SetForOccluders(occluders);
 
             // Set max time to calc
@@ -295,16 +295,26 @@ namespace RP0.Harmony
 
             // cache values for speed
             double semiLatusRectum = 0d;
-            CelestialBody mb = v.orbitDriver.orbit.referenceBody;
-            Vector3d surfPos = new Vector3d();
+            CelestialBody mb = v.mainBody;
+            Vector3d surfPos;
+            Vector3d polarAxis;
             if (isSurf)
             {
-                surfPos = v.mainBody.GetRelSurfacePosition(v.latitude, v.longitude, v.altitude);
+                surfPos = mb.GetRelSurfacePosition(v.latitude, v.longitude, v.altitude);
+                // Doing this manually instead of calling LocalToWorld avoids a double swizzle (was LocalToWorld(surfPos.xzy).xzy )
+                surfPos = surfPos.x * mb.BodyFrame.X + surfPos.y * mb.BodyFrame.Z + surfPos.z * mb.BodyFrame.Y;
+
+                // This will not be quite correct for Principia but at least it's
+                // using the BodyFrame, which Principia clobbers, rather than the
+                // transform.
+                polarAxis = mb.BodyFrame.Rotation.swizzle * Vector3d.up;
             }
             else
             {
                 semiLatusRectum = v.orbit.semiLatusRectum;
                 maxCalculation = Math.Min(maxCalculation, v.orbit.period);
+                surfPos = new Vector3d();
+                polarAxis = new Vector3d();
             }
 
             // Set up timimg
@@ -324,21 +334,22 @@ namespace RP0.Harmony
             for (int i = sampleCount; i-- > 0;)
             {
                 double ut = now - i * stepLength;
-                bodyCache.SetForUT(ut);
+                bodyCache.SetForUT(ut, occluders);
                 Vector3d bodyPos = bodyCache.GetBodyPosition(mb.flightGlobalsIndex);
                 Vector3d pos;
-                if (!isSurf)
+                if (isSurf)
                 {
-                    pos = bodyPos + FastGetRelativePositionAtUT(v.orbit, ut, semiLatusRectum);
+                    // Rotate the surface position based on where the body would have rotated in the past
+                    // Note: rotation is around *down* so we flip the sign of the rotation
+                    pos = QuaternionD.AngleAxis(mb.rotPeriodRecip * i * stepLength * 360d, polarAxis) * surfPos;
                 }
                 else
                 {
-                    // Doing this manually instead of calling LocalToWorld avoids a double swizzle (was LocalToWorld(surfPos.xzy).xzy )
-                    pos = surfPos.x * mb.BodyFrame.X + surfPos.y * mb.BodyFrame.Z + surfPos.z * mb.BodyFrame.Y;
-                    // Now rotate the pos based on where the body would have rotated in the past
-                    pos = QuaternionD.AngleAxis(mb.rotPeriodRecip * -i * stepLength * 360d, mb.transform.up) * pos;
-                    pos += bodyPos; // and apply the position
+                    pos = FastGetRelativePositionAtUT(v.orbit, ut, semiLatusRectum);
                 }
+                // Apply the body's position
+                pos += bodyPos;
+
                 bool vis = IsSunVisibleAtTime(v, pos, sun, occluders, isSurf);
                 if (vis)
                     ++sunSamples;
@@ -378,7 +389,7 @@ namespace RP0.Harmony
             if (isSurf && vessel.mainBody.Radius < 100000.0)
             {
                 ignoreMainbody = true;
-                Vector3d mainBodyPos = bodyCache.GetBodyPosition(vessel.orbitDriver.orbit.referenceBody.flightGlobalsIndex);
+                Vector3d mainBodyPos = bodyCache.GetBodyPosition(vessel.mainBody.flightGlobalsIndex);
                 Vector3d mainBodyDir = (mainBodyPos - vesselPos).normalized;
                 double dotSunBody = Vector3d.Dot(mainBodyDir, sunDir);
                 Vector3d mainBodyDirProjected = mainBodyDir * dotSunBody;
@@ -403,7 +414,7 @@ namespace RP0.Harmony
                 if (ignoreMainbody && occludingBody == vessel.mainBody)
                     continue;
 
-                Vector3d toBody = bodyCache.GetOccluderPosition(i) - vesselPos;
+                Vector3d toBody = bodyCache.GetBodyPosition(occludingBody.flightGlobalsIndex) - vesselPos;
                 // projection of origin->body center ray over the raytracing direction
                 double k = Vector3d.Dot(toBody, sunDir);
                 // the ray doesn't hit body if its minimal analytical distance along the ray is less than its radius
@@ -416,15 +427,22 @@ namespace RP0.Harmony
             return true;
         }
 
-        public class BodyCache
+        /// <summary>
+		/// A cache to speed calculation of body positions at a given UT, based on
+		/// as set of occluders. Used when calculating solar exposure at analytic rates.
+		/// This creates storage for each body in FlightGlobals, but only caches
+		/// a lookup from occluder to body index, and then for each relevant occluder
+		/// and its parents a lookup to each parent (and on up the chain) and the
+		/// semilatus rectum. Then when set for a UT, it calculates positions
+		/// for each occluder on up the chain to the root CB.
+		/// </summary>
+		public class BodyCache
         {
-            private readonly List<Vector3d> positions = new List<Vector3d>();
-            private readonly List<int> parents = new List<int>();
-            private readonly List<int> occluderToBodyIndex = new List<int>(); // not strictly needed but a good way to store which occluders we have
-            private readonly List<double> semiLatusRectums = new List<double>();
+            private Vector3d[] positions = null;
+            private int[] parents;
+            private double[] semiLatusRectums;
 
             public Vector3d GetBodyPosition(int idx) { return positions[idx]; }
-            public Vector3d GetOccluderPosition(int occluderIdx) { return positions[occluderToBodyIndex[occluderIdx]]; }
 
             /// <summary>
             /// Check and, if uninitialized, setup the body caches
@@ -432,19 +450,12 @@ namespace RP0.Harmony
             private void CheckInitBodies()
             {
                 int c = FlightGlobals.Bodies.Count;
-                if (positions.Count == c)
+                if (positions != null && positions.Length == c)
                     return;
 
-                positions.Clear();
-                parents.Clear();
-                semiLatusRectums.Clear();
-                // Avoid growing the lists bit by bit
-                if (positions.Capacity < c)
-                    positions.Capacity = c;
-                if (parents.Capacity < c)
-                    parents.Capacity = c;
-                if (semiLatusRectums.Capacity < c)
-                    semiLatusRectums.Capacity = c;
+                positions = new Vector3d[c];
+                parents = new int[c];
+                semiLatusRectums = new double[c];
 
                 for (int i = 0; i < c; ++i)
                 {
@@ -453,16 +464,12 @@ namespace RP0.Harmony
                     var parent = cb.orbitDriver?.orbit?.referenceBody;
                     if (parent != null && parent != cb)
                     {
-                        parents.Add(parent.flightGlobalsIndex);
+                        parents[i] = parent.flightGlobalsIndex;
                     }
                     else
                     {
-                        parents.Add(-1);
+                        parents[i] = -1;
                     }
-
-                    // Filled every time
-                    positions.Add(new Vector3d());
-                    semiLatusRectums.Add(1d);
                 }
             }
 
@@ -477,25 +484,21 @@ namespace RP0.Harmony
             {
                 CheckInitBodies();
 
-                occluderToBodyIndex.Clear();
-                foreach (var cb in occluders)
-                    occluderToBodyIndex.Add(cb.flightGlobalsIndex);
-
                 // Now clear all SLRs and then set only the relevant ones
                 // (i.e. the occluders, their parents, their grandparents, etc)
-                for (int i = semiLatusRectums.Count; i-- > 0;)
-                    semiLatusRectums[i] = -1d;
-                for (int i = occluderToBodyIndex.Count; i-- > 0;)
-                    SetSLRs(occluderToBodyIndex[i]);
+                for (int i = semiLatusRectums.Length; i-- > 0;)
+                    semiLatusRectums[i] = double.MaxValue;
+                for (int i = occluders.Count; i-- > 0;)
+                    SetSLRs(occluders[i].flightGlobalsIndex);
             }
 
             private void SetSLRs(int i)
             {
                 // Check if set
-                if (semiLatusRectums[i] >= 0d)
+                if (semiLatusRectums[i] != double.MaxValue)
                     return;
 
-                // Check if no parent
+                // Check if parent
                 int pIdx = parents[i];
                 if (pIdx == -1)
                 {
@@ -503,7 +506,6 @@ namespace RP0.Harmony
                     return;
                 }
 
-                // set SLR and recurse
                 semiLatusRectums[i] = FlightGlobals.Bodies[i].orbit.semiLatusRectum;
                 SetSLRs(pIdx);
             }
@@ -512,17 +514,15 @@ namespace RP0.Harmony
             /// Set the occluder body positions at the given UT
             /// </summary>
             /// <param name="ut"></param>
-            public void SetForUT(double ut)
+            public void SetForUT(double ut, List<CelestialBody> occluders)
             {
                 // Start from unknown positions
-                for (int i = positions.Count; i-- > 0;)
+                for (int i = positions.Length; i-- > 0;)
                     positions[i] = new Vector3d(double.MaxValue, double.MaxValue);
 
                 // Fill positions at UT, recursively (skipping calculated parents)
-                for (int i = occluderToBodyIndex.Count; i-- > 0;)
-                    SetForUTInternal(occluderToBodyIndex[i], ut);
-
-
+                for (int i = occluders.Count; i-- > 0;)
+                    SetForUTInternal(occluders[i].flightGlobalsIndex, ut);
             }
 
             private void SetForUTInternal(int i, double ut)
@@ -540,6 +540,7 @@ namespace RP0.Harmony
                     positions[i] = cb.position;
                     return;
                 }
+
                 // If we do have a parent, recurse and then
                 // set position based on newly-set parent's pos
                 SetForUTInternal(pIdx, ut);

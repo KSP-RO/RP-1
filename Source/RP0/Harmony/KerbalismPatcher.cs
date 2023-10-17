@@ -301,8 +301,8 @@ namespace RP0.Harmony
             if (isSurf)
             {
                 surfPos = mb.GetRelSurfacePosition(v.latitude, v.longitude, v.altitude);
-                // Doing this manually instead of calling LocalToWorld avoids a double swizzle (was LocalToWorld(surfPos.xzy).xzy )
-                surfPos = surfPos.x * mb.BodyFrame.X + surfPos.y * mb.BodyFrame.Z + surfPos.z * mb.BodyFrame.Y;
+                // Doing this manually instead of swizzling surfPos avoids one of the two swizzles
+                surfPos = (surfPos.x * mb.BodyFrame.X + surfPos.z * mb.BodyFrame.Y + surfPos.y * mb.BodyFrame.Z).xzy;
 
                 // This will not be quite correct for Principia but at least it's
                 // using the BodyFrame, which Principia clobbers, rather than the

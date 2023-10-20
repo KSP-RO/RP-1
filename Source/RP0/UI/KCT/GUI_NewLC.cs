@@ -429,7 +429,7 @@ namespace RP0
                 double buildTime = ConstructionProject.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
                 double buildCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -totalCost);
                 string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
-                string costString = isModify ? "Renovate Cost:" : "Build Cost:";
+                string costString = isModify ? "Modify Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
                 GUILayout.Label(new GUIContent($"√{buildCost:N0}", $"Daily: √{(buildCost * 86400d / buildTime):N1}"), GetLabelRightAlignStyle());
@@ -495,7 +495,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
+            if (GUILayout.Button(isModify ? "Modify" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
                 if (HighLogic.LoadedSceneIsEditor && !SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
                 {

@@ -303,14 +303,26 @@ namespace RP0
 
                 if (isModify)
                 {
+                    int maxMax = (int)_newLCData.MaxPossibleMass;
+                    int maxMin = (int)_newLCData.MinPossibleMass;
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Upgrade Limit for max tng:");
-                    GUILayout.Label($"{(int)(_newLCData.massOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    if (maxMax < _newLCData.massMax)
+                        GUILayout.Label("Upgrade Limit for max tng:", GetLabelStyleYellow());
+                    else
+                        GUILayout.Label("Upgrade Limit for max tng:");
+                    GUILayout.Label($"{maxMax:N0}", 
+                        maxMax < _newLCData.massMax ? GetLabelRightAlignStyleYellow() : GetLabelRightAlignStyle(), 
+                        GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Downgrade Limit for max tng:");
-                    GUILayout.Label($"{Math.Max(1, (int)(_newLCData.massOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    if (maxMin > _newLCData.massMax)
+                        GUILayout.Label("Downgrade Limit for max tng:", GetLabelStyleYellow());
+                    else
+                        GUILayout.Label("Downgrade Limit for max tng:");
+                    GUILayout.Label($"{maxMin:N0}",
+                        maxMin > _newLCData.massMax ? GetLabelRightAlignStyleYellow() : GetLabelRightAlignStyle(), 
+                        GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     
@@ -318,8 +330,8 @@ namespace RP0
                 else
                 {
                     _newLCData.massOrig = _newLCData.massMax;
-                    if (_newLCData.massOrig < 1.5f)
-                        _newLCData.massOrig = 1.5f;
+                    int maxMax = (int)_newLCData.MaxPossibleMass;
+                    int maxMin = (int)_newLCData.MinPossibleMass;
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Upgrade Limit for max tng:");

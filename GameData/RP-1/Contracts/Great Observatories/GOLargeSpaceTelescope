@@ -5,9 +5,9 @@ CONTRACT_TYPE
 	group = GreatObservatories
 	agent = Federation Aeronautique Internationale
 	
-	description = <b>Program: Great Observatories<br>Type: <color=green>Required</color></b><br><br>Since the launch of the first early-series space telescopes, astronomers have clamored for larger observatories. Launch a large, visible-light space telescope to study the heavens with unprecedented clarity.<br><br><b><color="green">Make sure your craft contains a Space Telescope 2 experiment and produces enough electricity to power it.</color></b><br><br>Historical example: TIROS-1 (120kg, Thor-Able)
+	description = <b>Program: Great Observatories<br>Type: <color=green>Required</color></b><br><br>Since the launch of the first early-series space telescopes, astronomers have clamored for larger observatories. Launch a large, visible-light space telescope to study the heavens with unprecedented clarity.<br><br><b><color="green">Make sure your craft contains a Space Telescope 2 experiment and produces enough electricity to power it.</color></b><br><br>Historical example: Hubble Space Telescope.
 
-	synopsis = Launch the first large-scale space telescope, and return 30 days of observations.
+	synopsis = Launch the first large-scale space telescope, and return the first 30 days of science observations.
 
 	completedMessage = Success! Images from the first Great Observatory have been a boon to all manner of astronomical research, and have caused a popular sensation as well.
 
@@ -79,7 +79,7 @@ CONTRACT_TYPE
 			name = Has Docking Port
 			type = PartValidation
 			minMass = 11
-			title = Space telescope must mass at least 11,000 kg
+			title = Space telescope must have a docking port
 			hideChildren = true
 		}
 		PARAMETER
@@ -128,6 +128,6 @@ CONTRACT_TYPE
 		situation = InSpaceLow
 		experiment = RP0infraredRad1
 		fractionComplete = 0.0041
-		title = Transmit 30 days of infrared weather data from low orbit
+		title = Transmit 30 days of science imagery
 	}
 }

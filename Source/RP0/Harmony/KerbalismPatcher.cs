@@ -4,6 +4,7 @@ using KERBALISM;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Linq;
 
 namespace RP0.Harmony
 {
@@ -56,6 +57,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(CrewSpecs))]
     internal class PatchKerbalism_CrewSpecs
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         [HarmonyPrefix]
         [HarmonyPatch("Check", new Type[] { typeof(ProtoCrewMember) })]
         internal static bool Prefix_Check(ProtoCrewMember c, ref bool __result)
@@ -115,6 +118,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Sim))]
     internal class PatchKerbalism_Sim
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         [HarmonyPrefix]
         [HarmonyPatch("ShadowPeriod", new Type[] { typeof(Vessel) })]
         internal static bool Prefix_ShadowPeriod(Vessel v, ref double __result)
@@ -583,6 +588,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(SolarPanelFixer))]
     internal class PatchKerbalism_SolarPanelFixer
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
         internal static void Postfix_Update(SolarPanelFixer __instance)
@@ -607,6 +614,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Specifics))]
     internal class PatchKerbalism_Specifics
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         private static string _ecName;
         private static bool _needName = true;
 
@@ -636,86 +645,6 @@ namespace RP0.Harmony
         }
     }
 
-    // The following patches don't work, and are done instead
-    // by the hacky workarounds below them
-#if disabled
-    // This throws:
-    // FormatException: Method static System.Void KERBALISM.Planner.Planner::AddSubPanelEC(KERBALISM.Panel p) cannot be patched. Reason: The type initializer for 'KERBALISM.Planner.Planner' threw an exception.
-    //    HarmonyLib.PatchFunctions.UpdateWrapper
-    [HarmonyPatch(typeof(KERBALISM.Planner.Planner))]
-    internal class PatchKerbalism_Planner
-    {
-        [HarmonyPrefix]
-        [HarmonyPatch("AddSubPanelEC")]
-        internal static bool Prefix_AddSubPanelEC(Panel p, KERBALISM.Planner.ResourceSimulator ___resource_sim)
-        {
-            KERBALISM.Planner.SimulatedResource simulatedResource = ___resource_sim.Resource("ElectricCharge");
-            string tooltip = simulatedResource.Tooltip();
-            p.AddSection(Local.Planner_ELECTRICCHARGE);
-            p.AddContent(Local.Planner_storage, Lib.HumanReadableAmount(simulatedResource.storage), tooltip);
-            p.AddContent(Local.Planner_consumed, KSPUtil.PrintSI(simulatedResource.consumed * 1000d, "W", 3), tooltip);
-            p.AddContent(Local.Planner_produced, KSPUtil.PrintSI(simulatedResource.produced * 1000d, "W", 3), tooltip);
-            p.AddContent(Local.Planner_duration, Lib.HumanReadableDuration(simulatedResource.Lifetime()));
-
-            return false;
-        }
-    }
-
-    // This fails the same way.
-
-    [HarmonyPatch(typeof(KERBALISM.Planner.Planner))]
-    internal class PatchKerbalism_Planner
-    {
-        private static readonly FieldInfo _resSimField = typeof(KERBALISM.Planner.Planner).GetField("resource_sim", AccessTools.all);
-        private static bool _needField = true;
-        private static KERBALISM.Planner.ResourceSimulator _resource_sim;
-
-        private static readonly MethodInfo _addSubECMethod = typeof(KERBALISM.Planner.Planner).GetMethod("AddSubPanelEC", AccessTools.all);
-        private static readonly MethodInfo _replaceMethod = typeof(PatchKerbalism_Planner).GetMethod("ReplacementAddSubPanelEC", AccessTools.all);
-
-        [HarmonyTranspiler]
-        [HarmonyPatch("Update")]
-        internal static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
-        {
-            List<CodeInstruction> code = new List<CodeInstruction>(instructions);
-            for (int i = 0; i < code.Count; ++i)
-            {
-                if (code[i].Calls(_addSubECMethod))
-                {
-                    code[i] = new CodeInstruction(System.Reflection.Emit.OpCodes.Call, _replaceMethod);
-                    break;
-                }
-            }
-            return code;
-        }
-
-        internal static void ReplacementAddSubPanelEC(Panel p)
-        {
-            if (_needField)
-            {
-                _resource_sim = (KERBALISM.Planner.ResourceSimulator)_resSimField.GetValue(null);
-                _needField = false;
-            }
-
-            KERBALISM.Planner.SimulatedResource simulatedResource = _resource_sim.Resource("ElectricCharge");
-            string tooltip = simulatedResource.Tooltip();
-            string[] splitTip = tooltip.Split('\n');
-            for (int i = 0; i < splitTip.Length; ++i)
-            {
-                if (splitTip[i].Length > 0)
-                    KerbalismUtils.HumanRateToSI(ref splitTip[i], "W", 1000d);
-            }
-            tooltip = string.Join("\n", splitTip);
-
-            p.AddSection(Local.Planner_ELECTRICCHARGE);
-            p.AddContent(Local.Planner_storage, Lib.HumanReadableAmount(simulatedResource.storage), tooltip);
-            p.AddContent(Local.Planner_consumed, KSPUtil.PrintSI(simulatedResource.consumed * 1000d, "W", 4), tooltip);
-            p.AddContent(Local.Planner_produced, KSPUtil.PrintSI(simulatedResource.produced * 1000d, "W", 4), tooltip);
-            p.AddContent(Local.Planner_duration, Lib.HumanReadableDuration(simulatedResource.Lifetime()));
-        }
-    }
-#endif
-
     /// <summary>
     /// This exists to signal that we just ran the Analyze method. It's
     /// only run in one place, right before we create the EC subpanel
@@ -724,6 +653,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(KERBALISM.Planner.ResourceSimulator))]
     internal class PatchKerbalism_Planner_ResourceSimulator
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         public static bool JustRanAnalyze = false;
         [HarmonyPostfix]
         [HarmonyPatch("Analyze")]
@@ -743,6 +674,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(KERBALISM.Panel))]
     internal class PatchKerbalism_Panel
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         [HarmonyPrefix]
         [HarmonyPatch("AddContent")]
         internal static void Prefix_AddContent(string label, ref string value)
@@ -772,6 +705,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(KERBALISM.Planner.SimulatedResource))]
     internal class PatchKerbalism_Planner_SimulatedResource
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         public static bool IsEC = false;
 
         [HarmonyPrefix]
@@ -798,6 +733,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Telemetry))]
     internal class PatchKerbalism_Telemetry
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         public static bool IsRenderSupplies = false;
         public static bool IsEC = false;
 
@@ -832,6 +769,8 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Lib))]
     internal class PatchKerbalism_Lib
     {
+        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+
         private static string _ecName;
         private static bool _needName = true;
 

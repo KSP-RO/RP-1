@@ -1,11 +1,45 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
+﻿using System;
+using System.Reflection;
+using System.Linq;
 using KERBALISM;
 
 namespace RP0
 {
     public static class KerbalismUtils
     {
+        private static bool _needCheck = true;
+        private static bool _isValidToPatchSolarAndEC;
+        private static Assembly _kerbAssembly = null;
+
+        private static void Check()
+        {
+            if (_needCheck)
+            {
+                _needCheck = false;
+                _kerbAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name.StartsWith("Kerbalism", StringComparison.OrdinalIgnoreCase))?.assembly;
+                var v = new Version("3.17");
+                _isValidToPatchSolarAndEC = _kerbAssembly != null && _kerbAssembly.GetName().Version <= v;
+            }
+        }
+
+        public static bool IsValidToPatchSolarAndEC
+        {
+            get
+            {
+                Check();
+                return _isValidToPatchSolarAndEC;
+            }
+        }
+
+        public static Assembly Assembly
+        {
+            get
+            {
+                Check();
+                return _kerbAssembly;
+            }
+        }
+
         public static ExperimentSituations ToExperimentSituations(this KERBALISM.ScienceSituation sit)
         {
             int sitInt = 1 << (int)ScienceSituationUtils.ToValidStockSituation(sit);

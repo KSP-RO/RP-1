@@ -48,7 +48,7 @@ namespace RP0InstallChecker
             }
 
             assembliesToCheck = new[] { "ToolbarController", "ClickThroughBlocker", "RealFuels", "ContractConfigurator", "ModularFlightIntegrator" };    // These are values of KSPAssembly attribute
-            var kerbAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name == "Kerbalism");
+            var kerbAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name.StartsWith("Kerbalism", StringComparison.OrdinalIgnoreCase));
             if (assembliesToCheck.Any(an => !AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals(an, StringComparison.OrdinalIgnoreCase)))
                 || kerbAssembly == null
                 || kerbAssembly.assembly.GetName().Version < new Version("3.17"))

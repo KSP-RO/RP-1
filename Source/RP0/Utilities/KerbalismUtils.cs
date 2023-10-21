@@ -8,36 +8,38 @@ namespace RP0
     public static class KerbalismUtils
     {
         private static bool _needCheck = true;
-        private static bool _isValidToPatchSolarAndEC;
-        private static Assembly _kerbAssembly = null;
-
-        private static void Check()
-        {
-            if (_needCheck)
-            {
-                _needCheck = false;
-                _kerbAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name.StartsWith("Kerbalism", StringComparison.OrdinalIgnoreCase))?.assembly;
-                var v = new Version("3.17");
-                _isValidToPatchSolarAndEC = _kerbAssembly != null && _kerbAssembly.GetName().Version <= v;
-            }
-        }
-
-        public static bool IsValidToPatchSolarAndEC
-        {
-            get
-            {
-                Check();
-                return _isValidToPatchSolarAndEC;
-            }
-        }
+        private static Version _version = null;
+        private static Assembly _assembly = null;
 
         public static Assembly Assembly
         {
             get
             {
                 Check();
-                return _kerbAssembly;
+                return _assembly;
             }
+        }
+
+        private static void Check()
+        {
+            if (_needCheck)
+            {
+                _needCheck = false;
+                _assembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name.StartsWith("Kerbalism", StringComparison.OrdinalIgnoreCase))?.assembly;
+                if (_assembly != null)
+                    _version = new Version(_assembly.GetName().Version.ToString());
+                RP0Debug.Log("Kerbalism version: " + (_version?.ToString() ?? "assembly not found"), true);
+            }
+        }
+
+        public static bool IsValidToPatch(Version v, bool isMax)
+        {
+            Check();
+
+            if (_version == null)
+                return false;
+
+            return isMax ? _version <= v : _version >= v;
         }
 
         public static ExperimentSituations ToExperimentSituations(this KERBALISM.ScienceSituation sit)

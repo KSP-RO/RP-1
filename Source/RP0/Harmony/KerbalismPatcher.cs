@@ -57,7 +57,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(CrewSpecs))]
     internal class PatchKerbalism_CrewSpecs
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         [HarmonyPrefix]
         [HarmonyPatch("Check", new Type[] { typeof(ProtoCrewMember) })]
@@ -118,7 +118,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Sim))]
     internal class PatchKerbalism_Sim
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         [HarmonyPrefix]
         [HarmonyPatch("ShadowPeriod", new Type[] { typeof(Vessel) })]
@@ -588,7 +588,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(SolarPanelFixer))]
     internal class PatchKerbalism_SolarPanelFixer
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         [HarmonyPostfix]
         [HarmonyPatch("Update")]
@@ -614,7 +614,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Specifics))]
     internal class PatchKerbalism_Specifics
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         private static string _ecName;
         private static bool _needName = true;
@@ -653,7 +653,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(KERBALISM.Planner.ResourceSimulator))]
     internal class PatchKerbalism_Planner_ResourceSimulator
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         public static bool JustRanAnalyze = false;
         [HarmonyPostfix]
@@ -674,7 +674,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(KERBALISM.Panel))]
     internal class PatchKerbalism_Panel
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         [HarmonyPrefix]
         [HarmonyPatch("AddContent")]
@@ -705,7 +705,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(KERBALISM.Planner.SimulatedResource))]
     internal class PatchKerbalism_Planner_SimulatedResource
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         public static bool IsEC = false;
 
@@ -733,7 +733,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Telemetry))]
     internal class PatchKerbalism_Telemetry
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         public static bool IsRenderSupplies = false;
         public static bool IsEC = false;
@@ -769,7 +769,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Lib))]
     internal class PatchKerbalism_Lib
     {
-        static bool Prepare() => KerbalismUtils.IsValidToPatchSolarAndEC;
+        static bool Prepare() => KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         private static string _ecName;
         private static bool _needName = true;
@@ -811,4 +811,50 @@ namespace RP0.Harmony
         }
     }
     #endregion
+
+    [HarmonyPatch(typeof(ExperimentRequirements))]
+    internal class PatchKerbalism_ExperimentRequirements
+    {
+        // Don't even bother to patch if Principia isn't installed.
+        // Also, of course, don't patch if Kerbalism 3.18 is out with this fix inside it.
+        static bool Prepare() => KCTUtilities.IsPrincipiaInstalled && KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
+
+        private static double PrincipiaCorrectInclination(Orbit o)
+        {
+            if (KCTUtilities.IsPrincipiaInstalled && o.referenceBody != (FlightGlobals.currentMainBody ?? Planetarium.fetch.Home))
+            {
+                Vector3d polarAxis = o.referenceBody.BodyFrame.Z;
+
+                double hSqrMag = o.h.sqrMagnitude;
+                if (hSqrMag == 0d)
+                {
+                    return Math.Acos(Vector3d.Dot(polarAxis, o.pos) / o.pos.magnitude) * (180.0 / Math.PI);
+                }
+                else
+                {
+                    Vector3d orbitZ = o.h / Math.Sqrt(hSqrMag);
+                    return Math.Atan2((orbitZ - polarAxis).magnitude, (orbitZ + polarAxis).magnitude) * (2d * (180.0 / Math.PI));
+                }
+            }
+            else
+            {
+                return o.inclination;
+            }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("TestRequirements")]
+        internal static void Prefix_TestRequirements(Vessel v, out double __state)
+        {
+            __state = v.orbit.inclination;
+            v.orbit.inclination = PrincipiaCorrectInclination(v.orbit);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch("TestRequirements")]
+        internal static void Postfix_TestRequirements(Vessel v, double __state)
+        {
+            v.orbit.inclination = __state;
+        }
+    }
 }

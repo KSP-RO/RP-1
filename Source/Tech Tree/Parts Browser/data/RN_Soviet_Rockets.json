@@ -86,8 +86,8 @@
         "spacecraft": "APAS-75 (ASTP)",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "dockingAndro",
-        "identical_part_name": "",
+        "entry_cost_mods": "5000,dockingAndro",
+        "identical_part_name": "APAS-75",
         "module_tags": []
     },
     {

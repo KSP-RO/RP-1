@@ -51,7 +51,7 @@ namespace RP0InstallChecker
             var kerbAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name.StartsWith("Kerbalism", StringComparison.OrdinalIgnoreCase));
             if (assembliesToCheck.Any(an => !AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals(an, StringComparison.OrdinalIgnoreCase)))
                 || kerbAssembly == null
-                || kerbAssembly.assembly.GetName().Version < new Version("3.17"))
+                || kerbAssembly.assembly.GetName().Version < new Version("3.18"))
             {
                 string titleText = "Incorrect RP-1 Installation";
                 string contentText = "You are missing dependencies for RP-1. This could be caused by manually installing RP-1, or by not updating dependencies. " +

@@ -303,14 +303,26 @@ namespace RP0
 
                 if (isModify)
                 {
+                    int maxMax = (int)_newLCData.MaxPossibleMass;
+                    int maxMin = (int)_newLCData.MinPossibleMass;
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Upgrade Limit for max tng:");
-                    GUILayout.Label($"{(int)(_newLCData.massOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    if (maxMax < _newLCData.massMax)
+                        GUILayout.Label("Upgrade Limit for max tng:", GetLabelStyleYellow());
+                    else
+                        GUILayout.Label("Upgrade Limit for max tng:");
+                    GUILayout.Label($"{maxMax:N0}", 
+                        maxMax < _newLCData.massMax ? GetLabelRightAlignStyleYellow() : GetLabelRightAlignStyle(), 
+                        GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Downgrade Limit for max tng:");
-                    GUILayout.Label($"{Math.Max(1, (int)(_newLCData.massOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    if (maxMin > _newLCData.massMax)
+                        GUILayout.Label("Downgrade Limit for max tng:", GetLabelStyleYellow());
+                    else
+                        GUILayout.Label("Downgrade Limit for max tng:");
+                    GUILayout.Label($"{maxMin:N0}",
+                        maxMin > _newLCData.massMax ? GetLabelRightAlignStyleYellow() : GetLabelRightAlignStyle(), 
+                        GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     
@@ -318,8 +330,8 @@ namespace RP0
                 else
                 {
                     _newLCData.massOrig = _newLCData.massMax;
-                    if (_newLCData.massOrig < 1.5f)
-                        _newLCData.massOrig = 1.5f;
+                    int maxMax = (int)_newLCData.MaxPossibleMass;
+                    int maxMin = (int)_newLCData.MinPossibleMass;
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Upgrade Limit for max tng:");
@@ -429,7 +441,7 @@ namespace RP0
                 double buildTime = ConstructionProject.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
                 double buildCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -totalCost);
                 string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
-                string costString = isModify ? "Renovate Cost:" : "Build Cost:";
+                string costString = isModify ? "Modify Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
                 GUILayout.Label(new GUIContent($"√{buildCost:N0}", $"Daily: √{(buildCost * 86400d / buildTime):N1}"), GetLabelRightAlignStyle());
@@ -495,7 +507,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
+            if (GUILayout.Button(isModify ? "Modify" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
                 if (HighLogic.LoadedSceneIsEditor && !SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
                 {
@@ -792,7 +804,7 @@ namespace RP0
             if (lc != null && lc.LCType == LaunchComplexType.Hangar)
                 return true;
 
-            if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < Math.Max(1, (int)lc.MassOrig / 2) || tonnageLimit > lc.MassOrig * 2)))
+            if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < lc.Stats.MinPossibleMass || tonnageLimit > lc.Stats.MaxPossibleMass)))
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid tonnage limit");
                 RP0Debug.Log($"Invalid LC tonnage set, fractional: {fractionalPadLvl}, tonnageLimit {tonnageLimit}, orig {(lc != null ? lc.MassOrig : -1f)}");

@@ -262,6 +262,10 @@ namespace RP0
                     bestItem = e;
                 }
             }
+
+            if (bestCloseness < 1d && bestCloseness > 0.95d)
+                bestCloseness = 0.95d;
+
             return bestItem;
         }
 

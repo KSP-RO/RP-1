@@ -804,7 +804,7 @@ namespace RP0
             if (lc != null && lc.LCType == LaunchComplexType.Hangar)
                 return true;
 
-            if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < Math.Max(1, (int)lc.MassOrig / 2) || tonnageLimit > lc.MassOrig * 2)))
+            if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < lc.Stats.MinPossibleMass || tonnageLimit > lc.Stats.MaxPossibleMass)))
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid tonnage limit");
                 RP0Debug.Log($"Invalid LC tonnage set, fractional: {fractionalPadLvl}, tonnageLimit {tonnageLimit}, orig {(lc != null ? lc.MassOrig : -1f)}");

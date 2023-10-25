@@ -187,7 +187,7 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginHorizontal(GUILayout.Width(250));
             GUILayout.Label("EC amount: ", HighLogic.Skin.label, GUILayout.Width(150));
             _sECAmount = GUILayout.TextField(_sECAmount, HighLogic.Skin.textField);
-            GUILayout.Label("J", HighLogic.Skin.label);
+            GUILayout.Label("kJ", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));

@@ -12,7 +12,7 @@ CONTRACT_TYPE
 
 	completedMessage = Mission Success! You have resupplied @/targetVessel1 with enough coolant for now. Be sure to monitor your telescopes to keep them functional.
 
-	sortKey = 1507
+	// sortKey = 1507
 
 	cancellable = true
 	declinable = true

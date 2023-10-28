@@ -19,7 +19,6 @@ namespace RP0.Harmony
         {
             if (___varLoaded && !__state)
             {
-                MaintenanceHandler.ClearFacilityCosts();
                 MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
             }
         }

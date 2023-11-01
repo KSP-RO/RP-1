@@ -3,7 +3,7 @@ using System;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace
-namespace KSPAPIExtensions
+namespace RP0
 {
     public static class MathUtils
     {
@@ -350,9 +350,14 @@ namespace KSPAPIExtensions
         /// </summary>
         public static string FormatMass(double mass, int sigFigs = 4, int exponent = 0)
         {
-            return mass < 1.0f ?
+            return mass < 1.0d ?
                 mass.ToStringSI(sigFigs, exponent + 6, "g") :
                 mass.ToStringSI(sigFigs, exponent, "t");
+        }
+
+        public static string PrintMass(double mass, int sigFigs = 3, bool longPrefix = false)
+        {
+            return mass < 1d ? KSPUtil.PrintSI(mass * 1000d * 1000d, longPrefix ? "grams" : "g", sigFigs, longPrefix) : KSPUtil.PrintSI(mass, longPrefix ? "tons" : "t", sigFigs, longPrefix);
         }
     }
 

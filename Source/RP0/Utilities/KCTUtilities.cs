@@ -1582,9 +1582,9 @@ namespace RP0
         /// <returns></returns>
         public static int GetIndexFromNorm(float norm, int levels)
         {
-            norm *= levels;
+            norm *= (levels - 1);
             norm += 0.01f;
-            return (int)norm / levels;
+            return (int)norm;
         }
 
         public static string ToCommaString<T>(this List<T> list)

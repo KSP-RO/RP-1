@@ -399,6 +399,29 @@
         ]
     },
     {
+        "name": "RO-SNAP-3-RTGPo210",
+        "title": "SNAP-3A Series RTG (Po210)",
+        "description": "",
+        "mod": "Ven Stock Revamp",
+        "cost": "300",
+        "entry_cost": "0",
+        "category": "NUCLEAR",
+        "info": "RTG",
+        "year": "1961",
+        "technology": "firstRTG",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "rtgMini",
+        "identical_part_name": "",
+        "module_tags": [
+            "NuclearRTG"
+        ]
+    },
+    {
         "name": "RO-SNAP-9-RTG",
         "title": "SNAP-9 Series RTG",
         "description": "The SNAP-9 series were evolved designs of the experimental SNAP-3 series, again as part of the Transit system (precursor to the current GPS system), but now featuring over 10 times higher power generation.",
@@ -598,7 +621,7 @@
     },
     {
         "name": "rtgMini",
-        "title": "SNAP-3 Series RTG",
+        "title": "SNAP-3B Series RTG",
         "description": "The SNAP-3 series were the first radioisotope thermoelectric generators (RTGs) to ever operate in space, as part of the Transit system (precursor to the current GPS system). Very low overall efficiency and power generation.",
         "mod": "Ven Stock Revamp",
         "cost": 300,

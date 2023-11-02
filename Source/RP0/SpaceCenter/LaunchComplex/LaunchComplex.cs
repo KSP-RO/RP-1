@@ -404,6 +404,14 @@ namespace RP0
                         Recon_Rollout.AddRange(temp);
                     }
                 }
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 8)
+                {
+                    var keys = new System.Collections.Generic.List<string>(_lcData.resourcesHandled.Keys);
+                    foreach (var k in keys)
+                    {
+                        _lcData.resourcesHandled[k] = Math.Ceiling(_lcData.resourcesHandled[k]);
+                    }
+                }
             }
 
             foreach (var rr in Recon_Rollout)

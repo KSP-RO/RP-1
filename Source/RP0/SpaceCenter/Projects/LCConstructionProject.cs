@@ -28,6 +28,18 @@ namespace RP0
         public override void Load(ConfigNode node)
         {
             base.Load(node);
+
+            if (SpaceCenterManagement.Instance.LoadedSaveVersion < SpaceCenterManagement.VERSION)
+            {
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 8)
+                {
+                    var keys = new System.Collections.Generic.List<string>(lcData.resourcesHandled.Keys);
+                    foreach (var k in keys)
+                    {
+                        lcData.resourcesHandled[k] = Math.Ceiling(lcData.resourcesHandled[k]);
+                    }
+                }
+            }
         }
 
         protected override void ProcessComplete()

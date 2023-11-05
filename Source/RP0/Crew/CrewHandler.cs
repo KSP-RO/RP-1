@@ -626,8 +626,9 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
-                                             HighLogic.UISkin)
-                    .PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
+                                             HighLogic.UISkin,
+                                             !HighLogic.LoadedSceneIsFlight)
+                    .PrePostActionsNonFlight(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 

@@ -47,6 +47,22 @@ namespace RP0
         }
 
         /// <summary>
+        /// Like PrePostActions, but does nothing in the Flight scene
+        /// </summary>
+        /// <param name="dialog"></param>
+        /// <param name="lockType"></param>
+        /// <param name="lockName"></param>
+        /// <param name="onCreateAction"></param>
+        /// <param name="onDestroyAction"></param>
+        public static PopupDialog PrePostActionsNonFlight(this PopupDialog dialog, ControlTypes lockType = ControlTypes.None, string lockName = null, Callback onCreateAction = null, Callback onDestroyAction = null)
+        {
+            if (HighLogic.LoadedSceneIsFlight)
+                return dialog;
+
+            return PrePostActions(dialog, lockType, lockName, onCreateAction, onDestroyAction);
+        }
+
+        /// <summary>
         /// Adds a way for a PopupDialog to perform actions on spawn/despawn, like locking input for a true modal.
         /// </summary>
         /// <param name="dialog"></param>
@@ -54,10 +70,10 @@ namespace RP0
         /// <param name="lockName">optional (will use default if not specified and locking controls)</param>
         /// <param name="onCreateAction">optional: runs on dialog spawn</param>
         /// <param name="onDestroyAction">optional: runs when dialog is destroyed</param>
-        public static void PrePostActions(this PopupDialog dialog, ControlTypes lockType = ControlTypes.None, string lockName = null, Callback onCreateAction = null, Callback onDestroyAction = null)
+        public static PopupDialog PrePostActions(this PopupDialog dialog, ControlTypes lockType = ControlTypes.None, string lockName = null, Callback onCreateAction = null, Callback onDestroyAction = null)
         {
             if (dialog == null)
-                return;
+                return null;
 
             if (onCreateAction != null)
                 onCreateAction();
@@ -69,6 +85,8 @@ namespace RP0
                 InputLockManager.SetControlLock(lockType, lockName);
             }
             dialog.gameObject.AddComponent<LockRemover>().Setup(lockName, onDestroyAction);
+
+            return dialog;
         }
 
         public class LockRemover : MonoBehaviour
@@ -130,9 +148,17 @@ namespace RP0
             }
         }
 
-        public static void HideGUIsWhilePopup(this PopupDialog dialog)
+        public static PopupDialog HideGUIsWhilePopupNonFlight(this PopupDialog dialog)
         {
-            PrePostActions(dialog, ControlTypes.KSC_ALL | ControlTypes.UI_MAIN | ControlTypes.EDITOR_SOFT_LOCK, "RP0GenericPopupDialogLock", OnDialogSpawn, OnDialogDismiss);
+            if (HighLogic.LoadedSceneIsFlight)
+                return dialog;
+
+            return HideGUIsWhilePopup(dialog);
+        }
+
+        public static PopupDialog HideGUIsWhilePopup(this PopupDialog dialog)
+        {
+            return PrePostActions(dialog, ControlTypes.KSC_ALL | ControlTypes.UI_MAIN | ControlTypes.EDITOR_SOFT_LOCK, "RP0GenericPopupDialogLock", OnDialogSpawn, OnDialogDismiss);
         }
 
         private static void OnDialogSpawn()

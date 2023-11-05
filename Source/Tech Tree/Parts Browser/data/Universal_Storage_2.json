@@ -793,9 +793,7 @@
         "upgrade": false,
         "entry_cost_mods": "RO-MMRTG",
         "identical_part_name": "",
-        "module_tags": [
-            "NuclearRTG"
-        ]
+        "module_tags": []
     },
     {
         "name": "USRadialTanks",

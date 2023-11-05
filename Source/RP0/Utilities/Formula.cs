@@ -245,13 +245,13 @@ namespace RP0
         /// <returns></returns>
         public static double GetLCCloseness(LCData ourStats, LCData otherStats)
         {
-            if (ourStats.lcType == LaunchComplexType.Hangar)
+            if (ourStats.Compare(otherStats))
                 return 1d;
 
             if (otherStats.lcType != ourStats.lcType)
                 return 0d;
 
-            if (ourStats.Compare(otherStats))
+            if (ourStats.lcType == LaunchComplexType.Hangar)
                 return 1d;
 
             LCData bigger, smaller;

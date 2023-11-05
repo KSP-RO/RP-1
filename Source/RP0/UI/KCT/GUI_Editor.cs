@@ -282,8 +282,8 @@ namespace RP0
                 //        _centralWindowPosition.width = 300;
                 //    }
                 //}
-                if (GUILayout.Button(new GUIContent("Modify",
-                    $"Modify the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible.{(canModify ? string.Empty : modifyFailTooltip)}"),
+                if (GUILayout.Button(new GUIContent("Upgrade",
+                    $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible.{(canModify ? string.Empty : modifyFailTooltip)}"),
                     canModify ? GUI.skin.button : _yellowButton))
                 {
                     if (EditorLogic.fetch.ship.parts.Count == 0)

@@ -1,4 +1,5 @@
-﻿using RealFuels.Tanks;
+﻿using KSPAPIExtensions;
+using RealFuels.Tanks;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -132,7 +133,7 @@ namespace RP0.ProceduralAvionics
         private float GetShieldingMass(float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * CurrentProceduralAvionicsTechNode.shieldingMassFactor;
 
         protected override float GetEnabledkW() => GetEnabledkW(CurrentProceduralAvionicsTechNode, GetInternalMassLimit());
-        internal static float GetEnabledkW(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.powerExponent, techNode.powerConstant, techNode.powerFactor) / 1000f;
+        private static float GetEnabledkW(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.powerExponent, techNode.powerConstant, techNode.powerFactor) / 1000f;
         protected override float GetDisabledkW() => GetEnabledkW() * CurrentProceduralAvionicsTechNode.disabledPowerFactor;
 
         private static float GetPolynomial(float value, float exponent, float constant, float factor) => (Mathf.Pow(value, exponent) + constant) * factor;
@@ -586,21 +587,25 @@ namespace RP0.ProceduralAvionics
             _window?.RefreshDisplays();
         }
 
-        public static string BuildPowerString(float enabledkW, float disabledkW)
-        {
-            var powerConsumptionBuilder = StringBuilderCache.Acquire();
-            powerConsumptionBuilder.Append(KERBALISM.Lib.HumanOrSIRate(enabledkW, KERBALISM.Lib.ECResID));
-            if (disabledkW > 0)
-            {
-                powerConsumptionBuilder.Append(" / ");
-                powerConsumptionBuilder.Append(KERBALISM.Lib.HumanOrSIRate(disabledkW, KERBALISM.Lib.ECResID));
-            }
-            return powerConsumptionBuilder.ToStringAndRelease();
-        }
-
         private void RefreshPowerDisplay()
         {
-            powerRequirementsDisplay = BuildPowerString(GetEnabledkW(), GetDisabledkW());
+            var powerConsumptionBuilder = StringBuilderCache.Acquire();
+            AppendPowerString(powerConsumptionBuilder, GetEnabledkW());
+            float dkW = GetDisabledkW();
+            if (dkW > 0)
+            {
+                powerConsumptionBuilder.Append(" /");
+                AppendPowerString(powerConsumptionBuilder, dkW);
+            }
+            powerRequirementsDisplay = powerConsumptionBuilder.ToStringAndRelease();
+        }
+
+        private void AppendPowerString(System.Text.StringBuilder builder, float val)
+        {
+            if (val >= 1)
+                builder.AppendFormat(KwFormat, val).Append("\u2009kW");
+            else
+                builder.AppendFormat(WFormat, val * 1000).Append("\u2009W");
         }
 
         private void SetScienceContainer()

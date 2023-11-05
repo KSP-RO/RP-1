@@ -175,7 +175,7 @@ namespace RP0
             base.OnAwake();
             GameEvents.onStageActivate.Add(StageActivated);
             if (HighLogic.LoadedScene != GameScenes.LOADING)
-                KerbalismAPI ??= KerbalismUtils.Assembly;
+                KerbalismAPI ??= AssemblyLoader.loadedAssemblies.FirstOrDefault(x => x.name.StartsWith("Kerbalism"))?.assembly;
         }
 
         // OnStartFinished() instead of OnStart(), to let ModuleCommand configure itself first.

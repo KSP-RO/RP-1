@@ -303,43 +303,32 @@ namespace RP0
 
                 if (isModify)
                 {
-                    _newLCData.massOrig = isModify ? activeLC.MassOrig : 0;
-                    int maxMax = (int)_newLCData.MaxPossibleMass;
-                    int maxMin = (int)_newLCData.MinPossibleMass;
-                    GUILayout.BeginHorizontal();
-                    if (maxMax < _newLCData.massMax)
-                        GUILayout.Label("Upgrade Limit for max tng:", GetLabelStyleYellow());
-                    else
-                        GUILayout.Label("Upgrade Limit for max tng:");
-                    GUILayout.Label($"{maxMax:N0}", 
-                        maxMax < _newLCData.massMax ? GetLabelRightAlignStyleYellow() : GetLabelRightAlignStyle(), 
-                        GUILayout.ExpandWidth(false));
-                    GUILayout.EndHorizontal();
-
-                    GUILayout.BeginHorizontal();
-                    if (maxMin > _newLCData.massMax)
-                        GUILayout.Label("Downgrade Limit for max tng:", GetLabelStyleYellow());
-                    else
-                        GUILayout.Label("Downgrade Limit for max tng:");
-                    GUILayout.Label($"{maxMin:N0}",
-                        maxMin > _newLCData.massMax ? GetLabelRightAlignStyleYellow() : GetLabelRightAlignStyle(), 
-                        GUILayout.ExpandWidth(false));
-                    GUILayout.EndHorizontal();
-                }
-                else
-                {
-                    _newLCData.massOrig = _newLCData.massMax;
-                    int maxMax = (int)_newLCData.MaxPossibleMass;
-                    int maxMin = (int)_newLCData.MinPossibleMass;
-
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Upgrade Limit for max tng:");
-                    GUILayout.Label($"{_newLCData.MaxPossibleMass:N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{(int)(_newLCData.massOrig * 2f):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Downgrade Limit for max tng:");
-                    GUILayout.Label($"{_newLCData.MinPossibleMass:N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{Math.Max(1, (int)(_newLCData.massOrig * 0.5f)):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.EndHorizontal();
+
+                    
+                }
+                else
+                {
+                    _newLCData.massOrig = _newLCData.massMax;
+                    if (_newLCData.massOrig < 1.5f)
+                        _newLCData.massOrig = 1.5f;
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Upgrade Limit for max tng:");
+                    GUILayout.Label($"{Math.Max(3, _newLCData.massOrig * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Downgrade Limit for max tng:");
+                    GUILayout.Label($"{Math.Max(1, _newLCData.massOrig / 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
                 }
             }
@@ -440,7 +429,7 @@ namespace RP0
                 double buildTime = ConstructionProject.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
                 double buildCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -totalCost);
                 string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
-                string costString = isModify ? "Modify Cost:" : "Build Cost:";
+                string costString = isModify ? "Renovate Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
                 GUILayout.Label(new GUIContent($"√{buildCost:N0}", $"Daily: √{(buildCost * 86400d / buildTime):N1}"), GetLabelRightAlignStyle());
@@ -506,7 +495,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(isModify ? "Modify" : "Build") && ValidateLCCreationParameters(_newLCData, isModify ? activeLC : null))
+            if (GUILayout.Button(isModify ? "Renovate" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
             {
                 if (HighLogic.LoadedSceneIsEditor && !SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
                 {
@@ -792,34 +781,25 @@ namespace RP0
             return failedVessels != string.Empty;
         }
 
-        private static bool ValidateLCCreationParameters(LCData newLCData, LaunchComplex existingLC)
+        private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LaunchComplex lc)
         {
-            if (newLCData.sizeMax == Vector3.zero)
+            if (curPadSize == Vector3.zero)
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid size");
                 return false;
             }
 
-            if (existingLC != null && existingLC.LCType == LaunchComplexType.Hangar)
+            if (lc != null && lc.LCType == LaunchComplexType.Hangar)
                 return true;
 
-            if (newLCData.GetPadFracLevel() == -1 || newLCData.massMax == 0)
+            if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < Math.Max(1, (int)lc.MassOrig / 2) || tonnageLimit > lc.MassOrig * 2)))
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid tonnage limit");
-                RP0Debug.Log($"Invalid LC tonnage set, fractional: {newLCData.GetPadFracLevel()}, tonnageLimit {newLCData.massMax}");
+                RP0Debug.Log($"Invalid LC tonnage set, fractional: {fractionalPadLvl}, tonnageLimit {tonnageLimit}, orig {(lc != null ? lc.MassOrig : -1f)}");
                 return false;
             }
 
-            if (existingLC != null && !newLCData.IsMassWithinUpAndDowngradeMargins)
-            {
-                string msg = !newLCData.IsMassWithinUpgradeMargin ? $"Cannot upgrade tonnage above the limit of {newLCData.MaxPossibleMass}t"
-                                                                  : $"Cannot downgrade tonnage below the limit of {newLCData.MinPossibleMass}t";
-                ScreenMessages.PostScreenMessage(msg);
-                RP0Debug.Log($"LC tonnage exceeding upgrade margins, fractional: {newLCData.GetPadFracLevel()}, tonnageLimit {newLCData.massMax}, orig {(existingLC != null ? existingLC.MassOrig : -1f)}");
-                return false;
-            }
-
-            if (existingLC != null && !existingLC.CanModifyReal)
+            if (lc != null && !lc.CanModifyReal)
             {
                 ScreenMessages.PostScreenMessage("Please wait for any reconditioning, rollout, rollback, or recovery to complete");
                 RP0Debug.Log($"Can't modify LC, recon_rollout in progress");
@@ -827,10 +807,10 @@ namespace RP0
             }
 
             // Don't bother with name if it's a modify.
-            if (existingLC != null)
+            if (lc != null)
                 return true;
 
-            if (string.IsNullOrEmpty(newLCData.Name))
+            if (string.IsNullOrEmpty(newName))
             {
                 ScreenMessages.PostScreenMessage("Enter a name for the new launch complex");
                 return false;
@@ -839,7 +819,7 @@ namespace RP0
             for (int i = 0; i < SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count; i++)
             {
                 var lp = SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes[i];
-                if (string.Equals(lp.Name, newLCData.Name, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(lp.Name, newName, StringComparison.OrdinalIgnoreCase))
                 {
                     ScreenMessages.PostScreenMessage("Another launch complex with the same name already exists");
                     return false;

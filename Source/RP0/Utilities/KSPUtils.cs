@@ -54,7 +54,7 @@ namespace RP0
         /// <param name="lockName">optional (will use default if not specified and locking controls)</param>
         /// <param name="onCreateAction">optional: runs on dialog spawn</param>
         /// <param name="onDestroyAction">optional: runs when dialog is destroyed</param>
-        public static void PrePostActions(this PopupDialog dialog, ControlTypes lockType = ControlTypes.None, string lockName = null, Callback onCreateAction = null, Callback onDestroyAction = null)
+        public static void PrePostActions(this PopupDialog dialog, ControlTypes lockType = ControlTypes.None, string lockName = null, Action onCreateAction = null, Action onDestroyAction = null)
         {
             if (dialog == null)
                 return;
@@ -74,47 +74,12 @@ namespace RP0
         public class LockRemover : MonoBehaviour
         {
             private string _lockName;
-            private Callback _dismissAction;
-            private bool _dismissActionRun = false;
+            private Action _action;
 
-            public void Setup(string lockName, Callback dismissAction)
+            public void Setup(string lockName, Action action)
             {
                 _lockName = lockName;
-                _dismissAction = dismissAction;
-
-                // If the dialog is dismissed by a button, we need to run the
-                // postaction _before_ the button's own callback. This is because
-                // usually we are restoring UI elements, and the button's callback
-                // *also* probably tocuhes UI elements. So we need to restore state
-                // prior to the callback running. To do this, we combine the callbacks
-                // on all child buttons that dismiss on select.
-                if (_dismissAction != null && gameObject.GetComponent<PopupDialog>() is PopupDialog dlg && dlg.dialogToDisplay != null)
-                {
-                    Callback cb = () =>
-                    {
-                        if (!_dismissActionRun)
-                        {
-                            _dismissActionRun = true;
-                            _dismissAction();
-                        }
-                    };
-
-                    foreach (var d in dlg.dialogToDisplay.Options)
-                        CombineCallbackAndRecurse(d, cb);
-                }
-            }
-
-            private void CombineCallbackAndRecurse(DialogGUIBase dlg, Callback cb)
-            {
-                if (dlg is DialogGUIButton b && b.DismissOnSelect)
-                {
-                    if (b.onOptionSelected == null)
-                        b.onOptionSelected = cb;
-                    else
-                        b.onOptionSelected = (Callback)Callback.Combine(cb, b.onOptionSelected);
-                }
-                foreach (var d in dlg.children)
-                    CombineCallbackAndRecurse(d, cb);
+                _action = action;
             }
 
             public void OnDestroy()
@@ -122,11 +87,8 @@ namespace RP0
                 if (_lockName != null)
                     InputLockManager.RemoveControlLock(_lockName);
 
-                if (_dismissAction != null && !_dismissActionRun)
-                {
-                    _dismissActionRun = true;
-                    _dismissAction();
-                }
+                if (_action != null)
+                    _action();
             }
         }
 

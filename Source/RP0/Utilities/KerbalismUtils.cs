@@ -1,47 +1,11 @@
-﻿using System;
-using System.Reflection;
-using System.Linq;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using KERBALISM;
 
 namespace RP0
 {
     public static class KerbalismUtils
     {
-        private static bool _needCheck = true;
-        private static Version _version = null;
-        private static Assembly _assembly = null;
-
-        public static Assembly Assembly
-        {
-            get
-            {
-                Check();
-                return _assembly;
-            }
-        }
-
-        private static void Check()
-        {
-            if (_needCheck)
-            {
-                _needCheck = false;
-                _assembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name.StartsWith("Kerbalism", StringComparison.OrdinalIgnoreCase))?.assembly;
-                if (_assembly != null)
-                    _version = new Version(_assembly.GetName().Version.ToString());
-                RP0Debug.Log("Kerbalism version: " + (_version?.ToString() ?? "assembly not found"), true);
-            }
-        }
-
-        public static bool IsValidToPatch(Version v, bool isMax)
-        {
-            Check();
-
-            if (_version == null)
-                return false;
-
-            return isMax ? _version <= v : _version >= v;
-        }
-
         public static ExperimentSituations ToExperimentSituations(this KERBALISM.ScienceSituation sit)
         {
             int sitInt = 1 << (int)ScienceSituationUtils.ToValidStockSituation(sit);

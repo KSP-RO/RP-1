@@ -883,46 +883,6 @@ namespace RP0
             return false;
         }
 
-        public static int GetBuildingUpgradeLevel(SpaceCenterFacility facility)
-        {
-            int lvl = GetBuildingUpgradeMaxLevel(facility);
-            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
-            {
-                lvl = (int)Math.Round(lvl * ScenarioUpgradeableFacilities.GetFacilityLevel(facility));
-            }
-            return lvl;
-        }
-
-        public static int GetBuildingUpgradeLevel(string facilityID)
-        {
-            int lvl = GetBuildingUpgradeMaxLevel(facilityID);
-            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
-            {
-                lvl = (int)Math.Round(lvl * ScenarioUpgradeableFacilities.GetFacilityLevel(facilityID));
-            }
-            return lvl;
-        }
-
-        public static int GetBuildingUpgradeMaxLevel(string facilityID)
-        {
-            int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facilityID);
-            if (lvl < 0)
-            {
-                return Database.GetFacilityLevelCount(Database.FacilityIDToFacility.ValueOrDefault(facilityID));
-            }
-            return lvl;
-        }
-
-        public static int GetBuildingUpgradeMaxLevel(SpaceCenterFacility facility)
-        {
-            int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
-            if (lvl < 0)
-            {
-                return Database.GetFacilityLevelCount(facility);
-            }
-            return lvl;
-        }
-
         public static bool RecoverActiveVesselToStorage(ProjectType listType)
         {
             try
@@ -1606,22 +1566,25 @@ namespace RP0
 
         public static int GetFacilityLevel(SpaceCenterFacility facility)
         {
-            if (ScenarioUpgradeableFacilities.facilityStrings.TryGetValue(facility, out string str))
-                return GetFacilityLevel(str);
-
-            return GetFacilityLevel(facility.ToString());
+            return GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
         }
 
-        public static int GetFacilityLevel(string facilityId)
+        public static int GetFacilityLevel(string facility)
         {
-            facilityId = ScenarioUpgradeableFacilities.SlashSanitize(facilityId);
-            if (!ScenarioUpgradeableFacilities.protoUpgradeables.TryGetValue(facilityId, out var value))
-                return 0;
+            return GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
+        }
 
-            if (value.facilityRefs.Count < 1)
-                return 0;
-
-            return value.facilityRefs[0].facilityLevel;
+        /// <summary>
+        /// Takes a normalized value and converts it to an array index
+        /// </summary>
+        /// <param name="norm"></param>
+        /// <param name="levels"></param>
+        /// <returns></returns>
+        public static int GetIndexFromNorm(float norm, int levels)
+        {
+            norm *= levels;
+            norm += 0.01f;
+            return (int)norm / levels;
         }
 
         public static string ToCommaString<T>(this List<T> list)

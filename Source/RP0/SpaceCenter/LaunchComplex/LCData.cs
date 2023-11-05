@@ -14,15 +14,30 @@ namespace RP0
     public class LCData
     {
         [Persistent] public string Name;
+        /// <summary>
+        /// Max vessel mass that the LC can support.
+        /// </summary>
         [Persistent] public float massMax;
+        /// <summary>
+        /// The mass that LC was originally built with.
+        /// </summary>
         [Persistent] public float massOrig;
         [Persistent] public Vector3 sizeMax;
         [Persistent] public LaunchComplexType lcType = LaunchComplexType.Pad;
         [Persistent] public bool isHumanRated;
         [Persistent] public PersistentDictionaryValueTypes<string, double> resourcesHandled = new PersistentDictionaryValueTypes<string, double>();
 
-        public float MaxPossibleMass => Mathf.Floor(massOrig * 2f);
-        public float MinPossibleMass => Mathf.Ceil(massOrig * 0.5f);
+        /// <summary>
+        /// Max allowable mass that the LC can be upgraded to.
+        /// </summary>
+        public float MaxPossibleMass => Math.Max(3f, Mathf.Floor(massOrig * 2f));
+        /// <summary>
+        /// Min allowable mass that the LC can be downgraded to.
+        /// </summary>
+        public float MinPossibleMass => Math.Max(1, Mathf.Ceil(massOrig * 0.5f));
+        public bool IsMassWithinUpgradeMargin => massMax <= MaxPossibleMass;
+        public bool IsMassWithinDowngradeMargin => massMax >= MinPossibleMass;
+        public bool IsMassWithinUpAndDowngradeMargins => IsMassWithinUpgradeMargin && IsMassWithinDowngradeMargin;
         public static float CalcMassMin(float massMax) => massMax == float.MaxValue ? 0f : Mathf.Floor(massMax * 0.75f);
         public float MassMin => CalcMassMin(massMax);
         public static float CalcMassMaxFromMin(float massMin) => Mathf.Ceil(massMin / 0.75f);

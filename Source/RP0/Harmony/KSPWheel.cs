@@ -1,12 +1,20 @@
 ﻿using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
+using System.Linq;
 
 namespace RP0.Harmony
 {
     [HarmonyPatch]
     internal class PatchKSPWheel_KSPWheelDamage_wearUpdateSimple
     {
+        static bool Prepare()
+        {
+            bool foundKSPWheel = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.name.Equals("KSPWheel", System.StringComparison.OrdinalIgnoreCase)) != null;
+            RP0Debug.Log("Attempting to patch KSPWheel. Found? " + foundKSPWheel.ToString(), true);
+            return foundKSPWheel;
+        }
+
         static MethodBase TargetMethod() => AccessTools.TypeByName("KSPWheel.KSPWheelDamage")?.GetMethod("wearUpdateSimple", AccessTools.all);
 
         [HarmonyPrefix]

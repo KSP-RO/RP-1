@@ -341,6 +341,9 @@
     <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\CrewedLunarFlyby.cfg">
       <Link>Contracts\Lunar Crewed\CrewedLunarFlyby.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\CrewedLunarOrbitRepeat.cfg">
+      <Link>Contracts\Lunar Crewed\CrewedLunarOrbitRepeat.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\CrewedMoonLandingRover.cfg">
       <Link>Contracts\Lunar Crewed\CrewedMoonLandingRover.cfg</Link>
     </Content>

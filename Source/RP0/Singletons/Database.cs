@@ -37,16 +37,17 @@ namespace RP0
     public class Database : MonoBehaviour
     {
         public static readonly ResourceInfo ResourceInfo = new ResourceInfo();
+
         public static readonly PersistentDictionaryNodeKeyed<PartEffectiveCostModifier> KCTCostModifiers = new PersistentDictionaryNodeKeyed<PartEffectiveCostModifier>();
-        public static readonly PersistentDictionaryNodeKeyed<TechPeriod> TechNodePeriods = new PersistentDictionaryNodeKeyed<TechPeriod>("id");
-        public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
+
         public static readonly List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
         public static readonly Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
         public static int GetFacilityLevelCount(SpaceCenterFacility fac) { return FacilityLevelCosts.ValueOrDefault(fac)?.Count ?? 1; }
-        public static int GetFacilityLevelCount(string facilityID) { return Database.GetFacilityLevelCount(Database.FacilityIDToFacility.ValueOrDefault(facilityID)); }
-        public static readonly Dictionary<string, SpaceCenterFacility> FacilityIDToFacility = new Dictionary<string, SpaceCenterFacility>();
+
         public static readonly Dictionary<string, string> TechNameToTitle = new Dictionary<string, string>();
         public static readonly Dictionary<string, List<string>> TechNameToParents = new Dictionary<string, List<string>>();
+        public static readonly PersistentDictionaryNodeKeyed<TechPeriod> TechNodePeriods = new PersistentDictionaryNodeKeyed<TechPeriod>("id");
+        public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
         public static readonly Dictionary<string, Dictionary<string, HashSet<ExperimentSituations>>> StartCompletedExperiments = new Dictionary<string, Dictionary<string, HashSet<ExperimentSituations>>>();
 
         public static readonly SpaceCenterSettings SettingsSC = new SpaceCenterSettings();

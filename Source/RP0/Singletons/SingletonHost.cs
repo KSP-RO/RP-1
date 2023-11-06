@@ -48,11 +48,8 @@ namespace RP0
             // Poke Kerbalism
             KERBALISM.Settings.UseSamplingSunFactor = true;
 
-            // Cache facility ID -> enum
-            foreach (var kvp in ScenarioUpgradeableFacilities.facilityStrings)
-                Database.FacilityIDToFacility[kvp.Value] = kvp.Key;
 
-            List<Type> singletonTypes = KSPUtils.GetAllLoadedTypes<HostedSingleton>();
+            List <Type> singletonTypes = KSPUtils.GetAllLoadedTypes<HostedSingleton>();
             foreach (var t in singletonTypes)
             {
                 HostedSingleton s = (HostedSingleton)Activator.CreateInstance(t, new System.Object[] { this });

@@ -1569,11 +1569,6 @@ namespace RP0
             return GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
         }
 
-        public static int GetFacilityLevel(string facility)
-        {
-            return GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
-        }
-
         /// <summary>
         /// Takes a normalized value and converts it to an array index
         /// </summary>

@@ -304,37 +304,6 @@ namespace RP0
             return bs;
         }
 
-        /// <summary>
-        /// Tests to see if two ConfigNodes have the same information. Currently requires same ordering of subnodes
-        /// </summary>
-        /// <param name="node1"></param>
-        /// <param name="node2"></param>
-        /// <returns></returns>
-        public static bool ConfigNodesAreEquivalent(ConfigNode node1, ConfigNode node2)
-        {
-            //Check that the number of subnodes are equal
-            if (node1.GetNodes().Length != node2.GetNodes().Length)
-                return false;
-            //Check that all the values are identical
-            foreach (string valueName in node1.values.DistinctNames())
-            {
-                if (!node2.HasValue(valueName))
-                    return false;
-                if (node1.GetValue(valueName) != node2.GetValue(valueName))
-                    return false;
-            }
-
-            //Check all subnodes for equality
-            for (int index = 0; index < node1.GetNodes().Length; ++index)
-            {
-                if (!ConfigNodesAreEquivalent(node1.nodes[index], node2.nodes[index]))
-                    return false;
-            }
-
-            //If all these tests pass, we consider the nodes to be equivalent
-            return true;
-        }
-
         public static double SpendFunds(double toSpend, TransactionReasons reason)
         {
             if (!KSPUtils.CurrentGameIsCareer())
@@ -569,11 +538,6 @@ namespace RP0
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
             newCompletionPercent = newProgressBP / newTotalBP;
-        }
-
-        public static int FindUnlockCost(List<AvailablePart> availableParts)
-        {
-            return (int)RealFuels.EntryCostManager.Instance.EntryCostForParts(availableParts);
         }
 
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)

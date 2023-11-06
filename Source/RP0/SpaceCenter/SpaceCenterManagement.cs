@@ -195,12 +195,6 @@ namespace RP0
             }
             PresetManager.Instance.SetActiveFromSaveData();
 
-            // Create events for other mods
-            if (!SCMEvents.Instance.CreatedEvents)
-            {
-                SCMEvents.Instance.CreateEvents();
-            }
-
             var obj = new GameObject("KCTToolbarControl");
             ToolbarControl = obj.AddComponent<ToolbarControl>();
             ToolbarControl.AddToAllToolbars(null, null,

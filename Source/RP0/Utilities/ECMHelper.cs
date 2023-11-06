@@ -1,7 +1,14 @@
-﻿namespace RP0
+﻿using System.Collections.Generic;
+
+namespace RP0
 {
     internal static class ECMHelper
     {
+        public static int FindUnlockCost(List<AvailablePart> availableParts)
+        {
+            return (int)RealFuels.EntryCostManager.Instance.EntryCostForParts(availableParts);
+        }
+
         public static string GetEcmNameFromPartModule(PartModule pm)
         {
             if (pm is ProceduralAvionics.ModuleProceduralAvionics pa)

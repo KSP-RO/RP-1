@@ -165,7 +165,7 @@ namespace RP0
             
             // PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
             
-            double unlockCost = KCTUtilities.FindUnlockCost(partList);
+            double unlockCost = ECMHelper.FindUnlockCost(partList);
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds, false);
 

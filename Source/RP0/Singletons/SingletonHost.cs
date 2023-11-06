@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections.Generic;
-using ToolbarControl_NS;
 using System;
 
 namespace RP0
@@ -38,16 +37,6 @@ namespace RP0
 
             RP0Debug.Log("SingletonHost Awake - registering events and running processes");
 
-            // Subscribe to events from KSP and other mods.
-            // This is done as early as possible for the scene change events to work when loading into a save from main menu.
-            if (!SCMEvents.Instance.SubscribedToEvents)
-            {
-                SCMEvents.Instance.SubscribeToEvents();
-            }
-
-            // Poke Kerbalism
-            KERBALISM.Settings.UseSamplingSunFactor = true;
-
 
             List <Type> singletonTypes = KSPUtils.GetAllLoadedTypes<HostedSingleton>();
             foreach (var t in singletonTypes)
@@ -75,8 +64,6 @@ namespace RP0
 
         public void Start()
         {
-            ToolbarControl.RegisterMod(SpaceCenterManagement._modId, SpaceCenterManagement._modName);
-
             foreach (var s in _singletons)
             {
                 try

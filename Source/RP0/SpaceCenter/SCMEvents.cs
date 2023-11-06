@@ -1,14 +1,29 @@
 using System.Collections.Generic;
 using RP0.DataTypes;
+using ToolbarControl_NS;
 
 namespace RP0
 {
-    public class SCMEvents
+    public class SCMEvents : HostedSingleton
     {
-        public static SCMEvents Instance { get; private set; } = new SCMEvents();
+        new public static SCMEvents Instance { get; private set; }
 
-        public bool SubscribedToEvents { get; private set; }
-        public bool CreatedEvents { get; private set; }
+        public SCMEvents(SingletonHost host) : base(host)
+        {
+            Instance = this;
+            CreateEvents();
+        }
+
+        public override void Awake()
+        {
+            SubscribeToEvents();
+        }
+
+        public override void Start()
+        {
+            ToolbarControl.RegisterMod(SpaceCenterManagement._modId, SpaceCenterManagement._modName);
+        }
+
         public bool KCTButtonStockImportant { get; set; }
 
         public static EventData<VesselProject> OnVesselAddedToBuildQueue;
@@ -44,13 +59,6 @@ namespace RP0
         /// Rate, tags, resource amounts
         /// </summary>
         public static EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>> ApplyGlobalEffectiveCostMultiplier;
-
-        public SCMEvents()
-        {
-            RP0Debug.Log("KCT_Events constructor");
-            SubscribedToEvents = false;
-            CreatedEvents = false;
-        }
 
         public void SubscribeToEvents()
         {
@@ -91,8 +99,6 @@ namespace RP0
             GameEvents.onGUIMissionControlDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
-
-            SubscribedToEvents = true;
         }
 
         private void OnEditorStarted()
@@ -122,8 +128,6 @@ namespace RP0
             ApplyResearchRateMultiplier = new EventData<Boxed<double>, NodeType, string>("ApplyResearchRateMultiplier");
             ApplyPartEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>>("ApplyPartEffectiveCostMultiplier");
             ApplyGlobalEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>>("ApplyGlobalEffectiveCostMultiplier");
-
-            CreatedEvents = true;
         }
 
         public void HideAllGUIs()

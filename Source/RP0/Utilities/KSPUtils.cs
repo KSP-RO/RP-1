@@ -47,6 +47,35 @@ namespace RP0
         }
 
         /// <summary>
+        /// Tests to see if two ConfigNodes have the same information. Currently requires same ordering of values and subnodes
+        /// </summary>
+        /// <param name="node1"></param>
+        /// <param name="node2"></param>
+        /// <returns></returns>
+        public static bool ConfigNodesAreEquivalent(ConfigNode node1, ConfigNode node2)
+        {
+            if (node1.nodes.Count != node2.nodes.Count)
+                return false;
+
+            if (node1.values.Count != node2.values.Count)
+                return false;
+
+            for (int i = node1.values.Count; i-- > 0;)
+            {
+                var v1 = node1.values[i];
+                var v2 = node2.values[i];
+                if (v1.name != v2.name || v1.value != v2.value)
+                    return false;
+            }
+
+            for (int i = node1.nodes.Count; i-- > 0;)
+                if (!ConfigNodesAreEquivalent(node1.nodes[i], node2.nodes[i]))
+                    return false;
+
+            return true;
+        }
+
+        /// <summary>
         /// Like PrePostActions, but does nothing in the Flight scene
         /// </summary>
         /// <param name="dialog"></param>

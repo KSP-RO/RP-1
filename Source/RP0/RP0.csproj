@@ -39,7 +39,6 @@
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
     <Compile Include="Harmony\ModuleRCS.cs" />
-    <Compile Include="Harmony\KSPWheel.cs" />
     <Compile Include="UI\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />
     <Compile Include="CareerLog\CareerEventScope.cs" />

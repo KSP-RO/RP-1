@@ -108,6 +108,7 @@ suggests:
   - name: WernherCheckerContinued
 conflicts:
   - name: RP-0
+  - name: RONoCareer
   - name: KerbalConstructionTime
   - name: CrowdSourcedScience
   - name: HideEmptyTechNodes

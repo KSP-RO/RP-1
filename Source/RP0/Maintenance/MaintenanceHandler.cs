@@ -6,6 +6,7 @@ using RP0.Programs;
 using UnityEngine;
 using UnityEngine.Profiling;
 using Upgradeables;
+using ROUtils;
 
 namespace RP0
 {
@@ -340,11 +341,11 @@ namespace RP0
                 if (!Database.FacilityLevelCosts.TryGetValue(facility, out var facCosts))
                     continue;
 
-                double cost = ComputeDailyMaintenanceCost(KCTUtilities.SumThrough(facCosts, KCTUtilities.GetFacilityLevel(facility)));
+                double cost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, KCTUtilities.GetFacilityLevel(facility)));
                 double ratio = GetFacilityUpgradeRatio(facility);
                 if (ratio > 0d)
                 {
-                    double newCost = ComputeDailyMaintenanceCost(KCTUtilities.SumThrough(facCosts, 1 + KCTUtilities.GetFacilityLevel(facility)));
+                    double newCost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, 1 + KCTUtilities.GetFacilityLevel(facility)));
                     cost = UtilMath.LerpUnclamped(cost, newCost, ratio);
                 }
                 FacilityMaintenanceCosts[facility] = cost;

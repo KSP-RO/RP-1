@@ -2,7 +2,8 @@
 using KSP.UI.Screens;
 using UnityEngine;
 using KSP.Localization;
-using static RP0.MiscUtils;
+using static ROUtils.MiscUtils;
+using ROUtils;
 
 namespace RP0.Harmony
 {

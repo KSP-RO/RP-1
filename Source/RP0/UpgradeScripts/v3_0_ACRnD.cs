@@ -1,6 +1,7 @@
 ﻿using System;
 using SaveUpgradePipeline;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0.UpgradeScripts
 {

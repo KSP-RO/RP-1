@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
+using ROUtils;
 
 namespace RP0.ProceduralAvionics
 {

@@ -12,6 +12,7 @@ using UnityEngine.Profiling;
 using UnityEngine.UI;
 using RP0.UI;
 using KSP.Localization;
+using ROUtils;
 
 namespace RP0
 {
@@ -416,7 +417,7 @@ namespace RP0
                                 }
                             }
                             RP0Debug.Log($"Setting simulation UT to {SimulationParams.SimulationUT}");
-                            if (!KCTUtilities.IsPrincipiaInstalled)
+                            if (!ModUtils.IsPrincipiaInstalled)
                                 Planetarium.SetUniversalTime(SimulationParams.SimulationUT);
                             else
                                 StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), SimulationParams.SimulationUT));
@@ -1239,9 +1240,9 @@ namespace RP0
                 yield return _wfsOne;
             }
 
-            HyperEdit_Utilities.DoAirlaunch(launchParams);
+            KCTUtilities.DoAirlaunch(launchParams);
 
-            if (KCTUtilities.IsPrincipiaInstalled)
+            if (ModUtils.IsPrincipiaInstalled)
                 StartCoroutine(ClobberPrincipia());
         }
 
@@ -1277,7 +1278,7 @@ namespace RP0
             {
                 if (simParams.DisableFailures)
                 {
-                    KCTUtilities.ToggleFailures(!simParams.DisableFailures);
+                    ModUtils.ToggleFailures(!simParams.DisableFailures);
                 }
                 if (!simParams.SimulateInOrbit || !FlightDriver.CanRevertToPrelaunch)
                 {

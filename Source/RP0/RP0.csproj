@@ -200,14 +200,11 @@
     <Compile Include="UpgradeScripts\v2_3_UpgradeUnlockCredit.cs" />
     <Compile Include="Utilities\BypassCertificateHandler.cs" />
     <Compile Include="Utilities\CSV\CsvWriter.cs" />
-    <Compile Include="Utilities\ContinuousLogger.cs" />
     <Compile Include="Utilities\ContractUtils.cs" />
     <Compile Include="Utilities\CurrencyUtils.cs" />
     <Compile Include="Utilities\KerbalismUtils.cs" />
     <Compile Include="ModIntegrations\KACWrapper.cs" />
-    <Compile Include="Utilities\KSPUtils.cs" />
-    <Compile Include="Utilities\MathUtils.cs" />
-    <Compile Include="Utilities\ObjectSerializer.cs" />
+    <Compile Include="Utilities\GUIUtils.cs" />
     <Compile Include="UI\MaintenanceGUI.cs" />
     <Compile Include="UI\TopWindow.cs" />
     <Compile Include="UI\UIBase.cs" />
@@ -216,8 +213,6 @@
     <Compile Include="UI\Tooltip.cs" />
     <Compile Include="UI\ToolingGUI.cs" />
     <Compile Include="UI\AvionicsGUI.cs" />
-    <Compile Include="Utilities\MiscUtils.cs" />
-    <Compile Include="Utilities\TransformUtils.cs" />
     <Compile Include="SpaceCenter\AirlaunchParams.cs" />
     <Compile Include="SpaceCenter\AirlaunchTechLevel.cs" />
     <Compile Include="SpaceCenter\Projects\ConstructionProject.cs" />
@@ -246,7 +241,6 @@
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\KCTVesselData.cs" />
     <Compile Include="SpaceCenter\SimulationParams.cs" />
-    <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="Utilities\ECMHelper.cs" />
     <Compile Include="SpaceCenter\Projects\ISpaceCenterProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselProject.cs" />
@@ -266,7 +260,6 @@
     <Compile Include="SpaceCenter\Projects\ResearchProject.cs" />
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
     <Compile Include="Utilities\KCTUtilities.cs" />
-    <Compile Include="Utilities\WindowHelper.cs" />
     <Compile Include="SpaceCenter\SpaceCenterManagement.cs" />
     <Compile Include="Utilities\TextureScale.cs" />
     <Compile Include="Persistence\KCTVesselTracker.cs" />

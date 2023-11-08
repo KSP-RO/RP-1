@@ -8,6 +8,7 @@ using UnityEngine;
 using UnityEngine.Profiling;
 using KCTUtils = RP0.KCTUtilities;
 using ROUtils.DataTypes;
+using ROUtils;
 
 namespace RP0.Crew
 {

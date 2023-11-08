@@ -6,6 +6,7 @@ using KSP.UI.Screens;
 using KSP.UI;
 using System.Collections.Generic;
 using PreFlightTests;
+using ROUtils;
 
 namespace RP0.Harmony
 {

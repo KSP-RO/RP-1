@@ -65,8 +65,6 @@
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="UI\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
-    <Compile Include="DataTypes\PersistentCompressedConfigNode.cs" />
-    <Compile Include="DataTypes\PersistentSortedList.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
     <Compile Include="Utilities\DTUtils.cs" />
     <Compile Include="Harmony\MainMenu.cs" />
@@ -95,10 +93,6 @@
     <Compile Include="SpaceCenter\LaunchComplex\LCEfficiency.cs" />
     <Compile Include="SpaceCenter\LaunchComplex\LCData.cs" />
     <Compile Include="Leaders\CurrencyModifierQueryRP0.cs" />
-    <Compile Include="DataTypes\PersistentDictionary.cs" />
-    <Compile Include="DataTypes\PersistentHashSet.cs" />
-    <Compile Include="DataTypes\Misc.cs" />
-    <Compile Include="DataTypes\PersistentList.cs" />
     <Compile Include="Harmony\EnumExtensions.cs" />
     <Compile Include="Harmony\GameSettings.cs" />
     <Compile Include="Harmony\CurrencyModifierQuery.cs" />
@@ -321,6 +315,10 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="RealFuels">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="ROUtils">
+      <HintPath>..\..\..\..\..\..\..\Games\R112\GameData\ROUtils\Plugins\ROUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="System">

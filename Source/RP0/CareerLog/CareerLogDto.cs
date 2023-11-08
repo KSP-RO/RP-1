@@ -103,7 +103,7 @@ namespace RP0
         public ContractEventDto(ContractEvent ce)
         {
             internalName = ce.InternalName;
-            date = DTUtils.UTToDate(ce.UT).ToString("o");
+            date = ROUtils.DTUtils.UTToDate(ce.UT).ToString("o");
             repChange = ce.RepChange;
             type = ce.Type;
         }
@@ -237,7 +237,7 @@ namespace RP0
 
         public FacilityConstructionEventDto(FacilityConstructionEvent fce)
         {
-            date = DTUtils.UTToDate(fce.UT).ToString("o");
+            date = ROUtils.DTUtils.UTToDate(fce.UT).ToString("o");
             facility = fce.Facility;
             facilityID = fce.FacilityID.ToString();
             state = fce.State;
@@ -267,7 +267,7 @@ namespace RP0
 
         public TechResearchEventDto(TechResearchEvent tre)
         {
-            date = DTUtils.UTToDate(tre.UT).ToString("o");
+            date = ROUtils.DTUtils.UTToDate(tre.UT).ToString("o");
             nodeName = tre.NodeName;
             yearMult = tre.YearMult;
             researchRate = tre.ResearchRate;
@@ -300,7 +300,7 @@ namespace RP0
 
         public LaunchEventDto(LaunchEvent le)
         {
-            date = DTUtils.UTToDate(le.UT).ToString("o");
+            date = ROUtils.DTUtils.UTToDate(le.UT).ToString("o");
             vesselName = le.VesselName;
             vesselUID = le.VesselUID;
             launchID = le.LaunchID;
@@ -337,7 +337,7 @@ namespace RP0
 
         public FailureEventDto(FailureEvent fe)
         {
-            date = DTUtils.UTToDate(fe.UT).ToString("o");
+            date = ROUtils.DTUtils.UTToDate(fe.UT).ToString("o");
             vesselUID = fe.VesselUID;
             launchID = fe.LaunchID;
             part = fe.Part;
@@ -374,11 +374,11 @@ namespace RP0
 
         public ProgramDto(Program p)
         {
-            var dt1 = p.objectivesCompletedUT > 0 ? DTUtils.UTToDate(p.objectivesCompletedUT) : DateTime.MinValue;
-            var dt2 = p.completedUT > 0 ? DTUtils.UTToDate(p.completedUT) : DateTime.MinValue;
+            var dt1 = p.objectivesCompletedUT > 0 ? ROUtils.DTUtils.UTToDate(p.objectivesCompletedUT) : DateTime.MinValue;
+            var dt2 = p.completedUT > 0 ? ROUtils.DTUtils.UTToDate(p.completedUT) : DateTime.MinValue;
 
             name = p.name;
-            accepted = DTUtils.UTToDate(p.acceptedUT).ToString("o");
+            accepted = ROUtils.DTUtils.UTToDate(p.acceptedUT).ToString("o");
             objectivesCompleted = dt1.ToString("o");
             completed = dt2.ToString("o");
             nominalDurationYears = p.nominalDurationYears;
@@ -417,7 +417,7 @@ namespace RP0
 
         public LeaderEventDto(LeaderEvent evt)
         {
-            date = DTUtils.UTToDate(evt.UT).ToString("o");
+            date = ROUtils.DTUtils.UTToDate(evt.UT).ToString("o");
             leaderName = evt.LeaderName;
             cost = evt.Cost;
             isAdd = evt.IsAdd;

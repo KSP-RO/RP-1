@@ -66,7 +66,7 @@
     <Compile Include="UI\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
-    <Compile Include="Utilities\DTUtils.cs" />
+    <Compile Include="Utilities\RP0DTUtils.cs" />
     <Compile Include="Harmony\MainMenu.cs" />
     <Compile Include="Harmony\CrewListItem.cs" />
     <Compile Include="Harmony\EditorDriver.cs" />

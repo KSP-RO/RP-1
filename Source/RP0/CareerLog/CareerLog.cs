@@ -372,7 +372,7 @@ namespace RP0
                                                 .Sum();
                 return new[]
                 {
-                    DTUtils.UTToDate(p.StartUT).ToString("yyyy-MM"),
+                    ROUtils.DTUtils.UTToDate(p.StartUT).ToString("yyyy-MM"),
                     p.NumEngineers.ToString(),
                     p.NumResearchers.ToString(),
                     p.CurrentFunds.ToString("F0"),
@@ -572,8 +572,8 @@ namespace RP0
             return new CareerLogDto
             {
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
-                startDate = DTUtils.UTToDate(logPeriod.StartUT).ToString("o"),
-                endDate = DTUtils.UTToDate(logPeriod.EndUT).ToString("o"),
+                startDate = ROUtils.DTUtils.UTToDate(logPeriod.StartUT).ToString("o"),
+                endDate = ROUtils.DTUtils.UTToDate(logPeriod.EndUT).ToString("o"),
                 numEngineers = logPeriod.NumEngineers,
                 numResearchers = logPeriod.NumResearchers,
                 efficiencyEngineers = logPeriod.EfficiencyEngineers,
@@ -639,8 +639,8 @@ namespace RP0
         {
             if (!_periodDict.TryGetValue(periodStartUt, out LogPeriod period))
             {
-                DateTime dtNextPeriod = DTUtils.UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
-                double nextPeriodStart = (dtNextPeriod - DTUtils.Epoch).TotalSeconds;
+                DateTime dtNextPeriod = ROUtils.DTUtils.UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
+                double nextPeriodStart = (dtNextPeriod - ROUtils.DTUtils.Epoch).TotalSeconds;
                 period = new LogPeriod(periodStartUt, nextPeriodStart);
                 _periodDict.Add(periodStartUt, period);
             }

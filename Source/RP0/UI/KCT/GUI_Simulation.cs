@@ -191,7 +191,7 @@ namespace RP0
 
             double currentUT = Planetarium.GetUniversalTime();
             double ut = 0;
-            if (!string.IsNullOrWhiteSpace(_UTString) && !DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
+            if (!string.IsNullOrWhiteSpace(_UTString) && !ROUtils.DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
             {
                 var message = new ScreenMessage("Please enter a valid time value.", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);

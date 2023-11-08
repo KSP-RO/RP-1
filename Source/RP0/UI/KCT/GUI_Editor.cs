@@ -340,13 +340,13 @@ namespace RP0
                         ? buildPoints / (bR * bpLeaderEffect)
                         : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, startingEff, out rolloutEff))
                     : double.NaN;
-                GUILayout.Label(new GUIContent($"Remaining: {DTUtils.GetFormattedTime(buildTime, 0, false)}", 
+                GUILayout.Label(new GUIContent($"Remaining: {RP0DTUtils.GetFormattedTime(buildTime, 0, false)}", 
                     idx == -1 ? "Time left takes efficiency increase into account based on assuming vessel will be placed at head of integration list" :
                     "Time left takes efficiency increase into account based on vessel's current place in the integration list"));
 
                 if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (bR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
+                    GUILayout.Label($"Rollout Time: {RP0DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (bR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
                 }
             }
             else

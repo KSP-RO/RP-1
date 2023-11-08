@@ -245,7 +245,6 @@
     <Compile Include="PartModules\ModuleTagList.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\KCTVesselData.cs" />
-    <Compile Include="Singletons\SingletonHost.cs" />
     <Compile Include="SpaceCenter\SimulationParams.cs" />
     <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="Utilities\ECMHelper.cs" />

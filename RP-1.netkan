@@ -41,6 +41,8 @@ depends:
     suppress_recommendations: true
   - name: KerbalChangelog
     suppress_recommendations: true
+  - name: ROUtils
+    suppress_recommendations: true
 recommends:
   - name: ROLoadingImages
   - name: RSSDateTimeFormatter

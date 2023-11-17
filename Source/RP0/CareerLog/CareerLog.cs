@@ -45,7 +45,7 @@ namespace RP0
         private EventData<LCLaunchPad> onKctPadDismantledEvent;
 
         [KSPField(isPersistant = true)]
-        private readonly PersistentDictionary<double, LogPeriod> _periodDict = new PersistentDictionaryValueTypeKey<double, LogPeriod>();
+        private readonly PersistentDictionaryValueTypeKey<double, LogPeriod> _periodDict = new PersistentDictionaryValueTypeKey<double, LogPeriod>();
         [KSPField(isPersistant = true)]
         private readonly PersistentList<ContractEvent> _contractDict = new PersistentList<ContractEvent>();
         [KSPField(isPersistant = true)]

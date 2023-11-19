@@ -166,6 +166,7 @@ namespace RP0
                 case RolloutReconType.AirlaunchMount: RRType = RolloutReconType.AirlaunchUnmount; break;
                 case RolloutReconType.AirlaunchUnmount: RRType = RolloutReconType.AirlaunchMount; break;
             }
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
         }
 
         public override bool IsCapped => RRType != RolloutReconType.Reconditioning;

@@ -327,7 +327,7 @@ namespace RP0
 
             if (KSPUtils.CurrentGameIsCareer() && HasCost && this.cost > 0)
             {
-                var reason = TransactionReason;
+                TransactionReasonsRP0 reason = TransactionReason;
                 if (!CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d).CanAfford()) //If they can't afford to continue the rollout, progress stops
                 {
                     progress = progBefore;
@@ -343,11 +343,14 @@ namespace RP0
                     KCTUtilities.SpendFunds(cost, reason);
                 }
             }
+
             if (IsComplete() != _wasComplete && _lc != null)
             {
-                _lc.RecalculateProjectBP();
                 _wasComplete = !_wasComplete;
+                _lc.RecalculateProjectBP();
+                MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
             }
+
             if (IsComplete())
             {
                 return (1d - Math.Abs(toGo) / Math.Abs(incBP)) * UTDiff;

@@ -127,7 +127,11 @@ namespace RP0
         void added(int idx, ConstructionProject pc) { _ksc.Constructions.Add(pc); }
         void removed(int idx, ConstructionProject pc) { _ksc.Constructions.Remove(pc); }
         void updated() { MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
-        void lcpUpdated() { RecalculateProjectBP(); }
+        void lcpUpdated()
+        {
+            RecalculateProjectBP();
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
+        }
 
         void AddListeners()
         {

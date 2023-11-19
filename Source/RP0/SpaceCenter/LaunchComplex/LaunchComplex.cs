@@ -203,7 +203,7 @@ namespace RP0
 
         public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
 
-        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0;
+        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Any(rr => !rr.IsComplete());
         public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning);
         public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0;
         public bool CanModifyReal => Recon_Rollout.Count == 0;

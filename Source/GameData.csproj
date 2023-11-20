@@ -617,26 +617,26 @@
     <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SuborbitalReturn.cfg">
       <Link>Contracts\Sounding Rockets\SuborbitalReturn.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Add Crew Module Station.cfg">
-      <Link>Contracts\Space Stations\Add Crew Module Station.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Add Crew Module Station.cfg.disabled">
+      <Link>Contracts\Space Stations\Add Crew Module Station.cfg.disabled</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Crew Rotation Station.cfg">
-      <Link>Contracts\Space Stations\Crew Rotation Station.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Crew Rotation Station.cfg.disabled">
+      <Link>Contracts\Space Stations\Crew Rotation Station.cfg.disabled</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Space Stations\First Space Station.cfg">
-      <Link>Contracts\Space Stations\First Space Station.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Space Stations\First Space Station.cfg.disabled">
+      <Link>Contracts\Space Stations\First Space Station.cfg.disabled</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Improved Space Station.cfg">
-      <Link>Contracts\Space Stations\Improved Space Station.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Improved Space Station.cfg.disabled">
+      <Link>Contracts\Space Stations\Improved Space Station.cfg.disabled</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Life Support Station.cfg">
-      <Link>Contracts\Space Stations\Life Support Station.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Life Support Station.cfg.disabled">
+      <Link>Contracts\Space Stations\Life Support Station.cfg.disabled</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Space Stations\New Crew Station.cfg">
-      <Link>Contracts\Space Stations\New Crew Station.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Space Stations\New Crew Station.cfg.disabled">
+      <Link>Contracts\Space Stations\New Crew Station.cfg.disabled</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Power Module Station.cfg">
-      <Link>Contracts\Space Stations\Power Module Station.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Space Stations\Power Module Station.cfg.disabled">
+      <Link>Contracts\Space Stations\Power Module Station.cfg.disabled</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\DockingPlane.cfg">
       <Link>Contracts\Spaceplanes\DockingPlane.cfg</Link>

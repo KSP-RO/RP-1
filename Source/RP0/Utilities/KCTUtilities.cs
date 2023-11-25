@@ -389,6 +389,7 @@ namespace RP0
             {
                 CheckPartAvailability = !skipPartChecks,
                 CheckPartConfigs = !skipPartChecks,
+                CheckUntooledParts = !skipPartChecks,
                 SuccessAction = AddVesselToBuildList
             };
             v.ProcessVessel(vp);

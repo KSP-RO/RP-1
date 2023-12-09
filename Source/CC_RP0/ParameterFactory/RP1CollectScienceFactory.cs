@@ -14,6 +14,7 @@ namespace ContractConfigurator.RP0
         protected double fractionComplete { get; set; }
         protected int? minSubjectsToComplete { get; set; }
         protected double? fractionCompleteBiome { get; set; }
+        protected float updateFrequency { get; set; }
 
         public override bool Load(ConfigNode configNode)
         {
@@ -32,6 +33,8 @@ namespace ContractConfigurator.RP0
             valid &= ConfigNodeUtil.ParseValue(configNode, "subject", x => subjects = x, this, new List<ScienceSubject>());
 
             valid &= ConfigNodeUtil.MutuallyExclusive(configNode, new string[] { "subject" }, new string[] { "biome", "situation", "location", "experiment" }, this);
+
+            valid &= ConfigNodeUtil.ParseValue<float>(configNode, "updateFrequency", x => updateFrequency = x, this, RP1CollectScience.DEFAULT_UPDATE_FREQUENCY, x => Validation.GT(x, 0.0f));
 
             // Validate subjects
             if (subjects != null && subjects.Count > 1)
@@ -60,14 +63,16 @@ namespace ContractConfigurator.RP0
             {
                 Biome b = Util.Science.GetBiome(subjects[0]);
                 ExperimentSituations es = Util.Science.GetSituation(subjects[0]);
+                List<string> experimentIDs = subjects.Select(s => Util.Science.GetExperiment(s).id).ToList();
 
                 return new RP1CollectScience(b == null ? targetBody : b.body, b == null ? "" : b.biome, es, location,
-                    subjects.Select(s => Util.Science.GetExperiment(s).id).ToList(), fractionComplete, minSubjectsToComplete, fractionCompleteBiome, title);
+                    experimentIDs, fractionComplete, minSubjectsToComplete, fractionCompleteBiome, title, updateFrequency);
             }
             else
             {
+                var experimentIDs = experiment.Select(e => e.id).ToList();
                 return new RP1CollectScience(biome == null ? targetBody : biome.body, biome == null ? "" : biome.biome, situation, location,
-                    experiment.Select(e => e.id).ToList(), fractionComplete, minSubjectsToComplete, fractionCompleteBiome, title);
+                    experimentIDs, fractionComplete, minSubjectsToComplete, fractionCompleteBiome, title, updateFrequency);
             }
         }
     }

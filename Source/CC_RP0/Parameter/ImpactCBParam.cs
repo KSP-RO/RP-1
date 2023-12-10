@@ -40,14 +40,17 @@ namespace ContractConfigurator.RP0
             base.OnParameterSave(node);
 
             node.AddValue("minSrfVel", minSrfVel);
-            node.AddValue("targetBody", targetBody.name);
+            if (targetBody != null)    // to prevent an exception being thrown due to a mistake that made it into previous release
+            {
+                node.AddValue("targetBody", targetBody.name);
+            }
         }
 
         protected override void OnParameterLoad(ConfigNode node)
         {
             base.OnParameterLoad(node);
 
-            minSrfVel = ConfigNodeUtil.ParseNode<double>(node, "minSrfVel");
+            minSrfVel = ConfigNodeUtil.ParseValue<double>(node, "minSrfVel");
             targetBody = ConfigNodeUtil.ParseValue<CelestialBody>(node, "targetBody", null);
         }
 

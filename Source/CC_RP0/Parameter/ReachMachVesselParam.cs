@@ -5,7 +5,7 @@ namespace ContractConfigurator.RP0
 {
     public class ReachMach : VesselParameter
     {
-        protected double mach;
+        protected double mach { get; set; }
         protected float updateFrequency { get; set; }
 
         private float lastUpdate = 0.0f;
@@ -26,7 +26,6 @@ namespace ContractConfigurator.RP0
             base.OnParameterSave(node);
 
             node.AddValue("updateFrequency", updateFrequency);
-            node.AddValue("updateFrequency", updateFrequency);
             node.AddValue("mach", mach);
         }
 
@@ -35,7 +34,7 @@ namespace ContractConfigurator.RP0
             base.OnParameterLoad(node);
 
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
-            node.TryGetValue("mach", ref mach);
+            mach = ConfigNodeUtil.ParseValue<double>(node, "mach");
         }
 
         protected override string GetParameterTitle()

@@ -8,7 +8,7 @@ namespace ContractConfigurator.RP0
     {
         private const int VelQueueSize = 50;
 
-        protected double minSrfVel = 0;
+        protected double minSrfVel { get; set; }
 
         private Queue<double> srfVelQueue = new Queue<double>(VelQueueSize);
         private Dictionary<Vessel, bool> destroyedVessels = new Dictionary<Vessel, bool>();
@@ -47,7 +47,7 @@ namespace ContractConfigurator.RP0
         {
             base.OnParameterLoad(node);
 
-            node.TryGetValue("minSrfVel", ref minSrfVel);
+            minSrfVel = ConfigNodeUtil.ParseNode<double>(node, "minSrfVel");
             targetBody = ConfigNodeUtil.ParseValue<CelestialBody>(node, "targetBody", null);
         }
 

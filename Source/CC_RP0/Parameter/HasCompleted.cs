@@ -15,7 +15,7 @@ namespace ContractConfigurator.RP0
     public class HasCompleted : VesselParameter
     {
         protected List<string> ContractTags { get; set; }
-        protected bool InvertParameter = false;
+        protected bool InvertParameter { get; set; }
 
         public HasCompleted()
             : base(null)
@@ -48,7 +48,7 @@ namespace ContractConfigurator.RP0
         {
             base.OnParameterLoad(node);
             ContractTags = ConfigNodeUtil.ParseValue<List<string>>(node, "contractTag", new List<string>());
-            InvertParameter = Convert.ToBoolean(node.GetValue("invertParameter"));
+            InvertParameter = ConfigNodeUtil.ParseValue<bool>(node, "invertParameter");
         }
 
         protected override void OnRegister()

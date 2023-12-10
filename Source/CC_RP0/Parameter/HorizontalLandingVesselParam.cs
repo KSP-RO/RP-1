@@ -6,8 +6,8 @@ namespace ContractConfigurator.RP0
 {
     public class HorizontalLanding : VesselParameter
     {
-        protected double glideRatio;
-        protected bool wasPreviouslyMet = false;
+        protected double glideRatio { get; set; }
+        protected bool wasPreviouslyMet { get; set; }
         protected float updateFrequency { get; set; }
 
         private float lastUpdate = 0.0f;
@@ -39,8 +39,8 @@ namespace ContractConfigurator.RP0
             base.OnParameterLoad(node);
 
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
-            node.TryGetValue("glideRatio", ref glideRatio);
-            node.TryGetValue("wasPreviouslyMet", ref wasPreviouslyMet);
+            glideRatio = ConfigNodeUtil.ParseValue<double>(node, "glideRatio");
+            wasPreviouslyMet = ConfigNodeUtil.ParseValue<bool>(node, "wasPreviouslyMet");
         }
 
         protected override bool VesselMeetsCondition(Vessel vessel)

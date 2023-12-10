@@ -1,13 +1,12 @@
 ﻿using ContractConfigurator.Parameters;
-using Contracts;
 
 namespace ContractConfigurator.RP0
 {
     public class AvionicsCheckParameter : VesselParameter
     {
-        protected bool parameterIsSatisified = true;
-        protected bool controlHasLapsed = false;
-        protected bool continuousControlRequired = false;
+        protected bool parameterIsSatisified { get; set; } = true;
+        protected bool controlHasLapsed { get; set; }
+        protected bool continuousControlRequired { get; set; }
 
         public AvionicsCheckParameter() : base(null) { }
 
@@ -30,7 +29,7 @@ namespace ContractConfigurator.RP0
             base.OnParameterLoad(node);
 
             // Save parameter options on a per-vessel basis
-            node.TryGetValue("continuousControlRequired", ref continuousControlRequired);
+            continuousControlRequired = ConfigNodeUtil.ParseValue<bool>(node, "continuousControlRequired");
         }
         protected override void OnRegister()
         {

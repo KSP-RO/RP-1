@@ -7,13 +7,13 @@ namespace ContractConfigurator.RP0
     public class RP1ReturnHome : VesselParameter
     {
         public const double DefaultMaxSpeed = 5;
+        internal const float DEFAULT_UPDATE_FREQUENCY = 0.5f;
 
-        protected string landAtFacility = string.Empty;
-        protected double maxSpeed = DefaultMaxSpeed;
+        protected string landAtFacility { get; set; }
+        protected double maxSpeed { get; set; }
         protected float updateFrequency { get; set; }
 
         private float lastUpdate = 0.0f;
-        internal const float DEFAULT_UPDATE_FREQUENCY = 0.5f;
 
         public RP1ReturnHome()
             : this(null, string.Empty, DefaultMaxSpeed, DEFAULT_UPDATE_FREQUENCY)
@@ -49,8 +49,8 @@ namespace ContractConfigurator.RP0
             base.OnParameterLoad(node);
 
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
-            node.TryGetValue("landAtFacility", ref landAtFacility);
-            node.TryGetValue("maxSpeed", ref maxSpeed);
+            landAtFacility = ConfigNodeUtil.ParseValue<string>(node, "landAtFacility", string.Empty);
+            maxSpeed = ConfigNodeUtil.ParseValue<double>(node, "maxSpeed", DefaultMaxSpeed);
         }
 
         protected override void OnUpdate()

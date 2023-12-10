@@ -5,7 +5,7 @@ namespace ContractConfigurator.RP0
 {
     public class VesselBuiltAtParameter : VesselParameter
     {
-        private EditorFacility builtAt;
+        private EditorFacility builtAt {  get; set; }
 
         public VesselBuiltAtParameter()
             : base(null)

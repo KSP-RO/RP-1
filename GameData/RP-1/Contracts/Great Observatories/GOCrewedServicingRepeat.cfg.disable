@@ -1,6 +1,6 @@
 CONTRACT_TYPE
 {
-	name = GOCrewedServicing
+	name = GOCrewedServicingRepeat
 	title = Large Space Telescope Crewed Servicing Mission
 
 	group = Great Observatories

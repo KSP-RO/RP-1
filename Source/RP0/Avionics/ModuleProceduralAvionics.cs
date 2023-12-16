@@ -624,6 +624,12 @@ namespace RP0.ProceduralAvionics
             if (CurrentProceduralAvionicsConfig == null && !string.IsNullOrEmpty(avionicsConfigName))
                 CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
 
+            if (Utilization > 1.001)
+            {
+                validationError = $"increase part size until avionics utilization is 100% or less";
+                return false;
+            }
+
             techToResolve = CurrentProceduralAvionicsTechNode.TechNodeName;
 
             if (!CurrentProceduralAvionicsTechNode.IsAvailable)

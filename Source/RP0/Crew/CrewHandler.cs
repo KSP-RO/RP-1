@@ -1030,6 +1030,10 @@ namespace RP0.Crew
                 foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
                 {
                     pcm.inactive = false;
+                    if (pcm.type == ProtoCrewMember.KerbalType.Applicant)
+                    {
+                        pcm.type = ProtoCrewMember.KerbalType.Crew;
+                    }
                 }
             }
         }

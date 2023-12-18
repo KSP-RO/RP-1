@@ -174,9 +174,7 @@
         "upgrade": true,
         "entry_cost_mods": "5000, RD-58M, RD58-FamSyntin",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "1_8KS7800",
@@ -5859,9 +5857,7 @@
         "upgrade": false,
         "entry_cost_mods": "50000, KDU-414, HypergolicPumps",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "KTDU-425A",
@@ -7621,9 +7617,7 @@
         "upgrade": false,
         "entry_cost_mods": "Minuteman",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineSolid"
-        ]
+        "module_tags": []
     },
     {
         "name": "MB-35",
@@ -11697,9 +11691,7 @@
         "upgrade": false,
         "entry_cost_mods": "60000, HydrazineFuel",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-111-8D716",
@@ -12205,9 +12197,7 @@
         "upgrade": false,
         "entry_cost_mods": "R14-TP-1960",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-215M-8D613",
@@ -12427,9 +12417,7 @@
         "upgrade": false,
         "entry_cost_mods": "20000, RD-220, Proton-Family",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-253-Mk2",
@@ -12451,9 +12439,7 @@
         "upgrade": true,
         "entry_cost_mods": "10000, RD-253",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-253-Mk3",
@@ -12475,9 +12461,7 @@
         "upgrade": true,
         "entry_cost_mods": "10000, RD-253-Mk2",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-253-Mk4",
@@ -12499,9 +12483,7 @@
         "upgrade": true,
         "entry_cost_mods": "10000, RD-253-Mk3",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-254-11D44",
@@ -12787,9 +12769,7 @@
         "upgrade": true,
         "entry_cost_mods": "20000, RD-253-Mk4",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-275M",
@@ -12811,9 +12791,7 @@
         "upgrade": true,
         "entry_cost_mods": "20000, RD-275",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-277-14D16",
@@ -15285,10 +15263,7 @@
         "upgrade": true,
         "entry_cost_mods": "10000, SNTPPFE100-Prototype",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo",
-            "Nuclear"
-        ]
+        "module_tags": []
     },
     {
         "name": "SNTPPFE100-Prototype",
@@ -17874,9 +17849,7 @@
         "upgrade": false,
         "entry_cost_mods": "Navaho-PhaseII-TP",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "XLR43-NA-1",
@@ -18074,9 +18047,7 @@
         "upgrade": false,
         "entry_cost_mods": "50000, XLR11-RM-3",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "XLR99-RM-2A",

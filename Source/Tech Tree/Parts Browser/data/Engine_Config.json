@@ -17898,7 +17898,7 @@
     {
         "name": "XLR81-BA-11",
         "title": "XLR81-BA-11",
-        "description": "Agena D",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 57,
         "entry_cost": 0,
@@ -17920,7 +17920,7 @@
     {
         "name": "XLR81-BA-13",
         "title": "XLR81-BA-13",
-        "description": "GATV",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 59,
         "entry_cost": 0,
@@ -17964,7 +17964,7 @@
     {
         "name": "XLR81-BA-5",
         "title": "XLR81-BA-5",
-        "description": "Agena A",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 46,
         "entry_cost": 0,
@@ -17986,7 +17986,7 @@
     {
         "name": "XLR81-BA-7",
         "title": "XLR81-BA-7",
-        "description": "Agena B",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 50,
         "entry_cost": 0,
@@ -18008,7 +18008,7 @@
     {
         "name": "XLR81-LF2-SPS",
         "title": "XLR-LF2-SPS",
-        "description": "Liquid Fluorine based design, proposed for use on the GE D-2 Apollo vehicle, and later high performance Agena tugs.",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 401,
         "entry_cost": 0,

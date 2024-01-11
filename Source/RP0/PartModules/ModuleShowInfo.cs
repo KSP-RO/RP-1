@@ -131,19 +131,18 @@ namespace RP0
             AvailablePart ap = part.partInfo;
             if (ap is null) return "";
 
+            string result = $"Tech Required: {ResearchAndDevelopment.GetTechnologyTitle(ap.TechRequired)}";
+
+            if (part.CrewCapacity > 0)
+                result += $"\nTraining course: {(TrainingDatabase.SynonymReplace(ap.name, out string name) ? name : ap.title)}";
+
             EntryCostDatabaseAccessor.Init();
             EntryCostDatabaseAccessor.GetFields();
-
-            string data = null;
             string nm = RealFuels.Utilities.SanitizeName(ap.name);
             if (HighLogic.LoadedScene != GameScenes.LOADING && EntryCostDatabase.GetHolder(nm) is PartEntryCostHolder h)
-                data = $"Total cost: {EntryCostDatabaseAccessor.GetCost(h)}\n{EntryCostDatabaseAccessor.DisplayHolder(h, false)}";
+                result += $"\nTotal cost: {EntryCostDatabaseAccessor.GetCost(h)}\n{EntryCostDatabaseAccessor.DisplayHolder(h, false)}";
 
-            string apInfo = $"Tech Required: {ap.TechRequired}";
-            if (part.CrewCapacity > 0)
-                apInfo = $"Training course: {(TrainingDatabase.SynonymReplace(ap.name, out string name) ? name : ap.title)}\n{apInfo}";
-
-            return $"Part name: {ap.name}\n{apInfo}\n{data}";
+            return result;
         }
 
         public override void OnStart(StartState state)

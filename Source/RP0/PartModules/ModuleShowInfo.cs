@@ -131,7 +131,7 @@ namespace RP0
             AvailablePart ap = part.partInfo;
             if (ap is null) return "";
 
-            string result = $"Tech Required: {ResearchAndDevelopment.GetTechnologyTitle(ap.TechRequired)}";
+            string result = $"Part name: {ap.name}\nTech Required: {ResearchAndDevelopment.GetTechnologyTitle(ap.TechRequired)}";
 
             if (part.CrewCapacity > 0)
                 result += $"\nTraining course: {(TrainingDatabase.SynonymReplace(ap.name, out string name) ? name : ap.title)}";

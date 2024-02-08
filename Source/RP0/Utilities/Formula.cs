@@ -163,6 +163,11 @@ namespace RP0
             return vessel.buildPoints * 0.01d + Math.Max(1, vessel.GetTotalMass() - 20d) * 2000d;
         }
 
+        public static double GetVesselRepairBP(VesselProject vessel)
+        {
+            return GetRolloutBP(vessel) / 7.5;
+        }
+
         public static double GetRecoveryBPSPH(VesselProject vessel)
         {
             double costDeltaHighPow;

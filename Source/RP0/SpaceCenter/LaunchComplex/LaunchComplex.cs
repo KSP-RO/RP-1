@@ -1,7 +1,8 @@
-﻿using System;
+﻿using ROUtils.DataTypes;
+using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using ROUtils.DataTypes;
 
 namespace RP0
 {
@@ -44,6 +45,8 @@ namespace RP0
         public PersistentObservableList<PadConstructionProject> PadConstructions = new PersistentObservableList<PadConstructionProject>();
         [Persistent]
         public PersistentObservableList<ReconRolloutProject> Recon_Rollout = new PersistentObservableList<ReconRolloutProject>();
+        [Persistent]
+        public PersistentObservableList<VesselRepairProject> VesselRepairs = new PersistentObservableList<VesselRepairProject>();
 
         private double _rate;
         private double _rateHRCapped;
@@ -142,6 +145,7 @@ namespace RP0
             BuildList.Updated += updated;
             Warehouse.Updated += updated;
             Recon_Rollout.Updated += lcpUpdated;
+            VesselRepairs.Updated += lcpUpdated;
         }
         #endregion
 
@@ -207,10 +211,12 @@ namespace RP0
 
         public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
 
-        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Any(rr => !rr.IsComplete());
-        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning);
-        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0;
-        public bool CanModifyReal => Recon_Rollout.Count == 0;
+        public bool IsActive => BuildList.Count > 0 || GetAllLCOps().Any(op => !op.IsComplete());
+        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && 
+                                    !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning) &&
+                                    VesselRepairs.Count == 0;
+        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0 && VesselRepairs.Count == 0;
+        public bool CanModifyReal => Recon_Rollout.Count == 0 && VesselRepairs.Count == 0;
         public bool CanIntegrate => ProjectBPTotal == 0d;
 
         private double _projectBPTotal = -1d;
@@ -219,7 +225,7 @@ namespace RP0
         public double RecalculateProjectBP()
         {
             _projectBPTotal = 0d;
-            foreach (var r in Recon_Rollout)
+            foreach (var r in GetAllLCOps())
             {
                 if (!r.IsBlocking || r.IsComplete())
                     continue;
@@ -250,8 +256,8 @@ namespace RP0
             foreach (var vp in BuildList)
                 vp.UpdateBuildRate();
 
-            foreach (var rr in Recon_Rollout)
-                rr.UpdateBuildRate();
+            foreach (var op in GetAllLCOps())
+                op.UpdateBuildRate();
 
             RecalculateProjectBP();
 
@@ -418,7 +424,7 @@ namespace RP0
                 }
             }
 
-            foreach (var rr in Recon_Rollout)
+            foreach (var rr in GetAllLCOps())
                 rr.LC = this;
 
             foreach (var vp in BuildList)
@@ -444,6 +450,19 @@ namespace RP0
             {
                 // Editor scene needs LC rates to show build time estimates
                 CalculateAndSetRates();
+            }
+        }
+
+        public IEnumerable<LCOpsProject> GetAllLCOps()
+        {
+            foreach (var item in Recon_Rollout)
+            {
+                yield return item;
+            }
+
+            foreach (var item in VesselRepairs)
+            {
+                yield return item;
             }
         }
 

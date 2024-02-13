@@ -749,6 +749,29 @@
         "module_tags": []
     },
     {
+        "name": "AJ10-133-Hylas",
+        "title": "AJ10-133-Hylas",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "118",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1966",
+        "technology": "improvedHydrolox",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AJ10_Adv",
+        "upgrade": true,
+        "entry_cost_mods": "4000,HydroloxPF,AJ10-104,AJ10-highPerf",
+        "identical_part_name": "",
+        "module_tags": [
+            "Hydrolox"
+        ]
+    },
+    {
         "name": "AJ10-133-LH",
         "title": "AJ10-133-LH",
         "description": "",
@@ -766,9 +789,11 @@
         "spacecraft": "Alternate Apollo",
         "engine_config": "AJ10_Adv",
         "upgrade": true,
-        "entry_cost_mods": "4000, HydroloxPF, AJ10-104, AJ10-highPerf",
+        "entry_cost_mods": "5000,AJ10-133-Hylas",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Hydrolox"
+        ]
     },
     {
         "name": "AJ10-137",

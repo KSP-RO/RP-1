@@ -30,7 +30,7 @@ namespace RP0
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "", "Difficulty settings changed", msg, "Understood", false, HighLogic.UISkin);
                 }
 
-                MarkExperimentsAsDone();
+                ScienceUtils.MarkExperimentsAsDone(Database.StartCompletedExperiments);
                 ClobberRealChuteDefaultSettings();
                 CopyCraftFiles();
                 UnlockCreditHandler.Instance.IncrementCredit("start", HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().StartingUnlockCredit);
@@ -53,46 +53,6 @@ namespace RP0
                 };
                 ResearchAndDevelopment.Instance.SetTechState(StartTechID, ptn);
             }
-        }
-
-        private static void MarkExperimentsAsDone()
-        {
-            foreach (var bodyKVP in Database.StartCompletedExperiments)
-                foreach (var expKVP in bodyKVP.Value)
-                    foreach (var sit in expKVP.Value)
-                        MarkExperimentAsDone(expKVP.Key, sit, bodyKVP.Key);
-        }
-
-        private static void MarkExperimentAsDone(string experimentID, ExperimentSituations situation, string bodyName)
-        {
-            ScienceExperiment experiment = ResearchAndDevelopment.GetExperiment(experimentID);
-            if (experiment == null)
-            {
-                RP0Debug.LogError($"MarkExperimentAsDone: Invalid experiment {experimentID}");
-                return;
-            }
-            CelestialBody body = FlightGlobals.GetBodyByName(bodyName);
-
-            if (experiment.BiomeIsRelevantWhile(situation))
-            {
-                List<string> allBiomes = ResearchAndDevelopment.GetBiomeTags(body, false);
-                foreach (string biomeName in allBiomes)
-                {
-                    string biomeTitle = ScienceUtil.GetBiomedisplayName(body, biomeName);
-                    MarkAsDone(experiment, situation, body, biomeName, biomeTitle);
-                }
-            }
-            else
-            {
-                MarkAsDone(experiment, situation, body, string.Empty, string.Empty);
-            }
-        }
-
-        private static void MarkAsDone(ScienceExperiment experiment, ExperimentSituations situation, CelestialBody body, string biomeName, string biomeTitle)
-        {
-            ScienceSubject subj = ResearchAndDevelopment.GetExperimentSubject(experiment, situation, body, biomeName, biomeTitle);
-            subj.scientificValue = 0;
-            subj.science = subj.scienceCap;
         }
 
         private void ClobberRealChuteDefaultSettings()

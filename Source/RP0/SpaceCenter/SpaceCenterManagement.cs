@@ -3,7 +3,7 @@ using System.Reflection;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 using ToolbarControl_NS;
 using KSP.UI.Screens;
 using System.Collections;
@@ -12,6 +12,7 @@ using UnityEngine.Profiling;
 using UnityEngine.UI;
 using RP0.UI;
 using KSP.Localization;
+using ROUtils;
 
 namespace RP0
 {
@@ -95,7 +96,7 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
-        public const int VERSION = 7;
+        public const int VERSION = 8;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
@@ -142,6 +143,8 @@ namespace RP0
         #endregion
 
         #region Fields
+
+        public bool DoingVesselRepair;
 
         public bool MergingAvailable;
         public List<VesselProject> MergedVessels = new List<VesselProject>();
@@ -194,12 +197,6 @@ namespace RP0
                 PresetManager.Instance = new PresetManager();
             }
             PresetManager.Instance.SetActiveFromSaveData();
-
-            // Create events for other mods
-            if (!SCMEvents.Instance.CreatedEvents)
-            {
-                SCMEvents.Instance.CreateEvents();
-            }
 
             var obj = new GameObject("KCTToolbarControl");
             ToolbarControl = obj.AddComponent<ToolbarControl>();
@@ -422,7 +419,7 @@ namespace RP0
                                 }
                             }
                             RP0Debug.Log($"Setting simulation UT to {SimulationParams.SimulationUT}");
-                            if (!KCTUtilities.IsPrincipiaInstalled)
+                            if (!ModUtils.IsPrincipiaInstalled)
                                 Planetarium.SetUniversalTime(SimulationParams.SimulationUT);
                             else
                                 StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), SimulationParams.SimulationUT));
@@ -760,7 +757,7 @@ namespace RP0
                         for (int i = 0; i < currentLC.Recon_Rollout.Count; i++)
                         {
                             ReconRolloutProject rr = currentLC.Recon_Rollout[i];
-                            if (rr.associatedID == vp.shipID.ToString())
+                            if (rr.AssociatedIdAsGuid == vp.shipID)
                             {
                                 currentLC.Recon_Rollout.Remove(rr);
                                 i--;
@@ -848,6 +845,20 @@ namespace RP0
         public LaunchComplex FindLCFromID(Guid guid)
         {
             return LC(guid);
+        }
+
+        public VesselRepairProject FindRepairForVessel(Vessel v)
+        {
+            foreach (var ksc in KSCs)
+            {
+                foreach (var lc in ksc.LaunchComplexes)
+                {
+                    var r = lc.VesselRepairs.Find(r => r.AssociatedIdAsGuid == v.id);
+                    if (r != null) return r;
+                }
+            }
+
+            return null;
         }
 
         #endregion
@@ -1157,7 +1168,7 @@ namespace RP0
                     FlightGlobals.ActiveVessel.vesselName = vp.shipName;
                 }
                 if (vesselLC == null) vesselLC = ActiveSC.ActiveLC;
-                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == vp.shipID.ToString()) is ReconRolloutProject rollout)
+                if (vesselLC.Recon_Rollout.FirstOrDefault(r => r.AssociatedIdAsGuid == vp.shipID) is ReconRolloutProject rollout)
                     vesselLC.Recon_Rollout.Remove(rollout);
 
                 LaunchedVessel = new VesselProject();
@@ -1245,9 +1256,9 @@ namespace RP0
                 yield return _wfsOne;
             }
 
-            HyperEdit_Utilities.DoAirlaunch(launchParams);
+            KCTUtilities.DoAirlaunch(launchParams);
 
-            if (KCTUtilities.IsPrincipiaInstalled)
+            if (ModUtils.IsPrincipiaInstalled)
                 StartCoroutine(ClobberPrincipia());
         }
 
@@ -1283,7 +1294,7 @@ namespace RP0
             {
                 if (simParams.DisableFailures)
                 {
-                    KCTUtilities.ToggleFailures(!simParams.DisableFailures);
+                    ModUtils.ToggleFailures(!simParams.DisableFailures);
                 }
                 if (!simParams.SimulateInOrbit || !FlightDriver.CanRevertToPrelaunch)
                 {
@@ -1636,11 +1647,22 @@ namespace RP0
                             //Reset the associated launchpad id when rollback completes
                             Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindVPesselByID");
                             if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollback && rr.IsComplete()
-                                && KCTUtilities.FindVPByID(rr.LC, new Guid(rr.associatedID)) is VesselProject vp)
+                                && KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vp)
                             {
                                 vp.launchSiteIndex = -1;
                             }
                             Profiler.EndSample();
+                        }
+
+                        for (int i = currentLC.VesselRepairs.Count; i-- > 0;)
+                        {
+                            var vr = currentLC.VesselRepairs[i];
+                            vr.IncrementProgress(UTDiff);
+                            if (vr.IsComplete() && HighLogic.LoadedSceneIsFlight &&
+                                vr.ApplyRepairs())
+                            {
+                                currentLC.VesselRepairs.Remove(vr);
+                            }
                         }
 
                         currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount && rr.IsComplete());
@@ -1725,6 +1747,34 @@ namespace RP0
             _recoverCallback.Invoke();
         }
 
+        private void QueueRepairFailures()
+        {
+            KCT_Preset_General settings = PresetManager.Instance.ActivePreset.GeneralSettings;
+            if (settings.BuildTimes)
+            {
+                var dataModule = FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker) as KCTVesselTracker;
+                if (dataModule != null && dataModule.Data.FacilityBuiltIn == EditorFacility.VAB)
+                {
+                    string launchSite = FlightDriver.LaunchSiteName;
+                    LaunchComplex lc = Instance.FindLCFromID(dataModule.Data.LCID);
+                    if (lc != null)
+                    {
+                        if (lc.LCType == LaunchComplexType.Pad && lc.ActiveLPInstance != null
+                            && (launchSite == "LaunchPad" || lc.LaunchPads.Find(p => p.name == launchSite) == null))
+                        {
+                            launchSite = lc.ActiveLPInstance.name;
+                        }
+                        var proj = new VesselRepairProject(FlightGlobals.ActiveVessel, launchSite, lc);
+                        lc.VesselRepairs.Add(proj);
+                    }
+                }
+            }
+            else
+            {
+                // Do immediately?
+            }
+        }
+
         private void RecoveryChoiceTS()
         {
             if (!(_trackingStation != null && _trackingStation.SelectedVessel is Vessel selectedVessel))
@@ -1756,10 +1806,11 @@ namespace RP0
                 return;
             }
 
-            bool isSPHAllowed = KCTUtilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel);
-            bool isVABAllowed = KCTUtilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel);
+            Vessel v = FlightGlobals.ActiveVessel;
+            bool isSPHAllowed = KCTUtilities.IsSphRecoveryAvailable(v);
+            bool isVABAllowed = KCTUtilities.IsVabRecoveryAvailable(v);
             var options = new List<DialogGUIBase>();
-            if (!FlightGlobals.ActiveVessel.isEVA)
+            if (!v.isEVA)
             {
                 string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(Database.SettingsSC.VABRecoveryTech);
                 string techLimitText = string.IsNullOrEmpty(nodeTitle) ? string.Empty :
@@ -1782,6 +1833,15 @@ namespace RP0
                 {
                     tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded."
                 });
+
+                if (TFInterop.HasSupportForReset && v.GetVesselBuiltAt() != EditorFacility.SPH &&
+                    TFInterop.VesselHasFailedParts(v) && FindRepairForVessel(v) == null)
+                {
+                    options.Add(new DialogGUIButtonWithTooltip("Repair failures", QueueRepairFailures)
+                    {
+                        tooltipText = "All failures will be repaired without having to leave the flight scene."
+                    });
+                }
             }
             else
             {

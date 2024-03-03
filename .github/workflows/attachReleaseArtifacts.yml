@@ -50,6 +50,11 @@ jobs:
 
       - name: Build mod solution
         run: msbuild ${GITHUB_WORKSPACE}/Source/RP0.sln /t:build /restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}"
+
+      - name: Remove excess DLLs
+        uses: KSP-RO/BuildTools/remove-excess-dlls@master
+        with:
+          path: ${GITHUB_WORKSPACE}/GameData/
         
       - name: Update version file
         uses: KSP-RO/BuildTools/update-version-file@master

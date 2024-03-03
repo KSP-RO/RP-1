@@ -2,7 +2,8 @@
 using KSP.UI.Screens;
 using UnityEngine;
 using KSP.Localization;
-using static RP0.MiscUtils;
+using static ROUtils.MiscUtils;
+using ROUtils;
 
 namespace RP0.Harmony
 {
@@ -50,7 +51,7 @@ namespace RP0.Harmony
                 }
                 extraText += Localizer.Format(item.BuildRate > 0 ? "#rp0_RnD_Progress" : "#rp0_RnD_ProgressEst",
                     (item.GetFractionComplete() * 100d).ToString("N0"),
-                    DTUtils.GetColonFormattedTime(item.GetTimeLeftEst(prevTime), prevTime, flip: false, showSeconds: false)) + "\n";
+                    RP0DTUtils.GetColonFormattedTime(item.GetTimeLeftEst(prevTime), prevTime, flip: false, showSeconds: false)) + "\n";
             }
             if (showCredit || showProgress)
                 extraText += "\n";

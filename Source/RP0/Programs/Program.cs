@@ -440,7 +440,7 @@ namespace RP0.Programs
             if (frac <= 1d)
                 return 0d;
 
-            return RepPenaltyPerYearLate * (1d - frac) * DurationYears;
+            return RepPenaltyPerYearLate * (frac - 1d) * DurationYears;
         }
 
         public string GetDescription(bool extendedInfo)

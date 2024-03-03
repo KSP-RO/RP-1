@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -206,7 +207,7 @@ namespace RP0
                 double buildRate = KCTUtilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, delta)
                     * efficiency * stratMult;
                 double bpLeft = b.buildPoints - b.progress;
-                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -224,7 +225,7 @@ namespace RP0
 
                     double buildRate = lcp.GetBuildRate(delta);
                     double bpLeft = (lcp.IsReversed ? 0 : lcp.BP) - lcp.progress;
-                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
+                    GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
                 }
                 else
                 {
@@ -297,7 +298,7 @@ namespace RP0
                 GUILayout.Label($"Current Research: {t.techName}");
                 double techRate = Formula.GetResearchRate(t.scienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
                 double timeLeft = (t.scienceCost - t.progress) / techRate;
-                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }
             else
             {

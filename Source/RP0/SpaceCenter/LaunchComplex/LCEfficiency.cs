@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 using UnityEngine;
 
 namespace RP0
@@ -45,6 +45,22 @@ namespace RP0
             _lcs.Removed += removed;
 
             _lcs.Add(lc);
+        }
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            if (SpaceCenterManagement.Instance.LoadedSaveVersion < SpaceCenterManagement.VERSION)
+            {
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 8)
+                {
+                    var keys = new List<string>(_lcStats.resourcesHandled.Keys);
+                    foreach (var k in keys)
+                    {
+                        _lcStats.resourcesHandled[k] = Math.Ceiling(_lcStats.resourcesHandled[k]);
+                    }
+                }
+            }
         }
 
         protected void Relink()

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -39,21 +40,13 @@ namespace RP0
             {
                 if (_newLCData.resourcesHandled.TryGetValue(_allResourceKeys[i], out double resourceValue))
                 {
-                    _allResourceValues[i] = resourceValue.ToString("F0");
+                    _allResourceValues[i] = Math.Ceiling(resourceValue).ToString("F0");
                 }
                 else
                 {
                     _allResourceValues[i] = "0";
                 }
             }
-        }
-
-        private static void SetFieldsFromStartingLCData(LCData old)
-        {
-            _newLCData.SetFrom(old);
-            _newLCData.Name = _newName = $"Launch Complex {(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count)}";
-            SetStrings();
-            SetResources();
         }
 
         private static void SetFieldsFromLC(LaunchComplex LC)
@@ -119,7 +112,7 @@ namespace RP0
             foreach (var kvp in vp.resourceAmounts)
             {
                 if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > vp.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
-                    _newLCData.resourcesHandled.Add(kvp.Key, Math.Max(_MinResourceVolume, kvp.Value * 1.1d));
+                    _newLCData.resourcesHandled.Add(kvp.Key, Math.Max(_MinResourceVolume, Math.Ceiling(kvp.Value * 1.1d)));
             }
             SetStrings();
             SetResources();
@@ -177,7 +170,7 @@ namespace RP0
                 {
                     _newLCData.resourcesHandled.TryGetValue(kvp.Key, out double oldAmount);
                     if (oldAmount < kvp.Value)
-                        _newLCData.resourcesHandled[kvp.Key] = Math.Max(_MinResourceVolume, kvp.Value * 1.1d);
+                        _newLCData.resourcesHandled[kvp.Key] = Math.Max(_MinResourceVolume, Math.Ceiling(kvp.Value * 1.1d));
                 }
             }
             // Reset based on our new values.

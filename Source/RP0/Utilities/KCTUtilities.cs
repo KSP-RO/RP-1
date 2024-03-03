@@ -8,20 +8,12 @@ using System.Text;
 using UniLinq;
 using UnityEngine;
 using UnityEngine.Profiling;
+using ROUtils;
 
 namespace RP0
 {
     public static class KCTUtilities
     {
-        private static bool? _isPrincipiaInstalled = null;
-        private static bool? _isTestFlightInstalled = null;
-        private static bool? _isTestLiteInstalled = null;
-
-        private static PropertyInfo _piTFInstance;
-        private static PropertyInfo _piTFSettingsEnabled;
-        private static Type _tlSettingsType;
-        private static FieldInfo _fiTLSettingsDisabled;
-
         internal const string _iconPath = "RP-1/PluginData/Icons/";
         internal const string _icon_KCT_Off_24 = _iconPath + "KCT_off-24";
         internal const string _icon_KCT_Off_38 = _iconPath + "KCT_off-38";
@@ -304,37 +296,6 @@ namespace RP0
             return bs;
         }
 
-        /// <summary>
-        /// Tests to see if two ConfigNodes have the same information. Currently requires same ordering of subnodes
-        /// </summary>
-        /// <param name="node1"></param>
-        /// <param name="node2"></param>
-        /// <returns></returns>
-        public static bool ConfigNodesAreEquivalent(ConfigNode node1, ConfigNode node2)
-        {
-            //Check that the number of subnodes are equal
-            if (node1.GetNodes().Length != node2.GetNodes().Length)
-                return false;
-            //Check that all the values are identical
-            foreach (string valueName in node1.values.DistinctNames())
-            {
-                if (!node2.HasValue(valueName))
-                    return false;
-                if (node1.GetValue(valueName) != node2.GetValue(valueName))
-                    return false;
-            }
-
-            //Check all subnodes for equality
-            for (int index = 0; index < node1.GetNodes().Length; ++index)
-            {
-                if (!ConfigNodesAreEquivalent(node1.nodes[index], node2.nodes[index]))
-                    return false;
-            }
-
-            //If all these tests pass, we consider the nodes to be equivalent
-            return true;
-        }
-
         public static double SpendFunds(double toSpend, TransactionReasons reason)
         {
             if (!KSPUtils.CurrentGameIsCareer())
@@ -428,6 +389,7 @@ namespace RP0
             {
                 CheckPartAvailability = !skipPartChecks,
                 CheckPartConfigs = !skipPartChecks,
+                CheckUntooledParts = !skipPartChecks,
                 SuccessAction = AddVesselToBuildList
             };
             v.ProcessVessel(vp);
@@ -571,11 +533,6 @@ namespace RP0
             newCompletionPercent = newProgressBP / newTotalBP;
         }
 
-        public static int FindUnlockCost(List<AvailablePart> availableParts)
-        {
-            return (int)RealFuels.EntryCostManager.Instance.EntryCostForParts(availableParts);
-        }
-
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
         {
             // this will spend the funds, which is why we set costsFunds=false below.
@@ -710,7 +667,7 @@ namespace RP0
                         continue;
                     foreach (ISpaceCenterProject vp in LC.BuildList)
                         _checkTime(vp, ref shortestTime, ref thing);
-                    foreach (ISpaceCenterProject rr in LC.Recon_Rollout)
+                    foreach (ISpaceCenterProject rr in LC.GetAllLCOps())
                         _checkTime(rr, ref shortestTime, ref thing);
                 }
                 foreach (ISpaceCenterProject ub in KSC.Constructions)
@@ -741,29 +698,6 @@ namespace RP0
             EditorDriver.editorFacility = isVAB ? EditorFacility.VAB : EditorFacility.SPH;
             EditorDriver.setupValidLaunchSites();
             return EditorDriver.ValidLaunchSites;
-        }
-
-        public static bool IsPrincipiaInstalled
-        {
-            get
-            {
-                if (!_isPrincipiaInstalled.HasValue)
-                {
-                    _isPrincipiaInstalled = AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.name, "ksp_plugin_adapter", StringComparison.OrdinalIgnoreCase));
-                }
-                return _isPrincipiaInstalled.Value;
-            }
-        }
-
-        public static PQSCity FindKSC(CelestialBody home)
-        {
-            if (home?.pqsController?.transform?.Find("KSC") is Transform t &&
-                t.GetComponent(typeof(PQSCity)) is PQSCity KSC)
-            {
-                return KSC;
-            }
-
-            return Resources.FindObjectsOfTypeAll<PQSCity>().FirstOrDefault(x => x.name == "KSC");
         }
 
         public static bool IsLaunchFacilityIntact(ProjectType type)
@@ -1174,61 +1108,6 @@ namespace RP0
             DeleteSimulationSave();
         }
 
-        public static bool IsTestFlightInstalled
-        {
-            get
-            {
-                if (!_isTestFlightInstalled.HasValue)
-                {
-                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestFlightCore", StringComparison.OrdinalIgnoreCase))?.assembly;
-                    _isTestFlightInstalled = a != null;
-                    if (_isTestFlightInstalled.Value)
-                    {
-                        Type t = a.GetType("TestFlightCore.TestFlightManagerScenario");
-                        _piTFInstance = t?.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                        _piTFSettingsEnabled = t?.GetProperty("SettingsEnabled", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-                    }
-                }
-                return _isTestFlightInstalled.Value;
-            }
-        }
-
-        public static bool IsTestLiteInstalled
-        {
-            get
-            {
-                if (!_isTestLiteInstalled.HasValue)
-                {
-                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestLite", StringComparison.OrdinalIgnoreCase))?.assembly;
-                    _isTestLiteInstalled = a != null;
-                    if (_isTestLiteInstalled.Value)
-                    {
-                        _tlSettingsType = a.GetType("TestLite.TestLiteGameSettings");
-                        _fiTLSettingsDisabled = _tlSettingsType?.GetField("disabled");
-                    }
-                }
-                return _isTestLiteInstalled.Value;
-            }
-        }
-
-        public static void ToggleFailures(bool isEnabled)
-        {
-            if (IsTestFlightInstalled) ToggleTFFailures(isEnabled);
-            else if (IsTestLiteInstalled) ToggleTLFailures(isEnabled);
-        }
-
-        public static void ToggleTFFailures(bool isEnabled)
-        {
-            object tfInstance = _piTFInstance.GetValue(null);
-            _piTFSettingsEnabled.SetValue(tfInstance, isEnabled);
-        }
-
-        private static void ToggleTLFailures(bool isEnabled)
-        {
-            _fiTLSettingsDisabled.SetValue(HighLogic.CurrentGame.Parameters.CustomParams(_tlSettingsType), !isEnabled);
-            GameEvents.OnGameSettingsApplied.Fire();
-        }
-
         public static void CleanupDebris(string launchSiteName)
         {
             if (KCTSettings.Instance.CleanUpKSCDebris)
@@ -1564,125 +1443,14 @@ namespace RP0
             return true;
         }
 
+        public static void DoAirlaunch(AirlaunchParams launchParams)
+        {
+            ROUtils.HyperEdit_Utilities.DoAirlaunch(launchParams.KscDistance, launchParams.KscAzimuth, launchParams.LaunchAzimuth, launchParams.Altitude, launchParams.Velocity);
+        }
+
         public static int GetFacilityLevel(SpaceCenterFacility facility)
         {
-            return GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
-        }
-
-        public static int GetFacilityLevel(string facility)
-        {
-            return GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
-        }
-
-        /// <summary>
-        /// Takes a normalized value and converts it to an array index
-        /// </summary>
-        /// <param name="norm"></param>
-        /// <param name="levels"></param>
-        /// <returns></returns>
-        public static int GetIndexFromNorm(float norm, int levels)
-        {
-            norm *= levels;
-            norm += 0.01f;
-            return (int)norm / levels;
-        }
-
-        public static string ToCommaString<T>(this List<T> list)
-        {
-            if (list.Count == 0)
-                return string.Empty;
-
-            var sb = StringBuilderCache.Acquire();
-            sb.Append(list[0].ToString());
-            for(int i = 1, iC = list.Count; i < iC; ++i)
-                sb.Append(", " + list[i].ToString());
-
-            return sb.ToStringAndRelease();
-        }
-
-        /// <summary>
-        /// NOTE: Must be used only on value-type lists
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <param name="str"></param>
-        public static void FromCommaString<T>(this List<T> list, string str)
-        {
-            Type type = typeof(T);
-            KSPCommunityFixes.Modding.DataType dataType = KSPCommunityFixes.Modding.FieldData.ValueDataType(type);
-            
-            list.Clear();
-            var split = str.Split(',');
-            foreach (var s in split)
-            {
-                string s2 = s.Trim();
-                if (s2.Length == 0)
-                    continue;
-                list.Add((T)KSPCommunityFixes.Modding.FieldData.ReadValue(s2, dataType, type));
-            }
-        }
-
-        public static double SumThrough(this List<double> list, int idx)
-        {
-            double sum = 0d;
-            for (int i = idx + 1; i-- > 0;)
-            {
-                sum += list[i];
-            }
-
-            return sum;
-        }
-
-        public static float SumThrough(this List<float> list, int idx)
-        {
-            float sum = 0f;
-            for (int i = idx + 1; i-- > 0;)
-            {
-                sum += list[i];
-            }
-
-            return sum;
-        }
-
-        public static int SumThrough(this List<int> list, int idx)
-        {
-            int sum = 0;
-            for (int i = idx + 1; i-- > 0;)
-            {
-                sum += list[i];
-            }
-
-            return sum;
-        }
-
-        public static int SumThrough(this List<bool> list, int idx)
-        {
-            int sum = 0;
-            for (int i = idx + 1; i-- > 0;)
-            {
-                if (list[i])
-                    ++sum;
-            }
-
-            return sum;
-        }
-
-        public static bool AllTrue(this List<bool> list)
-        {
-            for (int i = list.Count; i-- > 0;)
-                if (!list[i])
-                    return false;
-
-            return true;
-        }
-
-        public static bool AllFalse(this List<bool> list)
-        {
-            for (int i = list.Count; i-- > 0;)
-                if (list[i])
-                    return false;
-
-            return true;
+            return MathUtils.GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
         }
     }
 }

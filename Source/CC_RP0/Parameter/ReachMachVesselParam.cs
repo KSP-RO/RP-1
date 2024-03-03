@@ -5,23 +5,27 @@ namespace ContractConfigurator.RP0
 {
     public class ReachMach : VesselParameter
     {
-        protected double mach;
+        protected double mach { get; set; }
+        protected float updateFrequency { get; set; }
 
         private float lastUpdate = 0.0f;
-        private const float UPDATE_FREQUENCY = 0.25f;
+        internal const float DEFAULT_UPDATE_FREQUENCY = 0.25f;
 
         public ReachMach() : base(null) { }
 
-        public ReachMach(string title, double mach) : base(title)
+        public ReachMach(string title, double mach, float updateFrequency)
+            : base(title)
         {
             this.mach = mach;
             this.title = GetParameterTitle();
+            this.updateFrequency = updateFrequency;
         }
 
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
 
+            node.AddValue("updateFrequency", updateFrequency);
             node.AddValue("mach", mach);
         }
 
@@ -29,7 +33,8 @@ namespace ContractConfigurator.RP0
         {
             base.OnParameterLoad(node);
 
-            node.TryGetValue("mach", ref mach);
+            updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
+            mach = ConfigNodeUtil.ParseValue<double>(node, "mach");
         }
 
         protected override string GetParameterTitle()
@@ -41,7 +46,7 @@ namespace ContractConfigurator.RP0
         {
             base.OnUpdate();
 
-            if (Time.fixedTime - lastUpdate > UPDATE_FREQUENCY)
+            if (Time.fixedTime - lastUpdate > updateFrequency)
             {
                 lastUpdate = Time.fixedTime;
                 CheckVessel(FlightGlobals.ActiveVessel);

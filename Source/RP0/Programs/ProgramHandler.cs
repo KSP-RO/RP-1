@@ -11,7 +11,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using KSP.UI.Screens.DebugToolbar;
 using KSP.Localization;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 
 namespace RP0.Programs
 {

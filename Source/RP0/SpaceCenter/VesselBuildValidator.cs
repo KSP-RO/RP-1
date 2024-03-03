@@ -5,6 +5,7 @@ using UniLinq;
 using System.Reflection;
 using UnityEngine;
 using RP0.UI;
+using ROUtils;
 
 namespace RP0
 {
@@ -22,6 +23,7 @@ namespace RP0
         public bool CheckPartAvailability { get; set; } = true;
         public bool CheckPartConfigs { get; set; } = true;
         public bool CheckAvailableFunds { get; set; } = true;
+        public bool CheckUntooledParts { get; set; } = true;
         public double? CostOffset { get; set; } = null;
         public Action<VesselProject> SuccessAction { get; set; }
         public Action FailureAction { get; set; }
@@ -96,6 +98,17 @@ namespace RP0
                 yield break;
             }
 
+            ProcessUntooledParts(vp);
+            while (_validationResult == ValidationResult.Undecided)
+                yield return null;
+
+            _routine = null;
+            if (_validationResult != ValidationResult.Success)
+            {
+                _failureActions();
+                yield break;
+            }
+
             _successActions(vp);
         }
 
@@ -165,7 +178,7 @@ namespace RP0
             
             // PopupDialog asking you if you want to pay the entry cost for all the parts that can be unlocked (tech node researched)
             
-            double unlockCost = KCTUtilities.FindUnlockCost(partList);
+            double unlockCost = ECMHelper.FindUnlockCost(partList);
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds, false);
 
@@ -232,6 +245,38 @@ namespace RP0
                     controls),
                 false,
                 HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
+        private void ProcessUntooledParts(VesselProject vp)
+        {
+            _validationResult = ValidationResult.Success;
+            if (!CheckUntooledParts || !HighLogic.LoadedSceneIsEditor ||
+                !HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().ShowToolingReminders)
+            {
+                return;
+            }
+
+            bool hasUntooledParts = EditorLogic.fetch.ship.Parts.Any(p => p.FindModuleImplementing<ModuleTooling>()?.IsUnlocked() == false);
+            if (hasUntooledParts)
+            {
+                _validationResult = ValidationResult.Undecided;
+
+                var dlgRect = new Rect(0.5f, 0.5f, 400, 100);
+                var buttons = new DialogGUIButton[] {
+                    new DialogGUIButton("Cancel integration", () => { _validationResult = ValidationResult.Fail; }),
+                    new DialogGUIButton("Integrate anyway", () => { _validationResult = ValidationResult.Success; })
+                };
+
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                    new MultiOptionDialog("ontooledPartsWarningPopup",
+                        "Tool them in the RP-1 menu to reduce vessel cost and integration time.",
+                        "Untooled parts",
+                        HighLogic.UISkin,
+                        dlgRect,
+                        buttons),
+                    false,
+                    HighLogic.UISkin).HideGUIsWhilePopup();
+            }
         }
 
         private ValidationResult ProcessFundsChecks(VesselProject vp)

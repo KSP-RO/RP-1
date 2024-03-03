@@ -6,26 +6,30 @@ namespace ContractConfigurator.RP0
 {
     public class HorizontalLanding : VesselParameter
     {
-        protected double glideRatio;
-        protected bool wasPreviouslyMet = false;
+        protected double glideRatio { get; set; }
+        protected bool wasPreviouslyMet { get; set; }
+        protected float updateFrequency { get; set; }
 
         private float lastUpdate = 0.0f;
-        private const float UPDATE_FREQUENCY = 0.5f;
+        internal const float DEFAULT_UPDATE_FREQUENCY = 0.5f;
 
         public HorizontalLanding() : base(null)
         {
         }
 
-        public HorizontalLanding(string title, double descentAngle) : base(title)
+        public HorizontalLanding(string title, double descentAngle, float updateFrequency)
+            : base(title)
         {
             this.title = title ?? $"Land horizontally with a descent angle below {descentAngle}°";
             this.glideRatio = 1 / Math.Tan(Mathf.Deg2Rad * descentAngle);
+            this.updateFrequency = updateFrequency;
         }
 
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
 
+            node.AddValue("updateFrequency", updateFrequency);
             node.AddValue("glideRatio", glideRatio);
             node.AddValue("wasPreviouslyMet", wasPreviouslyMet);
         }
@@ -34,8 +38,9 @@ namespace ContractConfigurator.RP0
         {
             base.OnParameterLoad(node);
 
-            node.TryGetValue("glideRatio", ref glideRatio);
-            node.TryGetValue("wasPreviouslyMet", ref wasPreviouslyMet);
+            updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
+            glideRatio = ConfigNodeUtil.ParseValue<double>(node, "glideRatio");
+            wasPreviouslyMet = ConfigNodeUtil.ParseValue<bool>(node, "wasPreviouslyMet");
         }
 
         protected override bool VesselMeetsCondition(Vessel vessel)
@@ -55,7 +60,7 @@ namespace ContractConfigurator.RP0
 
             base.OnUpdate();
 
-            if (Time.fixedTime - lastUpdate > UPDATE_FREQUENCY)
+            if (Time.fixedTime - lastUpdate > updateFrequency)
             {
                 lastUpdate = Time.fixedTime;
 

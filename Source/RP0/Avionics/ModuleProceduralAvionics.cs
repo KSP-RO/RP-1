@@ -6,6 +6,7 @@ using System.Reflection;
 using UnityEngine;
 using UnityEngine.Profiling;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
+using ROUtils;
 
 namespace RP0.ProceduralAvionics
 {
@@ -622,6 +623,12 @@ namespace RP0.ProceduralAvionics
 
             if (CurrentProceduralAvionicsConfig == null && !string.IsNullOrEmpty(avionicsConfigName))
                 CurrentProceduralAvionicsConfig = ProceduralAvionicsTechManager.GetProceduralAvionicsConfig(avionicsConfigName);
+
+            if (Utilization > 1.001)
+            {
+                validationError = $"increase part size until avionics utilization is 100% or less";
+                return false;
+            }
 
             techToResolve = CurrentProceduralAvionicsTechNode.TechNodeName;
 

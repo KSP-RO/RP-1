@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
+using ROUtils;
 
 namespace RP0
 {
@@ -43,7 +44,6 @@ namespace RP0
         public static float CalcMassMaxFromMin(float massMin) => Mathf.Ceil(massMin / 0.75f);
 
         public static readonly LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());
-        public static readonly LCData StartingLC = new LCData("Launch Complex 1", 1f, 1.5f, new Vector3(2f, 10f, 2f), LaunchComplexType.Pad, false, new PersistentDictionaryValueTypes<string, double>());
 
         public LCData() { }
 

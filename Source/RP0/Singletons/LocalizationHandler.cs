@@ -2,6 +2,7 @@
 using KSP.Localization;
 using System.Collections.Generic;
 using RP0.ProceduralAvionics;
+using ROUtils;
 
 namespace RP0
 {

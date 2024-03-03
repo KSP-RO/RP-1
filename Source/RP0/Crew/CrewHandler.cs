@@ -7,7 +7,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Profiling;
 using KCTUtils = RP0.KCTUtilities;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
+using ROUtils;
 
 namespace RP0.Crew
 {
@@ -626,8 +627,9 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
-                                             HighLogic.UISkin)
-                    .PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
+                                             HighLogic.UISkin,
+                                             !HighLogic.LoadedSceneIsFlight)
+                    .PrePostActionsNonFlight(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -1028,6 +1030,10 @@ namespace RP0.Crew
                 foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
                 {
                     pcm.inactive = false;
+                    if (pcm.type == ProtoCrewMember.KerbalType.Applicant)
+                    {
+                        pcm.type = ProtoCrewMember.KerbalType.Crew;
+                    }
                 }
             }
         }

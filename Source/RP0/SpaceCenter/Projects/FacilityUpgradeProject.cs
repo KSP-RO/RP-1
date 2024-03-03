@@ -66,7 +66,7 @@ namespace RP0
                 facility.SetLevel(upgradeLevel);
             }
 
-            int newLvl = KCTUtilities.GetFacilityLevel(id);
+            int newLvl = KCTUtilities.GetFacilityLevel(sFacilityType);
             upgradeProcessed = newLvl == upgradeLevel;
             if (upgradeProcessed)
             {

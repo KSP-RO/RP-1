@@ -18,6 +18,7 @@ namespace ContractConfigurator.RP0
         protected double fractionComplete { get; set; }
         protected double? fractionCompleteBiome { get; set; }
         protected int? minSubjectsToComplete { get; set; }
+        protected float updateFrequency { get; set; }
 
         protected bool _expandedBiomes = false;
         protected List<ScienceSubject> subjects;
@@ -25,7 +26,7 @@ namespace ContractConfigurator.RP0
         protected Dictionary<string, float> paramIdProgressDict = new Dictionary<string, float>();
 
         private float lastUpdate = 0.0f;
-        private const float UPDATE_FREQUENCY = 2.5f;
+        internal const float DEFAULT_UPDATE_FREQUENCY = 2.5f;
         private const float FractionErrorMargin = 0.00025f;
         private const double MinFractionDiffForTitleUpdate = 0.001;
 
@@ -36,7 +37,8 @@ namespace ContractConfigurator.RP0
         }
 
         public RP1CollectScience(CelestialBody targetBody, string biome, ExperimentSituations? situation,
-            BodyLocation? location, List<string> experiment, double fractionComplete, int? minSubjectsToComplete, double? fractionCompleteBiome, string title)
+            BodyLocation? location, List<string> experiment, double fractionComplete, int? minSubjectsToComplete,
+            double? fractionCompleteBiome, string title, float updateFrequency)
             : base(title)
         {
             lastUpdate = UnityEngine.Time.fixedTime;
@@ -49,6 +51,7 @@ namespace ContractConfigurator.RP0
             this.fractionComplete = fractionComplete;
             this.minSubjectsToComplete = minSubjectsToComplete;
             this.fractionCompleteBiome = fractionCompleteBiome;
+            this.updateFrequency = updateFrequency;
 
             disableOnStateChange = true;
 
@@ -58,6 +61,8 @@ namespace ContractConfigurator.RP0
 
         protected override void OnParameterSave(ConfigNode node)
         {
+            node.AddValue("updateFrequency", updateFrequency);
+
             if (targetBody != null)
             {
                 node.AddValue("targetBody", targetBody.name);
@@ -102,6 +107,7 @@ namespace ContractConfigurator.RP0
         {
             try
             {
+                updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
                 targetBody = ConfigNodeUtil.ParseValue(node, "targetBody", (CelestialBody)null);
                 biome = ConfigNodeUtil.ParseValue(node, "biome", "").Replace(" ", "");
                 situation = ConfigNodeUtil.ParseValue(node, "situation", (ExperimentSituations?)null);
@@ -180,7 +186,7 @@ namespace ContractConfigurator.RP0
         {
             base.OnUpdate();
 
-            if (UnityEngine.Time.fixedTime - lastUpdate > UPDATE_FREQUENCY)
+            if (UnityEngine.Time.fixedTime - lastUpdate > updateFrequency)
             {
                 lastUpdate = UnityEngine.Time.fixedTime;
                 int numToComplete = minSubjectsToComplete ?? 1;

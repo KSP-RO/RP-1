@@ -69,6 +69,8 @@ namespace RP0InstallChecker
                 ShowErrorDialog(titleText, contentText);
                 return;
             }
+
+            Destroy(this);
         }
 
         private static void ShowErrorDialog(string titleText, string contentText)

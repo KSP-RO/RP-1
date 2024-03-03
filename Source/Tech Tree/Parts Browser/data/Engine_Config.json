@@ -92,7 +92,7 @@
         "title": "11D417B",
         "description": "",
         "mod": "Engine_Config",
-        "cost": -79,
+        "cost": 0,
         "entry_cost": 0,
         "category": "EDL",
         "info": "",
@@ -174,9 +174,7 @@
         "upgrade": true,
         "entry_cost_mods": "5000, RD-58M, RD58-FamSyntin",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "1_8KS7800",
@@ -2104,7 +2102,7 @@
         "entry_cost": 0,
         "category": "NTR",
         "info": "",
-        "year": "2021",
+        "year": "2028",
         "technology": "nuclearPropulsionNF",
         "era": "11-NF",
         "ro": true,
@@ -2114,6 +2112,27 @@
         "engine_config": "BNTR",
         "upgrade": false,
         "entry_cost_mods": "400000,PEWEE100-Hydrogen,TurbineReactors",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "BNTR25k",
+        "title": "BNTR25k",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "",
+        "year": "2028",
+        "technology": "nuclearPropulsionNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "BNTR25k",
+        "upgrade": false,
+        "entry_cost_mods": "50000,BNTR",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3478,6 +3497,27 @@
         "engine_config": "F100",
         "upgrade": true,
         "entry_cost_mods": "10000,F100-PW-229",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "F100-PW-229PYBBN",
+        "title": "F100-PW-229PYBBN",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "83",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "",
+        "year": "1993",
+        "technology": "refinedTurbofans",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "F100",
+        "upgrade": true,
+        "entry_cost_mods": "5000,F100-PW-229",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -5859,9 +5899,7 @@
         "upgrade": false,
         "entry_cost_mods": "50000, KDU-414, HypergolicPumps",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "KTDU-425A",
@@ -7478,8 +7516,8 @@
         "entry_cost": 0,
         "category": "HYDROLOX",
         "info": "",
-        "year": "1976",
-        "technology": "hydrolox1976",
+        "year": "1975",
+        "technology": "hydrolox1972",
         "era": "06-STATION",
         "ro": true,
         "orphan": false,
@@ -7500,8 +7538,8 @@
         "entry_cost": 0,
         "category": "HYDROLOX",
         "info": "",
-        "year": "1972",
-        "technology": "hydrolox1972",
+        "year": "1970",
+        "technology": "hydrolox1969",
         "era": "06-STATION",
         "ro": true,
         "orphan": false,
@@ -7621,9 +7659,7 @@
         "upgrade": false,
         "entry_cost_mods": "Minuteman",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineSolid"
-        ]
+        "module_tags": []
     },
     {
         "name": "MB-35",
@@ -10649,7 +10685,7 @@
         "title": "RD-0212",
         "description": "",
         "mod": "Engine_Config",
-        "cost": 36,
+        "cost": 24,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -10671,7 +10707,7 @@
         "title": "RD-0212-Mk2",
         "description": "",
         "mod": "Engine_Config",
-        "cost": 41,
+        "cost": 26,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -10693,7 +10729,7 @@
         "title": "RD-0212-Mk3",
         "description": "",
         "mod": "Engine_Config",
-        "cost": 41,
+        "cost": 26,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -11697,9 +11733,7 @@
         "upgrade": false,
         "entry_cost_mods": "60000, HydrazineFuel",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-111-8D716",
@@ -12205,9 +12239,7 @@
         "upgrade": false,
         "entry_cost_mods": "R14-TP-1960",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-215M-8D613",
@@ -12427,9 +12459,7 @@
         "upgrade": false,
         "entry_cost_mods": "20000, RD-220, Proton-Family",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-253-Mk2",
@@ -12451,9 +12481,7 @@
         "upgrade": true,
         "entry_cost_mods": "10000, RD-253",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-253-Mk3",
@@ -12475,9 +12503,7 @@
         "upgrade": true,
         "entry_cost_mods": "10000, RD-253-Mk2",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-253-Mk4",
@@ -12499,9 +12525,7 @@
         "upgrade": true,
         "entry_cost_mods": "10000, RD-253-Mk3",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-254-11D44",
@@ -12787,9 +12811,7 @@
         "upgrade": true,
         "entry_cost_mods": "20000, RD-253-Mk4",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-275M",
@@ -12811,9 +12833,7 @@
         "upgrade": true,
         "entry_cost_mods": "20000, RD-275",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "RD-277-14D16",
@@ -13238,7 +13258,7 @@
         "title": "RD-855",
         "description": "",
         "mod": "Engine_Config",
-        "cost": 22,
+        "cost": 6,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
@@ -13260,7 +13280,7 @@
         "title": "RD-856",
         "description": "",
         "mod": "Engine_Config",
-        "cost": -2,
+        "cost": -1,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
@@ -13846,6 +13866,27 @@
         "engine_config": "RL10",
         "upgrade": true,
         "entry_cost_mods": "50000,RL10B-2",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RL10C-X",
+        "title": "RL10C-X",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": 487,
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2024",
+        "technology": "hydrolox2019",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": true,
+        "entry_cost_mods": "25000,RL10C-3,RL10C-1-1",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -15264,10 +15305,7 @@
         "upgrade": true,
         "entry_cost_mods": "10000, SNTPPFE100-Prototype",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo",
-            "Nuclear"
-        ]
+        "module_tags": []
     },
     {
         "name": "SNTPPFE100-Prototype",
@@ -17853,9 +17891,7 @@
         "upgrade": false,
         "entry_cost_mods": "Navaho-PhaseII-TP",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "XLR43-NA-1",
@@ -17904,7 +17940,7 @@
     {
         "name": "XLR81-BA-11",
         "title": "XLR81-BA-11",
-        "description": "Agena D",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 57,
         "entry_cost": 0,
@@ -17926,7 +17962,7 @@
     {
         "name": "XLR81-BA-13",
         "title": "XLR81-BA-13",
-        "description": "GATV",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 59,
         "entry_cost": 0,
@@ -17970,7 +18006,7 @@
     {
         "name": "XLR81-BA-5",
         "title": "XLR81-BA-5",
-        "description": "Agena A",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 46,
         "entry_cost": 0,
@@ -17992,7 +18028,7 @@
     {
         "name": "XLR81-BA-7",
         "title": "XLR81-BA-7",
-        "description": "Agena B",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 50,
         "entry_cost": 0,
@@ -18014,7 +18050,7 @@
     {
         "name": "XLR81-LF2-SPS",
         "title": "XLR-LF2-SPS",
-        "description": "Liquid Fluorine based design, proposed for use on the GE D-2 Apollo vehicle, and later high performance Agena tugs.",
+        "description": "",
         "mod": "Engine_Config",
         "cost": 401,
         "entry_cost": 0,
@@ -18053,9 +18089,7 @@
         "upgrade": false,
         "entry_cost_mods": "50000, XLR11-RM-3",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
+        "module_tags": []
     },
     {
         "name": "XLR99-RM-2A",

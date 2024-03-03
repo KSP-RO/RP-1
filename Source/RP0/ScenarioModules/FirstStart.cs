@@ -34,6 +34,8 @@ namespace RP0
                 ClobberRealChuteDefaultSettings();
                 CopyCraftFiles();
                 UnlockCreditHandler.Instance.IncrementCredit("start", HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().StartingUnlockCredit);
+
+                HighLogic.CurrentGame.CrewRoster.Update(Planetarium.GetUniversalTime());
             }
         }
 

@@ -1094,7 +1094,7 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = SM-I
+		type = Battery-I
 		utilization = 50
 		volume = 0.52359999999999995
 		mass = 0.00052330381

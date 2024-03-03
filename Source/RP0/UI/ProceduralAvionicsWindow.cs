@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
+using ROUtils;
 
 namespace RP0.ProceduralAvionics
 {
@@ -399,7 +400,7 @@ namespace RP0.ProceduralAvionics
                 double m3CurVol = avVolume + _rfPM.totalVolume / 1000;    // l to m³, assume 100% RF utilization
                 double m3MinVol = GetNeededProcTankVolume(0, ecAmount);
                 double m3MissingVol = m3MinVol - m3CurVol;
-                if (m3MissingVol > 0.0001)
+                if (m3MissingVol > 1e-6)
                 {
                     ecAmount = 1;    // Never remove the EC resource entirely
                     double m3AvailVolForEC = m3AvailVol;

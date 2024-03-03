@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -41,7 +42,7 @@ namespace RP0
             {
                 SetNewWorkingPreset(null, true);
             }
-            if (_isChanged && _presetIndex < presetShortNames.Length - 1 && !KCTUtilities.ConfigNodesAreEquivalent(_workingPreset.AsConfigNode(), PresetManager.Instance.Presets[_presetIndex].AsConfigNode())) //!KCT_PresetManager.Instance.PresetsEqual(WorkingPreset, KCT_PresetManager.Instance.Presets[presetIndex], true)
+            if (_isChanged && _presetIndex < presetShortNames.Length - 1 && !KSPUtils.ConfigNodesAreEquivalent(_workingPreset.AsConfigNode(), PresetManager.Instance.Presets[_presetIndex].AsConfigNode())) //!KCT_PresetManager.Instance.PresetsEqual(WorkingPreset, KCT_PresetManager.Instance.Presets[presetIndex], true)
             {
                 SetNewWorkingPreset(null, true);
             }

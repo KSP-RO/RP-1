@@ -3501,6 +3501,27 @@
         "module_tags": []
     },
     {
+        "name": "F100-PW-229PYBBN",
+        "title": "F100-PW-229PYBBN",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "83",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "",
+        "year": "1993",
+        "technology": "refinedTurbofans",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "F100",
+        "upgrade": true,
+        "entry_cost_mods": "5000,F100-PW-229",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "F119-PW-100",
         "title": "F119-PW-100",
         "description": "",

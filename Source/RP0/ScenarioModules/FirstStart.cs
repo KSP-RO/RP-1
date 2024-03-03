@@ -97,7 +97,8 @@ namespace RP0
 
         private void ClobberRealChuteDefaultSettings()
         {
-            if (AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "RealChute") is var rcAssembly &&
+            var rcAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "RealChute");
+            if (rcAssembly != null &&
                rcAssembly.assembly.GetType("RealChute.RealChuteSettings") is Type rcSettings &&
                rcSettings.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public) is PropertyInfo instancePInf &&
                rcSettings.GetProperty("AutoArm", BindingFlags.Instance | BindingFlags.Public) is PropertyInfo autoArmPInf &&

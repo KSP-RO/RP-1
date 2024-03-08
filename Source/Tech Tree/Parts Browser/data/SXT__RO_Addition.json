@@ -70,6 +70,27 @@
         "module_tags": []
     },
     {
+        "name": "RO-SXT-R79",
+        "title": "R-79 Low-Bypass Turbofan",
+        "description": "",
+        "mod": "SXT (RO Addition)",
+        "cost": "743",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "",
+        "year": "1986",
+        "technology": "refinedTurbofans",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "R79",
+        "upgrade": false,
+        "entry_cost_mods": "R-79-300",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RO-VK1",
         "title": "VK-1 Turbojet",
         "description": "",

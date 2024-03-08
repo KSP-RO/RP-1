@@ -69,6 +69,29 @@
         "module_tags": []
     },
     {
+        "name": "RO-KTDU5A",
+        "title": "KTDU-5A",
+        "description": "",
+        "mod": "Stock (RO Addition)",
+        "cost": "68",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1963",
+        "technology": "orbitalRocketry1963",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Luna E-6",
+        "engine_config": "KTDU5A",
+        "upgrade": false,
+        "entry_cost_mods": "KTDU-5A",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
         "name": "RO-WS10",
         "title": "",
         "description": "",

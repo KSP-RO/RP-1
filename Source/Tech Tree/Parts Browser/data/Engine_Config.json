@@ -5966,6 +5966,27 @@
         "module_tags": []
     },
     {
+        "name": "KTDU-5A",
+        "title": "KTDU-5A",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1963",
+        "technology": "orbitalRocketry1963",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "KTDU5A",
+        "upgrade": false,
+        "entry_cost_mods": "20000,HypergolicPumps,PumpReignition",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "KVD-1",
         "title": "KVD-1",
         "description": "",

@@ -44,6 +44,11 @@ namespace RP0
             GameEvents.Modifiers.OnCurrencyModified.Remove(OnCurrenciesModified);
         }
 
+        public void SetConfidence(float value)
+        {
+            confidence = value;
+        }
+
         public void AddConfidence(float delta, TransactionReasons reason)
         {
             // We'll apply the total change in OnCurrenciesModified

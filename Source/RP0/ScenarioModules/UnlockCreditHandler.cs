@@ -98,6 +98,11 @@ namespace RP0
             }
         }
 
+        public void SetCredit(double value)
+        {
+            _totalCredit = value;
+        }
+
         public void SpendCreditAndCost(List<AvailablePart> parts)
         {
             // This is going to be expensive, because we have to chase down all the ECMs.

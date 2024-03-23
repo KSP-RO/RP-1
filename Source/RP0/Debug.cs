@@ -1,4 +1,6 @@
-﻿namespace RP0
+﻿using System;
+
+namespace RP0
 {
     public static class RP0Debug
     {
@@ -23,6 +25,11 @@
         public static void LogError(string str)
         {
             UnityEngine.Debug.LogError("[RP-0] " + str);
+        }
+
+        public static void LogException(Exception ex)
+        {
+            UnityEngine.Debug.LogError("[RP-0] " + ex);
         }
     }
 }

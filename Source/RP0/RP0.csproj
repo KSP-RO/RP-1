@@ -38,6 +38,11 @@
   <ItemGroup>
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
+    <Compile Include="ConfigurableStart\DateHandler.cs" />
+    <Compile Include="ConfigurableStart\PresetPickerGUI.cs" />
+    <Compile Include="ConfigurableStart\Scenario.cs" />
+    <Compile Include="ConfigurableStart\ScenarioHandler.cs" />
+    <Compile Include="ConfigurableStart\Utilities.cs" />
     <Compile Include="Harmony\FlightInputHandler.cs" />
     <Compile Include="Harmony\ModuleRCS.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
@@ -264,6 +269,7 @@
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
     <Compile Include="Utilities\KCTUtilities.cs" />
     <Compile Include="SpaceCenter\SpaceCenterManagement.cs" />
+    <Compile Include="Utilities\ScienceUtils.cs" />
     <Compile Include="Utilities\TextureScale.cs" />
     <Compile Include="Persistence\KCTVesselTracker.cs" />
     <Compile Include="Singletons\KCTVesselTrackerEventHandler.cs" />
@@ -364,6 +370,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ConfigurableStart\README.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <!--Krafs.Publicizer items-->

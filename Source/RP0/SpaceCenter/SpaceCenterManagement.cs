@@ -1766,6 +1766,8 @@ namespace RP0
                         }
                         var proj = new VesselRepairProject(FlightGlobals.ActiveVessel, launchSite, lc);
                         lc.VesselRepairs.Add(proj);
+
+                        KCT_GUI.GUIStates.ShowBuildList = true;
                     }
                 }
             }

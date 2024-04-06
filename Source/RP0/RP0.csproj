@@ -41,6 +41,7 @@
     <Compile Include="Harmony\FlightInputHandler.cs" />
     <Compile Include="Harmony\ModuleRCS.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
+    <Compile Include="Singletons\LeaderNotifications.cs" />
     <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />
     <Compile Include="UI\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="UI\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
+    <Compile Include="Utilities\LeaderUtils.cs" />
     <Compile Include="Utilities\RP0DTUtils.cs" />
     <Compile Include="Harmony\MainMenu.cs" />
     <Compile Include="Harmony\CrewListItem.cs" />

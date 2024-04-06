@@ -512,19 +512,8 @@ namespace RP0.Programs
 
                 text = $"<b>Slots Taken: {slots}</b>\n\n{text}";
 
-                var leadersUnlockedByThis = StrategySystem.Instance.SystemConfig.Strategies
-                    .OfType<StrategyConfigRP0>()
-                    .Where(s => s.DepartmentName != "Programs" &&
-                                s.RequirementsBlock != null &&
-                                (s.RequirementsBlock.Op is Any ||
-                                 s.RequirementsBlock.Op is All && s.RequirementsBlock.Reqs.Count == 1) &&
-                                s.RequirementsBlock.ChildBlocks.Count == 0 &&
-                                s.RequirementsBlock.Reqs.Any(r => !r.IsInverted &&
-                                                                  r is ProgramRequirement pr &&
-                                                                  pr.ProgramName == name))
-                    .Select(s => s.title);
-
-                string leaderString = string.Join("\n", leadersUnlockedByThis);
+                var leaderTitles = LeaderUtils.GetLeadersUnlockedByProgram(name).Select(s => s.title);
+                string leaderString = string.Join("\n", leaderTitles);
                 if (!string.IsNullOrEmpty(leaderString))
                     text += "\n\n" + Localizer.Format("#rp0_Leaders_UnlocksLeader") + leaderString;
 

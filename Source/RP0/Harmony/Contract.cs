@@ -68,7 +68,9 @@ namespace RP0.Harmony
                     value += $"\n{KSP.Localization.Localizer.Format("#rp0_ContractRewards_GainApplicants", applicants)}";
             }
 
-            var leaderTitles = LeaderUtils.GetLeadersUnlockedByContract(_contract).Select(s => s.title);
+            var leaderTitles = LeaderUtils.GetLeadersUnlockedByContract(_contract)
+                .Where(s => !_isReward || !s.IsUnlocked())
+                .Select(s => s.title);
             string leaderString = string.Join("\n", leaderTitles);
             if (!string.IsNullOrEmpty(leaderString))
                 value += "\n" + KSP.Localization.Localizer.Format(_isReward ? "#rp0_Leaders_LeadersUnlocked" : "#rp0_Leaders_UnlocksLeader") + leaderString;

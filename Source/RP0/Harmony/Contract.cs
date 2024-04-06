@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using HarmonyLib;
+using RP0.Leaders;
 using UniLinq;
 
 namespace RP0.Harmony
@@ -59,6 +60,7 @@ namespace RP0.Harmony
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ContractReward, 0d, 0d, 0d, _contract.ReputationCompletion * repToConf, 0d);
                 value += $"<color={CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence)}>{CurrencyModifierQueryRP0.SpriteString(CurrencyRP0.Confidence)} {cmq.GetTotal(CurrencyRP0.Confidence):N0} {cmq.GetEffectDeltaText(CurrencyRP0.Confidence, "N0", CurrencyModifierQuery.TextStyling.OnGUI)}  </color>";
             }
+
             if (PresetManager.Instance != null)
             {
                 int applicants = Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(_contract.contractType.name);

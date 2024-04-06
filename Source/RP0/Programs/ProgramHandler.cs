@@ -12,6 +12,7 @@ using System.Reflection.Emit;
 using KSP.UI.Screens.DebugToolbar;
 using ROUtils.DataTypes;
 using RP0.Singletons;
+using RP0.Leaders;
 
 namespace RP0.Programs
 {

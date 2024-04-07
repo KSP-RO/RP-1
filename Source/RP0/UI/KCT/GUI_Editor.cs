@@ -148,6 +148,7 @@ namespace RP0
                 _simulationConfigPosition.height = 1;
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
+                GameplayTips.Instance.CheckAndShowExcessECTip(EditorLogic.fetch.ship);
             }
             if (!KCTSettings.Instance.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {

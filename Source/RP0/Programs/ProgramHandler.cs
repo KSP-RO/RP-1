@@ -502,12 +502,19 @@ namespace RP0.Programs
             GUILayout.EndVertical();
         }
 
-        public void ActivateProgram(Program p)
+        public Program ActivateProgram(string programName, Program.Speed speed)
+        {
+            Program p = Programs.Find(p2 => p2.name == programName);
+            p.SetSpeed(speed);
+            return ActivateProgram(p);
+        }
+
+        public Program ActivateProgram(Program p)
         {
             if (p == null)
             {
                 RP0Debug.LogError($"Error: Tried to accept null program!");
-                return;
+                return null;
             }
 
             Program activeP = p.Accept();
@@ -523,8 +530,17 @@ namespace RP0.Programs
             else
                 ps.SetProgram(activeP);
 
-
             SpaceCenterManagement.Instance.StartedProgram = true;
+
+            return activeP;
+        }
+
+        public Program CompleteProgram(string programName)
+        {
+            Program p = ActivePrograms.Find(p2 => p2.name == programName);
+            CompleteProgram(p);
+
+            return p;
         }
 
         public void CompleteProgram(Program p)

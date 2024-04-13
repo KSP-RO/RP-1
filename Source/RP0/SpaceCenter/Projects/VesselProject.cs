@@ -1314,7 +1314,7 @@ namespace RP0
             double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
             double bpLeft = bp - progress;
             if (newEff == LCEfficiency.MaxEfficiency)
-                return (bpLeft - progress) / (rate * newEff);
+                return bpLeft / (rate * newEff);
 
             return CalculateTimeLeftForBuildRate(bpLeft, rate, startingEff, out newEff);
         }

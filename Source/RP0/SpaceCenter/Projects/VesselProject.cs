@@ -64,8 +64,6 @@ namespace RP0
         [Persistent]
         public Guid shipID;
         [Persistent]
-        public bool cannotEarnScience;
-        [Persistent]
         public bool humanRated;
         [Persistent]
         public float cost = 0;
@@ -256,7 +254,6 @@ namespace RP0
 
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
-            cannotEarnScience = false;
 
             //get the crew from the editorlogic
             desiredManifest = new List<string>();
@@ -281,7 +278,6 @@ namespace RP0
             flag = flagURL;
             humanRated = isHuman;
             Type = editorFacility == EditorFacility.VAB ? ProjectType.VAB : ProjectType.SPH;
-            cannotEarnScience = false;
             cost = spentFunds;
             FacilityBuiltIn = editorFacility;
         }
@@ -329,7 +325,6 @@ namespace RP0
                         mass += def.density * (float)rsc.amount;
                 }
             }
-            cannotEarnScience = true;
             numStages = stages.Count;
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 

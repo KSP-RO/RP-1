@@ -1365,7 +1365,7 @@ namespace RP0
             return 0d;
         }
 
-        private void MoveVesselToWarehouse()
+        public void MoveVesselToWarehouse()
         {
             SCMEvents.Instance.KCTButtonStockImportant = true;
 

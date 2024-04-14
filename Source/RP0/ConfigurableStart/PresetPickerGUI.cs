@@ -5,18 +5,17 @@ namespace RP0.ConfigurableStart
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
     public class PresetPickerGUI : MonoBehaviour
     {
-        //TODO: find a better starting position
-        private static Rect _selectionWindowRect = new Rect(267, 104, 400, 200);
-        private static bool _shouldResetUIHeight = false;
-        private static bool _showUI = false;
+        private Rect _selectionWindowRect = new Rect(267, 104, 400, 200);
+        private bool _shouldResetUIHeight = false;
+        private bool _showUI = false;
 
-        private static string[] _loadedScenarioNames;
-        private static int _selectedScenarioIndex = 0;
+        private string[] _loadedScenarioNames;
+        private int _selectedScenarioIndex = 0;
 
         public static PresetPickerGUI Instance { get; private set; }
         public bool Initialized { get; private set; }
 
-        public void Awake()
+        internal void Awake()
         {
             if (Instance != null)
             {
@@ -27,9 +26,15 @@ namespace RP0.ConfigurableStart
             Instance = this;
         }
 
-        public static void SetVisible(bool visible) => _showUI = visible;
+        internal void OnDestroy()
+        {
+            if (Instance == this)
+                Instance = null;
+        }
 
-        public static void ToggleVisible() => _showUI = !_showUI;
+        public void SetVisible(bool visible) => _showUI = visible;
+
+        public void ToggleVisible() => _showUI = !_showUI;
 
         public void Setup(string[] names)
         {
@@ -47,11 +52,11 @@ namespace RP0.ConfigurableStart
                     _shouldResetUIHeight = false;
                 }
 
-                _selectionWindowRect = GUILayout.Window(GetInstanceID(), _selectionWindowRect, SelectionWindow, "Scenario Selector", HighLogic.Skin.window);
+                _selectionWindowRect = GUILayout.Window(GetInstanceID(), _selectionWindowRect, RenderSelectionWindow, "Scenario Selector", HighLogic.Skin.window);
             }
         }
 
-        private static void SelectionWindow(int windowID)
+        private void RenderSelectionWindow(int windowID)
         {
             GUILayout.BeginVertical(HighLogic.Skin.box);
             {
@@ -63,11 +68,11 @@ namespace RP0.ConfigurableStart
                     {
                         _shouldResetUIHeight = true;
                         RP0Debug.Log("Selected Scenario changed, updating values");
-                        ScenarioHandler.SetCurrentScenarioFromName(_loadedScenarioNames[_selectedScenarioIndex]);
+                        ScenarioHandler.Instance.SetCurrentScenarioFromName(_loadedScenarioNames[_selectedScenarioIndex]);
                     }
                 }
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(ScenarioHandler.CurrentScenario?.Description ?? "");
+                GUILayout.Label(ScenarioHandler.Instance.CurrentScenario?.Description ?? "");
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndVertical();

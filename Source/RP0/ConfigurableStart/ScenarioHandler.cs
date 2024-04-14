@@ -18,18 +18,16 @@ namespace RP0.ConfigurableStart
     {
         public const string EmptyScenarioName = "None";
 
-        private static bool _mainMenuVisited;
-        private static string _curScenarioName;
-        private static readonly Dictionary<string, ConfigNode> _contractNodes = new Dictionary<string, ConfigNode>();    // to cache the contract nodes
-        private static uint _runningContractCoroutines = 0;
-        private static bool _contractsIterated = false;
-
+        private string _curScenarioName;
+        private readonly Dictionary<string, ConfigNode> _contractNodes = new Dictionary<string, ConfigNode>();    // to cache the contract nodes
+        private uint _runningContractCoroutines = 0;
+        private bool _contractsIterated = false;
         private TextMeshProUGUI _btnText;
 
         public static ScenarioHandler Instance { get; private set; }
-        public static Dictionary<string, Scenario> LoadedScenarios { get; private set; }
-        public static bool ContractsInitialized => _runningContractCoroutines == 0 && _contractsIterated;
-        public static Scenario CurrentScenario
+        public Dictionary<string, Scenario> LoadedScenarios { get; private set; }
+        public bool ContractsInitialized => _runningContractCoroutines == 0 && _contractsIterated;
+        public Scenario CurrentScenario
         {
             get
             {
@@ -45,7 +43,7 @@ namespace RP0.ConfigurableStart
             }
         }
 
-        public static void SetCurrentScenarioFromName(string name)
+        public void SetCurrentScenarioFromName(string name)
         {
             if (!string.IsNullOrEmpty(name) && LoadedScenarios.ContainsKey(name))
             {
@@ -69,12 +67,8 @@ namespace RP0.ConfigurableStart
 
             // don't destroy on scene switch
             DontDestroyOnLoad(this);
-            
-            if (!_mainMenuVisited)
-            {
-                GameEvents.onGameNewStart.Add(OnGameNewStart);
-                _mainMenuVisited = true;
-            }
+
+            GameEvents.onGameNewStart.Add(OnGameNewStart);
 
             LoadedScenarios = Database.CustomScenarios;
             _curScenarioName = EmptyScenarioName;
@@ -92,7 +86,7 @@ namespace RP0.ConfigurableStart
         
         public void OnGameNewStart()
         {
-            PresetPickerGUI.SetVisible(false);
+            PresetPickerGUI.Instance?.SetVisible(false);
             if (CurrentScenario == null || CurrentScenario.ScenarioName == EmptyScenarioName) return;
 
             switch (HighLogic.CurrentGame.Mode)
@@ -784,7 +778,7 @@ namespace RP0.ConfigurableStart
             var btn = newBtn.GetComponentInChildren<Button>();
             btn.onClick.AddListener(() =>
             {
-                PresetPickerGUI.ToggleVisible();
+                PresetPickerGUI.Instance.ToggleVisible();
             });
 
             hzGroup.transform.SetParent(uiItem.transform);

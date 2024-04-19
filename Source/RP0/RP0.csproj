@@ -47,6 +47,7 @@
     <Compile Include="Harmony\ModuleRCS.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
     <Compile Include="Singletons\LeaderNotifications.cs" />
+    <Compile Include="SpaceCenter\Projects\HireStaffProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />
     <Compile Include="UI\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />

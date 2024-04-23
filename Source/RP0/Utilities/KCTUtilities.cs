@@ -493,7 +493,9 @@ namespace RP0
             newShip.progress = progressBP;
             RP0Debug.Log($"Finished? {editableShip.IsFinished}");
             if (editableShip.IsFinished)
-                newShip.cannotEarnScience = true;
+            {
+                newShip.MoveVesselToWarehouse();
+            }
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 

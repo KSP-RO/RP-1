@@ -12,7 +12,7 @@ namespace RP0
         Pad,
     }
 
-    public class LCData
+    public class LCData : IConfigNode
     {
         [Persistent] public string Name;
         /// <summary>
@@ -192,6 +192,16 @@ namespace RP0
             }
 
             return totalCost;
+        }
+
+        public void Load(ConfigNode node)
+        {
+            ConfigNode.LoadObjectFromConfig(this, node);
+        }
+
+        public void Save(ConfigNode node)
+        {
+            ConfigNode.CreateConfigFromObject(this, node);
         }
     }
 }

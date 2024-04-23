@@ -51,12 +51,6 @@ namespace RP0
             Instance = this;
         }
 
-        public override void OnDestroy()
-        {
-            if (Instance == this)
-                Instance = null;
-        }
-
         public void Load()
         {
             if (TimeWarp.fetch != null)

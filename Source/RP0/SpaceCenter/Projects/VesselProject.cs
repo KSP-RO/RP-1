@@ -64,8 +64,6 @@ namespace RP0
         [Persistent]
         public Guid shipID;
         [Persistent]
-        public bool cannotEarnScience;
-        [Persistent]
         public bool humanRated;
         [Persistent]
         public float cost = 0;
@@ -256,7 +254,6 @@ namespace RP0
 
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
-            cannotEarnScience = false;
 
             //get the crew from the editorlogic
             desiredManifest = new List<string>();
@@ -281,7 +278,6 @@ namespace RP0
             flag = flagURL;
             humanRated = isHuman;
             Type = editorFacility == EditorFacility.VAB ? ProjectType.VAB : ProjectType.SPH;
-            cannotEarnScience = false;
             cost = spentFunds;
             FacilityBuiltIn = editorFacility;
         }
@@ -329,7 +325,6 @@ namespace RP0
                         mass += def.density * (float)rsc.amount;
                 }
             }
-            cannotEarnScience = true;
             numStages = stages.Count;
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
@@ -1314,7 +1309,7 @@ namespace RP0
             double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
             double bpLeft = bp - progress;
             if (newEff == LCEfficiency.MaxEfficiency)
-                return (bpLeft - progress) / (rate * newEff);
+                return bpLeft / (rate * newEff);
 
             return CalculateTimeLeftForBuildRate(bpLeft, rate, startingEff, out newEff);
         }
@@ -1365,7 +1360,7 @@ namespace RP0
             return 0d;
         }
 
-        private void MoveVesselToWarehouse()
+        public void MoveVesselToWarehouse()
         {
             SCMEvents.Instance.KCTButtonStockImportant = true;
 

@@ -491,8 +491,8 @@ namespace RP0
 
             GetShipEditProgress(editableShip, out double progressBP, out _, out _);
             newShip.progress = progressBP;
-            RP0Debug.Log($"Finished? {editableShip.IsFinished}");
-            if (editableShip.IsFinished)
+            RP0Debug.Log($"Finished? {newShip.IsFinished}");
+            if (newShip.IsFinished)
             {
                 newShip.MoveVesselToWarehouse();
             }

@@ -1,7 +1,7 @@
 [
     {
         "name": "RO-Atar101D",
-        "title": "Atar 101D Turbojet",
+        "title": "Atar 101 Turbojet",
         "description": "",
         "mod": "SXT (RO Addition)",
         "cost": 196,
@@ -66,6 +66,27 @@
         "engine_config": "J35",
         "upgrade": false,
         "entry_cost_mods": "J35-A-11",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO-SXT-R79",
+        "title": "R-79 Low-Bypass Turbofan",
+        "description": "",
+        "mod": "SXT (RO Addition)",
+        "cost": "743",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "",
+        "year": "1986",
+        "technology": "refinedTurbofans",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "R79",
+        "upgrade": false,
+        "entry_cost_mods": "R-79-300",
         "identical_part_name": "",
         "module_tags": []
     },

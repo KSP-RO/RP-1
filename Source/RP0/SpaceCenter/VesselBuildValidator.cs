@@ -102,6 +102,10 @@ namespace RP0
             while (_validationResult == ValidationResult.Undecided)
                 yield return null;
 
+            ProcessExcessEC(vp);
+            while (_validationResult == ValidationResult.Undecided)
+                yield return null;
+
             _routine = null;
             if (_validationResult != ValidationResult.Success)
             {
@@ -271,6 +275,36 @@ namespace RP0
                     new MultiOptionDialog("ontooledPartsWarningPopup",
                         "Tool them in the RP-1 menu to reduce vessel cost and integration time.",
                         "Untooled parts",
+                        HighLogic.UISkin,
+                        dlgRect,
+                        buttons),
+                    false,
+                    HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+        }
+
+        private void ProcessExcessEC(VesselProject vp)
+        {
+            _validationResult = ValidationResult.Success;
+            if (!HighLogic.LoadedSceneIsEditor)
+            {
+                return;
+            }
+            
+            if (GameplayTips.Instance.ShipHasExcessEC(EditorLogic.fetch.ship))
+            {
+                _validationResult = ValidationResult.Undecided;
+
+                var dlgRect = new Rect(0.5f, 0.5f, 400, 100);
+                var buttons = new DialogGUIButton[] {
+                    new DialogGUIButton("Cancel integration", () => { _validationResult = ValidationResult.Fail; }),
+                    new DialogGUIButton("Integrate anyway", () => { _validationResult = ValidationResult.Success; })
+                };
+
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                    new MultiOptionDialog("excessECWarningPopup",
+                        KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_ExcessEC_Text"),
+                        KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_ExcessEC_Title"),
                         HighLogic.UISkin,
                         dlgRect,
                         buttons),

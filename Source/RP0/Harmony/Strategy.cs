@@ -2,6 +2,7 @@
 using Strategies;
 using RP0.Programs;
 using KSP.Localization;
+using KSP.UI.Screens;
 
 namespace RP0.Harmony
 {
@@ -103,6 +104,31 @@ namespace RP0.Harmony
                 return false;
             }
             return true;
+        }
+
+        // Fix strategies getting deactivated in Editor due to Planetarium time not getting updated on reverts
+        [HarmonyPrefix]
+        [HarmonyPatch("Update")]
+        internal static bool Prefix_Update(Strategy __instance)
+        {
+            if (__instance.LongestDuration != 0d &&
+                __instance.dateActivated + __instance.LongestDuration <= Planetarium.GetUniversalTime())
+            {
+                __instance.SendStateMessage(Strategy.cacheAutoLOC_304909, __instance.MessageDeactivatedMaxTime(),
+                                            MessageSystemButton.MessageButtonColor.ORANGE, MessageSystemButton.ButtonIcons.ALERT);
+                __instance.Deactivate();
+                return false;
+            }
+
+            __instance.OnUpdate();
+
+            int i = 0;
+            for (int count = __instance.effects.Count; i < count; i++)
+            {
+                __instance.effects[i].Update();
+            }
+
+            return false;
         }
     }
 }

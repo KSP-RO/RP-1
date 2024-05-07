@@ -30,7 +30,7 @@ namespace ContractConfigurator.RP0
             bool isValidVel = srfVelQueue.Count > 0 && srfVelQueue.Peek() >= minSrfVel;
             bool isValidAlt = vessel.radarAltitude < 100;
 
-            RP0Debug.Log($"[ImpactCB] VesselMeetsCondition vel: {srfVelQueue.Peek()}; isDestroyed: {isDestroyed}; isCorrectBody: {isCorrectBody}; radarAltitude: {vessel.radarAltitude}");
+            RP0Debug.Log($"[ImpactCB] VesselMeetsCondition vel: {(srfVelQueue.Count > 0 ? srfVelQueue.Peek() : 0)}; isDestroyed: {isDestroyed}; isCorrectBody: {isCorrectBody}; radarAltitude: {vessel.radarAltitude}");
 
             return isDestroyed && isCorrectBody && isValidVel && isValidAlt;
         }

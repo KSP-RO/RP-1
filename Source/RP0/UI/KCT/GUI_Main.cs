@@ -256,6 +256,9 @@ namespace RP0
             GUIStates.ShowPresetSaver = false;
             GUIStates.ShowLaunchSiteSelector = false;
             GUIStates.ShowAirlaunch = false;
+            GUIStates.ShowSimulationGUI = false;
+            GUIStates.ShowSimConfig = false;
+            GUIStates.ShowSimBodyChooser = false;
 
             ResetBLWindow();
         }

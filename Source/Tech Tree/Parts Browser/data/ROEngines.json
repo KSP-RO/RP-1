@@ -939,6 +939,75 @@
         "module_tags": []
     },
     {
+        "name": "ROE-Agena_Retro_TypeIII",
+        "title": "Agena Retro Type III",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "8",
+        "entry_cost": "1",
+        "category": "SOLID",
+        "info": "",
+        "year": "1959",
+        "technology": "solids1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "2000,SolidsComposite",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Agena_Spinrocket",
+        "title": "Agena Spinrocket",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "4",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1959",
+        "technology": "solids1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "500,SolidsComposite",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Alcyone1",
+        "title": "Alcyone-1",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "75",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1962",
+        "technology": "solids1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Alcyone1",
+        "upgrade": false,
+        "entry_cost_mods": "Alcyone-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Algol1",
         "title": "Algol IB",
         "description": "",
@@ -3904,6 +3973,29 @@
         ]
     },
     {
+        "name": "ROE-M55",
+        "title": "M55",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "750",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1962",
+        "technology": "solids1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "M55",
+        "upgrade": false,
+        "entry_cost_mods": "M55",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-MB35",
         "title": "MB-35",
         "description": "",
@@ -6860,6 +6952,52 @@
         ]
     },
     {
+        "name": "ROE-SR19",
+        "title": "SR19",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1964",
+        "technology": "solids1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SR19",
+        "upgrade": false,
+        "entry_cost_mods": "SR19-AJ-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-SR73",
+        "title": "SR73",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1964",
+        "technology": "solids1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SR73",
+        "upgrade": false,
+        "entry_cost_mods": "SR73-AJ-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-SRMU",
         "title": "SRMU",
         "description": "",
@@ -7020,6 +7158,52 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "ROE-Star13",
+        "title": "Star-13",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-13",
+        "upgrade": false,
+        "entry_cost_mods": "Star-13",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star13A",
+        "title": "Star-13A",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-13A",
+        "upgrade": false,
+        "entry_cost_mods": "Star-13A",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
     },
     {
         "name": "ROE-Star37",
@@ -7389,6 +7573,29 @@
         "identical_part_name": "TD-339",
         "module_tags": [
             "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "ROE-TX280",
+        "title": "TX-280 Ullage Motor",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "20",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1964",
+        "technology": "solids1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SIVUllageMotor",
+        "upgrade": false,
+        "entry_cost_mods": "TX-280",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
         ]
     },
     {

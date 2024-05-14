@@ -26,7 +26,7 @@ namespace RP0
         private static double _accumulatedTimeBefore;
 
         private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
-        private static GUIContent _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
+        private static GUIContent _emptyTexture, _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
             _reconTexture, _rolloutTexture, _rollbackTexture, _airlaunchTexture, _recoveryTexture, _hangarTexture, _repairTexture;
         private const int _width1 = 120;
         private const int _width2 = 100;
@@ -115,6 +115,7 @@ namespace RP0
             _settingsTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_settings16", false));
             _techTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_tech16", false));
             _repairTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_repair", false));
+            _emptyTexture = new GUIContent("");
         }
 
         public static void DrawBuildListWindow(int windowID)
@@ -653,6 +654,9 @@ namespace RP0
             if (SpaceCenterManagement.Instance.fundTarget.IsValid)
                 _allItems.Add(SpaceCenterManagement.Instance.fundTarget);
 
+            if (SpaceCenterManagement.Instance.staffTarget.IsValid)
+                _allItems.Add(SpaceCenterManagement.Instance.staffTarget);
+
             // Precalc times and then sort
             foreach (var b in _allItems)
                 _estTimeForItem[b] = b.GetTimeLeftEst(_timeBeforeItem.ValueOrDefault(b));
@@ -673,6 +677,13 @@ namespace RP0
                     continue;
 
                 GUILayout.BeginHorizontal();
+                if ((t is HireStaffProject || t is FundTargetProject) &&
+                    GUILayout.Button("X", GUILayout.Width(_butW)))
+                {
+                    (t as HireStaffProject)?.Clear();
+                    (t as FundTargetProject)?.Clear();
+                }
+
                 DrawTypeIcon(t);
                 VesselProject vp;
                 if (t is ReconRolloutProject r)
@@ -833,7 +844,7 @@ namespace RP0
                     return _repairTexture;
             }
 
-            return _constructTexture;
+            return _emptyTexture;
         }
 
         private static void DrawTypeIcon(ISpaceCenterProject b)

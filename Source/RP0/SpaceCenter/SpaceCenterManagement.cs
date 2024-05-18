@@ -140,6 +140,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public FundTargetProject fundTarget = new FundTargetProject();
 
+        [KSPField(isPersistant = true)]
+        public HireStaffProject staffTarget = new HireStaffProject();
+
         #endregion
 
         #region Fields
@@ -1691,6 +1694,14 @@ namespace RP0
                 if (fundTarget.IsValid && fundTarget.GetTimeLeft() < 0.5d)
                     fundTarget.Clear();
             }
+
+            if (staffTarget.IsValid)
+            {
+                staffTarget.IncrementProgress(UTDiff);
+                if (staffTarget.IsComplete())
+                    staffTarget.Clear();
+            }
+
             Profiler.EndSample();
         }
 

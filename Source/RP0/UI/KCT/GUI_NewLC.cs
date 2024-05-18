@@ -590,6 +590,8 @@ namespace RP0
                     if (isModify)
                     {
                         lc = activeLC;
+                        if (SpaceCenterManagement.Instance.staffTarget.LCID == lc.ID)
+                            SpaceCenterManagement.Instance.staffTarget.Clear();
                         KCTUtilities.ChangeEngineers(lc, -engineers);
                         SpaceCenterManagement.Instance.ActiveSC.SwitchToPrevLaunchComplex();
 

@@ -377,6 +377,8 @@ namespace RP0
                 SpaceCenterManagement.Instance.UnregsiterLP(lp);
 
             SpaceCenterManagement.Instance.UnregisterLC(this);
+            if (SpaceCenterManagement.Instance.staffTarget.LCID == ID)
+                SpaceCenterManagement.Instance.staffTarget.Clear();
 
             int index = KSC.LaunchComplexes.IndexOf(this);
             KSC.LaunchComplexes.RemoveAt(index);

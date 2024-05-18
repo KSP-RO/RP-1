@@ -491,9 +491,11 @@ namespace RP0
 
             GetShipEditProgress(editableShip, out double progressBP, out _, out _);
             newShip.progress = progressBP;
-            RP0Debug.Log($"Finished? {editableShip.IsFinished}");
-            if (editableShip.IsFinished)
-                newShip.cannotEarnScience = true;
+            RP0Debug.Log($"Finished? {newShip.IsFinished}");
+            if (newShip.IsFinished)
+            {
+                newShip.MoveVesselToWarehouse();
+            }
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
@@ -682,6 +684,8 @@ namespace RP0
                 _checkTime(course, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.fundTarget.IsValid)
                 _checkTime(SpaceCenterManagement.Instance.fundTarget, ref shortestTime, ref thing);
+            if (SpaceCenterManagement.Instance.staffTarget.IsValid)
+                _checkTime(SpaceCenterManagement.Instance.staffTarget, ref shortestTime, ref thing);
 
             return thing;
         }
@@ -1320,6 +1324,31 @@ namespace RP0
                 b.RemoveFromBuildList(out _);
             }
             AddFunds(b.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
+        }
+
+        public static void HireStaff(bool isResearch, int workerAmount, LaunchComplex lc = null)
+        {
+            // Use up applicants first
+            int workersToHire = Math.Max(0, workerAmount - SpaceCenterManagement.Instance.Applicants);
+
+            // Note: have to pass base, not modified, cost here, since the CMQ reruns
+            SpendFunds(workersToHire * Database.SettingsSC.HireCost, isResearch ? TransactionReasonsRP0.HiringResearchers : TransactionReasonsRP0.HiringEngineers);
+            if (isResearch)
+            {
+                ChangeResearchers(workerAmount);
+                SpaceCenterManagement.Instance.UpdateTechTimes();
+            }
+            else
+            {
+                LCSpaceCenter ksc = lc?.KSC ?? SpaceCenterManagement.Instance.ActiveSC;
+                ChangeEngineers(ksc, workerAmount);
+                if (lc != null)
+                    ChangeEngineers(lc, workerAmount);
+                ksc.RecalculateBuildRates(false);
+            }
+            SpaceCenterManagement.Instance.Applicants = Math.Max(0, SpaceCenterManagement.Instance.Applicants - workerAmount);
+            if (SpaceCenterManagement.Instance.Applicants == 0)
+                SpaceCenterManagement.Instance.HiredStarterApplicants = true;
         }
 
         public static void ChangeEngineers(LaunchComplex currentLC, int delta)

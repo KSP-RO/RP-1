@@ -148,6 +148,7 @@ namespace RP0
                 _simulationConfigPosition.height = 1;
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
+                GameplayTips.Instance.CheckAndShowExcessECTip(EditorLogic.fetch.ship);
             }
             if (!KCTSettings.Instance.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {
@@ -356,10 +357,11 @@ namespace RP0
             }
 
             GUILayout.BeginHorizontal();
-            if (EditorDriver.editorFacility == EditorFacility.SPH || (SpaceCenterManagement.Instance.EditorVessel.LC.IsHumanRated && !SpaceCenterManagement.Instance.EditorVessel.humanRated))
+            VesselProject curVessel = SpaceCenterManagement.Instance.EditorVessel;
+            if (curVessel.LC != null && (EditorDriver.editorFacility == EditorFacility.SPH || (curVessel.LC.IsHumanRated && !curVessel.humanRated)))
             {
                 GUILayout.Label("Engineer Cap:");
-                GUILayout.Label(SpaceCenterManagement.Instance.EditorVessel.LC.MaxEngineersFor(SpaceCenterManagement.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
+                GUILayout.Label(curVessel.LC.MaxEngineersFor(curVessel).ToString(), GetLabelRightAlignStyle());
             }
             else
             {

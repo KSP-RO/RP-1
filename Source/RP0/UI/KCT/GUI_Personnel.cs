@@ -405,16 +405,16 @@ namespace RP0
                 {
                     LaunchComplex currentLC = isResearch ? null : ksc.LaunchComplexes[_LCIndex];
                     int curCount = isResearch ? SpaceCenterManagement.Instance.Researchers : currentLC.Engineers;
-                    string sNumCrew = curCount.ToString("N0");
+                    string sNumStaff = curCount.ToString("N0");
                     string sReserveFunds = Funding.Instance.Funds.ToString("N0");
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(dialogName, "", dialogTitle, HighLogic.UISkin,
                             isResearch ? new DialogGUISpace(0f) : new DialogGUILabel($"LC: {currentLC.Name}"),
                             new DialogGUILabel($"Final count {(isResearch ? "" : $"(max: {currentLC.MaxEngineers:N0})")}"),
-                            new DialogGUITextInput(sNumCrew, false, 7, (string n) =>
+                            new DialogGUITextInput(sNumStaff, false, 7, (string n) =>
                             {
-                                sNumCrew = n;
-                                return sNumCrew;
+                                sNumStaff = n;
+                                return sNumStaff;
                             }, 24f),
                             new DialogGUILabel("Reserve funds"),
                             new DialogGUITextInput(sReserveFunds, false, 12, (string n) =>
@@ -422,16 +422,16 @@ namespace RP0
                                 sReserveFunds = n;
                                 return sReserveFunds;
                             }, 24f),
-                            new DialogGUIButton("Add", () => { TryAddAutoHire(sNumCrew, sReserveFunds, currentLC); }),
+                            new DialogGUIButton("Add", () => { TryAddAutoHire(sNumStaff, sReserveFunds, currentLC); }),
                             new DialogGUIButton("Cancel", () => { })
                         ), false, HighLogic.UISkin).HideGUIsWhilePopup();
                 }
             }
         }
 
-        private static void TryAddAutoHire(string sNumCrew, string sReserveFunds, LaunchComplex lc)
+        private static void TryAddAutoHire(string sNumStaff, string sReserveFunds, LaunchComplex lc)
         {
-            bool b1 = int.TryParse(sNumCrew, out int numCrew);
+            bool b1 = int.TryParse(sNumStaff, out int numCrew);
             bool b2 = double.TryParse(sReserveFunds, out double reserveFunds);
             if (!b1 || !b2)
             {
@@ -449,14 +449,16 @@ namespace RP0
                 if (lc == null)
                 {
                     startCount = SpaceCenterManagement.Instance.Researchers;
-                    endCount = numCrew;
+                    endCount = Math.Max(numCrew, startCount);
                 }
                 else
                 {
-                    startCount = Math.Min(lc.Engineers, lc.MaxEngineers);
+                    startCount = lc.Engineers;
+                    endCount = Math.Min(numCrew, lc.MaxEngineers);
+                    endCount = Math.Max(endCount, startCount);
                 }
 
-                var target = new HireStaffProject(startCount, numCrew, reserveFunds, lc);
+                var target = new HireStaffProject(startCount, endCount, reserveFunds, lc);
                 SpaceCenterManagement.Instance.staffTarget = target;
             }
         }

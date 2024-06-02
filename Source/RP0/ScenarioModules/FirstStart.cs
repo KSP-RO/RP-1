@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 
 namespace RP0
@@ -31,7 +29,6 @@ namespace RP0
                 }
 
                 ScienceUtils.MarkExperimentsAsDone(Database.StartCompletedExperiments);
-                ClobberRealChuteDefaultSettings();
                 CopyCraftFiles();
                 UnlockCreditHandler.Instance.IncrementCredit("start", HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().StartingUnlockCredit);
 
@@ -52,25 +49,6 @@ namespace RP0
                     partsPurchased = new List<AvailablePart>()
                 };
                 ResearchAndDevelopment.Instance.SetTechState(StartTechID, ptn);
-            }
-        }
-
-        private void ClobberRealChuteDefaultSettings()
-        {
-            var rcAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "RealChute");
-            if (rcAssembly != null &&
-               rcAssembly.assembly.GetType("RealChute.RealChuteSettings") is Type rcSettings &&
-               rcSettings.GetProperty("Instance", BindingFlags.Static | BindingFlags.Public) is PropertyInfo instancePInf &&
-               rcSettings.GetProperty("AutoArm", BindingFlags.Instance | BindingFlags.Public) is PropertyInfo autoArmPInf &&
-               rcSettings.GetMethod("SaveSettings", BindingFlags.Static | BindingFlags.Public) is MethodInfo saveMInf)
-            {
-                object settingsInstance = instancePInf.GetValue(null);
-                autoArmPInf?.SetValue(settingsInstance, true);
-                saveMInf.Invoke(null, null);
-            }
-            else
-            {
-                RP0Debug.Log("FirstStart: RealChute not found");
             }
         }
 

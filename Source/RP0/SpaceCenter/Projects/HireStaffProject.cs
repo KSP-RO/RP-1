@@ -115,7 +115,7 @@ namespace RP0
             if (SpaceCenterManagement.Instance.Applicants > 0 || Funding.Instance.Funds > nextHireAt)
             {
                 int numCanHire = (int)((Funding.Instance.Funds - reserveFunds) / modifiedHireCost);
-                numCanHire = SpaceCenterManagement.Instance.Applicants + numCanHire;
+                numCanHire = SpaceCenterManagement.Instance.Applicants + Math.Max(0, numCanHire);
                 KCTUtilities.HireStaff(IsResearch, Math.Min(numCanHire, NumLeftToHire), LC);
             }
 

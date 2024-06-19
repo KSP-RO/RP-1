@@ -1509,6 +1509,24 @@ namespace RP0
                 upgradable.configNode.SetValue("lvl", normLevel);
 
                 // Note that OnKSCFacilityUpgrading and OnKSCFacilityUpgraded events are not fired through this code path
+                // Still, we need to let RA know that it needs a reset to account for the finished upgrade.
+                if (scf == SpaceCenterFacility.TrackingStation)
+                {
+                    ClobberRACommnet();
+                }
+            }
+        }
+
+        private static void ClobberRACommnet()
+        {
+            var mInf = CommNetScenario.Instance?.GetType().GetMethod("ApplyTSLevelChange", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (mInf != null)
+            {
+                mInf.Invoke(CommNetScenario.Instance, new object[0]);
+            }
+            else
+            {
+                RP0Debug.LogError($"Failed to call ApplyTSLevelChange() on RA CommNetScenario");
             }
         }
     }

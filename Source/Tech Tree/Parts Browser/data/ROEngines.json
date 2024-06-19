@@ -7206,6 +7206,75 @@
         ]
     },
     {
+        "name": "ROE-Star13D",
+        "title": "Star-13D",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1963",
+        "technology": "solids1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-13D",
+        "upgrade": false,
+        "entry_cost_mods": "Star-13D",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star17",
+        "title": "Star-17",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "172",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1968",
+        "technology": "solids1967",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-17",
+        "upgrade": false,
+        "entry_cost_mods": "STAR-17",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star17A",
+        "title": "Star-17A",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "200",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1969",
+        "technology": "solids1969",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-17A",
+        "upgrade": false,
+        "entry_cost_mods": "Star-17A",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Star37",
         "title": "Star 37",
         "description": "",

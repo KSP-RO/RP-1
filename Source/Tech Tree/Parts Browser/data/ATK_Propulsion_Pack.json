@@ -227,7 +227,7 @@
         "title": "Star 17A",
         "description": "Apogee kick motor. Modifications: 175 mm straight section added to the Star 17. The 17A has been used for circularized orbits for the Skynet 1, NATO 1, and IMP-H & J satellites. This motor provides the high case safety factor required for this program. The TE-M-521-7 model used for several Air Force missions provides a typical safety factor with a 1.3 pound weight savings. Diameter: [0.44 m]. Plume configured by RealPlume.",
         "mod": "ATK Propulsion Pack",
-        "cost": 172,
+        "cost": 200,
         "entry_cost": 3440,
         "category": "SOLID",
         "info": "",

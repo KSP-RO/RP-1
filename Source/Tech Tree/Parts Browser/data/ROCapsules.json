@@ -3867,6 +3867,29 @@
         ]
     },
     {
+        "name": "ROC-LFVBDB",
+        "title": "Lunar Flying Vehicle",
+        "description": "",
+        "mod": "ROCapsules",
+        "cost": "1200",
+        "entry_cost": "30000",
+        "category": "EDL",
+        "info": "Lander",
+        "year": "1971",
+        "technology": "improvedLandingEngines",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROC-MercuryAdapterAtlas",
         "title": "Mercury-Atlas Adapter",
         "description": "",

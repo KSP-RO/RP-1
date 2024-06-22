@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.IO;
-using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -55,7 +55,7 @@ namespace RP0
         {
             foreach (KCT_Preset preset2 in Presets)
             {
-                if (KCTUtilities.ConfigNodesAreEquivalent(preset.AsConfigNode(), preset2.AsConfigNode()))
+                if (KSPUtils.ConfigNodesAreEquivalent(preset.AsConfigNode(), preset2.AsConfigNode()))
                     return Presets.IndexOf(preset2);
             }
             return -1;

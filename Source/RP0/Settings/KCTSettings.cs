@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -48,12 +49,6 @@ namespace RP0
         public override void Awake()
         {
             Instance = this;
-        }
-
-        public override void OnDestroy()
-        {
-            if (Instance == this)
-                Instance = null;
         }
 
         public void Load()

@@ -1,14 +1,32 @@
 using System.Collections.Generic;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
+using ToolbarControl_NS;
+using ROUtils;
+using UnityEngine.SceneManagement;
 
 namespace RP0
 {
-    public class SCMEvents
+    public class SCMEvents : HostedSingleton
     {
-        public static SCMEvents Instance { get; private set; } = new SCMEvents();
+        new public static SCMEvents Instance { get; private set; }
+        public static bool SceneChangeInProgress { get; private set; }
 
-        public bool SubscribedToEvents { get; private set; }
-        public bool CreatedEvents { get; private set; }
+        public SCMEvents(SingletonHost host) : base(host)
+        {
+            Instance = this;
+            CreateEvents();
+        }
+
+        public override void Awake()
+        {
+            SubscribeToEvents();
+        }
+
+        public override void Start()
+        {
+            ToolbarControl.RegisterMod(SpaceCenterManagement._modId, SpaceCenterManagement._modName);
+        }
+
         public bool KCTButtonStockImportant { get; set; }
 
         public static EventData<VesselProject> OnVesselAddedToBuildQueue;
@@ -45,13 +63,6 @@ namespace RP0
         /// </summary>
         public static EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>> ApplyGlobalEffectiveCostMultiplier;
 
-        public SCMEvents()
-        {
-            RP0Debug.Log("KCT_Events constructor");
-            SubscribedToEvents = false;
-            CreatedEvents = false;
-        }
-
         public void SubscribeToEvents()
         {
             // Fired via Tracking Station or via VesselRetrieval
@@ -62,6 +73,7 @@ namespace RP0
             GameEvents.onGameStateLoad.Add(OnGameStateLoad);
             GameEvents.OnPartPurchased.Add(OnPartPurchased);
             GameEvents.Modifiers.OnCurrencyModified.Add(OnCurrenciesModified);
+            GameEvents.onFlightGlobalsRemoveVessel.Add(OnRemoveVessel);
 
             // Flight
             GameEvents.onVesselSituationChange.Add(VesselSituationChange);
@@ -72,7 +84,6 @@ namespace RP0
             GameEvents.StageManager.OnGUIStageRemoved.Add(StageCountChangedEvent);
             GameEvents.StageManager.OnGUIStageSequenceModified.Add(StagingOrderChangedEvent);
             GameEvents.StageManager.OnPartUpdateStageability.Add(PartStageabilityChangedEvent);
-            GameEvents.onEditorStarted.Add(OnEditorStarted);
 
             // Space Center
             GameEvents.OnKSCFacilityUpgraded.Add(FacilityUpgradedEvent);
@@ -92,12 +103,8 @@ namespace RP0
             GameEvents.onGUIRnDComplexDespawn.Add(ExitSCSubsceneAndShow);
             GameEvents.onGUIKSPediaDespawn.Add(RestoreAllGUIs);
 
-            SubscribedToEvents = true;
-        }
-
-        private void OnEditorStarted()
-        {
-            KCTUtilities.HandleEditorButton();
+            GameEvents.onGameSceneLoadRequested.Add(OnGameSceneLoadRequested);
+            SceneManager.sceneLoaded += OnSceneLoaded;
         }
 
         public void CreateEvents()
@@ -122,8 +129,20 @@ namespace RP0
             ApplyResearchRateMultiplier = new EventData<Boxed<double>, NodeType, string>("ApplyResearchRateMultiplier");
             ApplyPartEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>>("ApplyPartEffectiveCostMultiplier");
             ApplyGlobalEffectiveCostMultiplier = new EventData<Boxed<double>, IEnumerable<string>, Dictionary<string, double>>("ApplyGlobalEffectiveCostMultiplier");
+        }
 
-            CreatedEvents = true;
+        private void OnGameSceneLoadRequested(GameScenes data)
+        {
+            SceneChangeInProgress = true;
+        }
+
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            if (mode != LoadSceneMode.Additive &&
+                HighLogic.GetLoadedGameSceneFromBuildIndex(scene.buildIndex) != GameScenes.LOADINGBUFFER)
+            {
+                SceneChangeInProgress = false;
+            }
         }
 
         public void HideAllGUIs()
@@ -196,6 +215,18 @@ namespace RP0
 
             RP0Debug.Log($"Detected sci point change: {changeDelta}");
             KCTUtilities.ProcessSciPointTotalChange(changeDelta);
+        }
+
+        private void OnRemoveVessel(Vessel v)
+        {
+            if (SceneChangeInProgress) return;
+
+            RP0Debug.Log($"OnRemoveVessel: {v.vesselName}");
+            VesselRepairProject r = SpaceCenterManagement.Instance.FindRepairForVessel(v);
+            if (r != null)
+            {
+                r.LC.VesselRepairs.Remove(r);
+            }
         }
 
         private void ShipModifiedEvent(ShipConstruct vessel)

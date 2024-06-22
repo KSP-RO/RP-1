@@ -241,27 +241,49 @@ namespace RP0
             GUILayout.Label(FormatCost(CurrencyUtils.Rate(TransactionReasonsRP0.RateUnlockCreditIncrease) * unlockCredit), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && GUILayout.Button(new GUIContent("Warp to Fund Target", "Warps to the fund target you specify in the resulting dialog"), HighLogic.Skin.button))
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER &&
+                GUILayout.Button(new GUIContent("Warp to Fund Target", "Warps to the fund target you specify in the resulting dialog"), HighLogic.Skin.button))
             {
-                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "warptofunds");
-                UIHolder.Instance.HideWindow();
+                ShowWarpToFundsDlg();
+            }
+        }
+
+        private void ShowWarpToFundsDlg()
+        {
+            InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "warptofunds");
+            UIHolder.Instance.HideWindow();
+            if (SpaceCenterManagement.Instance.staffTarget.IsValid)
+            {
+                string msg = "This functionality cannot be used while there's automatic staff hiring in progress.";
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                    new MultiOptionDialog("warpToFunds", msg, "Warp To Funds", HighLogic.UISkin,
+                        new DialogGUIButton("Understood", () =>
+                        {
+                            UIHolder.Instance.ShowWindow();
+                            InputLockManager.RemoveControlLock("warptofunds");
+                        })
+                    ), false, HighLogic.UISkin);
+            }
+            else
+            {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("warpToFunds", "Fund Target", "Warp To Funds", HighLogic.UISkin,
-                    new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
-                    {
-                        warpToFundsString = n;
-                        return warpToFundsString;
-                    }, 24f),
-                    new DialogGUIButton("Estimate Time", () => { ConfirmWarpDialog(); }),
-                    new DialogGUIButton("Cancel", () => { 
-                        UIHolder.Instance.ShowWindow();
-                        InputLockManager.RemoveControlLock("warptofunds");
-                    })
+                        new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
+                        {
+                            warpToFundsString = n;
+                            return warpToFundsString;
+                        }, 24f),
+                        new DialogGUIButton("Estimate Time", () => { ShowConfirmWarpDialog(); }),
+                        new DialogGUIButton("Cancel", () =>
+                        {
+                            UIHolder.Instance.ShowWindow();
+                            InputLockManager.RemoveControlLock("warptofunds");
+                        })
                     ), false, HighLogic.UISkin);
             }
         }
 
-        private void ConfirmWarpDialog()
+        private void ShowConfirmWarpDialog()
         {
             if (!double.TryParse(warpToFundsString, out double fundTarget))
             {

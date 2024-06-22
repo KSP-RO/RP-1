@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using KSP.UI.Screens;
 using UniLinq;
+using ROUtils;
 
 namespace RP0
 {
@@ -35,11 +36,6 @@ namespace RP0
                     }
                 }
             }
-        }
-
-        public override void OnDestroy()
-        {
-            RDTechTree.OnTechTreeSpawn.Remove(OnUpdateRnD);
         }
 
         private void OnUpdateRnD(RDTechTree tree)

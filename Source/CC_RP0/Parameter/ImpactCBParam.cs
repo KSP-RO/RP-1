@@ -8,7 +8,7 @@ namespace ContractConfigurator.RP0
     {
         private const int VelQueueSize = 50;
 
-        protected double minSrfVel = 0;
+        protected double minSrfVel { get; set; }
 
         private Queue<double> srfVelQueue = new Queue<double>(VelQueueSize);
         private Dictionary<Vessel, bool> destroyedVessels = new Dictionary<Vessel, bool>();
@@ -30,7 +30,7 @@ namespace ContractConfigurator.RP0
             bool isValidVel = srfVelQueue.Count > 0 && srfVelQueue.Peek() >= minSrfVel;
             bool isValidAlt = vessel.radarAltitude < 100;
 
-            RP0Debug.Log($"[ImpactCB] VesselMeetsCondition vel: {srfVelQueue.Peek()}; isDestroyed: {isDestroyed}; isCorrectBody: {isCorrectBody}; radarAltitude: {vessel.radarAltitude}");
+            RP0Debug.Log($"[ImpactCB] VesselMeetsCondition vel: {(srfVelQueue.Count > 0 ? srfVelQueue.Peek() : 0)}; isDestroyed: {isDestroyed}; isCorrectBody: {isCorrectBody}; radarAltitude: {vessel.radarAltitude}");
 
             return isDestroyed && isCorrectBody && isValidVel && isValidAlt;
         }
@@ -40,14 +40,17 @@ namespace ContractConfigurator.RP0
             base.OnParameterSave(node);
 
             node.AddValue("minSrfVel", minSrfVel);
-            node.AddValue("targetBody", targetBody.name);
+            if (targetBody != null)    // to prevent an exception being thrown due to a mistake that made it into previous release
+            {
+                node.AddValue("targetBody", targetBody.name);
+            }
         }
 
         protected override void OnParameterLoad(ConfigNode node)
         {
             base.OnParameterLoad(node);
 
-            node.TryGetValue("minSrfVel", ref minSrfVel);
+            minSrfVel = ConfigNodeUtil.ParseValue<double>(node, "minSrfVel");
             targetBody = ConfigNodeUtil.ParseValue<CelestialBody>(node, "targetBody", null);
         }
 

@@ -7,8 +7,8 @@ namespace RP0
     {
         public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None, AirlaunchMount, AirlaunchUnmount };
 
-        public override string Name => KSP.Localization.Localizer.Format("#rp0_LCOps_Type_" + RRType.ToString())
-            ;
+        public override string Name => KSP.Localization.Localizer.Format("#rp0_LCOps_Type_" + RRType.ToString());
+
         [Persistent]
         public string launchPadID = "LaunchPad";
         [Persistent]
@@ -166,6 +166,7 @@ namespace RP0
                 case RolloutReconType.AirlaunchMount: RRType = RolloutReconType.AirlaunchUnmount; break;
                 case RolloutReconType.AirlaunchUnmount: RRType = RolloutReconType.AirlaunchMount; break;
             }
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
         }
 
         public override bool IsCapped => RRType != RolloutReconType.Reconditioning;

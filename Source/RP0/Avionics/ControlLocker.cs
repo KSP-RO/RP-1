@@ -43,9 +43,10 @@ namespace RP0
             if (!_isFirstLoad) return;
             _isFirstLoad = false;
 
-            if (AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2") is var mechJebAssembly &&
-               Type.GetType("MuMech.MechJebCore, MechJeb2") is Type mechJebCore &&
-               Type.GetType("MuMech.VesselExtensions, MechJeb2") is Type mechJebVesselExtensions)
+            var mechJebAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2");
+            if (mechJebAssembly != null &&
+               mechJebAssembly.assembly.GetType("MuMech.MechJebCore") is Type mechJebCore &&
+               mechJebAssembly.assembly.GetType("MuMech.VesselExtensions") is Type mechJebVesselExtensions)
             {
                 _mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
                 _getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);

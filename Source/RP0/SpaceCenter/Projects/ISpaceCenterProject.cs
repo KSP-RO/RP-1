@@ -9,7 +9,8 @@
         Reconditioning,
         KSC,
         AirLaunch,
-        Crew
+        Crew,
+        VesselRepair
     };
 
     public interface ISpaceCenterProject

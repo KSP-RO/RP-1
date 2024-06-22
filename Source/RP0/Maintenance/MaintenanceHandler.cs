@@ -6,6 +6,7 @@ using RP0.Programs;
 using UnityEngine;
 using UnityEngine.Profiling;
 using Upgradeables;
+using ROUtils;
 
 namespace RP0
 {
@@ -24,9 +25,7 @@ namespace RP0
         public static MaintenanceHandler Instance { get; private set; } = null;
 
         private bool _isFirstLoad = true;
-        private static readonly Dictionary<SpaceCenterFacility, float[]> _facilityLevelCosts = new Dictionary<SpaceCenterFacility, float[]>();
-        public static void ClearFacilityCosts() { _facilityLevelCosts.Clear(); }
-
+        
         public static EventVoid OnRP0MaintenanceChanged = new EventVoid("OnRP0MaintenanceChanged");
 
         [KSPField(isPersistant = true)]
@@ -48,7 +47,6 @@ namespace RP0
 
         private bool _wasWarpingHigh = false;
         private int _frameCount = 0;
-        private bool _waitingForLevelLoad = false;
 
         #region Component costs
 
@@ -171,32 +169,6 @@ namespace RP0
         public void Start()
         {
             OnRP0MaintenanceChanged.Add(ScheduleMaintenanceUpdate);
-        }
-
-        protected double SumCosts(float[] costs, int idx)
-        {
-            double s = 0d;
-            for (int i = idx + 1; i-- > 0;)
-                s += costs[i];
-
-            return s;
-        }
-
-        protected double SumCosts(float[] costs, float fractionalIdx)
-        {
-            double s = 0d;
-            int i = (int)fractionalIdx;
-            if (i != fractionalIdx && i + 1 < costs.Length)
-            {
-                float fractionOverFullLvl = fractionalIdx - i;
-                float fractionCost = costs[i + 1] * fractionOverFullLvl;
-                s = fractionCost;
-            }
-
-            for (; i >= 0; i--)
-                s += costs[i];
-
-            return s;
         }
 
         public void ScheduleMaintenanceUpdate()
@@ -354,8 +326,6 @@ namespace RP0
 
             UpdateKCTSalaries();
 
-            EnsureFacilityLvlCostsLoaded();
-
             LCsCostPerDay = 0d;
             foreach (var ksc in SpaceCenterManagement.Instance.KSCs)
             {
@@ -368,14 +338,14 @@ namespace RP0
                 if (Database.LockedFacilities.Contains(facility))
                     continue;
 
-                if (!_facilityLevelCosts.TryGetValue(facility, out float[] facCosts))
+                if (!Database.FacilityLevelCosts.TryGetValue(facility, out var facCosts))
                     continue;
 
-                double cost = ComputeDailyMaintenanceCost(SumCosts(facCosts, KCTUtilities.GetFacilityLevel(facility)));
+                double cost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, KCTUtilities.GetFacilityLevel(facility)));
                 double ratio = GetFacilityUpgradeRatio(facility);
                 if (ratio > 0d)
                 {
-                    double newCost = ComputeDailyMaintenanceCost(SumCosts(facCosts, 1 + KCTUtilities.GetFacilityLevel(facility)));
+                    double newCost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, 1 + KCTUtilities.GetFacilityLevel(facility)));
                     cost = UtilMath.LerpUnclamped(cost, newCost, ratio);
                 }
                 FacilityMaintenanceCosts[facility] = cost;
@@ -384,24 +354,21 @@ namespace RP0
             
 
             TrainingUpkeepPerDay = 0d;
-            if (_facilityLevelCosts.TryGetValue(SpaceCenterFacility.AstronautComplex, out float[] costs))
+            if (CrewHandler.Instance?.TrainingCourses != null)
             {
-                if (CrewHandler.Instance?.TrainingCourses != null)
+                foreach (var course in CrewHandler.Instance.TrainingCourses)
                 {
-                    foreach (var course in CrewHandler.Instance.TrainingCourses)
-                    {
-                        if (!course.Started)
-                            continue;
+                    if (!course.Started)
+                        continue;
 
-                        TrainingDatabase.FillBools(course.Target, Database.SettingsSC.nautUpkeepTrainings, Database.SettingsSC.nautUpkeepTrainingBools);
-                        double trainingTypeCost = GetTrainingCostFromBools();
-                        Database.SettingsSC.ResetBools();
-                        TrainingUpkeepPerDay += course.Students.Count *
-                            (Database.SettingsSC.nautTrainingCostPerFacLevel[KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)]
-                            + trainingTypeCost * Database.SettingsSC.nautTrainingTypeCostMult);
-                    }
-                    TrainingUpkeepPerDay /= 365.25d;
+                    TrainingDatabase.FillBools(course.Target, Database.SettingsSC.nautUpkeepTrainings, Database.SettingsSC.nautUpkeepTrainingBools);
+                    double trainingTypeCost = GetTrainingCostFromBools();
+                    Database.SettingsSC.ResetBools();
+                    TrainingUpkeepPerDay += course.Students.Count *
+                        (Database.SettingsSC.nautTrainingCostPerFacLevel[KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)]
+                        + trainingTypeCost * Database.SettingsSC.nautTrainingTypeCostMult);
                 }
+                TrainingUpkeepPerDay /= 365.25d;
             }
 
             
@@ -576,29 +543,6 @@ namespace RP0
         private void SettingsChanged()
         {
             UpdateUpkeep();
-        }
-
-        private bool EnsureFacilityLvlCostsLoaded()
-        {
-            if(_waitingForLevelLoad)
-                return false;
-
-            if (_facilityLevelCosts.Count == 0)
-            {
-                // Facility level upgrade costs should be loaded only once. These do not change and are actually unavailable 
-                // when outside HomePlanet's SOI and also in the tracking station in some cases.
-                foreach (UpgradeableFacility facility in FindObjectsOfType<UpgradeableFacility>())
-                {
-                    var costArr = new float[facility.UpgradeLevels.Length];
-                    for (int i = 0; i < facility.UpgradeLevels.Length; i++)
-                    {
-                        costArr[i] = facility.UpgradeLevels[i].levelCost;
-                    }
-                    _facilityLevelCosts[(SpaceCenterFacility)Enum.Parse(typeof(SpaceCenterFacility), facility.name)] = costArr;
-                }
-                RP0Debug.Log($"Updated facilityLevelsCosts, count: {_facilityLevelCosts.Count}");
-            }
-            return true;
         }
 
         public double GetSubsidyAmount(double startUT, double endUT)

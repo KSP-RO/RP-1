@@ -1,4 +1,4 @@
-﻿using RP0.DataTypes;
+﻿using ROUtils.DataTypes;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -213,7 +213,7 @@ namespace RP0.Crew
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
                                              HighLogic.UISkin,
-                                             !HighLogic.LoadedSceneIsFlight).HideGUIsWhilePopup();
+                                             !HighLogic.LoadedSceneIsFlight).HideGUIsWhilePopupNonFlight();
                 }
             }
 

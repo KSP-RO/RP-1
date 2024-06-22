@@ -26,22 +26,28 @@ namespace RP0
         protected PartModule pmFairing;
         protected PartModule pmDecoupler;
 
-        protected BaseField baseRad, maxRad, cylEnd, sideThickness, inlineHeight, noseHeightRatio, hingeEnabled, fairingStaged;
+        protected BaseField diameterFld, heightFld, hingeEnabledFld, fairingStagedFld;
+        [Obsolete]
+        protected BaseField baseRad, maxRad, cylEnd, sideThickness, inlineHeight, noseHeightRatio;
 
         protected bool EnsureFields()
         {
-            if (baseRad == null)
+            if (fairingStagedFld == null)
             {
+                diameterFld = pmFairing.Fields["diameter"];
+                heightFld = pmFairing.Fields["height"];
+                hingeEnabledFld = pmFairing.Fields["hingeEnabled"];
+                fairingStagedFld = pmDecoupler.Fields["fairingStaged"];
+
+                //TODO: legacy code, remove all those at a later date
                 baseRad = pmFairing.Fields["baseRad"];
                 maxRad = pmFairing.Fields["maxRad"];
                 cylEnd = pmFairing.Fields["cylEnd"];
                 sideThickness = pmFairing.Fields["sideThickness"];
                 inlineHeight = pmFairing.Fields["inlineHeight"];
                 noseHeightRatio = pmFairing.Fields["noseHeightRatio"];
-                hingeEnabled = pmFairing.Fields["hingeEnabled"];
-                fairingStaged = pmDecoupler.Fields["fairingStaged"];
 
-                if (baseRad == null)
+                if (baseRad == null && diameterFld == null)
                 {
                     RP0Debug.LogError($"[ModuleTooling] Could not bind to ProceduralFairingSide fields on {part}");
                     return false;
@@ -66,8 +72,8 @@ namespace RP0
 
             if (state == StartState.Editor)
             {
-                fairingStaged.uiControlEditor.onFieldChanged += OnStateUpdated;
-                hingeEnabled.uiControlEditor.onFieldChanged += OnStateUpdated;
+                fairingStagedFld.uiControlEditor.onFieldChanged += OnStateUpdated;
+                hingeEnabledFld.uiControlEditor.onFieldChanged += OnStateUpdated;
                 UpdateToolingAndCosts();
             }
         }
@@ -85,16 +91,24 @@ namespace RP0
             if (!EnsureFields())
                 return;
 
-            float baseRadF, maxRadF, cylEndF, sideThicknessF, inlineHeightF, noseHeightRatioF;
-            baseRadF = baseRad.GetValue<float>(pmFairing);
-            maxRadF = maxRad.GetValue<float>(pmFairing);
-            cylEndF = cylEnd.GetValue<float>(pmFairing);
-            sideThicknessF = sideThickness.GetValue<float>(pmFairing);
-            inlineHeightF = inlineHeight.GetValue<float>(pmFairing);
-            noseHeightRatioF = noseHeightRatio.GetValue<float>(pmFairing);
-
-            diam = (Math.Max(baseRadF, maxRadF) + sideThicknessF) * 2f;
-            len = (inlineHeightF > 0) ? inlineHeightF : (noseHeightRatioF * diam / 2) + cylEndF;
+            if (diameterFld !=  null)
+            {
+                diam = diameterFld.GetValue<float>(pmFairing);
+                len = heightFld.GetValue<float>(pmFairing);
+            }
+            else
+            {
+                //TODO: legacy code, remove all those at a later date
+                float baseRadF, maxRadF, cylEndF, sideThicknessF, inlineHeightF, noseHeightRatioF;
+                baseRadF = baseRad.GetValue<float>(pmFairing);
+                maxRadF = maxRad.GetValue<float>(pmFairing);
+                cylEndF = cylEnd.GetValue<float>(pmFairing);
+                sideThicknessF = sideThickness.GetValue<float>(pmFairing);
+                inlineHeightF = inlineHeight.GetValue<float>(pmFairing);
+                noseHeightRatioF = noseHeightRatio.GetValue<float>(pmFairing);
+                diam = (Math.Max(baseRadF, maxRadF) + sideThicknessF) * 2f;
+                len = (inlineHeightF > 0) ? inlineHeightF : (noseHeightRatioF * diam / 2) + cylEndF;
+            }
         }
 
         public void UpdateToolingAndCosts()
@@ -105,8 +119,8 @@ namespace RP0
             if (!EnsureFields())
                 return;
 
-            bool isDecoupled = fairingStaged.GetValue<bool>(pmDecoupler);
-            bool isHinged = hingeEnabled.GetValue<bool>(pmFairing);
+            bool isDecoupled = fairingStagedFld.GetValue<bool>(pmDecoupler);
+            bool isHinged = hingeEnabledFld.GetValue<bool>(pmFairing);
 
             var toolingPrefabModule = part.partInfo.partPrefab.FindModuleImplementing<ModuleToolingPFSide>();
             if (isDecoupled)

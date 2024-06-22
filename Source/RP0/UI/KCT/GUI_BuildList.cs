@@ -2,7 +2,8 @@
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
+using ROUtils;
 
 namespace RP0
 {
@@ -25,8 +26,8 @@ namespace RP0
         private static double _accumulatedTimeBefore;
 
         private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
-        private static GUIContent _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
-            _reconTexture, _rolloutTexture, _rollbackTexture, _airlaunchTexture, _recoveryTexture, _hangarTexture;
+        private static GUIContent _emptyTexture, _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
+            _reconTexture, _rolloutTexture, _rollbackTexture, _airlaunchTexture, _recoveryTexture, _hangarTexture, _repairTexture;
         private const int _width1 = 120;
         private const int _width2 = 100;
         private const int _butW = 20;
@@ -113,6 +114,8 @@ namespace RP0
             _rolloutTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_rollout16", false));
             _settingsTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_settings16", false));
             _techTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_tech16", false));
+            _repairTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_repair", false));
+            _emptyTexture = new GUIContent("");
         }
 
         public static void DrawBuildListWindow(int windowID)
@@ -138,19 +141,19 @@ namespace RP0
                     }
                     else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
                     {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID.ToString() == reconRoll.associatedID);
+                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
                         txt = $"{associated.shipName} Rollout";
                         locTxt = reconRoll.launchPadID;
                     }
                     else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
                     {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID.ToString() == reconRoll.associatedID);
+                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
                         txt = $"{associated.shipName} Rollback";
                         locTxt = reconRoll.launchPadID;
                     }
                     else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Recovery)
                     {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID.ToString() == reconRoll.associatedID);
+                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
                         txt = $"{associated.shipName} Recovery";
                         locTxt = associated.LC.Name;
                     }
@@ -197,7 +200,7 @@ namespace RP0
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
-                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
 
                 if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(buildItem.GetTimeLeft()):N0}")))
                 {
@@ -236,12 +239,12 @@ namespace RP0
                             }
                             else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
                             {
-                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID.ToString() == reconRoll.associatedID);
+                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
                                 txt += $"{associated.shipName} rollout at {reconRoll.launchPadID}";
                             }
                             else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
                             {
-                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID.ToString() == reconRoll.associatedID);
+                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
                                 txt += $"{associated.shipName} rollback at {reconRoll.launchPadID}";
                             }
                             else
@@ -403,11 +406,11 @@ namespace RP0
                 if (buildRate > 0d)
                 {
                     double seconds = constr.GetTimeLeft();
-                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(seconds, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
                 else
                 {
-                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
 
                 if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d)
@@ -575,7 +578,7 @@ namespace RP0
                     if (blockingPrereq == null)
                     {
                         double seconds = t.TimeLeft;
-                        GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName()), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                        GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName()), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                         _accumulatedTimeBefore += seconds;
                     }
                     else
@@ -585,7 +588,7 @@ namespace RP0
                 {
                     DrawYearBasedMult(t, _accumulatedTimeBefore);
                     double seconds = t.GetTimeLeftEst(_accumulatedTimeBefore);
-                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(seconds, t.GetItemName(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                     _accumulatedTimeBefore += seconds;
                 }
                 if (t.BuildRate > 0 && blockingPrereq == null)
@@ -630,6 +633,7 @@ namespace RP0
                         _allItems.Add(b);
                     }
                     _allItems.AddRange(l.Recon_Rollout);
+                    _allItems.AddRange(l.VesselRepairs);
                 }
                 accTime = 0d;
                 foreach (var c in k.Constructions)
@@ -649,6 +653,9 @@ namespace RP0
             
             if (SpaceCenterManagement.Instance.fundTarget.IsValid)
                 _allItems.Add(SpaceCenterManagement.Instance.fundTarget);
+
+            if (SpaceCenterManagement.Instance.staffTarget.IsValid)
+                _allItems.Add(SpaceCenterManagement.Instance.staffTarget);
 
             // Precalc times and then sort
             foreach (var b in _allItems)
@@ -670,6 +677,13 @@ namespace RP0
                     continue;
 
                 GUILayout.BeginHorizontal();
+                if ((t is HireStaffProject || t is FundTargetProject) &&
+                    GUILayout.Button("X", GUILayout.Width(_butW)))
+                {
+                    (t as HireStaffProject)?.Clear();
+                    (t as FundTargetProject)?.Clear();
+                }
+
                 DrawTypeIcon(t);
                 VesselProject vp;
                 if (t is ReconRolloutProject r)
@@ -687,6 +701,10 @@ namespace RP0
                     }
                     else
                         GUILayout.Label(r.GetItemName());
+                }
+                else if (t is VesselRepairProject)
+                {
+                    GUILayout.Label(t.GetItemName());
                 }
                 else if (t is VesselProject b)
                     GUILayout.Label($"{b.LC.Name}: {b.GetItemName()}");
@@ -721,12 +739,12 @@ namespace RP0
                         GUILayout.Label("Waiting for PreReq", GUILayout.Width(_width1));
                     }
                     else
-                        GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                        GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(t.GetTimeLeft(), "combined" + i), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
                 else if (t is VesselProject b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
-                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                    GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
             }
 
@@ -821,9 +839,12 @@ namespace RP0
 
                 case ProjectType.TechNode:
                     return _techTexture;
+
+                case ProjectType.VesselRepair:
+                    return _repairTexture;
             }
 
-            return _constructTexture;
+            return _emptyTexture;
         }
 
         private static void DrawTypeIcon(ISpaceCenterProject b)
@@ -840,7 +861,10 @@ namespace RP0
             _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(375));
 
             if (activeLC.LCType == LaunchComplexType.Pad)
+            {
+                RenderRepairs();
                 RenderRollouts();
+            }
             RenderVesselsBeingBuilt(activeLC);
             RenderWarehouse();
 
@@ -866,14 +890,47 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 double tLeft = reconditioning.GetTimeLeft();
-                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 && GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(tLeft):N0}"), GUILayout.Width((_butW + 4) * 3)))
+                if (!HighLogic.LoadedSceneIsEditor && reconditioning.GetBuildRate() > 0 &&
+                    GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(tLeft):N0}"), GUILayout.Width((_butW + 4) * 3)))
                 {
                     KCTWarpController.Create(reconditioning);
                 }
                 DrawTypeIcon(reconditioning);
                 GUILayout.Label($"Reconditioning: {reconditioning.launchPadID}");
                 GUILayout.Label($"{reconditioning.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
-                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(tLeft, "recon"+reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(tLeft, "recon" + reconditioning.launchPadID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        private static void RenderRepairs()
+        {
+            LaunchComplex activeLC = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LC : SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
+            foreach (VesselRepairProject repair in activeLC.VesselRepairs)
+            {
+                GUILayout.BeginHorizontal();
+                double tLeft = repair.GetTimeLeft();
+                if (!HighLogic.LoadedSceneIsEditor && repair.GetBuildRate() > 0 &&
+                    GUILayout.Button(new GUIContent("Warp To", $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(tLeft):N0}"), GUILayout.Width((_butW + 4) * 3)))
+                {
+                    KCTWarpController.Create(repair);
+                }
+
+                if (GUILayout.Button("X", GUILayout.Width(_butW)))
+                {
+                    DialogGUIBase[] options = new DialogGUIBase[2];
+                    options[0] = new DialogGUIButton("Yes", () => activeLC.VesselRepairs.Remove(repair));
+                    options[1] = new DialogGUIButton("No", () => { });
+                    MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to cancel this repair?",
+                        "Cancel Repair", null, options: options);
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+                }
+
+                DrawTypeIcon(repair);
+                GUILayout.Label($"Repair: {repair.shipName}");
+                GUILayout.Label($"{repair.GetFractionComplete():P2}", GetLabelRightAlignStyle(), GUILayout.Width(_width1 / 2));
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(tLeft, "repair" + repair.associatedID), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
 
                 GUILayout.EndHorizontal();
             }
@@ -951,7 +1008,7 @@ namespace RP0
                 if (b.BuildRate > 0)
                 {
                     double seconds = b.GetTimeLeft(out lc.accumEffic);
-                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString()), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds;
                 }
                 else
@@ -959,7 +1016,7 @@ namespace RP0
                     if (_accumulatedTimeBefore == 0d)
                         _accumulatedTimeBefore = lc.GetBlockingProjectTimeLeft();
                     double seconds = b.GetTimeLeftEst(_accumulatedTimeBefore, lc.accumEffic, out lc.accumEffic);
-                    GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
+                    GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(seconds, b.shipID.ToString(), _accumulatedTimeBefore, true), GetLabelRightAlignStyle(), GUILayout.Width(_width2));
                     _accumulatedTimeBefore += seconds;
                 }
                 GUILayout.EndHorizontal();
@@ -1116,7 +1173,7 @@ namespace RP0
             
             if (recovery != null)
             {
-                GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+ vpID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+ vpID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             }
             else
             {
@@ -1159,7 +1216,7 @@ namespace RP0
                         ReconRolloutProject tmpRollout = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.Rollout, vpID, launchSite);
                         if (tmpRollout.cost > 0d)
                             GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -tmpRollout.cost):N0}");
-                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ vpID) : new GUIContent("Rollout");
+                        GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? RP0DTUtils.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ vpID) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
                             if (foundPad != null && lpState == LaunchPadState.Free)
@@ -1194,7 +1251,7 @@ namespace RP0
                                 _mouseOnRolloutButton = -1;
                     }
                     else if (!HighLogic.LoadedSceneIsEditor && rollback == null && rollout != null && !rollout.IsComplete() &&
-                             GUILayout.Button(DTUtils.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+ vpID), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
+                             GUILayout.Button(RP0DTUtils.GetColonFormattedTimeWithTooltip(rollout.GetTimeLeft(), "rollout"+ vpID), GUILayout.ExpandWidth(false)))    //swap rollout to rollback
                     {
                         rollout.SwitchDirection();
                     }
@@ -1202,12 +1259,12 @@ namespace RP0
                     {
                         if (rollout == null && padRollout == null)
                         {
-                            if (GUILayout.Button(DTUtils.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ vpID), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
+                            if (GUILayout.Button(RP0DTUtils.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ vpID), GUILayout.ExpandWidth(false)))    //switch rollback back to rollout
                                 rollback.SwitchDirection();
                         }
                         else
                         {
-                            GUILayout.Label(DTUtils.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ vpID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                            GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(rollback.GetTimeLeft(), "rollback"+ vpID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                         }
                     }
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
@@ -1252,7 +1309,7 @@ namespace RP0
                                 }
                                 else if (vesselLC.GetReconditioning(launchSite) is ReconRolloutProject recon)
                                 {
-                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {RP0DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
                                     ScreenMessages.PostScreenMessage(message);
                                 }
                                 else
@@ -1297,7 +1354,7 @@ namespace RP0
                             var tmpPrep = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.AirlaunchMount, vpID);
                             if (tmpPrep.cost > 0d)
                                 GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
-                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ vpID) : new GUIContent("Prep for airlaunch");
+                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? RP0DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ vpID) : new GUIContent("Prep for airlaunch");
                             if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
                             {
                                 AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
@@ -1318,7 +1375,7 @@ namespace RP0
                         }
                         else if (airlaunchPrep != null)
                         {
-                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : DTUtils.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.associatedID);
+                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : RP0DTUtils.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.associatedID);
                             if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
                             {
                                 airlaunchPrep.SwitchDirection();

@@ -1,12 +1,9 @@
-﻿using RP0.DataTypes;
+﻿using ROUtils.DataTypes;
 
 namespace RP0.Programs
 {
     public class ProgramHandlerSettings
     {
-        [Persistent]
-        public bool doNotCompressData = false;
-
         [Persistent]
         public float repToConfidence = 5;
 

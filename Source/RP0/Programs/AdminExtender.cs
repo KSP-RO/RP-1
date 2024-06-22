@@ -10,6 +10,7 @@ using KSP.UI;
 using KSP.UI.Screens;
 using Strategies;
 using KSP.Localization;
+using ROUtils;
 
 namespace RP0.Programs
 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -108,10 +109,10 @@ namespace RP0
             _UTString = GUILayout.TextField(_UTString, GUILayout.Width(110));
             _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the amount of time entered onto the field. Otherwise the date and time will be set to entered value."));
             GUILayout.EndHorizontal();
-            GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"1960-01-01 15:30\"");
+            GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"1960-12-31 23:59\"");
             GUILayout.Space(4);
 
-            if (KCTUtilities.IsTestFlightInstalled || KCTUtilities.IsTestLiteInstalled)
+            if (ModUtils.IsTestFlightInstalled || ModUtils.IsTestLiteInstalled)
             {
                 simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures");
                 GUILayout.Space(4);
@@ -191,7 +192,7 @@ namespace RP0
 
             double currentUT = Planetarium.GetUniversalTime();
             double ut = 0;
-            if (!string.IsNullOrWhiteSpace(_UTString) && !DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
+            if (!string.IsNullOrWhiteSpace(_UTString) && !ROUtils.DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
             {
                 var message = new ScreenMessage("Please enter a valid time value.", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
@@ -215,7 +216,7 @@ namespace RP0
                 return;
             }
 
-            if (KCTUtilities.IsPrincipiaInstalled && simParams.SimulationUT != 0 && simParams.SimulationUT < currentUT + 0.5)
+            if (ModUtils.IsPrincipiaInstalled && simParams.SimulationUT != 0 && simParams.SimulationUT < currentUT + 0.5)
             {
                 var message = new ScreenMessage("Going backwards in time isn't allowed with Principia", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);

@@ -1,5 +1,28 @@
 [
     {
+        "name": "ROH-AdjustableHIAD",
+        "title": "Adjustable HIAD",
+        "description": "",
+        "mod": "ROHeatshields",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "EDL",
+        "info": "Heat Shield",
+        "year": "2019",
+        "technology": "SIAD",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "150000",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
         "name": "ROH-AdjustableHS",
         "title": "Adjustable Heatshield",
         "description": "",

@@ -1,6 +1,8 @@
-﻿namespace RP0
+﻿using ROUtils.DataTypes;
+
+namespace RP0
 {
-    public class PartEffectiveCostModifier : DataTypes.ConfigNodePersistenceBase
+    public class PartEffectiveCostModifier : ConfigNodePersistenceBase
     {
         [Persistent] public string name;
         [Persistent] public string displayName;

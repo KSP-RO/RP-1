@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
+using ROUtils;
 
 namespace RP0.ProceduralAvionics
 {
@@ -171,7 +172,7 @@ namespace RP0.ProceduralAvionics
                 if (float.TryParse(ControllableMass, out _newControlMass))
                 {
                     float avionicsMass = _module.GetShieldedAvionicsMass(_newControlMass);
-                    GUILayout.Label($" ({avionicsMass * 1000:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
+                    GUILayout.Label($" ({MathUtils.PrintMass(avionicsMass)})", HighLogic.Skin.label, GUILayout.Width(150));
                 }
 
                 if (oldControlMass != _newControlMass)
@@ -187,12 +188,15 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginHorizontal(GUILayout.Width(250));
             GUILayout.Label("EC amount: ", HighLogic.Skin.label, GUILayout.Width(150));
             _sECAmount = GUILayout.TextField(_sECAmount, HighLogic.Skin.textField);
+            GUILayout.Label("kJ", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal(GUILayout.MaxWidth(50));
             if (float.TryParse(_sECAmount, out float ecAmount))
             {
-                GUILayout.Label($" ({_ecTank.mass * ecAmount:0.#} kg)", HighLogic.Skin.label, GUILayout.Width(150));
+                float ekW = ModuleProceduralAvionics.GetEnabledkW(_module.CurrentProceduralAvionicsTechNode, _newControlMass);
+                float dkW = _module.CurrentProceduralAvionicsTechNode.disabledPowerFactor * ekW;
+                GUILayout.Label($" ({MathUtils.PrintMass(_ecTank.mass * ecAmount / _ecTank.utilization)}, {ModuleProceduralAvionics.BuildPowerString(ekW, dkW)})", HighLogic.Skin.label, GUILayout.Width(150));
             }
             GUILayout.EndHorizontal();
             GUILayout.EndHorizontal();
@@ -205,7 +209,7 @@ namespace RP0.ProceduralAvionics
             GUI.enabled = false;
             _sExtraVolume = GUILayout.TextField(_sExtraVolume, HighLogic.Skin.textField);
             GUI.enabled = true;
-            GUILayout.Label("l", HighLogic.Skin.label);
+            GUILayout.Label("L", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
             if (_showROTankSizeWarning)
@@ -396,7 +400,7 @@ namespace RP0.ProceduralAvionics
                 double m3CurVol = avVolume + _rfPM.totalVolume / 1000;    // l to m³, assume 100% RF utilization
                 double m3MinVol = GetNeededProcTankVolume(0, ecAmount);
                 double m3MissingVol = m3MinVol - m3CurVol;
-                if (m3MissingVol > 0.0001)
+                if (m3MissingVol > 1e-6)
                 {
                     ecAmount = 1;    // Never remove the EC resource entirely
                     double m3AvailVolForEC = m3AvailVol;

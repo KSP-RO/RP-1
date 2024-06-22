@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -39,21 +40,13 @@ namespace RP0
             {
                 if (_newLCData.resourcesHandled.TryGetValue(_allResourceKeys[i], out double resourceValue))
                 {
-                    _allResourceValues[i] = resourceValue.ToString("F0");
+                    _allResourceValues[i] = Math.Ceiling(resourceValue).ToString("F0");
                 }
                 else
                 {
                     _allResourceValues[i] = "0";
                 }
             }
-        }
-
-        private static void SetFieldsFromStartingLCData(LCData old)
-        {
-            _newLCData.SetFrom(old);
-            _newLCData.Name = _newName = $"Launch Complex {(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count)}";
-            SetStrings();
-            SetResources();
         }
 
         private static void SetFieldsFromLC(LaunchComplex LC)
@@ -119,7 +112,7 @@ namespace RP0
             foreach (var kvp in vp.resourceAmounts)
             {
                 if (kvp.Value * PartResourceLibrary.Instance.GetDefinition(kvp.Key).density > vp.GetTotalMass() * Formula.ResourceValidationRatioOfVesselMassMin)
-                    _newLCData.resourcesHandled.Add(kvp.Key, Math.Max(_MinResourceVolume, kvp.Value * 1.1d));
+                    _newLCData.resourcesHandled.Add(kvp.Key, Math.Max(_MinResourceVolume, Math.Ceiling(kvp.Value * 1.1d)));
             }
             SetStrings();
             SetResources();
@@ -177,7 +170,7 @@ namespace RP0
                 {
                     _newLCData.resourcesHandled.TryGetValue(kvp.Key, out double oldAmount);
                     if (oldAmount < kvp.Value)
-                        _newLCData.resourcesHandled[kvp.Key] = Math.Max(_MinResourceVolume, kvp.Value * 1.1d);
+                        _newLCData.resourcesHandled[kvp.Key] = Math.Max(_MinResourceVolume, Math.Ceiling(kvp.Value * 1.1d));
                 }
             }
             // Reset based on our new values.
@@ -303,6 +296,7 @@ namespace RP0
 
                 if (isModify)
                 {
+                    _newLCData.massOrig = isModify ? activeLC.MassOrig : 0;
                     int maxMax = (int)_newLCData.MaxPossibleMass;
                     int maxMin = (int)_newLCData.MinPossibleMass;
                     GUILayout.BeginHorizontal();
@@ -324,8 +318,6 @@ namespace RP0
                         maxMin > _newLCData.massMax ? GetLabelRightAlignStyleYellow() : GetLabelRightAlignStyle(), 
                         GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
-
-                    
                 }
                 else
                 {
@@ -335,12 +327,12 @@ namespace RP0
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Upgrade Limit for max tng:");
-                    GUILayout.Label($"{Math.Max(3, _newLCData.massOrig * 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{_newLCData.MaxPossibleMass:N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
 
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Downgrade Limit for max tng:");
-                    GUILayout.Label($"{Math.Max(1, _newLCData.massOrig / 2):N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                    GUILayout.Label($"{_newLCData.MinPossibleMass:N0}", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
                     GUILayout.EndHorizontal();
                 }
             }
@@ -507,7 +499,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button(isModify ? "Modify" : "Build") && ValidateLCCreationParameters(_newLCData.Name, _newLCData.GetPadFracLevel(), _newLCData.massMax, _newLCData.sizeMax, isModify ? activeLC : null))
+            if (GUILayout.Button(isModify ? "Modify" : "Build") && ValidateLCCreationParameters(_newLCData, isModify ? activeLC : null))
             {
                 if (HighLogic.LoadedSceneIsEditor && !SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(_newLCData, null))
                 {
@@ -598,6 +590,8 @@ namespace RP0
                     if (isModify)
                     {
                         lc = activeLC;
+                        if (SpaceCenterManagement.Instance.staffTarget.LCID == lc.ID)
+                            SpaceCenterManagement.Instance.staffTarget.Clear();
                         KCTUtilities.ChangeEngineers(lc, -engineers);
                         SpaceCenterManagement.Instance.ActiveSC.SwitchToPrevLaunchComplex();
 
@@ -793,25 +787,34 @@ namespace RP0
             return failedVessels != string.Empty;
         }
 
-        private static bool ValidateLCCreationParameters(string newName, float fractionalPadLvl, float tonnageLimit, Vector3 curPadSize, LaunchComplex lc)
+        private static bool ValidateLCCreationParameters(LCData newLCData, LaunchComplex existingLC)
         {
-            if (curPadSize == Vector3.zero)
+            if (newLCData.sizeMax == Vector3.zero)
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid size");
                 return false;
             }
 
-            if (lc != null && lc.LCType == LaunchComplexType.Hangar)
+            if (existingLC != null && existingLC.LCType == LaunchComplexType.Hangar)
                 return true;
 
-            if (fractionalPadLvl == -1 || tonnageLimit == 0 || (lc != null && (tonnageLimit < lc.Stats.MinPossibleMass || tonnageLimit > lc.Stats.MaxPossibleMass)))
+            if (newLCData.GetPadFracLevel() == -1 || newLCData.massMax == 0)
             {
                 ScreenMessages.PostScreenMessage("Please enter a valid tonnage limit");
-                RP0Debug.Log($"Invalid LC tonnage set, fractional: {fractionalPadLvl}, tonnageLimit {tonnageLimit}, orig {(lc != null ? lc.MassOrig : -1f)}");
+                RP0Debug.Log($"Invalid LC tonnage set, fractional: {newLCData.GetPadFracLevel()}, tonnageLimit {newLCData.massMax}");
                 return false;
             }
 
-            if (lc != null && !lc.CanModifyReal)
+            if (existingLC != null && !newLCData.IsMassWithinUpAndDowngradeMargins)
+            {
+                string msg = !newLCData.IsMassWithinUpgradeMargin ? $"Cannot upgrade tonnage above the limit of {newLCData.MaxPossibleMass}t"
+                                                                  : $"Cannot downgrade tonnage below the limit of {newLCData.MinPossibleMass}t";
+                ScreenMessages.PostScreenMessage(msg);
+                RP0Debug.Log($"LC tonnage exceeding upgrade margins, fractional: {newLCData.GetPadFracLevel()}, tonnageLimit {newLCData.massMax}, orig {(existingLC != null ? existingLC.MassOrig : -1f)}");
+                return false;
+            }
+
+            if (existingLC != null && !existingLC.CanModifyReal)
             {
                 ScreenMessages.PostScreenMessage("Please wait for any reconditioning, rollout, rollback, or recovery to complete");
                 RP0Debug.Log($"Can't modify LC, recon_rollout in progress");
@@ -819,10 +822,10 @@ namespace RP0
             }
 
             // Don't bother with name if it's a modify.
-            if (lc != null)
+            if (existingLC != null)
                 return true;
 
-            if (string.IsNullOrEmpty(newName))
+            if (string.IsNullOrEmpty(newLCData.Name))
             {
                 ScreenMessages.PostScreenMessage("Enter a name for the new launch complex");
                 return false;
@@ -831,7 +834,7 @@ namespace RP0
             for (int i = 0; i < SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count; i++)
             {
                 var lp = SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes[i];
-                if (string.Equals(lp.Name, newName, StringComparison.OrdinalIgnoreCase))
+                if (string.Equals(lp.Name, newLCData.Name, StringComparison.OrdinalIgnoreCase))
                 {
                     ScreenMessages.PostScreenMessage("Another launch complex with the same name already exists");
                     return false;

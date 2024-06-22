@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 using UnityEngine.Profiling;
 using KSP.UI.Screens;
+using ROUtils;
 
 namespace RP0
 {
@@ -62,8 +63,6 @@ namespace RP0
         public ProjectType Type = ProjectType.None;
         [Persistent]
         public Guid shipID;
-        [Persistent]
-        public bool cannotEarnScience;
         [Persistent]
         public bool humanRated;
         [Persistent]
@@ -255,7 +254,6 @@ namespace RP0
 
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
-            cannotEarnScience = false;
 
             //get the crew from the editorlogic
             desiredManifest = new List<string>();
@@ -280,7 +278,6 @@ namespace RP0
             flag = flagURL;
             humanRated = isHuman;
             Type = editorFacility == EditorFacility.VAB ? ProjectType.VAB : ProjectType.SPH;
-            cannotEarnScience = false;
             cost = spentFunds;
             FacilityBuiltIn = editorFacility;
         }
@@ -328,7 +325,6 @@ namespace RP0
                         mass += def.density * (float)rsc.amount;
                 }
             }
-            cannotEarnScience = true;
             numStages = stages.Count;
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
@@ -1033,17 +1029,24 @@ namespace RP0
             Part partRef = o as Part;
             bool isNode = partNode != null;
             if (!isNode && partRef == null)
-                return 0;
+                return 0d;
 
             string name;
+            AvailablePart availablePart;
             if (isNode)
             {
                 name = KCTUtilities.GetPartNameFromNode(partNode);
-                partRef = KCTUtilities.GetAvailablePartByName(name).partPrefab;
+                availablePart = KCTUtilities.GetAvailablePartByName(name);
+                if (availablePart == null)
+                    return 0d;
+                partRef = availablePart.partPrefab;
             }
             else
             {
-                name = partRef.partInfo.name;
+                availablePart = partRef.partInfo;
+                if (availablePart == null)
+                    return 0d;
+                name = availablePart.name;
             }
 
             float dryCost;
@@ -1053,9 +1056,12 @@ namespace RP0
 
             if (isNode)
             {
-                ShipConstruction.GetPartCostsAndMass(partNode, KCTUtilities.GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
-                foreach (ConfigNode rNode in partNode.GetNodes("RESOURCE"))
+                ShipConstruction.GetPartCostsAndMass(partNode, availablePart, out dryCost, out fuelCost, out dryMass, out fuelMass);
+                foreach (ConfigNode rNode in partNode.nodes)
                 {
+                    if (rNode.name != "RESOURCE")
+                        continue;
+
                     string rName = rNode.GetValue("name");
                     _tempResourceAmounts[rName] = double.Parse(rNode.GetValue("maxAmount"));
                 }
@@ -1118,13 +1124,17 @@ namespace RP0
                         mecbName = mecb.moduleName;
                     }
 
-                    foreach (ConfigNode modNode in partNode.GetNodes("MODULE"))
+                    foreach (ConfigNode modNode in partNode.nodes)
                     {
+                        if (modNode.name != "MODULE")
+                            continue;
+
                         string s = modNode.GetValue("name");
+
                         if (s == "TestFlightReliability_EngineCycle")
-                            double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
+                            modNode.TryGetValue("engineOperatingTime", ref runTime);
                         else if (s == "ModuleTestLite")
-                            double.TryParse(modNode.GetValue("runTime"), out runTime);
+                            modNode.TryGetValue("runTime", ref runTime);
                         else if (s == mecbName)
                         {
                             string config = modNode.GetValue("configuration");
@@ -1299,7 +1309,7 @@ namespace RP0
             double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
             double bpLeft = bp - progress;
             if (newEff == LCEfficiency.MaxEfficiency)
-                return (bpLeft - progress) / (rate * newEff);
+                return bpLeft / (rate * newEff);
 
             return CalculateTimeLeftForBuildRate(bpLeft, rate, startingEff, out newEff);
         }
@@ -1350,7 +1360,7 @@ namespace RP0
             return 0d;
         }
 
-        private void MoveVesselToWarehouse()
+        public void MoveVesselToWarehouse()
         {
             SCMEvents.Instance.KCTButtonStockImportant = true;
 

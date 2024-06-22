@@ -5,6 +5,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Linq;
+using ROUtils;
 
 namespace RP0.Harmony
 {
@@ -817,11 +818,11 @@ namespace RP0.Harmony
     {
         // Don't even bother to patch if Principia isn't installed.
         // Also, of course, don't patch if Kerbalism 3.18 is out with this fix inside it.
-        static bool Prepare() => KCTUtilities.IsPrincipiaInstalled && KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
+        static bool Prepare() => ModUtils.IsPrincipiaInstalled && KerbalismUtils.IsValidToPatch(new Version(3, 17, int.MaxValue, int.MaxValue), true);
 
         private static double PrincipiaCorrectInclination(Orbit o)
         {
-            if (KCTUtilities.IsPrincipiaInstalled && o.referenceBody != (FlightGlobals.currentMainBody ?? Planetarium.fetch.Home))
+            if (ModUtils.IsPrincipiaInstalled && o.referenceBody != (FlightGlobals.currentMainBody ?? Planetarium.fetch.Home))
             {
                 Vector3d polarAxis = o.referenceBody.BodyFrame.Z;
 

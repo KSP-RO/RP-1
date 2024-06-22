@@ -41,6 +41,8 @@ depends:
     suppress_recommendations: true
   - name: KerbalChangelog
     suppress_recommendations: true
+  - name: ROUtils
+    suppress_recommendations: true
 recommends:
   - name: ROLoadingImages
   - name: RSSDateTimeFormatter
@@ -108,6 +110,7 @@ suggests:
   - name: WernherCheckerContinued
 conflicts:
   - name: RP-0
+  - name: RONoCareer
   - name: KerbalConstructionTime
   - name: CrowdSourcedScience
   - name: HideEmptyTechNodes

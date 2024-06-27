@@ -150,17 +150,15 @@ namespace RP0
 
         private double TimeLeftWithEfficiencyIncrease(double timeLeft)
         {
-            if (LC.Efficiency == LCEfficiency.MaxEfficiency)
+            if (LC.Efficiency == LCEfficiency.MaxEfficiency || timeLeft < 86400d)
                 return timeLeft;
 
-            if (timeLeft > 86400d)
+            double bpDivRate = timeLeft * LC.Efficiency;
+            double newEff = LC.Efficiency;
+            double portion = LC.Engineers / (double)LC.MaxEngineers;
+            for (int i = 0; i < 4; ++i)
             {
-                double newEff = LC.Efficiency;
-                double portion = LC.Engineers / (double)LC.MaxEngineers;
-                for (int i = 0; i < 4; ++i)
-                {
-                    timeLeft = (timeLeft * newEff) / LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, portion, out newEff, LC.Efficiency);
-                }
+                timeLeft =  bpDivRate / LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, portion, out newEff, LC.Efficiency);
             }
             return timeLeft;
         }

@@ -1052,7 +1052,7 @@ namespace RP0
         public double GetRolloutCostOverTime(double time, LCSpaceCenter ksc)
         {
             double delta = 0;
-            for (int i = 1; i < ksc.LaunchComplexes.Count; ++i)
+            for (int i = 0; i < ksc.LaunchComplexes.Count; ++i)
                 delta += GetRolloutCostOverTime(time, ksc.LaunchComplexes[i]);
 
             return delta;

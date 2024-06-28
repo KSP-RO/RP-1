@@ -103,7 +103,11 @@ namespace RP0
             }
 
             if (SpaceCenterManagement.EditorRolloutCost > 0)
-                GUILayout.Label($"Rollout Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -SpaceCenterManagement.EditorRolloutCost):N1}");
+            {
+                double rolloutCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -SpaceCenterManagement.EditorRolloutCost);
+                double recondCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -SpaceCenterManagement.EditorReconditionCost);
+                GUILayout.Label(new GUIContent($"Launch Cost: √{rolloutCost:N1} + √{recondCost:N1}", "Launch costs consist of rollout + pad reconditioning"));
+            }
 
             bool showCredit = false;
             if (SpaceCenterManagement.EditorUnlockCosts > 0)

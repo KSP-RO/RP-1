@@ -41,11 +41,16 @@ namespace RP0
             if (index > 0 || !LC.IsOperational)
                 return 0d;
 
-            //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             int personnel = Math.Max(0, LC.Engineers + persDelta);
             if (isHumanRatedCapped)
                 personnel = Math.Min(personnel, LC.MaxEngineersNonHR);
 
+            return personnel * _EngineerBPRate * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
+        }
+
+        public static double GetReconditioningBuildRate(LaunchComplex LC, bool isHumanRatedCapped)
+        {
+            int personnel = isHumanRatedCapped ? LC.MaxEngineersNonHR : LC.MaxEngineers;
             return personnel * _EngineerBPRate * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
         }
 
@@ -102,6 +107,11 @@ namespace RP0
             double result = vesselPortion + lcPortion;
             result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
             return result * 0.5d;
+        }
+
+        public static double GetReconditioningCost(VesselProject vessel)
+        {
+            return GetRolloutCost(vessel) * 0.2;
         }
 
         public static double GetAirlaunchCost(VesselProject vessel)

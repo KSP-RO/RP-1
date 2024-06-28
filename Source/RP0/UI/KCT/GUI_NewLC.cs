@@ -816,7 +816,7 @@ namespace RP0
 
             if (existingLC != null && !existingLC.CanModifyReal)
             {
-                ScreenMessages.PostScreenMessage("Please wait for any reconditioning, rollout, rollback, or recovery to complete");
+                ScreenMessages.PostScreenMessage("Please wait for any rollout, rollback, or recovery to complete");
                 RP0Debug.Log($"Can't modify LC, recon_rollout in progress");
                 return false;
             }

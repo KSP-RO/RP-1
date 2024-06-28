@@ -34,6 +34,7 @@ namespace RP0
 
         public static bool EditorShipEditingMode = false;
         public static double EditorRolloutCost = 0;
+        public static double EditorReconditionCost = 0;
         public static double EditorRolloutBP = 0;
         public static double EditorUnlockCosts = 0;
         public static double EditorToolingCosts = 0;
@@ -1001,7 +1002,7 @@ namespace RP0
 
             double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
             double fundDelta = Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
-                + GetConstructionCostOverTime(deltaTime) + GetRolloutCostOverTime(deltaTime)
+                + GetConstructionCostOverTime(deltaTime) + GetReconRolloutCostOverTime(deltaTime)
                 + Programs.ProgramHandler.Instance.GetDisplayProgramFunding(deltaTime);
 
             return fundDelta;
@@ -1039,51 +1040,53 @@ namespace RP0
             return 0d;
         }
 
-        public double GetRolloutCostOverTime(double time)
+        public double GetReconRolloutCostOverTime(double time)
         {
             double delta = 0;
             foreach (var ksc in KSCs)
             {
-                delta += GetRolloutCostOverTime(time, ksc);
+                delta += GetReconRolloutCostOverTime(time, ksc);
             }
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, LCSpaceCenter ksc)
+        public double GetReconRolloutCostOverTime(double time, LCSpaceCenter ksc)
         {
             double delta = 0;
             for (int i = 0; i < ksc.LaunchComplexes.Count; ++i)
-                delta += GetRolloutCostOverTime(time, ksc.LaunchComplexes[i]);
+                delta += GetReconRolloutCostOverTime(time, ksc.LaunchComplexes[i]);
 
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, LaunchComplex lc)
+        public double GetReconRolloutCostOverTime(double time, LaunchComplex lc)
         {
             double delta = 0;
             foreach (var rr in lc.Recon_Rollout)
             {
-                if (rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount)
-                    continue;
+                if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollout ||
+                    rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning ||
+                    rr.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
+                {
+                    double t = rr.GetTimeLeft();
+                    double fac = 1d;
+                    if (t > time)
+                        fac = time / t;
 
-                double t = rr.GetTimeLeft();
-                double fac = 1d;
-                if (t > time)
-                    fac = time / t;
-
-                delta += CurrencyUtils.Funds(rr.TransactionReason, -rr.cost * (1d - rr.progress / rr.BP) * fac);
+                    delta += CurrencyUtils.Funds(rr.TransactionReason, -rr.cost * (1d - rr.progress / rr.BP) * fac);
+                }
             }
 
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, string kscName)
+        public double GetReconRolloutCostOverTime(double time, string kscName)
         {
             foreach (var ksc in KSCs)
             {
                 if (ksc.KSCName == kscName)
                 {
-                    return GetRolloutCostOverTime(time, ksc);
+                    return GetReconRolloutCostOverTime(time, ksc);
                 }
             }
 
@@ -1512,6 +1515,7 @@ namespace RP0
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
                 EditorRolloutCost = Formula.GetRolloutCost(EditorVessel);
+                EditorReconditionCost = Formula.GetReconditioningCost(EditorVessel);
                 EditorRolloutBP = Formula.GetRolloutBP(EditorVessel);
             }
             else
@@ -1607,68 +1611,13 @@ namespace RP0
                     remainingUT = UTDiff - passes * 86400d;
                     ++passes;
                 }
-                int rushingEngs = 0;
 
-                int totalEngineers = 0;
                 foreach (LCSpaceCenter ksc in KSCs)
                 {
-                    totalEngineers += ksc.Engineers;
-
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {
                         LaunchComplex currentLC = ksc.LaunchComplexes[j];
-                        if (!currentLC.IsOperational || currentLC.Engineers == 0 || !currentLC.IsActive)
-                            continue;
-
-                        double portionEngineers = currentLC.Engineers / (double)currentLC.MaxEngineers;
-
-                        if (currentLC.IsRushing)
-                            rushingEngs += currentLC.Engineers;
-                        else
-                        {
-                            for (int p = 0; p < passes; ++p)
-                            {
-                                double timestep = p == 0 ? remainingUT : 86400d;
-                                currentLC.EfficiencySource?.IncreaseEfficiency(timestep, portionEngineers);
-                            }
-                        }
-
-                        double timeForBuild = UTDiff;
-                        while (timeForBuild > 0d && currentLC.BuildList.Count > 0)
-                        {
-                            timeForBuild = currentLC.BuildList[0].IncrementProgress(UTDiff);
-                        }
-
-                        for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
-                        {
-                            // These work in parallel so no need to track excess time
-                            // FIXME: that's not _quite_ true, but it's close enough: when one
-                            // completes, the others speed up, but that's hard to deal with here
-                            // so I think we just eat the cost.
-                            var rr = currentLC.Recon_Rollout[i];
-                            rr.IncrementProgress(UTDiff);
-                            //Reset the associated launchpad id when rollback completes
-                            Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindVPesselByID");
-                            if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollback && rr.IsComplete()
-                                && KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vp)
-                            {
-                                vp.launchSiteIndex = -1;
-                            }
-                            Profiler.EndSample();
-                        }
-
-                        for (int i = currentLC.VesselRepairs.Count; i-- > 0;)
-                        {
-                            var vr = currentLC.VesselRepairs[i];
-                            vr.IncrementProgress(UTDiff);
-                            if (vr.IsComplete() && HighLogic.LoadedSceneIsFlight &&
-                                vr.ApplyRepairs())
-                            {
-                                currentLC.VesselRepairs.Remove(vr);
-                            }
-                        }
-
-                        currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount && rr.IsComplete());
+                        ProgressLCBuildTime(currentLC, UTDiff, remainingUT, passes);
                     }
 
                     for (int i = ksc.Constructions.Count; i-- > 0;)
@@ -1703,6 +1652,70 @@ namespace RP0
             }
 
             Profiler.EndSample();
+        }
+
+        private static void ProgressLCBuildTime(LaunchComplex currentLC, double UTDiff, double remainingUT, int passes)
+        {
+            if (currentLC.IsOperational && currentLC.Engineers > 0 && currentLC.IsActive)
+            {
+                double portionEngineers = currentLC.Engineers / (double)currentLC.MaxEngineers;
+
+                if (!currentLC.IsRushing)
+                {
+                    for (int p = 0; p < passes; ++p)
+                    {
+                        double timestep = p == 0 ? remainingUT : 86400d;
+                        currentLC.EfficiencySource?.IncreaseEfficiency(timestep, portionEngineers);
+                    }
+                }
+
+                double timeForBuild = UTDiff;
+                while (timeForBuild > 0d && currentLC.BuildList.Count > 0)
+                {
+                    timeForBuild = currentLC.BuildList[0].IncrementProgress(UTDiff);
+                }
+
+                for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
+                {
+                    // These work in parallel so no need to track excess time
+                    // FIXME: that's not _quite_ true, but it's close enough: when one
+                    // completes, the others speed up, but that's hard to deal with here
+                    // so I think we just eat the cost.
+                    var rr = currentLC.Recon_Rollout[i];
+                    rr.IncrementProgress(UTDiff);
+                    //Reset the associated launchpad id when rollback completes
+                    Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindVPesselByID");
+                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollback && rr.IsComplete()
+                        && KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vp)
+                    {
+                        vp.launchSiteIndex = -1;
+                    }
+                    Profiler.EndSample();
+                }
+
+                for (int i = currentLC.VesselRepairs.Count; i-- > 0;)
+                {
+                    var vr = currentLC.VesselRepairs[i];
+                    vr.IncrementProgress(UTDiff);
+                    if (vr.IsComplete() && HighLogic.LoadedSceneIsFlight &&
+                        vr.ApplyRepairs())
+                    {
+                        currentLC.VesselRepairs.Remove(vr);
+                    }
+                }
+            }
+            else
+            {
+                // Process reconditioning even for LCs that have no engineers or are inactive
+                for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
+                {
+                    var rr = currentLC.Recon_Rollout[i];
+                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
+                        rr.IncrementProgress(UTDiff);
+                }
+            }
+
+            currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount && rr.IsComplete());
         }
 
         #endregion

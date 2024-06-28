@@ -211,12 +211,13 @@ namespace RP0
 
         public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
 
-        public bool IsActive => BuildList.Count > 0 || GetAllLCOps().Any(op => !op.IsComplete());
-        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && 
-                                    !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning) &&
-                                    VesselRepairs.Count == 0;
-        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0 && VesselRepairs.Count == 0;
-        public bool CanModifyReal => Recon_Rollout.Count == 0 && VesselRepairs.Count == 0;
+        public bool IsActive => BuildList.Count > 0 || GetAllLCOps().Any(op => !op.IsComplete() && op.KeepsLCActive);
+        public bool CanDismantle => CanModifyButton;
+        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 &&
+                                       !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning) &&
+                                       VesselRepairs.Count == 0;
+        public bool CanModifyReal => !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning) &&
+                                     VesselRepairs.Count == 0;
         public bool CanIntegrate => ProjectBPTotal == 0d;
 
         private double _projectBPTotal = -1d;

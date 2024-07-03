@@ -125,7 +125,6 @@ namespace RP0
             if (engToAssign > 0)
             {
                 KCTUtilities.ChangeEngineers(lc, engToAssign);
-                lc.RecalculateBuildRates();
             }
         }
     }

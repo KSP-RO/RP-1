@@ -1443,7 +1443,7 @@ PART
 		isEnabled = True
 		_enabled = True
 		TxPower = 30
-		TechLevel = 10
+		TechLevel = 0
 		AMWTemp = 0
 		antennaDiameter = 0
 		referenceGain = 1.5
@@ -1465,15 +1465,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = commsTL1
-			upgrade = commsTL2
-			upgrade = commsTL3
-			upgrade = commsTL4
-			upgrade = commsTL5
-			upgrade = commsTL6
-			upgrade = commsTL7
-			upgrade = commsTL8
-			upgrade = commsTL9
 		}
 	}
 	MODULE

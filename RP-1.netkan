@@ -29,8 +29,6 @@ depends:
     suppress_recommendations: true
   - name: RealSolarSystem
     suppress_recommendations: true
-  - name: MagiCore
-    suppress_recommendations: true
   - name: ClickThroughBlocker
     suppress_recommendations: true
   - name: ToolbarController

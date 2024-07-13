@@ -145,7 +145,7 @@ def create_app(test_config=None):
     @app.route('/api/commit_changes',  methods=['POST'])
     def commit_changes():
         queued_changes = request.get_json()
-        for row_id in queued_changes['queued_changes']:
+        for row_id in reversed(queued_changes['queued_changes']):
             new_part = False
             part = None
             # if the part name changed, we need to use the old name to find it, else use the supplied name field

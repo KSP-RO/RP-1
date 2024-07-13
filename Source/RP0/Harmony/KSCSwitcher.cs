@@ -21,7 +21,7 @@ namespace RP0.Harmony
         {
             if (__result && SpaceCenterManagement.Instance != null)
             {
-                SpaceCenterManagement.Instance.SetActiveKSC(KSC.name);
+                SpaceCenterManagement.Instance.SetActiveKSC(KSC.GetValue("name"));
             }
         }
     }

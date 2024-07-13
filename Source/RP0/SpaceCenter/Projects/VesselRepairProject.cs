@@ -15,6 +15,8 @@ namespace RP0
 
         protected override TransactionReasonsRP0 transactionReasonTime => TransactionReasonsRP0.RateRollout;
 
+        public override bool KeepsLCActive => false;
+
         public override ProjectType GetProjectType() => ProjectType.VesselRepair;
 
         public VesselRepairProject() : base()

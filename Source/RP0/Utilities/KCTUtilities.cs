@@ -1345,7 +1345,6 @@ namespace RP0
                 ChangeEngineers(ksc, workerAmount);
                 if (lc != null)
                     ChangeEngineers(lc, workerAmount);
-                ksc.RecalculateBuildRates(false);
             }
             SpaceCenterManagement.Instance.Applicants = Math.Max(0, SpaceCenterManagement.Instance.Applicants - workerAmount);
             if (SpaceCenterManagement.Instance.Applicants == 0)
@@ -1357,6 +1356,7 @@ namespace RP0
             currentLC.Engineers += delta;
             SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+            currentLC.RecalculateBuildRates();
             KCT_GUI.BuildRateForDisplay = null;
         }
 

@@ -123,9 +123,10 @@ namespace RP0
             string assignStr = GetAssignText(true, currentLC, out int assignAmt);
             string unassignStr = GetAssignText(false, currentLC, out int unassignAmt);
 
-            bool recalc = false;
             ProjectType type = currentLC.LCType == LaunchComplexType.Pad ? ProjectType.VAB : ProjectType.SPH;
-            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { KCTUtilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
+            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0)
+                KCTUtilities.ChangeEngineers(currentLC, -unassignAmt);
+
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -136,7 +137,9 @@ namespace RP0
 
             GUILayout.Label($"  {currentLC.Engineers:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
 
-            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false)) && assignAmt > 0) { KCTUtilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
+            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false)) && assignAmt > 0)
+                KCTUtilities.ChangeEngineers(currentLC, assignAmt);
+
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -147,12 +150,6 @@ namespace RP0
 
             GUILayout.Label($"Max: {currentLC.MaxEngineers:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
-
-            if (recalc)
-            {
-                currentLC.RecalculateBuildRates();
-                currentLC.KSC.RecalculateBuildRates(false);
-            }
 
             int assignDelta = 0;
             if (_currentPersonnelHover == PersonnelButtonHover.Assign)

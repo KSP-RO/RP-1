@@ -97,7 +97,7 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
-        public const int VERSION = 8;
+        public const int VERSION = 9;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
@@ -540,9 +540,15 @@ namespace RP0
                 // Prune bad or inactive KSCs.
                 for (int i = KSCs.Count; i-- > 0;)
                 {
+                    bool any = false;
                     LCSpaceCenter ksc = KSCs[i];
                     if (ksc.KSCName == null || ksc.KSCName.Length == 0 || (ksc.IsEmpty && ksc != ActiveSC))
+                    {
                         KSCs.RemoveAt(i);
+                        any = true;
+                    }
+
+                    if (any) KCTUtilities.RefreshGroundStationActiveState();
                 }
 
                 foreach (var vp in BuildPlans.Values)
@@ -556,6 +562,11 @@ namespace RP0
 
                 if (LoadedSaveVersion < VERSION)
                 {
+                    if (LoadedSaveVersion < 9)
+                    {
+                        KCTUtilities.RefreshGroundStationActiveState();
+                    }
+
                     // This upgrades to new payloads
                     // NOTE this upgrade has to come before other upgrades
                     // that touch ship nodes, because they will do the UpgradePipeline
@@ -888,6 +899,7 @@ namespace RP0
                     newKsc = new LCSpaceCenter(site);
                     newKsc.EnsureStartingLaunchComplexes();
                     KSCs.Add(newKsc);
+                    KCTUtilities.RefreshGroundStationActiveState();
                 }
 
                 SetActiveKSC(newKsc);

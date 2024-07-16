@@ -314,6 +314,9 @@
     <Reference Include="ModularFlightIntegrator">
       <Private>False</Private>
     </Reference>
+    <Reference Include="RealAntennas">
+      <Private>False</Private>
+    </Reference>
     <Reference Include="RealFuels">
       <Private>False</Private>
     </Reference>

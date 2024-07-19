@@ -89,7 +89,6 @@ CONTRACT_TYPE
 			name = HasCrew
 			type = HasCrew
 			minCrew = 2
-			crewOnly = true
 			maxCrew = @/targetCapacity
 		}
 		PARAMETER

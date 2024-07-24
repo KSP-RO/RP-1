@@ -78,7 +78,6 @@ namespace RP0
         public bool UseLastScreenshot = false;
 
         public bool AirlaunchTipShown = false;
-        public bool RealChuteTipShown = false;
         public bool Avionics_InterplanetaryWarningShown = false;
         public bool AvionicsWindow_ShowInfo1 = true;
         public bool AvionicsWindow_ShowInfo2 = true;

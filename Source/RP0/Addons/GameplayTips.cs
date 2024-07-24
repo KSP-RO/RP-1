@@ -1,6 +1,7 @@
 ﻿using RealFuels;
 using System.Collections;
 using System.Collections.Generic;
+using UniLinq;
 using UnityEngine;
 
 namespace RP0
@@ -60,7 +61,7 @@ namespace RP0
             {
                 LoadRAUpgradeStatus(rp0Settings);
 
-                if (_hasNewPurchasableRATL || !rp0Settings.RealChuteTipShown)
+                if (_hasNewPurchasableRATL)
                 {
                     GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
                     _subcribedToPAWEvent = true;
@@ -75,11 +76,6 @@ namespace RP0
 
         private void OnPartActionUIShown(UIPartActionWindow paw, Part part)
         {
-            if (part.Modules.Contains("RealChuteModule"))
-            {
-                ShowRealChuteTip();
-            }
-
             if (_hasNewPurchasableRATL && part.Modules.Contains("ModuleRealAntenna"))
             {
                 ShowRATechAvailableTip();
@@ -125,23 +121,32 @@ namespace RP0
                                          HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        private void ShowRealChuteTip()
+        public void CheckAndShowExcessECTip(ShipConstruct ship)
         {
-            var rp0Settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
-            if (rp0Settings.RealChuteTipShown) return;
+            if (ShipHasExcessEC(ship))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                             new Vector2(0.5f, 0.5f),
+                                             "ShowExcessECTip",
+                                             KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_ExcessEC_Title"),
+                                             KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_ExcessEC_Text"),
+                                             KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
+                                             false,
+                                             HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+        }
 
-            rp0Settings.RealChuteTipShown = true;
+        public bool ShipHasExcessEC(ShipConstruct ship)
+        {
+            const string techId = "electronicsSatellite";
+            if (ResearchAndDevelopment.GetTechnologyState(techId) == RDTech.State.Available)
+            {
+                // No longer check this beyond the early game
+                return false;
+            }
 
-            string msg = "RealChute has very old UI. To resize and configure the chute, enter Action Groups mode by using the button in the top left corner. " +
-                         "Then click on the part to open up the configuration UI.";
-            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                         new Vector2(0.5f, 0.5f),
-                                         "ShowRealChuteTip",
-                                         "Configuring parachutes",
-                                         msg,
-                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
-                                         false,
-                                         HighLogic.UISkin).HideGUIsWhilePopup();
+            double ecTotal = ship.Parts.Sum(p => p.Resources.Get("ElectricCharge")?.maxAmount ?? 0);
+            return ecTotal > 10000;
         }
 
         private void ShowRATechAvailableTip()

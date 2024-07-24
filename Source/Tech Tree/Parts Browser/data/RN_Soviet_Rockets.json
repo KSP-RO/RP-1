@@ -464,7 +464,7 @@
         "title": "RD-0257 Vernier",
         "description": "RD-0257 vernier engine for second stage of the Dnepr 1 rocket. Plume configured by RealPlume.",
         "mod": "RN Soviet Rockets",
-        "cost": 100,
+        "cost": 25,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",

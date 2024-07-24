@@ -123,9 +123,10 @@ namespace RP0
             string assignStr = GetAssignText(true, currentLC, out int assignAmt);
             string unassignStr = GetAssignText(false, currentLC, out int unassignAmt);
 
-            bool recalc = false;
             ProjectType type = currentLC.LCType == LaunchComplexType.Pad ? ProjectType.VAB : ProjectType.SPH;
-            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0) { KCTUtilities.ChangeEngineers(currentLC, -unassignAmt); recalc = true; }
+            if (GUILayout.Button(unassignStr, GUILayout.ExpandWidth(false)) && unassignAmt > 0)
+                KCTUtilities.ChangeEngineers(currentLC, -unassignAmt);
+
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -136,7 +137,9 @@ namespace RP0
 
             GUILayout.Label($"  {currentLC.Engineers:N0}  ", GetLabelCenterAlignStyle(), GUILayout.ExpandWidth(false));
 
-            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false)) && assignAmt > 0) { KCTUtilities.ChangeEngineers(currentLC, assignAmt); recalc = true; }
+            if (GUILayout.Button(assignStr, GUILayout.ExpandWidth(false)) && assignAmt > 0)
+                KCTUtilities.ChangeEngineers(currentLC, assignAmt);
+
             if (Event.current.type == EventType.Repaint)
             {
                 if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -147,12 +150,6 @@ namespace RP0
 
             GUILayout.Label($"Max: {currentLC.MaxEngineers:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
-
-            if (recalc)
-            {
-                currentLC.RecalculateBuildRates();
-                currentLC.KSC.RecalculateBuildRates(false);
-            }
 
             int assignDelta = 0;
             if (_currentPersonnelHover == PersonnelButtonHover.Assign)
@@ -246,13 +243,6 @@ namespace RP0
             GUILayout.Label(SpaceCenterManagement.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Max:", GUILayout.Width(90));
-            int resLimit = Database.SettingsSC.GetResearcherCap();
-            string resLimitStr = resLimit >= 0 ? resLimit.ToString("N0") : "Unlimited";
-            GUILayout.Label(resLimitStr, GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
-
             RenderHireFire(true, out int fireAmount, out int hireAmount);
 
             int delta = 0;
@@ -307,16 +297,16 @@ namespace RP0
             GUILayout.EndHorizontal();
         }
 
-        private static void RenderHireFire(bool research, out int fireAmount, out int hireAmount)
+        private static void RenderHireFire(bool isResearch, out int fireAmount, out int hireAmount)
         {
             if (KSPUtils.CurrentGameIsCareer())
             {
                 GUILayout.BeginHorizontal();
 
-                string title = research ? "Researchers" : "Engineers";
+                string title = isResearch ? "Researchers" : "Engineers";
                 GUILayout.Label($"Hire/Fire {title}:");
 
-                fireAmount = research ? SpaceCenterManagement.Instance.Researchers : SpaceCenterManagement.Instance.ActiveSC.UnassignedEngineers;
+                fireAmount = isResearch ? SpaceCenterManagement.Instance.Researchers : SpaceCenterManagement.Instance.ActiveSC.UnassignedEngineers;
                 int workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = fireAmount;
@@ -325,7 +315,7 @@ namespace RP0
                 GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
                 if (GUILayout.Button($"Fire {workers:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
-                    if (research)
+                    if (isResearch)
                     {
                         KCTUtilities.ChangeResearchers(-workers);
                         SpaceCenterManagement.Instance.UpdateTechTimes();
@@ -337,6 +327,7 @@ namespace RP0
                         ksc.RecalculateBuildRates(false);
                     }
                 }
+
                 if (Event.current.type == EventType.Repaint)
                 {
                     if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -346,48 +337,29 @@ namespace RP0
                 }
                 fireAmount = Math.Min(workers, fireAmount);
 
-                double modifiedHireCost = -CurrencyUtils.Funds(research ? TransactionReasonsRP0.HiringResearchers : TransactionReasonsRP0.HiringEngineers, -Database.SettingsSC.HireCost);
+                double modifiedHireCost = -CurrencyUtils.Funds(isResearch ? TransactionReasonsRP0.HiringResearchers : TransactionReasonsRP0.HiringEngineers, -Database.SettingsSC.HireCost);
                 workers = _buyModifier;
                 if (workers == int.MaxValue)
                     workers = Math.Max(_buyModifierMultsPersonnel[0], SpaceCenterManagement.Instance.Applicants + (int)(Funding.Instance.Funds / modifiedHireCost));
 
-                if (research)
+                if (isResearch)
                 {
-                    int maxRes = Database.SettingsSC.GetResearcherCap();
-                    if (maxRes < 0)
-                        maxRes = int.MaxValue;
-
-                    workers = Math.Max(0, Math.Min(workers, maxRes - SpaceCenterManagement.Instance.Researchers));
+                    workers = Math.Max(0, workers);
                 }
 
-                double workersToHire = Math.Max(0, workers - SpaceCenterManagement.Instance.Applicants);
+                int workersToHire = Math.Max(0, workers - SpaceCenterManagement.Instance.Applicants);
                 _fundsCost = modifiedHireCost * workersToHire;
                 // Show the result for whatever you're asking for, even if you can't afford it.
-                hireAmount = workers; // Math.Min(workers, (int)(Funding.Instance.Funds / Database.SettingsSC.HireCost) + KerbalConstructionTimeData.Instance.UnassignedPersonnel);
+                hireAmount = workers;
 
                 canAfford = Funding.Instance.Funds >= _fundsCost;
                 style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
                 if (GUILayout.Button($"Hire {workers:N0}: √{_fundsCost:N0}", style, GUILayout.ExpandWidth(false)) && canAfford)
                 {
-                    // Note: have to pass base, not modified, cost here, since the CMQ reruns
-                    KCTUtilities.SpendFunds(workersToHire * Database.SettingsSC.HireCost, research ? TransactionReasonsRP0.HiringResearchers : TransactionReasonsRP0.HiringEngineers);
-                    if (research)
-                    {
-                        KCTUtilities.ChangeResearchers(workers);
-                        SpaceCenterManagement.Instance.UpdateTechTimes();
-                    }
-                    else
-                    {
-                        LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
-                        KCTUtilities.ChangeEngineers(ksc, workers);
-                        ksc.RecalculateBuildRates(false);
-                    }
-                    SpaceCenterManagement.Instance.Applicants = Math.Max(0, SpaceCenterManagement.Instance.Applicants - workers);
-                    if (SpaceCenterManagement.Instance.Applicants == 0)
-                        SpaceCenterManagement.Instance.HiredStarterApplicants = true;
-
+                    KCTUtilities.HireStaff(isResearch, workers);
                     _fundsCost = int.MinValue;
                 }
+
                 if (Event.current.type == EventType.Repaint)
                 {
                     if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -396,12 +368,95 @@ namespace RP0
                         _currentPersonnelHover = PersonnelButtonHover.None;
                 }
 
+                RenderHireNButton(isResearch);
+
                 GUILayout.EndHorizontal();
             }
             else
             {
                 hireAmount = 0;
                 fireAmount = 0;
+            }
+        }
+
+        private static void RenderHireNButton(bool isResearch)
+        {
+            LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
+            if (!isResearch && ksc.ActiveLC == null)
+                return;
+
+            if (GUILayout.Button(new GUIContent("Auto hire", "Schedules staff to be hired over time"), GUILayout.ExpandWidth(false)))
+            {
+                string dialogName = "warpToStaff";
+                string dialogTitle = $"Auto hire {(isResearch ? "researchers" : "engineers")}";
+
+                if (SpaceCenterManagement.Instance.fundTarget.IsValid)
+                {
+                    string msg = "This functionality cannot be used while there's Warp To Fund Target in progress.";
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog(dialogName, msg, dialogTitle, HighLogic.UISkin,
+                            new DialogGUIButton("Understood", () => { })
+                        ), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                }
+                else
+                {
+                    LaunchComplex currentLC = isResearch ? null : ksc.LaunchComplexes[_LCIndex];
+                    int curCount = isResearch ? SpaceCenterManagement.Instance.Researchers : currentLC.Engineers;
+                    string sNumStaff = curCount.ToString("N0");
+                    string sReserveFunds = Funding.Instance.Funds.ToString("N0");
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog(dialogName, "", dialogTitle, HighLogic.UISkin,
+                            isResearch ? new DialogGUISpace(0f) : new DialogGUILabel($"LC: {currentLC.Name}"),
+                            new DialogGUILabel($"Final count {(isResearch ? "" : $"(max: {currentLC.MaxEngineers:N0})")}"),
+                            new DialogGUITextInput(sNumStaff, false, 7, (string n) =>
+                            {
+                                sNumStaff = n;
+                                return sNumStaff;
+                            }, 24f),
+                            new DialogGUILabel("Reserve funds"),
+                            new DialogGUITextInput(sReserveFunds, false, 12, (string n) =>
+                            {
+                                sReserveFunds = n;
+                                return sReserveFunds;
+                            }, 24f),
+                            new DialogGUIButton("Add", () => { TryAddAutoHire(sNumStaff, sReserveFunds, currentLC); }),
+                            new DialogGUIButton("Cancel", () => { })
+                        ), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                }
+            }
+        }
+
+        private static void TryAddAutoHire(string sNumStaff, string sReserveFunds, LaunchComplex lc)
+        {
+            bool b1 = int.TryParse(sNumStaff, out int numCrew);
+            bool b2 = double.TryParse(sReserveFunds, out double reserveFunds);
+            if (!b1 || !b2)
+            {
+                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToStaffConfirmFail",
+                    $"Failed to parse {(b1 ? "crew count" : "reserve funds")}!",
+                    "Error",
+                    HighLogic.UISkin,
+                    300,
+                    new DialogGUIButton("Understood", () => { })
+                    ), false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            else
+            {
+                int startCount, endCount;
+                if (lc == null)
+                {
+                    startCount = SpaceCenterManagement.Instance.Researchers;
+                    endCount = Math.Max(numCrew, startCount);
+                }
+                else
+                {
+                    startCount = lc.Engineers;
+                    endCount = Math.Min(numCrew, lc.MaxEngineers);
+                    endCount = Math.Max(endCount, startCount);
+                }
+
+                var target = new HireStaffProject(startCount, endCount, reserveFunds, lc);
+                SpaceCenterManagement.Instance.staffTarget = target;
             }
         }
 

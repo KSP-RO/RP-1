@@ -939,6 +939,75 @@
         "module_tags": []
     },
     {
+        "name": "ROE-Agena_Retro_TypeIII",
+        "title": "Agena Retro Type III",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "8",
+        "entry_cost": "1",
+        "category": "SOLID",
+        "info": "",
+        "year": "1959",
+        "technology": "solids1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "2000,SolidsComposite",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Agena_Spinrocket",
+        "title": "Agena Spinrocket",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "4",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1959",
+        "technology": "solids1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "500,SolidsComposite",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Alcyone1",
+        "title": "Alcyone-1",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "75",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1962",
+        "technology": "solids1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Alcyone1",
+        "upgrade": false,
+        "entry_cost_mods": "Alcyone-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-Algol1",
         "title": "Algol IB",
         "description": "",
@@ -3904,6 +3973,29 @@
         ]
     },
     {
+        "name": "ROE-M55",
+        "title": "M55",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "750",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1962",
+        "technology": "solids1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "M55",
+        "upgrade": false,
+        "entry_cost_mods": "M55",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-MB35",
         "title": "MB-35",
         "description": "",
@@ -5078,7 +5170,7 @@
         "title": "RD-0212",
         "description": "",
         "mod": "ROEngines",
-        "cost": 435,
+        "cost": 526,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -5127,7 +5219,7 @@
         "title": "RD-0207/0214",
         "description": "",
         "mod": "ROEngines",
-        "cost": 91,
+        "cost": 23,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -5839,7 +5931,7 @@
         "title": "RD-8",
         "description": "A single-chamber derivative of the RD-8 engine used on the Zenit second stage. Yuzhnoye Design Office concept, featuring dual-axis gimbal control and restart capability for use in upper stages. Diameter: 0.5 m. Plume configured by RealPlume.",
         "mod": "ROEngines",
-        "cost": 194,
+        "cost": 49,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -5863,7 +5955,7 @@
         "title": "RD-851/855",
         "description": "",
         "mod": "ROEngines",
-        "cost": 96,
+        "cost": 24,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "Engine",
@@ -5887,7 +5979,7 @@
         "title": "RD-852/856",
         "description": "",
         "mod": "ROEngines",
-        "cost": 50,
+        "cost": 13,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "Engine",
@@ -6860,6 +6952,52 @@
         ]
     },
     {
+        "name": "ROE-SR19",
+        "title": "SR19",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "500",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1964",
+        "technology": "solids1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SR19",
+        "upgrade": false,
+        "entry_cost_mods": "SR19-AJ-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-SR73",
+        "title": "SR73",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "400",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1964",
+        "technology": "solids1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SR73",
+        "upgrade": false,
+        "entry_cost_mods": "SR73-AJ-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROE-SRMU",
         "title": "SRMU",
         "description": "",
@@ -7020,6 +7158,121 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "ROE-Star13",
+        "title": "Star-13",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-13",
+        "upgrade": false,
+        "entry_cost_mods": "Star-13",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star13A",
+        "title": "Star-13A",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-13A",
+        "upgrade": false,
+        "entry_cost_mods": "Star-13A",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star13D",
+        "title": "Star-13D",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1963",
+        "technology": "solids1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-13D",
+        "upgrade": false,
+        "entry_cost_mods": "Star-13D",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star17",
+        "title": "Star-17",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "172",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1968",
+        "technology": "solids1967",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-17",
+        "upgrade": false,
+        "entry_cost_mods": "STAR-17",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROE-Star17A",
+        "title": "Star-17A",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "200",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1969",
+        "technology": "solids1969",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-17A",
+        "upgrade": false,
+        "entry_cost_mods": "Star-17A",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
     },
     {
         "name": "ROE-Star37",
@@ -7389,6 +7642,29 @@
         "identical_part_name": "TD-339",
         "module_tags": [
             "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "ROE-TX280",
+        "title": "TX-280 Ullage Motor",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": "20",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1964",
+        "technology": "solids1964",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SIVUllageMotor",
+        "upgrade": false,
+        "entry_cost_mods": "TX-280",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
         ]
     },
     {
@@ -7917,30 +8193,6 @@
         "upgrade": false,
         "entry_cost_mods": "XLR41",
         "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
-    },
-    {
-        "name": "ROE-XLR43",
-        "title": "XLR43 Series",
-        "description": "First large, single chamber engine developed in the US, based off of the A-4.",
-        "mod": "ROEngines",
-        "cost": 270,
-        "entry_cost": 0,
-        "category": "ORBITAL",
-        "info": "Deprecated",
-        "year": "1950",
-        "technology": "earlyRocketry",
-        "era": "",
-        "ro": false,
-        "orphan": false,
-        "rp0_conf": false,
-        "spacecraft": "",
-        "engine_config": "XLR43",
-        "upgrade": false,
-        "entry_cost_mods": "XLR43-NA-1",
-        "identical_part_name": "XLR43",
         "module_tags": [
             "EngineLiquidTurbo"
         ]

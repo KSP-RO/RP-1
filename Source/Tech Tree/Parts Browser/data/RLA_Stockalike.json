@@ -260,7 +260,7 @@
         "title": "RD-0214",
         "description": "A vernier engine cluster found on the third stage of the Proton series launcher. Diameter: [3.78 m]. Plume configured by RealPlume.",
         "mod": "RLA Stockalike",
-        "cost": 91,
+        "cost": 23,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",

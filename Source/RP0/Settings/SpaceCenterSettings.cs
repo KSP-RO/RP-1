@@ -117,15 +117,6 @@ namespace RP0
                 nautUpkeepTrainingBools[i] = false;
         }
 
-        public int GetResearcherCap(int lvl = -1)
-        {
-            return -1;
-
-            /*if (lvl == -1)
-                lvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
-            return GeneralSettings.ResearcherCaps[lvl];*/
-        }
-
         public int GetStartingPersonnel(Game.Modes mode)
         {
             if (mode == Game.Modes.CAREER)

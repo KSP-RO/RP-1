@@ -38,11 +38,6 @@ namespace RP0
             }
         }
 
-        public override void OnDestroy()
-        {
-            RDTechTree.OnTechTreeSpawn.Remove(OnUpdateRnD);
-        }
-
         private void OnUpdateRnD(RDTechTree tree)
         {
             ProcessTree(tree);

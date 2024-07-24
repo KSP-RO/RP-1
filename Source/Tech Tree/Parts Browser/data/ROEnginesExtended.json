@@ -294,6 +294,29 @@
         ]
     },
     {
+        "name": "ROEE-FW5",
+        "title": "FW-5",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "215",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1972",
+        "technology": "solids1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "FW5",
+        "upgrade": false,
+        "entry_cost_mods": "FW-5",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROEE-G1",
         "title": "G-1",
         "description": "",
@@ -688,7 +711,7 @@
         "title": "RD-0230",
         "description": "",
         "mod": "ROEnginesExtended",
-        "cost": 100,
+        "cost": 25,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -736,7 +759,7 @@
         "title": "RD-0236",
         "description": "",
         "mod": "ROEnginesExtended",
-        "cost": 90,
+        "cost": 23,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -809,7 +832,7 @@
         "title": "RD-864",
         "description": "",
         "mod": "ROEnginesExtended",
-        "cost": 163,
+        "cost": 41,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
@@ -1072,6 +1095,29 @@
         ]
     },
     {
+        "name": "ROEE-SR28",
+        "title": "SR28",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "220",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SR28",
+        "upgrade": false,
+        "entry_cost_mods": "SR28-JPL-3",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROEE-STBE",
         "title": "STBE",
         "description": "",
@@ -1166,6 +1212,121 @@
         "module_tags": [
             "EngineLiquidTurbo",
             "Hydrolox"
+        ]
+    },
+    {
+        "name": "ROEE-SVM1",
+        "title": "SVM-1",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "40",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1966",
+        "technology": "solids1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SVM1",
+        "upgrade": false,
+        "entry_cost_mods": "SVM-1",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROEE-SVM2",
+        "title": "SVM-2",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "75",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1968",
+        "technology": "solids1967",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SVM2",
+        "upgrade": false,
+        "entry_cost_mods": "SVM-2",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROEE-SVM4A",
+        "title": "SVM-4A",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "175",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1971",
+        "technology": "solids1969",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SVM4A",
+        "upgrade": false,
+        "entry_cost_mods": "SVM-4A",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROEE-SVM5",
+        "title": "SVM-5",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "125",
+        "entry_cost": "",
+        "category": "SOLID",
+        "info": "",
+        "year": "1974",
+        "technology": "solids1972",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "SVM5",
+        "upgrade": false,
+        "entry_cost_mods": "SVM-5",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROEE-Star13B",
+        "title": "Star-13B",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "55",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1967",
+        "technology": "solids1967",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Star-13B",
+        "upgrade": false,
+        "entry_cost_mods": "Star-13B",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
         ]
     },
     {

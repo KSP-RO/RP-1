@@ -288,11 +288,11 @@ namespace RP0
                 SpaceCenterManagement.Instance.RecalculateBuildRates(); // this might change other rates
 
                 double portion = toGo / increment;
-                UnlockCreditHandler.Instance.IncrementCreditTime(techID, portion * UTDiff);
+                UnlockCreditHandler.Instance.IncrementCreditTime(portion * UTDiff);
                 return (1d - portion) * UTDiff;
             }
 
-            UnlockCreditHandler.Instance.IncrementCreditTime(techID, UTDiff);
+            UnlockCreditHandler.Instance.IncrementCreditTime(UTDiff);
             return 0d;
         }
 

@@ -45,6 +45,7 @@ namespace RP0.Harmony
                     techID = availablePart.TechRequired;
                     eCost = availablePart.entryCost;
                 }
+
                 if (SpaceCenterManagement.Instance.TechListHas(techID))
                 {
                     __instance.buttonPurchaseContainer.SetActive(false);
@@ -52,7 +53,7 @@ namespace RP0.Harmony
                 }
                 else if (__instance.buttonPurchase.gameObject.activeSelf || __instance.buttonPurchaseRed.gameObject.activeSelf)
                 {
-                    var cmq = UnlockCreditHandler.Instance.GetCMQ(eCost, techID, TransactionReasonsRP0.PartOrUpgradeUnlock);
+                    var cmq = UnlockCreditHandler.Instance.GetCMQ(eCost, TransactionReasonsRP0.PartOrUpgradeUnlock);
                     // If we still can't afford, bail without setting tooltip
                     if (!cmq.CanAfford())
                         return;

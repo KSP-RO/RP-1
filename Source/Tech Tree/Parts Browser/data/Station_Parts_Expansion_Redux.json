@@ -2525,7 +2525,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "stations415m",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated"

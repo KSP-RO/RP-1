@@ -186,9 +186,7 @@ namespace RP0
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds, false);
 
-            double credit = UnlockCreditHandler.Instance.GetCreditAmount(partList);
-
-            double spentCredit = Math.Min(postCMQUnlockCost, credit);
+            double spentCredit = Math.Min(postCMQUnlockCost, UnlockCreditHandler.Instance.TotalCredit);
             cmq.AddPostDelta(CurrencyRP0.Funds, spentCredit, true);
 
             int partCount = partList.Count;
@@ -455,7 +453,7 @@ namespace RP0
                         string costStr = cmq.GetCostLineOverride(true, false, false, true);
                         double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds, false);
                         double invertCMQOp = error.CostToResolve / trueTotal;
-                        double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.GetCreditAmount(error.TechToResolve));
+                        double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.TotalCredit);
                         cmq.AddPostDelta(CurrencyRP0.Funds, creditAmtToUse, true);
                         string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true, true);
                         if (string.IsNullOrEmpty(afterCreditLine))

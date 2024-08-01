@@ -185,7 +185,7 @@ namespace RP0
             double rolloutCost = 0d;
             try
             {
-                rolloutCost = SpaceCenterManagement.Instance.GetRolloutCostOverTime(PeriodFactor * 86400d);
+                rolloutCost = SpaceCenterManagement.Instance.GetReconRolloutCostOverTime(PeriodFactor * 86400d);
                 GUILayout.Label("Rollout/Airlaunch Prep", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label(FormatCost(rolloutCost), RightLabel, GUILayout.Width(160));
             }

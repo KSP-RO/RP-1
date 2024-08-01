@@ -1,14 +1,16 @@
-﻿using KSP.UI;
+﻿using CommNet;
+using KSP.UI;
 using KSP.UI.Screens;
+using ROUtils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using UniLinq;
 using UnityEngine;
 using UnityEngine.Profiling;
-using ROUtils;
+using Upgradeables;
 
 namespace RP0
 {
@@ -933,7 +935,7 @@ namespace RP0
                     }
                 }
             }
-            else if(SpaceCenterManagement.Instance != null)
+            else if (SpaceCenterManagement.Instance != null)
             {
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, SpaceCenterManagement.KCTLaunchLock);
                 if (!SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled)
@@ -1256,7 +1258,7 @@ namespace RP0
         {
             HashSet<string> blacklist = new HashSet<string>();
             SortedList<string, string> slist = new SortedList<string, string>();
-            foreach(string s in input)
+            foreach (string s in input)
             {
                 foreach (string parent in Database.TechNameToParents[s])
                 {
@@ -1311,7 +1313,7 @@ namespace RP0
             }
             return res;
         }
-        
+
         public static void ScrapVessel(VesselProject b)
         {
             RP0Debug.Log($"Scrapping {b.shipName}");
@@ -1344,7 +1346,6 @@ namespace RP0
                 ChangeEngineers(ksc, workerAmount);
                 if (lc != null)
                     ChangeEngineers(lc, workerAmount);
-                ksc.RecalculateBuildRates(false);
             }
             SpaceCenterManagement.Instance.Applicants = Math.Max(0, SpaceCenterManagement.Instance.Applicants - workerAmount);
             if (SpaceCenterManagement.Instance.Applicants == 0)
@@ -1356,6 +1357,7 @@ namespace RP0
             currentLC.Engineers += delta;
             SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+            currentLC.RecalculateBuildRates();
             KCT_GUI.BuildRateForDisplay = null;
         }
 
@@ -1480,6 +1482,94 @@ namespace RP0
         public static int GetFacilityLevel(SpaceCenterFacility facility)
         {
             return MathUtils.GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
+        }
+
+        public static void SetFacilityLevel(SpaceCenterFacility scf, int level)
+        {
+            string facId = ScenarioUpgradeableFacilities.SlashSanitize(scf.ToString());
+            ScenarioUpgradeableFacilities.ProtoUpgradeable upgradable = ScenarioUpgradeableFacilities.protoUpgradeables[facId];
+
+            bool levelWasSet = false;
+            if (upgradable.facilityRefs.Count > 0)
+            {
+                // The facilityRefs are only available when the space center facilities are physically spawned.
+                // For instance they aren't found in TS scene or when going far enough away from home body.
+                levelWasSet = true;
+                foreach (UpgradeableFacility upgd in upgradable.facilityRefs)
+                {
+                    RP0Debug.Log($"Setting facility {upgd.id} upgrade level through standard path");
+                    upgd.SetLevel(level);
+                }
+            }
+
+            if (!levelWasSet)
+            {
+                RP0Debug.Log($"Failed to set facility {scf} upgrade level through standard path, using fallback");
+                int maxLevel = Database.GetFacilityLevelCount(scf) - 1;
+                double normLevel = maxLevel == 0 ? 1d : level / (double)maxLevel;
+                upgradable.configNode.SetValue("lvl", normLevel);
+
+                // Note that OnKSCFacilityUpgrading and OnKSCFacilityUpgraded events are not fired through this code path
+                // Still, we need to let RA know that it needs a reset to account for the finished upgrade.
+                if (scf == SpaceCenterFacility.TrackingStation)
+                {
+                    ClobberRACommnet();
+                }
+            }
+        }
+
+        public static void RefreshGroundStationActiveState()
+        {
+            var scInstance = SpaceCenterManagement.Instance;
+            if (scInstance == null)
+            {
+                RP0Debug.LogError("SpaceCenterManagement.Instance is null");
+                return;
+            }
+
+            if (!RealAntennas.HomeNodeTypes.initialized)
+            {
+                static IEnumerator DelayedRefreshRoutine()
+                {
+                    yield return new WaitForEndOfFrame();
+                    RefreshGroundStationActiveState_Internal();
+                }
+                scInstance.StartCoroutine(DelayedRefreshRoutine());
+            }
+            else
+            {
+                RefreshGroundStationActiveState_Internal();
+            }
+        }
+
+        private static void RefreshGroundStationActiveState_Internal()
+        {
+            if (RealAntennas.HomeNodeTypes.HomeDict.TryGetValue("LaunchSite", out List<RealAntennas.Network.RACommNetHome> lsHomes))
+            {
+                RP0Debug.Log("RefreshGroundStationActiveState");
+                var allActiveKSCStations = SpaceCenterManagement.Instance.KSCs.Select(ksc => ksc.AssociatedGroundStation).ToList();
+                foreach (RealAntennas.Network.RACommNetHome home in lsHomes)
+                {
+                    home.enabled = allActiveKSCStations.Contains(home.nodeName);
+                }
+            }
+            else
+            {
+                RP0Debug.LogError("Failed to update RA LaunchSite active state");
+            }
+        }
+
+        private static void ClobberRACommnet()
+        {
+            var mInf = CommNetScenario.Instance?.GetType().GetMethod("ApplyTSLevelChange", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (mInf != null)
+            {
+                mInf.Invoke(CommNetScenario.Instance, new object[0]);
+            }
+            else
+            {
+                RP0Debug.LogError($"Failed to call ApplyTSLevelChange() on RA CommNetScenario");
+            }
         }
     }
 }

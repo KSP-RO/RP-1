@@ -39,22 +39,17 @@ namespace RP0
             return sum * mult;
         }
 
-        public double GetCreditAmount(string tech) => _totalCredit;
-        public double GetCreditAmount(List<AvailablePart> partList) => _totalCredit;
-
         /// <summary>
         /// Note this is CMQ-neutral.
         /// </summary>
-        /// <param name="tech"></param>
         /// <param name="UT"></param>
-        public void IncrementCreditTime(string tech, double UT) => IncrementCredit(tech, CreditForTime(UT));
+        public void IncrementCreditTime(double UT) => IncrementCredit(CreditForTime(UT));
 
         /// <summary>
         /// Note this is CMQ-neutral.
         /// </summary>
-        /// <param name="tech"></param>
         /// <param name="amount"></param>
-        public void IncrementCredit(string tech, double amount)
+        public void IncrementCredit(double amount)
         {
             // Will also catch NaN
             if (!(amount > 0))
@@ -128,8 +123,6 @@ namespace RP0
                 Funding.Instance.AddFunds(-excess * recipCMQMult, TransactionReasonsRP0.PartOrUpgradeUnlock.Stock());
         }
 
-        public double SpendCredit(string tech, double cost) => SpendCredit(cost);
-
         public double SpendCredit(double cost)
         {
             if (_totalCredit == 0d)
@@ -153,18 +146,18 @@ namespace RP0
             return excessCost;
         }
 
-        public CurrencyModifierQueryRP0 GetCMQ(double cost, string tech, TransactionReasonsRP0 reason)
+        public CurrencyModifierQueryRP0 GetCMQ(double cost, TransactionReasonsRP0 reason)
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
-            cmq.AddPostDelta(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, true), GetCreditAmount(tech)), true);
+            cmq.AddPostDelta(CurrencyRP0.Funds, Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, true), TotalCredit), true);
             return cmq;
         }
 
-        public CurrencyModifierQueryRP0 GetPrePostCostAndAffordability(double cost, string tech, TransactionReasonsRP0 reason, out double preCreditCost, out double postCreditCost, out double credit, out bool canAfford)
+        public CurrencyModifierQueryRP0 GetPrePostCostAndAffordability(double cost, TransactionReasonsRP0 reason, out double preCreditCost, out double postCreditCost, out double credit, out bool canAfford)
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
             preCreditCost = -cmq.GetTotal(CurrencyRP0.Funds, false);
-            credit = Math.Min(preCreditCost, GetCreditAmount(tech));
+            credit = Math.Min(preCreditCost, TotalCredit);
             cmq.AddPostDelta(CurrencyRP0.Funds, credit, true);
             postCreditCost = -cmq.GetTotal(CurrencyRP0.Funds, true);
             canAfford = cmq.CanAfford();
@@ -172,7 +165,7 @@ namespace RP0
             return cmq;
         }
 
-        public void ProcessCredit(double cost, string tech, TransactionReasonsRP0 reason)
+        public void ProcessCredit(double cost, TransactionReasonsRP0 reason)
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
             double postCMQCost = -cmq.GetTotal(CurrencyRP0.Funds, true);
@@ -185,9 +178,8 @@ namespace RP0
         /// and returns remaining (unsubsidized) cost
         /// </summary>
         /// <param name="entryCost"></param>
-        /// <param name="tech"></param>
         /// <returns></returns>
-        private float ProcessCredit(float entryCost, string tech)
+        private float ProcessCredit(float entryCost)
         {
             if (entryCost == 0f)
                 return 0f;
@@ -220,7 +212,7 @@ namespace RP0
             UnlockCreditUtility.StoredPartEntryCost = ap.entryCost;
             if (ap.costsFunds)
             {
-                int remainingCost = (int)ProcessCredit(ap.entryCost, ap.TechRequired);
+                int remainingCost = (int)ProcessCredit(ap.entryCost);
                 ap.SetEntryCost(remainingCost);
                 if(HighLogic.LoadedSceneIsEditor)
                     SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
@@ -230,7 +222,7 @@ namespace RP0
         private void OnPartUpgradePurchased(PartUpgradeHandler.Upgrade up)
         {
             UnlockCreditUtility.StoredUpgradeEntryCost = up.entryCost;
-            float remainingCost = ProcessCredit(up.entryCost, up.techRequired);
+            float remainingCost = ProcessCredit(up.entryCost);
             up.entryCost = remainingCost;
             if (HighLogic.LoadedSceneIsEditor)
                 SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;

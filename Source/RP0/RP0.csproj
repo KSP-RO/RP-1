@@ -45,6 +45,7 @@
     <Compile Include="ConfigurableStart\Utilities.cs" />
     <Compile Include="Harmony\FlightInputHandler.cs" />
     <Compile Include="Harmony\ModuleRCS.cs" />
+    <Compile Include="ModIntegrations\KSCSwitcherInterop.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
     <Compile Include="Singletons\LeaderNotifications.cs" />
     <Compile Include="SpaceCenter\Projects\HireStaffProject.cs" />
@@ -311,6 +312,9 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ModularFlightIntegrator">
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="RealAntennas">
       <Private>False</Private>
     </Reference>
     <Reference Include="RealFuels">

@@ -20,7 +20,6 @@ namespace RP0
         public PersistentObservableList<LCConstructionProject> LCConstructions = new PersistentObservableList<LCConstructionProject>();
         [Persistent]
         public PersistentObservableList<FacilityUpgradeProject> FacilityUpgrades = new PersistentObservableList<FacilityUpgradeProject>();
-                
 
         public List<ConstructionProject> Constructions = new List<ConstructionProject>();
 
@@ -28,6 +27,8 @@ namespace RP0
 
         public const int HangarIndex = 0;
         public LaunchComplex Hangar => LaunchComplexes[HangarIndex];
+
+        public string AssociatedGroundStation => KSCSwitcherInterop.GetGroundStationForKSC(KSCName);
 
         void added(int idx, ConstructionProject item) { Constructions.Add(item); }
         void removed(int idx, ConstructionProject item) { Constructions.Remove(item); }

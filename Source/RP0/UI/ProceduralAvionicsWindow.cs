@@ -340,7 +340,7 @@ namespace RP0.ProceduralAvionics
             if (unlockCost <= 0) return switchedConfig;
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double trueCost = -cmq.GetTotal(CurrencyRP0.Funds, false);
-            double creditToUse = Math.Min(trueCost, UnlockCreditHandler.Instance.GetCreditAmount(techNode.TechNodeName));
+            double creditToUse = Math.Min(trueCost, UnlockCreditHandler.Instance.TotalCredit);
             cmq.AddPostDelta(CurrencyRP0.Funds, creditToUse, true);
             GUI.enabled = techNode.IsAvailable && cmq.CanAfford();
             _gc.text = $"Unlock ({BuildCostString(Math.Max(0d, trueCost - creditToUse), trueCost)})";

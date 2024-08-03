@@ -653,7 +653,7 @@
     {
         "name": "SXTAirbag",
         "title": "Mk10-XL Inflatable Airbag",
-        "description": "A set of inflatable balloons that can handle impacts of moderate speed on planetary surfaces. These airbags are well suited for landing small landers and probes on rough terrain when a skycrane or internal propulsion is lacking or imprecise. First used on Russian Luna landers like Luna 9, airbags served well as Mars landing systems during various missions.",
+        "description": "A more advanced alternative to the Mk-10 landing system. Rather stronger.",
         "mod": "SXT",
         "cost": 200,
         "entry_cost": 20000,
@@ -676,7 +676,7 @@
     {
         "name": "SXTAirbagSmall",
         "title": "Mk-10 Inflatable Airbag",
-        "description": "A more advanced alternative to the Mk-10 landing system. Rather stronger.",
+        "description": "A set of inflatable balloons that can handle impacts of moderate speed on planetary surfaces. These airbags are well suited for landing small landers and probes on rough terrain when a skycrane or internal propulsion is lacking or imprecise. First used on Russian Luna landers like Luna 9, airbags served well as Mars landing systems during various missions.",
         "mod": "SXT",
         "cost": 150,
         "entry_cost": 15000,
@@ -1136,7 +1136,7 @@
     {
         "name": "SXTISSHabISK30",
         "title": "Skylab Orbital Workshop",
-        "description": "Hold 8 peole with 155 days (5 months) of supplies. A large crew compartment designed for larger, more permanent space stations. Designed and launched in 1973, the Skylab orbital station was the wider space station ever. Given the 270m3 pressurised volume, there is plenty of room for all your IVA activies. It even features a orbital laboratory!",
+        "description": "Hold 8 peole with 155 days (5 months) of supplies. A large crew compartment designed for larger, more permanent space stations. Designed and launched in 1973, the Skylab orbital station was the widest space station ever. Given the 270m3 pressurised volume, there is plenty of room for all your IVA activies. It even features a orbital laboratory!",
         "mod": "SXT",
         "cost": 17400,
         "entry_cost": 200000,

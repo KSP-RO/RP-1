@@ -22,6 +22,7 @@ namespace RP0
 
         public abstract TransactionReasonsRP0 TransactionReason { get; }
         protected abstract TransactionReasonsRP0 transactionReasonTime { get; }
+        public abstract bool KeepsLCActive { get; }
 
         public VesselProject AssociatedVP => KCTUtilities.FindVPByID(LC, AssociatedIdAsGuid);
 
@@ -96,7 +97,7 @@ namespace RP0
             return _buildRate;
         }
 
-        protected double CalculateBuildRate(int delta)
+        protected virtual double CalculateBuildRate(int delta)
         {
             double rate;
             if (IsCapped)
@@ -150,17 +151,15 @@ namespace RP0
 
         private double TimeLeftWithEfficiencyIncrease(double timeLeft)
         {
-            if (LC.Efficiency == LCEfficiency.MaxEfficiency)
+            if (LC.Efficiency == LCEfficiency.MaxEfficiency || timeLeft < 86400d || LC.Engineers == 0)
                 return timeLeft;
 
-            if (timeLeft > 86400d)
+            double bpDivRate = timeLeft * LC.Efficiency;
+            double newEff = LC.Efficiency;
+            double portion = LC.Engineers / (double)LC.MaxEngineers;
+            for (int i = 0; i < 4; ++i)
             {
-                double newEff = LC.Efficiency;
-                double portion = LC.Engineers / (double)LC.MaxEngineers;
-                for (int i = 0; i < 4; ++i)
-                {
-                    timeLeft = (timeLeft * newEff) / LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, portion, out newEff, LC.Efficiency);
-                }
+                timeLeft =  bpDivRate / LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, portion, out newEff, LC.Efficiency);
             }
             return timeLeft;
         }

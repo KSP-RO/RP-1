@@ -34,6 +34,7 @@ namespace RP0
 
         public static bool EditorShipEditingMode = false;
         public static double EditorRolloutCost = 0;
+        public static double EditorReconditionCost = 0;
         public static double EditorRolloutBP = 0;
         public static double EditorUnlockCosts = 0;
         public static double EditorToolingCosts = 0;
@@ -96,7 +97,7 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
-        public const int VERSION = 8;
+        public const int VERSION = 9;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
@@ -525,7 +526,7 @@ namespace RP0
                 bool foundStockKSC = false;
                 foreach (var ksc in KSCs)
                 {
-                    if (ksc.KSCName.Length > 0 && string.Equals(ksc.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase))
+                    if (ksc.KSCName.Length > 0 && string.Equals(ksc.KSCName, KSCSwitcherInterop.LegacyDefaultKscId, StringComparison.OrdinalIgnoreCase))
                     {
                         foundStockKSC = true;
                         break;
@@ -539,9 +540,15 @@ namespace RP0
                 // Prune bad or inactive KSCs.
                 for (int i = KSCs.Count; i-- > 0;)
                 {
+                    bool any = false;
                     LCSpaceCenter ksc = KSCs[i];
                     if (ksc.KSCName == null || ksc.KSCName.Length == 0 || (ksc.IsEmpty && ksc != ActiveSC))
+                    {
                         KSCs.RemoveAt(i);
+                        any = true;
+                    }
+
+                    if (any) KCTUtilities.RefreshGroundStationActiveState();
                 }
 
                 foreach (var vp in BuildPlans.Values)
@@ -555,6 +562,11 @@ namespace RP0
 
                 if (LoadedSaveVersion < VERSION)
                 {
+                    if (LoadedSaveVersion < 9)
+                    {
+                        KCTUtilities.RefreshGroundStationActiveState();
+                    }
+
                     // This upgrades to new payloads
                     // NOTE this upgrade has to come before other upgrades
                     // that touch ship nodes, because they will do the UpgradePipeline
@@ -646,11 +658,11 @@ namespace RP0
 
         private void TryMigrateStockKSC()
         {
-            LCSpaceCenter stockKsc = KSCs.Find(k => string.Equals(k.KSCName, _legacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
+            LCSpaceCenter stockKsc = KSCs.Find(k => string.Equals(k.KSCName, KSCSwitcherInterop.LegacyDefaultKscId, StringComparison.OrdinalIgnoreCase));
             if (KSCs.Count == 1)
             {
                 // Rename the stock KSC to the new default (Cape)
-                stockKsc.KSCName = _defaultKscId;
+                stockKsc.KSCName = KSCSwitcherInterop.DefaultKscId;
                 SetActiveKSC(stockKsc.KSCName);
                 return;
             }
@@ -666,7 +678,7 @@ namespace RP0
             int numOtherUsedKSCs = KSCs.Count(k => !k.IsEmpty && k != stockKsc);
             if (numOtherUsedKSCs == 0)
             {
-                string kscName = GetActiveRSSKSC() ?? _defaultKscId;
+                string kscName = KSCSwitcherInterop.GetActiveRSSKSC() ?? KSCSwitcherInterop.DefaultKscId;
                 LCSpaceCenter newDefault = KSCs.Find(k => string.Equals(k.KSCName, kscName, StringComparison.OrdinalIgnoreCase));
                 if (newDefault != null)
                 {
@@ -679,7 +691,7 @@ namespace RP0
             }
 
             // Can't really do anything if there's multiple KSCs in use.
-            if (!IsKSCSwitcherInstalled)
+            if (!KSCSwitcherInterop.IsKSCSwitcherInstalled)
             {
                 // Need to switch back to the legacy "Stock" KSC if KSCSwitcher isn't installed
                 SetActiveKSC(stockKsc.KSCName);
@@ -866,77 +878,18 @@ namespace RP0
 
         #endregion
 
-        #region KSCSwitcher section
-
-        private static bool? _isKSCSwitcherInstalled = null;
-        private static FieldInfo _fiKSCSwInstance;
-        private static FieldInfo _fiKSCSwSites;
-        private static FieldInfo _fiKSCSwLastSite;
-        private static FieldInfo _fiKSCSwDefaultSite;
-        private const string _legacyDefaultKscId = "Stock";
-        private const string _defaultKscId = "us_cape_canaveral";
-
-        private static bool IsKSCSwitcherInstalled
-        {
-            get
-            {
-                if (!_isKSCSwitcherInstalled.HasValue)
-                {
-                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "KSCSwitcher", StringComparison.OrdinalIgnoreCase))?.assembly;
-                    _isKSCSwitcherInstalled = a != null;
-                    if (_isKSCSwitcherInstalled.Value)
-                    {
-                        Type t = a.GetType("regexKSP.KSCLoader");
-                        _fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
-                        _fiKSCSwSites = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-
-                        t = a.GetType("regexKSP.KSCSiteManager");
-                        _fiKSCSwLastSite = t?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-                        _fiKSCSwDefaultSite = t?.GetField("defaultSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-
-                        if (_fiKSCSwInstance == null || _fiKSCSwSites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null)
-                        {
-                            RP0Debug.LogError("Failed to bind to KSCSwitcher");
-                            _isKSCSwitcherInstalled = false;
-                        }
-                    }
-                }
-                return _isKSCSwitcherInstalled.Value;
-            }
-        }
-
-        private string GetActiveRSSKSC()
-        {
-            if (!IsKSCSwitcherInstalled) return null;
-
-            // get the LastKSC.KSCLoader.instance object
-            // check the Sites object (KSCSiteManager) for the lastSite, if "" then get defaultSite
-
-            object loaderInstance = _fiKSCSwInstance.GetValue(null);
-            if (loaderInstance == null)
-                return null;
-            object sites = _fiKSCSwSites.GetValue(loaderInstance);
-            string lastSite = _fiKSCSwLastSite.GetValue(sites) as string;
-
-            if (lastSite == string.Empty)
-                lastSite = _fiKSCSwDefaultSite.GetValue(sites) as string;
-            return lastSite;
-        }
-
-        #endregion
-
         #region KSC
 
         private void SetActiveKSCToRSS()
         {
-            string site = GetActiveRSSKSC();
+            string site = KSCSwitcherInterop.GetActiveRSSKSC();
             SetActiveKSC(site);
         }
 
         public void SetActiveKSC(string site)
         {
             if (site == null || site.Length == 0)
-                site = _defaultKscId;
+                site = KSCSwitcherInterop.DefaultKscId;
             if (ActiveSC == null || site != ActiveSC.KSCName)
             {
                 RP0Debug.Log($"Setting active site to {site}");
@@ -946,6 +899,7 @@ namespace RP0
                     newKsc = new LCSpaceCenter(site);
                     newKsc.EnsureStartingLaunchComplexes();
                     KSCs.Add(newKsc);
+                    KCTUtilities.RefreshGroundStationActiveState();
                 }
 
                 SetActiveKSC(newKsc);
@@ -1001,7 +955,7 @@ namespace RP0
 
             double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
             double fundDelta = Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
-                + GetConstructionCostOverTime(deltaTime) + GetRolloutCostOverTime(deltaTime)
+                + GetConstructionCostOverTime(deltaTime) + GetReconRolloutCostOverTime(deltaTime)
                 + Programs.ProgramHandler.Instance.GetDisplayProgramFunding(deltaTime);
 
             return fundDelta;
@@ -1039,51 +993,53 @@ namespace RP0
             return 0d;
         }
 
-        public double GetRolloutCostOverTime(double time)
+        public double GetReconRolloutCostOverTime(double time)
         {
             double delta = 0;
             foreach (var ksc in KSCs)
             {
-                delta += GetRolloutCostOverTime(time, ksc);
+                delta += GetReconRolloutCostOverTime(time, ksc);
             }
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, LCSpaceCenter ksc)
+        public double GetReconRolloutCostOverTime(double time, LCSpaceCenter ksc)
         {
             double delta = 0;
-            for (int i = 1; i < ksc.LaunchComplexes.Count; ++i)
-                delta += GetRolloutCostOverTime(time, ksc.LaunchComplexes[i]);
+            for (int i = 0; i < ksc.LaunchComplexes.Count; ++i)
+                delta += GetReconRolloutCostOverTime(time, ksc.LaunchComplexes[i]);
 
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, LaunchComplex lc)
+        public double GetReconRolloutCostOverTime(double time, LaunchComplex lc)
         {
             double delta = 0;
             foreach (var rr in lc.Recon_Rollout)
             {
-                if (rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount)
-                    continue;
+                if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollout ||
+                    rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning ||
+                    rr.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
+                {
+                    double t = rr.GetTimeLeft();
+                    double fac = 1d;
+                    if (t > time)
+                        fac = time / t;
 
-                double t = rr.GetTimeLeft();
-                double fac = 1d;
-                if (t > time)
-                    fac = time / t;
-
-                delta += CurrencyUtils.Funds(rr.TransactionReason, -rr.cost * (1d - rr.progress / rr.BP) * fac);
+                    delta += CurrencyUtils.Funds(rr.TransactionReason, -rr.cost * (1d - rr.progress / rr.BP) * fac);
+                }
             }
 
             return delta;
         }
 
-        public double GetRolloutCostOverTime(double time, string kscName)
+        public double GetReconRolloutCostOverTime(double time, string kscName)
         {
             foreach (var ksc in KSCs)
             {
                 if (ksc.KSCName == kscName)
                 {
-                    return GetRolloutCostOverTime(time, ksc);
+                    return GetReconRolloutCostOverTime(time, ksc);
                 }
             }
 
@@ -1512,6 +1468,7 @@ namespace RP0
             if (EditorDriver.editorFacility == EditorFacility.VAB)
             {
                 EditorRolloutCost = Formula.GetRolloutCost(EditorVessel);
+                EditorReconditionCost = Formula.GetReconditioningCost(EditorVessel);
                 EditorRolloutBP = Formula.GetRolloutBP(EditorVessel);
             }
             else
@@ -1607,68 +1564,13 @@ namespace RP0
                     remainingUT = UTDiff - passes * 86400d;
                     ++passes;
                 }
-                int rushingEngs = 0;
 
-                int totalEngineers = 0;
                 foreach (LCSpaceCenter ksc in KSCs)
                 {
-                    totalEngineers += ksc.Engineers;
-
                     for (int j = ksc.LaunchComplexes.Count - 1; j >= 0; j--)
                     {
                         LaunchComplex currentLC = ksc.LaunchComplexes[j];
-                        if (!currentLC.IsOperational || currentLC.Engineers == 0 || !currentLC.IsActive)
-                            continue;
-
-                        double portionEngineers = currentLC.Engineers / (double)currentLC.MaxEngineers;
-
-                        if (currentLC.IsRushing)
-                            rushingEngs += currentLC.Engineers;
-                        else
-                        {
-                            for (int p = 0; p < passes; ++p)
-                            {
-                                double timestep = p == 0 ? remainingUT : 86400d;
-                                currentLC.EfficiencySource?.IncreaseEfficiency(timestep, portionEngineers);
-                            }
-                        }
-
-                        double timeForBuild = UTDiff;
-                        while (timeForBuild > 0d && currentLC.BuildList.Count > 0)
-                        {
-                            timeForBuild = currentLC.BuildList[0].IncrementProgress(UTDiff);
-                        }
-
-                        for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
-                        {
-                            // These work in parallel so no need to track excess time
-                            // FIXME: that's not _quite_ true, but it's close enough: when one
-                            // completes, the others speed up, but that's hard to deal with here
-                            // so I think we just eat the cost.
-                            var rr = currentLC.Recon_Rollout[i];
-                            rr.IncrementProgress(UTDiff);
-                            //Reset the associated launchpad id when rollback completes
-                            Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindVPesselByID");
-                            if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollback && rr.IsComplete()
-                                && KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vp)
-                            {
-                                vp.launchSiteIndex = -1;
-                            }
-                            Profiler.EndSample();
-                        }
-
-                        for (int i = currentLC.VesselRepairs.Count; i-- > 0;)
-                        {
-                            var vr = currentLC.VesselRepairs[i];
-                            vr.IncrementProgress(UTDiff);
-                            if (vr.IsComplete() && HighLogic.LoadedSceneIsFlight &&
-                                vr.ApplyRepairs())
-                            {
-                                currentLC.VesselRepairs.Remove(vr);
-                            }
-                        }
-
-                        currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount && rr.IsComplete());
+                        ProgressLCBuildTime(currentLC, UTDiff, remainingUT, passes);
                     }
 
                     for (int i = ksc.Constructions.Count; i-- > 0;)
@@ -1703,6 +1605,70 @@ namespace RP0
             }
 
             Profiler.EndSample();
+        }
+
+        private static void ProgressLCBuildTime(LaunchComplex currentLC, double UTDiff, double remainingUT, int passes)
+        {
+            if (currentLC.IsOperational && currentLC.Engineers > 0 && currentLC.IsActive)
+            {
+                double portionEngineers = currentLC.Engineers / (double)currentLC.MaxEngineers;
+
+                if (!currentLC.IsRushing)
+                {
+                    for (int p = 0; p < passes; ++p)
+                    {
+                        double timestep = p == 0 ? remainingUT : 86400d;
+                        currentLC.EfficiencySource?.IncreaseEfficiency(timestep, portionEngineers);
+                    }
+                }
+
+                double timeForBuild = UTDiff;
+                while (timeForBuild > 0d && currentLC.BuildList.Count > 0)
+                {
+                    timeForBuild = currentLC.BuildList[0].IncrementProgress(UTDiff);
+                }
+
+                for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
+                {
+                    // These work in parallel so no need to track excess time
+                    // FIXME: that's not _quite_ true, but it's close enough: when one
+                    // completes, the others speed up, but that's hard to deal with here
+                    // so I think we just eat the cost.
+                    var rr = currentLC.Recon_Rollout[i];
+                    rr.IncrementProgress(UTDiff);
+                    //Reset the associated launchpad id when rollback completes
+                    Profiler.BeginSample("RP0ProgressBuildTime.ReconRollout.FindVPesselByID");
+                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollback && rr.IsComplete()
+                        && KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vp)
+                    {
+                        vp.launchSiteIndex = -1;
+                    }
+                    Profiler.EndSample();
+                }
+
+                for (int i = currentLC.VesselRepairs.Count; i-- > 0;)
+                {
+                    var vr = currentLC.VesselRepairs[i];
+                    vr.IncrementProgress(UTDiff);
+                    if (vr.IsComplete() && HighLogic.LoadedSceneIsFlight &&
+                        vr.ApplyRepairs())
+                    {
+                        currentLC.VesselRepairs.Remove(vr);
+                    }
+                }
+            }
+            else
+            {
+                // Process reconditioning even for LCs that have no engineers or are inactive
+                for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
+                {
+                    var rr = currentLC.Recon_Rollout[i];
+                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
+                        rr.IncrementProgress(UTDiff);
+                }
+            }
+
+            currentLC.Recon_Rollout.RemoveAll(rr => rr.RRType != ReconRolloutProject.RolloutReconType.Rollout && rr.RRType != ReconRolloutProject.RolloutReconType.AirlaunchMount && rr.IsComplete());
         }
 
         #endregion

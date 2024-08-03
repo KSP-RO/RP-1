@@ -3,6 +3,7 @@ using KSP.UI;
 using KSP.UI.Screens;
 using ROUtils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -1345,7 +1346,6 @@ namespace RP0
                 ChangeEngineers(ksc, workerAmount);
                 if (lc != null)
                     ChangeEngineers(lc, workerAmount);
-                ksc.RecalculateBuildRates(false);
             }
             SpaceCenterManagement.Instance.Applicants = Math.Max(0, SpaceCenterManagement.Instance.Applicants - workerAmount);
             if (SpaceCenterManagement.Instance.Applicants == 0)
@@ -1357,6 +1357,7 @@ namespace RP0
             currentLC.Engineers += delta;
             SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+            currentLC.RecalculateBuildRates();
             KCT_GUI.BuildRateForDisplay = null;
         }
 
@@ -1514,6 +1515,47 @@ namespace RP0
                 {
                     ClobberRACommnet();
                 }
+            }
+        }
+
+        public static void RefreshGroundStationActiveState()
+        {
+            var scInstance = SpaceCenterManagement.Instance;
+            if (scInstance == null)
+            {
+                RP0Debug.LogError("SpaceCenterManagement.Instance is null");
+                return;
+            }
+
+            if (!RealAntennas.HomeNodeTypes.initialized)
+            {
+                static IEnumerator DelayedRefreshRoutine()
+                {
+                    yield return new WaitForEndOfFrame();
+                    RefreshGroundStationActiveState_Internal();
+                }
+                scInstance.StartCoroutine(DelayedRefreshRoutine());
+            }
+            else
+            {
+                RefreshGroundStationActiveState_Internal();
+            }
+        }
+
+        private static void RefreshGroundStationActiveState_Internal()
+        {
+            if (RealAntennas.HomeNodeTypes.HomeDict.TryGetValue("LaunchSite", out List<RealAntennas.Network.RACommNetHome> lsHomes))
+            {
+                RP0Debug.Log("RefreshGroundStationActiveState");
+                var allActiveKSCStations = SpaceCenterManagement.Instance.KSCs.Select(ksc => ksc.AssociatedGroundStation).ToList();
+                foreach (RealAntennas.Network.RACommNetHome home in lsHomes)
+                {
+                    home.enabled = allActiveKSCStations.Contains(home.nodeName);
+                }
+            }
+            else
+            {
+                RP0Debug.LogError("Failed to update RA LaunchSite active state");
             }
         }
 

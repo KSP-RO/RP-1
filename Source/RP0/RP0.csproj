@@ -45,6 +45,7 @@
     <Compile Include="ConfigurableStart\Utilities.cs" />
     <Compile Include="Harmony\FlightInputHandler.cs" />
     <Compile Include="Harmony\ModuleRCS.cs" />
+    <Compile Include="Harmony\RealAntennas.cs" />
     <Compile Include="ModIntegrations\KSCSwitcherInterop.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
     <Compile Include="Singletons\LeaderNotifications.cs" />

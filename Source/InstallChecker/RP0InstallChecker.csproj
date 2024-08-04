@@ -33,12 +33,21 @@
     <WarningLevel>4</WarningLevel>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
+  <PropertyGroup>
+    <KSPRoot Condition=" '$(KSPRoot)' == '' ">
+      $(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System" />
-    <Reference Include="UnityEngine.CoreModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/System.dll">
+      <HintPath>$(ReferencePath)/System.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.CoreModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

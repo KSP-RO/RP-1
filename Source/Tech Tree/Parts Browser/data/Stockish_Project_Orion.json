@@ -103,7 +103,7 @@
         "entry_cost_mods": "SPO-Orion5Meter",
         "identical_part_name": "",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     },
     {
@@ -126,7 +126,7 @@
         "entry_cost_mods": "SPO-Orion5Meter",
         "identical_part_name": "",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     },
     {
@@ -195,7 +195,7 @@
         "entry_cost_mods": "SPO-Orion5Meter",
         "identical_part_name": "",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     },
     {
@@ -218,7 +218,7 @@
         "entry_cost_mods": "SPO-Orion5Meter",
         "identical_part_name": "",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     },
     {
@@ -241,7 +241,7 @@
         "entry_cost_mods": "SPO-Orion5Meter",
         "identical_part_name": "",
         "module_tags": [
-            "Nuclear"
+            "NuclearRTG"
         ]
     }
 ]

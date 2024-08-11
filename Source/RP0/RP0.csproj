@@ -35,6 +35,10 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <KSPRoot Condition=" '$(KSPRoot)' == '' ">
+      $(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
@@ -279,99 +283,124 @@
     <Compile Include="SpaceCenter\VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/GameData/000_Harmony/0Harmony.dll">
+      <HintPath>$(ReferencePath)/0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp-firstpass.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ClickThroughBlocker">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/GameData/000_ClickThroughBlocker/Plugins/ClickThroughBlocker.dll">
+      <HintPath>$(ReferencePath)/ClickThroughBlocker.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ContractConfigurator, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/GameData/ContractConfigurator/ContractConfigurator.dll">
+      <HintPath>$(ReferencePath)/ContractConfigurator.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ferramGraph">
+    <Reference Include="$(KSPRoot)/GameData/FerramAerospaceResearch/Plugins/ferramGraph.dll">
+      <HintPath>$(ReferencePath)/ferramGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Ionic.Zip.dll">
+      <HintPath>$(ReferencePath)/Ionic.Zip.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Kerbalism112, Version=3.17.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/GameData/Kerbalism/Kerbalism112.kbin">
+      <HintPath>$(ReferencePath)/Kerbalism112.kbin</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="KSPCommunityFixes">
+    <Reference Include="$(KSPRoot)/GameData/KSPCommunityFixes/Plugins/KSPCommunityFixes.dll">
+      <HintPath>$(ReferencePath)/KSPCommunityFixes.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ModularFlightIntegrator">
+    <Reference Include="$(KSPRoot)/GameData/ModularFlightIntegrator/ModularFlightIntegrator.dll">
+      <HintPath>$(ReferencePath)/ModularFlightIntegrator.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RealAntennas">
+    <Reference Include="$(KSPRoot)/GameData/RealAntennas/Plugins/RealAntennas.dll">
+      <HintPath>$(ReferencePath)/RealAntennas.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RealFuels">
+    <Reference Include="$(KSPRoot)/GameData/RealFuels/Plugins/RealFuels.dll">
+      <HintPath>$(ReferencePath)/RealFuels.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ROUtils">
+    <Reference Include="$(KSPRoot)/GameData/ROUtils/Plugins/ROUtils.dll">
+      <HintPath>$(ReferencePath)/ROUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SolverEngines">
+    <Reference Include="$(KSPRoot)/GameData/SolverEngines/Plugins/SolverEngines.dll">
+      <HintPath>$(ReferencePath)/SolverEngines.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/System.dll">
+      <HintPath>$(ReferencePath)/System.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ToolbarControl">
+    <Reference Include="$(KSPRoot)/GameData/001_ToolbarControl/Plugins/ToolbarControl.dll">
+      <HintPath>$(ReferencePath)/ToolbarControl.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.AnimationModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.AnimationModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.AnimationModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.AssetBundleModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.CoreModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.ImageConversionModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.ImageConversionModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.IMGUIModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.IMGUIModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.InputLegacyModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.PhysicsModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.ScreenCaptureModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.ScreenCaptureModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.ScreenCaptureModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.TextRenderingModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UI">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.UI.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.UI.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UIModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.UIModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.UIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.UnityWebRequestModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.UnityWebRequestModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.JSONSerializeModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.JSONSerializeModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

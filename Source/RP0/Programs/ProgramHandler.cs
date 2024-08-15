@@ -40,6 +40,7 @@ namespace RP0.Programs
         public static ProgramHandlerSettings Settings { get; private set; }
         public static List<Program> Programs { get; private set; }
         public static Dictionary<string, Program> ProgramDict { get; private set; }
+        public static List<ProgramModifier> ProgramModifiers { get; private set; }
 
         private static Dictionary<string, Type> programStrategies = new Dictionary<string, Type>();
         private static AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
@@ -78,6 +79,7 @@ namespace RP0.Programs
             {
                 Programs = new List<Program>();
                 ProgramDict = new Dictionary<string, Program>();
+                ProgramModifiers = new List<ProgramModifier>();
 
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_PROGRAM"))
                 {
@@ -94,6 +96,12 @@ namespace RP0.Programs
                     programStrategies[p.name] = t;
                     if (Strategies.StrategySystem.StrategyTypes.Count > 0)
                         Strategies.StrategySystem.StrategyTypes.Add(t);
+                }
+
+                foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_PROGRAM_MODIFIER"))
+                {
+                    ProgramModifier pm = new ProgramModifier(n);
+                    ProgramModifiers.Add(pm);
                 }
             }
         }
@@ -390,8 +398,7 @@ namespace RP0.Programs
                     DrawProgramSection(p);
                 }
 
-                foreach (Program p in Programs.Where(p => !ActivePrograms.Any(p2 => p.name == p2.name) &&
-                                                          !CompletedPrograms.Any(p2 => p.name == p2.name)))
+                foreach (Program p in Programs.Where(p => !IsProgramActiveOrCompleted(p.name)))
                 {
                     DrawProgramSection(p);
                 }
@@ -500,6 +507,12 @@ namespace RP0.Programs
             }
 
             GUILayout.EndVertical();
+        }
+
+        public bool IsProgramActiveOrCompleted(string name)
+        {
+            return ActivePrograms.Any(p => p.name == name) ||
+                CompletedPrograms.Any(p => p.name == name);
         }
 
         public Program ActivateProgram(string programName, Program.Speed speed)

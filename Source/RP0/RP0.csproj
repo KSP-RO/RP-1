@@ -52,6 +52,7 @@
     <Compile Include="Harmony\RealAntennas.cs" />
     <Compile Include="ModIntegrations\KSCSwitcherInterop.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
+    <Compile Include="Programs\ProgramModifier.cs" />
     <Compile Include="Singletons\LeaderNotifications.cs" />
     <Compile Include="SpaceCenter\Projects\HireStaffProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />

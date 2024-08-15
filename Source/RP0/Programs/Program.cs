@@ -74,7 +74,7 @@ namespace RP0.Programs
         [Persistent(isPersistant = false)]
         public double baseFunding;
 
-        [Persistent(isPersistant = false)]
+        [Persistent]
         public string fundingCurve;
 
         [Persistent]
@@ -114,7 +114,7 @@ namespace RP0.Programs
                 speed = spd;
         }
 
-        private Dictionary<Speed, float> confidenceCosts = new Dictionary<Speed, float>();
+        public Dictionary<Speed, float> confidenceCosts = new Dictionary<Speed, float>();
         public float GetDisplayedConfidenceCostForSpeed(Speed spd) => -(float)CurrencyUtils.Conf(TransactionReasonsRP0.ProgramActivation, -confidenceCosts[spd]);
         public float ConfidenceCost => confidenceCosts[speed];
         public float DisplayConfidenceCost => GetDisplayedConfidenceCostForSpeed(speed);
@@ -125,10 +125,10 @@ namespace RP0.Programs
         [Persistent(isPersistant = false)]
         public string icon;
 
-        [Persistent(isPersistant = false)]
+        [Persistent]
         public double repDeltaOnCompletePerYearEarly;
 
-        [Persistent(isPersistant = false)]
+        [Persistent]
         public double repPenaltyPerYearLate;
         public double RepPenaltyPerYearLate => RepPenaltyPerYearLateCalc(speed, repPenaltyPerYearLate);
         public static double RepPenaltyPerYearLateCalc(Speed spd, double pen)
@@ -140,11 +140,11 @@ namespace RP0.Programs
             return pen * mult;
         }
 
-        [Persistent(isPersistant = false)]
-        private float repToConfidence = -1f;
+        [Persistent]
+        public float repToConfidence = -1f;
         public float RepToConfidence => repToConfidence >= 0f ? repToConfidence : ProgramHandler.Settings.repToConfidence;
 
-        [Persistent(isPersistant = false)]
+        [Persistent]
         public int slots = 2;
 
         public List<string> programsToDisableOnAccept = new List<string>();
@@ -157,12 +157,9 @@ namespace RP0.Programs
         private Func<bool> _requirementsPredicate;
         private Func<bool> _objectivesPredicate;
 
-        public static double TotalFundingCalc(Speed spd, double funds)
-        {
-            // For now, no change in funding.
-            return funds * HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
-        }
-        public double TotalFunding => totalFunding > 0 ? totalFunding : TotalFundingCalc(speed, baseFunding);
+        public static double CalcTotalFunding(double funds) => funds * HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
+
+        public double TotalFunding => totalFunding > 0 ? totalFunding : CalcTotalFunding(baseFunding);
 
         public bool IsComplete => completedUT != 0;
 
@@ -208,7 +205,7 @@ namespace RP0.Programs
             programsToDisableOnAccept = toCopy.programsToDisableOnAccept;
             optionalContracts = toCopy.optionalContracts;
             speed = toCopy.speed;
-            confidenceCosts = toCopy.confidenceCosts;
+            confidenceCosts = new Dictionary<Speed, float>(toCopy.confidenceCosts);
             repToConfidence = toCopy.repToConfidence;
             slots = toCopy.slots;
         }
@@ -264,26 +261,7 @@ namespace RP0.Programs
                     optionalContracts.Add(v.name);
             }
 
-            cn = node.GetNode("CONFIDENCECOSTS");
-            if (cn != null)
-            {
-                for (int i = 0; i < (int)Speed.MAX; ++i)
-                {
-                    Speed spd = (Speed)i;
-                    float cost = 0;
-                    cn.TryGetValue(spd.ToString(), ref cost);
-                    confidenceCosts[spd] = cost;
-                }
-            }
-            // This is back-compat and can probably go away.
-            // But maybe a program could be defined with no costs?
-            else if (confidenceCosts.Count == 0)
-            {
-                for (int i = 0; i < (int)Speed.MAX; ++i)
-                {
-                    confidenceCosts[(Speed)i] = 0;
-                }
-            }
+            LoadConfidenceCosts(node, confidenceCosts);
         }
 
         public void Save(ConfigNode node)
@@ -293,18 +271,19 @@ namespace RP0.Programs
 
         public Program Accept()
         {
-            Confidence.Instance.AddConfidence(-confidenceCosts[speed], TransactionReasonsRP0.ProgramActivation.Stock());
-
             var p = new Program(this)
             {
                 acceptedUT = Planetarium.GetUniversalTime(),
                 lastPaymentUT = Planetarium.GetUniversalTime(),
-                totalFunding = TotalFunding,
                 fundsPaidOut = 0,
                 repPenaltyAssessed = 0,
-                fracElapsed = 0,
-                deadlineUT = acceptedUT + DurationYears * secsPerYear
+                fracElapsed = 0
             };
+            p.ApplyProgramModifiers();
+            p.totalFunding = p.TotalFunding;
+            p.deadlineUT = p.acceptedUT + p.DurationYears * secsPerYear;
+
+            Confidence.Instance.AddConfidence(-p.confidenceCosts[speed], TransactionReasonsRP0.ProgramActivation.Stock());
             CareerLog.Instance?.ProgramAccepted(p);
 
             return p;
@@ -502,9 +481,19 @@ namespace RP0.Programs
                 {
                     if (programsToDisableOnAccept.Count > 0)
                     {
-                        text += "\nWill disable the following on accept:";
+                        text += "\n\nWill disable the following on accept:";
                         foreach (var s in programsToDisableOnAccept)
-                            text += $"\n{ProgramHandler.PrettyPrintProgramName(s)}";
+                            text += $"\n* {ProgramHandler.PrettyPrintProgramName(s)}";
+                    }
+
+                    List<ProgramModifier> pModifs = ProgramHandler.ProgramModifiers.FindAll(pm => pm.srcProgram == name);
+                    if (pModifs.Count > 0)
+                    {
+                        text += "\n\nWill affect the following on accept:\n";
+                        foreach (ProgramModifier pm in pModifs)
+                        {
+                            text += pm.GetDiffString();
+                        }
                     }
 
                     text += $"\n\n{Localizer.Format("#rp0_Admin_Program_ConfidenceRequired", DisplayConfidenceCost.ToString("N0"))}";
@@ -569,5 +558,36 @@ namespace RP0.Programs
         }
 
         public ProgramStrategy GetStrategy() => StrategySystem.Instance.Strategies.Find(s => s.Config.Name == name) as ProgramStrategy;
+
+        /// <summary>
+        /// Applies all active program modifiers to current program.
+        /// This should NOT get called on template programs (i.e the ones in ProgramHandler.Programs) since there is currently no logic that resets them to original state.
+        /// </summary>
+        public void ApplyProgramModifiers()
+        {
+            var pms = ProgramHandler.ProgramModifiers.FindAll(pm => pm.tgtProgram == name);
+            foreach (ProgramModifier pm in pms)
+            {
+                if (ProgramHandler.Instance.IsProgramActiveOrCompleted(pm.srcProgram))
+                {
+                    pm.Apply(this);
+                }
+            }
+        }
+
+        public static void LoadConfidenceCosts(ConfigNode node, Dictionary<Speed, float> confidenceCosts)
+        {
+            ConfigNode cn = node.GetNode("CONFIDENCECOSTS");
+            if (cn != null)
+            {
+                for (int i = 0; i < (int)Speed.MAX; ++i)
+                {
+                    Speed spd = (Speed)i;
+                    float cost = 0;
+                    cn.TryGetValue(spd.ToString(), ref cost);
+                    confidenceCosts[spd] = cost;
+                }
+            }
+        }
     }
 }

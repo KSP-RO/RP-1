@@ -89,16 +89,16 @@ namespace RP0.Programs
             sb.AppendFormat("* {0}\n", baseline.title);
 
             const string diffFormat = "  - {0}: {1} -> {2}\n";
-            if (baseline.nominalDurationYears != nominalDurationYears)
+            if (nominalDurationYears != -1 && baseline.nominalDurationYears != nominalDurationYears)
                 sb.AppendFormat(diffFormat, "Nominal duration (years)", baseline.nominalDurationYears, nominalDurationYears);
 
-            if (baseline.baseFunding != baseFunding)
+            if (baseFunding != -1 && baseline.baseFunding != baseFunding)
                 sb.AppendFormat(diffFormat, "Total funds", CalcTotalFunding(baseline.baseFunding).ToString("N0"), CalcTotalFunding(baseFunding).ToString("N0"));
 
-            if (baseline.fundingCurve != fundingCurve)
+            if (fundingCurve != null && baseline.fundingCurve != fundingCurve)
                 sb.AppendFormat(diffFormat, "Funding curve", baseline.fundingCurve, fundingCurve);
 
-            if (baseline.slots != slots)
+            if (slots != -1 && baseline.slots != slots)
                 sb.AppendFormat(diffFormat, "Slots", baseline.slots, slots);
 
             if (confidenceCosts.Count > 0)

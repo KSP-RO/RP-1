@@ -152,7 +152,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_GymHab",
@@ -174,7 +176,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_KHM_Endcap",
@@ -240,7 +244,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_MCBM",
@@ -285,7 +291,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_Node1",
@@ -307,7 +315,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_NodeCoverV1",
@@ -484,7 +494,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_RTAS_A",
@@ -572,7 +584,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_SleepHabV4-2",
@@ -594,7 +608,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_SleepHabV6-1",
@@ -616,7 +632,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_SleepHabV6-2",
@@ -638,7 +656,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "CXA_TRUNNION",

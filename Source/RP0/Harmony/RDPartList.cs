@@ -28,7 +28,7 @@ namespace RP0.Harmony
                     if (!cmq.CanAfford())
                     {
                         // try again, with credit
-                        cmq.AddPostDelta(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, false), UnlockCreditHandler.Instance.GetCreditAmount(part.TechRequired)), true);
+                        cmq.AddPostDelta(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, false), UnlockCreditHandler.Instance.TotalCredit), true);
                         if (!cmq.CanAfford())
                         {
                             // still can't afford, so use the can't afford color
@@ -75,7 +75,7 @@ namespace RP0.Harmony
                         // BUT if we can't afford normally, but can with credit let's fix the coloring.
                         if (!cmq.CanAfford())
                         {
-                            cmq.AddPostDelta(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, false), UnlockCreditHandler.Instance.GetCreditAmount(upgrade.techRequired)), true);
+                            cmq.AddPostDelta(CurrencyRP0.Funds, System.Math.Min(-cmq.GetTotal(CurrencyRP0.Funds, false), UnlockCreditHandler.Instance.TotalCredit), true);
                             if (!cmq.CanAfford())
                             {
                                 text = cmq.GetCostLineOverride(true, false, true, true, false);

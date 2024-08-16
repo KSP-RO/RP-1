@@ -275,7 +275,9 @@
         "upgrade": false,
         "entry_cost_mods": "50000,almaz3-5",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "rn_almaz_rcs",

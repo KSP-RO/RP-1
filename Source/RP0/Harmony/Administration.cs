@@ -293,7 +293,7 @@ namespace RP0.Harmony
 
             if (wrapper.strategy is ProgramStrategy ps)
             {
-                if (!ps.Program.IsActive && ps.Program.IsComplete)
+                if (!ps.Program.IsActive && !ps.Program.IsComplete)
                     ps.Program.ApplyProgramModifiers();
                 // Set best speed before we get description
                 // This is maybe a duplicate of the work we did in CreateStrategiesList but eh.

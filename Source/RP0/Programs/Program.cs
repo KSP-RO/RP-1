@@ -486,7 +486,8 @@ namespace RP0.Programs
                             text += $"\n* {ProgramHandler.PrettyPrintProgramName(s)}";
                     }
 
-                    List<ProgramModifier> pModifs = ProgramHandler.ProgramModifiers.FindAll(pm => pm.srcProgram == name);
+                    List<ProgramModifier> pModifs = ProgramHandler.ProgramModifiers
+                        .FindAll(pm => pm.srcProgram == name && !ProgramHandler.Instance.IsProgramActiveOrCompleted(pm.tgtProgram));
                     if (pModifs.Count > 0)
                     {
                         text += "\n\nWill affect the following on accept:\n";

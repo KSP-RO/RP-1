@@ -1075,7 +1075,7 @@ namespace RP0
                             continue;
 
                         engineers += lc.Engineers;
-                        effic += lc.Efficiency * engineers;
+                        effic += lc.Efficiency * lc.Engineers;
                     }
                 }
 

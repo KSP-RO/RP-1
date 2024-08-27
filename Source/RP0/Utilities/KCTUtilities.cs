@@ -242,7 +242,7 @@ namespace RP0
                 }
                 if (excludeChutes)
                 {
-                    if (p.Modules["RealChuteModule"] != null)
+                    if (p.Modules.GetModule("RealChuteModule") != null)
                         continue;
                 }
 

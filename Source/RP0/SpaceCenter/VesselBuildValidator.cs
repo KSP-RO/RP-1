@@ -55,56 +55,52 @@ namespace RP0
 
         private IEnumerator RunValidationRoutine(VesselProject vp)
         {
-            if (ProcessFacilityChecks(vp) != ValidationResult.Success)
+            _validationResult = ProcessFacilityChecks(vp);
+
+            if (_validationResult == ValidationResult.Success &&
+                !KSPUtils.CurrentGameIsCareer())
             {
-                _failureActions();
-                yield break;
-            }
-            if (!KSPUtils.CurrentGameIsCareer())
-            {
+                _routine = null;
                 _successActions(vp);
                 yield break;
             }
 
-            ProcessPartAvailability(vp);
-            while (_validationResult == ValidationResult.Undecided)
-                yield return null;
-
-            _routine = null;
-            if (_validationResult != ValidationResult.Success)
+            if (_validationResult == ValidationResult.Success)
             {
-                _failureActions();
-                yield break;
-            }
-
-            do
-            {
-                ProcessPartConfigs(vp);
+                ProcessPartAvailability(vp);
                 while (_validationResult == ValidationResult.Undecided)
                     yield return null;
             }
-            while (_validationResult == ValidationResult.Rerun);
 
-            _routine = null;
-            if (_validationResult != ValidationResult.Success)
+            if (_validationResult == ValidationResult.Success)
             {
-                _failureActions();
-                yield break;
+                do
+                {
+                    ProcessPartConfigs(vp);
+                    while (_validationResult == ValidationResult.Undecided)
+                        yield return null;
+                }
+                while (_validationResult == ValidationResult.Rerun);
             }
 
-            if (ProcessFundsChecks(vp) != ValidationResult.Success)
+            if (_validationResult == ValidationResult.Success)
             {
-                _failureActions();
-                yield break;
+                _validationResult = ProcessFundsChecks(vp);
             }
 
-            ProcessUntooledParts(vp);
-            while (_validationResult == ValidationResult.Undecided)
-                yield return null;
+            if (_validationResult == ValidationResult.Success)
+            {
+                ProcessUntooledParts(vp);
+                while (_validationResult == ValidationResult.Undecided)
+                    yield return null;
+            }
 
-            ProcessExcessEC(vp);
-            while (_validationResult == ValidationResult.Undecided)
-                yield return null;
+            if (_validationResult == ValidationResult.Success)
+            {
+                ProcessExcessEC(vp);
+                while (_validationResult == ValidationResult.Undecided)
+                    yield return null;
+            }
 
             _routine = null;
             if (_validationResult != ValidationResult.Success)

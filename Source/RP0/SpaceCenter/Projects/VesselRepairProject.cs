@@ -64,7 +64,7 @@ namespace RP0
 
                 try
                 {
-                    ResetIgnitionsOnVessel(v);
+                    ResetMERFsOnVessel(v);
                 }
                 catch
                 {
@@ -80,11 +80,19 @@ namespace RP0
             }
         }
 
-        private static void ResetIgnitionsOnVessel(Vessel v)
+        private static void ResetMERFsOnVessel(Vessel v)
         {
             foreach (var merf in v.FindPartModulesImplementing<ModuleEnginesRF>())
             {
                 merf.ResetIgnitions();
+
+                foreach (ModuleResource ignRes in merf.ignitionResources)
+                {
+                    if (merf.part.Resources.Get(ignRes.id) is PartResource res)
+                    {
+                        res.amount = res.maxAmount;
+                    }
+                }
             }
         }
     }

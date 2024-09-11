@@ -115,7 +115,7 @@ jobs:
           cp -v -R "${{ github.workspace }}/LICENSE.md" "${RELEASE_DIR}/GameData/RP-1/LICENSE.md"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: RP-1
           path: ${{ steps.assemble-release.outputs.release-dir }}

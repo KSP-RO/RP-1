@@ -300,7 +300,7 @@ namespace RP0
                 // find LCConstruction
                 foreach (var lcc in lc.KSC.LCConstructions)
                 {
-                    if (lcc.lcID != lc.ID)
+                    if (lcc.lcID == lc.ID)
                         return lcc.progress / lcc.BP * LCUpkeep(lcc.lcData, lc.LaunchPadCount);
                 }
                 return 0d;

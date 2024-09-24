@@ -359,7 +359,7 @@ namespace RP0
                 new DialogGUIButton("Yes", () => KillAction(null)),
                 new DialogGUIButton("No", () => {})
             };
-            var dialog = new MultiOptionDialog("ConfirmDisableAvionics", "Are you sure you want to permanently disable the avionics unit? Doing this will prevent avionics from consuming power but it will no longer provide any control either.", "Disable Avionics", HighLogic.UISkin, 300, options);
+            var dialog = new MultiOptionDialog("ConfirmDisableAvionics", "Are you sure you want to permanently disable the avionics unit? Doing this will prevent avionics from consuming power but it will no longer provide any control either. Note that disabling the last avionics unit on the vessel will also disable all communications.", "Disable Avionics", HighLogic.UISkin, 300, options);
             PopupDialog.SpawnPopupDialog(dialog, true, HighLogic.UISkin);
         }
 

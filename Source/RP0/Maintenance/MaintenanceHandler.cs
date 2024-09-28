@@ -59,6 +59,7 @@ namespace RP0
         };
 
         public double LCsCostPerDay = 0d;
+        public double ResearchSalaryPerDay = 0d;
 
         public double TrainingUpkeepPerDay = 0d;
         public double NautBaseUpkeepPerDay = 0d;
@@ -78,8 +79,6 @@ namespace RP0
                 return tmp * Database.SettingsSC.salaryEngineers / 365.25d;
             }
         }
-
-        public double ResearchSalaryPerDay => Researchers * Database.SettingsSC.salaryResearchers / 365.25d;
 
         public struct SubsidyDetails
         {
@@ -336,6 +335,11 @@ namespace RP0
                     LCsCostPerDay += LCUpkeep(lc);
             }
 
+            if (SpaceCenterManagement.Instance.TechList.Count > 0)
+                ResearchSalaryPerDay = Researchers * Database.SettingsSC.salaryResearchers / 365.25d;
+            else
+                ResearchSalaryPerDay = Researchers * Database.SettingsSC.salaryResearchers * Database.SettingsSC.ResearcherIdleSalaryMult / 365.25d;
+
             foreach (SpaceCenterFacility facility in FacilitiesForMaintenance)
             {
                 if (Database.LockedFacilities.Contains(facility))
@@ -353,8 +357,6 @@ namespace RP0
                 }
                 FacilityMaintenanceCosts[facility] = cost;
             }
-
-            
 
             TrainingUpkeepPerDay = 0d;
             if (CrewHandler.Instance?.TrainingCourses != null)

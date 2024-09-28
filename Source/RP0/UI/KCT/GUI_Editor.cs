@@ -97,7 +97,7 @@ namespace RP0
             if (bR > 0d && rateWithCurEngis > 0d)
             {
                 double effectiveEngCount = bR / rateWithCurEngis * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers;
-                double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.IdleSalaryMult);
+                double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.EngineerIdleSalaryMult);
                 double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
             }

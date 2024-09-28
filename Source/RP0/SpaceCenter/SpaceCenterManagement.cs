@@ -925,7 +925,7 @@ namespace RP0
             double engineers = 0d;
             foreach (var lc in ksc.LaunchComplexes)
                 engineers += GetEffectiveEngineersForSalary(lc);
-            return engineers + ksc.UnassignedEngineers * Database.SettingsSC.IdleSalaryMult;
+            return engineers + ksc.UnassignedEngineers * Database.SettingsSC.EngineerIdleSalaryMult;
         }
 
         public double GetEffectiveEngineersForSalary(LCSpaceCenter ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
@@ -935,12 +935,12 @@ namespace RP0
             if (lc.IsOperational && lc.Engineers > 0)
             {
                 if (!lc.IsActive)
-                    return lc.Engineers * Database.SettingsSC.IdleSalaryMult;
+                    return lc.Engineers * Database.SettingsSC.EngineerIdleSalaryMult;
 
                 if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
                 {
                     int num = Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
-                    return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.IdleSalaryMult;
+                    return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.EngineerIdleSalaryMult;
                 }
 
                 return lc.Engineers * lc.RushSalary;

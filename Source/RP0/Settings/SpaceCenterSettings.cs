@@ -66,7 +66,9 @@ namespace RP0
         [Persistent]
         public int HireCost = 200;
         [Persistent]
-        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, IdleSalaryMult = 0.25, MergingTimePenalty = 0.05d,
+        public double ResearcherIdleSalaryMult = 0.5;
+        [Persistent]
+        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, EngineerIdleSalaryMult = 0.25, MergingTimePenalty = 0.05d,
             EffectiveCostPerLiterPerResourceMult = 0.1d;
         [Persistent]
         public FloatCurve EngineerSkillupRate = new FloatCurve();

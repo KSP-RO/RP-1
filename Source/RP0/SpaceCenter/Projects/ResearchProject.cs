@@ -238,10 +238,6 @@ namespace RP0
 
         public double IncrementProgress(double UTDiff)
         {
-            // Don't progress blocked items
-            if (GetBlockingTech() != null)
-                return 0d;
-
             double bR = BuildRate;
             if (bR == 0d && PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
                 return 0d;

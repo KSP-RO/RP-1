@@ -1,0 +1,124 @@
+CONTRACT_TYPE
+{
+	name = EOSFirstSpaceTelescope
+	title = First Space Telescope
+	group = EOS
+	agent = Federation Aeronautique Internationale
+	
+	description = <b>Program: Early Earth Observation Satellites<br>Type: <color=green>Required</color></b><br><br>Astronomers have long dreamed of somehow placing a telescope above Earth's turbulent, often-cloudy atmosphere. Launch the first space telescope to Earth orbit to make it a reality.<br><br><b><color="green">Make sure your craft contains a Space Telescope 1 experiment and produces enough electricity to power it.</color></b><br><br>Historical example: the Orbiting Astronomical Observatory series.
+
+	synopsis = Launch the first space telescope, and return the first 30 days of science data.
+
+	completedMessage = Well done! Scientists everywhere are racing to study the first UV observations from above the atmosphere.
+
+	
+
+	cancellable = true
+	declinable = false
+	autoAccept = false
+	minExpiry = 0
+	maxExpiry = 0
+	maxCompletions = 1
+	maxSimultaneous = 1
+	deadline = 0
+
+	targetBody = HomeWorld()
+
+	// ************ REWARDS ************
+	prestige = Trivial       // 1.0x
+	advanceFunds = 0
+	rewardScience = 0
+	rewardFunds = 0
+	failureFunds = 0
+	rewardReputation = 40 // placeholder
+	failureReputation = 0 // was @rewardReputation
+
+	// ************ REQUIREMENTS ************
+
+	REQUIREMENT
+	{
+		name = ProgramActive
+		type = ProgramActive
+		program = EarthObservationScience1
+	}
+
+	// ************ PARAMETERS ************
+
+	PARAMETER
+	{
+		name = SpaceTelescopeBasic
+		type = VesselParameterGroup
+		title = First space telescope
+		define = STcraft
+		defineList = EarthST
+
+		PARAMETER
+		{
+			name = NewVessel
+			type = NewVessel
+			title = Launch a new vessel
+			hideChildren = true
+		}
+
+		PARAMETER 
+		{
+			name = Crewmembers
+			type = HasCrew
+			minCrew = 0
+			maxCrew = 0
+			title = Uncrewed
+			hideChildren = true
+		}
+
+		PARAMETER 
+		{
+			name = Space Telecope Mass
+			type = VesselMass
+			minMass = 2
+			title = Space telescope must mass at least 2,000 kg
+			hideChildren = true
+		}
+
+		PARAMETER
+		{
+			name = HasPower
+			type = HasResource
+			resource = ElectricCharge
+			minQuantity = 1.0
+			title = Craft must have Electric Charge for 30 days
+			hideChildren = true
+		}
+
+  		PARAMETER
+		{
+			name = Orbit
+			type = Orbit
+   			targetBody = HomeWorld()
+			minPeA = 800000
+			maxApA = 950000 // must stay below Van Allen belts to avoid interference
+			maxEccentricity = 0.005
+			disableOnStateChange = true
+
+			PARAMETER
+			{
+				name = Duration
+				type = Duration
+				duration = 30d
+				preWaitText = Survive in orbit for 30 days
+				waitingText = Checking for stable orbit...
+				completionText = Stable orbit: Confirmed
+			}
+		}
+	}
+
+	PARAMETER
+	{
+		name = CollectBST
+		type = RP1CollectScience
+		targetBody = HomeWorld()
+		situation = InSpaceLow
+		experiment = RP0BasicSpaceTelescope1
+		fractionComplete = 0.0164000000
+		title = Transmit 30 days of science imagery
+	}
+}

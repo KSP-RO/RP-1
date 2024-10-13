@@ -7930,6 +7930,30 @@
         ]
     },
     {
+        "name": "ROE-VeroniqueAK",
+        "title": "Veronique",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 80,
+        "entry_cost": 0,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Veronique",
+        "engine_config": "Veronique",
+        "upgrade": false,
+        "entry_cost_mods": "Veronique",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROE-Viking2",
         "title": "Viking (2)",
         "description": "",

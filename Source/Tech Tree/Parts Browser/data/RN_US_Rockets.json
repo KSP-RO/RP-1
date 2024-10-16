@@ -625,7 +625,7 @@
     {
         "name": "rn_aj10_104",
         "title": "AJ10 Upper Stage Engine Extended",
-        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US\u0027s first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents mid-period AJ10s with a nozzle extension and restart capability. Used on Thor-Ablestar/Epsilon and Delta E through Delta N. Plume configured by RealPlume.",
+        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents mid-period AJ10s with a nozzle extension and restart capability. Used on Thor-Ablestar/Epsilon and Delta E through Delta N. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
         "cost": 63,
         "entry_cost": 0,
@@ -650,7 +650,7 @@
     {
         "name": "rn_aj10_37",
         "title": "AJ10 Upper Stage Engine",
-        "description": "Small pressure-fed hypergolic upper stage engine for the Thor-Able/Delta. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US\u0027s first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This is the original Vanguard second stage / Able / Delta configuration, without restart capability. Plume configured by RealPlume.",
+        "description": "Small pressure-fed hypergolic upper stage engine for the Thor-Able/Delta. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This is the original Vanguard second stage / Able / Delta configuration, without restart capability. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
         "cost": 52,
         "entry_cost": 0,
@@ -1030,7 +1030,7 @@
     {
         "name": "rn_lr79_vernier",
         "title": "LR101 Thor Vernier",
-        "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MB-x system (LR79 or RS-27 \u002B 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
+        "description": "Pump or pressure-fed kerolox vernier engine. Used for attitude control and final velocity adjustment in the MB-x system (LR79 or RS-27 + 2xLR101) on Thor-Able / Thor-Agena / Thor-Delta / Delta. Plume configured by RealPlume.",
         "mod": "RN US Rockets",
         "cost": 15,
         "entry_cost": 1000,
@@ -2834,7 +2834,7 @@
     },
     {
         "name": "rn_ua1207_dec",
-        "title": "Titan UA1207 \u0026 SRMU SRM Decoupler",
+        "title": "Titan UA1207 & SRMU SRM Decoupler",
         "description": "Radial decoupler for the UA1207 and SRMU boosters of the Titan IV rocket series.",
         "mod": "RN US Rockets",
         "cost": 50,

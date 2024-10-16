@@ -1,5 +1,5 @@
 ﻿using Strategies;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 
 namespace RP0.Leaders
 {
@@ -36,12 +36,12 @@ namespace RP0.Leaders
 
         public override void OnRegister()
         {
-            KCTEvents.ApplyResearchRateMultiplier.Add(OnEffectQuery);
+            SCMEvents.ApplyResearchRateMultiplier.Add(OnEffectQuery);
         }
 
         public override void OnUnregister()
         {
-            KCTEvents.ApplyResearchRateMultiplier.Remove(OnEffectQuery);
+            SCMEvents.ApplyResearchRateMultiplier.Remove(OnEffectQuery);
         }
 
         protected void OnEffectQuery(Boxed<double> rate, NodeType type, string nodeID)

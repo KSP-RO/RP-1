@@ -198,7 +198,7 @@
     {
         "name": "X1_Engine",
         "title": "XLR11",
-        "description": "While it doesn\u0027t look a thing like it, this model represents the Reaction Motors XLR11, the first liquid fueled rocket engine designed for airplanes. Powered the X-1. Diameter: [0.46 m]. Plume configured by RealPlume.",
+        "description": "While it doesn't look a thing like it, this model represents the Reaction Motors XLR11, the first liquid fueled rocket engine designed for airplanes. Powered the X-1. Diameter: [0.46 m]. Plume configured by RealPlume.",
         "mod": "Taerobee",
         "cost": 163,
         "entry_cost": 3000,
@@ -223,7 +223,7 @@
     {
         "name": "X1_Tail",
         "title": "X-1 Rocket Propellant Tank B",
-        "description": "A rocket propellant tank designed for aircraft, it\u0027s cone shaped too!",
+        "description": "A rocket propellant tank designed for aircraft, it's cone shaped too!",
         "mod": "Taerobee",
         "cost": 40,
         "entry_cost": 800,

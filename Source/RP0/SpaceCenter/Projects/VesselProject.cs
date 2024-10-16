@@ -3,9 +3,10 @@ using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 using UnityEngine.Profiling;
 using KSP.UI.Screens;
+using ROUtils;
 
 namespace RP0
 {
@@ -51,8 +52,6 @@ namespace RP0
         [Persistent]
         public double buildPoints;
         [Persistent]
-        public double integrationPoints;
-        [Persistent]
         public string launchSite;
         [Persistent]
         public string flag;
@@ -65,13 +64,9 @@ namespace RP0
         [Persistent]
         public Guid shipID;
         [Persistent]
-        public bool cannotEarnScience;
-        [Persistent]
         public bool humanRated;
         [Persistent]
         public float cost = 0;
-        [Persistent]
-        public float integrationCost;
         [Persistent]
         public float mass = 0;
         [Persistent]
@@ -123,7 +118,7 @@ namespace RP0
 
         private List<ConfigNode> ExtractedPartNodes => ShipNodeCompressed.Node.GetNodes("PART").ToList();
 
-        public bool IsFinished => progress >= buildPoints + integrationPoints;
+        public bool IsFinished => progress >= buildPoints;
 
         public LCSpaceCenter KSC
         {
@@ -150,7 +145,7 @@ namespace RP0
                 if (_lcID == Guid.Empty)
                     _lc = null;
                 else
-                    _lc = KerbalConstructionTimeData.Instance.LC(_lcID);
+                    _lc = SpaceCenterManagement.Instance.LC(_lcID);
             }
         }
 
@@ -161,7 +156,7 @@ namespace RP0
             {
                 if (_lc == null)
                 {
-                    _lc = KerbalConstructionTimeData.Instance.LC(_lcID);
+                    _lc = SpaceCenterManagement.Instance.LC(_lcID);
                 }
                 return _lc;
             }
@@ -241,13 +236,13 @@ namespace RP0
             {
                 Type = ProjectType.SPH;
                 FacilityBuiltIn = EditorFacility.SPH;
-                LC = KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
+                LC = SpaceCenterManagement.Instance.ActiveSC.Hangar;
             }
             else
             {
                 Type = ProjectType.VAB;
                 FacilityBuiltIn = EditorFacility.VAB;
-                LC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                LC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
                 if (_lc.LCType == LaunchComplexType.Hangar)
                 {
                     RP0Debug.LogError($"ERROR: Tried to link vessel {shipName} to LC {_lc.Name} but vessel is type VAB!");
@@ -259,7 +254,6 @@ namespace RP0
 
             shipID = Guid.NewGuid();
             KCTPersistentID = Guid.NewGuid().ToString("N");
-            cannotEarnScience = false;
 
             //get the crew from the editorlogic
             desiredManifest = new List<string>();
@@ -271,25 +265,20 @@ namespace RP0
                 }
             }
 
-            integrationPoints = Formula.GetIntegrationBP(this);
-            integrationCost = (float)Formula.GetIntegrationCost(this);
             Profiler.EndSample();
         }
 
-        public VesselProject(string name, string ls, double effCost, double bP, double integrP, string flagURL, float spentFunds, float integrCost, EditorFacility editorFacility, bool isHuman)
+        public VesselProject(string name, string ls, double effCost, double bP, string flagURL, float spentFunds, EditorFacility editorFacility, bool isHuman)
         {
             launchSite = ls;
             shipName = name;
             effectiveCost = effCost;
             buildPoints = bP;
-            integrationPoints = integrP;
             progress = 0;
             flag = flagURL;
             humanRated = isHuman;
             Type = editorFacility == EditorFacility.VAB ? ProjectType.VAB : ProjectType.SPH;
-            cannotEarnScience = false;
             cost = spentFunds;
-            integrationCost = integrCost;
             FacilityBuiltIn = editorFacility;
         }
 
@@ -336,7 +325,6 @@ namespace RP0
                         mass += def.density * (float)rsc.amount;
                 }
             }
-            cannotEarnScience = true;
             numStages = stages.Count;
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
@@ -346,10 +334,7 @@ namespace RP0
 
             kscDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
 
-            integrationPoints = Formula.GetIntegrationBP(this);
-            integrationCost = (float)Formula.GetIntegrationCost(this);
-
-            progress = buildPoints + integrationPoints;
+            progress = buildPoints;
         }
 
         public override string ToString() => $"{Type}: {shipName}";
@@ -410,7 +395,6 @@ namespace RP0
             {
                 effectiveCost = ec;
                 buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
-                integrationPoints = Formula.GetIntegrationBP(this);
             }
             else
             {
@@ -422,7 +406,10 @@ namespace RP0
         {
             //PART, MODULE -> clean experiments, repack chutes, disable engines
             string filePath = $"{KSPUtil.ApplicationRootPath}GameData/RP-1/KCT/KCT_ModuleTemplates.cfg";
-            ConfigNode ModuleTemplates = ConfigNode.Load(filePath);
+            ConfigNode ModuleTemplates = GameDatabase.Instance.GetConfigNodes("SCMModuleTemplates").FirstOrDefault();
+            if (ModuleTemplates == null)
+                return node;
+
             ConfigNode[] templates = ModuleTemplates.GetNodes("MODULE");
 
             foreach(ConfigNode part in node.GetNodes("PART"))
@@ -482,7 +469,7 @@ namespace RP0
 
         public VesselProject CreateCopy()
         {
-            VesselProject ret = new VesselProject(shipName, launchSite, effectiveCost, buildPoints, integrationPoints, flag, cost, integrationCost, FacilityBuiltIn, humanRated);
+            VesselProject ret = new VesselProject(shipName, launchSite, effectiveCost, buildPoints, flag, cost, FacilityBuiltIn, humanRated);
             ret._lc = _lc;
             ret._lcID = _lcID;
             ret.globalTags = globalTags.Clone() as PersistentHashSetValueType<string>;
@@ -498,7 +485,6 @@ namespace RP0
             ret.mass = mass;
             ret.emptyMass = emptyMass;
             ret.cost = cost;
-            ret.integrationCost = integrationCost;
             ret.emptyCost = emptyCost;
             ret.numStageParts = numStageParts;
             ret.numStages = numStages;
@@ -511,8 +497,6 @@ namespace RP0
 
             // Safe to always do these, they're cheap.
             ret.buildPoints = Formula.GetVesselBuildPoints(ret.effectiveCost);
-            ret.integrationPoints = Formula.GetIntegrationBP(ret);
-            ret.integrationCost = (float)Formula.GetIntegrationCost(ret);
 
             return ret;
         }
@@ -560,11 +544,11 @@ namespace RP0
         {
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
-            LaunchComplex lc = KerbalConstructionTimeData.Instance.FindLCFromID(_lcID);
+            LaunchComplex lc = SpaceCenterManagement.Instance.FindLCFromID(_lcID);
             if (lc == null)
-                lc = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                lc = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
             else
-                KerbalConstructionTimeData.Instance.ActiveSC.SwitchLaunchComplex(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.IndexOf(lc));
+                SpaceCenterManagement.Instance.ActiveSC.SwitchLaunchComplex(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.IndexOf(lc));
 
             string tempFile = $"{KSPUtil.ApplicationRootPath}saves/{HighLogic.SaveFolder}/Ships/temp.craft";
             UpdateRFTanks();
@@ -583,8 +567,11 @@ namespace RP0
             }
 
             KCTUtilities.CleanupDebris(launchSiteName);
-            KerbalConstructionTimeData.Instance.AirlaunchParams.KSPVesselId = Guid.Empty;
-            FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
+            SpaceCenterManagement.Instance.AirlaunchParams.KSPVesselId = Guid.Empty;
+            SpaceCenterManagement.Instance.StartCoroutine(CallbackUtil.DelayedCallback(1, delegate
+            {
+                FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
+            }));
         }
 
         public bool ResourcesOK(LCData stats, List<string> failedReasons = null)
@@ -609,7 +596,7 @@ namespace RP0
                     return false;
 
                 pass = false;
-                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Renovate or Upgrade {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
+                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
             }
 
             return pass;
@@ -621,7 +608,7 @@ namespace RP0
             LaunchComplex selectedLC;
             if (LC == null)
             {
-                selectedLC = Type == ProjectType.VAB ? KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC : KerbalConstructionTimeData.Instance.ActiveSC.Hangar;
+                selectedLC = Type == ProjectType.VAB ? SpaceCenterManagement.Instance.ActiveSC.ActiveLC : SpaceCenterManagement.Instance.ActiveSC.Hangar;
             }
             else
             {
@@ -805,11 +792,10 @@ namespace RP0
             {
                 cost = KCTUtilities.GetTotalVesselCost(ShipNodeCompressed.Node);
                 emptyCost = KCTUtilities.GetTotalVesselCost(ShipNodeCompressed.Node, false);
-                integrationCost = (float)Formula.GetIntegrationCost(this);
                 ShipNodeCompressed.CompressAndRelease();
             }
 
-            return cost + integrationCost;
+            return cost;
         }
 
         public double GetRushEfficiencyCost()
@@ -1046,17 +1032,24 @@ namespace RP0
             Part partRef = o as Part;
             bool isNode = partNode != null;
             if (!isNode && partRef == null)
-                return 0;
+                return 0d;
 
             string name;
+            AvailablePart availablePart;
             if (isNode)
             {
                 name = KCTUtilities.GetPartNameFromNode(partNode);
-                partRef = KCTUtilities.GetAvailablePartByName(name).partPrefab;
+                availablePart = KCTUtilities.GetAvailablePartByName(name);
+                if (availablePart == null)
+                    return 0d;
+                partRef = availablePart.partPrefab;
             }
             else
             {
-                name = partRef.partInfo.name;
+                availablePart = partRef.partInfo;
+                if (availablePart == null)
+                    return 0d;
+                name = availablePart.name;
             }
 
             float dryCost;
@@ -1066,9 +1059,12 @@ namespace RP0
 
             if (isNode)
             {
-                ShipConstruction.GetPartCostsAndMass(partNode, KCTUtilities.GetAvailablePartByName(name), out dryCost, out fuelCost, out dryMass, out fuelMass);
-                foreach (ConfigNode rNode in partNode.GetNodes("RESOURCE"))
+                ShipConstruction.GetPartCostsAndMass(partNode, availablePart, out dryCost, out fuelCost, out dryMass, out fuelMass);
+                foreach (ConfigNode rNode in partNode.nodes)
                 {
+                    if (rNode.name != "RESOURCE")
+                        continue;
+
                     string rName = rNode.GetValue("name");
                     _tempResourceAmounts[rName] = double.Parse(rNode.GetValue("maxAmount"));
                 }
@@ -1131,13 +1127,17 @@ namespace RP0
                         mecbName = mecb.moduleName;
                     }
 
-                    foreach (ConfigNode modNode in partNode.GetNodes("MODULE"))
+                    foreach (ConfigNode modNode in partNode.nodes)
                     {
+                        if (modNode.name != "MODULE")
+                            continue;
+
                         string s = modNode.GetValue("name");
+
                         if (s == "TestFlightReliability_EngineCycle")
-                            double.TryParse(modNode.GetValue("engineOperatingTime"), out runTime);
+                            modNode.TryGetValue("engineOperatingTime", ref runTime);
                         else if (s == "ModuleTestLite")
-                            double.TryParse(modNode.GetValue("runTime"), out runTime);
+                            modNode.TryGetValue("runTime", ref runTime);
                         else if (s == mecbName)
                         {
                             string config = modNode.GetValue("configuration");
@@ -1274,7 +1274,7 @@ namespace RP0
             return _buildRate;
         }
 
-        public double GetFractionComplete() => progress / (buildPoints + integrationPoints);
+        public double GetFractionComplete() => progress / buildPoints;
 
         public double GetTimeLeft()
         {
@@ -1286,7 +1286,7 @@ namespace RP0
             newEff = LC.Efficiency;
             if (BuildRate > 0)
             {
-                double bpLeft = integrationPoints + buildPoints - progress;
+                double bpLeft = buildPoints - progress;
                 if (LC.Efficiency == LCEfficiency.MaxEfficiency)
                     return bpLeft / BuildRate;
 
@@ -1308,11 +1308,11 @@ namespace RP0
                 return GetTimeLeft(out newEff);
             }
             newEff = LC.Efficiency;
-            double bp = buildPoints + integrationPoints;
+            double bp = buildPoints;
             double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
             double bpLeft = bp - progress;
             if (newEff == LCEfficiency.MaxEfficiency)
-                return (bpLeft - progress) / (rate * newEff);
+                return bpLeft / (rate * newEff);
 
             return CalculateTimeLeftForBuildRate(bpLeft, rate, startingEff, out newEff);
         }
@@ -1342,7 +1342,7 @@ namespace RP0
 
         public ProjectType GetProjectType() => Type;
 
-        public bool IsComplete() => progress >= buildPoints + integrationPoints;
+        public bool IsComplete() => progress >= buildPoints;
 
         public double IncrementProgress(double UTDiff)
         {
@@ -1350,7 +1350,7 @@ namespace RP0
             if (bR == 0)
                 return 0d;
 
-            double toGo = buildPoints + integrationPoints - progress;
+            double toGo = buildPoints - progress;
             double amt = bR * UTDiff;
             progress += bR * UTDiff;
             if (IsComplete())
@@ -1363,9 +1363,9 @@ namespace RP0
             return 0d;
         }
 
-        private void MoveVesselToWarehouse()
+        public void MoveVesselToWarehouse()
         {
-            KCTEvents.Instance.KCTButtonStockImportant = true;
+            SCMEvents.Instance.KCTButtonStockImportant = true;
 
             // use getter first just in case
             LC.BuildList.Remove(this);
@@ -1441,6 +1441,20 @@ namespace RP0
             {
                 _buildRate = 0d;
                 return;
+            }
+        }
+
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            if (SpaceCenterManagement.Instance.LoadedSaveVersion < SpaceCenterManagement.VERSION)
+            {
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 7)
+                {
+                    double intPoints = 0d;
+                    node.TryGetValue("integrationPoints", ref intPoints);
+                    buildPoints += intPoints;
+                }
             }
         }
     }

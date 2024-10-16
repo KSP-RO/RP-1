@@ -1,4 +1,4 @@
-﻿using RP0.DataTypes;
+﻿using ROUtils.DataTypes;
 using System.Collections.Generic;
 
 namespace RP0
@@ -99,7 +99,7 @@ namespace RP0
         public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
         public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
         public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier()
-            * Formula.GetScienceResearchEfficiencyMult(KerbalConstructionTimeData.Instance.SciPointsTotal);
+            * Formula.GetScienceResearchEfficiencyMult(SpaceCenterManagement.Instance.SciPointsTotal);
 
         public override void Load(ConfigNode node)
         {
@@ -115,15 +115,6 @@ namespace RP0
         {
             for (int i = nautUpkeepTrainingBools.Count; i-- > 0;)
                 nautUpkeepTrainingBools[i] = false;
-        }
-
-        public int GetResearcherCap(int lvl = -1)
-        {
-            return -1;
-
-            /*if (lvl == -1)
-                lvl = Utilities.GetBuildingUpgradeLevel(SpaceCenterFacility.ResearchAndDevelopment);
-            return GeneralSettings.ResearcherCaps[lvl];*/
         }
 
         public int GetStartingPersonnel(Game.Modes mode)

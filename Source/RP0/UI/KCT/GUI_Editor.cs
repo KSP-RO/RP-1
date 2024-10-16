@@ -1,6 +1,7 @@
 ﻿using System;
 using UniLinq;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -32,7 +33,7 @@ namespace RP0
                 EditorWindowPosition.height = 1;
             }
             GUILayout.BeginVertical();
-            if (!KerbalConstructionTimeData.EditorShipEditingMode)
+            if (!SpaceCenterManagement.EditorShipEditingMode)
             {
                 RenderBuildMode();
             }
@@ -51,30 +52,33 @@ namespace RP0
 
         private static void RenderBuildMode()
         {
-            double buildPoints = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints + KerbalConstructionTimeData.Instance.EditorVessel.integrationPoints;
-            double bpLeaderEffect = KerbalConstructionTimeData.Instance.EditorVessel.LeaderEffect;
-            double effic = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Efficiency;
-            double rateWithCurEngis = KCTUtilities.GetBuildRate(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC, KerbalConstructionTimeData.Instance.EditorVessel.mass, KerbalConstructionTimeData.Instance.EditorVessel.buildPoints, KerbalConstructionTimeData.Instance.EditorVessel.humanRated, 0)
+            double buildPoints = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
+            double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect;
+            double effic = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Efficiency;
+            double rateWithCurEngis = KCTUtilities.GetBuildRate(SpaceCenterManagement.Instance.ActiveSC.ActiveLC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic
-                * KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
+                * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
 
             RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
 
             if (KSP.UI.Screens.DebugToolbar.DebugScreenSpawner.Instance?.screen?.isShown ?? false)
+            {
                 GUILayout.Label($"BP Cost: {buildPoints:N0}");
+                GUILayout.Label($"EC: {SpaceCenterManagement.Instance.EditorVessel.effectiveCost:N0}");
+            }
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
                 double buildTime = bR > 0d
                     ? (effic >= LCEfficiency.MaxEfficiency
                         ? buildPoints / (bR * bpLeaderEffect)
-                        : KerbalConstructionTimeData.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, effic, out _))
+                        : SpaceCenterManagement.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, effic, out _))
                     : 0d;
-                GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")}");
+                GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")} at {effic:P0}");
 
-                if (KerbalConstructionTimeData.EditorRolloutBP > 0)
+                if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(KerbalConstructionTimeData.EditorRolloutBP / bR, true, false) : "infinity")}");
+                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / bR, true, false) : "infinity")} at {effic:P0}");
                 }
             }
             else
@@ -82,48 +86,49 @@ namespace RP0
                 GUILayout.Label("Invalid Integration Rate");
             }
 
-            if (EditorDriver.editorFacility == EditorFacility.SPH || (KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad && KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.IsHumanRated && !KerbalConstructionTimeData.Instance.EditorVessel.humanRated))
+            if (EditorDriver.editorFacility == EditorFacility.SPH || (SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad && SpaceCenterManagement.Instance.ActiveSC.ActiveLC.IsHumanRated && !SpaceCenterManagement.Instance.EditorVessel.humanRated))
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Engineer Cap:");
-                GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? KerbalConstructionTimeData.Instance.ActiveSC.Hangar : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC).MaxEngineersFor(KerbalConstructionTimeData.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
+                GUILayout.Label((EditorDriver.editorFacility == EditorFacility.SPH ? SpaceCenterManagement.Instance.ActiveSC.Hangar : SpaceCenterManagement.Instance.ActiveSC.ActiveLC).MaxEngineersFor(SpaceCenterManagement.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
             }
 
-            if (KerbalConstructionTimeData.Instance.EditorVessel.integrationCost > 0)
-                GUILayout.Label($"Integration Cost: √{KerbalConstructionTimeData.Instance.EditorVessel.integrationCost:N1}");
-
             if (bR > 0d && rateWithCurEngis > 0d)
             {
-                double effectiveEngCount = bR / rateWithCurEngis * KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Engineers;
+                double effectiveEngCount = bR / rateWithCurEngis * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers;
                 double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.IdleSalaryMult);
                 double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
             }
 
-            if (KerbalConstructionTimeData.EditorRolloutCost > 0)
-                GUILayout.Label($"Rollout Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -KerbalConstructionTimeData.EditorRolloutCost):N1}");
-
-            bool showCredit = false;
-            if (KerbalConstructionTimeData.EditorUnlockCosts > 0)
+            if (SpaceCenterManagement.EditorRolloutCost > 0)
             {
-                showCredit = true;
-                GUILayout.Label($"Unlock Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -KerbalConstructionTimeData.EditorUnlockCosts):N1}");
+                double rolloutCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -SpaceCenterManagement.EditorRolloutCost);
+                double recondCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -SpaceCenterManagement.EditorReconditionCost);
+                GUILayout.Label(new GUIContent($"Launch Cost: √{rolloutCost:N1} + √{recondCost:N1}", "Launch costs consist of rollout + pad reconditioning"));
             }
 
-            if (KerbalConstructionTimeData.EditorToolingCosts > 0)
+            bool showCredit = false;
+            if (SpaceCenterManagement.EditorUnlockCosts > 0)
             {
                 showCredit = true;
-                GUILayout.Label($"Tooling Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -KerbalConstructionTimeData.EditorToolingCosts):N1}");
+                GUILayout.Label($"Unlock Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -SpaceCenterManagement.EditorUnlockCosts):N1}");
+            }
+
+            if (SpaceCenterManagement.EditorToolingCosts > 0)
+            {
+                showCredit = true;
+                GUILayout.Label($"Tooling Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -SpaceCenterManagement.EditorToolingCosts):N1}");
             }
 
             if (showCredit)
                 GUILayout.Label($"Unlock Credit: √{UnlockCreditHandler.Instance.TotalCredit:N1}");
 
-            if (KerbalConstructionTimeData.EditorRequiredTechs.Count > 0)
+            if (SpaceCenterManagement.EditorRequiredTechs.Count > 0)
             {
                 string techLabel = string.Empty;
-                foreach (string techId in KerbalConstructionTimeData.EditorRequiredTechs)
+                foreach (string techId in SpaceCenterManagement.EditorRequiredTechs)
                 {
                     string techName = ResearchAndDevelopment.GetTechnologyTitle(techId);
 
@@ -135,7 +140,7 @@ namespace RP0
                 GUILayout.Label(techLabel);
             }
 
-            if (KerbalConstructionTimeData.Instance.EditorVessel.humanRated && !KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.IsHumanRated)
+            if (SpaceCenterManagement.Instance.EditorVessel.humanRated && !SpaceCenterManagement.Instance.ActiveSC.ActiveLC.IsHumanRated)
             {
                 GUILayout.Label("WARNING: Cannot integrate vessel!");
                 GUILayout.Label("Select a human-rated Launch Complex.");
@@ -147,11 +152,12 @@ namespace RP0
                 _simulationConfigPosition.height = 1;
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
+                GameplayTips.Instance.CheckAndShowExcessECTip(EditorLogic.fetch.ship);
             }
             if (!KCTSettings.Instance.OverrideLaunchButton && GUILayout.Button("Integrate"))
             {
                 KCTUtilities.TryAddVesselToBuildList();
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
             }
             GUILayout.EndHorizontal();
             if (GUILayout.Button("Show/Hide Management"))
@@ -177,9 +183,9 @@ namespace RP0
 
         private static void RenderEditorLaunchComplexControls()
         {
-            LaunchComplex activeLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            LaunchComplex activeLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
             bool rightLC = (EditorDriver.editorFacility == EditorFacility.SPH) == (activeLC.LCType == LaunchComplexType.Hangar);
-            int lcCount = KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexCountPad;
+            int lcCount = SpaceCenterManagement.Instance.ActiveSC.LaunchComplexCountPad;
 
             GUILayout.BeginHorizontal();
             if (rightLC)
@@ -188,7 +194,7 @@ namespace RP0
                 {
                     if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
                     {
-                        KerbalConstructionTimeData.Instance.ActiveSC.SwitchToPrevLaunchComplex();
+                        SpaceCenterManagement.Instance.ActiveSC.SwitchToPrevLaunchComplex();
                         BuildRateForDisplay = null;
                     }
                 }
@@ -201,7 +207,7 @@ namespace RP0
                 {
                     if (lcCount > 1 && !GUIStates.ShowModifyLC && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
                     {
-                        KerbalConstructionTimeData.Instance.ActiveSC.SwitchToNextLaunchComplex();
+                        SpaceCenterManagement.Instance.ActiveSC.SwitchToNextLaunchComplex();
                         BuildRateForDisplay = null;
                     }
                 }
@@ -213,19 +219,19 @@ namespace RP0
                     if (lcCount > 0)
                     {
                         if (GUILayout.Button(_gcSwitchToLC))
-                            KerbalConstructionTimeData.Instance.ActiveSC.SwitchToNextLaunchComplex();
+                            SpaceCenterManagement.Instance.ActiveSC.SwitchToNextLaunchComplex();
                     }
                     else
                     {
-                        GUILayout.Label(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Count > 1 ? _gcNoLCAvailableSomeConstructing : _gcNoLCAvailable, GetLabelCenterAlignStyle());
+                        GUILayout.Label(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count > 1 ? _gcNoLCAvailableSomeConstructing : _gcNoLCAvailable, GetLabelCenterAlignStyle());
                     }
                 }
                 else
                 {
-                    if (KerbalConstructionTimeData.Instance.ActiveSC.Hangar.IsOperational)
+                    if (SpaceCenterManagement.Instance.ActiveSC.Hangar.IsOperational)
                     {
                         if (GUILayout.Button(_gcSwitchToHangar))
-                            KerbalConstructionTimeData.Instance.ActiveSC.SwitchLaunchComplex(KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.IndexOf(KerbalConstructionTimeData.Instance.ActiveSC.Hangar));
+                            SpaceCenterManagement.Instance.ActiveSC.SwitchLaunchComplex(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.IndexOf(SpaceCenterManagement.Instance.ActiveSC.Hangar));
                     }
                     else
                     {
@@ -244,7 +250,7 @@ namespace RP0
                 }
                 else
                 {
-                    SetFieldsFromVessel(KerbalConstructionTimeData.Instance.EditorVessel);
+                    SetFieldsFromVessel(SpaceCenterManagement.Instance.EditorVessel);
 
                     _wasShowBuildList = GUIStates.ShowBuildList;
                     GUIStates.ShowNewLC = true;
@@ -282,8 +288,8 @@ namespace RP0
                 //        _centralWindowPosition.width = 300;
                 //    }
                 //}
-                if (GUILayout.Button(new GUIContent("Upgrade",
-                    $"Upgrade the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible.{(canModify ? string.Empty : modifyFailTooltip)}"),
+                if (GUILayout.Button(new GUIContent("Modify",
+                    $"Modify the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible.{(canModify ? string.Empty : modifyFailTooltip)}"),
                     canModify ? GUI.skin.button : _yellowButton))
                 {
                     if (EditorLogic.fetch.ship.parts.Count == 0)
@@ -292,7 +298,7 @@ namespace RP0
                     }
                     else
                     {
-                        SetFieldsFromVesselKeepOld(KerbalConstructionTimeData.Instance.EditorVessel, activeLC);
+                        SetFieldsFromVesselKeepOld(SpaceCenterManagement.Instance.EditorVessel, activeLC);
 
                         _wasShowBuildList = GUIStates.ShowBuildList;
                         GUIStates.ShowModifyLC = true;
@@ -309,32 +315,44 @@ namespace RP0
 
         private static void RenderEditMode()
         {
-            VesselProject editedVessel = KerbalConstructionTimeData.Instance.EditedVessel;
-            double fullVesselBP = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints + KerbalConstructionTimeData.Instance.EditorVessel.integrationPoints;
-            double bpLeaderEffect = KerbalConstructionTimeData.Instance.EditorVessel.LeaderEffect;
+            VesselProject editedVessel = SpaceCenterManagement.Instance.EditedVessel;
+            double fullVesselBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
+            double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect;
             double effic = editedVessel.LC.Efficiency;
             KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
             
-            double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, KerbalConstructionTimeData.Instance.EditorVessel.mass, KerbalConstructionTimeData.Instance.EditorVessel.buildPoints, KerbalConstructionTimeData.Instance.EditorVessel.humanRated, 0)
+            double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic * editedVessel.LC.StrategyRateMultiplier;
 
             RenderBuildRateInputRow(fullVesselBP, rateWithCurEngis);
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
+                double startingEff = effic;
+                double rolloutEff = effic;
+                int idx = editedVessel.LC.BuildList.IndexOf(editedVessel);
+                if (idx != -1 && bR > 0d && effic < LCEfficiency.MaxEfficiency)
+                {
+                    double brTrue = bR / effic;
+                    for (int i = 0; i < idx; ++i)
+                        editedVessel.LC.BuildList[i].CalculateTimeLeftForBuildRate(editedVessel.buildPoints - editedVessel.progress, brTrue, startingEff, out startingEff);
+                }
+
                 double buildPoints = Math.Abs(fullVesselBP - newProgressBP);
                 double buildTime = bR > 0d
                     ? (effic >= LCEfficiency.MaxEfficiency
                         ? buildPoints / (bR * bpLeaderEffect)
-                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, effic, out _))
+                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, startingEff, out rolloutEff))
                     : double.NaN;
-                GUILayout.Label(DTUtils.GetFormattedTime(buildTime, 0, false));
+                GUILayout.Label(new GUIContent($"Remaining: {RP0DTUtils.GetFormattedTime(buildTime, 0, false)}", 
+                    idx == -1 ? "Time left takes efficiency increase into account based on assuming vessel will be placed at head of integration list" :
+                    "Time left takes efficiency increase into account based on vessel's current place in the integration list"));
 
-                if (KerbalConstructionTimeData.EditorRolloutBP > 0)
+                if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {DTUtils.GetFormattedTime(KerbalConstructionTimeData.EditorRolloutBP / bR, 0, false)}");
+                    GUILayout.Label($"Rollout Time: {RP0DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (bR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
                 }
             }
             else
@@ -343,10 +361,11 @@ namespace RP0
             }
 
             GUILayout.BeginHorizontal();
-            if (EditorDriver.editorFacility == EditorFacility.SPH || (KerbalConstructionTimeData.Instance.EditorVessel.LC.IsHumanRated && !KerbalConstructionTimeData.Instance.EditorVessel.humanRated))
+            VesselProject curVessel = SpaceCenterManagement.Instance.EditorVessel;
+            if (curVessel.LC != null && (EditorDriver.editorFacility == EditorFacility.SPH || (curVessel.LC.IsHumanRated && !curVessel.humanRated)))
             {
                 GUILayout.Label("Engineer Cap:");
-                GUILayout.Label(KerbalConstructionTimeData.Instance.EditorVessel.LC.MaxEngineersFor(KerbalConstructionTimeData.Instance.EditorVessel).ToString(), GetLabelRightAlignStyle());
+                GUILayout.Label(curVessel.LC.MaxEngineersFor(curVessel).ToString(), GetLabelRightAlignStyle());
             }
             else
             {
@@ -362,7 +381,7 @@ namespace RP0
             if (GUILayout.Button("Cancel Edits"))
             {
                 RP0Debug.Log("Edits cancelled.");
-                KerbalConstructionTimeData.ClearVesselEditMode();
+                SpaceCenterManagement.ClearVesselEditMode();
 
                 HighLogic.LoadScene(GameScenes.SPACECENTER);
             }
@@ -375,12 +394,12 @@ namespace RP0
                 EditorLogic.fetch.Lock(true, true, true, "KCTGUILock");
                 GUIStates.ShowSimConfig = true;
 
-                KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
-                KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = editedVessel.LC.ID; // should already be correct, but just in case.
+                SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
+                SpaceCenterManagement.Instance.LaunchedVessel.LCID = editedVessel.LC.ID; // should already be correct, but just in case.
             }
             GUILayout.EndHorizontal();
 
-            if (!KerbalConstructionTimeData.Instance.EditorVessel.AreTanksFull() &&
+            if (!SpaceCenterManagement.Instance.EditorVessel.AreTanksFull() &&
                 GUILayout.Button("Fill Tanks"))
             {
                 foreach (Part p in EditorLogic.fetch.ship.parts)
@@ -434,10 +453,10 @@ namespace RP0
 
             if (GUILayout.Button(_gcMaxBuildRate, GUILayout.ExpandWidth(false)))
             {
-                var ship = KerbalConstructionTimeData.Instance.EditorVessel;
-                var deltaToMaxEngineers = int.MaxValue - KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Engineers;
-                bR = KCTUtilities.GetBuildRate(KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
-                    * KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.Efficiency * KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
+                var ship = SpaceCenterManagement.Instance.EditorVessel;
+                var deltaToMaxEngineers = int.MaxValue - SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers;
+                bR = KCTUtilities.GetBuildRate(SpaceCenterManagement.Instance.ActiveSC.ActiveLC, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
+                    * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Efficiency * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
                 BuildRateForDisplay = bR.ToString();
             }
 

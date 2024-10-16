@@ -2,7 +2,7 @@
     {
         "name": "rn_mirdockingmodule",
         "title": "MIR Docking Module",
-        "description": "The docking module was designed to help simplify Space Shuttle dockings to Mir. Before the first shuttle docking mission (STS-71), the Kristall module had to be tediously moved to ensure sufficient clearance between Atlantis and Mir\u0027s solar arrays. With the addition of the docking module, enough clearance was provided without the need to relocate Kristall. It had two identical APAS-89 docking ports, one attached to the distal port of Kristall with the other available for shuttle docking. (Missing entryCost field)",
+        "description": "The docking module was designed to help simplify Space Shuttle dockings to Mir. Before the first shuttle docking mission (STS-71), the Kristall module had to be tediously moved to ensure sufficient clearance between Atlantis and Mir's solar arrays. With the addition of the docking module, enough clearance was provided without the need to relocate Kristall. It had two identical APAS-89 docking ports, one attached to the distal port of Kristall with the other available for shuttle docking. (Missing entryCost field)",
         "mod": "RN Misc",
         "cost": 600,
         "entry_cost": 1,

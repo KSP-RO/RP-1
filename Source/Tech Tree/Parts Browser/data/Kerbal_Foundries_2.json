@@ -116,7 +116,7 @@
     {
         "name": "KF-TrackInverting",
         "title": "RBI Inverting Track",
-        "description": "The crate simply says: \u0022Please fit the right way up. Enjoy any which way.\u0022 Ironically, it has no \u0022this way up\u0022 sticker.  Warranty void if inverted.",
+        "description": "The crate simply says: \"Please fit the right way up. Enjoy any which way.\" Ironically, it has no \"this way up\" sticker.  Warranty void if inverted.",
         "mod": "Kerbal Foundries 2",
         "cost": 100,
         "entry_cost": 4000,
@@ -138,7 +138,7 @@
     {
         "name": "KF-TrackLong",
         "title": "Long Track",
-        "description": "Long and powerful track. It\u0027s suited to support heavy panzer look-alikes but can be used for more civilized duties. Like flipping over on slopes.",
+        "description": "Long and powerful track. It's suited to support heavy panzer look-alikes but can be used for more civilized duties. Like flipping over on slopes.",
         "mod": "Kerbal Foundries 2",
         "cost": 100,
         "entry_cost": 4000,
@@ -160,7 +160,7 @@
     {
         "name": "KF-TrackMedium",
         "title": "Medium track",
-        "description": "Originally a treadmill for sharpening up lazy interns, this track unit soon fell into widespread use when a bored engineer flipped it over, strapped a battery pack to it, and set it running out of the SPH, shouting \u0022BE FREE!\u0022",
+        "description": "Originally a treadmill for sharpening up lazy interns, this track unit soon fell into widespread use when a bored engineer flipped it over, strapped a battery pack to it, and set it running out of the SPH, shouting \"BE FREE!\"",
         "mod": "Kerbal Foundries 2",
         "cost": 100,
         "entry_cost": 4000,
@@ -204,7 +204,7 @@
     {
         "name": "KF-TrackSimple",
         "title": "Simple Track",
-        "description": "Inspired by his favourite childhood series \u0022Thunder Kats\u0022, Gene Kerman was inspired to created this oddly shaped track unit. Useful for smaller craft, as well as remote control snack delivery units. Snacks not included.",
+        "description": "Inspired by his favourite childhood series \"Thunder Kats\", Gene Kerman was inspired to created this oddly shaped track unit. Useful for smaller craft, as well as remote control snack delivery units. Snacks not included.",
         "mod": "Kerbal Foundries 2",
         "cost": 100,
         "entry_cost": 4000,
@@ -226,7 +226,7 @@
     {
         "name": "KF-TrackSmall",
         "title": "Small track",
-        "description": "Flying in the face of the usual \u0022Go big or go home\u0022 philosophy, junior Kerbal engineer Dougel Kerman came up with these after looking at a larger prototype \u0027from far away\u0027. Valentina thinks they\u0027re cute.",
+        "description": "Flying in the face of the usual \"Go big or go home\" philosophy, junior Kerbal engineer Dougel Kerman came up with these after looking at a larger prototype 'from far away'. Valentina thinks they're cute.",
         "mod": "Kerbal Foundries 2",
         "cost": 100,
         "entry_cost": 4000,

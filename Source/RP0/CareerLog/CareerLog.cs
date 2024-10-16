@@ -1,6 +1,6 @@
 ﻿using Contracts;
 using Csv;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 using RP0.Programs;
 using System;
 using System.Collections;
@@ -45,7 +45,7 @@ namespace RP0
         private EventData<LCLaunchPad> onKctPadDismantledEvent;
 
         [KSPField(isPersistant = true)]
-        private readonly PersistentDictionary<double, LogPeriod> _periodDict = new PersistentDictionaryValueTypeKey<double, LogPeriod>();
+        private readonly PersistentDictionaryValueTypeKey<double, LogPeriod> _periodDict = new PersistentDictionaryValueTypeKey<double, LogPeriod>();
         [KSPField(isPersistant = true)]
         private readonly PersistentList<ContractEvent> _contractDict = new PersistentList<ContractEvent>();
         [KSPField(isPersistant = true)]
@@ -372,7 +372,7 @@ namespace RP0
                                                 .Sum();
                 return new[]
                 {
-                    DTUtils.UTToDate(p.StartUT).ToString("yyyy-MM"),
+                    ROUtils.DTUtils.UTToDate(p.StartUT).ToString("yyyy-MM"),
                     p.NumEngineers.ToString(),
                     p.NumResearchers.ToString(),
                     p.CurrentFunds.ToString("F0"),
@@ -572,8 +572,8 @@ namespace RP0
             return new CareerLogDto
             {
                 careerUuid = SystemInfo.deviceUniqueIdentifier,
-                startDate = DTUtils.UTToDate(logPeriod.StartUT).ToString("o"),
-                endDate = DTUtils.UTToDate(logPeriod.EndUT).ToString("o"),
+                startDate = ROUtils.DTUtils.UTToDate(logPeriod.StartUT).ToString("o"),
+                endDate = ROUtils.DTUtils.UTToDate(logPeriod.EndUT).ToString("o"),
                 numEngineers = logPeriod.NumEngineers,
                 numResearchers = logPeriod.NumResearchers,
                 efficiencyEngineers = logPeriod.EfficiencyEngineers,
@@ -618,10 +618,10 @@ namespace RP0
             {
                 _prevPeriod.CurrentFunds = Funding.Instance.Funds;
                 _prevPeriod.CurrentSci = ResearchAndDevelopment.Instance.Science;
-                _prevPeriod.RnDQueueLength = KerbalConstructionTimeData.Instance.TechList.Sum(t => t.scienceCost);
-                _prevPeriod.NumEngineers = KerbalConstructionTimeData.Instance.TotalEngineers;
-                _prevPeriod.NumResearchers = KerbalConstructionTimeData.Instance.Researchers;
-                _prevPeriod.EfficiencyEngineers = KerbalConstructionTimeData.Instance.WeightedAverageEfficiencyEngineers;
+                _prevPeriod.RnDQueueLength = SpaceCenterManagement.Instance.TechList.Sum(t => t.scienceCost);
+                _prevPeriod.NumEngineers = SpaceCenterManagement.Instance.TotalEngineers;
+                _prevPeriod.NumResearchers = SpaceCenterManagement.Instance.Researchers;
+                _prevPeriod.EfficiencyEngineers = SpaceCenterManagement.Instance.WeightedAverageEfficiencyEngineers;
                 _prevPeriod.ScienceEarned = GetSciPointTotalFromKCT();
                 _prevPeriod.FundsGainMult = HighLogic.CurrentGame.Parameters.Career.FundsGainMultiplier;
                 _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmount(_prevPeriod.StartUT, _prevPeriod.EndUT);
@@ -639,8 +639,8 @@ namespace RP0
         {
             if (!_periodDict.TryGetValue(periodStartUt, out LogPeriod period))
             {
-                DateTime dtNextPeriod = DTUtils.UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
-                double nextPeriodStart = (dtNextPeriod - DTUtils.Epoch).TotalSeconds;
+                DateTime dtNextPeriod = ROUtils.DTUtils.UTToDate(periodStartUt).AddMonths(LogPeriodMonths);
+                double nextPeriodStart = (dtNextPeriod - ROUtils.DTUtils.Epoch).TotalSeconds;
                 period = new LogPeriod(periodStartUt, nextPeriodStart);
                 _periodDict.Add(periodStartUt, period);
             }
@@ -889,7 +889,7 @@ namespace RP0
             try
             {
                 // KCT returns -1 if the player hasn't earned any sci yet
-                return Math.Max(0, KerbalConstructionTimeData.Instance.SciPointsTotal);
+                return Math.Max(0, SpaceCenterManagement.Instance.SciPointsTotal);
             }
             catch (Exception ex)
             {

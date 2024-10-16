@@ -2,7 +2,7 @@
     {
         "name": "WBI_ATVSeat",
         "title": "ATV Command Seat",
-        "description": "This bare-bones seat gives you just enough flight controls to externally control a vessel without those cumbersome inconveniences like a \u0022pressurized cabin\u0022 and \u0022seat belts.\u0022",
+        "description": "This bare-bones seat gives you just enough flight controls to externally control a vessel without those cumbersome inconveniences like a \"pressurized cabin\" and \"seat belts.\"",
         "mod": "WildBlue Buffalo Rover",
         "cost": 200,
         "entry_cost": 8100,
@@ -27,7 +27,7 @@
     {
         "name": "WBI_AuxEN",
         "title": "Auxiliary Electronic Navigatior",
-        "description": "The Auxiliary Electronic Navigator (AuxEN) is a specialized chassis segment that contains a probe core. Simply orient the section of the box that says \u0022Front\u0022 on it forward, and clip it into your chassis.",
+        "description": "The Auxiliary Electronic Navigator (AuxEN) is a specialized chassis segment that contains a probe core. Simply orient the section of the box that says \"Front\" on it forward, and clip it into your chassis.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 3500,
         "entry_cost": 7500,
@@ -52,7 +52,7 @@
     {
         "name": "WBI_Buckboard",
         "title": "MC-1000 Buckboard",
-        "description": "Essentially a redesigned SC-62 Standard Container, The Buckboard can hold a wide variety of different resources. It\u0027s essential equipment for the kerbal on the go.",
+        "description": "Essentially a redesigned SC-62 Standard Container, The Buckboard can hold a wide variety of different resources. It's essential equipment for the kerbal on the go.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 800,
         "entry_cost": 3800,
@@ -74,7 +74,7 @@
     {
         "name": "WBI_Buckboard2",
         "title": "MC-2000 Buckboard",
-        "description": "For those kerbals that have more stuff than fits in a standard storage box, this double-length Buckboard gives you more room. Of course, empty space needs filling, so it\u0027s an endless cycle of getting more room and then filling it..",
+        "description": "For those kerbals that have more stuff than fits in a standard storage box, this double-length Buckboard gives you more room. Of course, empty space needs filling, so it's an endless cycle of getting more room and then filling it..",
         "mod": "WildBlue Buffalo Rover",
         "cost": 1200,
         "entry_cost": 3800,
@@ -294,7 +294,7 @@
     {
         "name": "WBI_Flatbed1uStd",
         "title": "Buffalo Flatbed (1U)",
-        "description": "The Standard Flatbed is mounted to the Buffalo Chassis. It provides two hardpoints to mount a variety of equipment such as the Buckboard and Ponderosa. While you need an engineer to attach the flatbed to the chassis, you don\u0027t need one to stack equipment.",
+        "description": "The Standard Flatbed is mounted to the Buffalo Chassis. It provides two hardpoints to mount a variety of equipment such as the Buckboard and Ponderosa. While you need an engineer to attach the flatbed to the chassis, you don't need one to stack equipment.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 200,
         "entry_cost": 2000,
@@ -316,7 +316,7 @@
     {
         "name": "WBI_Flatbed1uWide",
         "title": "Buffalo Flatbed Wide (1U)",
-        "description": "The Wide Flatbed is mounted to the Buffalo Chassis. It provides three hardpoints to mount a variety of equipment such as the Buckboard and Ponderosa. While you need an engineer to attach the flatbed to the chassis, you don\u0027t need one to stack equipment.",
+        "description": "The Wide Flatbed is mounted to the Buffalo Chassis. It provides three hardpoints to mount a variety of equipment such as the Buckboard and Ponderosa. While you need an engineer to attach the flatbed to the chassis, you don't need one to stack equipment.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 200,
         "entry_cost": 2000,
@@ -338,7 +338,7 @@
     {
         "name": "WBI_Flatbed2uStd",
         "title": "Buffalo Flatbed (2U)",
-        "description": "The Standard Flatbed is mounted to the Buffalo Chassis. The 2u simplifies construction a bit by doubling the length of the flatbed. It provides four hardpoints to mount a variety of equipment such as the Buckboard and Ponderosa. While you need an engineer to attach the flatbed to the chassis, you don\u0027t need one to stack equipment.",
+        "description": "The Standard Flatbed is mounted to the Buffalo Chassis. The 2u simplifies construction a bit by doubling the length of the flatbed. It provides four hardpoints to mount a variety of equipment such as the Buckboard and Ponderosa. While you need an engineer to attach the flatbed to the chassis, you don't need one to stack equipment.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 200,
         "entry_cost": 2000,
@@ -360,7 +360,7 @@
     {
         "name": "WBI_Flatbed2uWide",
         "title": "Buffalo Flatbed Wide (2U)",
-        "description": "The Standard Flatbed is mounted to the Buffalo Chassis. The 2u simplifies construction a bit by doubling the length of the flatbed. It provides six hardpoints to mount a variety of equipment such as the Buckboard and Ponderosa. While you need an engineer to attach the flatbed to the chassis, you don\u0027t need one to stack equipment.",
+        "description": "The Standard Flatbed is mounted to the Buffalo Chassis. The 2u simplifies construction a bit by doubling the length of the flatbed. It provides six hardpoints to mount a variety of equipment such as the Buckboard and Ponderosa. While you need an engineer to attach the flatbed to the chassis, you don't need one to stack equipment.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 200,
         "entry_cost": 2000,
@@ -382,7 +382,7 @@
     {
         "name": "WBI_GrapplerArm",
         "title": "Buffalo Grappler Arm",
-        "description": "Whether you\u0027re grabbing asteroids, vessels, or kerbals, the Grappler Arm is for you. Simply bolt one to your craft, arm it, and fly towards the target of your choice. WARNING: do not back objects into an armed grappler, or you\u0027ll tempt the Kraken!",
+        "description": "Whether you're grabbing asteroids, vessels, or kerbals, the Grappler Arm is for you. Simply bolt one to your craft, arm it, and fly towards the target of your choice. WARNING: do not back objects into an armed grappler, or you'll tempt the Kraken!",
         "mod": "WildBlue Buffalo Rover",
         "cost": 750,
         "entry_cost": 5200,
@@ -492,7 +492,7 @@
     {
         "name": "WBI_Outback",
         "title": "Outback ESP",
-        "description": "Sometimes you just need a small pack to carry a handful of items, and the Outback fits the bill. This handy Extravehicular Support Pack (ESP) offers a convenient space to store your stuff along with some extra EVA propellant for a longer ride. Use \u0022X\u0022 to detach from the ship\u0027s hull, and \u0022H\u0022 to attach it again.",
+        "description": "Sometimes you just need a small pack to carry a handful of items, and the Outback fits the bill. This handy Extravehicular Support Pack (ESP) offers a convenient space to store your stuff along with some extra EVA propellant for a longer ride. Use \"X\" to detach from the ship's hull, and \"H\" to attach it again.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 250,
         "entry_cost": 800,
@@ -514,7 +514,7 @@
     {
         "name": "WBI_PlasmaTV",
         "title": "Plasma TV - Small",
-        "description": "Unlike the DSEV graphene radiator, the plasma screen tv can actually display images. It\u0027s perfect for giving your intrepid crew the ability to see around their ship when stuffed in the back of a cargo bay, or for just watching an in-flight movie so they don\u0027t get bored.",
+        "description": "Unlike the DSEV graphene radiator, the plasma screen tv can actually display images. It's perfect for giving your intrepid crew the ability to see around their ship when stuffed in the back of a cargo bay, or for just watching an in-flight movie so they don't get bored.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 200,
         "entry_cost": 800,
@@ -536,7 +536,7 @@
     {
         "name": "WBI_PlasmaTV2",
         "title": "Plasma TV - Medium",
-        "description": "Unlike the DSEV graphene radiator, the plasma screen tv can actually display images. It\u0027s perfect for giving your intrepid crew the ability to see around their ship when stuffed in the back of a cargo bay, or for just watching an in-flight movie so they don\u0027t get bored.",
+        "description": "Unlike the DSEV graphene radiator, the plasma screen tv can actually display images. It's perfect for giving your intrepid crew the ability to see around their ship when stuffed in the back of a cargo bay, or for just watching an in-flight movie so they don't get bored.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 200,
         "entry_cost": 800,
@@ -558,7 +558,7 @@
     {
         "name": "WBI_PlasmaTV3",
         "title": "Plasma TV - Large",
-        "description": "Unlike the DSEV graphene radiator, the plasma screen tv can actually display images. It\u0027s perfect for giving your intrepid crew the ability to see around their ship when stuffed in the back of a cargo bay, or for just watching an in-flight movie so they don\u0027t get bored.",
+        "description": "Unlike the DSEV graphene radiator, the plasma screen tv can actually display images. It's perfect for giving your intrepid crew the ability to see around their ship when stuffed in the back of a cargo bay, or for just watching an in-flight movie so they don't get bored.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 200,
         "entry_cost": 800,
@@ -602,7 +602,7 @@
     {
         "name": "WBI_ScannerArm",
         "title": "Buffalo A.R.C.S. Arm",
-        "description": "The Asteroid Resource Composition Scanner (ARCS) is specially designed for scanning asteroids for their resource content. Simply point it at an asteroid you\u0027re attached to, turn it on, and read the composition report.",
+        "description": "The Asteroid Resource Composition Scanner (ARCS) is specially designed for scanning asteroids for their resource content. Simply point it at an asteroid you're attached to, turn it on, and read the composition report.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 800,
         "entry_cost": 2500,
@@ -668,7 +668,7 @@
     {
         "name": "WBI_Wagon2u",
         "title": "Wagon",
-        "description": "The Wagon is a Buffalo Storage Module that\u0027s capable of holding a variety of items.",
+        "description": "The Wagon is a Buffalo Storage Module that's capable of holding a variety of items.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 1400,
         "entry_cost": 6500,
@@ -690,7 +690,7 @@
     {
         "name": "WBI_WheelJack",
         "title": "Wheel Jack",
-        "description": "Not to be confused with a transforming robot that was voiced by a famous actor, the wheel jack serves as the foundation for building a Buffalo MSEV. Simply bolt it into the ground. If you can run into the wheel jack and move it, then it\u0027s not bolted properly. Once bolted firmly into the ground, attach a Buffalo Assembly Port to the WheelJack\u0027s top node (be sure that the Assembly Port\u0027s RED side is up). Then attach the chassis or other components to the Buffalo Assembly Port. Finally, to detach the assembled vehicle, switch to the space center and back to the rover, then decouple the Assembly Port.",
+        "description": "Not to be confused with a transforming robot that was voiced by a famous actor, the wheel jack serves as the foundation for building a Buffalo MSEV. Simply bolt it into the ground. If you can run into the wheel jack and move it, then it's not bolted properly. Once bolted firmly into the ground, attach a Buffalo Assembly Port to the WheelJack's top node (be sure that the Assembly Port's RED side is up). Then attach the chassis or other components to the Buffalo Assembly Port. Finally, to detach the assembled vehicle, switch to the space center and back to the rover, then decouple the Assembly Port.",
         "mod": "WildBlue Buffalo Rover",
         "cost": 400,
         "entry_cost": 3200,

@@ -68,7 +68,7 @@
     {
         "name": "almaz3-5",
         "title": "Almaz 2/3/5",
-        "description": "Almaz 2, 3 \u0026 5 military orbital laboratory. Salyut ASAS REQUIRED for station to function. Plume configured by RealPlume.",
+        "description": "Almaz 2, 3 & 5 military orbital laboratory. Salyut ASAS REQUIRED for station to function. Plume configured by RealPlume.",
         "mod": "RN Salyut",
         "cost": 22380,
         "entry_cost": 0,
@@ -275,7 +275,9 @@
         "upgrade": false,
         "entry_cost_mods": "50000,almaz3-5",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "rn_almaz_rcs",
@@ -444,7 +446,7 @@
     {
         "name": "salyut1-4",
         "title": "Salyut 1/4",
-        "description": "Salyut 1 \u0026 4 orbital laboratory. Salyut ASAS REQUIRED for station to function. Plume configured by RealPlume.",
+        "description": "Salyut 1 & 4 orbital laboratory. Salyut ASAS REQUIRED for station to function. Plume configured by RealPlume.",
         "mod": "RN Salyut",
         "cost": 19600,
         "entry_cost": 0,

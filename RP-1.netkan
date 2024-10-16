@@ -29,8 +29,6 @@ depends:
     suppress_recommendations: true
   - name: RealSolarSystem
     suppress_recommendations: true
-  - name: MagiCore
-    suppress_recommendations: true
   - name: ClickThroughBlocker
     suppress_recommendations: true
   - name: ToolbarController
@@ -40,6 +38,8 @@ depends:
   - name: KSPCommunityFixes
     suppress_recommendations: true
   - name: KerbalChangelog
+    suppress_recommendations: true
+  - name: ROUtils
     suppress_recommendations: true
 recommends:
   - name: ROLoadingImages
@@ -108,6 +108,7 @@ suggests:
   - name: WernherCheckerContinued
 conflicts:
   - name: RP-0
+  - name: RONoCareer
   - name: KerbalConstructionTime
   - name: CrowdSourcedScience
   - name: HideEmptyTechNodes

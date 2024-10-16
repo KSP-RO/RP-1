@@ -14,15 +14,15 @@ namespace RP0.Harmony
                 || !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
                 return true;
 
-            if (KerbalConstructionTimeData.Instance.TechListHas(__instance.techID))
+            if (SpaceCenterManagement.Instance.TechListHas(__instance.techID))
                 return false;
 
             var tech = new ResearchProject(__instance);
 
-            KerbalConstructionTimeData.Instance.TechList.Add(tech);
-            tech.UpdateBuildRate(KerbalConstructionTimeData.Instance.TechList.Count - 1);
+            SpaceCenterManagement.Instance.TechList.Add(tech);
+            tech.UpdateBuildRate(SpaceCenterManagement.Instance.TechList.Count - 1);
 
-            KCTEvents.OnTechQueued.Fire(__instance);
+            SCMEvents.OnTechQueued.Fire(__instance);
 
             KCTUtilities.AddNodePartsToExperimental(__instance.techID);
 

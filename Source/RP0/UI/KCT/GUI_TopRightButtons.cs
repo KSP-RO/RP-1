@@ -50,7 +50,7 @@ namespace RP0
                     OnHovTexturePath = "GameData/RP-1/PluginData/Icons/KCT_dev_parts_on",
                     TooltipDefaultText = "Show Experimental parts",
                     TooltipOnText = "Hide Experimental parts",
-                    IsOn = KerbalConstructionTimeData.Instance.ExperimentalPartsEnabled
+                    IsOn = SpaceCenterManagement.Instance.ExperimentalPartsEnabled
                 };
                 btn.Init();
                 _buttons.Add(btn);

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UniLinq;
 using Upgradeables;
+using ROUtils;
 
 namespace RP0
 {
@@ -67,7 +68,7 @@ namespace RP0
         {
             get
             {
-                foreach (LCSpaceCenter currentKSC in KerbalConstructionTimeData.Instance.KSCs)
+                foreach (LCSpaceCenter currentKSC in SpaceCenterManagement.Instance.KSCs)
                 {
                     if (currentKSC.LaunchComplexes.FirstOrDefault(x => x.LaunchPads.Contains(this)) is LaunchComplex currentLC)
                     {
@@ -123,12 +124,12 @@ namespace RP0
             level = (int)lvl;
             isOperational = false;
 
-            KerbalConstructionTimeData.Instance.RegisterLP(this);
+            SpaceCenterManagement.Instance.RegisterLP(this);
         }
 
         public bool Delete(out string failReason)
         {
-            foreach (LCSpaceCenter currentKSC in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (LCSpaceCenter currentKSC in SpaceCenterManagement.Instance.KSCs)
             {
                 foreach (LaunchComplex currentLC in currentKSC.LaunchComplexes)
                 {
@@ -158,7 +159,7 @@ namespace RP0
                     
                     try
                     {
-                        KCTEvents.OnPadDismantled?.Fire(this);
+                        SCMEvents.OnPadDismantled?.Fire(this);
                     }
                     catch (Exception ex)
                     {
@@ -167,12 +168,12 @@ namespace RP0
 
                     currentLC.LaunchPads.RemoveAt(idx);
 
-                    if (currentLC == KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC)
+                    if (currentLC == SpaceCenterManagement.Instance.ActiveSC.ActiveLC)
                     {
                         currentLC.SwitchLaunchPad(0);
                     }
 
-                    KerbalConstructionTimeData.Instance.UnregsiterLP(this);
+                    SpaceCenterManagement.Instance.UnregsiterLP(this);
                 }
             }
 
@@ -215,7 +216,7 @@ namespace RP0
 
             try
             {
-                int idx = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LaunchPads.IndexOf(this);
+                int idx = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LaunchPads.IndexOf(this);
                 RP0Debug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
 
                 //set the level to this level

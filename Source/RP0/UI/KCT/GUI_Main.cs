@@ -38,7 +38,7 @@ namespace RP0
                 _windowSkin = GUI.skin;
             GUI.skin = _windowSkin;
 
-            if (_validScenes.Contains(HighLogic.LoadedScene) && KerbalConstructionTimeData.Instance != null)
+            if (_validScenes.Contains(HighLogic.LoadedScene) && SpaceCenterManagement.Instance != null)
             {
                 if (GUIStates.ShowSettings)
                     _presetPosition = DrawWindowWithTooltipSupport(_presetPosition, "DrawPresetWindow", "Settings", DrawPresetWindow);
@@ -120,13 +120,13 @@ namespace RP0
             {
                 if (!_isKSCLocked)
                 {
-                    InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, KerbalConstructionTimeData.KCTKSCLock);
+                    InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, SpaceCenterManagement.KCTKSCLock);
                     _isKSCLocked = true;
                 }
             }
             else if (_isKSCLocked)
             {
-                InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTKSCLock);
+                InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTKSCLock);
                 _isKSCLocked = false;
             }
 
@@ -140,8 +140,8 @@ namespace RP0
 
         public static void ToggleVisibility(bool isVisible)
         {
-            if (KCTEvents.Instance.KCTButtonStockImportant)
-                KCTEvents.Instance.KCTButtonStockImportant = false;
+            if (SCMEvents.Instance.KCTButtonStockImportant)
+                SCMEvents.Instance.KCTButtonStockImportant = false;
 
             if (HighLogic.LoadedScene == GameScenes.FLIGHT && !IsPrimarilyDisabled)
             {
@@ -150,11 +150,11 @@ namespace RP0
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow();
 
-                if (KerbalConstructionTimeData.Instance.IsSimulatedFlight && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
+                if (SpaceCenterManagement.Instance.IsSimulatedFlight && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
                 {
                     GUIStates.ShowAirlaunch = isVisible;
                 }
-                if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+                if (SpaceCenterManagement.Instance.IsSimulatedFlight)
                 {
                     GUIStates.ShowSimulationGUI = isVisible;
                     _simulationWindowPosition.height = 1;
@@ -166,7 +166,7 @@ namespace RP0
                 GUIStates.ShowEditorGUI = isVisible;
                 if (!isVisible)
                     GUIStates.ShowBuildList = false;
-                KerbalConstructionTimeData.ShowWindows[1] = isVisible;
+                SpaceCenterManagement.ShowWindows[1] = isVisible;
             }
             else if ((HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.TRACKSTATION) && !IsPrimarilyDisabled)
             {
@@ -175,7 +175,7 @@ namespace RP0
                 GUIStates.ShowBuildPlansWindow = false;
                 GUIStates.ShowBLPlus = false;
                 ResetBLWindow();
-                KerbalConstructionTimeData.ShowWindows[0] = isVisible;
+                SpaceCenterManagement.ShowWindows[0] = isVisible;
             }
 
             RefreshToolbarState();
@@ -185,11 +185,11 @@ namespace RP0
         {
             if (GUIStates.IsMainGuiVisible)
             {
-                KerbalConstructionTimeData.ToolbarControl.SetTrue(false);
+                SpaceCenterManagement.ToolbarControl.SetTrue(false);
             }
             else
             {
-                KerbalConstructionTimeData.ToolbarControl.SetFalse(false);
+                SpaceCenterManagement.ToolbarControl.SetFalse(false);
             }
         }
 
@@ -202,7 +202,7 @@ namespace RP0
             if (HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.EDITOR)
             {
                 int idx = HighLogic.LoadedScene == GameScenes.SPACECENTER ? 0 : 1;
-                KerbalConstructionTimeData.ShowWindows[idx] = GUIStates.IsMainGuiVisible;
+                SpaceCenterManagement.ShowWindows[idx] = GUIStates.IsMainGuiVisible;
             }
 
             RefreshToolbarState();
@@ -256,6 +256,9 @@ namespace RP0
             GUIStates.ShowPresetSaver = false;
             GUIStates.ShowLaunchSiteSelector = false;
             GUIStates.ShowAirlaunch = false;
+            GUIStates.ShowSimulationGUI = false;
+            GUIStates.ShowSimConfig = false;
+            GUIStates.ShowSimBodyChooser = false;
 
             ResetBLWindow();
         }

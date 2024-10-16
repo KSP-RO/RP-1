@@ -36,14 +36,17 @@ namespace RP0
         private static PropertyInfo _mjDeactivateControl = null;
         private object _masterMechJeb = null;
 
+        public static ControlLocker Instance { get; private set; }
+
         private void Awake()
         {
             if (!_isFirstLoad) return;
             _isFirstLoad = false;
 
-            if (AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2") is var mechJebAssembly &&
-               Type.GetType("MuMech.MechJebCore, MechJeb2") is Type mechJebCore &&
-               Type.GetType("MuMech.VesselExtensions, MechJeb2") is Type mechJebVesselExtensions)
+            var mechJebAssembly = AssemblyLoader.loadedAssemblies.FirstOrDefault(a => a.assembly.GetName().Name == "MechJeb2");
+            if (mechJebAssembly != null &&
+               mechJebAssembly.assembly.GetType("MuMech.MechJebCore") is Type mechJebCore &&
+               mechJebAssembly.assembly.GetType("MuMech.VesselExtensions") is Type mechJebVesselExtensions)
             {
                 _mjDeactivateControl = mechJebCore.GetProperty("DeactivateControl", BindingFlags.Public | BindingFlags.Instance);
                 _getMasterMechJeb = mechJebVesselExtensions.GetMethod("GetMasterMechJeb", BindingFlags.Public | BindingFlags.Static);
@@ -52,6 +55,11 @@ namespace RP0
                 RP0Debug.Log($"{ModTag} MechJeb methods found", true);
             else
                 RP0Debug.Log($"{ModTag} MJ assembly or methods NOT found", true);
+
+            if (Instance != null)
+                Destroy(Instance);
+
+            Instance = this;
         }
 
         private void Start()
@@ -175,6 +183,9 @@ namespace RP0
             GameEvents.onVesselSwitching.Remove(OnVesselSwitchingHandler);
             GameEvents.onVesselGoOnRails.Remove(OnRailsHandler);
             GameEvents.onVesselGoOffRails.Remove(OffRailsHandler);
+
+            if (Instance == this)
+                Instance = null;
         }
 
         private void DisableAutopilot()

@@ -25,7 +25,7 @@
     {
         "name": "proceduralAvionics",
         "title": "Avionics [Procedural]",
-        "description": "This is a procedural avionics unit.  It simply contains a battery and avionics control, so don\u0027t forget to add an antenna.",
+        "description": "This is a procedural avionics unit.  It simply contains a battery and avionics control, so don't forget to add an antenna.",
         "mod": "Procedural Parts",
         "cost": 0,
         "entry_cost": 1,

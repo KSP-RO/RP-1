@@ -33,24 +33,33 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <KSPRoot Condition=" '$(KSPRoot)' == '' ">
+      $(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
+  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp-firstpass.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ContractConfigurator">
+    <Reference Include="$(KSPRoot)/GameData/ContractConfigurator/ContractConfigurator.dll">
+      <HintPath>$(ReferencePath)/ContractConfigurator.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/System.dll">
+      <HintPath>$(ReferencePath)/System.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.CoreModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

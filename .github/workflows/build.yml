@@ -13,6 +13,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+env:
+  KSP_ROOT: /tmp/ksp
+
 # A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
   check-secret:
@@ -25,7 +28,7 @@ jobs:
 
   build:
     # The type of runner that the job will run on
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: [check-secret]
     if: needs.check-secret.outputs.has-password == 'true'
     # Steps represent a sequence of tasks that will be executed as part of the job
@@ -38,9 +41,22 @@ jobs:
 
       - name: Download required assemblies
         id: download-assemblies
-        uses: KSP-RO/BuildTools/download-assemblies@master
+        uses: KSP-RO/BuildTools/download-assemblies-v2@master
         with:
           KSP_ZIP_PASSWORD: ${{ secrets.KSP_ZIP_PASSWORD }}
+          dependency-identifiers: |
+            Harmony2
+            ClickThroughBlocker
+            ContractConfigurator
+            FerramAerospaceResearchContinued
+            Kerbalism
+            KSPCommunityFixes
+            ModularFlightIntegrator
+            RealAntennas
+            RealFuels
+            ROUtils
+            SolverEngines
+            ToolbarController
 
       - name: Get SHA
         id: get-sha
@@ -70,17 +86,22 @@ jobs:
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@AssemblyInformationalVersion
         with:
-          path: ${GITHUB_WORKSPACE}/Source/RP0/Properties/AssemblyInfo.cs
+          path: ${{ github.workspace }}/Source/RP0/Properties/AssemblyInfo.cs
           tag: "3.0.0.0"
           informational-version: ${{env.info_text}}
 
       - name: Build mod solution
-        run: msbuild ${GITHUB_WORKSPACE}/Source/RP0.sln /t:build /restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}"
+        run: msbuild ${{ github.workspace }}/Source/RP0.sln /t:build /restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" /p:KSPRoot="${{ env.KSP_ROOT }}"
+
+      - name: Remove excess DLLs
+        uses: KSP-RO/BuildTools/remove-excess-dlls@master
+        with:
+          path: ${{ github.workspace }}/GameData/
 
       - name: Build metadata
         uses: KSP-RO/BuildTools/update-version-file@master
         with:
-          path: ${GITHUB_WORKSPACE}/GameData/RP-1/RP-1.version
+          path: ${{ github.workspace }}/GameData/RP-1/RP-1.version
           tag: "v3.0.0.0"
 
       - name: Assemble release
@@ -90,11 +111,11 @@ jobs:
           echo "Release dir: ${RELEASE_DIR}"
           mkdir -v "${RELEASE_DIR}"
           echo "::set-output name=release-dir::${RELEASE_DIR}"
-          cp -v -R "${GITHUB_WORKSPACE}/GameData" "${RELEASE_DIR}"
-          cp -v -R "${GITHUB_WORKSPACE}/LICENSE.md" "${RELEASE_DIR}/GameData/RP-1/LICENSE.md"
+          cp -v -R "${{ github.workspace }}/GameData" "${RELEASE_DIR}"
+          cp -v -R "${{ github.workspace }}/LICENSE.md" "${RELEASE_DIR}/GameData/RP-1/LICENSE.md"
 
       - name: Upload artifacts
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v4
         with:
           name: RP-1
           path: ${{ steps.assemble-release.outputs.release-dir }}

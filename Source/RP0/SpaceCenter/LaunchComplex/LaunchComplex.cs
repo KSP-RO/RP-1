@@ -1,7 +1,8 @@
-﻿using System;
+﻿using ROUtils.DataTypes;
+using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using RP0.DataTypes;
 
 namespace RP0
 {
@@ -44,6 +45,8 @@ namespace RP0
         public PersistentObservableList<PadConstructionProject> PadConstructions = new PersistentObservableList<PadConstructionProject>();
         [Persistent]
         public PersistentObservableList<ReconRolloutProject> Recon_Rollout = new PersistentObservableList<ReconRolloutProject>();
+        [Persistent]
+        public PersistentObservableList<VesselRepairProject> VesselRepairs = new PersistentObservableList<VesselRepairProject>();
 
         private double _rate;
         private double _rateHRCapped;
@@ -71,7 +74,7 @@ namespace RP0
             double bpMax = Math.Pow(bp * 0.000015d, 0.75d);
             return Math.Max(MinEngineersConst, (int)Math.Ceiling((tngMax * 0.25d + bpMax * 0.75d) * EngineersPerPacket));
         }
-        public int MaxEngineersFor(VesselProject vp) => vp == null ? MaxEngineers : MaxEngineersFor(vp.GetTotalMass(), vp.buildPoints + vp.integrationPoints, vp.humanRated);
+        public int MaxEngineersFor(VesselProject vp) => vp == null ? MaxEngineers : MaxEngineersFor(vp.GetTotalMass(), vp.buildPoints, vp.humanRated);
 
         private double _strategyRateMultiplier = 1d;
         public double StrategyRateMultiplier => _strategyRateMultiplier;
@@ -127,7 +130,11 @@ namespace RP0
         void added(int idx, ConstructionProject pc) { _ksc.Constructions.Add(pc); }
         void removed(int idx, ConstructionProject pc) { _ksc.Constructions.Remove(pc); }
         void updated() { MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate(); }
-        void lcpUpdated() { RecalculateProjectBP(); }
+        void lcpUpdated()
+        {
+            RecalculateProjectBP();
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
+        }
 
         void AddListeners()
         {
@@ -138,6 +145,7 @@ namespace RP0
             BuildList.Updated += updated;
             Warehouse.Updated += updated;
             Recon_Rollout.Updated += lcpUpdated;
+            VesselRepairs.Updated += lcpUpdated;
         }
         #endregion
 
@@ -161,7 +169,7 @@ namespace RP0
 
             AddListeners();
 
-            KerbalConstructionTimeData.Instance.RegisterLC(this);
+            SpaceCenterManagement.Instance.RegisterLC(this);
         }
 
         public void Modify(LCData data, Guid modId)
@@ -203,10 +211,13 @@ namespace RP0
 
         public bool IsEmpty => LCType == LaunchComplexType.Hangar && BuildList.Count == 0 && Warehouse.Count == 0 && Engineers == 0 && LCData.StartingHangar.Compare(this);
 
-        public bool IsActive => BuildList.Count > 0 || Recon_Rollout.Count > 0;
-        public bool CanDismantle => BuildList.Count == 0 && Warehouse.Count == 0 && !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning);
-        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 && Recon_Rollout.Count == 0;
-        public bool CanModifyReal => Recon_Rollout.Count == 0;
+        public bool IsActive => BuildList.Count > 0 || GetAllLCOps().Any(op => !op.IsComplete() && op.KeepsLCActive);
+        public bool CanDismantle => CanModifyButton;
+        public bool CanModifyButton => BuildList.Count == 0 && Warehouse.Count == 0 &&
+                                       !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning) &&
+                                       VesselRepairs.Count == 0;
+        public bool CanModifyReal => !Recon_Rollout.Any(r => r.RRType != ReconRolloutProject.RolloutReconType.Reconditioning) &&
+                                     VesselRepairs.Count == 0;
         public bool CanIntegrate => ProjectBPTotal == 0d;
 
         private double _projectBPTotal = -1d;
@@ -215,7 +226,7 @@ namespace RP0
         public double RecalculateProjectBP()
         {
             _projectBPTotal = 0d;
-            foreach (var r in Recon_Rollout)
+            foreach (var r in GetAllLCOps())
             {
                 if (!r.IsBlocking || r.IsComplete())
                     continue;
@@ -246,8 +257,8 @@ namespace RP0
             foreach (var vp in BuildList)
                 vp.UpdateBuildRate();
 
-            foreach (var rr in Recon_Rollout)
-                rr.UpdateBuildRate();
+            foreach (var op in GetAllLCOps())
+                op.UpdateBuildRate();
 
             RecalculateProjectBP();
 
@@ -357,16 +368,18 @@ namespace RP0
         public void Delete()
         {
             if (_efficiencySource == null)
-                KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(this, out _efficiencySource);
+                SpaceCenterManagement.Instance.LCToEfficiency.TryGetValue(this, out _efficiencySource);
             if (_efficiencySource != null)
                 _efficiencySource.RemoveLC(this);
             else
                 LCEfficiency.ClearEmpty();
 
             foreach (var lp in LaunchPads)
-                KerbalConstructionTimeData.Instance.UnregsiterLP(lp);
+                SpaceCenterManagement.Instance.UnregsiterLP(lp);
 
-            KerbalConstructionTimeData.Instance.UnregisterLC(this);
+            SpaceCenterManagement.Instance.UnregisterLC(this);
+            if (SpaceCenterManagement.Instance.staffTarget.LCID == ID)
+                SpaceCenterManagement.Instance.staffTarget.Clear();
 
             int index = KSC.LaunchComplexes.IndexOf(this);
             KSC.LaunchComplexes.RemoveAt(index);
@@ -383,9 +396,9 @@ namespace RP0
         {
             ConfigNode.LoadObjectFromConfig(this, node);
 
-            if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < KerbalConstructionTimeData.VERSION)
+            if (SpaceCenterManagement.Instance.LoadedSaveVersion < SpaceCenterManagement.VERSION)
             {
-                if (KerbalConstructionTimeData.Instance.LoadedSaveVersion < 6)
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 6)
                 {
                     var alNode = node.GetNode("Airlaunch_Prep");
                     if (alNode != null && alNode.nodes.Count > 0)
@@ -404,9 +417,17 @@ namespace RP0
                         Recon_Rollout.AddRange(temp);
                     }
                 }
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 8)
+                {
+                    var keys = new System.Collections.Generic.List<string>(_lcData.resourcesHandled.Keys);
+                    foreach (var k in keys)
+                    {
+                        _lcData.resourcesHandled[k] = Math.Ceiling(_lcData.resourcesHandled[k]);
+                    }
+                }
             }
 
-            foreach (var rr in Recon_Rollout)
+            foreach (var rr in GetAllLCOps())
                 rr.LC = this;
 
             foreach (var vp in BuildList)
@@ -424,14 +445,27 @@ namespace RP0
             foreach (var pc in PadConstructions)
                 added(i++, pc);
 
-            KerbalConstructionTimeData.Instance.RegisterLC(this);
+            SpaceCenterManagement.Instance.RegisterLC(this);
             foreach(var lp in LaunchPads)
-                KerbalConstructionTimeData.Instance.RegisterLP(lp);
+                SpaceCenterManagement.Instance.RegisterLP(lp);
 
             if (HighLogic.LoadedSceneIsEditor)
             {
                 // Editor scene needs LC rates to show build time estimates
                 CalculateAndSetRates();
+            }
+        }
+
+        public IEnumerable<LCOpsProject> GetAllLCOps()
+        {
+            foreach (var item in Recon_Rollout)
+            {
+                yield return item;
+            }
+
+            foreach (var item in VesselRepairs)
+            {
+                yield return item;
             }
         }
 

@@ -22,14 +22,14 @@ namespace RP0.Harmony
         private static void FixActiveLC(EditorFacility facility)
         {
             var type = facility == EditorFacility.SPH ? LaunchComplexType.Hangar : LaunchComplexType.Pad;
-            if (KerbalConstructionTimeData.Instance?.ActiveSC.ActiveLC.LCType != type)
+            if (SpaceCenterManagement.Instance?.ActiveSC.ActiveLC.LCType != type)
             {
-                for (int i = 0; i < KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes.Count; ++i)
+                for (int i = 0; i < SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count; ++i)
                 {
-                    var lc = KerbalConstructionTimeData.Instance.ActiveSC.LaunchComplexes[i];
+                    var lc = SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes[i];
                     if (lc.IsOperational && lc.LCType == type)
                     {
-                        KerbalConstructionTimeData.Instance.ActiveSC.SwitchLaunchComplex(i);
+                        SpaceCenterManagement.Instance.ActiveSC.SwitchLaunchComplex(i);
                         return;
                     }
                 }

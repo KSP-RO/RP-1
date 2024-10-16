@@ -184,7 +184,7 @@
     {
         "name": "SOYUZ_REENTRY_CAPSULE",
         "title": "Soyuz TM/TMA/MS Descent Module",
-        "description": "The Soyuz Descent Module (SA) is where the crew sits during both ascent and reentry. It\u0027s equipped with basic life support, RCS for control during reentry and landing engines for softening the landing. Another notable feature is the offset COM, which allows the pod to generate lifting force during reentry and allow a small degree of control over it\u0027s landing zone. Plume configured by RealPlume.",
+        "description": "The Soyuz Descent Module (SA) is where the crew sits during both ascent and reentry. It's equipped with basic life support, RCS for control during reentry and landing engines for softening the landing. Another notable feature is the offset COM, which allows the pod to generate lifting force during reentry and allow a small degree of control over it's landing zone. Plume configured by RealPlume.",
         "mod": "DECQ Soyuz",
         "cost": 280,
         "entry_cost": 6400,
@@ -279,7 +279,7 @@
     {
         "name": "SOYUZdockingPort",
         "title": "Soyuz/Progress Docking System",
-        "description": "The Soyuz and Progress docking system is the male part of a probe and drogue system. It\u0027s equipped with a rendezvous antenna and the soft-docking system. To use the docking system first extend the probe and then dock the two spacecraft. The probe will prevent them from connecting so that the Soyuz spacecraft can be rotated precisely to the desired position. Once that is done the probe is retracted, allowing hard docking to take place.",
+        "description": "The Soyuz and Progress docking system is the male part of a probe and drogue system. It's equipped with a rendezvous antenna and the soft-docking system. To use the docking system first extend the probe and then dock the two spacecraft. The probe will prevent them from connecting so that the Soyuz spacecraft can be rotated precisely to the desired position. Once that is done the probe is retracted, allowing hard docking to take place.",
         "mod": "DECQ Soyuz",
         "cost": 280,
         "entry_cost": 6400,

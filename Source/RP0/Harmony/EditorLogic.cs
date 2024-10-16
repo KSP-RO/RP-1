@@ -11,8 +11,8 @@ namespace RP0.Harmony
         {
             if (PresetManager.Instance.ActivePreset?.GeneralSettings?.Enabled != true) return;
 
-            KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
-            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ID;
+            SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, false);
+            SpaceCenterManagement.Instance.LaunchedVessel.LCID = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ID;
         }
     }
 }

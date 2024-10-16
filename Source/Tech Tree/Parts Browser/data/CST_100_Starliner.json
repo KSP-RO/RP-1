@@ -68,7 +68,7 @@
     {
         "name": "CST-100?Heat?Shield",
         "title": "CST-100 Heat Shield",
-        "description": "The heat shield for CST-100 \u0022Starliner\u0022 command module.",
+        "description": "The heat shield for CST-100 \"Starliner\" command module.",
         "mod": "CST-100 Starliner",
         "cost": 3600,
         "entry_cost": 0,
@@ -90,7 +90,7 @@
     {
         "name": "CST-100?Service?Module",
         "title": "CST-100 Service Module",
-        "description": "The service module for the CST-100 \u0022Starliner\u0022 spacecraft.",
+        "description": "The service module for the CST-100 \"Starliner\" spacecraft.",
         "mod": "CST-100 Starliner",
         "cost": 5000,
         "entry_cost": 0,
@@ -114,7 +114,7 @@
     {
         "name": "CST-100?capsule",
         "title": "CST-100 Command Module",
-        "description": "The command module of the CST-100 \u0022Starliner\u0022 Commercial Crew Transportation System (COTS). Designed to be reusable for up to 10 times.",
+        "description": "The command module of the CST-100 \"Starliner\" Commercial Crew Transportation System (COTS). Designed to be reusable for up to 10 times.",
         "mod": "CST-100 Starliner",
         "cost": 34000,
         "entry_cost": 0,
@@ -140,7 +140,7 @@
     {
         "name": "RS88",
         "title": "CST-100 Launch Abort Engines (LAE)",
-        "description": "The launch abort system of the CST-100 \u0022Starliner\u0022 spacecraft. Uses four RS-88 engines (hypergolic variant). Plume configured by RealPlume.",
+        "description": "The launch abort system of the CST-100 \"Starliner\" spacecraft. Uses four RS-88 engines (hypergolic variant). Plume configured by RealPlume.",
         "mod": "CST-100 Starliner",
         "cost": 166,
         "entry_cost": 0,
@@ -186,7 +186,7 @@
     {
         "name": "cstparachute",
         "title": "CST-100 Parachute Pack",
-        "description": "The parachute pack for the CST-100 \u0022Starliner\u0022 command module.",
+        "description": "The parachute pack for the CST-100 \"Starliner\" command module.",
         "mod": "CST-100 Starliner",
         "cost": 0,
         "entry_cost": 1,

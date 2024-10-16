@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -23,7 +24,7 @@ namespace RP0
                 GUIStates.ShowSimulationGUI = false;
                 KCTUtilities.EnableSimulationLocks();
                 FlightDriver.RevertToLaunch();
-                KerbalConstructionTimeData.Instance.SimulationParams.Reset();
+                SpaceCenterManagement.Instance.SimulationParams.Reset();
                 _centralWindowPosition.height = 1;
             }
 
@@ -50,11 +51,11 @@ namespace RP0
 
         public static void DrawSimulationConfigure(int windowID)
         {
-            SimulationParams simParams = KerbalConstructionTimeData.Instance.SimulationParams;
+            SimulationParams simParams = SpaceCenterManagement.Instance.SimulationParams;
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Body: ");
-            if (simParams == null) simParams = KerbalConstructionTimeData.Instance.SimulationParams = new SimulationParams();
+            if (simParams == null) simParams = SpaceCenterManagement.Instance.SimulationParams = new SimulationParams();
             if (simParams.SimulationBody == null)
             {
                 simParams.SimulationBody = Planetarium.fetch.Home;
@@ -108,10 +109,10 @@ namespace RP0
             _UTString = GUILayout.TextField(_UTString, GUILayout.Width(110));
             _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the amount of time entered onto the field. Otherwise the date and time will be set to entered value."));
             GUILayout.EndHorizontal();
-            GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"1960-01-01 15:30\"");
+            GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"1960-12-31 23:59\"");
             GUILayout.Space(4);
 
-            if (KCTUtilities.IsTestFlightInstalled || KCTUtilities.IsTestLiteInstalled)
+            if (ModUtils.IsTestFlightInstalled || ModUtils.IsTestLiteInstalled)
             {
                 simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures");
                 GUILayout.Space(4);
@@ -144,7 +145,7 @@ namespace RP0
             {
                 if (GUILayout.Button(body.bodyName))
                 {
-                    KerbalConstructionTimeData.Instance.SimulationParams.SimulationBody = body;
+                    SpaceCenterManagement.Instance.SimulationParams.SimulationBody = body;
                     GUIStates.ShowSimBodyChooser = false;
                     GUIStates.ShowSimConfig = true;
                     _centralWindowPosition.height = 1;
@@ -159,7 +160,7 @@ namespace RP0
 
         private static void StartSim(SimulationParams simParams)
         {
-            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+            if (SpaceCenterManagement.Instance.IsSimulatedFlight)
             {
                 string msg = "Current save already appears to be a simulation. Starting a simulation inside a simulation isn't allowed.";
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "simErrorPopup", "Simulation error", msg, "Understood", false, HighLogic.UISkin).HideGUIsWhilePopup();
@@ -191,7 +192,7 @@ namespace RP0
 
             double currentUT = Planetarium.GetUniversalTime();
             double ut = 0;
-            if (!string.IsNullOrWhiteSpace(_UTString) && !DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
+            if (!string.IsNullOrWhiteSpace(_UTString) && !ROUtils.DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
             {
                 var message = new ScreenMessage("Please enter a valid time value.", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
@@ -215,7 +216,7 @@ namespace RP0
                 return;
             }
 
-            if (KCTUtilities.IsPrincipiaInstalled && simParams.SimulationUT != 0 && simParams.SimulationUT < currentUT + 0.5)
+            if (ModUtils.IsPrincipiaInstalled && simParams.SimulationUT != 0 && simParams.SimulationUT < currentUT + 0.5)
             {
                 var message = new ScreenMessage("Going backwards in time isn't allowed with Principia", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
@@ -234,9 +235,9 @@ namespace RP0
 
             // Create the LaunchedVessel fresh instead of cloning the EditorVessel, since it's possible that the player
             // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.
-            KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
+            SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
             // Just in case, let's set the LCID
-            KerbalConstructionTimeData.Instance.LaunchedVessel.LCID = KerbalConstructionTimeData.EditorShipEditingMode ? KerbalConstructionTimeData.Instance.EditedVessel.LCID : KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ID;
+            SpaceCenterManagement.Instance.LaunchedVessel.LCID = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LCID : SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ID;
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)
@@ -244,13 +245,16 @@ namespace RP0
                 manifest = HighLogic.CurrentGame.CrewRoster.DefaultCrewForVessel(EditorLogic.fetch.ship.SaveShip(), null, true);
             }
             EditorLogic.fetch.ship.SaveShip().Save(tempFile);
-            KerbalConstructionTimeData.Instance.IsSimulatedFlight = true;
+            SpaceCenterManagement.Instance.IsSimulatedFlight = true;
             string launchSiteName = EditorLogic.fetch.launchSiteName;
-            if (launchSiteName == "LaunchPad" && KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad)
+            if (launchSiteName == "LaunchPad" && SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad)
             {
-                launchSiteName = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName;
+                launchSiteName = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName;
             }
-            FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
+            SpaceCenterManagement.Instance.StartCoroutine(CallbackUtil.DelayedCallback(1, delegate
+            {
+                FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
+            }));
         }
     }
 }

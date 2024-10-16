@@ -1,4 +1,5 @@
 ﻿using HarmonyLib;
+using System;
 using System.Reflection;
 
 namespace RP0.Harmony
@@ -6,22 +7,22 @@ namespace RP0.Harmony
     [HarmonyPatch]
     internal class PatchKSCSwitcher
     {
-        internal static readonly System.Type KSCSwitcherType = AccessTools.TypeByName("regexKSP.KSCSwitcher");
+        internal static readonly System.Type _type = AccessTools.TypeByName("regexKSP.KSCSwitcher");
 
-        internal static MethodBase TargetMethod() => KSCSwitcherType == null ? null : AccessTools.Method(KSCSwitcherType, "SetSite", new System.Type[] { typeof(ConfigNode) });
+        internal static MethodBase TargetMethod() => AccessTools.Method(_type, "SetSite", new Type[] { typeof(ConfigNode) });
 
         [HarmonyPrepare]
         internal static bool Prepare()
         {
-            return KSCSwitcherType != null;
+            return _type != null;
         }
 
         [HarmonyPostfix]
         internal static void Postfix_SetSite(ConfigNode KSC, bool __result)
         {
-            if (__result && KerbalConstructionTimeData.Instance != null)
+            if (__result && SpaceCenterManagement.Instance != null)
             {
-                KerbalConstructionTimeData.Instance.SetActiveKSC(KSC.name);
+                SpaceCenterManagement.Instance.SetActiveKSC(KSC.GetValue("name"));
             }
         }
     }

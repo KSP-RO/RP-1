@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using UniLinq;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 
 namespace RP0
 {
@@ -20,7 +20,6 @@ namespace RP0
         public PersistentObservableList<LCConstructionProject> LCConstructions = new PersistentObservableList<LCConstructionProject>();
         [Persistent]
         public PersistentObservableList<FacilityUpgradeProject> FacilityUpgrades = new PersistentObservableList<FacilityUpgradeProject>();
-                
 
         public List<ConstructionProject> Constructions = new List<ConstructionProject>();
 
@@ -28,6 +27,8 @@ namespace RP0
 
         public const int HangarIndex = 0;
         public LaunchComplex Hangar => LaunchComplexes[HangarIndex];
+
+        public string AssociatedGroundStation => KSCSwitcherInterop.GetGroundStationForKSC(KSCName);
 
         void added(int idx, ConstructionProject item) { Constructions.Add(item); }
         void removed(int idx, ConstructionProject item) { Constructions.Remove(item); }
@@ -151,9 +152,9 @@ namespace RP0
 
             if (HighLogic.LoadedSceneIsEditor)
             {
-                if (!KerbalConstructionTimeData.EditorShipEditingMode)
-                    KerbalConstructionTimeData.Instance.EditorVessel.LCID = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.ID;
-                KerbalConstructionTimeData.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, Harmony.PatchEngineersReport.UpdateCraftStats));
+                if (!SpaceCenterManagement.EditorShipEditingMode)
+                    SpaceCenterManagement.Instance.EditorVessel.LCID = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ID;
+                SpaceCenterManagement.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, Harmony.PatchEngineersReport.UpdateCraftStats));
             }
 
             LaunchComplexes[LC_index].SwitchLaunchPad();

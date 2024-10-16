@@ -83,7 +83,7 @@ namespace RP0
 
         public void RenderSummaryTab()
         {
-            if (KerbalConstructionTimeData.Instance == null)
+            if (SpaceCenterManagement.Instance == null)
                 return;
 
             double totalCost = 0d;
@@ -185,7 +185,7 @@ namespace RP0
             double rolloutCost = 0d;
             try
             {
-                rolloutCost = KerbalConstructionTimeData.Instance.GetRolloutCostOverTime(PeriodFactor * 86400d);
+                rolloutCost = SpaceCenterManagement.Instance.GetReconRolloutCostOverTime(PeriodFactor * 86400d);
                 GUILayout.Label("Rollout/Airlaunch Prep", HighLogic.Skin.label, GUILayout.Width(160));
                 GUILayout.Label(FormatCost(rolloutCost), RightLabel, GUILayout.Width(160));
             }
@@ -196,7 +196,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            double constrMaterials = KerbalConstructionTimeData.Instance.GetConstructionCostOverTime(PeriodFactor * 86400d);
+            double constrMaterials = SpaceCenterManagement.Instance.GetConstructionCostOverTime(PeriodFactor * 86400d);
             GUILayout.Label("Constructions", HighLogic.Skin.label, GUILayout.Width(160));
             GUILayout.Label(FormatCost(constrMaterials), RightLabel, GUILayout.Width(160));
             if (GUILayout.Button(_infoBtnContent, InfoButton))
@@ -226,9 +226,9 @@ namespace RP0
             GUILayout.Label("Unlock Credit", HighLogic.Skin.label, GUILayout.Width(160));
             double unlockCredit = 0d;
             double accumTime = 0d;
-            for (int i = 0; i < KerbalConstructionTimeData.Instance.TechList.Count && accumTime < utDelta; ++i)
+            for (int i = 0; i < SpaceCenterManagement.Instance.TechList.Count && accumTime < utDelta; ++i)
             {
-                var tech = KerbalConstructionTimeData.Instance.TechList[i];
+                var tech = SpaceCenterManagement.Instance.TechList[i];
                 double buildTime = tech.BuildRate > 0d ? tech.TimeLeft : tech.GetTimeLeftEst(accumTime);
                 double timeLeft = utDelta - accumTime;
                 if (buildTime > timeLeft)
@@ -241,27 +241,49 @@ namespace RP0
             GUILayout.Label(FormatCost(CurrencyUtils.Rate(TransactionReasonsRP0.RateUnlockCreditIncrease) * unlockCredit), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
-            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && GUILayout.Button(new GUIContent("Warp to Fund Target", "Warps to the fund target you specify in the resulting dialog"), HighLogic.Skin.button))
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER &&
+                GUILayout.Button(new GUIContent("Warp to Fund Target", "Warps to the fund target you specify in the resulting dialog"), HighLogic.Skin.button))
             {
-                InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "warptofunds");
-                UIHolder.Instance.HideWindow();
+                ShowWarpToFundsDlg();
+            }
+        }
+
+        private void ShowWarpToFundsDlg()
+        {
+            InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "warptofunds");
+            UIHolder.Instance.HideWindow();
+            if (SpaceCenterManagement.Instance.staffTarget.IsValid)
+            {
+                string msg = "This functionality cannot be used while there's automatic staff hiring in progress.";
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                    new MultiOptionDialog("warpToFunds", msg, "Warp To Funds", HighLogic.UISkin,
+                        new DialogGUIButton("Understood", () =>
+                        {
+                            UIHolder.Instance.ShowWindow();
+                            InputLockManager.RemoveControlLock("warptofunds");
+                        })
+                    ), false, HighLogic.UISkin);
+            }
+            else
+            {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("warpToFunds", "Fund Target", "Warp To Funds", HighLogic.UISkin,
-                    new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
-                    {
-                        warpToFundsString = n;
-                        return warpToFundsString;
-                    }, 24f),
-                    new DialogGUIButton("Estimate Time", () => { ConfirmWarpDialog(); }),
-                    new DialogGUIButton("Cancel", () => { 
-                        UIHolder.Instance.ShowWindow();
-                        InputLockManager.RemoveControlLock("warptofunds");
-                    })
+                        new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
+                        {
+                            warpToFundsString = n;
+                            return warpToFundsString;
+                        }, 24f),
+                        new DialogGUIButton("Estimate Time", () => { ShowConfirmWarpDialog(); }),
+                        new DialogGUIButton("Cancel", () =>
+                        {
+                            UIHolder.Instance.ShowWindow();
+                            InputLockManager.RemoveControlLock("warptofunds");
+                        })
                     ), false, HighLogic.UISkin);
             }
         }
 
-        private void ConfirmWarpDialog()
+        private void ShowConfirmWarpDialog()
         {
             if (!double.TryParse(warpToFundsString, out double fundTarget))
             {
@@ -288,7 +310,7 @@ namespace RP0
                     {
                         UIHolder.Instance.ShowWindow();
                         InputLockManager.RemoveControlLock("warptofunds");
-                        KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                        SpaceCenterManagement.Instance.fundTarget.Clear();
                     })), false, HighLogic.UISkin);
                     return;
                 }
@@ -305,7 +327,7 @@ namespace RP0
                         new DialogGUIButton("Understood", () => {
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
-                            KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                            SpaceCenterManagement.Instance.fundTarget.Clear();
                         })), false, HighLogic.UISkin);
                 }
                 else
@@ -313,21 +335,21 @@ namespace RP0
                     var options = new DialogGUIBase[] {
                         new DialogGUIButton("Yes, Warp", () => 
                         {
-                            KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                            SpaceCenterManagement.Instance.fundTarget.Clear();
                             KCTWarpController.Create(target);
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         }),
                         new DialogGUIButton("Add Warp Target", () =>
                         {
-                            KerbalConstructionTimeData.Instance.fundTarget = target;
+                            SpaceCenterManagement.Instance.fundTarget = target;
                             target.SetAutoWarp(false);
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         }),
                         new DialogGUIButton("Cancel", () => 
                         {
-                            KerbalConstructionTimeData.Instance.fundTarget.Clear();
+                            SpaceCenterManagement.Instance.fundTarget.Clear();
                             UIHolder.Instance.ShowWindow();
                             InputLockManager.RemoveControlLock("warptofunds");
                         })
@@ -340,7 +362,7 @@ namespace RP0
 
         public void RenderFacilitiesTab()
         {
-            if (KerbalConstructionTimeData.Instance == null)
+            if (SpaceCenterManagement.Instance == null)
                 return;
 
             GUILayout.BeginHorizontal();
@@ -350,7 +372,7 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             double grandTotal = 0d;
-            foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (var ksc in SpaceCenterManagement.Instance.KSCs)
             {
                 string site = LocalizeSiteName(ksc.KSCName);
                 GUILayout.BeginHorizontal();
@@ -414,7 +436,7 @@ namespace RP0
 
         public void RenderIntegrationTab()
         {
-            if (KerbalConstructionTimeData.Instance == null)
+            if (SpaceCenterManagement.Instance == null)
                 return;
 
             GUILayout.BeginHorizontal();
@@ -462,7 +484,7 @@ namespace RP0
 
         public void RenderConstructionTab()
         {
-            if (KerbalConstructionTimeData.Instance == null)
+            if (SpaceCenterManagement.Instance == null)
                 return;
 
             double totalCost = 0d;
@@ -472,7 +494,7 @@ namespace RP0
             GUILayout.Label(")", HighLogic.Skin.label);
             GUILayout.EndHorizontal();
 
-            foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (var ksc in SpaceCenterManagement.Instance.KSCs)
             {
                 string site = LocalizeSiteName(ksc.KSCName);
                 if (ksc.Constructions.Count == 0)
@@ -481,7 +503,7 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    double cost = KerbalConstructionTimeData.Instance.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc);
+                    double cost = SpaceCenterManagement.Instance.GetConstructionCostOverTime(PeriodFactor * 86400d, ksc);
                     totalCost += cost;
                     GUILayout.Label(site, HighLogic.Skin.label, GUILayout.Width(160));
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));

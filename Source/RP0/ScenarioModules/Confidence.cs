@@ -44,6 +44,11 @@ namespace RP0
             GameEvents.Modifiers.OnCurrencyModified.Remove(OnCurrenciesModified);
         }
 
+        public void SetConfidence(float value)
+        {
+            confidence = value;
+        }
+
         public void AddConfidence(float delta, TransactionReasons reason)
         {
             // We'll apply the total change in OnCurrenciesModified
@@ -56,11 +61,12 @@ namespace RP0
         {
             float sciDelta = query.GetInput(Currency.Science);
             float conf = 0f;
-            // Annoyingly Kerbalism uses TransactionReason.None
-            if (sciDelta > 0f && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
+            // Annoyingly Kerbalism uses TransactionReason.None for science transmission
+            if (!SpaceCenterManagement.IsRefundingScience && sciDelta > 0f 
+                && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
             {
                 if (Programs.ProgramHandler.Settings != null)
-                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)KerbalConstructionTimeData.Instance.SciPointsTotal)) * sciDelta;
+                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)SpaceCenterManagement.Instance.SciPointsTotal)) * sciDelta;
                 else
                     conf = sciDelta * 2f;
 

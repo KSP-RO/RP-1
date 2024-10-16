@@ -7,7 +7,8 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.Profiling;
 using KCTUtils = RP0.KCTUtilities;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
+using ROUtils;
 
 namespace RP0.Crew
 {
@@ -227,7 +228,7 @@ namespace RP0.Crew
                 ap.partPrefab.Modules.Contains<KerbalSeat>() || KCTUtils.IsClamp(ap.partPrefab)) return;
 
             bool hasTech = !string.IsNullOrEmpty(ap.TechRequired);
-            bool isKCTExperimentalNode = hasTech && KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired);
+            bool isKCTExperimentalNode = hasTech && SpaceCenterManagement.Instance.TechListHas(ap.TechRequired);
             bool isPartUnlocked = !hasTech || (!isKCTExperimentalNode && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available);
 
             if (!isKCTExperimentalNode && !isPartUnlocked)
@@ -288,14 +289,15 @@ namespace RP0.Crew
                 return false;
 
             if (!HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsTrainingEnabled
-                || KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+                || SpaceCenterManagement.Instance.IsSimulatedFlight)
                 return true;
 
             // If part doesn't have a training associated with it, abort
             if (!TrainingDatabase.TrainingExists(partName, out string training))
                 return true;
 
-            return includeProf ? Instance.NautHasTrainingForPart(pcm, training, includeMission) : includeMission ? Instance.NautHasMissionTrainingForPart(pcm, training) : true;
+            return includeProf ? Instance.NautHasTrainingForPart(pcm, training, includeMission)
+                : includeMission && Instance.IsMissionTrainingEnabled ? Instance.NautHasMissionTrainingForPart(pcm, training) : true;
         }
 
         public static bool CanCrewLaunchOnVessel(ProtoCrewMember pcm, List<Part> parts)
@@ -331,7 +333,7 @@ namespace RP0.Crew
                 if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
                         continue;
 
-                if (lacksMission)
+                if (lacksMission && IsMissionTrainingEnabled)
                 {
                     if (e.type == TrainingType_Mission && e.target == partName)
                     {
@@ -626,8 +628,9 @@ namespace RP0.Crew
                                              sb.ToString(),
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              true,
-                                             HighLogic.UISkin)
-                    .PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
+                                             HighLogic.UISkin,
+                                             !HighLogic.LoadedSceneIsFlight)
+                    .PrePostActionsNonFlight(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "RP0CrewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
         }
 
@@ -1023,11 +1026,15 @@ namespace RP0.Crew
             if (!HighLogic.LoadedSceneIsFlight) yield return null;
             yield return new WaitForFixedUpdate();
 
-            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight && FlightGlobals.ActiveVessel != null)
+            if (SpaceCenterManagement.Instance.IsSimulatedFlight && FlightGlobals.ActiveVessel != null)
             {
                 foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
                 {
                     pcm.inactive = false;
+                    if (pcm.type == ProtoCrewMember.KerbalType.Applicant)
+                    {
+                        pcm.type = ProtoCrewMember.KerbalType.Crew;
+                    }
                 }
             }
         }

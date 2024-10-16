@@ -19,3 +19,4 @@ NonReentryRated,
 UnpressurizedCockpit,
 NuclearRTG,Tag
 isDynamic,TagSetting
+TankIsogrid,Tag

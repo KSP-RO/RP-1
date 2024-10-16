@@ -28,11 +28,23 @@ namespace RP0
         public override void Load(ConfigNode node)
         {
             base.Load(node);
+
+            if (SpaceCenterManagement.Instance.LoadedSaveVersion < SpaceCenterManagement.VERSION)
+            {
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 8)
+                {
+                    var keys = new System.Collections.Generic.List<string>(lcData.resourcesHandled.Keys);
+                    foreach (var k in keys)
+                    {
+                        lcData.resourcesHandled[k] = Math.Ceiling(lcData.resourcesHandled[k]);
+                    }
+                }
+            }
         }
 
         protected override void ProcessComplete()
         {
-            if (!KerbalConstructionTimeData.Instance.ErroredDuringOnLoad)
+            if (!SpaceCenterManagement.Instance.ErroredDuringOnLoad)
             {
                 LaunchComplex lc = KSC.LaunchComplexes.Find(l => l.ID == lcID);
                 lc.IsOperational = true;
@@ -44,7 +56,7 @@ namespace RP0
 
                 try
                 {
-                    KCTEvents.OnLCConstructionComplete?.Fire(this, lc);
+                    SCMEvents.OnLCConstructionComplete?.Fire(this, lc);
                 }
                 catch (Exception ex)
                 {
@@ -94,7 +106,7 @@ namespace RP0
 
             try
             {
-                KCTEvents.OnLCConstructionCancel?.Fire(this, lc);
+                SCMEvents.OnLCConstructionCancel?.Fire(this, lc);
             }
             catch (Exception ex)
             {
@@ -113,7 +125,6 @@ namespace RP0
             if (engToAssign > 0)
             {
                 KCTUtilities.ChangeEngineers(lc, engToAssign);
-                lc.RecalculateBuildRates();
             }
         }
     }

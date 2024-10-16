@@ -44,7 +44,7 @@ namespace RP0.Crew
                     if (string.IsNullOrEmpty(ap.TechRequired))
                         return true;
 
-                    if (!KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired) && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available)
+                    if (!SpaceCenterManagement.Instance.TechListHas(ap.TechRequired) && ResearchAndDevelopment.GetTechnologyState(ap.TechRequired) == RDTech.State.Available)
                         return true;
                 }
 

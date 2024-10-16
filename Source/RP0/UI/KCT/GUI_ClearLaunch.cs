@@ -12,7 +12,7 @@ namespace RP0
             {
                 GUIStates.ShowClearLaunch = false;
 
-                List<ProtoVessel> list = ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, KerbalConstructionTimeData.Instance.LaunchedVessel.launchSite);
+                List<ProtoVessel> list = ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, SpaceCenterManagement.Instance.LaunchedVessel.launchSite);
                 foreach (ProtoVessel pv in list)
                     ShipConstruction.RecoverVesselFromFlight(pv, HighLogic.CurrentGame.flightState);
 
@@ -22,9 +22,9 @@ namespace RP0
                 }
                 else
                 {
-                    if (!KerbalConstructionTimeData.Instance.LaunchedVessel.IsCrewable())
+                    if (!SpaceCenterManagement.Instance.LaunchedVessel.IsCrewable())
                     {
-                        KerbalConstructionTimeData.Instance.LaunchedVessel.Launch();
+                        SpaceCenterManagement.Instance.LaunchedVessel.Launch();
                     }
                     else
                     {
@@ -37,7 +37,7 @@ namespace RP0
 
             if (GUILayout.Button("Cancel"))
             {
-                KerbalConstructionTimeData.Instance.LaunchedVessel = new VesselProject();
+                SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject();
                 GUIStates.ShowClearLaunch = false;
                 GUIStates.ShowAirlaunch = false;
                 GUIStates.ShowBuildList = true;

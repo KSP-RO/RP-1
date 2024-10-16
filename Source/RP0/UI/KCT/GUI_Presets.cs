@@ -1,5 +1,6 @@
 ﻿using System;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0
 {
@@ -41,7 +42,7 @@ namespace RP0
             {
                 SetNewWorkingPreset(null, true);
             }
-            if (_isChanged && _presetIndex < presetShortNames.Length - 1 && !KCTUtilities.ConfigNodesAreEquivalent(_workingPreset.AsConfigNode(), PresetManager.Instance.Presets[_presetIndex].AsConfigNode())) //!KCT_PresetManager.Instance.PresetsEqual(WorkingPreset, KCT_PresetManager.Instance.Presets[presetIndex], true)
+            if (_isChanged && _presetIndex < presetShortNames.Length - 1 && !KSPUtils.ConfigNodesAreEquivalent(_workingPreset.AsConfigNode(), PresetManager.Instance.Presets[_presetIndex].AsConfigNode())) //!KCT_PresetManager.Instance.PresetsEqual(WorkingPreset, KCT_PresetManager.Instance.Presets[presetIndex], true)
             {
                 SetNewWorkingPreset(null, true);
             }
@@ -136,9 +137,9 @@ namespace RP0
                     GUIStates.ShowBuildList = true;
                     RefreshToolbarState();
                 }
-                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTKSCLock);
+                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTKSCLock);
 
-                KerbalConstructionTimeData.Instance.RecalculateBuildRates();
+                SpaceCenterManagement.Instance.RecalculateBuildRates();
 
                 ResetFormulaRateHolders();
                 Harmony.PatchKSCFacilityContextMenu.AreTextsUpdated = false;
@@ -154,7 +155,7 @@ namespace RP0
                     RefreshToolbarState();
                 }
 
-                KerbalConstructionTimeData.Instance.RecalculateBuildRates();
+                SpaceCenterManagement.Instance.RecalculateBuildRates();
             }
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();

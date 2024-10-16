@@ -45,6 +45,8 @@ using System.Runtime.InteropServices;
 
 [assembly: KSPAssemblyDependency("ModularFlightIntegrator", 1, 0)]
 [assembly: KSPAssemblyDependency("RealFuels", 15, 7)]
+[assembly: KSPAssemblyDependency("RealAntennas", 2, 6)]
+[assembly: KSPAssemblyDependency("ROUtils", 1, 0, 1)]
 [assembly: KSPAssemblyDependency("ClickThroughBlocker", 1, 8)]
 [assembly: KSPAssemblyDependency("ContractConfigurator", 2, 6)]
 [assembly: KSPAssemblyDependency("ToolbarController", 1, 0)]

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 using UnityEngine;
 
 namespace RP0
@@ -47,6 +47,22 @@ namespace RP0
             _lcs.Add(lc);
         }
 
+        public override void Load(ConfigNode node)
+        {
+            base.Load(node);
+            if (SpaceCenterManagement.Instance.LoadedSaveVersion < SpaceCenterManagement.VERSION)
+            {
+                if (SpaceCenterManagement.Instance.LoadedSaveVersion < 8)
+                {
+                    var keys = new List<string>(_lcStats.resourcesHandled.Keys);
+                    foreach (var k in keys)
+                    {
+                        _lcStats.resourcesHandled[k] = Math.Ceiling(_lcStats.resourcesHandled[k]);
+                    }
+                }
+            }
+        }
+
         protected void Relink()
         {
             _ignoreObserve = true;
@@ -61,7 +77,7 @@ namespace RP0
                     continue;
                 }
 
-                var lc = KerbalConstructionTimeData.Instance.FindLCFromID(id);
+                var lc = SpaceCenterManagement.Instance.FindLCFromID(id);
                 if (lc == null)
                 {
                     _lcIDs.RemoveAt(i);
@@ -77,7 +93,7 @@ namespace RP0
         protected void RefreshCache()
         {
             _closenessCache.Clear();
-            foreach (LCEfficiency e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+            foreach (LCEfficiency e in SpaceCenterManagement.Instance.LCEfficiencies)
                 if (e != this)
                     _closenessCache[e] = Formula.GetLCCloseness(_lcStats, e._lcStats);
         }
@@ -94,9 +110,9 @@ namespace RP0
             else
             {
                 // Just in case we get in a bad state
-                if (KerbalConstructionTimeData.Instance.LCToEfficiency.ContainsKey(lc))
+                if (SpaceCenterManagement.Instance.LCToEfficiency.ContainsKey(lc))
                 {
-                    KerbalConstructionTimeData.Instance.LCToEfficiency.Remove(lc);
+                    SpaceCenterManagement.Instance.LCToEfficiency.Remove(lc);
                     ClearEmpty();
                 }
             }
@@ -132,7 +148,7 @@ namespace RP0
 
             if (distribute)
             {
-                foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+                foreach (var e in SpaceCenterManagement.Instance.LCEfficiencies)
                     if (e != this)
                         e.ReceiveDistributedEfficiency(this, increase);
             }
@@ -253,7 +269,7 @@ namespace RP0
             bestCloseness = 0d;
             LCEfficiency bestItem = null;
             
-            foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+            foreach (var e in SpaceCenterManagement.Instance.LCEfficiencies)
             {
                 double closeness = Formula.GetLCCloseness(data, e._lcStats);
                 if (closeness > bestCloseness)
@@ -262,13 +278,17 @@ namespace RP0
                     bestItem = e;
                 }
             }
+
+            if (bestCloseness < 1d && bestCloseness > 0.95d)
+                bestCloseness = 0.95d;
+
             return bestItem;
         }
 
         public static LCEfficiency GetOrCreateEfficiencyForLC(LaunchComplex lc, bool allowLookup)
         {
             LCEfficiency e;
-            if (allowLookup && KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(lc, out e))
+            if (allowLookup && SpaceCenterManagement.Instance.LCToEfficiency.TryGetValue(lc, out e))
                 return e;
 
             e = FindClosest(lc, out double closeness);
@@ -283,14 +303,14 @@ namespace RP0
             }
 
             e = new LCEfficiency(lc); // this will put it in the dict
-            KerbalConstructionTimeData.Instance.LCEfficiencies.Add(e);
+            SpaceCenterManagement.Instance.LCEfficiencies.Add(e);
             RefreshAllCaches();
             return e;
         }
 
         public static void RelinkAll()
         {
-            foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+            foreach (var e in SpaceCenterManagement.Instance.LCEfficiencies)
                 e.Relink();
 
             if (!ClearEmpty())
@@ -299,18 +319,18 @@ namespace RP0
 
         protected static void RefreshAllCaches()
         {
-            foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+            foreach (var e in SpaceCenterManagement.Instance.LCEfficiencies)
                 e.RefreshCache();
         }
 
         public static bool ClearEmpty()
         {
-            int oldCount = KerbalConstructionTimeData.Instance.LCEfficiencies.Count;
-            for (int i = KerbalConstructionTimeData.Instance.LCEfficiencies.Count; i-- > 0;)
-                if (KerbalConstructionTimeData.Instance.LCEfficiencies[i]._lcs.Count == 0)
-                    KerbalConstructionTimeData.Instance.LCEfficiencies.RemoveAt(i);
+            int oldCount = SpaceCenterManagement.Instance.LCEfficiencies.Count;
+            for (int i = SpaceCenterManagement.Instance.LCEfficiencies.Count; i-- > 0;)
+                if (SpaceCenterManagement.Instance.LCEfficiencies[i]._lcs.Count == 0)
+                    SpaceCenterManagement.Instance.LCEfficiencies.RemoveAt(i);
 
-            if (oldCount != KerbalConstructionTimeData.Instance.LCEfficiencies.Count)
+            if (oldCount != SpaceCenterManagement.Instance.LCEfficiencies.Count)
             {
                 RefreshAllCaches();
                 return true;
@@ -340,7 +360,7 @@ namespace RP0
             if (KSP.UI.Screens.MessageSystem.Instance != null)
             {
                 var sb = StringBuilderCache.Acquire();
-                foreach (var kvp in KerbalConstructionTimeData.Instance.LCToEfficiency)
+                foreach (var kvp in SpaceCenterManagement.Instance.LCToEfficiency)
                 {
                     if (kvp.Value._efficiency < _MinEfficiency)
                     {
@@ -353,7 +373,7 @@ namespace RP0
                         $"Due to improved technology the minimum efficiency for launch complexes is now {_MinEfficiency:P1} and the following complexes had efficiency raised to that level:" + lcsModified,
                         KSP.UI.Screens.MessageSystemButton.MessageButtonColor.GREEN, KSP.UI.Screens.MessageSystemButton.ButtonIcons.ACHIEVE));
             }
-            foreach (var e in KerbalConstructionTimeData.Instance.LCEfficiencies)
+            foreach (var e in SpaceCenterManagement.Instance.LCEfficiencies)
                 if (e._efficiency < _MinEfficiency)
                     e._efficiency = _MinEfficiency;
         }
@@ -371,14 +391,14 @@ namespace RP0
 
         private void added(int idx, LaunchComplex lc)
         {
-            if (KerbalConstructionTimeData.Instance.LCToEfficiency.TryGetValue(lc, out var oldEffic))
+            if (SpaceCenterManagement.Instance.LCToEfficiency.TryGetValue(lc, out var oldEffic))
             {
                 oldEffic._lcs.Remove(lc);
                 if (oldEffic._lcs.Count == 0 && !_ignoreObserve)
                     ClearEmpty();
             }
 
-            KerbalConstructionTimeData.Instance.LCToEfficiency[lc] = this;
+            SpaceCenterManagement.Instance.LCToEfficiency[lc] = this;
 
             if (_ignoreObserve)
                 return;
@@ -388,7 +408,7 @@ namespace RP0
 
         private void removed(int idx, LaunchComplex lc)
         {
-            KerbalConstructionTimeData.Instance.LCToEfficiency.Remove(lc);
+            SpaceCenterManagement.Instance.LCToEfficiency.Remove(lc);
 
             if (_ignoreObserve)
                 return;

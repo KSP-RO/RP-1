@@ -7,8 +7,8 @@ namespace RP0
     {
         public enum RolloutReconType { Reconditioning, Rollout, Rollback, Recovery, None, AirlaunchMount, AirlaunchUnmount };
 
-        public override string Name => KSP.Localization.Localizer.Format("#rp0_LCOps_Type_" + RRType.ToString())
-            ;
+        public override string Name => KSP.Localization.Localizer.Format("#rp0_LCOps_Type_" + RRType.ToString());
+
         [Persistent]
         public string launchPadID = "LaunchPad";
         [Persistent]
@@ -88,7 +88,8 @@ namespace RP0
                 var vp = new VesselProject(vessel, ProjectType.VAB);
                 isHumanRated = vp.humanRated;
                 BP = Formula.GetReconditioningBP(vp);
-                vesselBP = vp.buildPoints + vp.integrationPoints;
+                cost = Formula.GetReconditioningCost(vp);
+                vesselBP = vp.buildPoints;
             }
             catch
             {
@@ -119,13 +120,14 @@ namespace RP0
             progress = 0;
             mass = vessel.GetTotalMass();
             _lc = vessel.LC;
-            vesselBP = vessel.buildPoints + vessel.integrationPoints;
+            vesselBP = vessel.buildPoints;
             isHumanRated = vessel.humanRated;
             
             switch (type)
             {
                 case RolloutReconType.Reconditioning:
                     BP = Formula.GetReconditioningBP(vessel);
+                    cost = Formula.GetReconditioningCost(vessel);
                     break;
 
                 case RolloutReconType.Rollout:
@@ -166,6 +168,7 @@ namespace RP0
                 case RolloutReconType.AirlaunchMount: RRType = RolloutReconType.AirlaunchUnmount; break;
                 case RolloutReconType.AirlaunchUnmount: RRType = RolloutReconType.AirlaunchMount; break;
             }
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
         }
 
         public override bool IsCapped => RRType != RolloutReconType.Reconditioning;
@@ -173,7 +176,10 @@ namespace RP0
 
         public override bool IsReversed => RRType == RolloutReconType.Rollback || RRType == RolloutReconType.AirlaunchUnmount;
 
-        public override bool HasCost => RRType == RolloutReconType.Rollout || RRType == RolloutReconType.AirlaunchMount;
+        public override bool HasCost => RRType == RolloutReconType.Rollout || RRType == RolloutReconType.AirlaunchMount ||
+                                        RRType == RolloutReconType.Reconditioning;
+
+        public override bool KeepsLCActive => RRType != RolloutReconType.Reconditioning;
 
         public override ProjectType GetProjectType()
         {
@@ -182,7 +188,6 @@ namespace RP0
                 case RolloutReconType.AirlaunchMount:
                 case RolloutReconType.AirlaunchUnmount:
                     return ProjectType.AirLaunch;
-
                 default:
                     return ProjectType.Reconditioning;
             }
@@ -191,6 +196,19 @@ namespace RP0
         public override void Load(ConfigNode node)
         {
             base.Load(node);
+        }
+
+        protected override double CalculateBuildRate(int delta)
+        {
+            if (RRType == RolloutReconType.Reconditioning)
+            {
+                bool isHRCapped = IsCapped && !isHumanRated && LC.IsHumanRated;
+                return Formula.GetReconditioningBuildRate(LC, isHRCapped);
+            }
+            else
+            {
+                return base.CalculateBuildRate(delta);
+            }
         }
     }
 }

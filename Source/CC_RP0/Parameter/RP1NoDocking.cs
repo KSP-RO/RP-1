@@ -11,7 +11,7 @@ namespace ContractConfigurator.RP0
     /// </summary>
     public class RP1NoDocking : VesselParameter
     {
-        protected HashSet<string> dockedVesselIDs = new HashSet<string>();
+        protected HashSet<string> dockedVesselIDs { get; set; } = new HashSet<string>();
         protected List<string> vessels { get; set; }
 
         public RP1NoDocking()

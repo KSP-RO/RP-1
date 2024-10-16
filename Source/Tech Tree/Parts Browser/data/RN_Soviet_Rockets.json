@@ -86,8 +86,8 @@
         "spacecraft": "APAS-75 (ASTP)",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "dockingAndro",
-        "identical_part_name": "",
+        "entry_cost_mods": "5000,dockingAndro",
+        "identical_part_name": "APAS-75",
         "module_tags": []
     },
     {
@@ -464,7 +464,7 @@
         "title": "RD-0257 Vernier",
         "description": "RD-0257 vernier engine for second stage of the Dnepr 1 rocket. Plume configured by RealPlume.",
         "mod": "RN Soviet Rockets",
-        "cost": 100,
+        "cost": 25,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -864,7 +864,7 @@
     {
         "name": "rn_lk_lander_legs",
         "title": "LK Lander Legs",
-        "description": "Landing legs for the LK lander modules. Attach on the bottom. Use as a launch platform for the lander ascent stage, leave on the moon. Don\u0027t forget to action group the landing engines, they are used on touchdown with the surface to prevent tipping over. Plume configured by RealPlume.",
+        "description": "Landing legs for the LK lander modules. Attach on the bottom. Use as a launch platform for the lander ascent stage, leave on the moon. Don't forget to action group the landing engines, they are used on touchdown with the surface to prevent tipping over. Plume configured by RealPlume.",
         "mod": "RN Soviet Rockets",
         "cost": 750,
         "entry_cost": 15000,
@@ -2615,7 +2615,7 @@
     },
     {
         "name": "rn_r7_les_okt",
-        "title": "R7 Soyuz 7K-OK \u0026 7K-T Launch Escape System",
+        "title": "R7 Soyuz 7K-OK & 7K-T Launch Escape System",
         "description": "LES tower for soyuz ok and t models. Use with soyuz fairings. Plume configured by RealPlume.",
         "mod": "RN Soviet Rockets",
         "cost": 5000,

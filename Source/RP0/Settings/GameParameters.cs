@@ -68,6 +68,9 @@ namespace RP0
         [GameParameters.CustomParameterUI("Procedural avionics window auto opens", toolTip = "When enabled, the Procedural Avionics configuration window is automatically opened when you right click on a part with Proc Avionics.")]
         public bool IsProcAvionicsAutoShown = true;
 
+        [GameParameters.CustomParameterUI("Show tooling reminders", toolTip = "When enabled, a warning is shown on integration when the vessel has untooled parts.")]
+        public bool ShowToolingReminders = true;
+
         // The following values are persisted to the savegame but are not shown in the difficulty settings UI
         public int CommsPayload = ContractGUI.MinPayload;
         public int WeatherPayload = ContractGUI.MinPayload;
@@ -75,14 +78,13 @@ namespace RP0
         public bool UseLastScreenshot = false;
 
         public bool AirlaunchTipShown = false;
-        public bool RealChuteTipShown = false;
-        public bool NeverShowToolingReminders = false;
         public bool Avionics_InterplanetaryWarningShown = false;
         public bool AvionicsWindow_ShowInfo1 = true;
         public bool AvionicsWindow_ShowInfo2 = true;
         public bool AvionicsWindow_ShowInfo3 = true;
         public bool NeverShowUntrainedReminders = false;
         public bool NeverShowHSFProgramReminders = false;
+        public int RATLTipShown = 0;
 
         public string CareerLog_URL;
         public string CareerLog_Token;
@@ -92,7 +94,7 @@ namespace RP0
             bool isCareer = MainMenu.newGameMode == Game.Modes.CAREER;
             IsTrainingEnabled = IsMissionTrainingEnabled = IsCrewRnREnabled = IsRetirementEnabled = isCareer;
             CareerLogEnabled = isCareer;
-            NeverShowToolingReminders = !isCareer;
+            ShowToolingReminders = isCareer;
 
             switch (preset)
             {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 
 namespace RP0
 {
@@ -100,7 +100,7 @@ namespace RP0
             {
                 if (_buildRate < 0)
                 {
-                    UpdateBuildRate(Math.Max(KerbalConstructionTimeData.Instance.TechList.IndexOf(this), 0));
+                    UpdateBuildRate(Math.Max(SpaceCenterManagement.Instance.TechList.IndexOf(this), 0));
                 }
                 return _buildRate;
             }
@@ -202,7 +202,7 @@ namespace RP0
 
         public bool IsInList()
         {
-            return KerbalConstructionTimeData.Instance.TechListHas(techID);
+            return SpaceCenterManagement.Instance.TechListHas(techID);
         }
 
         public string GetItemName() => techName;
@@ -238,10 +238,6 @@ namespace RP0
 
         public double IncrementProgress(double UTDiff)
         {
-            // Don't progress blocked items
-            if (GetBlockingTech() != null)
-                return 0d;
-
             double bR = BuildRate;
             if (bR == 0d && PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
                 return 0d;
@@ -275,7 +271,7 @@ namespace RP0
                     GameEvents.OnTechnologyResearched.Fire(new GameEvents.HostTargetAction<RDTech, RDTech.OperationResult>(rdt, RDTech.OperationResult.Successful));
 
                     // fire our own event
-                    KCTEvents.OnTechCompleted.Fire(this);
+                    SCMEvents.OnTechCompleted.Fire(this);
                 }
                 catch (Exception ex)
                 {
@@ -283,22 +279,22 @@ namespace RP0
                 }
                 go.DestroyGameObject();
 
-                KerbalConstructionTimeData.Instance.TechList.Remove(this);
+                SpaceCenterManagement.Instance.TechList.Remove(this);
 
-                KerbalConstructionTimeData.Instance.RecalculateBuildRates(); // this might change other rates
+                SpaceCenterManagement.Instance.RecalculateBuildRates(); // this might change other rates
 
                 double portion = toGo / increment;
-                UnlockCreditHandler.Instance.IncrementCreditTime(techID, portion * UTDiff);
+                UnlockCreditHandler.Instance.IncrementCreditTime(portion * UTDiff);
                 return (1d - portion) * UTDiff;
             }
 
-            UnlockCreditHandler.Instance.IncrementCreditTime(techID, UTDiff);
+            UnlockCreditHandler.Instance.IncrementCreditTime(UTDiff);
             return 0d;
         }
 
         public string GetBlockingTech()
         {
-            var techList = KerbalConstructionTimeData.Instance.TechList;
+            var techList = SpaceCenterManagement.Instance.TechList;
             string blockingTech = null;
 
             List<string> parentList;

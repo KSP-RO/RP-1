@@ -1,7 +1,7 @@
 [
     {
         "name": "KIWIA24",
-        "title": "LV-NKA24 \u0022KIWI A24\u0022 Atomic Rocket Motor",
+        "title": "LV-NKA24 \"KIWI A24\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 1345,
@@ -27,7 +27,7 @@
     },
     {
         "name": "KIWIB48",
-        "title": "LV-NKB48 \u0022KIWI B48\u0022 Atomic Rocket Motor",
+        "title": "LV-NKB48 \"KIWI B48\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 5437,
@@ -53,7 +53,7 @@
     },
     {
         "name": "NERVA_NRX",
-        "title": "LV-NRX50 \u0022NERVA NRX 50\u0022 Atomic Rocket Motor",
+        "title": "LV-NRX50 \"NERVA NRX 50\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 5976,
@@ -79,7 +79,7 @@
     },
     {
         "name": "NERVA_XE",
-        "title": "LV-NXE100 \u0022NERVA XE 100\u0022 Atomic Rocket Motor",
+        "title": "LV-NXE100 \"NERVA XE 100\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 5788,
@@ -105,7 +105,7 @@
     },
     {
         "name": "PEWEE100",
-        "title": "LV-NPW100 \u0022Pewee 100\u0022 Atomic Rocket Motor",
+        "title": "LV-NPW100 \"Pewee 100\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 3965,
@@ -131,7 +131,7 @@
     },
     {
         "name": "Phoebus1N50",
-        "title": "LV-NPO50 \u0022Pheobus One 50\u0022 Atomic Rocket Motor",
+        "title": "LV-NPO50 \"Pheobus One 50\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 6048,
@@ -157,7 +157,7 @@
     },
     {
         "name": "Phoebus2N100",
-        "title": "LV-NPT100 \u0022Pheobus Two 100\u0022 Atomic Rocket Motor",
+        "title": "LV-NPT100 \"Pheobus Two 100\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 10924,
@@ -183,7 +183,7 @@
     },
     {
         "name": "RD0410MID",
-        "title": "RD-0410 NTR \u0022RD-0410 46\u0022 Atomic Rocket Motor",
+        "title": "RD-0410 NTR \"RD-0410 46\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 2278,
@@ -209,7 +209,7 @@
     },
     {
         "name": "SNTPPFE100",
-        "title": "LV-NSNTP-PFE100 \u0022Partial Flow Expander Cycle Space Nuclear Thermal Propulsion\u0022 Atomic Rocket Motor",
+        "title": "LV-NSNTP-PFE100 \"Partial Flow Expander Cycle Space Nuclear Thermal Propulsion\" Atomic Rocket Motor",
         "description": "",
         "mod": "Bornholio Nuclear",
         "cost": 7102,

@@ -29,8 +29,6 @@ namespace RP0
             return ScenarioUpgradeableFacilities.GetFacilityName(sFacilityType);
         }
 
-        
-
         public FacilityUpgradeProject()
         {
         }
@@ -56,35 +54,29 @@ namespace RP0
             }
         }
 
-        public void Apply()
+        public bool Apply()
         {
             RP0Debug.Log($"Upgrading {name} to level {upgradeLevel}");
+            KCTUtilities.SetFacilityLevel(FacilityType, upgradeLevel);
 
-            List<UpgradeableFacility> facilityRefs = GetFacilityReferencesById(id);
-            foreach (UpgradeableFacility facility in facilityRefs)
-            {
-                facility.SetLevel(upgradeLevel);
-            }
-
-            int newLvl = KCTUtilities.GetBuildingUpgradeLevel(id);
+            int newLvl = KCTUtilities.GetFacilityLevel(sFacilityType);
             upgradeProcessed = newLvl == upgradeLevel;
             if (upgradeProcessed)
             {
                 UpgradeLockedFacilities();
+                RP0Debug.Log($"Upgrade processed: {upgradeProcessed} Current: {newLvl} Desired: {upgradeLevel}");
+            }
+            else
+            {
+                RP0Debug.LogError($"Setting facility level failed, Current: {newLvl} Desired: {upgradeLevel}");
             }
 
-            RP0Debug.Log($"Upgrade processed: {upgradeProcessed} Current: {newLvl} Desired: {upgradeLevel}");
+            return upgradeProcessed;
         }
 
         public static List<UpgradeableFacility> GetFacilityReferencesById(string id)
         {
             return ScenarioUpgradeableFacilities.protoUpgradeables[id].facilityRefs;
-        }
-
-        public static List<UpgradeableFacility> GetFacilityReferencesByType(SpaceCenterFacility facilityType)
-        {
-            string internalId = ScenarioUpgradeableFacilities.SlashSanitize(facilityType.ToString());
-            return GetFacilityReferencesById(internalId);
         }
 
         public static void UpgradeLockedFacilities()
@@ -105,7 +97,6 @@ namespace RP0
             avgLevel /= (float)facCount;
             int desiredLevel = (int)Math.Round(avgLevel * 2d);
 
-            List<UpgradeableFacility> facilityRefs = new List<UpgradeableFacility>();
             for (SpaceCenterFacility fac = SpaceCenterFacility.Administration; fac <= SpaceCenterFacility.VehicleAssemblyBuilding; ++fac)
             {
                 if (fac == SpaceCenterFacility.Runway || fac == SpaceCenterFacility.LaunchPad)
@@ -113,10 +104,8 @@ namespace RP0
                 if (!Database.LockedFacilities.Contains(fac))
                     continue;
 
-                facilityRefs.AddRange(GetFacilityReferencesByType(fac));
+                KCTUtilities.SetFacilityLevel(fac, desiredLevel);
             }
-            foreach (var fac in facilityRefs)
-                fac.SetLevel(desiredLevel);
         }
 
         public bool AlreadyInProgress()
@@ -126,7 +115,7 @@ namespace RP0
 
         public static bool AlreadyInProgressByID(string id)
         {
-            return KerbalConstructionTimeData.Instance.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == id) != null) != null;
+            return SpaceCenterManagement.Instance.KSCs.Find(ksc => ksc.FacilityUpgrades.Find(ub => ub.id == id) != null) != null;
         }
 
         protected override void ProcessCancel()
@@ -135,7 +124,7 @@ namespace RP0
 
             try
             {
-                KCTEvents.OnFacilityUpgradeCancel?.Fire(this);
+                SCMEvents.OnFacilityUpgradeCancel?.Fire(this);
             }
             catch (Exception ex)
             {
@@ -147,18 +136,18 @@ namespace RP0
 
         protected override void ProcessComplete()
         {
-
-            if (ScenarioUpgradeableFacilities.Instance != null && !KerbalConstructionTimeData.Instance.ErroredDuringOnLoad)
+            if (ScenarioUpgradeableFacilities.Instance != null && !SpaceCenterManagement.Instance.ErroredDuringOnLoad)
             {
-                Apply();
-
-                try
+                if (Apply())
                 {
-                    KCTEvents.OnFacilityUpgradeComplete?.Fire(this);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
+                    try
+                    {
+                        SCMEvents.OnFacilityUpgradeComplete?.Fire(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogException(ex);
+                    }
                 }
             }
         }

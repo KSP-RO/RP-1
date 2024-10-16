@@ -1,8 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using System.Collections;
-using RP0.DataTypes;
+using RP0.ConfigurableStart;
+using ROUtils.DataTypes;
+using ROUtils;
 
 namespace RP0
 {
@@ -37,16 +40,19 @@ namespace RP0
     public class Database : MonoBehaviour
     {
         public static readonly ResourceInfo ResourceInfo = new ResourceInfo();
-        public static readonly PersistentDictionaryNodeKeyed<KCTCostModifier> KCTCostModifiers = new PersistentDictionaryNodeKeyed<KCTCostModifier>();
-        public static readonly PersistentDictionaryNodeKeyed<TechPeriod> TechNodePeriods = new PersistentDictionaryNodeKeyed<TechPeriod>("id");
-        public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
+
+        public static readonly PersistentDictionaryNodeKeyed<PartEffectiveCostModifier> KCTCostModifiers = new PersistentDictionaryNodeKeyed<PartEffectiveCostModifier>();
+
         public static readonly List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
         public static readonly Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
-        public static int GetFacilityLevelCount(SpaceCenterFacility fac) { return FacilityLevelCosts.ValueOrDefault(fac)?.Count ?? 0; }
-        public static readonly Dictionary<string, SpaceCenterFacility> FacilityIDToFacility = new Dictionary<string, SpaceCenterFacility>();
+        public static int GetFacilityLevelCount(SpaceCenterFacility fac) { return FacilityLevelCosts.ValueOrDefault(fac)?.Count ?? 1; }
+
         public static readonly Dictionary<string, string> TechNameToTitle = new Dictionary<string, string>();
         public static readonly Dictionary<string, List<string>> TechNameToParents = new Dictionary<string, List<string>>();
+        public static readonly PersistentDictionaryNodeKeyed<TechPeriod> TechNodePeriods = new PersistentDictionaryNodeKeyed<TechPeriod>("id");
+        public static readonly PersistentDictionaryValueTypes<string, NodeType> NodeTypes = new PersistentDictionaryValueTypes<string, NodeType>();
         public static readonly Dictionary<string, Dictionary<string, HashSet<ExperimentSituations>>> StartCompletedExperiments = new Dictionary<string, Dictionary<string, HashSet<ExperimentSituations>>>();
+        public static Dictionary<string, Scenario> CustomScenarios = new Dictionary<string, Scenario>();
 
         public static readonly SpaceCenterSettings SettingsSC = new SpaceCenterSettings();
         public static readonly CrewSettings SettingsCrew = new CrewSettings();
@@ -112,7 +118,7 @@ namespace RP0
 
     public class KCTDataLoader : LoadingSystem
     {
-        private const int NumLoaders = 7;
+        private const int NumLoaders = 8;
 
         private IEnumerator LoadRoutine()
         {
@@ -136,7 +142,10 @@ namespace RP0
             yield return StartCoroutine(LoadCrewSettings());
             _progress = ++idx;
             
-            yield return StartCoroutine(LoadExperiments());
+            yield return StartCoroutine(LoadCompletedExperiments());
+            _progress = ++idx;
+            
+            yield return StartCoroutine(LoadConfigurableStartPresets());
             _progress = ++idx;
             
             yield return null;
@@ -238,44 +247,76 @@ namespace RP0
             }
         }
 
-        private IEnumerator LoadExperiments()
+        private IEnumerator LoadCompletedExperiments()
         {
             foreach (ConfigNode rootCN in GameDatabase.Instance.GetConfigNodes("IGNORED_EXPERIMENTS"))
             {
-                foreach (ConfigNode bodyCN in rootCN.GetNodes("BODY"))
+                yield return LoadExperiments(rootCN, Database.StartCompletedExperiments);
+            }
+        }
+
+        public static IEnumerator LoadExperiments(ConfigNode rootCN, Dictionary<string, Dictionary<string, HashSet<ExperimentSituations>>> experimentDict)
+        {
+            foreach (ConfigNode bodyCN in rootCN.GetNodes("BODY"))
+            {
+                string bodyName = bodyCN.GetValue("name");
+                if (!experimentDict.TryGetValue(bodyName, out var dict))
                 {
-                    string bodyName = bodyCN.GetValue("name");
-                    if (!Database.StartCompletedExperiments.TryGetValue(bodyName, out var dict))
+                    dict = new Dictionary<string, HashSet<ExperimentSituations>>();
+                    experimentDict[bodyName] = dict;
+                }
+
+                foreach (ConfigNode expCN in bodyCN.GetNodes("EXPERIMENT"))
+                {
+                    string experimentName = expCN.GetValue("name");
+                    if (!dict.TryGetValue(experimentName, out var set))
                     {
-                        dict = new Dictionary<string, HashSet<ExperimentSituations>>();
-                        Database.StartCompletedExperiments[bodyName] = dict;
+                        set = new HashSet<ExperimentSituations>();
+                        dict[experimentName] = set;
                     }
 
-                    foreach (ConfigNode expCN in bodyCN.GetNodes("EXPERIMENT"))
+                    foreach (ConfigNode sitCN in expCN.GetNodes("SITUATIONS"))
                     {
-                        string experimentName = expCN.GetValue("name");
-                        if (!dict.TryGetValue(experimentName, out var set))
+                        foreach (string situationName in sitCN.GetValues("name"))
                         {
-                            set = new HashSet<ExperimentSituations>();
-                            dict[experimentName] = set;
-                        }
-
-                        foreach (ConfigNode sitCN in expCN.GetNodes("SITUATIONS"))
-                        {
-                            foreach (string situationName in sitCN.GetValues("name"))
+                            if (!System.Enum.TryParse(situationName, out ExperimentSituations situation))
                             {
-                                if (!System.Enum.TryParse(situationName, out ExperimentSituations situation))
-                                {
-                                    RP0Debug.LogError($"MarkExperimentAsDone: Invalid situation {situationName}");
-                                    continue;
-                                }
-                                set.Add(situation);
+                                RP0Debug.LogError($"MarkExperimentAsDone: Invalid situation {situationName}");
+                                continue;
                             }
+                            set.Add(situation);
                         }
-                        yield return null;
                     }
+                    yield return null;
                 }
             }
+        }
+
+        public static IEnumerator LoadConfigurableStartPresets()
+        {
+            Dictionary<string, Scenario> scenarioDict = Database.CustomScenarios;
+            scenarioDict.Clear();
+            scenarioDict[ScenarioHandler.EmptyScenarioName] = new Scenario(ScenarioHandler.EmptyScenarioName);
+            ConfigNode[] nodes = GameDatabase.Instance.GetConfigNodes("CUSTOMSCENARIO");
+
+            foreach (ConfigNode scenarioNode in nodes)
+            {
+                if (scenarioNode == null)
+                    continue;
+                try
+                {
+                    var s = new Scenario(scenarioNode);
+                    scenarioDict[s.ScenarioName] = s;
+                }
+                catch (Exception ex)
+                {
+                    RP0Debug.LogError($"{ex}");
+                }
+                yield return null;
+            }
+
+            int actualCount = scenarioDict.Count - 1;
+            RP0Debug.Log($"Found {actualCount} scenario{(actualCount > 1 ? "s" : "")}");
         }
 
         private bool isReady = false;

@@ -2,7 +2,7 @@
     {
         "name": "solarpanel-blanket-1",
         "title": "OKEB-500 Blanket Photovoltaic Array",
-        "description": "OKEB offers a new take on solar arrays - really, really big. Their first entry into the market dwarfs even Kerb Kastria Inc.\u0027s Megalador panel. Uses the latest state of the art technology. 420m^2.",
+        "description": "OKEB offers a new take on solar arrays - really, really big. Their first entry into the market dwarfs even Kerb Kastria Inc.'s Megalador panel. Uses the latest state of the art technology. 420m^2.",
         "mod": "Near Future Solar",
         "cost": 0,
         "entry_cost": 1140000,
@@ -25,7 +25,7 @@
     {
         "name": "solarpanel-blanket-2",
         "title": "OKEB-100 Blanket Photovoltaic Array",
-        "description": "OKEB\u0027s smaller sized panel set is still quite large! Uses the latest state of the art technology. 73.125m^2.",
+        "description": "OKEB's smaller sized panel set is still quite large! Uses the latest state of the art technology. 73.125m^2.",
         "mod": "Near Future Solar",
         "cost": 11400,
         "entry_cost": 228000,
@@ -117,7 +117,7 @@
     {
         "name": "solarpanel-deploying-1x3-1",
         "title": "KRX 1x3 Concentrating Photovoltaic Panels",
-        "description": "As a follow up to the underwhelmingly popular 1x4 series, the KRX also includes concentrator lenses for extra power at the cost of mass. On the KRX, support struts are sacrificed to cut down that mass, the result is a panel that is quite light for its generation capabilities. Just don\u0027t sneeze on it. 1.44m^2.",
+        "description": "As a follow up to the underwhelmingly popular 1x4 series, the KRX also includes concentrator lenses for extra power at the cost of mass. On the KRX, support struts are sacrificed to cut down that mass, the result is a panel that is quite light for its generation capabilities. Just don't sneeze on it. 1.44m^2.",
         "mod": "Near Future Solar",
         "cost": 550,
         "entry_cost": 11000,
@@ -140,7 +140,7 @@
     {
         "name": "solarpanel-deploying-1x4-1",
         "title": "KRK 1x4 Concentrating Photovoltaic Panels",
-        "description": "Kerb Kastria\u0027s solar panel offering includes special lenses that concentrate sunlight onto fewer, stronger solar cells. This increases power density by almost 50%, but also increases panel mass. 2.5m^2.",
+        "description": "Kerb Kastria's solar panel offering includes special lenses that concentrate sunlight onto fewer, stronger solar cells. This increases power density by almost 50%, but also increases panel mass. 2.5m^2.",
         "mod": "Near Future Solar",
         "cost": 770,
         "entry_cost": 15400,
@@ -186,7 +186,7 @@
     {
         "name": "solarpanel-deploying-1x5-1",
         "title": "T65 1x5 Concentrating Photovoltaic Panels",
-        "description": "This versatile light panel provides a moderate amount of power without breaking the bank, or the back of the Kerbals assigned to carry it. It\u0027s a win-win for Finance and HR! 5.25m^2.",
+        "description": "This versatile light panel provides a moderate amount of power without breaking the bank, or the back of the Kerbals assigned to carry it. It's a win-win for Finance and HR! 5.25m^2.",
         "mod": "Near Future Solar",
         "cost": 1500,
         "entry_cost": 30000,
@@ -232,7 +232,7 @@
     {
         "name": "solarpanel-deploying-2x1-1",
         "title": "KR-XL Megalador Concentrating Solar Array",
-        "description": "Disputing the Gigantor-XL\u0027s claim of \u0027single largest solar array available\u0027, the Megalador is large and unwieldy - but, if you can get past all that, is packed with loads of advanced solar cells. 24m^2.",
+        "description": "Disputing the Gigantor-XL's claim of 'single largest solar array available', the Megalador is large and unwieldy - but, if you can get past all that, is packed with loads of advanced solar cells. 24m^2.",
         "mod": "Near Future Solar",
         "cost": 6500,
         "entry_cost": 130000,
@@ -255,7 +255,7 @@
     {
         "name": "solarpanel-deploying-2x1-2",
         "title": "KR-SL Solo Concentrating Solar Array",
-        "description": "A compact, pared down (with shears!) version of the Trio without some of that finnecky extension gear. Comes in a box advertising something about the odds, and how you shouldn\u0027t worry about them or even mention them. Uses the latest state of the art technology. 25.875m^2.",
+        "description": "A compact, pared down (with shears!) version of the Trio without some of that finnecky extension gear. Comes in a box advertising something about the odds, and how you shouldn't worry about them or even mention them. Uses the latest state of the art technology. 25.875m^2.",
         "mod": "Near Future Solar",
         "cost": 7000,
         "entry_cost": 140000,

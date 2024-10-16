@@ -1,27 +1,21 @@
-﻿using KSP.UI;
+﻿using CommNet;
+using KSP.UI;
 using KSP.UI.Screens;
+using ROUtils;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text;
 using UniLinq;
 using UnityEngine;
 using UnityEngine.Profiling;
+using Upgradeables;
 
 namespace RP0
 {
     public static class KCTUtilities
     {
-        private static bool? _isPrincipiaInstalled = null;
-        private static bool? _isTestFlightInstalled = null;
-        private static bool? _isTestLiteInstalled = null;
-
-        private static PropertyInfo _piTFInstance;
-        private static PropertyInfo _piTFSettingsEnabled;
-        private static Type _tlSettingsType;
-        private static FieldInfo _fiTLSettingsDisabled;
-
         internal const string _iconPath = "RP-1/PluginData/Icons/";
         internal const string _icon_KCT_Off_24 = _iconPath + "KCT_off-24";
         internal const string _icon_KCT_Off_38 = _iconPath + "KCT_off-38";
@@ -248,7 +242,7 @@ namespace RP0
                 }
                 if (excludeChutes)
                 {
-                    if (p.Modules["RealChuteModule"] != null)
+                    if (p.Modules.GetModule("RealChuteModule") != null)
                         continue;
                 }
 
@@ -304,37 +298,6 @@ namespace RP0
             return bs;
         }
 
-        /// <summary>
-        /// Tests to see if two ConfigNodes have the same information. Currently requires same ordering of subnodes
-        /// </summary>
-        /// <param name="node1"></param>
-        /// <param name="node2"></param>
-        /// <returns></returns>
-        public static bool ConfigNodesAreEquivalent(ConfigNode node1, ConfigNode node2)
-        {
-            //Check that the number of subnodes are equal
-            if (node1.GetNodes().Length != node2.GetNodes().Length)
-                return false;
-            //Check that all the values are identical
-            foreach (string valueName in node1.values.DistinctNames())
-            {
-                if (!node2.HasValue(valueName))
-                    return false;
-                if (node1.GetValue(valueName) != node2.GetValue(valueName))
-                    return false;
-            }
-
-            //Check all subnodes for equality
-            for (int index = 0; index < node1.GetNodes().Length; ++index)
-            {
-                if (!ConfigNodesAreEquivalent(node1.nodes[index], node2.nodes[index]))
-                    return false;
-            }
-
-            //If all these tests pass, we consider the nodes to be equivalent
-            return true;
-        }
-
         public static double SpendFunds(double toSpend, TransactionReasons reason)
         {
             if (!KSPUtils.CurrentGameIsCareer())
@@ -366,10 +329,10 @@ namespace RP0
         public static void ProcessSciPointTotalChange(float changeDelta)
         {
             // Earned point totals shouldn't decrease. This would only make sense when done through the cheat menu.
-            if (changeDelta <= 0f || KerbalConstructionTimeData.IsRefundingScience) return;
+            if (changeDelta <= 0f || SpaceCenterManagement.IsRefundingScience) return;
 
-            KerbalConstructionTimeData.Instance.SciPointsTotal += changeDelta;
-            RP0Debug.Log("Total sci points earned is now: " + KerbalConstructionTimeData.Instance.SciPointsTotal);
+            SpaceCenterManagement.Instance.SciPointsTotal += changeDelta;
+            RP0Debug.Log("Total sci points earned is now: " + SpaceCenterManagement.Instance.SciPointsTotal);
         }
 
         public static void TryAddVesselToBuildList() => TryAddVesselToBuildList(EditorLogic.fetch.launchSiteName);
@@ -383,12 +346,12 @@ namespace RP0
 
             ProjectType type = EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB ? ProjectType.VAB : ProjectType.SPH;
 
-            if ((type == ProjectType.VAB) != (KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad))
+            if ((type == ProjectType.VAB) != (SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad))
             {
                 string dialogStr;
                 if (type == ProjectType.VAB)
                 {
-                    if (KerbalConstructionTimeData.Instance.ActiveSC.IsAnyLCOperational)
+                    if (SpaceCenterManagement.Instance.ActiveSC.IsAnyLCOperational)
                         dialogStr = $"a launch complex. Please switch to a launch complex and try again.";
                     else
                         dialogStr = $"a launch complex. You must build a launch complex (or wait for a launch complex to finish building or renovating) before you can integrate this vessel.";
@@ -396,7 +359,7 @@ namespace RP0
                 }
                 else
                 {
-                    if (KerbalConstructionTimeData.Instance.ActiveSC.Hangar.IsOperational)
+                    if (SpaceCenterManagement.Instance.ActiveSC.Hangar.IsOperational)
                         dialogStr = $"the Hangar. Please switch to the Hangar as active launch complex and try again.";
                     else
                         dialogStr = $"the Hangar. You must wait for the Hangar to finish renovating before you can integrate this vessel.";
@@ -428,6 +391,7 @@ namespace RP0
             {
                 CheckPartAvailability = !skipPartChecks,
                 CheckPartConfigs = !skipPartChecks,
+                CheckUntooledParts = !skipPartChecks,
                 SuccessAction = AddVesselToBuildList
             };
             v.ProcessVessel(vp);
@@ -452,20 +416,20 @@ namespace RP0
             }
             else
             {
-                RP0Debug.LogError($"Error! Tried to add {vp.shipName} to build list but couldn't find LC! KSC {KerbalConstructionTimeData.Instance.ActiveSC.KSCName} and active LC {KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC}");
+                RP0Debug.LogError($"Error! Tried to add {vp.shipName} to build list but couldn't find LC! KSC {SpaceCenterManagement.Instance.ActiveSC.KSCName} and active LC {SpaceCenterManagement.Instance.ActiveSC.ActiveLC}");
                 return;
             }
 
             try
             {
-                KCTEvents.OnVesselAddedToBuildQueue.Fire(vp);
+                SCMEvents.OnVesselAddedToBuildQueue.Fire(vp);
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
             }
 
-            RP0Debug.Log($"Added {vp.shipName} to build list at {lc.Name} at {KerbalConstructionTimeData.Instance.ActiveSC.KSCName}. Cost: {vp.cost}. IntegrationCost: {vp.integrationCost}");
+            RP0Debug.Log($"Added {vp.shipName} to build list at {lc.Name} at {SpaceCenterManagement.Instance.ActiveSC.KSCName}. Cost: {vp.cost}.");
             RP0Debug.Log("Launch site is " + vp.launchSite);
             string text = $"Added {vp.shipName} to integration list at {lc.Name}.";
             var message = new ScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
@@ -489,7 +453,7 @@ namespace RP0
             };
 
             double usedShipsCost = editableShip.GetTotalCost();
-            foreach (VesselProject v in KerbalConstructionTimeData.Instance.MergedVessels)
+            foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
             {
                 usedShipsCost += v.GetTotalCost();
                 v.RemoveFromBuildList(out _);
@@ -529,13 +493,15 @@ namespace RP0
 
             GetShipEditProgress(editableShip, out double progressBP, out _, out _);
             newShip.progress = progressBP;
-            RP0Debug.Log($"Finished? {editableShip.IsFinished}");
-            if (editableShip.IsFinished)
-                newShip.cannotEarnScience = true;
+            RP0Debug.Log($"Finished? {newShip.IsFinished}");
+            if (newShip.IsFinished)
+            {
+                newShip.MoveVesselToWarehouse();
+            }
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
-            KerbalConstructionTimeData.ClearVesselEditMode();
+            SpaceCenterManagement.ClearVesselEditMode();
 
             RP0Debug.Log("Edits saved.");
 
@@ -547,33 +513,28 @@ namespace RP0
             double origTotalBP;
             double oldProgressBP;
 
-            if (KerbalConstructionTimeData.Instance.MergedVessels.Count == 0)
+            if (SpaceCenterManagement.Instance.MergedVessels.Count == 0)
             {
-                origTotalBP = ship.buildPoints + ship.integrationPoints;
+                origTotalBP = ship.buildPoints;
                 oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
             }
             else
             {
                 double totalEffectiveCost = ship.effectiveCost;
-                foreach (VesselProject v in KerbalConstructionTimeData.Instance.MergedVessels)
+                foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
                 {
                     totalEffectiveCost += v.effectiveCost;
                 }
 
-                origTotalBP = oldProgressBP = Formula.GetIntegrationBP(ship, KerbalConstructionTimeData.Instance.MergedVessels) + Formula.GetVesselBuildPoints(totalEffectiveCost);
+                origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
                 oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 
-            double newTotalBP = KerbalConstructionTimeData.Instance.EditorVessel.buildPoints + KerbalConstructionTimeData.Instance.EditorVessel.integrationPoints;
+            double newTotalBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
             newCompletionPercent = newProgressBP / newTotalBP;
-        }
-
-        public static int FindUnlockCost(List<AvailablePart> availableParts)
-        {
-            return (int)RealFuels.EntryCostManager.Instance.EntryCostForParts(availableParts);
         }
 
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)
@@ -593,15 +554,12 @@ namespace RP0
                     ap.costsFunds = true;
                     HandlePurchase(ap);
                 }
-
-                RP0Debug.Log($"{ap.title} is no longer an experimental part. Part was unlocked.");
-                RemoveExperimentalPart(ap);
             }
 
             EditorPartList.Instance?.Refresh();
             EditorPartList.Instance?.Refresh(EditorPartList.State.PartsList);
             if (HighLogic.LoadedSceneIsEditor)
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
         }
 
@@ -643,7 +601,7 @@ namespace RP0
         public static bool PartIsUnlockedButNotPurchased(AvailablePart ap)
         {
             bool nodeIsInList = ResearchAndDevelopment.Instance.protoTechNodes.TryGetValue(ap.TechRequired, out ProtoTechNode ptn);
-            if (!nodeIsInList) return KerbalConstructionTimeData.Instance.TechListHas(ap.TechRequired);
+            if (!nodeIsInList) return SpaceCenterManagement.Instance.TechListHas(ap.TechRequired);
 
             bool nodeIsUnlocked = ptn.state == RDTech.State.Available;
             bool partNotPurchased = !ptn.partsPurchased.Contains(ap);
@@ -702,10 +660,10 @@ namespace RP0
         public static ISpaceCenterProject GetNextThingToFinish()
         {
             ISpaceCenterProject thing = null;
-            if (KerbalConstructionTimeData.Instance.ActiveSC == null)
+            if (SpaceCenterManagement.Instance.ActiveSC == null)
                 return null;
             double shortestTime = double.PositiveInfinity;
-            foreach (LCSpaceCenter KSC in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (LCSpaceCenter KSC in SpaceCenterManagement.Instance.KSCs)
             {
                 foreach (LaunchComplex LC in KSC.LaunchComplexes)
                 {
@@ -713,21 +671,23 @@ namespace RP0
                         continue;
                     foreach (ISpaceCenterProject vp in LC.BuildList)
                         _checkTime(vp, ref shortestTime, ref thing);
-                    foreach (ISpaceCenterProject rr in LC.Recon_Rollout)
+                    foreach (ISpaceCenterProject rr in LC.GetAllLCOps())
                         _checkTime(rr, ref shortestTime, ref thing);
                 }
                 foreach (ISpaceCenterProject ub in KSC.Constructions)
                     _checkTime(ub, ref shortestTime, ref thing);
             }
-            foreach (ResearchProject tech in KerbalConstructionTimeData.Instance.TechList)
+            foreach (ResearchProject tech in SpaceCenterManagement.Instance.TechList)
             {
                 if (tech.GetBlockingTech() == null)   // Ignore items that are blocked
                     _checkTime(tech, ref shortestTime, ref thing);
             }
             foreach (ISpaceCenterProject course in Crew.CrewHandler.Instance.TrainingCourses)
                 _checkTime(course, ref shortestTime, ref thing);
-            if (KerbalConstructionTimeData.Instance.fundTarget.IsValid)
-                _checkTime(KerbalConstructionTimeData.Instance.fundTarget, ref shortestTime, ref thing);
+            if (SpaceCenterManagement.Instance.fundTarget.IsValid)
+                _checkTime(SpaceCenterManagement.Instance.fundTarget, ref shortestTime, ref thing);
+            if (SpaceCenterManagement.Instance.staffTarget.IsValid)
+                _checkTime(SpaceCenterManagement.Instance.staffTarget, ref shortestTime, ref thing);
 
             return thing;
         }
@@ -735,7 +695,7 @@ namespace RP0
         public static void DisableModFunctionality()
         {
             DisableSimulationLocks();
-            InputLockManager.RemoveControlLock(KerbalConstructionTimeData.KCTLaunchLock);
+            InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTLaunchLock);
             KCT_GUI.HideAll();
         }
 
@@ -744,29 +704,6 @@ namespace RP0
             EditorDriver.editorFacility = isVAB ? EditorFacility.VAB : EditorFacility.SPH;
             EditorDriver.setupValidLaunchSites();
             return EditorDriver.ValidLaunchSites;
-        }
-
-        public static bool IsPrincipiaInstalled
-        {
-            get
-            {
-                if (!_isPrincipiaInstalled.HasValue)
-                {
-                    _isPrincipiaInstalled = AssemblyLoader.loadedAssemblies.Any(a => string.Equals(a.name, "ksp_plugin_adapter", StringComparison.OrdinalIgnoreCase));
-                }
-                return _isPrincipiaInstalled.Value;
-            }
-        }
-
-        public static PQSCity FindKSC(CelestialBody home)
-        {
-            if (home?.pqsController?.transform?.Find("KSC") is Transform t &&
-                t.GetComponent(typeof(PQSCity)) is PQSCity KSC)
-            {
-                return KSC;
-            }
-
-            return Resources.FindObjectsOfTypeAll<PQSCity>().FirstOrDefault(x => x.name == "KSC");
         }
 
         public static bool IsLaunchFacilityIntact(ProjectType type)
@@ -791,7 +728,7 @@ namespace RP0
 
         public static bool ReconditioningActive(LaunchComplex LC, string launchSite = "LaunchPad")
         {
-            if (LC == null) LC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+            if (LC == null) LC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
             return LC.GetReconditioning(launchSite) is ReconRolloutProject;
         }
 
@@ -805,7 +742,7 @@ namespace RP0
                     return b;
             }
 
-            foreach (LCSpaceCenter ksc in KerbalConstructionTimeData.Instance.KSCs)
+            foreach (LCSpaceCenter ksc in SpaceCenterManagement.Instance.KSCs)
             {
                 if (FindVPByID(id, ksc) is VesselProject vp)
                     return vp;
@@ -886,46 +823,6 @@ namespace RP0
             return false;
         }
 
-        public static int GetBuildingUpgradeLevel(SpaceCenterFacility facility)
-        {
-            int lvl = GetBuildingUpgradeMaxLevel(facility);
-            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
-            {
-                lvl = (int)Math.Round(lvl * ScenarioUpgradeableFacilities.GetFacilityLevel(facility));
-            }
-            return lvl;
-        }
-
-        public static int GetBuildingUpgradeLevel(string facilityID)
-        {
-            int lvl = GetBuildingUpgradeMaxLevel(facilityID);
-            if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
-            {
-                lvl = (int)Math.Round(lvl * ScenarioUpgradeableFacilities.GetFacilityLevel(facilityID));
-            }
-            return lvl;
-        }
-
-        public static int GetBuildingUpgradeMaxLevel(string facilityID)
-        {
-            int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facilityID);
-            if (lvl < 0)
-            {
-                return Database.GetFacilityLevelCount(Database.FacilityIDToFacility.ValueOrDefault(facilityID));
-            }
-            return lvl;
-        }
-
-        public static int GetBuildingUpgradeMaxLevel(SpaceCenterFacility facility)
-        {
-            int lvl = ScenarioUpgradeableFacilities.GetFacilityLevelCount(facility);
-            if (lvl < 0)
-            {
-                return Database.GetFacilityLevelCount(facility);
-            }
-            return lvl;
-        }
-
         public static bool RecoverActiveVesselToStorage(ProjectType listType)
         {
             try
@@ -933,35 +830,35 @@ namespace RP0
                 RP0Debug.Log("Attempting to recover active vessel to storage.  listType: " + listType);
                 GamePersistence.SaveGame("KCT_Backup", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
-                KerbalConstructionTimeData.Instance.RecoveredVessel = new VesselProject(FlightGlobals.ActiveVessel, listType);
+                SpaceCenterManagement.Instance.RecoveredVessel = new VesselProject(FlightGlobals.ActiveVessel, listType);
 
                 KCTVesselData vData = FlightGlobals.ActiveVessel.GetKCTVesselData();
-                KerbalConstructionTimeData.Instance.RecoveredVessel.KCTPersistentID = vData?.VesselID;
-                KerbalConstructionTimeData.Instance.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
-                KerbalConstructionTimeData.Instance.RecoveredVessel.LCID = vData?.LCID ?? Guid.Empty;
-                KerbalConstructionTimeData.Instance.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
+                SpaceCenterManagement.Instance.RecoveredVessel.KCTPersistentID = vData?.VesselID;
+                SpaceCenterManagement.Instance.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
+                SpaceCenterManagement.Instance.RecoveredVessel.LCID = vData?.LCID ?? Guid.Empty;
+                SpaceCenterManagement.Instance.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
 
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == ProjectType.SPH)
-                    KerbalConstructionTimeData.Instance.RecoveredVessel.launchSite = "Runway";
+                    SpaceCenterManagement.Instance.RecoveredVessel.launchSite = "Runway";
                 else
-                    KerbalConstructionTimeData.Instance.RecoveredVessel.launchSite = "LaunchPad";
+                    SpaceCenterManagement.Instance.RecoveredVessel.launchSite = "LaunchPad";
 
                 //check for symmetry parts and remove those references if they can't be found
-                KerbalConstructionTimeData.Instance.RecoveredVessel.RemoveMissingSymmetry();
+                SpaceCenterManagement.Instance.RecoveredVessel.RemoveMissingSymmetry();
 
                 // debug, save to a file
-                KerbalConstructionTimeData.Instance.RecoveredVessel.UpdateNodeAndSave("KCTVesselSave", false);
+                SpaceCenterManagement.Instance.RecoveredVessel.UpdateNodeAndSave("KCTVesselSave", false);
 
                 //test if we can actually convert it
-                var test = KerbalConstructionTimeData.Instance.RecoveredVessel.CreateShipConstructAndRelease();
+                var test = SpaceCenterManagement.Instance.RecoveredVessel.CreateShipConstructAndRelease();
 
                 if (test != null)
                     ShipConstruction.CreateBackup(test);
                 RP0Debug.Log("Load test reported success = " + (test == null ? "false" : "true"));
                 if (test == null)
                 {
-                    KerbalConstructionTimeData.Instance.RecoveredVessel = new VesselProject();
+                    SpaceCenterManagement.Instance.RecoveredVessel = new VesselProject();
                     return false;
                 }
 
@@ -977,7 +874,7 @@ namespace RP0
             {
                 RP0Debug.LogError("Error while recovering craft into inventory.");
                 RP0Debug.LogError("error: " + ex);
-                KerbalConstructionTimeData.Instance.RecoveredVessel = new VesselProject();
+                SpaceCenterManagement.Instance.RecoveredVessel = new VesselProject();
                 ShipConstruction.ClearBackups();
                 return false;
             }
@@ -998,7 +895,7 @@ namespace RP0
 
             if (KCTSettings.Instance.OverrideLaunchButton)
             {
-                if (KerbalConstructionTimeData.EditorShipEditingMode)
+                if (SpaceCenterManagement.EditorShipEditingMode)
                 {
                     // Prevent switching between VAB and SPH in edit mode.
                     // Bad things will happen if the edits are saved in another mode than the initial one.
@@ -1018,14 +915,14 @@ namespace RP0
                 }
 
                 EditorLogic.fetch.launchBtn.onClick.RemoveAllListeners();
-                EditorLogic.fetch.launchBtn.onClick.AddListener(() => { KerbalConstructionTimeData.ShowLaunchAlert(null); });
+                EditorLogic.fetch.launchBtn.onClick.AddListener(() => { SpaceCenterManagement.ShowLaunchAlert(null); });
 
-                if (KerbalConstructionTimeData.Instance == null)
+                if (SpaceCenterManagement.Instance == null)
                     return;
 
-                if (!KerbalConstructionTimeData.Instance.IsLaunchSiteControllerDisabled)
+                if (!SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled)
                 {
-                    KerbalConstructionTimeData.Instance.IsLaunchSiteControllerDisabled = true;
+                    SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled = true;
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller == null)
                     {
@@ -1038,12 +935,12 @@ namespace RP0
                     }
                 }
             }
-            else if(KerbalConstructionTimeData.Instance != null)
+            else if (SpaceCenterManagement.Instance != null)
             {
-                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, KerbalConstructionTimeData.KCTLaunchLock);
-                if (!KerbalConstructionTimeData.Instance.IsLaunchSiteControllerDisabled)
+                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, SpaceCenterManagement.KCTLaunchLock);
+                if (!SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled)
                 {
-                    KerbalConstructionTimeData.Instance.IsLaunchSiteControllerDisabled = true;
+                    SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled = true;
                     RP0Debug.Log("Attempting to disable launchsite specific buttons");
                     UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
                     if (controller != null)
@@ -1056,7 +953,7 @@ namespace RP0
 
         private static void OnEditorSwitch()
         {
-            KerbalConstructionTimeData.Instance.StartCoroutine(PostEditorSwitch());
+            SpaceCenterManagement.Instance.StartCoroutine(PostEditorSwitch());
         }
 
         private static System.Collections.IEnumerator PostEditorSwitch()
@@ -1067,7 +964,7 @@ namespace RP0
             if (EditorDriver.fetch == null)
                 yield break;
 
-            KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+            SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
         }
 
         /// <summary>
@@ -1217,61 +1114,6 @@ namespace RP0
             DeleteSimulationSave();
         }
 
-        public static bool IsTestFlightInstalled
-        {
-            get
-            {
-                if (!_isTestFlightInstalled.HasValue)
-                {
-                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestFlightCore", StringComparison.OrdinalIgnoreCase))?.assembly;
-                    _isTestFlightInstalled = a != null;
-                    if (_isTestFlightInstalled.Value)
-                    {
-                        Type t = a.GetType("TestFlightCore.TestFlightManagerScenario");
-                        _piTFInstance = t?.GetProperty("Instance", BindingFlags.Public | BindingFlags.Static);
-                        _piTFSettingsEnabled = t?.GetProperty("SettingsEnabled", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
-                    }
-                }
-                return _isTestFlightInstalled.Value;
-            }
-        }
-
-        public static bool IsTestLiteInstalled
-        {
-            get
-            {
-                if (!_isTestLiteInstalled.HasValue)
-                {
-                    Assembly a = AssemblyLoader.loadedAssemblies.FirstOrDefault(la => string.Equals(la.name, "TestLite", StringComparison.OrdinalIgnoreCase))?.assembly;
-                    _isTestLiteInstalled = a != null;
-                    if (_isTestLiteInstalled.Value)
-                    {
-                        _tlSettingsType = a.GetType("TestLite.TestLiteGameSettings");
-                        _fiTLSettingsDisabled = _tlSettingsType?.GetField("disabled");
-                    }
-                }
-                return _isTestLiteInstalled.Value;
-            }
-        }
-
-        public static void ToggleFailures(bool isEnabled)
-        {
-            if (IsTestFlightInstalled) ToggleTFFailures(isEnabled);
-            else if (IsTestLiteInstalled) ToggleTLFailures(isEnabled);
-        }
-
-        public static void ToggleTFFailures(bool isEnabled)
-        {
-            object tfInstance = _piTFInstance.GetValue(null);
-            _piTFSettingsEnabled.SetValue(tfInstance, isEnabled);
-        }
-
-        private static void ToggleTLFailures(bool isEnabled)
-        {
-            _fiTLSettingsDisabled.SetValue(HighLogic.CurrentGame.Parameters.CustomParams(_tlSettingsType), !isEnabled);
-            GameEvents.OnGameSettingsApplied.Fire();
-        }
-
         public static void CleanupDebris(string launchSiteName)
         {
             if (KCTSettings.Instance.CleanUpKSCDebris)
@@ -1416,7 +1258,7 @@ namespace RP0
         {
             HashSet<string> blacklist = new HashSet<string>();
             SortedList<string, string> slist = new SortedList<string, string>();
-            foreach(string s in input)
+            foreach (string s in input)
             {
                 foreach (string parent in Database.TechNameToParents[s])
                 {
@@ -1471,7 +1313,7 @@ namespace RP0
             }
             return res;
         }
-        
+
         public static void ScrapVessel(VesselProject b)
         {
             RP0Debug.Log($"Scrapping {b.shipName}");
@@ -1486,25 +1328,50 @@ namespace RP0
             AddFunds(b.GetTotalCost(), TransactionReasonsRP0.VesselPurchase);
         }
 
+        public static void HireStaff(bool isResearch, int workerAmount, LaunchComplex lc = null)
+        {
+            // Use up applicants first
+            int workersToHire = Math.Max(0, workerAmount - SpaceCenterManagement.Instance.Applicants);
+
+            // Note: have to pass base, not modified, cost here, since the CMQ reruns
+            SpendFunds(workersToHire * Database.SettingsSC.HireCost, isResearch ? TransactionReasonsRP0.HiringResearchers : TransactionReasonsRP0.HiringEngineers);
+            if (isResearch)
+            {
+                ChangeResearchers(workerAmount);
+                SpaceCenterManagement.Instance.UpdateTechTimes();
+            }
+            else
+            {
+                LCSpaceCenter ksc = lc?.KSC ?? SpaceCenterManagement.Instance.ActiveSC;
+                ChangeEngineers(ksc, workerAmount);
+                if (lc != null)
+                    ChangeEngineers(lc, workerAmount);
+            }
+            SpaceCenterManagement.Instance.Applicants = Math.Max(0, SpaceCenterManagement.Instance.Applicants - workerAmount);
+            if (SpaceCenterManagement.Instance.Applicants == 0)
+                SpaceCenterManagement.Instance.HiredStarterApplicants = true;
+        }
+
         public static void ChangeEngineers(LaunchComplex currentLC, int delta)
         {
             currentLC.Engineers += delta;
-            KCTEvents.OnPersonnelChange.Fire();
+            SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+            currentLC.RecalculateBuildRates();
             KCT_GUI.BuildRateForDisplay = null;
         }
 
         public static void ChangeEngineers(LCSpaceCenter ksc, int delta)
         {
             ksc.Engineers += delta;
-            KCTEvents.OnPersonnelChange.Fire();
+            SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
         public static void ChangeResearchers(int delta)
         {
-            KerbalConstructionTimeData.Instance.Researchers += delta;
-            KCTEvents.OnPersonnelChange.Fire();
+            SpaceCenterManagement.Instance.Researchers += delta;
+            SCMEvents.OnPersonnelChange.Fire();
             MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
         }
 
@@ -1513,7 +1380,7 @@ namespace RP0
 
         public static double ScienceForNextApplicants()
         {
-            int applicantsCur = ApplicantPacketsForScience(Math.Max(0d, KerbalConstructionTimeData.Instance.SciPointsTotal));
+            int applicantsCur = ApplicantPacketsForScience(Math.Max(0d, SpaceCenterManagement.Instance.SciPointsTotal));
             return Math.Pow(5d * (applicantsCur + 1d), 1d / ApplicantsPow);
         }
 
@@ -1585,144 +1452,124 @@ namespace RP0
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return false;
 
-            if (KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+            if (SpaceCenterManagement.Instance.IsSimulatedFlight)
                 return false;
 
             if (v.vesselRef.isEVA)
                 return false;
 
             // Is also called at the start of the flight scene when recovering clamps & debris
-            if (KerbalConstructionTimeData.Instance.RecoveredVessel?.IsValid != true)
+            if (SpaceCenterManagement.Instance.RecoveredVessel?.IsValid != true)
             {
                 RP0Debug.Log("Recovered vessel is null!");
                 return false;
             }
 
-            if (v.vesselName != KerbalConstructionTimeData.Instance.RecoveredVessel.shipName)
+            if (v.vesselName != SpaceCenterManagement.Instance.RecoveredVessel.shipName)
             {
-                RP0Debug.Log($"Recovered vessel '{v.vesselName}' and '{KerbalConstructionTimeData.Instance.RecoveredVessel.shipName}' do not match ");
+                RP0Debug.Log($"Recovered vessel '{v.vesselName}' and '{SpaceCenterManagement.Instance.RecoveredVessel.shipName}' do not match ");
                 return false;
             }
 
             return true;
         }
 
+        public static void DoAirlaunch(AirlaunchParams launchParams)
+        {
+            ROUtils.HyperEdit_Utilities.DoAirlaunch(launchParams.KscDistance, launchParams.KscAzimuth, launchParams.LaunchAzimuth, launchParams.Altitude, launchParams.Velocity);
+        }
+
         public static int GetFacilityLevel(SpaceCenterFacility facility)
         {
-            if (ScenarioUpgradeableFacilities.facilityStrings.TryGetValue(facility, out string str))
-                return GetFacilityLevel(str);
-
-            return GetFacilityLevel(facility.ToString());
+            return MathUtils.GetIndexFromNorm(ScenarioUpgradeableFacilities.GetFacilityLevel(facility), Database.GetFacilityLevelCount(facility));
         }
 
-        public static int GetFacilityLevel(string facilityId)
+        public static void SetFacilityLevel(SpaceCenterFacility scf, int level)
         {
-            facilityId = ScenarioUpgradeableFacilities.SlashSanitize(facilityId);
-            if (!ScenarioUpgradeableFacilities.protoUpgradeables.TryGetValue(facilityId, out var value))
-                return 0;
+            string facId = ScenarioUpgradeableFacilities.SlashSanitize(scf.ToString());
+            ScenarioUpgradeableFacilities.ProtoUpgradeable upgradable = ScenarioUpgradeableFacilities.protoUpgradeables[facId];
 
-            if (value.facilityRefs.Count < 1)
-                return 0;
-
-            return value.facilityRefs[0].facilityLevel;
-        }
-
-        public static string ToCommaString<T>(this List<T> list)
-        {
-            if (list.Count == 0)
-                return string.Empty;
-
-            var sb = StringBuilderCache.Acquire();
-            sb.Append(list[0].ToString());
-            for(int i = 1, iC = list.Count; i < iC; ++i)
-                sb.Append(", " + list[i].ToString());
-
-            return sb.ToStringAndRelease();
-        }
-
-        /// <summary>
-        /// NOTE: Must be used only on value-type lists
-        /// </summary>
-        /// <typeparam name="T"></typeparam>
-        /// <param name="list"></param>
-        /// <param name="str"></param>
-        public static void FromCommaString<T>(this List<T> list, string str)
-        {
-            Type type = typeof(T);
-            KSPCommunityFixes.Modding.DataType dataType = KSPCommunityFixes.Modding.FieldData.ValueDataType(type);
-            
-            list.Clear();
-            var split = str.Split(',');
-            foreach (var s in split)
+            bool levelWasSet = false;
+            if (upgradable.facilityRefs.Count > 0)
             {
-                string s2 = s.Trim();
-                if (s2.Length == 0)
-                    continue;
-                list.Add((T)KSPCommunityFixes.Modding.FieldData.ReadValue(s2, dataType, type));
+                // The facilityRefs are only available when the space center facilities are physically spawned.
+                // For instance they aren't found in TS scene or when going far enough away from home body.
+                levelWasSet = true;
+                foreach (UpgradeableFacility upgd in upgradable.facilityRefs)
+                {
+                    RP0Debug.Log($"Setting facility {upgd.id} upgrade level through standard path");
+                    upgd.SetLevel(level);
+                }
+            }
+
+            if (!levelWasSet)
+            {
+                RP0Debug.Log($"Failed to set facility {scf} upgrade level through standard path, using fallback");
+                int maxLevel = Database.GetFacilityLevelCount(scf) - 1;
+                double normLevel = maxLevel == 0 ? 1d : level / (double)maxLevel;
+                upgradable.configNode.SetValue("lvl", normLevel);
+
+                // Note that OnKSCFacilityUpgrading and OnKSCFacilityUpgraded events are not fired through this code path
+                // Still, we need to let RA know that it needs a reset to account for the finished upgrade.
+                if (scf == SpaceCenterFacility.TrackingStation)
+                {
+                    ClobberRACommnet();
+                }
             }
         }
 
-        public static double SumThrough(this List<double> list, int idx)
+        public static void RefreshGroundStationActiveState()
         {
-            double sum = 0d;
-            for (int i = idx + 1; i-- > 0;)
+            var scInstance = SpaceCenterManagement.Instance;
+            if (scInstance == null)
             {
-                sum += list[i];
+                RP0Debug.LogError("SpaceCenterManagement.Instance is null");
+                return;
             }
 
-            return sum;
-        }
-
-        public static float SumThrough(this List<float> list, int idx)
-        {
-            float sum = 0f;
-            for (int i = idx + 1; i-- > 0;)
+            if (!RealAntennas.HomeNodeTypes.initialized)
             {
-                sum += list[i];
+                static IEnumerator DelayedRefreshRoutine()
+                {
+                    yield return new WaitForEndOfFrame();
+                    RefreshGroundStationActiveState_Internal();
+                }
+                scInstance.StartCoroutine(DelayedRefreshRoutine());
             }
-
-            return sum;
-        }
-
-        public static int SumThrough(this List<int> list, int idx)
-        {
-            int sum = 0;
-            for (int i = idx + 1; i-- > 0;)
+            else
             {
-                sum += list[i];
+                RefreshGroundStationActiveState_Internal();
             }
-
-            return sum;
         }
 
-        public static int SumThrough(this List<bool> list, int idx)
+        private static void RefreshGroundStationActiveState_Internal()
         {
-            int sum = 0;
-            for (int i = idx + 1; i-- > 0;)
+            if (RealAntennas.HomeNodeTypes.HomeDict.TryGetValue("LaunchSite", out List<RealAntennas.Network.RACommNetHome> lsHomes))
             {
-                if (list[i])
-                    ++sum;
+                RP0Debug.Log("RefreshGroundStationActiveState");
+                var allActiveKSCStations = SpaceCenterManagement.Instance.KSCs.Select(ksc => ksc.AssociatedGroundStation).ToList();
+                foreach (RealAntennas.Network.RACommNetHome home in lsHomes)
+                {
+                    home.enabled = allActiveKSCStations.Contains(home.nodeName);
+                }
             }
-
-            return sum;
+            else
+            {
+                RP0Debug.LogError("Failed to update RA LaunchSite active state");
+            }
         }
 
-        public static bool AllTrue(this List<bool> list)
+        private static void ClobberRACommnet()
         {
-            for (int i = list.Count; i-- > 0;)
-                if (!list[i])
-                    return false;
-
-            return true;
-        }
-
-        public static bool AllFalse(this List<bool> list)
-        {
-            for (int i = list.Count; i-- > 0;)
-                if (list[i])
-                    return false;
-
-            return true;
+            var mInf = CommNetScenario.Instance?.GetType().GetMethod("ApplyTSLevelChange", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            if (mInf != null)
+            {
+                mInf.Invoke(CommNetScenario.Instance, new object[0]);
+            }
+            else
+            {
+                RP0Debug.LogError($"Failed to call ApplyTSLevelChange() on RA CommNetScenario");
+            }
         }
     }
 }

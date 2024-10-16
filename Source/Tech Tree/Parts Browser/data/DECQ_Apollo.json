@@ -146,7 +146,7 @@
     {
         "name": "APOLLO_RCS",
         "title": "Apollo Service Module RCS Quad Pod",
-        "description": "This is the RCS Quad Pods for the Apollo Service Module. Each contains it\u0027s own pressurization and fuel. Place 4 pods 90 degrees apart. 2:1 O/F Ratio.",
+        "description": "This is the RCS Quad Pods for the Apollo Service Module. Each contains it's own pressurization and fuel. Place 4 pods 90 degrees apart. 2:1 O/F Ratio.",
         "mod": "DECQ_Apollo",
         "cost": 100,
         "entry_cost": 3500,

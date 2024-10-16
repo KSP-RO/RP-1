@@ -754,8 +754,8 @@
     },
     {
         "name": "RO-RFTank-Integral",
-        "title": "Procedural Tank (Integral Structure)",
-        "description": "Integral structure tanks are also load-bearing and form the entire structure of the tank, so no additional mass is needed to maintain rigidity. Manufacturing them can be difficult, however.",
+        "title": "Procedural Tank (Isogrid Structure)",
+        "description": "Isogrid structure tanks are also load-bearing and form the entire structure of the tank, so no additional mass is needed to maintain rigidity. Manufacturing them can be difficult, however.",
         "mod": "RealFuels",
         "cost": 0,
         "entry_cost": 10000,
@@ -772,7 +772,9 @@
         "upgrade": false,
         "entry_cost_mods": "Aluminum, Isogrids",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankIsogrid"
+        ]
     },
     {
         "name": "RO-RFTank-SM",

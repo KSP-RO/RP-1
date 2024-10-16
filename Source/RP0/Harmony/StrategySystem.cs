@@ -141,29 +141,6 @@ namespace RP0.Harmony
             return false;
         }
 
-        // Save and load the deactivation date data
-        [HarmonyPostfix]
-        [HarmonyPatch("OnSave")]
-        internal static void Postfix_OnSave(StrategySystem __instance, ConfigNode gameNode)
-        {
-            ConfigNode node = gameNode.AddNode("DEACTIVATIONDATES");
-            foreach (var kvp in StrategyConfigRP0.ActivatedStrategies)
-                node.AddValue(kvp.Key, kvp.Value.ToString("G17"));
-        }
-
-        [HarmonyPostfix]
-        [HarmonyPatch("OnLoad")]
-        internal static void Postfix_OnLoad(StrategySystem __instance, ConfigNode gameNode)
-        {
-            StrategyConfigRP0.ActivatedStrategies.Clear();
-            ConfigNode node = gameNode.GetNode("DEACTIVATIONDATES");
-            if (node != null)
-            {
-                foreach (ConfigNode.Value v in node.values)
-                    StrategyConfigRP0.ActivatedStrategies.Add(v.name, double.Parse(v.value));
-            }
-        }
-
         [HarmonyPostfix]
         [HarmonyPatch("LoadStrategies")]
         internal static void Postfix_LoadStrategies()
@@ -191,7 +168,7 @@ namespace RP0.Harmony
 
             ProgramHandler.Instance.OnLoadStrategiesComplete();
 
-            KerbalConstructionTimeData.Instance.RecalculateBuildRates();
+            SpaceCenterManagement.Instance.RecalculateBuildRates();
         }
     }
 }

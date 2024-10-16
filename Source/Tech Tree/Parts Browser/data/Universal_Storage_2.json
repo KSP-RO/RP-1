@@ -243,7 +243,7 @@
     },
     {
         "name": "USAerozineWedge",
-        "title": "Universal Storage: Aerozine \u002B NTO Tank",
+        "title": "Universal Storage: Aerozine + NTO Tank",
         "description": "",
         "mod": "Universal Storage 2",
         "cost": 50,
@@ -793,7 +793,9 @@
         "upgrade": false,
         "entry_cost_mods": "RO-MMRTG",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NuclearRTG"
+        ]
     },
     {
         "name": "USRadialTanks",

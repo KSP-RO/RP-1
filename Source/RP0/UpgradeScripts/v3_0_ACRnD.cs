@@ -1,6 +1,7 @@
 ﻿using System;
 using SaveUpgradePipeline;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0.UpgradeScripts
 {
@@ -131,6 +132,30 @@ namespace RP0.UpgradeScripts
                 n.SetValue("upgradeLevel", newUp);
 
                 RP0Debug.Log($"UpgradePipeline context {loadContext} updated KCT Admin Building upgrade to target level {newUp} (was {oldUp})");
+            }
+        }
+    }
+
+    [UpgradeModule(LoadContext.SFS, sfsNodeUrl = "GAME/SCENARIO")]
+    public class v3_0_KCTSCM : UpgradeScript
+    {
+        public override string Name { get => "RP-1 KCT Upgrader"; }
+        public override string Description { get => "Updates main scenario module for RP-1"; }
+        public override Version EarliestCompatibleVersion { get => new Version(2, 0, 0); }
+        protected static Version _targetVersion = new Version(3, 0, 0);
+        public override Version TargetVersion => _targetVersion;
+
+        public override TestResult OnTest(ConfigNode node, LoadContext loadContext, ref string nodeName)
+        {
+            return node.GetValue("name") == "KerbalConstructionTimeData" ? TestResult.Upgradeable : TestResult.Pass;
+        }
+
+        public override void OnUpgrade(ConfigNode node, LoadContext loadContext, ConfigNode parentNode)
+        {
+            if(node.GetValue("name") == "KerbalConstructionTimeData")
+            {
+                node.SetValue("name", "SpaceCenterManagement");
+                RP0Debug.Log($"UpgradePipeline context {loadContext} updated KCTData to be SpaceCenterManagement");
             }
         }
     }

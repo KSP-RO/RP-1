@@ -10,14 +10,16 @@ using UnityEngine.Profiling;
 using System.Reflection;
 using System.Reflection.Emit;
 using KSP.UI.Screens.DebugToolbar;
-using KSP.Localization;
+using ROUtils.DataTypes;
+using RP0.Singletons;
+using RP0.Leaders;
 
 namespace RP0.Programs
 {
     [KSPScenario((ScenarioCreationOptions)480, new GameScenes[] { GameScenes.EDITOR, GameScenes.FLIGHT, GameScenes.SPACECENTER, GameScenes.TRACKSTATION })]
     public class ProgramHandler : ScenarioModule
     {
-        private const int VERSION = 2;
+        private const int VERSION = 3;
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = VERSION;
 
@@ -38,6 +40,7 @@ namespace RP0.Programs
         public static ProgramHandlerSettings Settings { get; private set; }
         public static List<Program> Programs { get; private set; }
         public static Dictionary<string, Program> ProgramDict { get; private set; }
+        public static List<ProgramModifier> ProgramModifiers { get; private set; }
 
         private static Dictionary<string, Type> programStrategies = new Dictionary<string, Type>();
         private static AssemblyBuilder assemblyBuilder = AppDomain.CurrentDomain.DefineDynamicAssembly(
@@ -51,6 +54,10 @@ namespace RP0.Programs
         public List<Program> CompletedPrograms { get; private set; } = new List<Program>();
 
         public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
+
+        // Put here since we can't add to StrategySystem
+        [KSPField(isPersistant = true)]
+        public PersistentDictionaryValueTypes<string, double> ActivatedStrategies = new PersistentDictionaryValueTypes<string, double>();
 
         public int MaxProgramSlots => GameVariables.Instance.GetActiveStrategyLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.Administration));
 
@@ -72,6 +79,7 @@ namespace RP0.Programs
             {
                 Programs = new List<Program>();
                 ProgramDict = new Dictionary<string, Program>();
+                ProgramModifiers = new List<ProgramModifier>();
 
                 foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_PROGRAM"))
                 {
@@ -88,6 +96,12 @@ namespace RP0.Programs
                     programStrategies[p.name] = t;
                     if (Strategies.StrategySystem.StrategyTypes.Count > 0)
                         Strategies.StrategySystem.StrategyTypes.Add(t);
+                }
+
+                foreach (ConfigNode n in GameDatabase.Instance.GetConfigNodes("RP0_PROGRAM_MODIFIER"))
+                {
+                    ProgramModifier pm = new ProgramModifier(n);
+                    ProgramModifiers.Add(pm);
                 }
             }
         }
@@ -184,6 +198,17 @@ namespace RP0.Programs
                     _ready = false;
                     _upgrade_v02 = true;
                     // handled in OnLoadStrategiesComplete because we need to know what leaders are active
+                }
+                if (LoadedSaveVersion < 3)
+                {
+                    foreach (var psm in ScenarioRunner.Instance.protoModules)
+                    {
+                        if (psm.moduleName == "StrategySystem" && psm.moduleValues.GetNode("DEACTIVATIONDATES") is ConfigNode cn)
+                        {
+                            ActivatedStrategies.Load(cn);
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -303,8 +328,8 @@ namespace RP0.Programs
 
         private void OnContractAccept(Contract data)
         {
-            if (KerbalConstructionTimeData.Instance.StartedProgram)
-                KerbalConstructionTimeData.Instance.AcceptedContract = true;
+            if (SpaceCenterManagement.Instance.StartedProgram)
+                SpaceCenterManagement.Instance.AcceptedContract = true;
         }
 
         private void OnContractComplete(Contract data)
@@ -333,7 +358,7 @@ namespace RP0.Programs
                 // Handle KCT applicants
                 int applicants = Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(cc.contractType.name);
                 if (applicants > 0)
-                    KerbalConstructionTimeData.Instance.Applicants += applicants;
+                    SpaceCenterManagement.Instance.Applicants += applicants;
 
                 // Handle Confidence
                 float repToConf = RepToConfidenceForContract(cc, true);
@@ -373,8 +398,7 @@ namespace RP0.Programs
                     DrawProgramSection(p);
                 }
 
-                foreach (Program p in Programs.Where(p => !ActivePrograms.Any(p2 => p.name == p2.name) &&
-                                                          !CompletedPrograms.Any(p2 => p.name == p2.name)))
+                foreach (Program p in Programs.Where(p => !IsProgramActiveOrCompleted(p.name)))
                 {
                     DrawProgramSection(p);
                 }
@@ -485,12 +509,25 @@ namespace RP0.Programs
             GUILayout.EndVertical();
         }
 
-        public void ActivateProgram(Program p)
+        public bool IsProgramActiveOrCompleted(string name)
+        {
+            return ActivePrograms.Any(p => p.name == name) ||
+                CompletedPrograms.Any(p => p.name == name);
+        }
+
+        public Program ActivateProgram(string programName, Program.Speed speed)
+        {
+            Program p = Programs.Find(p2 => p2.name == programName);
+            p.SetSpeed(speed);
+            return ActivateProgram(p);
+        }
+
+        public Program ActivateProgram(Program p)
         {
             if (p == null)
             {
                 RP0Debug.LogError($"Error: Tried to accept null program!");
-                return;
+                return null;
             }
 
             Program activeP = p.Accept();
@@ -506,13 +543,22 @@ namespace RP0.Programs
             else
                 ps.SetProgram(activeP);
 
+            SpaceCenterManagement.Instance.StartedProgram = true;
 
-            KerbalConstructionTimeData.Instance.StartedProgram = true;
+            return activeP;
+        }
+
+        public Program CompleteProgram(string programName)
+        {
+            Program p = ActivePrograms.Find(p2 => p2.name == programName);
+            CompleteProgram(p);
+
+            return p;
         }
 
         public void CompleteProgram(Program p)
         {
-            List<StrategyConfigRP0> unlockedLeadersBef = GetAllUnlockedLeaders();
+            List<StrategyConfigRP0> unlockedLeadersBef = LeaderUtils.GetAllUnlockedLeaders().ToList();
 
             ActivePrograms.Remove(p);
             CompletedPrograms.Add(p);
@@ -520,10 +566,10 @@ namespace RP0.Programs
             // No change needed to ProgramStrategy because reference holds.
             ContractPreLoader.Instance?.ResetGenerationFailure();
 
-            List<StrategyConfigRP0> unlockedLeadersAft = GetAllUnlockedLeaders();
+            IEnumerable<StrategyConfigRP0> unlockedLeadersAft = LeaderUtils.GetAllUnlockedLeaders();
             IEnumerable<StrategyConfigRP0> newLeaders = unlockedLeadersAft.Except(unlockedLeadersBef);
 
-            ShowNotificationForNewLeaders(newLeaders);
+            LeaderNotifications.ShowNotificationForNewLeaders(newLeaders);
         }
 
         private void DisableProgram(string s)
@@ -532,30 +578,6 @@ namespace RP0.Programs
                 RP0Debug.Log($"Disabling program {s}");
             else
                 RP0Debug.Log($"tried to disable program {s} but it already was!");
-        }
-
-        private static List<StrategyConfigRP0> GetAllUnlockedLeaders()
-        {
-            return Strategies.StrategySystem.Instance.SystemConfig.Strategies
-                .OfType<StrategyConfigRP0>()
-                .Where(s => s.DepartmentName != "Programs" && s.IsUnlocked())
-                .ToList();
-        }
-
-        private static void ShowNotificationForNewLeaders(IEnumerable<StrategyConfigRP0> newLeaders)
-        {
-            string leaderString = string.Join("\n", newLeaders.Select(s => s.Title));
-            if (!string.IsNullOrEmpty(leaderString))
-            {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                             new Vector2(0.5f, 0.5f),
-                                             "LeaderUnlocked",
-                                             Localizer.Format("#rp0_Leaders_LeadersUnlockedTitle"),
-                                             Localizer.Format("#rp0_Leaders_LeadersUnlocked") + leaderString,
-                                             Localizer.GetStringByTag("#autoLOC_190905"),
-                                             true,
-                                             HighLogic.UISkin).HideGUIsWhilePopup();
-            }
         }
     }
 }

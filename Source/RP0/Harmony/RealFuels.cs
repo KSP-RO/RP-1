@@ -48,9 +48,9 @@ namespace RP0.Harmony
         [HarmonyPatch("SetConfiguration", new Type[] { typeof(ConfigNode), typeof(bool) })]
         internal static void Postfix_SetConfiguration(RealFuels.ModuleEngineConfigsBase __instance, ConfigNode newConfig)
         {
-            if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTimeData.Instance != null)
+            if (HighLogic.LoadedSceneIsEditor && SpaceCenterManagement.Instance != null)
             {
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
             }
             if (HighLogic.LoadedScene != GameScenes.LOADING && __instance.part != null)
             {
@@ -73,9 +73,9 @@ namespace RP0.Harmony
         [HarmonyPatch("RaiseTankDefinitionChanged")]
         internal static void Postfix_RaiseTankDefinitionChanged(RealFuels.Tanks.ModuleFuelTanks __instance)
         {
-            if (HighLogic.LoadedSceneIsEditor && KerbalConstructionTimeData.Instance != null)
+            if (HighLogic.LoadedSceneIsEditor && SpaceCenterManagement.Instance != null)
             {
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
             }
             if (HighLogic.LoadedScene != GameScenes.LOADING && __instance.part != null)
             {
@@ -111,7 +111,7 @@ namespace RP0.Harmony
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -cfgCost, 0d, 0d);
                 double postCMQcost = -cmq.GetTotal(CurrencyRP0.Funds, false);
                 double invertCMQop = cfgCost / postCMQcost;
-                double credit = UnlockCreditHandler.Instance.GetCreditAmount(techNode);
+                double credit = UnlockCreditHandler.Instance.TotalCredit;
                 // we don't bother with Min() because we're never touching this cmq again.
                 cmq.AddPostDelta(CurrencyRP0.Funds, credit, true);
                 if (!cmq.CanAfford())
@@ -119,7 +119,7 @@ namespace RP0.Harmony
                     return false;
                 }
 
-                double excessCost = UnlockCreditHandler.Instance.SpendCredit(techNode, postCMQcost);
+                double excessCost = UnlockCreditHandler.Instance.SpendCredit(postCMQcost);
                 if (excessCost > 0d)
                 {
                     Funding.Instance.AddFunds(-excessCost * invertCMQop, TransactionReasonsRP0.PartOrUpgradeUnlock.Stock());
@@ -131,7 +131,7 @@ namespace RP0.Harmony
             techNode = null;
 
             if (HighLogic.LoadedSceneIsEditor)
-                KerbalConstructionTimeData.Instance.IsEditorRecalcuationRequired = true;
+                SpaceCenterManagement.Instance.IsEditorRecalcuationRequired = true;
 
             return true;
         }

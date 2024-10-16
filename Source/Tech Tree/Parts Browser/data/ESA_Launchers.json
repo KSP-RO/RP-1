@@ -89,7 +89,7 @@
     },
     {
         "name": "Ariane4NoseCone",
-        "title": "Ariane 4 liquid booster\u0027s nosecone",
+        "title": "Ariane 4 liquid booster's nosecone",
         "description": "A small nosecone to put on the top of liquid booster, to permit a better jettison.",
         "mod": "ESA Launchers",
         "cost": 200,
@@ -111,7 +111,7 @@
     },
     {
         "name": "Ariane4NoseCone2",
-        "title": "Ariane 4 solid booster\u0027s nosecone",
+        "title": "Ariane 4 solid booster's nosecone",
         "description": "A small nosecone to put on the top of solid booster, to permit a better jettison.",
         "mod": "ESA Launchers",
         "cost": 200,
@@ -224,7 +224,7 @@
     {
         "name": "Ariane4Stage3",
         "title": "Ariane 4 H10 III (3rd stage)",
-        "description": "The cryogenic third stage of the variety used in the majority of Ariane 4 launches. Powered by a HM7B\u002B\u002B engine, and equiped with small attitude control thrusters fueled with gaseous hydrogen (boil-off from the main tank).",
+        "description": "The cryogenic third stage of the variety used in the majority of Ariane 4 launches. Powered by a HM7B++ engine, and equiped with small attitude control thrusters fueled with gaseous hydrogen (boil-off from the main tank).",
         "mod": "ESA Launchers",
         "cost": 1800,
         "entry_cost": 8000,
@@ -268,7 +268,7 @@
     {
         "name": "Ariane5_EAP",
         "title": "EAP MPS-241A",
-        "description": "Ariane 5\u0027s solid booster",
+        "description": "Ariane 5's solid booster",
         "mod": "ESA Launchers",
         "cost": 6000,
         "entry_cost": 120000,
@@ -429,7 +429,7 @@
     {
         "name": "Ariane5_tank",
         "title": "Ariane 5 EPC",
-        "description": "The EPC is the main stage of Ariane 5. It\u0027s a huge fuel tank.",
+        "description": "The EPC is the main stage of Ariane 5. It's a huge fuel tank.",
         "mod": "ESA Launchers",
         "cost": 2250,
         "entry_cost": 24000,
@@ -604,7 +604,7 @@
     },
     {
         "name": "DiamantAsterix",
-        "title": "A-1 \u0022Asterix\u0022",
+        "title": "A-1 \"Asterix\"",
         "description": "The first French satellite in orbit.",
         "mod": "ESA Launchers",
         "cost": 250,
@@ -651,7 +651,7 @@
     },
     {
         "name": "Diamant_Stage1",
-        "title": "Diamant A 1st stage \u0022Emeraude\u0022",
+        "title": "Diamant A 1st stage \"Emeraude\"",
         "description": "First stage of the Diamant A rocket, powered by an LRBA Vexin engine.",
         "mod": "ESA Launchers",
         "cost": 1800,
@@ -673,7 +673,7 @@
     },
     {
         "name": "Diamant_Stage2",
-        "title": "Diamant A/B 2nd stage \u0022Topaze\u0022",
+        "title": "Diamant A/B 2nd stage \"Topaze\"",
         "description": "The second stage of the Diamant rocket, and simultaneously the first stage of the Topaze sounding rocket. For complete realism add some small solid rockets at the top of this stage to spin stabilize the rocket before firing the third stage.",
         "mod": "ESA Launchers",
         "cost": 1800,

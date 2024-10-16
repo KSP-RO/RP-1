@@ -1,7 +1,7 @@
 ﻿using Strategies;
 using UnityEngine;
 using System.Collections.Generic;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 
 namespace RP0.Leaders
 {
@@ -56,17 +56,17 @@ namespace RP0.Leaders
         public override void OnRegister()
         {
             if (appliesToParts)
-                KCTEvents.ApplyPartEffectiveCostMultiplier.Add(OnEffectQueryParts);
+                SCMEvents.ApplyPartEffectiveCostMultiplier.Add(OnEffectQueryParts);
             if (appliesToVessel)
-                KCTEvents.ApplyGlobalEffectiveCostMultiplier.Add(OnEffectQuery);
+                SCMEvents.ApplyGlobalEffectiveCostMultiplier.Add(OnEffectQuery);
         }
 
         public override void OnUnregister()
         {
             if (appliesToParts)
-                KCTEvents.ApplyPartEffectiveCostMultiplier.Remove(OnEffectQueryParts);
+                SCMEvents.ApplyPartEffectiveCostMultiplier.Remove(OnEffectQueryParts);
             if (appliesToVessel)
-                KCTEvents.ApplyGlobalEffectiveCostMultiplier.Remove(OnEffectQuery);
+                SCMEvents.ApplyGlobalEffectiveCostMultiplier.Remove(OnEffectQuery);
         }
 
         protected void OnEffectQueryParts(Boxed<double> rate, IEnumerable<string> tags) => OnEffectQuery(rate, tags, null);

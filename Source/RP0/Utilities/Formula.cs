@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System;
+using ROUtils;
 
 namespace RP0
 {
@@ -40,11 +41,16 @@ namespace RP0
             if (index > 0 || !LC.IsOperational)
                 return 0d;
 
-            //N = num upgrades, I = rate index, L = VAB/SPH upgrade level, R = R&D level
             int personnel = Math.Max(0, LC.Engineers + persDelta);
             if (isHumanRatedCapped)
                 personnel = Math.Min(personnel, LC.MaxEngineersNonHR);
 
+            return personnel * _EngineerBPRate * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
+        }
+
+        public static double GetReconditioningBuildRate(LaunchComplex LC, bool isHumanRatedCapped)
+        {
+            int personnel = isHumanRatedCapped ? LC.MaxEngineersNonHR : LC.MaxEngineers;
             return personnel * _EngineerBPRate * HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().BuildRate;
         }
 
@@ -57,7 +63,7 @@ namespace RP0
 
         public static double GetResearchRate(double ScienceValue, int index, int upgradeDelta)
         {
-            int Personnel = KerbalConstructionTimeData.Instance.Researchers + upgradeDelta;
+            int Personnel = SpaceCenterManagement.Instance.Researchers + upgradeDelta;
             
             if (index > 0)
                 return 0d;
@@ -74,11 +80,8 @@ namespace RP0
 
         public static double GetVesselBuildPoints(double totalEffectiveCost)
         {
-            double bpScalar = UtilMath.Clamp((totalEffectiveCost - 500d) / 1500d, 0.5d, 1d);
-            double finalBP = 1000d + Math.Pow(totalEffectiveCost, 0.95) * 216 * bpScalar;
-            double powScalar = totalEffectiveCost - 50000d;
-            if (powScalar > 0)
-                finalBP += Math.Pow(powScalar, 1.4d) * 0.864d;
+            double bpScalar = UtilMath.Clamp((totalEffectiveCost - 200d) / 4000d, 0.5d, 1d);
+            double finalBP = 1000d + Math.Pow(totalEffectiveCost, 1.1d) * 100d * bpScalar;
 
             RP0Debug.Log($"BP: {finalBP}");
             return finalBP;
@@ -91,7 +94,7 @@ namespace RP0
 
             LaunchComplex vLC = vessel.LC;
             if (vLC == null)
-                vLC = KerbalConstructionTimeData.Instance.ActiveSC.ActiveLC;
+                vLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
 
             double multHR = 1d;
             if (vLC.IsHumanRated)
@@ -106,24 +109,9 @@ namespace RP0
             return result * 0.5d;
         }
 
-        public static double GetIntegrationCost(VesselProject vessel)
+        public static double GetReconditioningCost(VesselProject vessel)
         {
-            // set to 0 -- handled by salaries
-            return 0d;
-        }
-
-        public static double GetIntegrationBP(VesselProject vessel, List<VesselProject> mergedVessels = null)
-        {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
-                return 0d;
-            
-            double BP = vessel.buildPoints;
-            if (mergedVessels != null)
-            {
-                foreach (var v in mergedVessels)
-                    BP += v.buildPoints;
-            }
-            return BP;
+            return GetRolloutCost(vessel) * 0.2;
         }
 
         public static double GetAirlaunchCost(VesselProject vessel)
@@ -183,6 +171,11 @@ namespace RP0
         public static double GetReconditioningBP(VesselProject vessel)
         {
             return vessel.buildPoints * 0.01d + Math.Max(1, vessel.GetTotalMass() - 20d) * 2000d;
+        }
+
+        public static double GetVesselRepairBP(VesselProject vessel)
+        {
+            return GetRolloutBP(vessel) / 7.5;
         }
 
         public static double GetRecoveryBPSPH(VesselProject vessel)
@@ -268,13 +261,13 @@ namespace RP0
         /// <returns></returns>
         public static double GetLCCloseness(LCData ourStats, LCData otherStats)
         {
-            if (ourStats.Compare(otherStats))
+            if (ourStats.lcType == LaunchComplexType.Hangar)
                 return 1d;
 
             if (otherStats.lcType != ourStats.lcType)
                 return 0d;
 
-            if (ourStats.lcType == LaunchComplexType.Hangar)
+            if (ourStats.Compare(otherStats))
                 return 1d;
 
             LCData bigger, smaller;

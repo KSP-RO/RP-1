@@ -60,7 +60,7 @@
     {
         "name": "L25mSci",
         "title": "Station Science Module (Early)",
-        "description": "This module, designed for use on space stations, contains various planetary science and space science equipment designed for use in repeatable experiments. However, all data must be returned to the surface, you can\u0027t exactly beam samples back and forth. Unlike other science equipment which records all data instantly, experimenents using this equipment may be repeated multiple times (on subsequent crew rotations) for further scientific value. Don\u0027t forget to transfer all the data to the RV before the crew returns home!",
+        "description": "This module, designed for use on space stations, contains various planetary science and space science equipment designed for use in repeatable experiments. However, all data must be returned to the surface, you can't exactly beam samples back and forth. Unlike other science equipment which records all data instantly, experimenents using this equipment may be repeated multiple times (on subsequent crew rotations) for further scientific value. Don't forget to transfer all the data to the RV before the crew returns home!",
         "mod": "SXT",
         "cost": 8000,
         "entry_cost": 200000,
@@ -578,7 +578,7 @@
     {
         "name": "SXTAJ10",
         "title": "AJ10 Series (Early)",
-        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US\u0027s first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This is the original Vanguard second stage / Able / Delta configuration, without restart capability. Plume configured by RealPlume.",
+        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This is the original Vanguard second stage / Able / Delta configuration, without restart capability. Plume configured by RealPlume.",
         "mod": "SXT",
         "cost": 52,
         "entry_cost": 0,
@@ -603,7 +603,7 @@
     {
         "name": "SXTAJ10Adv",
         "title": "AJ10 Series (Advanced)",
-        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US\u0027s first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents advanced era AJ10s with a nozzle extension and restart capability. Used on Transtage as AJ10-138; similar models but back with the -118 designation were used on the Delta F and Delta K upper stages. Plume configured by RealPlume.",
+        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents advanced era AJ10s with a nozzle extension and restart capability. Used on Transtage as AJ10-138; similar models but back with the -118 designation were used on the Delta F and Delta K upper stages. Plume configured by RealPlume.",
         "mod": "SXT",
         "cost": 73,
         "entry_cost": 0,
@@ -628,7 +628,7 @@
     {
         "name": "SXTAJ10Mid",
         "title": "AJ10 Series (Mid)",
-        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US\u0027s first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents mid-period AJ10s with a nozzle extension and restart capability. Used on Thor-Ablestar and Delta E through Delta N. Plume configured by RealPlume.",
+        "description": "Small pressure-fed hypergolic upper stage engine. Derivative of the first US liquid rocket engine, the AJ10 series is perhaps the longest-lived of any engine series, a part of the US's first satellite launch vehicle, Vanguard, the Apollo CSM, and even one projected Orion service module. This represents mid-period AJ10s with a nozzle extension and restart capability. Used on Thor-Ablestar and Delta E through Delta N. Plume configured by RealPlume.",
         "mod": "SXT",
         "cost": 63,
         "entry_cost": 0,
@@ -653,7 +653,7 @@
     {
         "name": "SXTAirbag",
         "title": "Mk10-XL Inflatable Airbag",
-        "description": "A set of inflatable balloons that can handle impacts of moderate speed on planetary surfaces. These airbags are well suited for landing small landers and probes on rough terrain when a skycrane or internal propulsion is lacking or imprecise. First used on Russian Luna landers like Luna 9, airbags served well as Mars landing systems during various missions.",
+        "description": "A more advanced alternative to the Mk-10 landing system. Rather stronger.",
         "mod": "SXT",
         "cost": 200,
         "entry_cost": 20000,
@@ -676,7 +676,7 @@
     {
         "name": "SXTAirbagSmall",
         "title": "Mk-10 Inflatable Airbag",
-        "description": "A more advanced alternative to the Mk-10 landing system. Rather stronger.",
+        "description": "A set of inflatable balloons that can handle impacts of moderate speed on planetary surfaces. These airbags are well suited for landing small landers and probes on rough terrain when a skycrane or internal propulsion is lacking or imprecise. First used on Russian Luna landers like Luna 9, airbags served well as Mars landing systems during various missions.",
         "mod": "SXT",
         "cost": 150,
         "entry_cost": 15000,
@@ -983,7 +983,7 @@
     {
         "name": "SXTDLK83EHabitat",
         "title": "Ares LK-S3E Heavy Planetary Habitat",
-        "description": "Hold 8 people with 45 days of supplies. A top of the line habitat meant for long-term operations. Typically after the initial \u0027colonists\u0027 made their situation more \u0027permanent\u0027 with a bit of lithobreaking. Features cabins, food preparation areas, sofas, space loos, laboratory, and even a home gym.",
+        "description": "Hold 8 people with 45 days of supplies. A top of the line habitat meant for long-term operations. Typically after the initial 'colonists' made their situation more 'permanent' with a bit of lithobreaking. Features cabins, food preparation areas, sofas, space loos, laboratory, and even a home gym.",
         "mod": "SXT",
         "cost": 0,
         "entry_cost": 420000,
@@ -1087,7 +1087,7 @@
     {
         "name": "SXTFuel625m",
         "title": "Mk1 LFO Barrel",
-        "description": "Less \u0027High tech spaceship part\u0027, more \u0027We spent the budget on food and this was the only thing we could find lying around\u0027. The designers did manage to add a smaller sub-tank for oxidiser, although the words \u0027plastic bag - Oxidiser goes here\u0027 can be seen on the blueprints. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
+        "description": "Less 'High tech spaceship part', more 'We spent the budget on food and this was the only thing we could find lying around'. The designers did manage to add a smaller sub-tank for oxidiser, although the words 'plastic bag - Oxidiser goes here' can be seen on the blueprints. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": 30,
         "entry_cost": 1,
@@ -1136,7 +1136,7 @@
     {
         "name": "SXTISSHabISK30",
         "title": "Skylab Orbital Workshop",
-        "description": "Hold 8 peole with 155 days (5 months) of supplies. A large crew compartment designed for larger, more permanent space stations. Designed and launched in 1973, the Skylab orbital station was the wider space station ever. Given the 270m3 pressurised volume, there is plenty of room for all your IVA activies. It even features a orbital laboratory!",
+        "description": "Hold 8 peole with 155 days (5 months) of supplies. A large crew compartment designed for larger, more permanent space stations. Designed and launched in 1973, the Skylab orbital station was the widest space station ever. Given the 270m3 pressurised volume, there is plenty of room for all your IVA activies. It even features a orbital laboratory!",
         "mod": "SXT",
         "cost": 17400,
         "entry_cost": 200000,
@@ -1163,7 +1163,7 @@
     {
         "name": "SXTInlineAirIntake",
         "title": "XM-600 1.25m Air Intake",
-        "description": "Vac-Co\u0027s answer to C7 Aerospace\u0027s Circular Turboprop intake. Slightly less efficient, but slightly lighter. Plus it has a spinny-round bit.",
+        "description": "Vac-Co's answer to C7 Aerospace's Circular Turboprop intake. Slightly less efficient, but slightly lighter. Plus it has a spinny-round bit.",
         "mod": "SXT",
         "cost": 20,
         "entry_cost": 1,
@@ -1299,7 +1299,7 @@
     {
         "name": "SXTKD170",
         "title": "RD-170 Series",
-        "description": "1980s to present, High TWR, atmospheric booster engine. The RD-170 is the most powerful liquid rocket engine ever flown. Originally developed for the Energia launcher\u0027s boosters, the engine consists of four combustion chambers fed by a single turbopump. A modified version, the RD-171, is used on the first stage of the Zenit launch vehicle. Diameter: [3.8 m]. Plume configured by RealPlume.",
+        "description": "1980s to present, High TWR, atmospheric booster engine. The RD-170 is the most powerful liquid rocket engine ever flown. Originally developed for the Energia launcher's boosters, the engine consists of four combustion chambers fed by a single turbopump. A modified version, the RD-171, is used on the first stage of the Zenit launch vehicle. Diameter: [3.8 m]. Plume configured by RealPlume.",
         "mod": "SXT",
         "cost": 2650,
         "entry_cost": 0,
@@ -1697,7 +1697,7 @@
     },
     {
         "name": "SXTNK12M",
-        "title": "KO-TP12M \u0022Bear\u0022 Turboprop",
+        "title": "KO-TP12M \"Bear\" Turboprop",
         "description": "Requires 100 units Liquid Fuel per hour at maximum throttle. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": 400,
@@ -1895,7 +1895,7 @@
     },
     {
         "name": "SXTPWPT6",
-        "title": "Pratt \u0026 Whitney PT6A-15AG Turboprop",
+        "title": "Pratt & Whitney PT6A-15AG Turboprop",
         "description": "Modern turboprop, 675 HP at takeoff",
         "mod": "SXT",
         "cost": 19,
@@ -1918,7 +1918,7 @@
     },
     {
         "name": "SXTPWR2800",
-        "title": "Pratt \u0026 Whitney R-2800-63W Double Wasp",
+        "title": "Pratt & Whitney R-2800-63W Double Wasp",
         "description": "2200HP turbosupercharged radial with water injection 2600HP. Flat-rated to 8km with ram air and WEP, 9km dry. Used by P-47D-22.",
         "mod": "SXT",
         "cost": 32,
@@ -1942,7 +1942,7 @@
     {
         "name": "SXTProbeGooo",
         "title": "Biological Sample Capsule",
-        "description": "This is a capsule containing biological samples (fruit flies, fungus, perhaps even a mouse or two). While some observations of the sample may be transmitted, only by recovering the sample safely can the most information be gained about life\u0027s response to the given situation.",
+        "description": "This is a capsule containing biological samples (fruit flies, fungus, perhaps even a mouse or two). While some observations of the sample may be transmitted, only by recovering the sample safely can the most information be gained about life's response to the given situation.",
         "mod": "SXT",
         "cost": 100,
         "entry_cost": 1000,
@@ -1989,7 +1989,7 @@
     },
     {
         "name": "SXTR280018WProp",
-        "title": "Pratt \u0026 Whitney R-2800-18W Double Wasp",
+        "title": "Pratt & Whitney R-2800-18W Double Wasp",
         "description": "WWII-era 2100HP (2450HP wet) twin-row 18-cylinder water-injected radial with a strong three-speed (only 2 modeled) two-stage supercharger. Note, due to modeling issues, will only develop rated altitude horsepower (high blower) when at maximum speed. Used on F4U-4 Corsair, XF6F-6 Hellcat, DC-6B.",
         "mod": "SXT",
         "cost": 24,
@@ -2012,7 +2012,7 @@
     },
     {
         "name": "SXTR280021Prop",
-        "title": "Pratt \u0026 Whitney R-2800-21 Double Wasp",
+        "title": "Pratt & Whitney R-2800-21 Double Wasp",
         "description": "2000HP turbosupercharged radial. Nearly flat-rated until about 8.5km. 12ft 2in prop for high speeds.",
         "mod": "SXT",
         "cost": 27,
@@ -2229,7 +2229,7 @@
     {
         "name": "SXTWingSmall",
         "title": "Mk0B Small Modular Wing",
-        "description": "A tiny wing, for tiny aeroplanes. A spare \u00270\u0027 was later discovered in the design specification. It had not been carried. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
+        "description": "A tiny wing, for tiny aeroplanes. A spare '0' was later discovered in the design specification. It had not been carried. (PART NOT SUPPORTED BY RO BUT PLACED AND COSTED BY RP-1)",
         "mod": "SXT",
         "cost": 40,
         "entry_cost": 1,
@@ -2421,7 +2421,7 @@
     {
         "name": "SXTlaunchclamp1",
         "title": "TT06-A Launch Stability Enhancer",
-        "description": "The TT06-A Stability Enhancer uses ground-breaking fastening technology to significantly increase the stability of spacecraft during the pre-launch phase. While OMB Demolition has been criticized in the past for using \u0022big fancy words for a rocket holder\u0022 in their description of their device, none can say the TT18 series doesn\u0027t deliver rock-solid clamping action, as advertised. The owner\u0027s manual strongly suggests these devices be placed on the bottommost section of the spacecraft, and activated as soon as the engines are lit, for optimal de-clamping performance.",
+        "description": "The TT06-A Stability Enhancer uses ground-breaking fastening technology to significantly increase the stability of spacecraft during the pre-launch phase. While OMB Demolition has been criticized in the past for using \"big fancy words for a rocket holder\" in their description of their device, none can say the TT18 series doesn't deliver rock-solid clamping action, as advertised. The owner's manual strongly suggests these devices be placed on the bottommost section of the spacecraft, and activated as soon as the engines are lit, for optimal de-clamping performance.",
         "mod": "SXT",
         "cost": 1,
         "entry_cost": 1,
@@ -2495,7 +2495,7 @@
     {
         "name": "SXTradialWindow",
         "title": "Airliner Window",
-        "description": "It\u0027s a window, you can look out of it. I wouldn\u0027t recommend it though, you might miss something on the TV.",
+        "description": "It's a window, you can look out of it. I wouldn't recommend it though, you might miss something on the TV.",
         "mod": "SXT",
         "cost": 1,
         "entry_cost": 1,
@@ -2517,16 +2517,16 @@
     },
     {
         "name": "SXTsciencenosecone",
-        "title": "GC-MS \u002B Antenna",
+        "title": "GC-MS + Antenna",
         "description": "The Gas Chromatograph - Mass Spectrometer (GC-MS) is an analytical instrument used for identification of multiple different substances in a selected gas sample, capable of detecting even trace amounts of them. Ideal of analyzing the atmospheric composition of unknown environments.",
         "mod": "SXT",
         "cost": 2000,
         "entry_cost": 2500,
         "category": "SCIENCE",
-        "info": "Atmosphere",
-        "year": "1967",
-        "technology": "scienceLunar",
-        "era": "05-LUNAR",
+        "info": "Mass Spectrometry",
+        "year": "1975",
+        "technology": "deepSpaceScience",
+        "era": "06-STATION",
         "ro": true,
         "rp0": true,
         "orphan": false,

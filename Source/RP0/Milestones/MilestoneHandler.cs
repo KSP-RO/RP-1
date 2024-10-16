@@ -1,11 +1,12 @@
 ﻿using ContractConfigurator;
 using ContractConfigurator.Parameters;
 using Contracts;
-using RP0.DataTypes;
+using ROUtils.DataTypes;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using ROUtils;
 
 namespace RP0.Milestones
 {
@@ -195,7 +196,7 @@ namespace RP0.Milestones
                 AddVesselCrewData(milestone.name, FlightGlobals.ActiveVessel);
                 // Add extra data here if desired
 
-                if (!HighLogic.LoadedSceneIsFlight || KerbalConstructionTimeData.Instance.IsSimulatedFlight)
+                if (!HighLogic.LoadedSceneIsFlight || SpaceCenterManagement.Instance.IsSimulatedFlight)
                     yield break;
 
                 yield return CaptureScreenshot(milestone, overwrite: false);
@@ -204,7 +205,7 @@ namespace RP0.Milestones
 
         private IEnumerator ContractParamCompleteRoutine(ContractConfiguratorParameter ccp)
         {
-            if (!HighLogic.LoadedSceneIsFlight || KerbalConstructionTimeData.Instance.IsSimulatedFlight ||
+            if (!HighLogic.LoadedSceneIsFlight || SpaceCenterManagement.Instance.IsSimulatedFlight ||
                 !ContractParamToMilestone.TryGetValue(ccp.ID, out Milestone milestone))
             {
                 yield break;

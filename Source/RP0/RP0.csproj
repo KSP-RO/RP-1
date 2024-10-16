@@ -35,10 +35,29 @@
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
+  <PropertyGroup>
+    <KSPRoot Condition=" '$(KSPRoot)' == '' ">
+      $(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
+  </PropertyGroup>
   <ItemGroup>
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
-    <Compile Include="Harmony\KSPWheel.cs" />
+    <Compile Include="ConfigurableStart\DateHandler.cs" />
+    <Compile Include="ConfigurableStart\PresetPickerGUI.cs" />
+    <Compile Include="ConfigurableStart\Scenario.cs" />
+    <Compile Include="ConfigurableStart\ScenarioHandler.cs" />
+    <Compile Include="ConfigurableStart\Utilities.cs" />
+    <Compile Include="Harmony\FlightInputHandler.cs" />
+    <Compile Include="Harmony\ModuleRCS.cs" />
+    <Compile Include="Harmony\Vessel.cs" />
+    <Compile Include="Harmony\RealAntennas.cs" />
+    <Compile Include="Harmony\ROHeatshields.cs" />
+    <Compile Include="ModIntegrations\KSCSwitcherInterop.cs" />
+    <Compile Include="ModIntegrations\TFInterop.cs" />
+    <Compile Include="Programs\ProgramModifier.cs" />
+    <Compile Include="Singletons\LeaderNotifications.cs" />
+    <Compile Include="SpaceCenter\Projects\HireStaffProject.cs" />
+    <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />
     <Compile Include="UI\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />
     <Compile Include="CareerLog\CareerEventScope.cs" />
@@ -65,10 +84,8 @@
     <Compile Include="Crew\TrainingDatabase.cs" />
     <Compile Include="UI\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
-    <Compile Include="DataTypes\PersistentCompressedConfigNode.cs" />
-    <Compile Include="DataTypes\PersistentSortedList.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
-    <Compile Include="Utilities\DTUtils.cs" />
+    <Compile Include="Utilities\RP0DTUtils.cs" />
     <Compile Include="Harmony\MainMenu.cs" />
     <Compile Include="Harmony\CrewListItem.cs" />
     <Compile Include="Harmony\EditorDriver.cs" />
@@ -95,10 +112,6 @@
     <Compile Include="SpaceCenter\LaunchComplex\LCEfficiency.cs" />
     <Compile Include="SpaceCenter\LaunchComplex\LCData.cs" />
     <Compile Include="Leaders\CurrencyModifierQueryRP0.cs" />
-    <Compile Include="DataTypes\PersistentDictionary.cs" />
-    <Compile Include="DataTypes\PersistentHashSet.cs" />
-    <Compile Include="DataTypes\Misc.cs" />
-    <Compile Include="DataTypes\PersistentList.cs" />
     <Compile Include="Harmony\EnumExtensions.cs" />
     <Compile Include="Harmony\GameSettings.cs" />
     <Compile Include="Harmony\CurrencyModifierQuery.cs" />
@@ -206,14 +219,11 @@
     <Compile Include="UpgradeScripts\v2_3_UpgradeUnlockCredit.cs" />
     <Compile Include="Utilities\BypassCertificateHandler.cs" />
     <Compile Include="Utilities\CSV\CsvWriter.cs" />
-    <Compile Include="Utilities\ContinuousLogger.cs" />
     <Compile Include="Utilities\ContractUtils.cs" />
     <Compile Include="Utilities\CurrencyUtils.cs" />
     <Compile Include="Utilities\KerbalismUtils.cs" />
     <Compile Include="ModIntegrations\KACWrapper.cs" />
-    <Compile Include="Utilities\KSPUtils.cs" />
-    <Compile Include="Utilities\MathUtils.cs" />
-    <Compile Include="Utilities\ObjectSerializer.cs" />
+    <Compile Include="Utilities\GUIUtils.cs" />
     <Compile Include="UI\MaintenanceGUI.cs" />
     <Compile Include="UI\TopWindow.cs" />
     <Compile Include="UI\UIBase.cs" />
@@ -222,8 +232,6 @@
     <Compile Include="UI\Tooltip.cs" />
     <Compile Include="UI\ToolingGUI.cs" />
     <Compile Include="UI\AvionicsGUI.cs" />
-    <Compile Include="Utilities\MiscUtils.cs" />
-    <Compile Include="Utilities\TransformUtils.cs" />
     <Compile Include="SpaceCenter\AirlaunchParams.cs" />
     <Compile Include="SpaceCenter\AirlaunchTechLevel.cs" />
     <Compile Include="SpaceCenter\Projects\ConstructionProject.cs" />
@@ -246,19 +254,17 @@
     <Compile Include="UI\KCT\GUI_NewPad.cs" />
     <Compile Include="UI\KCT\GUI_VesselMerge.cs" />
     <Compile Include="UI\KCT\GUI_Simulation.cs" />
-    <Compile Include="SpaceCenter\KCTCostModifier.cs" />
+    <Compile Include="SpaceCenter\PartEffectiveCostModifier.cs" />
     <Compile Include="ModIntegrations\CTIWrapper.cs" />
     <Compile Include="PartModules\ModuleTagList.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\KCTVesselData.cs" />
-    <Compile Include="Singletons\SingletonHost.cs" />
     <Compile Include="SpaceCenter\SimulationParams.cs" />
-    <Compile Include="Utilities\HyperEdit_Utilities.cs" />
     <Compile Include="Utilities\ECMHelper.cs" />
     <Compile Include="SpaceCenter\Projects\ISpaceCenterProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselProject.cs" />
     <Compile Include="UI\KCT\GUI_BuildPlans.cs" />
-    <Compile Include="SpaceCenter\KCTEvents.cs" />
+    <Compile Include="SpaceCenter\SCMEvents.cs" />
     <Compile Include="Singletons\Database.cs" />
     <Compile Include="UI\KCT\GUI_Main.cs" />
     <Compile Include="UI\KCT\GUI_BuildList.cs" />
@@ -273,120 +279,137 @@
     <Compile Include="SpaceCenter\Projects\ResearchProject.cs" />
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
     <Compile Include="Utilities\KCTUtilities.cs" />
-    <Compile Include="Utilities\WindowHelper.cs" />
-    <Compile Include="SpaceCenter\KerbalConstructionTimeData.cs" />
+    <Compile Include="SpaceCenter\SpaceCenterManagement.cs" />
+    <Compile Include="Utilities\ScienceUtils.cs" />
     <Compile Include="Utilities\TextureScale.cs" />
     <Compile Include="Persistence\KCTVesselTracker.cs" />
     <Compile Include="Singletons\KCTVesselTrackerEventHandler.cs" />
     <Compile Include="SpaceCenter\VesselBuildValidator.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="0Harmony, Version=2.0.4.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/GameData/000_Harmony/0Harmony.dll">
+      <HintPath>$(ReferencePath)/0Harmony.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp-firstpass.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp-firstpass.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ClickThroughBlocker">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/GameData/000_ClickThroughBlocker/Plugins/ClickThroughBlocker.dll">
+      <HintPath>$(ReferencePath)/ClickThroughBlocker.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ContractConfigurator, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ContractConfigurator\source\ContractConfigurator\bin\Release\ContractConfigurator.dll</HintPath>
+    <Reference Include="$(KSPRoot)/GameData/ContractConfigurator/ContractConfigurator.dll">
+      <HintPath>$(ReferencePath)/ContractConfigurator.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ferramGraph">
+    <Reference Include="$(KSPRoot)/GameData/FerramAerospaceResearch/Plugins/ferramGraph.dll">
+      <HintPath>$(ReferencePath)/ferramGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\Ionic.Zip.dll</HintPath>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Ionic.Zip.dll">
+      <HintPath>$(ReferencePath)/Ionic.Zip.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="Kerbalism112, Version=3.17.0.0, Culture=neutral, processorArchitecture=AMD64">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\temp\dlls\Kerbalism112.dll</HintPath>
+    <Reference Include="$(KSPRoot)/GameData/Kerbalism/Kerbalism112.kbin">
+      <HintPath>$(ReferencePath)/Kerbalism112.kbin</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="KSPCommunityFixes">
-      <HintPath>..\..\..\..\..\..\Games\R112\GameData\KSPCommunityFixes\Plugins\KSPCommunityFixes.dll</HintPath>
+    <Reference Include="$(KSPRoot)/GameData/KSPCommunityFixes/Plugins/KSPCommunityFixes.dll">
+      <HintPath>$(ReferencePath)/KSPCommunityFixes.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ModularFlightIntegrator">
+    <Reference Include="$(KSPRoot)/GameData/ModularFlightIntegrator/ModularFlightIntegrator.dll">
+      <HintPath>$(ReferencePath)/ModularFlightIntegrator.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="RealFuels">
+    <Reference Include="$(KSPRoot)/GameData/RealAntennas/Plugins/RealAntennas.dll">
+      <HintPath>$(ReferencePath)/RealAntennas.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="System">
+    <Reference Include="$(KSPRoot)/GameData/RealFuels/Plugins/RealFuels.dll">
+      <HintPath>$(ReferencePath)/RealFuels.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="ToolbarControl">
+    <Reference Include="$(KSPRoot)/GameData/ROUtils/Plugins/ROUtils.dll">
+      <HintPath>$(ReferencePath)/ROUtils.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine">
+    <Reference Include="$(KSPRoot)/GameData/SolverEngines/Plugins/SolverEngines.dll">
+      <HintPath>$(ReferencePath)/SolverEngines.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/System.dll">
+      <HintPath>$(ReferencePath)/System.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\KSP DLL\1.12.3\UnityEngine.AssetBundleModule.dll</HintPath>
+    <Reference Include="$(KSPRoot)/GameData/001_ToolbarControl/Plugins/ToolbarControl.dll">
+      <HintPath>$(ReferencePath)/ToolbarControl.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.AnimationModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.AnimationModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.AssetBundleModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.AssetBundleModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.CoreModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.CoreModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.ImageConversionModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.ImageConversionModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.ScreenCaptureModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.IMGUIModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.IMGUIModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.InputLegacyModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.InputLegacyModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UI">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.PhysicsModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.PhysicsModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ContractConfigurator\source\ContractConfigurator\bin\Release\UnityEngine.UIModule.dll</HintPath>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.ScreenCaptureModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.ScreenCaptureModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UnityWebRequestModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.TextRenderingModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.TextRenderingModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.JSONSerializeModule">
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.UI.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.UI.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.UIModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.UIModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.UnityWebRequestModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.UnityWebRequestModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.JSONSerializeModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.JSONSerializeModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ConfigurableStart\README.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <!--Krafs.Publicizer items-->

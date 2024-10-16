@@ -10,27 +10,32 @@ namespace ContractConfigurator.RP0
     {
         protected static Dictionary<string, DownrangeDistance> CompletedParams;
 
-        protected bool triggered = false;
-        protected double distance = 0;
-        protected double curDist = 0;
-        protected double markLatitude, markLongitude;
+        protected bool triggered { get; set; }
+        protected double distance { get; set; }
+        protected double curDist { get; set; }
+        protected double markLatitude { get; set; }
+        protected double markLongitude { get; set; }
+        protected float updateFrequency { get; set; }
 
         private float lastUpdate = 0.0f;
-        private const float UPDATE_FREQUENCY = 1f;
+        internal const float DEFAULT_UPDATE_FREQUENCY = 1f;
 
         public DownrangeDistance() : base(null)
         {
         }
 
-        public DownrangeDistance(string title, double distance) : base(title)
+        public DownrangeDistance(string title, double distance, float updateFrequency)
+            : base(title)
         {
             this.distance = distance;
+            this.updateFrequency = updateFrequency;
         }
 
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
 
+            node.AddValue("updateFrequency", updateFrequency);
             node.AddValue("distance", distance);
             node.AddValue("markLatitude", markLatitude);
             node.AddValue("markLongitude", markLongitude);
@@ -41,10 +46,11 @@ namespace ContractConfigurator.RP0
         {
             base.OnParameterLoad(node);
 
-            node.TryGetValue("distance", ref distance);
-            node.TryGetValue("markLatitude", ref markLatitude);
-            node.TryGetValue("markLongitude", ref markLongitude);
-            node.TryGetValue("triggered", ref triggered);
+            updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
+            distance = ConfigNodeUtil.ParseValue<double>(node, "distance");
+            markLatitude = ConfigNodeUtil.ParseValue<double>(node, "markLatitude");
+            markLongitude = ConfigNodeUtil.ParseValue<double>(node, "markLongitude");
+            triggered = ConfigNodeUtil.ParseValue<bool>(node, "triggered");
         }
 
         protected override string GetParameterTitle()
@@ -148,7 +154,7 @@ namespace ContractConfigurator.RP0
 
             base.OnUpdate();
 
-            if (Time.fixedTime - lastUpdate > UPDATE_FREQUENCY)
+            if (Time.fixedTime - lastUpdate > updateFrequency)
             {
                 lastUpdate = Time.fixedTime;
 

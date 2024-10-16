@@ -1,4 +1,4 @@
-﻿using RP0.DataTypes;
+﻿using ROUtils.DataTypes;
 
 namespace RP0
 {
@@ -66,14 +66,17 @@ namespace RP0
 
         public double GetTimeLeft()
         {
-            double baseFunds = Funding.Instance.Funds;
+            return EstimateTimeToFunds(Funding.Instance.Funds, targetFunds, epsilonTime);
+        }
 
+        public static double EstimateTimeToFunds(double baseFunds, double targetFunds, double epsilonTime)
+        {
             if (targetFunds - baseFunds <= 0.001d)
                 return 0d;
 
             double timeLower = MinTime;
             double timeUpper = MaxTime;
-            
+
             double bestTime = -1d;
             double lastFunds = 0d;
             bool lastDir = false;
@@ -81,7 +84,7 @@ namespace RP0
             {
                 double time = (timeUpper + timeLower) * 0.5d;
                 // This is the post-CMQ delta.
-                double fundDelta = KerbalConstructionTimeData.Instance.GetBudgetDelta(time);
+                double fundDelta = SpaceCenterManagement.Instance.GetBudgetDelta(time);
                 double totalFunds = baseFunds + fundDelta;
 
                 if (totalFunds >= targetFunds)

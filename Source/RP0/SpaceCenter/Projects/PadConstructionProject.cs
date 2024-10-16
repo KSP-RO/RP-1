@@ -16,7 +16,7 @@ namespace RP0
             {
                 if (_lc == null)
                 {
-                    foreach (var ksc in KerbalConstructionTimeData.Instance.KSCs)
+                    foreach (var ksc in SpaceCenterManagement.Instance.KSCs)
                     {
                         foreach (var lc in ksc.LaunchComplexes)
                         {
@@ -55,7 +55,7 @@ namespace RP0
 
             try
             {
-                KCTEvents.OnPadConstructionCancel?.Fire(this, lp);
+                SCMEvents.OnPadConstructionCancel?.Fire(this, lp);
             }
             catch (Exception ex)
             {
@@ -68,7 +68,7 @@ namespace RP0
         protected override void ProcessComplete()
         {
 
-            if (ScenarioUpgradeableFacilities.Instance != null && !KerbalConstructionTimeData.Instance.ErroredDuringOnLoad)
+            if (ScenarioUpgradeableFacilities.Instance != null && !SpaceCenterManagement.Instance.ErroredDuringOnLoad)
             {
                 LCLaunchPad lp = LC.LaunchPads.Find(p => p.id == id);
                 lp.isOperational = true;
@@ -77,7 +77,7 @@ namespace RP0
 
                 try
                 {
-                    KCTEvents.OnPadConstructionComplete?.Fire(this, lp);
+                    SCMEvents.OnPadConstructionComplete?.Fire(this, lp);
                 }
                 catch (Exception ex)
                 {

@@ -36,6 +36,10 @@ namespace RP0.Programs
                 }
                 // Create a copy so we can mess with the speed freely in the UI
                 _program = new Program(source);
+                if (!_program.IsComplete && !_program.IsActive)
+                {
+                    _program.ApplyProgramModifiers();
+                }
             }
         }
 

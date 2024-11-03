@@ -568,7 +568,10 @@ namespace RP0
 
             KCTUtilities.CleanupDebris(launchSiteName);
             SpaceCenterManagement.Instance.AirlaunchParams.KSPVesselId = Guid.Empty;
-            FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
+            SpaceCenterManagement.Instance.StartCoroutine(CallbackUtil.DelayedCallback(1, delegate
+            {
+                FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
+            }));
         }
 
         public bool ResourcesOK(LCData stats, List<string> failedReasons = null)

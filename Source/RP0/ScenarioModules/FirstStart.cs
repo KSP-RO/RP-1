@@ -30,7 +30,7 @@ namespace RP0
 
                 ScienceUtils.MarkExperimentsAsDone(Database.StartCompletedExperiments);
                 CopyCraftFiles();
-                UnlockCreditHandler.Instance.IncrementCredit("start", HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().StartingUnlockCredit);
+                UnlockCreditHandler.Instance.IncrementCredit(HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().StartingUnlockCredit);
 
                 HighLogic.CurrentGame.CrewRoster.Update(Planetarium.GetUniversalTime());
             }

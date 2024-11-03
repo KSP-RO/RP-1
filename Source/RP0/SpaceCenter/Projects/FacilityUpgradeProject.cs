@@ -54,7 +54,7 @@ namespace RP0
             }
         }
 
-        public void Apply()
+        public bool Apply()
         {
             RP0Debug.Log($"Upgrading {name} to level {upgradeLevel}");
             KCTUtilities.SetFacilityLevel(FacilityType, upgradeLevel);
@@ -70,6 +70,8 @@ namespace RP0
             {
                 RP0Debug.LogError($"Setting facility level failed, Current: {newLvl} Desired: {upgradeLevel}");
             }
+
+            return upgradeProcessed;
         }
 
         public static List<UpgradeableFacility> GetFacilityReferencesById(string id)
@@ -136,15 +138,16 @@ namespace RP0
         {
             if (ScenarioUpgradeableFacilities.Instance != null && !SpaceCenterManagement.Instance.ErroredDuringOnLoad)
             {
-                Apply();
-
-                try
+                if (Apply())
                 {
-                    SCMEvents.OnFacilityUpgradeComplete?.Fire(this);
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogException(ex);
+                    try
+                    {
+                        SCMEvents.OnFacilityUpgradeComplete?.Fire(this);
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogException(ex);
+                    }
                 }
             }
         }

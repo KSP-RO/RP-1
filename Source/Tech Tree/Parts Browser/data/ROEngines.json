@@ -3313,31 +3313,6 @@
         ]
     },
     {
-        "name": "ROE-LR101-BDB",
-        "title": "LR101 Vernier Engine",
-        "description": "",
-        "mod": "ROEngines",
-        "cost": 38,
-        "entry_cost": 1000,
-        "category": "ORBITAL",
-        "info": "",
-        "year": "1956",
-        "technology": "orbitalRocketry1956",
-        "era": "",
-        "ro": true,
-        "rp0": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "",
-        "engine_config": "LR101",
-        "upgrade": false,
-        "entry_cost_mods": "LR101-NA-3",
-        "identical_part_name": "LR101",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
-    },
-    {
         "name": "ROE-LR101Inline",
         "title": "LR101 Vernier (Inline)",
         "description": "",
@@ -3363,8 +3338,33 @@
         ]
     },
     {
-        "name": "ROE-LR101Inline-BDB",
+        "name": "ROE-LR101Inline_2",
         "title": "LR101 Vernier (Inline)",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 38,
+        "entry_cost": 1000,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1956",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "rp0": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "LR101",
+        "upgrade": false,
+        "entry_cost_mods": "LR101-NA-3",
+        "identical_part_name": "LR101",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROE-LR101_2",
+        "title": "LR101 Vernier Engine",
         "description": "",
         "mod": "ROEngines",
         "cost": 38,
@@ -3413,7 +3413,7 @@
         ]
     },
     {
-        "name": "ROE-LR105-BDB",
+        "name": "ROE-LR105_2",
         "title": "LR105 Series Engine",
         "description": "",
         "mod": "ROEngines",
@@ -3735,7 +3735,7 @@
         ]
     },
     {
-        "name": "ROE-LR89-BDB",
+        "name": "ROE-LR89_2",
         "title": "LR89 Series Engine",
         "description": "",
         "mod": "ROEngines",
@@ -7907,6 +7907,30 @@
     },
     {
         "name": "ROE-Veronique",
+        "title": "Veronique",
+        "description": "",
+        "mod": "ROEngines",
+        "cost": 80,
+        "entry_cost": 0,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "0",
+        "technology": "unlockParts",
+        "era": "",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Veronique",
+        "engine_config": "Veronique",
+        "upgrade": false,
+        "entry_cost_mods": "Veronique",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "ROE-VeroniqueAK",
         "title": "Veronique",
         "description": "",
         "mod": "ROEngines",

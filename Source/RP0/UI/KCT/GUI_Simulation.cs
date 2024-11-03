@@ -251,7 +251,10 @@ namespace RP0
             {
                 launchSiteName = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName;
             }
-            FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
+            SpaceCenterManagement.Instance.StartCoroutine(CallbackUtil.DelayedCallback(1, delegate
+            {
+                FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
+            }));
         }
     }
 }

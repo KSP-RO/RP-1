@@ -238,10 +238,6 @@ namespace RP0
 
         public double IncrementProgress(double UTDiff)
         {
-            // Don't progress blocked items
-            if (GetBlockingTech() != null)
-                return 0d;
-
             double bR = BuildRate;
             if (bR == 0d && PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
                 return 0d;
@@ -288,11 +284,11 @@ namespace RP0
                 SpaceCenterManagement.Instance.RecalculateBuildRates(); // this might change other rates
 
                 double portion = toGo / increment;
-                UnlockCreditHandler.Instance.IncrementCreditTime(techID, portion * UTDiff);
+                UnlockCreditHandler.Instance.IncrementCreditTime(portion * UTDiff);
                 return (1d - portion) * UTDiff;
             }
 
-            UnlockCreditHandler.Instance.IncrementCreditTime(techID, UTDiff);
+            UnlockCreditHandler.Instance.IncrementCreditTime(UTDiff);
             return 0d;
         }
 

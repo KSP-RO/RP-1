@@ -452,7 +452,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m, 7000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-aquaculture-375-1",
@@ -474,7 +476,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-attach-125-1",
@@ -979,7 +983,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m, 10000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-core-1875-1",
@@ -1001,7 +1007,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-core-25-1",
@@ -1024,7 +1032,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m, 12000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-core-375-1",
@@ -1047,7 +1057,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m, 15000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-core-5-1",
@@ -1069,7 +1081,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-cupola-125-1",
@@ -1092,7 +1106,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m, 5000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-cupola-1875-1",
@@ -1114,7 +1130,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-cupola-375-1",
@@ -1137,7 +1155,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m, 9000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-cupola-greenhouse-125-1",
@@ -1159,7 +1179,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-cupola-telescope-125-1",
@@ -1181,7 +1203,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-docking-125-1",
@@ -1226,7 +1250,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-dome-cupola-5-1",
@@ -1248,7 +1274,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-dome-greenhouse-5-1",
@@ -1270,7 +1298,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-dome-habitation-5-1",
@@ -1292,7 +1322,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-expandable-centrifuge-375-1",
@@ -1314,7 +1346,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-expandable-centrifuge-375-2",
@@ -1336,7 +1370,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-expandable-centrifuge-5-1",
@@ -1358,7 +1394,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-extendable-tube-125-1",
@@ -1426,7 +1464,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-greenhouse-375-1",
@@ -1448,7 +1488,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-greenhouse-5-1",
@@ -1470,7 +1512,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-125-1",
@@ -1493,7 +1537,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m, 5000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-1875-1",
@@ -1515,7 +1561,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-1875-2",
@@ -1537,7 +1585,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-25-1",
@@ -1560,7 +1610,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m, 7000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-375-1",
@@ -1583,7 +1635,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m, 9000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-375-2",
@@ -1606,7 +1660,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m, 9000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-375-3",
@@ -1629,7 +1685,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m, 9000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-5-1",
@@ -1651,7 +1709,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-habitation-5-2",
@@ -1673,7 +1733,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-hub-125-1",
@@ -1763,7 +1825,9 @@
         "upgrade": false,
         "entry_cost_mods": "inflatable",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-inflatable-centrifuge-125-2",
@@ -1785,7 +1849,9 @@
         "upgrade": false,
         "entry_cost_mods": "inflatable",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-inflatable-centrifuge-25-1",
@@ -1807,7 +1873,9 @@
         "upgrade": false,
         "entry_cost_mods": "inflatable",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-inflatable-hab-125-1",
@@ -1829,7 +1897,9 @@
         "upgrade": false,
         "entry_cost_mods": "inflatable",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-inflatable-hab-125-2",
@@ -1851,7 +1921,9 @@
         "upgrade": false,
         "entry_cost_mods": "inflatable",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-inflatable-hab-125-3",
@@ -1873,7 +1945,9 @@
         "upgrade": false,
         "entry_cost_mods": "inflatable",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-inflatable-hab-25-1",
@@ -1895,7 +1969,9 @@
         "upgrade": false,
         "entry_cost_mods": "inflatable",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-inflatable-hab-25-2",
@@ -1917,7 +1993,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-lab-375-1",
@@ -1940,7 +2018,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m, 20000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-lab-5-1",
@@ -1962,7 +2042,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-lab-pallet-1",
@@ -2028,7 +2110,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-logistics-5-2",
@@ -2050,7 +2134,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-observation-25-1",
@@ -2073,15 +2159,17 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m, 7000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-science-1875-1",
         "title": "3.38m Science Module",
         "description": "",
         "mod": "Station Parts Expansion Redux",
-        "cost": 8000,
-        "entry_cost": 0,
+        "cost": "8000",
+        "entry_cost": "0",
         "category": "STATIONS",
         "info": "",
         "year": "1986",
@@ -2095,7 +2183,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-125-1",
@@ -2413,7 +2503,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m, 5000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-utility-1875-1",
@@ -2433,8 +2525,10 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "stations415m",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     }
 ]

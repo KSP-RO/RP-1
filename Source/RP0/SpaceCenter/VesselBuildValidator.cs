@@ -55,56 +55,52 @@ namespace RP0
 
         private IEnumerator RunValidationRoutine(VesselProject vp)
         {
-            if (ProcessFacilityChecks(vp) != ValidationResult.Success)
+            _validationResult = ProcessFacilityChecks(vp);
+
+            if (_validationResult == ValidationResult.Success &&
+                !KSPUtils.CurrentGameIsCareer())
             {
-                _failureActions();
-                yield break;
-            }
-            if (!KSPUtils.CurrentGameIsCareer())
-            {
+                _routine = null;
                 _successActions(vp);
                 yield break;
             }
 
-            ProcessPartAvailability(vp);
-            while (_validationResult == ValidationResult.Undecided)
-                yield return null;
-
-            _routine = null;
-            if (_validationResult != ValidationResult.Success)
+            if (_validationResult == ValidationResult.Success)
             {
-                _failureActions();
-                yield break;
-            }
-
-            do
-            {
-                ProcessPartConfigs(vp);
+                ProcessPartAvailability(vp);
                 while (_validationResult == ValidationResult.Undecided)
                     yield return null;
             }
-            while (_validationResult == ValidationResult.Rerun);
 
-            _routine = null;
-            if (_validationResult != ValidationResult.Success)
+            if (_validationResult == ValidationResult.Success)
             {
-                _failureActions();
-                yield break;
+                do
+                {
+                    ProcessPartConfigs(vp);
+                    while (_validationResult == ValidationResult.Undecided)
+                        yield return null;
+                }
+                while (_validationResult == ValidationResult.Rerun);
             }
 
-            if (ProcessFundsChecks(vp) != ValidationResult.Success)
+            if (_validationResult == ValidationResult.Success)
             {
-                _failureActions();
-                yield break;
+                _validationResult = ProcessFundsChecks(vp);
             }
 
-            ProcessUntooledParts(vp);
-            while (_validationResult == ValidationResult.Undecided)
-                yield return null;
+            if (_validationResult == ValidationResult.Success)
+            {
+                ProcessUntooledParts(vp);
+                while (_validationResult == ValidationResult.Undecided)
+                    yield return null;
+            }
 
-            ProcessExcessEC(vp);
-            while (_validationResult == ValidationResult.Undecided)
-                yield return null;
+            if (_validationResult == ValidationResult.Success)
+            {
+                ProcessExcessEC(vp);
+                while (_validationResult == ValidationResult.Undecided)
+                    yield return null;
+            }
 
             _routine = null;
             if (_validationResult != ValidationResult.Success)
@@ -186,9 +182,7 @@ namespace RP0
             var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -unlockCost, 0d, 0d);
             double postCMQUnlockCost = -cmq.GetTotal(CurrencyRP0.Funds, false);
 
-            double credit = UnlockCreditHandler.Instance.GetCreditAmount(partList);
-
-            double spentCredit = Math.Min(postCMQUnlockCost, credit);
+            double spentCredit = Math.Min(postCMQUnlockCost, UnlockCreditHandler.Instance.TotalCredit);
             cmq.AddPostDelta(CurrencyRP0.Funds, spentCredit, true);
 
             int partCount = partList.Count;
@@ -455,7 +449,7 @@ namespace RP0
                         string costStr = cmq.GetCostLineOverride(true, false, false, true);
                         double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds, false);
                         double invertCMQOp = error.CostToResolve / trueTotal;
-                        double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.GetCreditAmount(error.TechToResolve));
+                        double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.TotalCredit);
                         cmq.AddPostDelta(CurrencyRP0.Funds, creditAmtToUse, true);
                         string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true, true);
                         if (string.IsNullOrEmpty(afterCreditLine))

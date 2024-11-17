@@ -89,7 +89,7 @@ namespace RP0
         /// <summary>
         /// Whether the avionics is NE with controllable mass > 0 and control is being locked by being interplanetary.
         /// </summary>
-        public bool IsNearEarthAndLockedByInterplanetary => GetInternalMassLimit() > 0 && IsLockedByInterplanetary;
+        public bool IsNearEarthAndLockedByInterplanetary => !dead && GetInternalMassLimit() > 0 && IsLockedByInterplanetary;
 
         /// <summary>
         /// The altitude threshold around home world above which interplanetary avionics is required.

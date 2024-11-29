@@ -1415,6 +1415,29 @@
         "module_tags": []
     },
     {
+        "name": "AR-2",
+        "title": "AR-2",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "-6",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AR2",
+        "upgrade": true,
+        "entry_cost_mods": "5000,XLR42-NA-2",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "AR-22",
         "title": "AR-22",
         "description": "",
@@ -4881,7 +4904,7 @@
         "spacecraft": "Saturn V",
         "engine_config": "J2",
         "upgrade": false,
-        "entry_cost_mods": "225000, HydroloxPumps, Navaho-TP",
+        "entry_cost_mods": "225000, HydroloxPumps, Navaho-TP, throttlingTP, PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6840,6 +6863,29 @@
         "entry_cost_mods": "1200, MA-5-System-I, LR105-NA-7-1",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "LR121-NA-1",
+        "title": "LR121-NA-1",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "-4",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1963",
+        "technology": "orbitalRocketry1963",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AR2",
+        "upgrade": true,
+        "entry_cost_mods": "5000,PumpReignition,throttlingTP",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "LR129-P-1",
@@ -14020,7 +14066,7 @@
         "spacecraft": "",
         "engine_config": "RL10",
         "upgrade": false,
-        "entry_cost_mods": "37549, HydroloxPumps",
+        "entry_cost_mods": "37549, HydroloxPumps, PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -15619,7 +15665,7 @@
         "spacecraft": "",
         "engine_config": "S155",
         "upgrade": false,
-        "entry_cost_mods": "10000, Wasserfall",
+        "entry_cost_mods": "10000,Wasserfall,throttlingTP,PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -18885,6 +18931,27 @@
         "module_tags": []
     },
     {
+        "name": "XASR-2",
+        "title": "XASR-2",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": 4,
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1950",
+        "technology": "earlyRocketry",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Aerobee",
+        "upgrade": true,
+        "entry_cost_mods": "1000, XASR-1",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "XIPS25cm",
         "title": "XIPS25cm",
         "description": "",
@@ -19086,7 +19153,7 @@
         "spacecraft": "X-2",
         "engine_config": "XLR25",
         "upgrade": false,
-        "entry_cost_mods": "XLR11-RM-5, 5000",
+        "entry_cost_mods": "5000,XLR11-RM-5,throttlingTP,PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -19135,6 +19202,29 @@
         "entry_cost_mods": "Navaho-PhaseII-TP",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "XLR42-NA-2",
+        "title": "XLR42-NA-2",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1957",
+        "technology": "orbitalRocketry1956",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AR2",
+        "upgrade": false,
+        "entry_cost_mods": "10000",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "XLR43-NA-1",
@@ -19330,7 +19420,7 @@
         "spacecraft": "X-15",
         "engine_config": "XLR99",
         "upgrade": false,
-        "entry_cost_mods": "50000, XLR11-RM-3",
+        "entry_cost_mods": "50000, XLR11-RM-3,throttlingTP,PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -19339,7 +19429,7 @@
         "title": "XLR99-RM-2A",
         "description": "",
         "mod": "Engine_Config",
-        "cost": 50,
+        "cost": 10,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "ROEE",
@@ -19351,8 +19441,29 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "XLR99",
-        "upgrade": false,
+        "upgrade": true,
         "entry_cost_mods": "5000,XLR99-RM-2",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "XLR99-RM-3",
+        "title": "XLR99-RM-3",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": 27,
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1966",
+        "technology": "orbitalRocketry1966",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "XLR99",
+        "upgrade": true,
+        "entry_cost_mods": "50000,XLR99-RM-2A",
         "identical_part_name": "",
         "module_tags": []
     },

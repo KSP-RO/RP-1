@@ -62,7 +62,7 @@ namespace RP0
                         if (ecResource > 0 || HighLogic.LoadedSceneIsEditor)
                         {
                             partAvionicsMass += mA.CurrentMassLimit;
-                            axial |= mA.allowAxial;
+                            axial |= !mA.dead && mA.allowAxial;
                             isLimitedByNonInterplanetary |= mA.IsNearEarthAndLockedByInterplanetary;
                         }
                     }

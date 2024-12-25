@@ -5974,7 +5974,7 @@
         "category": "FLIGHT",
         "info": "Shuttle Parts",
         "year": "1981",
-        "technology": "matureTurbofans",
+        "technology": "spaceShuttles",
         "era": "07-SPCPLANES",
         "ro": true,
         "rp0": true,

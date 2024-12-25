@@ -4873,7 +4873,7 @@
         "category": "EDL",
         "info": "Lander",
         "year": "1967",
-        "technology": "lunarOrbiterCapsules",
+        "technology": "lunarRatedHeatshields",
         "era": "05-LUNAR",
         "ro": true,
         "rp0": true,

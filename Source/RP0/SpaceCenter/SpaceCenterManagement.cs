@@ -460,6 +460,12 @@ namespace RP0
                     UpdateTechYearMults();
                     _lastYearMultUpdateUT = UT;
                 }
+
+                if (MaintenanceHandler.Instance == null)
+                {
+                    // Normally handled through MaintenanceHandler but that doesn't exist outside career mode
+                    ProgressBuildTime(UTDiff);
+                }
             }
 
             if (HighLogic.LoadedSceneIsFlight && IsSimulatedFlight)
@@ -952,6 +958,8 @@ namespace RP0
         public double GetBudgetDelta(double deltaTime)
         {
             // note NetUpkeepPerDay is negative or 0.
+
+            if (MaintenanceHandler.Instance == null) return 0;
 
             double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
             double fundDelta = Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)

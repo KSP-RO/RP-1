@@ -1385,7 +1385,7 @@ namespace RP0
                 MessageSystem.Instance.AddMessage(m);
             }
 
-            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
         }
 
         public void ReleaseShipNode()

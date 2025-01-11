@@ -1286,8 +1286,26 @@ namespace RP0
         private static IEnumerator SetSimOrbit(SimulationParams simParams)
         {
             yield return new WaitForEndOfFrame();
-            RP0Debug.Log($"Moving vessel to orbit. {simParams.SimulationBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
-            HyperEdit_Utilities.PutInOrbitAround(simParams.SimulationBody, simParams.SimOrbitAltitude, simParams.SimInclination);
+
+            CelestialBody body = simParams.SimulationBody;
+            if (simParams.SimOrbitAp == 0 && simParams.SimOrbitPe == 0)
+            {
+                double sma = simParams.SimOrbitAltitude + body.Radius;
+                double ecc = 0.0000001;    // Just a really smol value to prevent Ap and Pe from flickering around
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, 0.0, 0.0, 0.0);
+                FloatingOrigin.ResetTerrainShaderOffset();
+            }
+            else
+            {
+                double ra = simParams.SimOrbitAp + body.Radius;
+                double rp = simParams.SimOrbitPe + body.Radius;
+                double sma = (ra + rp) / 2;
+                double ecc = (ra - rp) / (ra + rp);
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, Math.PI, 0.0, 0.0);
+                FloatingOrigin.ResetTerrainShaderOffset();
+            }
         }
 
         private void AddSimulationWatermark()

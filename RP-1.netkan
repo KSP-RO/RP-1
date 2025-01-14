@@ -112,6 +112,7 @@ conflicts:
   - name: KerbalConstructionTime
   - name: CrowdSourcedScience
   - name: HideEmptyTechNodes
+  - name: CommunityTechTree
   - name: MechJebForAll
   - name: NearFutureElectrical-DecayingRTGs
   - name: KRASH

@@ -4427,7 +4427,7 @@
     },
     {
         "name": "ROE-ModularRCS",
-        "title": "Modular RCS",
+        "title": "Procedural RCS",
         "description": "",
         "mod": "ROEngines",
         "cost": 2,

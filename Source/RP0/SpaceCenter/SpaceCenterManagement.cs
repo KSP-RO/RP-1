@@ -460,6 +460,12 @@ namespace RP0
                     UpdateTechYearMults();
                     _lastYearMultUpdateUT = UT;
                 }
+
+                if (MaintenanceHandler.Instance == null)
+                {
+                    // Normally handled through MaintenanceHandler but that doesn't exist outside career mode
+                    ProgressBuildTime(UTDiff);
+                }
             }
 
             if (HighLogic.LoadedSceneIsFlight && IsSimulatedFlight)
@@ -925,7 +931,7 @@ namespace RP0
             double engineers = 0d;
             foreach (var lc in ksc.LaunchComplexes)
                 engineers += GetEffectiveEngineersForSalary(lc);
-            return engineers + ksc.UnassignedEngineers * Database.SettingsSC.IdleSalaryMult;
+            return engineers + ksc.UnassignedEngineers * Database.SettingsSC.EngineerIdleSalaryMult;
         }
 
         public double GetEffectiveEngineersForSalary(LCSpaceCenter ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
@@ -935,12 +941,12 @@ namespace RP0
             if (lc.IsOperational && lc.Engineers > 0)
             {
                 if (!lc.IsActive)
-                    return lc.Engineers * Database.SettingsSC.IdleSalaryMult;
+                    return lc.Engineers * Database.SettingsSC.EngineerIdleSalaryMult;
 
                 if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
                 {
                     int num = Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
-                    return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.IdleSalaryMult;
+                    return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.EngineerIdleSalaryMult;
                 }
 
                 return lc.Engineers * lc.RushSalary;
@@ -952,6 +958,8 @@ namespace RP0
         public double GetBudgetDelta(double deltaTime)
         {
             // note NetUpkeepPerDay is negative or 0.
+
+            if (MaintenanceHandler.Instance == null) return 0;
 
             double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
             double fundDelta = Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
@@ -1286,8 +1294,26 @@ namespace RP0
         private static IEnumerator SetSimOrbit(SimulationParams simParams)
         {
             yield return new WaitForEndOfFrame();
-            RP0Debug.Log($"Moving vessel to orbit. {simParams.SimulationBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
-            HyperEdit_Utilities.PutInOrbitAround(simParams.SimulationBody, simParams.SimOrbitAltitude, simParams.SimInclination);
+
+            CelestialBody body = simParams.SimulationBody;
+            if (simParams.SimOrbitAp == 0 && simParams.SimOrbitPe == 0)
+            {
+                double sma = simParams.SimOrbitAltitude + body.Radius;
+                double ecc = 0.0000001;    // Just a really smol value to prevent Ap and Pe from flickering around
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, 0.0, 0.0, 0.0);
+                FloatingOrigin.ResetTerrainShaderOffset();
+            }
+            else
+            {
+                double ra = simParams.SimOrbitAp + body.Radius;
+                double rp = simParams.SimOrbitPe + body.Radius;
+                double sma = (ra + rp) / 2;
+                double ecc = (ra - rp) / (ra + rp);
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, Math.PI, 0.0, 0.0);
+                FloatingOrigin.ResetTerrainShaderOffset();
+            }
         }
 
         private void AddSimulationWatermark()

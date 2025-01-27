@@ -10,8 +10,9 @@ namespace RP0
         private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), 300, 1);
         private static Vector2 _bodyChooserScrollPos;
 
-        private static string _sOrbitAlt = "", _sOrbitInc = "", _UTString = "", _sDelay = "0";
+        private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _UTString = "", _sDelay = "0";
         private static bool _fromCurrentUT = true;
+        private static bool _circOrbit = true;
 
         public static void DrawSimulationWindow(int windowID)
         {
@@ -72,20 +73,35 @@ namespace RP0
             if (simParams.SimulationBody == Planetarium.fetch.Home)
             {
                 bool changed = simParams.SimulateInOrbit;
-                simParams.SimulateInOrbit = GUILayout.Toggle(simParams.SimulateInOrbit, " Start in orbit?");
+                simParams.SimulateInOrbit = GUILayout.Toggle(simParams.SimulateInOrbit, " Start in orbit");
                 if (simParams.SimulateInOrbit != changed)
                     _simulationConfigPosition.height = 1;
             }
             if (simParams.SimulationBody != Planetarium.fetch.Home || simParams.SimulateInOrbit)
             {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Orbit Altitude (km): ");
-                _sOrbitAlt = GUILayout.TextField(_sOrbitAlt, GUILayout.Width(100));
-                GUILayout.EndHorizontal();
-                GUILayout.BeginHorizontal();
-                GUILayout.Label("Min: " + simParams.SimulationBody.atmosphereDepth / 1000);
-                GUILayout.Label("Max: " + Math.Floor(simParams.SimulationBody.sphereOfInfluence) / 1000);
-                GUILayout.EndHorizontal();
+                _circOrbit = GUILayout.Toggle(_circOrbit, "Circular");
+                if (_circOrbit)
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Orbit Altitude (km): ");
+                    _sOrbitAlt = GUILayout.TextField(_sOrbitAlt, GUILayout.Width(100));
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Min: " + simParams.SimulationBody.atmosphereDepth / 1000);
+                    GUILayout.Label("Max: " + Math.Floor((simParams.SimulationBody.sphereOfInfluence - simParams.SimulationBody.Radius) / 1000));
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Orbit Periapsis (km): ");
+                    _sOrbitPe = GUILayout.TextField(_sOrbitPe, GUILayout.Width(100));
+                    GUILayout.EndHorizontal();
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Orbit Apoapsis (km): ");
+                    _sOrbitAp = GUILayout.TextField(_sOrbitAp, GUILayout.Width(100));
+                    GUILayout.EndHorizontal();
+                }
 
                 if (!simParams.SimulateInOrbit) simParams.SimulateInOrbit = true;
             }
@@ -100,6 +116,11 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Inclination: ");
                 _sOrbitInc = GUILayout.TextField(_sOrbitInc, GUILayout.Width(50));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("LAN: ");
+                _sOrbitLAN = GUILayout.TextField(_sOrbitLAN, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
             }
 
@@ -174,20 +195,45 @@ namespace RP0
                 return;
             }
 
-            if (simParams.SimulationBody != Planetarium.fetch.Home)
+            CelestialBody body = simParams.SimulationBody;
+
+            if (body != Planetarium.fetch.Home)
                 simParams.SimulateInOrbit = true;
 
             if (simParams.SimulateInOrbit)
             {
-                if (!double.TryParse(_sOrbitAlt, out simParams.SimOrbitAltitude))
-                    simParams.SimOrbitAltitude = simParams.SimulationBody.atmosphere ? simParams.SimulationBody.atmosphereDepth + 20000 : 20000;
+                if (_circOrbit)
+                {
+                    if (!double.TryParse(_sOrbitAlt, out simParams.SimOrbitAltitude))
+                        simParams.SimOrbitAltitude = GetDefaultAltitudeForBody(body);
+                    else
+                        simParams.SimOrbitAltitude = EnsureSafeMaxAltitude(1000 * simParams.SimOrbitAltitude, body);
+
+                    simParams.SimOrbitPe = simParams.SimOrbitAp = 0;
+                }
                 else
-                    simParams.SimOrbitAltitude = Math.Min(Math.Max(1000 * simParams.SimOrbitAltitude, simParams.SimulationBody.atmosphereDepth), simParams.SimulationBody.sphereOfInfluence);
+                {
+                    if (!double.TryParse(_sOrbitPe, out simParams.SimOrbitPe))
+                        simParams.SimOrbitPe = GetDefaultAltitudeForBody(body);
+
+                    if (!double.TryParse(_sOrbitAp, out simParams.SimOrbitAp))
+                        simParams.SimOrbitAp = GetDefaultAltitudeForBody(body);
+
+                    simParams.SimOrbitAp = EnsureSafeMaxAltitude(1000 * simParams.SimOrbitAp, body);
+                    simParams.SimOrbitPe = Math.Min(1000 * simParams.SimOrbitPe, simParams.SimOrbitAp);
+
+                    simParams.SimOrbitAltitude = 0;
+                }
 
                 if (!double.TryParse(_sOrbitInc, out simParams.SimInclination))
                     simParams.SimInclination = 0;
                 else
                     simParams.SimInclination %= 360;
+
+                if (!double.TryParse(_sOrbitLAN, out simParams.SimLAN))
+                    simParams.SimLAN = 0;
+                else
+                    simParams.SimLAN %= 360;
             }
 
             double currentUT = Planetarium.GetUniversalTime();
@@ -255,6 +301,16 @@ namespace RP0
             {
                 FlightDriver.StartWithNewLaunch(tempFile, EditorLogic.FlagURL, launchSiteName, manifest);
             }));
+        }
+
+        private static double EnsureSafeMaxAltitude(double altitudeMeters, CelestialBody body)
+        {
+            return Math.Min(Math.Max(altitudeMeters, body.atmosphereDepth), body.sphereOfInfluence - body.Radius - 1000);
+        }
+
+        private static double GetDefaultAltitudeForBody(CelestialBody body)
+        {
+            return body.atmosphere ? body.atmosphereDepth + 20000 : 20000;
         }
     }
 }

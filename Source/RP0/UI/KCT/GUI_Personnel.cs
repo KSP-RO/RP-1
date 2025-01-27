@@ -45,21 +45,24 @@ namespace RP0
             GUILayout.Label(SpaceCenterManagement.Instance.Applicants.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            double salaryE = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(SpaceCenterManagement.Instance.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
-            GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{salaryE:N0}", GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
+            if (MaintenanceHandler.Instance != null)
+            {
+                double salaryE = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Total Engineers:", GUILayout.Width(120));
+                GUILayout.Label(SpaceCenterManagement.Instance.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+                GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
+                GUILayout.Label($"√{salaryE:N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
 
-            double salaryR = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Total Researchers:", GUILayout.Width(120));
-            GUILayout.Label(SpaceCenterManagement.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
-            GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{salaryR:N0}", GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
+                double salaryR = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Total Researchers:", GUILayout.Width(120));
+                GUILayout.Label(SpaceCenterManagement.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+                GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
+                GUILayout.Label($"√{salaryR:N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+            }
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
@@ -468,7 +471,8 @@ namespace RP0
             if (add)
             {
                 signChar = "+";
-                limit = Math.Min(currentLC.KSC.UnassignedEngineers, currentLC.MaxEngineers - currentLC.Engineers);
+                int unassigned = KSPUtils.CurrentGameIsCareer() ? currentLC.KSC.UnassignedEngineers : int.MaxValue;
+                limit = Math.Min(unassigned, currentLC.MaxEngineers - currentLC.Engineers);
             }
             else
             {

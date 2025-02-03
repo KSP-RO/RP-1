@@ -135,7 +135,7 @@ namespace RP0
 
             if (ModUtils.IsTestFlightInstalled || ModUtils.IsTestLiteInstalled)
             {
-                simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures");
+                simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures with TestFlight or TestLite");
                 GUILayout.Space(4);
             }
 

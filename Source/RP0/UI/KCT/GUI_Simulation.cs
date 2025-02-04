@@ -130,7 +130,14 @@ namespace RP0
             _UTString = GUILayout.TextField(_UTString, GUILayout.Width(110));
             _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the amount of time entered onto the field. Otherwise the date and time will be set to entered value."));
             GUILayout.EndHorizontal();
-            GUILayout.Label("Accepts values with formats \"1y 2d 3h 4m 5s\", \"1960-12-31 23:59:59\", or \"61883248319\".");
+            if (_fromCurrentUT)
+            {
+                GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"31719845\".");
+            }
+            else
+            {
+                GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\", \"1960-12-31 23:59:59\", or \"31719845\".");
+            }
             GUILayout.Space(4);
 
             if (ModUtils.IsTestFlightInstalled || ModUtils.IsTestLiteInstalled)
@@ -238,16 +245,21 @@ namespace RP0
 
             double currentUT = Planetarium.GetUniversalTime();
             double ut = 0;
-            // if string is not empty and ((string has HH:mm but no YYYY-MM-DD) or (string fails TryParseTimeString)), then output failure
-            if (!string.IsNullOrWhiteSpace(_UTString) && 
-                (_UTString.Contains(":") && !System.Text.RegularExpressions.Regex.IsMatch(_UTString, @"^\d{4}-\d{2}-\d{2}")) ||
-                !ROUtils.DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
+            if (_fromCurrentUT && (_UTString.Contains("-") || _UTString.Contains(":"))) // prevent the user from doing 1960-12-31, accidentally selecting "From Now", and then warping 1960 years forward
+            {
+                var message = new ScreenMessage("Value must be of format \"1y 2d 3h 4m 5s\" or \"31719845\" when \"From Now\" is selected.", 6f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+                return;
+            }
+            else if (!string.IsNullOrWhiteSpace(_UTString) && 
+                     (_UTString.Contains(":") && !System.Text.RegularExpressions.Regex.IsMatch(_UTString, @"^\d{4}-\d{2}-\d{2}")) ||
+                     !ROUtils.DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut)) // if string is not empty and ((string has HH:mm but no YYYY-MM-DD) or (string fails TryParseTimeString)), then output failure
             {
                 var message = new ScreenMessage("Please enter a valid time value.", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
                 return;
             }
-
+            
             simParams.DelayMoveSeconds = 0;
             if (_fromCurrentUT)
             {

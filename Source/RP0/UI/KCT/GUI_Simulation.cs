@@ -259,7 +259,6 @@ namespace RP0
                 ScreenMessages.PostScreenMessage(message);
                 return;
             }
-            
             simParams.DelayMoveSeconds = 0;
             if (_fromCurrentUT)
             {

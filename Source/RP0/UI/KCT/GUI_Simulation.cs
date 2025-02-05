@@ -324,7 +324,7 @@ namespace RP0
 
         private static double GetDefaultAltitudeForBody(CelestialBody body)
         {
-            return body.atmosphere ? body.atmosphereDepth + 20000 : 20000;
+            return body.atmosphere ? body.atmosphereDepth + 20010 : 20000;
         }
     }
 }

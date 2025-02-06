@@ -10,7 +10,7 @@ namespace RP0
         private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), 300, 1);
         private static Vector2 _bodyChooserScrollPos;
 
-        private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _sOrbitMNA = "", _sOrbitArgPE = "", _UTString = "", _sDelay = "0";
+        private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _sOrbitMNA = "", _sOrbitArgPe = "", _UTString = "", _sDelay = "0";
         private static bool _fromCurrentUT = true;
         private static bool _circOrbit = true;
 
@@ -130,7 +130,7 @@ namespace RP0
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Argument of Periapsis: ");
-                _sOrbitArgPE = GUILayout.TextField(_sOrbitArgPE, GUILayout.Width(50));
+                _sOrbitArgPe = GUILayout.TextField(_sOrbitArgPe, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
             }
 
@@ -257,10 +257,10 @@ namespace RP0
                 else
                     simParams.SimMNA %= 2 * Math.PI;
 
-                if (!double.TryParse(_sOrbitArgPE, out simParams.SimArgPE))
-                    simParams.SimArgPE = 0;
+                if (!double.TryParse(_sOrbitArgPe, out simParams.SimArgPe))
+                    simParams.SimArgPe = 0;
                 else
-                    simParams.SimArgPE %= 360;
+                    simParams.SimArgPe %= 360;
             }
 
             double currentUT = Planetarium.GetUniversalTime();

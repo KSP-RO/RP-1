@@ -135,84 +135,94 @@ namespace RP0.Programs
 
         public override void OnLoad(ConfigNode node)
         {
-            base.OnLoad(node);
-
-            if (Settings == null)
+            try
             {
-                Settings = new ProgramHandlerSettings();
-                foreach (ConfigNode cn in GameDatabase.Instance.GetConfigNodes("PROGRAMHANDLERSETTINGS"))
-                    ConfigNode.LoadObjectFromConfig(Settings, cn);
-            }
+                base.OnLoad(node);
 
-            EnsurePrograms();
-
-            ConfigNode disableds = node.GetNode("DISABLEDPROGRAMS");
-            if (disableds != null)
-            {
-                foreach (ConfigNode.Value v in disableds.values)
+                if (Settings == null)
                 {
-                    DisabledPrograms.Add(v.name);
+                    Settings = new ProgramHandlerSettings();
+                    foreach (ConfigNode cn in GameDatabase.Instance.GetConfigNodes("PROGRAMHANDLERSETTINGS"))
+                        ConfigNode.LoadObjectFromConfig(Settings, cn);
                 }
-            }
 
-            foreach (ConfigNode cn in node.GetNodes("ACTIVEPROGRAM"))
-            {
-                string progName = cn.GetValue(nameof(Program.name));
-                Program programTemplate = Programs.FirstOrDefault(p => p.name == progName);
-                var program = new Program(programTemplate);
-                program.Load(cn);
-                ActivePrograms.Add(program);
-            }
+                EnsurePrograms();
 
-            foreach (ConfigNode cn in node.GetNodes("COMPLETEDPROGRAM"))
-            {
-                string progName = cn.GetValue(nameof(Program.name));
-                Program programTemplate = Programs.FirstOrDefault(p => p.name == progName);
-                var program = new Program(programTemplate);
-                program.Load(cn);
-                CompletedPrograms.Add(program);
-            }
-
-            _ready = true; // done BEFORE upgrading because we have to do hijinks there
-
-            if (LoadedSaveVersion < VERSION)
-            {
-                if (LoadedSaveVersion < 1)
+                ConfigNode disableds = node.GetNode("DISABLEDPROGRAMS");
+                if (disableds != null)
                 {
-                    List<Program> progs = new List<Program>();
-                    progs.AddRange(ActivePrograms);
-                    progs.AddRange(CompletedPrograms);
-                    foreach (var p in progs)
+                    foreach (ConfigNode.Value v in disableds.values)
                     {
-                        if (p.name == "CrewedOrbit")
-                        {
-                            DisabledPrograms.Add("CrewedOrbitEarly");
-                            DisabledPrograms.Add("CrewedOrbitAdv");
+                        DisabledPrograms.Add(v.name);
+                    }
+                }
 
-                            break;
+                foreach (ConfigNode cn in node.GetNodes("ACTIVEPROGRAM"))
+                {
+                    string progName = cn.GetValue(nameof(Program.name));
+                    Program programTemplate = Programs.FirstOrDefault(p => p.name == progName) ?? throw new Exception("Failed to find ACTIVEPROGRAM " + progName);
+                    var program = new Program(programTemplate);
+                    program.Load(cn);
+                    ActivePrograms.Add(program);
+                }
+
+                foreach (ConfigNode cn in node.GetNodes("COMPLETEDPROGRAM"))
+                {
+                    string progName = cn.GetValue(nameof(Program.name));
+                    Program programTemplate = Programs.FirstOrDefault(p => p.name == progName) ?? throw new Exception("Failed to find COMPLETEDPROGRAM " + progName);
+                    var program = new Program(programTemplate);
+                    program.Load(cn);
+                    CompletedPrograms.Add(program);
+                }
+
+                _ready = true; // done BEFORE upgrading because we have to do hijinks there
+
+                if (LoadedSaveVersion < VERSION)
+                {
+                    if (LoadedSaveVersion < 1)
+                    {
+                        List<Program> progs = new List<Program>();
+                        progs.AddRange(ActivePrograms);
+                        progs.AddRange(CompletedPrograms);
+                        foreach (var p in progs)
+                        {
+                            if (p.name == "CrewedOrbit")
+                            {
+                                DisabledPrograms.Add("CrewedOrbitEarly");
+                                DisabledPrograms.Add("CrewedOrbitAdv");
+
+                                break;
+                            }
+                        }
+                    }
+                    if (LoadedSaveVersion < 2)
+                    {
+                        _ready = false;
+                        _upgrade_v02 = true;
+                        // handled in OnLoadStrategiesComplete because we need to know what leaders are active
+                    }
+                    if (LoadedSaveVersion < 3)
+                    {
+                        foreach (var psm in ScenarioRunner.Instance.protoModules)
+                        {
+                            if (psm.moduleName == "StrategySystem" && psm.moduleValues.GetNode("DEACTIVATIONDATES") is ConfigNode cn)
+                            {
+                                ActivatedStrategies.Load(cn);
+                                break;
+                            }
                         }
                     }
                 }
-                if (LoadedSaveVersion < 2)
-                {
-                    _ready = false;
-                    _upgrade_v02 = true;
-                    // handled in OnLoadStrategiesComplete because we need to know what leaders are active
-                }
-                if (LoadedSaveVersion < 3)
-                {
-                    foreach (var psm in ScenarioRunner.Instance.protoModules)
-                    {
-                        if (psm.moduleName == "StrategySystem" && psm.moduleValues.GetNode("DEACTIVATIONDATES") is ConfigNode cn)
-                        {
-                            ActivatedStrategies.Load(cn);
-                            break;
-                        }
-                    }
-                }
-            }
 
-            LoadedSaveVersion = VERSION;
+                LoadedSaveVersion = VERSION;
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "RP0ProgramHandlerLoadErr",
+                    $"<b><color=red>SFS load failed</color></b>",
+                    "<b>RP-1 encountered an error while trying to load the state of the programs.<br>Things will be seriously broken!</b>", "Understood", false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
         }
 
         public void OnLoadStrategiesComplete()

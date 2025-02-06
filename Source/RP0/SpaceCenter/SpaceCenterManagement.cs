@@ -1844,7 +1844,7 @@ namespace RP0
                 {
                     options.Add(new DialogGUIButtonWithTooltip("Repair failures", QueueRepairFailures)
                     {
-                        tooltipText = "All failures will be repaired without having to leave the flight scene."
+                        tooltipText = "Repair all failures without leaving the flight scene.\nUse the \"Space Center Management\" window to track the time this process takes."
                     });
                 }
             }

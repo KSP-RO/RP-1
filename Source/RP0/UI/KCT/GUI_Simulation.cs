@@ -10,7 +10,7 @@ namespace RP0
         private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), 300, 1);
         private static Vector2 _bodyChooserScrollPos;
 
-        private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _UTString = "", _sDelay = "0";
+        private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _sOrbitMNA = "", _sOrbitArgPE = "", _UTString = "", _sDelay = "0";
         private static bool _fromCurrentUT = true;
         private static bool _circOrbit = true;
 
@@ -121,6 +121,16 @@ namespace RP0
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("LAN: ");
                 _sOrbitLAN = GUILayout.TextField(_sOrbitLAN, GUILayout.Width(50));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Mean Anomaly: ");
+                _sOrbitMNA = GUILayout.TextField(_sOrbitMNA, GUILayout.Width(50));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Argument of Periapsis: ");
+                _sOrbitArgPE = GUILayout.TextField(_sOrbitArgPE, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
             }
 
@@ -241,6 +251,16 @@ namespace RP0
                     simParams.SimLAN = 0;
                 else
                     simParams.SimLAN %= 360;
+
+                if (!double.TryParse(_sOrbitMNA, out simParams.SimMNA))
+                    simParams.SimMNA = Math.PI; // this will set it at apoapsis, good for safety
+                else
+                    simParams.SimMNA %= 2 * Math.PI;
+
+                if (!double.TryParse(_sOrbitArgPE, out simParams.SimArgPE))
+                    simParams.SimArgPE = 0;
+                else
+                    simParams.SimArgPE %= 360;
             }
 
             double currentUT = Planetarium.GetUniversalTime();

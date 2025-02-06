@@ -101,7 +101,7 @@
         "category": "LS",
         "info": "Life Support",
         "year": "1964",
-        "technology": "earlyLifeSupport",
+        "technology": "rudimentaryLifeSupport",
         "era": "04-ADV",
         "ro": true,
         "rp0": true,

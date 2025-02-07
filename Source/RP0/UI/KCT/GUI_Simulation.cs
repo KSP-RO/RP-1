@@ -87,8 +87,8 @@ namespace RP0
                     _sOrbitAlt = GUILayout.TextField(_sOrbitAlt, GUILayout.Width(100));
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Min: " + simParams.SimulationBody.atmosphereDepth / 1000);
-                    GUILayout.Label("Max: " + Math.Floor((simParams.SimulationBody.sphereOfInfluence - simParams.SimulationBody.Radius) / 1000));
+                    GUILayout.Label("Min: " + simParams.SimulationBody.atmosphereDepth / 1000 + "km");
+                    GUILayout.Label("Max: " + Math.Floor((simParams.SimulationBody.sphereOfInfluence - simParams.SimulationBody.Radius) / 1000) + "km");
                     GUILayout.EndHorizontal();
                 }
                 else
@@ -109,7 +109,7 @@ namespace RP0
             if (simParams.SimulateInOrbit)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Delay: (s)");
+                GUILayout.Label("Delay (s): ");
                 _sDelay = GUILayout.TextField(_sDelay, 3, GUILayout.Width(40));
                 GUILayout.EndHorizontal();
 

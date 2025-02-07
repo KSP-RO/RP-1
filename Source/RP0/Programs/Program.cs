@@ -282,6 +282,7 @@ namespace RP0.Programs
             p.ApplyProgramModifiers();
             p.totalFunding = p.TotalFunding;
             p.deadlineUT = p.acceptedUT + p.DurationYears * secsPerYear;
+            KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Contract, $"Deadline: {title}", p.deadlineUT);
 
             Confidence.Instance.AddConfidence(-p.confidenceCosts[speed], TransactionReasonsRP0.ProgramActivation.Stock());
             CareerLog.Instance?.ProgramAccepted(p);

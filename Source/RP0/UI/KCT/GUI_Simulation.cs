@@ -79,7 +79,7 @@ namespace RP0
             }
             if (simParams.SimulationBody != Planetarium.fetch.Home || simParams.SimulateInOrbit)
             {
-                _circOrbit = GUILayout.Toggle(_circOrbit, "Circular");
+                _circOrbit = GUILayout.Toggle(_circOrbit, " Circular");
                 if (_circOrbit)
                 {
                     GUILayout.BeginHorizontal();
@@ -114,22 +114,22 @@ namespace RP0
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Inclination: ");
+                GUILayout.Label("Inclination (degrees): ");
                 _sOrbitInc = GUILayout.TextField(_sOrbitInc, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("LAN: ");
+                GUILayout.Label("LAN (degrees): ");
                 _sOrbitLAN = GUILayout.TextField(_sOrbitLAN, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Mean Anomaly: ");
+                GUILayout.Label("Mean Anomaly (radians): ");
                 _sOrbitMNA = GUILayout.TextField(_sOrbitMNA, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Argument of Periapsis: ");
+                GUILayout.Label("Argument of Periapsis (degrees): ");
                 _sOrbitArgPe = GUILayout.TextField(_sOrbitArgPe, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
             }
@@ -142,17 +142,17 @@ namespace RP0
             GUILayout.EndHorizontal();
             if (_fromCurrentUT)
             {
-                GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"31719845\".");
+                GUILayout.Label("Valid formats: \"1y 2d 3h 4m 5s\" and \"31719845\".");
             }
             else
             {
-                GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\", \"1960-12-31 23:59:59\", or \"31719845\".");
+                GUILayout.Label("Valid formats: \"1y 2d 3h 4m 5s\", \"31719845\", and \"1960-12-31 23:59:59\".");
             }
             GUILayout.Space(4);
 
             if (ModUtils.IsTestFlightInstalled || ModUtils.IsTestLiteInstalled)
             {
-                simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures with TestFlight or TestLite");
+                simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures (TestFlight or TestLite)");
                 GUILayout.Space(4);
             }
 

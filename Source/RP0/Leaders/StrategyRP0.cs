@@ -152,6 +152,10 @@ namespace RP0
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
                 KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
             }
+            else if (this is Programs.ProgramStrategy)
+            {
+                KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Contract, $"Deadline: {ConfigRP0.Title}", Programs.deadlineUT);
+            }
         }
 
         /// <summary>

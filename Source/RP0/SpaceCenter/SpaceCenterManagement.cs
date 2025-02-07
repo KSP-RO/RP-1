@@ -1301,7 +1301,7 @@ namespace RP0
                 double sma = simParams.SimOrbitAltitude + body.Radius;
                 double ecc = 0.0000001;    // Just a really smol value to prevent Ap and Pe from flickering around
                 RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
-                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, 0.0, 0.0, 0.0);
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, simParams.SimMNA, simParams.SimArgPe, 0.0); // selBodyIndex, ecc, sma, inc, LAN, mna, argPe, ObT
                 FloatingOrigin.ResetTerrainShaderOffset();
             }
             else
@@ -1311,7 +1311,7 @@ namespace RP0
                 double sma = (ra + rp) / 2;
                 double ecc = (ra - rp) / (ra + rp);
                 RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
-                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, Math.PI, 0.0, 0.0);
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, simParams.SimMNA, simParams.SimArgPe, 0.0); // selBodyIndex, ecc, sma, inc, LAN, mna, argPe, ObT
                 FloatingOrigin.ResetTerrainShaderOffset();
             }
         }

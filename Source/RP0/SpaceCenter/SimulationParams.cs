@@ -32,7 +32,7 @@ namespace RP0
         public bool SimulateInOrbit, DisableFailures;
         public bool IsVesselMoved;
         [Persistent]
-        public double SimulationUT, SimOrbitAltitude, SimOrbitPe, SimOrbitAp, SimInclination, SimLAN;
+        public double SimulationUT, SimOrbitAltitude, SimOrbitPe, SimOrbitAp, SimInclination, SimLAN, SimMNA, SimArgPe;
         [Persistent]
         public int DelayMoveSeconds;
 

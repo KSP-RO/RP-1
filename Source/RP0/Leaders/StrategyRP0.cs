@@ -130,7 +130,6 @@ namespace RP0
             isActive = true;
             Register();
             dateActivated = Planetarium.GetUniversalTime();
-            KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
 
             // Update ActivatedStrategies to show that this strategy is currently active (and clobber
             // the UT it was last deactivated, if any).
@@ -151,6 +150,7 @@ namespace RP0
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 // FIXME add setup cost if we add setup costs to leaders
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
+                KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
             }
         }
 

@@ -138,7 +138,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Time: ");
             _UTString = GUILayout.TextField(_UTString, GUILayout.Width(110));
-            _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the amount of time entered onto the field. Otherwise the date and time will be set to entered value."));
+            _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the entered value. Otherwise the date and time will be set to the entered value."));
             GUILayout.EndHorizontal();
             if (_fromCurrentUT)
             {

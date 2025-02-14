@@ -1804,7 +1804,7 @@
     },
     {
         "name": "RO-KDU414",
-        "title": "KDU-414",
+        "title": "S5.19",
         "description": "",
         "mod": "Stock (RO Config)",
         "cost": 22,
@@ -1818,9 +1818,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "1MV",
-        "engine_config": "KDU414",
+        "engine_config": "S5_19",
         "upgrade": false,
-        "entry_cost_mods": "KDU-414",
+        "entry_cost_mods": "S5-19",
         "identical_part_name": "KDU-414",
         "module_tags": [
             "EngineLiquidPF"

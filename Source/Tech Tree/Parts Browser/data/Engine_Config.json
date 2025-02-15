@@ -6049,28 +6049,6 @@
         "module_tags": []
     },
     {
-        "name": "KDU-414",
-        "title": "KDU-414",
-        "description": "",
-        "mod": "Engine_Config",
-        "cost": 0,
-        "entry_cost": 0,
-        "category": "RCS",
-        "info": "",
-        "year": "1961",
-        "technology": "stabilityRP0",
-        "era": "",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": false,
-        "spacecraft": "",
-        "engine_config": "KDU414",
-        "upgrade": false,
-        "entry_cost_mods": "2500, HydrazineFuel",
-        "identical_part_name": "",
-        "module_tags": []
-    },
-    {
         "name": "KIWIA24-Hydrogen",
         "title": "KIWIA24-Hydrogen",
         "description": "",
@@ -15910,6 +15888,28 @@
         "module_tags": [
             "EngineLiquidTurbo"
         ]
+    },
+    {
+        "name": "S5.19",
+        "title": "S5.19",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": 0,
+        "entry_cost": 0,
+        "category": "RCS",
+        "info": "",
+        "year": "1961",
+        "technology": "stabilityRP0",
+        "era": "",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "",
+        "engine_config": "S5_19",
+        "upgrade": false,
+        "entry_cost_mods": "2500, HydrazineFuel",
+        "identical_part_name": "",
+        "module_tags": []
     },
     {
         "name": "S5.2",

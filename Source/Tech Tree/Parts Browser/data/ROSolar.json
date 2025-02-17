@@ -1,7 +1,7 @@
 [
     {
         "name": "ROS-BlanketSolarPanel",
-        "title": "Blanket Solar Panel [Procedural]",
+        "title": "Blanket Solar Panel",
         "description": "",
         "mod": "ROSolar",
         "cost": 1,
@@ -23,7 +23,7 @@
     },
     {
         "name": "ROS-FoldingSolarPanel",
-        "title": "Folding Solar Panel [Procedural]",
+        "title": "Folding Solar Panel",
         "description": "",
         "mod": "ROSolar",
         "cost": 0,
@@ -46,7 +46,7 @@
     },
     {
         "name": "ROS-HingedSolarPanel",
-        "title": "Hinged Solar Panel [Procedural]",
+        "title": "Hinged Solar Panel",
         "description": "",
         "mod": "ROSolar",
         "cost": 0,
@@ -69,7 +69,7 @@
     },
     {
         "name": "ROS-StaticSolarPanel",
-        "title": "Static Solar Panel [Procedural]",
+        "title": "Static Solar Panel",
         "description": "",
         "mod": "ROSolar",
         "cost": 0,

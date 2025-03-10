@@ -171,7 +171,7 @@ namespace RP0.ProceduralAvionics
                 float oldControlMass = _newControlMass;
                 if (float.TryParse(ControllableMass, out _newControlMass))
                 {
-                    float avionicsMass = _module.GetShieldedAvionicsMass(_newControlMass);
+                    float avionicsMass = _module.GetAvionicsMass(_newControlMass);
                     GUILayout.Label($" ({MathUtils.PrintMass(avionicsMass)})", HighLogic.Skin.label, GUILayout.Width(150));
                 }
 

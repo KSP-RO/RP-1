@@ -1,5 +1,28 @@
 [
     {
+        "name": "RO-A136",
+        "title": "A-136 Atomic Turbo Ramjet",
+        "description": "",
+        "mod": "Advanced Jet Engines",
+        "cost": "1100",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "",
+        "year": "1967",
+        "technology": "prototypeNuclearPropulsion",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "A136",
+        "upgrade": false,
+        "entry_cost_mods": "A-136",
+        "identical_part_name": "",
+        "module_tags": [
+            "Nuclear"
+        ]
+    },
+    {
         "name": "RO-AL7F",
         "title": "AL-7 Turbojet",
         "description": "",

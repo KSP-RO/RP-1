@@ -497,13 +497,13 @@ namespace RP0.ProceduralAvionics
             }
             if (techNode.shieldingMassFactor > 0)
             {
-                sb.AppendLine($"{indent}Total Avionics Mass: {massKG:0.#}kg");
-                sb.AppendLine($"{indent}{indent}Avionics Mass: {nonShieldMass:0.#}kg");
-                sb.AppendLine($"{indent}{indent}TR Shielding Mass: {shieldMass:0.#}kg"); // thermal/radiation shielding
+                sb.AppendLine($"{indent}Total mass: {massKG:0.#}kg");
+                sb.AppendLine($"{indent}{indent}Avionics: {nonShieldMass:0.#}kg");
+                sb.AppendLine($"{indent}{indent}TR Shielding: {shieldMass:0.#}kg"); // thermal/radiation shielding
             }
             else
             {
-                sb.AppendLine($"{indent}Avionics Mass: {massKG:0.#}kg");
+                sb.AppendLine($"{indent}Avionics mass: {massKG:0.#}kg");
             }
             sb.AppendLine($"{indent}Power consumption: {powerWatts:0.#}W");
 

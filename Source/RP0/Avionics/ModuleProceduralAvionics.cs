@@ -120,6 +120,7 @@ namespace RP0.ProceduralAvionics
         private float GetAvionicsMass() => GetAvionicsMass(GetInternalMassLimit());
         private float GetAvionicsMass(float controllableMass) => GetPolynomial(controllableMass, CurrentProceduralAvionicsTechNode.massExponent, CurrentProceduralAvionicsTechNode.massConstant, CurrentProceduralAvionicsTechNode.massFactor) / 1000f;
         private static float GetAvionicsMass(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.massExponent, techNode.massConstant, techNode.massFactor) / 1000f;
+        private static float GetShieldingMass(ProceduralAvionicsTechNode techNode, float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * techNode.shieldingMassFactor;
         private float GetAvionicsCost() => GetAvionicsCost(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode);
         private static float GetAvionicsCost(float massLimit, ProceduralAvionicsTechNode techNode) => GetPolynomial(massLimit, techNode.costExponent, techNode.costConstant, techNode.costFactor);
         internal float GetAvionicsVolume() => GetAvionicsMass() / CurrentProceduralAvionicsTechNode.avionicsDensity;
@@ -676,7 +677,8 @@ namespace RP0.ProceduralAvionics
             else if (controllableMass <= 0)
                 controllableMass = techNode.interplanetary ? 0.5f : 100f;
 
-            massKG = GetShieldedAvionicsMass(controllableMass) * 1000;
+            var avionicsMass = GetAvionicsMass(techNode, controllableMass);
+            massKG = (avionicsMass + GetShieldingMass(techNode, avionicsMass))*1000;
             cost = GetAvionicsCost(controllableMass, techNode);
             powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;
             return controllableMass;

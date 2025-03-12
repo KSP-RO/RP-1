@@ -130,7 +130,7 @@ namespace RP0.ProceduralAvionics
             return avionicsMass + GetShieldingMass(avionicsMass);
         }
 
-        private float GetShieldingMass(float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * CurrentProceduralAvionicsTechNode.shieldingMassFactor;
+        private float GetShieldingMass(float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * CurrentProceduralAvionicsTechNode.shieldingMassFactor; // use ^(2/3) to convert volume into surface
         private static float GetShieldingMass(ProceduralAvionicsTechNode techNode, float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * techNode.shieldingMassFactor;
 
         protected override float GetEnabledkW() => GetEnabledkW(CurrentProceduralAvionicsTechNode, GetInternalMassLimit());

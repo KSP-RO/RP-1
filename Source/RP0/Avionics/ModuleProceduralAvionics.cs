@@ -676,7 +676,7 @@ namespace RP0.ProceduralAvionics
             else if (controllableMass <= 0)
                 controllableMass = techNode.interplanetary ? 0.5f : 100f;
 
-            massKG = GetAvionicsMass(techNode, controllableMass) * 1000;
+            massKG = GetShieldedAvionicsMass(controllableMass) * 1000;
             cost = GetAvionicsCost(controllableMass, techNode);
             powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;
             return controllableMass;

@@ -487,17 +487,23 @@ namespace RP0.ProceduralAvionics
             }
 
             float calcMass = ModuleProceduralAvionics.GetStatsForTechNode(techNode, _newControlMass, out float massKG, out _, out float powerWatts);
-            float shieldMass = massKG - (ModuleProceduralAvionics.GetAvionicsMass(techNode, _newControlMass)*1000);
+            float nonShieldMass = ModuleProceduralAvionics.GetAvionicsMass(techNode, _newControlMass) * 1000;
+            float shieldMass = massKG - nonShieldMass;
             string indent = string.Empty;
             if (!techNode.IsScienceCore)
             {
                 sb.AppendLine($"At {calcMass:0.##}t controllable mass:");
                 indent = "  ";
             }
-            sb.AppendLine($"{indent}Total Avionics Mass: {massKG:0.#}kg");
             if (techNode.shieldingMassFactor > 0)
             {
-                sb.AppendLine($"{indent}{indent}Shielding Mass: {shieldMass:0.#}kg");
+                sb.AppendLine($"{indent}Total Avionics Mass: {massKG:0.#}kg");
+                sb.AppendLine($"{indent}{indent}Avionics Mass: {nonShieldMass:0.#}kg");
+                sb.AppendLine($"{indent}{indent}TR Shielding Mass: {shieldMass:0.#}kg"); // thermal/radiation shielding
+            }
+            else
+            {
+                sb.AppendLine($"{indent}Avionics Mass: {massKG:0.#}kg");
             }
             sb.AppendLine($"{indent}Power consumption: {powerWatts:0.#}W");
 

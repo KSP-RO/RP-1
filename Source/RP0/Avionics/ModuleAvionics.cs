@@ -33,6 +33,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public bool systemEnabled = true;
 
+        [KSPField]
+        public bool canPermaDisable = true;
+
         [KSPField(isPersistant = true, guiActive = true, guiName = "Permanently disabled", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public bool dead = false;
 
@@ -143,9 +146,9 @@ namespace RP0
             Actions[nameof(ShutdownAction)].active = (systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleable;
             Actions[nameof(ToggleAction)].active = toggleable;
             Fields[nameof(currentWatts)].guiActive = toggleable;
-            Actions[nameof(KillAction)].active = !dead;
-            Events[nameof(KillEvent)].guiActive = !dead;
-            Events[nameof(KillEvent)].active = !dead;
+            Actions[nameof(KillAction)].active = canPermaDisable && !dead;
+            Events[nameof(KillEvent)].guiActive = canPermaDisable && !dead;
+            Events[nameof(KillEvent)].active = canPermaDisable && !dead;
         }
 
         protected void StageActivated(int stage)

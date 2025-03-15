@@ -462,6 +462,27 @@
         "module_tags": []
     },
     {
+        "name": "A-136",
+        "title": "A-136",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "0",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "",
+        "year": "1967",
+        "technology": "prototypeNuclearPropulsion",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "A136",
+        "upgrade": false,
+        "entry_cost_mods": "20000,J93-GE-3,SpaceReactors",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "A-4",
         "title": "A-4",
         "description": "",

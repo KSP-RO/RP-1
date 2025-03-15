@@ -182,7 +182,6 @@
     <Compile Include="Avionics\ModuleProceduralAvionics.cs" />
     <Compile Include="PartModules\ModuleRangeSafety.cs" />
     <Compile Include="Avionics\ModuleAvionics.cs" />
-    <Compile Include="Avionics\ModuleScienceCore.cs" />
     <Compile Include="PartModules\ModuleShowInfo.cs" />
     <Compile Include="Avionics\ProceduralAvionicsTechManager.cs" />
     <Compile Include="Avionics\ProceduralAvionicsTechNode.cs" />

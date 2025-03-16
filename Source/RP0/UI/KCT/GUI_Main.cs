@@ -135,7 +135,7 @@ namespace RP0
 
         public static void ClickToggle()
         {
-            ToggleVisibility(!GUIStates.IsMainGuiVisible);
+            ToggleVisibility(!GUIStates.IsMainGuiVisible && !GUIStates.ShowSimConfig && !GUIStates.ShowSimulationGUI);
         }
 
         public static void ToggleVisibility(bool isVisible)
@@ -143,12 +143,15 @@ namespace RP0
             if (SCMEvents.Instance.KCTButtonStockImportant)
                 SCMEvents.Instance.KCTButtonStockImportant = false;
 
-            if (HighLogic.LoadedScene == GameScenes.FLIGHT && !IsPrimarilyDisabled)
+            if (HighLogic.LoadedScene == GameScenes.FLIGHT)
             {
-                BuildListWindowPosition.height = 1;
-                GUIStates.ShowBuildList = isVisible;
-                GUIStates.ShowBLPlus = false;
-                ResetBLWindow();
+                if (!IsPrimarilyDisabled)
+                {
+                    BuildListWindowPosition.height = 1;
+                    GUIStates.ShowBuildList = isVisible;
+                    GUIStates.ShowBLPlus = false;
+                    ResetBLWindow();
+                }
 
                 if (SpaceCenterManagement.Instance.IsSimulatedFlight && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
                 {
@@ -160,13 +163,20 @@ namespace RP0
                     _simulationWindowPosition.height = 1;
                 }
             }
-            else if ((HighLogic.LoadedScene == GameScenes.EDITOR) && !IsPrimarilyDisabled)
+            else if ((HighLogic.LoadedScene == GameScenes.EDITOR))
             {
-                EditorWindowPosition.height = 1;
-                GUIStates.ShowEditorGUI = isVisible;
-                if (!isVisible)
-                    GUIStates.ShowBuildList = false;
-                SpaceCenterManagement.ShowWindows[1] = isVisible;
+                if (!IsPrimarilyDisabled)
+                {
+                    EditorWindowPosition.height = 1;
+                    GUIStates.ShowEditorGUI = isVisible;
+                    if (!isVisible)
+                        GUIStates.ShowBuildList = false;
+                    SpaceCenterManagement.ShowWindows[1] = isVisible;
+                }
+                else
+                {
+                    GUIStates.ShowSimConfig = isVisible;
+                }
             }
             else if ((HighLogic.LoadedScene == GameScenes.SPACECENTER || HighLogic.LoadedScene == GameScenes.TRACKSTATION) && !IsPrimarilyDisabled)
             {

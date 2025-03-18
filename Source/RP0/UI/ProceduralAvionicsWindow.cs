@@ -493,7 +493,7 @@ namespace RP0.ProceduralAvionics
                 sb.AppendLine($"At {calcMass:0.##}t controllable mass:");
                 indent = "  ";
             }
-            sb.AppendLine($"{indent}Mass: {massKG:0.#}kg");
+            sb.AppendLine($"{indent}Avionics mass: {massKG:0.#}kg");
             sb.AppendLine($"{indent}Power consumption: {powerWatts:0.#}W");
 
             sb.AppendLine($"Axial control: {BoolToYesNoString(techNode.allowAxial)}");

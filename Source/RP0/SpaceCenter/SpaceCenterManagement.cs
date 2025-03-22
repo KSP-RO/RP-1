@@ -931,14 +931,9 @@ namespace RP0
             {
                 foreach (LaunchComplex lc in ksc.LaunchComplexes)
                 {
-                    foreach (LCLaunchPad lp in lc.LaunchPads)
-                    {
-                        if (lp.lastLoadedVesselId == stockVesselID)
-                        {
-                            lp.lastLoadedVesselId = default;
-                            return;
-                        }
-                    }
+                    LCLaunchPad lp = lc.FindPadWithLastLaunchedVessel(stockVesselID);
+                    if (lp != null)
+                        lp.lastLoadedVesselId = default;
                 }
             }
         }

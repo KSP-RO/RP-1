@@ -135,6 +135,12 @@ namespace RP0
 
         public bool Delete(out string failReason)
         {
+            if (HasVesselWaitingToBeLaunched(out Vessel foundVessel))
+            {
+                failReason = $"vessel {foundVessel.vesselName} is currently waiting on the launch pad";
+                return false;
+            }
+
             foreach (LCSpaceCenter currentKSC in SpaceCenterManagement.Instance.KSCs)
             {
                 foreach (LaunchComplex currentLC in currentKSC.LaunchComplexes)
@@ -239,6 +245,22 @@ namespace RP0
             {
                 RP0Debug.LogError("Error while calling SetActive: " + ex);
             }
+        }
+
+        public bool HasVesselWaitingToBeLaunched(out Vessel v)
+        {
+            v = null;
+            if (lastLoadedVesselId == default)
+                return false;
+
+            Vessel foundVessel = FlightGlobals.FindVessel(lastLoadedVesselId);
+            if (foundVessel?.situation == Vessel.Situations.PRELAUNCH)
+            {
+                v = foundVessel;
+                return true;
+            }
+
+            return false;
         }
 
         public void UpdateLaunchpadDestructionState(bool upgradeRepair)

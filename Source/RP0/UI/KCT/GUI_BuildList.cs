@@ -1225,8 +1225,22 @@ namespace RP0
                             {
                                 if (meetsChecks)
                                 {
-                                    b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
-                                    vesselLC.Recon_Rollout.Add(tmpRollout);
+                                    bool padClear = true;
+                                    if (foundPad.lastLoadedVesselId != default)
+                                    {
+                                        var foundVessel = FlightGlobals.FindVessel(foundPad.lastLoadedVesselId);
+                                        if (foundVessel?.situation == Vessel.Situations.PRELAUNCH)
+                                        {
+                                            padClear = false;
+                                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutVesselOnPad", "Cannot Roll out!", $"{foundVessel.vesselName} is already waiting on the launch pad.", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                                        }
+                                    }
+
+                                    if (padClear)
+                                    {
+                                        b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
+                                        vesselLC.Recon_Rollout.Add(tmpRollout);
+                                    }
                                 }
                                 else
                                 {

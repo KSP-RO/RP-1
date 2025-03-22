@@ -51,6 +51,12 @@ namespace RP0
         /// </summary>
         [Persistent] public string launchSiteName = "LaunchPad";
 
+        /// <summary>
+        /// ID of the last vessel that was rolled out and loaded into the flight scene.
+        /// Used for keeping track of vessels that are just sitting on the pad in flight scene, waiting to be launched.
+        /// </summary>
+        [Persistent] public Guid lastLoadedVesselId;
+
         public ConfigNode DestructionNode = new ConfigNode("DestructionState");
 
         public bool IsDestroyed

@@ -925,6 +925,19 @@ namespace RP0
             ActiveSC = ksc;
         }
 
+        public void ClearLPLastLaunchForVessel(Guid stockVesselID)
+        {
+            foreach (LCSpaceCenter ksc in KSCs)
+            {
+                foreach (LaunchComplex lc in ksc.LaunchComplexes)
+                {
+                    LCLaunchPad lp = lc.FindPadWithLastLaunchedVessel(stockVesselID);
+                    if (lp != null)
+                        lp.lastLoadedVesselId = default;
+                }
+            }
+        }
+
         #endregion
 
         #region Budget
@@ -1115,6 +1128,20 @@ namespace RP0
                 // This will only fire the first time, because we make it invalid afterwards by clearing the VP
                 if (vp.IsValid)
                 {
+                    var lc = vp.LC;
+                    if (lc.LCType == LaunchComplexType.Pad && lc.ActiveLPInstance != null)
+                    {
+                        LCLaunchPad lp = lc.ActiveLPInstance;
+                        if (lp != null)
+                        {
+                            lp.lastLoadedVesselId = FlightGlobals.ActiveVessel.id;
+                        }
+                        else
+                        {
+                            RP0Debug.LogWarning("ProcessNewFlight: failed to find active LP instance");
+                        }
+                    }
+
                     dataModule.Data.FacilityBuiltIn = vp.FacilityBuiltIn;
                     dataModule.Data.VesselID = vp.KCTPersistentID;
                     dataModule.Data.LCID = vp.LCID;

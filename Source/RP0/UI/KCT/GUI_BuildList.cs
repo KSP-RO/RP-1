@@ -202,9 +202,11 @@ namespace RP0
                 GUILayout.Label(locTxt, _windowSkin.label);
                 GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
 
-                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0 && GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(buildItem.GetTimeLeft()):N0}")))
+                if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0)
                 {
-                    KCTWarpController.Create(null); // warp to next item
+                    string tooltip = buildItem.GetTimeLeft() > 86400d * 365.25 * 5 ? null : $"√ Gain/Loss:\n{(SpaceCenterManagement.Instance.GetBudgetDelta(buildItem.GetTimeLeft())):N0}";
+                    if (GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", tooltip)))
+                        KCTWarpController.Create(null); // warp to next item
                 }
                 else if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex > 0 && GUILayout.Button($"Stop{Environment.NewLine}Warp"))
                 {

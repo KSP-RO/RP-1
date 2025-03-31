@@ -1,4 +1,4 @@
-﻿using RealFuels.Tanks;
+using RealFuels.Tanks;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -119,7 +119,7 @@ namespace RP0.ProceduralAvionics
 
         private float GetAvionicsMass() => GetAvionicsMass(GetInternalMassLimit());
         private float GetAvionicsMass(float controllableMass) => GetPolynomial(controllableMass, CurrentProceduralAvionicsTechNode.massExponent, CurrentProceduralAvionicsTechNode.massConstant, CurrentProceduralAvionicsTechNode.massFactor) / 1000f;
-        internal static float GetAvionicsMass(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.massExponent, techNode.massConstant, techNode.massFactor) / 1000f;
+        private static float GetAvionicsMass(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.massExponent, techNode.massConstant, techNode.massFactor) / 1000f;
         private float GetAvionicsCost() => GetAvionicsCost(GetInternalMassLimit(), CurrentProceduralAvionicsTechNode);
         private static float GetAvionicsCost(float massLimit, ProceduralAvionicsTechNode techNode) => GetPolynomial(massLimit, techNode.costExponent, techNode.costConstant, techNode.costFactor);
         internal float GetAvionicsVolume() => GetAvionicsMass() / CurrentProceduralAvionicsTechNode.avionicsDensity;
@@ -591,10 +591,11 @@ namespace RP0.ProceduralAvionics
         public static string BuildPowerString(float enabledkW, float disabledkW)
         {
             var powerConsumptionBuilder = StringBuilderCache.Acquire();
+            powerConsumptionBuilder.Append("Online: ");
             powerConsumptionBuilder.Append(KERBALISM.Lib.HumanOrSIRate(enabledkW, KERBALISM.Lib.ECResID));
             if (disabledkW > 0)
             {
-                powerConsumptionBuilder.Append(" / ");
+                powerConsumptionBuilder.Append(" / Hibernated: ");
                 powerConsumptionBuilder.Append(KERBALISM.Lib.HumanOrSIRate(disabledkW, KERBALISM.Lib.ECResID));
             }
             return powerConsumptionBuilder.ToStringAndRelease();
@@ -677,7 +678,7 @@ namespace RP0.ProceduralAvionics
             else if (controllableMass <= 0)
                 controllableMass = techNode.interplanetary ? 0.5f : 100f;
 
-            var avionicsMass = GetAvionicsMass(techNode, controllableMass);
+            float avionicsMass = GetAvionicsMass(techNode, controllableMass);
             massKG = (avionicsMass + GetShieldingMass(techNode, avionicsMass))*1000;
             cost = GetAvionicsCost(controllableMass, techNode);
             powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;

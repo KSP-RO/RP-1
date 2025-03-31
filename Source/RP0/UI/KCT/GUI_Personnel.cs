@@ -436,7 +436,7 @@ namespace RP0
             bool b1 = int.TryParse(sNumStaff, out int numCrew);
             bool b2 = double.TryParse(sReserveFunds, out double reserveFunds);
 
-            string errorMessage = (!b1 ? "Failed to parse stadf count!\n" : "") + (!b2 ? "Failed to parse reserve funds!" : "");
+            string errorMessage = (!b1 ? "Failed to parse staff count!\n" : "") + (!b2 ? "Failed to parse reserve funds!" : "");
 
             if (!string.IsNullOrEmpty(errorMessage))
             {

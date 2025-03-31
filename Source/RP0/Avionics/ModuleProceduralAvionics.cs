@@ -591,11 +591,10 @@ namespace RP0.ProceduralAvionics
         public static string BuildPowerString(float enabledkW, float disabledkW)
         {
             var powerConsumptionBuilder = StringBuilderCache.Acquire();
-            powerConsumptionBuilder.Append("Online: ");
             powerConsumptionBuilder.Append(KERBALISM.Lib.HumanOrSIRate(enabledkW, KERBALISM.Lib.ECResID));
             if (disabledkW > 0)
             {
-                powerConsumptionBuilder.Append(" / Hibernated: ");
+                powerConsumptionBuilder.Append(" / ");
                 powerConsumptionBuilder.Append(KERBALISM.Lib.HumanOrSIRate(disabledkW, KERBALISM.Lib.ECResID));
             }
             return powerConsumptionBuilder.ToStringAndRelease();

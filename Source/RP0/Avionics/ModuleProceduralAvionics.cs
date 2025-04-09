@@ -1,4 +1,4 @@
-﻿using RealFuels.Tanks;
+using RealFuels.Tanks;
 using System;
 using System.Collections.Generic;
 using UniLinq;
@@ -130,7 +130,8 @@ namespace RP0.ProceduralAvionics
             return avionicsMass + GetShieldingMass(avionicsMass);
         }
 
-        private float GetShieldingMass(float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * CurrentProceduralAvionicsTechNode.shieldingMassFactor;
+        private float GetShieldingMass(float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * CurrentProceduralAvionicsTechNode.shieldingMassFactor; // use ^(2/3) to convert volume into surface
+        private static float GetShieldingMass(ProceduralAvionicsTechNode techNode, float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * techNode.shieldingMassFactor;
 
         protected override float GetEnabledkW() => GetEnabledkW(CurrentProceduralAvionicsTechNode, GetInternalMassLimit());
         internal static float GetEnabledkW(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.powerExponent, techNode.powerConstant, techNode.powerFactor) / 1000f;
@@ -676,7 +677,8 @@ namespace RP0.ProceduralAvionics
             else if (controllableMass <= 0)
                 controllableMass = techNode.interplanetary ? 0.5f : 100f;
 
-            massKG = GetAvionicsMass(techNode, controllableMass) * 1000;
+            float avionicsMass = GetAvionicsMass(techNode, controllableMass);
+            massKG = (avionicsMass + GetShieldingMass(techNode, avionicsMass))*1000;
             cost = GetAvionicsCost(controllableMass, techNode);
             powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;
             return controllableMass;

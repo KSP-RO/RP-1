@@ -300,14 +300,15 @@ namespace RP0
                     var dataModule = FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker) as KCTVesselTracker;
                     if (dataModule != null && dataModule.Data.FacilityBuiltIn == EditorFacility.VAB && !dataModule.Data.HasStartedReconditioning)
                     {
-                        string launchSite = FlightDriver.LaunchSiteName;
                         LaunchComplex lc = SpaceCenterManagement.Instance.FindLCFromID(dataModule.Data.LCID);
                         if (lc != null)
                         {
+                            string launchSite = FlightDriver.LaunchSiteName;
                             if (lc.LCType == LaunchComplexType.Pad && lc.ActiveLPInstance != null
                                 && (launchSite == "LaunchPad" || lc.LaunchPads.Find(p => p.name == launchSite) == null))
                             {
                                 launchSite = lc.ActiveLPInstance.name;
+                                lc.ActiveLPInstance.lastLoadedVesselId = default;
                             }
                             lc.Recon_Rollout.Add(new ReconRolloutProject(ev.host, ReconRolloutProject.RolloutReconType.Reconditioning, ev.host.id.ToString(), launchSite, lc));
                             dataModule.Data.HasStartedReconditioning = true;
@@ -319,6 +320,8 @@ namespace RP0
 
         public void VesselRecoverEvent(ProtoVessel v, bool quick)
         {
+            SpaceCenterManagement.Instance.ClearLPLastLaunchForVessel(v.vesselID);
+
             if (!KCTUtilities.IsVesselKCTRecovering(v))
                 return;
 

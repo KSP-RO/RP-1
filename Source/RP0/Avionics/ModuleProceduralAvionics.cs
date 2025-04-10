@@ -360,8 +360,18 @@ namespace RP0.ProceduralAvionics
 
         private void ControllableMassChanged(BaseField arg1, object arg2)
         {
-            Profiler.BeginSample("RP0ProcAvi ControllableMassChanged");
             Log($"ControllableMassChanged to {arg1.GetValue(this)} from {arg2}");
+            float newVal = controllableMass;
+            UpdateInSymmetry((ModuleProceduralAvionics pm) =>
+            {
+                pm.SetControllableMassTo(newVal);
+            });
+        }
+
+        private void SetControllableMassTo(float newVal)
+        {
+            Profiler.BeginSample("RP0ProcAvi ControllableMassChanged");
+            controllableMass = newVal;
             if (float.IsNaN(controllableMass))
             {
                 RP0Debug.LogError("[RP0ProcAvi] - ControllableMassChanged tried to set to NAN! Resetting to 0.");
@@ -386,8 +396,12 @@ namespace RP0.ProceduralAvionics
 
         private void AvionicsConfigChanged(BaseField f, object obj)
         {
-            avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(avionicsConfigName);
-            AvionicsConfigChanged();
+            string tlName = ProceduralAvionicsTechManager.GetMaxUnlockedTech(avionicsConfigName);
+            UpdateInSymmetry((ModuleProceduralAvionics pm) =>
+            {
+                pm.avionicsTechLevel = tlName;
+                pm.AvionicsConfigChanged();
+            });
         }
 
         internal void ShowGUIChanged(BaseField f, object obj)
@@ -682,6 +696,20 @@ namespace RP0.ProceduralAvionics
             cost = GetAvionicsCost(controllableMass, techNode);
             powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;
             return controllableMass;
+        }
+
+        internal void UpdateInSymmetry(Action<ModuleProceduralAvionics> updateAction)
+        {
+            updateAction(this);
+            foreach (Part p in part.symmetryCounterparts)
+            {
+                updateAction(p.Modules.GetModule<ModuleProceduralAvionics>());
+                if (p.PartActionWindow  != null)
+                {
+                    p.PartActionWindow.displayDirty = true;
+                    p.PartActionWindow.UpdateWindow();
+                }
+            }
         }
     }
 }

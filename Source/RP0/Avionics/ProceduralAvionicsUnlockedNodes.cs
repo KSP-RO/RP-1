@@ -26,9 +26,11 @@
 
             string serialized = "";
 
-            if (unlockedTechNode != null) {
+            if (unlockedTechNode != null)
+            {
                 string param = unlockedTechNode.GetValue(UNLOCKED_TECH_STATE);
-                if (param != null) {
+                if (param != null)
+                {
                     serialized = param;
                 }
             }

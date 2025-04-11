@@ -134,7 +134,6 @@ namespace RP0
         private ModuleResource FindCommandChargeResource() =>
             part.FindModuleImplementing<ModuleCommand>()?.resHandler.inputResources.FirstOrDefault(r => r?.id == PartResourceLibrary.ElectricityHashcode);
 
-
         protected virtual void SetActionsAndGui()
         {
             bool toggleable = GetToggleable();
@@ -245,9 +244,11 @@ namespace RP0
             useKerbalismInFlight = KerbalismAPI != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().AvionicsUseKerbalism;
             UpdateRate(onRailsCached);
         }
+
         private void OnShipModified(ShipConstruct _) => UpdateRate(onRailsCached);
         private void GoOnRails(Vessel v) => RailChange(v, true);
         private void GoOffRails(Vessel v) => RailChange(v, false);
+
         private void RailChange(Vessel v, bool onRails)
         {
             onRailsCached = onRails;

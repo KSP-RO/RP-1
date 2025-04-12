@@ -42,6 +42,8 @@ namespace RP0.ProceduralAvionics
             }
         }
 
+        public bool IsAvailable => TechNodes.Values.Any(node => node.IsAvailable);
+
         public void Load(ConfigNode node)
         {
             ProceduralAvionicsUtils.Log("Loading Config nodes");

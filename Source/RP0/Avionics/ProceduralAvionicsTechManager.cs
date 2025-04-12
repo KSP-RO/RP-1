@@ -15,7 +15,9 @@ namespace RP0.ProceduralAvionics
 
         private static Dictionary<string, string> _unlockedTech;
 
-        #region calls made duirng OnLoad, OnSave, other initialization
+        public static bool TechIsEnabled { get; private set; }
+
+        #region calls made during OnLoad, OnSave, other initialization
 
         public static void LoadAvionicsConfigs()
         {
@@ -33,8 +35,17 @@ namespace RP0.ProceduralAvionics
             }
         }
 
+        /// <summary>
+        /// Used for injecting the state of the current save.
+        /// </summary>
+        /// <param name="param">Serialized tech state of the current save. Can be null if nothing exists.</param>
         internal static void SetUnlockedTechState(string param)
         {
+            TechIsEnabled = HighLogic.CurrentGame != null &&
+                ResearchAndDevelopment.Instance != null &&
+                (HighLogic.CurrentGame.Mode == Game.Modes.CAREER ||
+                HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX);
+
             ProceduralAvionicsUtils.Log("Setting unlocked tech state");
             _unlockedTech = new Dictionary<string, string>();
             if (param != null)
@@ -70,25 +81,15 @@ namespace RP0.ProceduralAvionics
 
         #endregion
 
-        public static bool TechIsEnabled
-        {
-            get
-            {
-                return HighLogic.CurrentGame != null &&
-                    ResearchAndDevelopment.Instance != null &&
-                    (HighLogic.CurrentGame.Mode == Game.Modes.CAREER ||
-                    HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX);
-            }
-        }
-
+        public static List<string> GetAllConfigs() => _allTechNodes.Select(node => node.name).ToList();
 
         public static List<string> GetAvailableConfigs()
         {
             //ProceduralAvionicsUtils.Log("Getting Available configs, procedural avionics has ", allTechNodes.Count, " nodes loaded");
             List<string> availableConfigs = new List<string>();
-            foreach (var config in _allTechNodes)
+            foreach (ProceduralAvionicsConfig config in _allTechNodes)
             {
-                if (!TechIsEnabled || (config.TechNodes.Values.Where(node => node.IsAvailable).Count() > 0))
+                if (!TechIsEnabled || config.IsAvailable)
                 {
                     availableConfigs.Add(config.name);
                 }
@@ -104,7 +105,7 @@ namespace RP0.ProceduralAvionics
             }
             else
             {
-                return _allTechNodes.Select(node => node.name).ToList();
+                return GetAllConfigs();
             }
         }
 
@@ -145,7 +146,7 @@ namespace RP0.ProceduralAvionics
         {
             if (!TechIsEnabled)
             {
-                var techNodesForConfig = _allTechNodes.Where(config => config.name == avionicsConfigName).FirstOrDefault();
+                var techNodesForConfig = _allTechNodes.FirstOrDefault(config => config.name == avionicsConfigName);
                 var tn = techNodesForConfig.TechNodes.Values.Last().name;
                 return tn;
             }
@@ -154,6 +155,14 @@ namespace RP0.ProceduralAvionics
                 return _unlockedTech[avionicsConfigName];
             }
             return string.Empty;
+        }
+
+        internal static string GetFirstTech(string avionicsConfigName)
+        {
+            var techNodesForConfig = _allTechNodes.FirstOrDefault(config => config.name == avionicsConfigName);
+            if (techNodesForConfig == null)
+                return string.Empty;
+            return techNodesForConfig.TechNodes.Values.First().name;
         }
 
         internal static int GetUnlockCost(string avionicsConfigName, ProceduralAvionicsTechNode techNode)
@@ -200,7 +209,7 @@ namespace RP0.ProceduralAvionics
 
         public static ProceduralAvionicsConfig GetProceduralAvionicsConfig(string configName)
         {
-            return _allTechNodes.Where(config => config.name == configName).FirstOrDefault() ?? new ProceduralAvionicsConfig {name = "LegacyConfig"};
+            return _allTechNodes.FirstOrDefault(config => config.name == configName) ?? new ProceduralAvionicsConfig { name = "LegacyConfig" };
         }
     }
 }

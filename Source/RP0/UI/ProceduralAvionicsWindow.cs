@@ -1,11 +1,12 @@
 ﻿using ClickThroughFix;
 using RealFuels.Tanks;
+using ROUtils;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UniLinq;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
-using ROUtils;
 
 namespace RP0.ProceduralAvionics
 {
@@ -16,6 +17,7 @@ namespace RP0.ProceduralAvionics
         private Rect _windowRect = new Rect(267, 104, 400, 300);
         private GUIContent _gc;
         private string[] _avionicsConfigNames;
+        private string[] _availColoredConfigNames;
         private int _selectedConfigIndex = 0;
         private float _newControlMass;
         private string _sECAmount = "400";
@@ -69,9 +71,18 @@ namespace RP0.ProceduralAvionics
             {
                 if (_avionicsConfigNames == null)
                 {
-                    _avionicsConfigNames = ProceduralAvionicsTechManager.GetAvailableConfigs().ToArray();
+                    _avionicsConfigNames = ProceduralAvionicsTechManager.GetAllConfigs().ToArray();
                     _selectedConfigIndex = _avionicsConfigNames.IndexOf(_module.avionicsConfigName);
                     _tooltipTexts = new Dictionary<string, string>();
+
+                    if (ProceduralAvionicsTechManager.TechIsEnabled)
+                    {
+                        _availColoredConfigNames = ProceduralAvionicsTechManager.AllAvionicsConfigs.Select(c => c.IsAvailable ? c.name : $"<color=orange>{c.name}</color>").ToArray();
+                    }
+                    else
+                    {
+                        _availColoredConfigNames = _avionicsConfigNames;
+                    }
                 }
 
                 if (_shouldResetUIHeight && Event.current.type == EventType.Layout)
@@ -104,7 +115,7 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginVertical(HighLogic.Skin.box);
             GUILayout.Label("Choose the avionics type:", HighLogic.Skin.label);
             int oldConfigIdx = _selectedConfigIndex;
-            _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _avionicsConfigNames, HighLogic.Skin.button);
+            _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _availColoredConfigNames, HighLogic.Skin.button);
             if (oldConfigIdx != _selectedConfigIndex)
             {
                 _shouldResetUIHeight = true;

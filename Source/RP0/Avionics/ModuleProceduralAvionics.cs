@@ -278,7 +278,12 @@ namespace RP0.ProceduralAvionics
         {
             Fields[nameof(avionicsConfigName)].guiActiveEditor = true;
             var range = Fields[nameof(avionicsConfigName)].uiControlEditor as UI_ChooseOption;
-            range.options = ProceduralAvionicsTechManager.GetPurchasedConfigs().ToArray();
+            range.options = ProceduralAvionicsTechManager.GetAllConfigs().ToArray();
+
+            if (ProceduralAvionicsTechManager.TechIsEnabled)
+            {
+                range.display = ProceduralAvionicsTechManager.AllAvionicsConfigs.Select(c => c.IsAvailable ? c.name : $"<color=orange>{c.name}</color>").ToArray();
+            }
 
             if (string.IsNullOrEmpty(avionicsConfigName))
             {
@@ -397,6 +402,13 @@ namespace RP0.ProceduralAvionics
         private void AvionicsConfigChanged(BaseField f, object obj)
         {
             string tlName = ProceduralAvionicsTechManager.GetMaxUnlockedTech(avionicsConfigName);
+            if (string.IsNullOrEmpty(tlName))
+            {
+                tlName = ProceduralAvionicsTechManager.GetFirstTech(avionicsConfigName);
+                if (string.IsNullOrEmpty(tlName))
+                    RP0Debug.LogError("[RP0ProcAvi] AvionicsConfigChanged, trying to set unknown config: " + avionicsConfigName);
+            }
+
             UpdateInSymmetry((ModuleProceduralAvionics pm) =>
             {
                 pm.avionicsTechLevel = tlName;

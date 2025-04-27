@@ -18,10 +18,12 @@ namespace RP0
         private bool _wasComplete;
         protected double _buildRate = -1;
 
+        public Guid AssociatedIdAsGuid => new Guid(associatedID);
+
         public abstract TransactionReasonsRP0 TransactionReason { get; }
         protected abstract TransactionReasonsRP0 transactionReasonTime { get; }
 
-        public VesselProject AssociatedVP => KCTUtilities.FindVPByID(LC, new Guid(associatedID));
+        public VesselProject AssociatedVP => KCTUtilities.FindVPByID(LC, AssociatedIdAsGuid);
 
         protected LaunchComplex _lc = null;
         public LaunchComplex LC
@@ -37,6 +39,14 @@ namespace RP0
                             if (this is ReconRolloutProject r)
                             {
                                 if (lc.Recon_Rollout.Contains(r))
+                                {
+                                    _lc = lc;
+                                    break;
+                                }
+                            }
+                            else if (this is VesselRepairProject vr)
+                            {
+                                if (lc.VesselRepairs.Contains(vr))
                                 {
                                     _lc = lc;
                                     break;
@@ -239,7 +249,7 @@ namespace RP0
 
         public static double GetTotalBlockingProjectTime(LaunchComplex lc)
         {
-            foreach (var r in lc.Recon_Rollout)
+            foreach (var r in lc.GetAllLCOps())
             {
                 if (r.IsBlocking && !r.IsComplete())
                     AddLCP(r);
@@ -288,7 +298,7 @@ namespace RP0
             LCOpsProject lcp = null;
             // The blocking LCP with the lowest time left
             // doesn't have to worry about build rate changing
-            foreach (var r in lc.Recon_Rollout)
+            foreach (var r in lc.GetAllLCOps())
             {
                 if (r.IsComplete())
                     continue;
@@ -327,7 +337,7 @@ namespace RP0
 
             if (KSPUtils.CurrentGameIsCareer() && HasCost && this.cost > 0)
             {
-                var reason = TransactionReason;
+                TransactionReasonsRP0 reason = TransactionReason;
                 if (!CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d).CanAfford()) //If they can't afford to continue the rollout, progress stops
                 {
                     progress = progBefore;
@@ -343,11 +353,14 @@ namespace RP0
                     KCTUtilities.SpendFunds(cost, reason);
                 }
             }
+
             if (IsComplete() != _wasComplete && _lc != null)
             {
-                _lc.RecalculateProjectBP();
                 _wasComplete = !_wasComplete;
+                _lc.RecalculateProjectBP();
+                MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
             }
+
             if (IsComplete())
             {
                 return (1d - Math.Abs(toGo) / Math.Abs(incBP)) * UTDiff;

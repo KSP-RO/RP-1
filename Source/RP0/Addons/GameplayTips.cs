@@ -1,8 +1,8 @@
 ﻿using RealFuels;
 using System.Collections;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using System.Collections.Generic;
 
 namespace RP0
 {
@@ -13,7 +13,8 @@ namespace RP0
         private static bool _isInterplanetaryWarningShown;
 
         private bool _subcribedToPAWEvent;
-        private EventData<VesselProject> _onKctVesselAddedToBuildQueueEvent;
+        private bool _hasNewPurchasableRATL;
+        private int _highestUnlockableRALvl;
 
         public static GameplayTips Instance { get; private set; }
 
@@ -43,12 +44,6 @@ namespace RP0
             }
             _airlaunchTipShown |= rp0Settings.AirlaunchTipShown;
 
-            _onKctVesselAddedToBuildQueueEvent = GameEvents.FindEvent<EventData<VesselProject>>("OnKctVesselAddedToBuildQueue");
-            if (_onKctVesselAddedToBuildQueueEvent != null)
-            {
-                _onKctVesselAddedToBuildQueueEvent.Add(OnKctVesselAddedToBuildQueue);
-            }
-
             if (HighLogic.LoadedSceneIsFlight)
             {
                 var vessel = FlightGlobals.ActiveVessel;
@@ -64,7 +59,9 @@ namespace RP0
             }
             else if (HighLogic.LoadedSceneIsEditor)
             {
-                if (!rp0Settings.RealChuteTipShown)
+                LoadRAUpgradeStatus(rp0Settings);
+
+                if (_hasNewPurchasableRATL || !rp0Settings.RealChuteTipShown)
                 {
                     GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
                     _subcribedToPAWEvent = true;
@@ -74,7 +71,6 @@ namespace RP0
 
         internal void OnDestroy()
         {
-            if (_onKctVesselAddedToBuildQueueEvent != null) _onKctVesselAddedToBuildQueueEvent.Remove(OnKctVesselAddedToBuildQueue);
             if (_subcribedToPAWEvent) GameEvents.onPartActionUIShown.Remove(OnPartActionUIShown);
         }
 
@@ -83,6 +79,11 @@ namespace RP0
             if (part.Modules.Contains("RealChuteModule"))
             {
                 ShowRealChuteTip();
+            }
+
+            if (_hasNewPurchasableRATL && part.Modules.Contains("ModuleRealAntenna"))
+            {
+                ShowRATechAvailableTip();
             }
         }
 
@@ -125,27 +126,6 @@ namespace RP0
                                          HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        private void OnKctVesselAddedToBuildQueue(VesselProject data)
-        {
-            if (!HighLogic.LoadedSceneIsEditor || HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders) return;
-
-            bool hasUntooledParts = EditorLogic.fetch.ship.Parts.Any(p => p.FindModuleImplementing<ModuleTooling>()?.IsUnlocked() == false);
-            if (hasUntooledParts)
-            {
-                ShowUntooledPartsReminder();
-            }
-        }
-
-        private static void ShowUntooledPartsReminder()
-        {
-            string msg = $"Tool them in the RP-1 menu to reduce vessel cost and integration time.";
-            DialogGUIBase[] options = new DialogGUIBase[2];
-            options[0] = new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { });
-            options[1] = new DialogGUIButton("Never remind me again", () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowToolingReminders = true; });
-            MultiOptionDialog diag = new MultiOptionDialog("ShowUntooledPartsReminder", msg, "Untooled parts", null, 300, options);
-            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
-        }
-
         private void ShowRealChuteTip()
         {
             var rp0Settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
@@ -159,6 +139,51 @@ namespace RP0
                                          new Vector2(0.5f, 0.5f),
                                          "ShowRealChuteTip",
                                          "Configuring parachutes",
+                                         msg,
+                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
+                                         false,
+                                         HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
+        public void CheckAndShowExcessECTip(ShipConstruct ship)
+        {
+            if (ShipHasExcessEC(ship))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                             new Vector2(0.5f, 0.5f),
+                                             "ShowExcessECTip",
+                                             KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_ExcessEC_Title"),
+                                             KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_ExcessEC_Text"),
+                                             KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
+                                             false,
+                                             HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+        }
+
+        public bool ShipHasExcessEC(ShipConstruct ship)
+        {
+            const string techId = "electronicsSatellite";
+            if (ResearchAndDevelopment.GetTechnologyState(techId) == RDTech.State.Available)
+            {
+                // No longer check this beyond the early game
+                return false;
+            }
+
+            double ecTotal = ship.Parts.Sum(p => p.Resources.Get("ElectricCharge")?.maxAmount ?? 0);
+            return ecTotal > 10000;
+        }
+
+        private void ShowRATechAvailableTip()
+        {
+            var rp0Settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
+            rp0Settings.RATLTipShown = _highestUnlockableRALvl;
+            _hasNewPurchasableRATL = false;
+
+            string msg = $"Communications Tech Level {_highestUnlockableRALvl} has been researched but not purchased. Purchase it in the R&D building to use higher-tech comms.";
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         "ShowRATLTip",
+                                         "New comms tech available",
                                          msg,
                                          KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                          false,
@@ -283,6 +308,29 @@ namespace RP0
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text"),
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 300, options);
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
+        private void LoadRAUpgradeStatus(RP0Settings rp0Settings)
+        {
+            _highestUnlockableRALvl = rp0Settings.RATLTipShown;
+            const int tlUpgradeCount = 9;
+            for (int i = rp0Settings.RATLTipShown + 1; i <= tlUpgradeCount; i++)
+            {
+                string upgradeName = "commsTL" + i;
+                if (PartUpgradeManager.Handler.IsEnabled(upgradeName))
+                {
+                    rp0Settings.RATLTipShown = i;
+                    continue;
+                }
+        
+                if (PartUpgradeManager.Handler.IsAvailableToUnlock(upgradeName))
+                {
+                    _highestUnlockableRALvl = i;
+                    _hasNewPurchasableRATL = true;
+                    continue;
+                }
+                break;
+            }
         }
     }
 }

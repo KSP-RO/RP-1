@@ -10,21 +10,23 @@ namespace ContractConfigurator.RP0
     {
         protected double distance { get; set; }
         protected double relativeSpeed { get; set; }
+        protected float updateFrequency { get; set; }
 
         private float lastUpdate = 0.0f;
-        private const float UPDATE_FREQUENCY = 0.50f;
+        internal const float DEFAULT_UPDATE_FREQUENCY = 0.50f;
 
         public RP1Rendezvous()
             : base(null)
         {
         }
 
-        public RP1Rendezvous(double distance, double relativeSpeed, string title)
+        public RP1Rendezvous(double distance, double relativeSpeed, string title, float updateFrequency)
             : base(title)
         {
             this.distance = distance;
             this.relativeSpeed = relativeSpeed;
             this.title = title;
+            this.updateFrequency = updateFrequency;
             disableOnStateChange = true;
         }
 
@@ -45,6 +47,8 @@ namespace ContractConfigurator.RP0
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
+
+            node.AddValue("updateFrequency", updateFrequency);
             node.AddValue("distance", distance);
             node.AddValue("relativeSpeed", relativeSpeed);
         }
@@ -52,6 +56,7 @@ namespace ContractConfigurator.RP0
         protected override void OnParameterLoad(ConfigNode node)
         {
             base.OnParameterLoad(node);
+            updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
             distance = ConfigNodeUtil.ParseValue<double>(node, "distance");
             relativeSpeed = ConfigNodeUtil.ParseValue<double>(node, "relativeSpeed");
         }
@@ -60,7 +65,7 @@ namespace ContractConfigurator.RP0
         {
             base.OnUpdate();
 
-            if (Time.fixedTime - lastUpdate < UPDATE_FREQUENCY) return;
+            if (Time.fixedTime - lastUpdate < updateFrequency) return;
 
             lastUpdate = Time.fixedTime;
 

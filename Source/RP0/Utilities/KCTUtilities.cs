@@ -389,6 +389,7 @@ namespace RP0
             {
                 CheckPartAvailability = !skipPartChecks,
                 CheckPartConfigs = !skipPartChecks,
+                CheckUntooledParts = !skipPartChecks,
                 SuccessAction = AddVesselToBuildList
             };
             v.ProcessVessel(vp);
@@ -492,7 +493,9 @@ namespace RP0
             newShip.progress = progressBP;
             RP0Debug.Log($"Finished? {editableShip.IsFinished}");
             if (editableShip.IsFinished)
-                newShip.cannotEarnScience = true;
+            {
+                newShip.MoveVesselToWarehouse();
+            }
 
             GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
 
@@ -666,7 +669,7 @@ namespace RP0
                         continue;
                     foreach (ISpaceCenterProject vp in LC.BuildList)
                         _checkTime(vp, ref shortestTime, ref thing);
-                    foreach (ISpaceCenterProject rr in LC.Recon_Rollout)
+                    foreach (ISpaceCenterProject rr in LC.GetAllLCOps())
                         _checkTime(rr, ref shortestTime, ref thing);
                 }
                 foreach (ISpaceCenterProject ub in KSC.Constructions)

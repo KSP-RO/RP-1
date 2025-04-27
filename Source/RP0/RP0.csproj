@@ -38,7 +38,16 @@
   <ItemGroup>
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
+    <Compile Include="ConfigurableStart\DateHandler.cs" />
+    <Compile Include="ConfigurableStart\PresetPickerGUI.cs" />
+    <Compile Include="ConfigurableStart\Scenario.cs" />
+    <Compile Include="ConfigurableStart\ScenarioHandler.cs" />
+    <Compile Include="ConfigurableStart\Utilities.cs" />
+    <Compile Include="Harmony\FlightInputHandler.cs" />
     <Compile Include="Harmony\ModuleRCS.cs" />
+    <Compile Include="ModIntegrations\TFInterop.cs" />
+    <Compile Include="Singletons\LeaderNotifications.cs" />
+    <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />
     <Compile Include="UI\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />
     <Compile Include="CareerLog\CareerEventScope.cs" />
@@ -261,6 +270,7 @@
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
     <Compile Include="Utilities\KCTUtilities.cs" />
     <Compile Include="SpaceCenter\SpaceCenterManagement.cs" />
+    <Compile Include="Utilities\ScienceUtils.cs" />
     <Compile Include="Utilities\TextureScale.cs" />
     <Compile Include="Persistence\KCTVesselTracker.cs" />
     <Compile Include="Singletons\KCTVesselTrackerEventHandler.cs" />
@@ -283,7 +293,6 @@
     </Reference>
     <Reference Include="ContractConfigurator, Version=2.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ContractConfigurator\source\ContractConfigurator\bin\Release\ContractConfigurator.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ferramGraph">
@@ -291,16 +300,13 @@
     </Reference>
     <Reference Include="Ionic.Zip, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\Ionic.Zip.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="Kerbalism112, Version=3.17.0.0, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\..\temp\dlls\Kerbalism112.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="KSPCommunityFixes">
-      <HintPath>..\..\..\..\..\..\Games\R112\GameData\KSPCommunityFixes\Plugins\KSPCommunityFixes.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="ModularFlightIntegrator">
@@ -310,7 +316,9 @@
       <Private>False</Private>
     </Reference>
     <Reference Include="ROUtils">
-      <HintPath>..\..\..\..\..\..\..\Games\R112\GameData\ROUtils\Plugins\ROUtils.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="SolverEngines">
       <Private>False</Private>
     </Reference>
     <Reference Include="System">
@@ -322,51 +330,37 @@
     <Reference Include="UnityEngine">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.AnimationModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.AnimationModule">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\KSP DLL\1.12.3\UnityEngine.AssetBundleModule.dll</HintPath>
+    <Reference Include="UnityEngine.AssetBundleModule">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.CoreModule">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.ImageConversionModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\UnityEngine.ImageConversionModule.dll</HintPath>
+    <Reference Include="UnityEngine.ImageConversionModule">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.IMGUIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.IMGUIModule">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.InputLegacyModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.InputLegacyModule">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.PhysicsModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.PhysicsModule">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.ScreenCaptureModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\Games\R112\KSP_x64_Data\Managed\UnityEngine.ScreenCaptureModule.dll</HintPath>
+    <Reference Include="UnityEngine.ScreenCaptureModule">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.TextRenderingModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
+    <Reference Include="UnityEngine.TextRenderingModule">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <Private>False</Private>
     </Reference>
-    <Reference Include="UnityEngine.UIModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\ContractConfigurator\source\ContractConfigurator\bin\Release\UnityEngine.UIModule.dll</HintPath>
+    <Reference Include="UnityEngine.UIModule">
       <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UnityWebRequestModule">
@@ -377,6 +371,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="ConfigurableStart\README.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <!--Krafs.Publicizer items-->

@@ -196,6 +196,30 @@
         ]
     },
     {
+        "name": "ROEE-BNTR25k",
+        "title": "Bimodal HALEU NTR (25klbf)",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "4639",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "Nuclear Engine",
+        "year": "2028",
+        "technology": "nuclearPropulsionNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "BNTR25k",
+        "upgrade": false,
+        "entry_cost_mods": "BNTR25k",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Nuclear"
+        ]
+    },
+    {
         "name": "ROEE-COBRA",
         "title": "COBRA",
         "description": "",
@@ -291,6 +315,30 @@
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "ROEE-INsTAR",
+        "title": "INsTAR",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "11489",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "Nuclear Engine",
+        "year": "2035",
+        "technology": "nuclearPropulsionNF2",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "INsTAR",
+        "upgrade": false,
+        "entry_cost_mods": "1000000,SNTPPFE100-Hydrogen",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Nuclear"
         ]
     },
     {
@@ -640,7 +688,7 @@
         "title": "RD-0230",
         "description": "",
         "mod": "ROEnginesExtended",
-        "cost": 100,
+        "cost": 25,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -688,7 +736,7 @@
         "title": "RD-0236",
         "description": "",
         "mod": "ROEnginesExtended",
-        "cost": 90,
+        "cost": 23,
         "entry_cost": 0,
         "category": "STAGED",
         "info": "",
@@ -761,7 +809,7 @@
         "title": "RD-864",
         "description": "",
         "mod": "ROEnginesExtended",
-        "cost": 163,
+        "cost": 41,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",

@@ -5,7 +5,7 @@ namespace ContractConfigurator.RP0
 {
     public class VesselBuiltAtParameter : VesselParameter
     {
-        private EditorFacility builtAt;
+        private EditorFacility builtAt {  get; set; }
 
         public VesselBuiltAtParameter()
             : base(null)
@@ -39,7 +39,8 @@ namespace ContractConfigurator.RP0
         protected override bool VesselMeetsCondition(Vessel vessel)
         {
             EditorFacility? curBuiltAt = vessel.GetVesselBuiltAt();
-            return !curBuiltAt.HasValue || curBuiltAt.Value == builtAt;
+            return !curBuiltAt.HasValue || curBuiltAt.Value == builtAt ||
+                curBuiltAt.Value == EditorFacility.None;    // Build times disabled
         }
     }
 }

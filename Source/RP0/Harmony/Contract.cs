@@ -1,7 +1,6 @@
 ﻿using Contracts;
 using HarmonyLib;
-using RP0.Requirements;
-using Strategies;
+using RP0.Leaders;
 using UniLinq;
 
 namespace RP0.Harmony
@@ -61,6 +60,7 @@ namespace RP0.Harmony
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.ContractReward, 0d, 0d, 0d, _contract.ReputationCompletion * repToConf, 0d);
                 value += $"<color={CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence)}>{CurrencyModifierQueryRP0.SpriteString(CurrencyRP0.Confidence)} {cmq.GetTotal(CurrencyRP0.Confidence):N0} {cmq.GetEffectDeltaText(CurrencyRP0.Confidence, "N0", CurrencyModifierQuery.TextStyling.OnGUI)}  </color>";
             }
+
             if (PresetManager.Instance != null)
             {
                 int applicants = Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(_contract.contractType.name);
@@ -68,20 +68,10 @@ namespace RP0.Harmony
                     value += $"\n{KSP.Localization.Localizer.Format("#rp0_ContractRewards_GainApplicants", applicants)}";
             }
 
-            var leadersUnlockedByThis = StrategySystem.Instance.SystemConfig.Strategies
-                .OfType<StrategyConfigRP0>()
-                .Where(s => s.DepartmentName != "Programs" &&
-                            s.RequirementsBlock != null &&
-                            (!_isReward || !s.IsUnlocked()) &&
-                            (s.RequirementsBlock.Op is Any ||
-                             s.RequirementsBlock.Op is All && s.RequirementsBlock.Reqs.Count == 1) &&
-                            s.RequirementsBlock.ChildBlocks.Count == 0 &&
-                            s.RequirementsBlock.Reqs.Any(r => !r.IsInverted &&
-                                                              r is ContractRequirement cr &&
-                                                              cr.ContractName == _contract.contractType.name))
+            var leaderTitles = LeaderUtils.GetLeadersUnlockedByContract(_contract)
+                .Where(s => !_isReward || !s.IsUnlocked())
                 .Select(s => s.title);
-
-            string leaderString = string.Join("\n", leadersUnlockedByThis);
+            string leaderString = string.Join("\n", leaderTitles);
             if (!string.IsNullOrEmpty(leaderString))
                 value += "\n" + KSP.Localization.Localizer.Format(_isReward ? "#rp0_Leaders_LeadersUnlocked" : "#rp0_Leaders_UnlocksLeader") + leaderString;
 

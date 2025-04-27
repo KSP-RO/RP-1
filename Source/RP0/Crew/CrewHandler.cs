@@ -296,7 +296,8 @@ namespace RP0.Crew
             if (!TrainingDatabase.TrainingExists(partName, out string training))
                 return true;
 
-            return includeProf ? Instance.NautHasTrainingForPart(pcm, training, includeMission) : includeMission ? Instance.NautHasMissionTrainingForPart(pcm, training) : true;
+            return includeProf ? Instance.NautHasTrainingForPart(pcm, training, includeMission)
+                : includeMission && Instance.IsMissionTrainingEnabled ? Instance.NautHasMissionTrainingForPart(pcm, training) : true;
         }
 
         public static bool CanCrewLaunchOnVessel(ProtoCrewMember pcm, List<Part> parts)
@@ -332,7 +333,7 @@ namespace RP0.Crew
                 if (string.IsNullOrEmpty(e.type) || string.IsNullOrEmpty(e.target))
                         continue;
 
-                if (lacksMission)
+                if (lacksMission && IsMissionTrainingEnabled)
                 {
                     if (e.type == TrainingType_Mission && e.target == partName)
                     {
@@ -1030,6 +1031,10 @@ namespace RP0.Crew
                 foreach (ProtoCrewMember pcm in FlightGlobals.ActiveVessel.GetVesselCrew())
                 {
                     pcm.inactive = false;
+                    if (pcm.type == ProtoCrewMember.KerbalType.Applicant)
+                    {
+                        pcm.type = ProtoCrewMember.KerbalType.Crew;
+                    }
                 }
             }
         }

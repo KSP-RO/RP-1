@@ -7,19 +7,20 @@ namespace ContractConfigurator.RP0
     public class RP1ReturnHome : VesselParameter
     {
         public const double DefaultMaxSpeed = 5;
+        internal const float DEFAULT_UPDATE_FREQUENCY = 0.5f;
 
-        protected string landAtFacility = string.Empty;
-        protected double maxSpeed = DefaultMaxSpeed;
+        protected string landAtFacility { get; set; }
+        protected double maxSpeed { get; set; }
+        protected float updateFrequency { get; set; }
 
         private float lastUpdate = 0.0f;
-        private const float UPDATE_FREQUENCY = 0.5f;
 
         public RP1ReturnHome()
-            : this(null, string.Empty, DefaultMaxSpeed)
+            : this(null, string.Empty, DefaultMaxSpeed, DEFAULT_UPDATE_FREQUENCY)
         {
         }
 
-        public RP1ReturnHome(string title, string landAtFacility, double maxSpeed)
+        public RP1ReturnHome(string title, string landAtFacility, double maxSpeed, float updateFrequency)
             : base(title)
         {
             CelestialBody home = FlightGlobals.GetHomeBody();
@@ -31,12 +32,14 @@ namespace ContractConfigurator.RP0
             }
             this.landAtFacility = landAtFacility;
             this.maxSpeed = maxSpeed;
+            this.updateFrequency = updateFrequency;
         }
 
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
 
+            node.AddValue("updateFrequency", updateFrequency);
             node.AddValue("landAtFacility", landAtFacility);
             node.AddValue("maxSpeed", maxSpeed);
         }
@@ -45,15 +48,16 @@ namespace ContractConfigurator.RP0
         {
             base.OnParameterLoad(node);
 
-            node.TryGetValue("landAtFacility", ref landAtFacility);
-            node.TryGetValue("maxSpeed", ref maxSpeed);
+            updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
+            landAtFacility = ConfigNodeUtil.ParseValue<string>(node, "landAtFacility", string.Empty);
+            maxSpeed = ConfigNodeUtil.ParseValue<double>(node, "maxSpeed", DefaultMaxSpeed);
         }
 
         protected override void OnUpdate()
         {
             base.OnUpdate();
 
-            if (Time.fixedTime - lastUpdate > UPDATE_FREQUENCY)
+            if (Time.fixedTime - lastUpdate > updateFrequency)
             {
                 lastUpdate = Time.fixedTime;
                 CheckVessel(FlightGlobals.ActiveVessel);

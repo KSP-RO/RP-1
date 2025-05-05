@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using UnityEngine;
 using ROUtils;
 
@@ -45,21 +45,24 @@ namespace RP0
             GUILayout.Label(SpaceCenterManagement.Instance.Applicants.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            double salaryE = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Total Engineers:", GUILayout.Width(120));
-            GUILayout.Label(SpaceCenterManagement.Instance.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
-            GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{salaryE:N0}", GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
+            if (MaintenanceHandler.Instance != null)
+            {
+                double salaryE = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -MaintenanceHandler.Instance.IntegrationSalaryPerDay * 365.25d);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Total Engineers:", GUILayout.Width(120));
+                GUILayout.Label(SpaceCenterManagement.Instance.TotalEngineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+                GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
+                GUILayout.Label($"√{salaryE:N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
 
-            double salaryR = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d);
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Total Researchers:", GUILayout.Width(120));
-            GUILayout.Label(SpaceCenterManagement.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
-            GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
-            GUILayout.Label($"√{salaryR:N0}", GetLabelRightAlignStyle());
-            GUILayout.EndHorizontal();
+                double salaryR = -CurrencyUtils.Funds(TransactionReasonsRP0.SalaryResearchers, -MaintenanceHandler.Instance.ResearchSalaryPerDay * 365.25d);
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Total Researchers:", GUILayout.Width(120));
+                GUILayout.Label(SpaceCenterManagement.Instance.Researchers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(60));
+                GUILayout.Label("Salary and Facilities:", GetLabelRightAlignStyle(), GUILayout.Width(150));
+                GUILayout.Label($"√{salaryR:N0}", GetLabelRightAlignStyle());
+                GUILayout.EndHorizontal();
+            }
 
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
@@ -428,12 +431,17 @@ namespace RP0
 
         private static void TryAddAutoHire(string sNumStaff, string sReserveFunds, LaunchComplex lc)
         {
+            sNumStaff = sNumStaff.Replace(",", "");
+            sReserveFunds = sReserveFunds.Replace(",", "");
             bool b1 = int.TryParse(sNumStaff, out int numCrew);
             bool b2 = double.TryParse(sReserveFunds, out double reserveFunds);
-            if (!b1 || !b2)
+
+            string errorMessage = (!b1 ? "Failed to parse staff count!\n" : "") + (!b2 ? "Failed to parse reserve funds!" : "");
+
+            if (!string.IsNullOrEmpty(errorMessage))
             {
                 PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToStaffConfirmFail",
-                    $"Failed to parse {(b1 ? "crew count" : "reserve funds")}!",
+                    errorMessage.Trim(),
                     "Error",
                     HighLogic.UISkin,
                     300,
@@ -468,7 +476,8 @@ namespace RP0
             if (add)
             {
                 signChar = "+";
-                limit = Math.Min(currentLC.KSC.UnassignedEngineers, currentLC.MaxEngineers - currentLC.Engineers);
+                int unassigned = KSPUtils.CurrentGameIsCareer() ? currentLC.KSC.UnassignedEngineers : int.MaxValue;
+                limit = Math.Min(unassigned, currentLC.MaxEngineers - currentLC.Engineers);
             }
             else
             {

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
-    <OutputPath>C:\Users\nderaney\Documents\GitHub\RP-0\Source\Tech Tree\Parts Browser\</OutputPath>
+    <OutputPath>..\Tech Tree\Parts Browser\</OutputPath>
     <PlatformTarget>x64</PlatformTarget>
   </PropertyGroup>
   

@@ -1,4 +1,5 @@
 ﻿using ROUtils.DataTypes;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
@@ -116,6 +117,15 @@ namespace RP0.Crew
                     if (Students.Count == 0)
                     {
                         CompleteCourse();   // cancel the course
+                    }
+                    else
+                    {
+                        // Increase the training time if more proficient nauts are removed from course.
+                        // Do not decrease training time if less proficient nauts are removed.
+                        // Course completing instantly in the second case wouldn't be ideal.
+                        double befBP = BP;
+                        RecalculateBP();
+                        BP = Math.Max(BP, befBP);
                     }
                 }
                 else

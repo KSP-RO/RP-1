@@ -33,6 +33,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public bool systemEnabled = true;
 
+        [KSPField]
+        public bool canPermaDisable = true;
+
         [KSPField(isPersistant = true, guiActive = true, guiName = "Permanently disabled", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public bool dead = false;
 
@@ -89,7 +92,7 @@ namespace RP0
         /// <summary>
         /// Whether the avionics is NE with controllable mass > 0 and control is being locked by being interplanetary.
         /// </summary>
-        public bool IsNearEarthAndLockedByInterplanetary => GetInternalMassLimit() > 0 && IsLockedByInterplanetary;
+        public bool IsNearEarthAndLockedByInterplanetary => !dead && GetInternalMassLimit() > 0 && IsLockedByInterplanetary;
 
         /// <summary>
         /// The altitude threshold around home world above which interplanetary avionics is required.
@@ -131,7 +134,6 @@ namespace RP0
         private ModuleResource FindCommandChargeResource() =>
             part.FindModuleImplementing<ModuleCommand>()?.resHandler.inputResources.FirstOrDefault(r => r?.id == PartResourceLibrary.ElectricityHashcode);
 
-
         protected virtual void SetActionsAndGui()
         {
             bool toggleable = GetToggleable();
@@ -143,9 +145,9 @@ namespace RP0
             Actions[nameof(ShutdownAction)].active = (systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleable;
             Actions[nameof(ToggleAction)].active = toggleable;
             Fields[nameof(currentWatts)].guiActive = toggleable;
-            Actions[nameof(KillAction)].active = !dead;
-            Events[nameof(KillEvent)].guiActive = !dead;
-            Events[nameof(KillEvent)].active = !dead;
+            Actions[nameof(KillAction)].active = canPermaDisable && !dead;
+            Events[nameof(KillEvent)].guiActive = canPermaDisable && !dead;
+            Events[nameof(KillEvent)].active = canPermaDisable && !dead;
         }
 
         protected void StageActivated(int stage)
@@ -242,9 +244,11 @@ namespace RP0
             useKerbalismInFlight = KerbalismAPI != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().AvionicsUseKerbalism;
             UpdateRate(onRailsCached);
         }
+
         private void OnShipModified(ShipConstruct _) => UpdateRate(onRailsCached);
         private void GoOnRails(Vessel v) => RailChange(v, true);
         private void GoOffRails(Vessel v) => RailChange(v, false);
+
         private void RailChange(Vessel v, bool onRails)
         {
             onRailsCached = onRails;
@@ -359,7 +363,7 @@ namespace RP0
                 new DialogGUIButton("Yes", () => KillAction(null)),
                 new DialogGUIButton("No", () => {})
             };
-            var dialog = new MultiOptionDialog("ConfirmDisableAvionics", "Are you sure you want to permanently disable the avionics unit? Doing this will prevent avionics from consuming power but it will no longer provide any control either.", "Disable Avionics", HighLogic.UISkin, 300, options);
+            var dialog = new MultiOptionDialog("ConfirmDisableAvionics", "Are you sure you want to permanently disable the avionics unit? Doing this will prevent avionics from consuming power but it will no longer provide any control nor use its internal antenna. Note that disabling the last avionics unit on the vessel will also disable all antennas. (internal and external, ingoing and outgoing)", "Disable Avionics", HighLogic.UISkin, 300, options);
             PopupDialog.SpawnPopupDialog(dialog, true, HighLogic.UISkin);
         }
 

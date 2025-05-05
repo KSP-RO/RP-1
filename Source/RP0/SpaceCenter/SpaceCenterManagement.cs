@@ -202,21 +202,24 @@ namespace RP0
             }
             PresetManager.Instance.SetActiveFromSaveData();
 
-            var obj = new GameObject("KCTToolbarControl");
-            ToolbarControl = obj.AddComponent<ToolbarControl>();
-            ToolbarControl.AddToAllToolbars(null, null,
-                null, null, null, null,
-                ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW | ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.SPH | ApplicationLauncher.AppScenes.TRACKSTATION | ApplicationLauncher.AppScenes.VAB,
-                _modId,
-                "MainButton",
-                KCTUtilities._icon_KCT_On_38,
-                KCTUtilities._icon_KCT_Off_38,
-                KCTUtilities._icon_KCT_On_24,
-                KCTUtilities._icon_KCT_Off_24,
-                _modName
-                );
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER || PresetManager.Instance.ActivePreset?.GeneralSettings?.Enabled == true)
+            {
+                var obj = new GameObject("KCTToolbarControl");
+                ToolbarControl = obj.AddComponent<ToolbarControl>();
+                ToolbarControl.AddToAllToolbars(null, null,
+                    null, null, null, null,
+                    ApplicationLauncher.AppScenes.FLIGHT | ApplicationLauncher.AppScenes.MAPVIEW | ApplicationLauncher.AppScenes.SPACECENTER | ApplicationLauncher.AppScenes.SPH | ApplicationLauncher.AppScenes.TRACKSTATION | ApplicationLauncher.AppScenes.VAB,
+                    _modId,
+                    "MainButton",
+                    KCTUtilities._icon_KCT_On_38,
+                    KCTUtilities._icon_KCT_Off_38,
+                    KCTUtilities._icon_KCT_On_24,
+                    KCTUtilities._icon_KCT_Off_24,
+                    _modName
+                    );
 
-            ToolbarControl.AddLeftRightClickCallbacks(KCT_GUI.ClickToggle, KCT_GUI.OnRightClick);
+                ToolbarControl.AddLeftRightClickCallbacks(KCT_GUI.ClickToggle, KCT_GUI.OnRightClick);
+            }
         }
 
         public void Start()
@@ -336,7 +339,7 @@ namespace RP0
             if (PresetManager.Instance?.ActivePreset == null || !PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return;
 
-            if (KCT_GUI.IsPrimarilyDisabled) return;
+            if (KCT_GUI.IsPrimarilyDisabled && !IsSimulatedFlight) return;
 
             //The following should only be executed when fully enabled for the save
 
@@ -459,6 +462,12 @@ namespace RP0
                 {
                     UpdateTechYearMults();
                     _lastYearMultUpdateUT = UT;
+                }
+
+                if (MaintenanceHandler.Instance == null)
+                {
+                    // Normally handled through MaintenanceHandler but that doesn't exist outside career mode
+                    ProgressBuildTime(UTDiff);
                 }
             }
 
@@ -916,6 +925,19 @@ namespace RP0
             ActiveSC = ksc;
         }
 
+        public void ClearLPLastLaunchForVessel(Guid stockVesselID)
+        {
+            foreach (LCSpaceCenter ksc in KSCs)
+            {
+                foreach (LaunchComplex lc in ksc.LaunchComplexes)
+                {
+                    LCLaunchPad lp = lc.FindPadWithLastLaunchedVessel(stockVesselID);
+                    if (lp != null)
+                        lp.lastLoadedVesselId = default;
+                }
+            }
+        }
+
         #endregion
 
         #region Budget
@@ -925,7 +947,7 @@ namespace RP0
             double engineers = 0d;
             foreach (var lc in ksc.LaunchComplexes)
                 engineers += GetEffectiveEngineersForSalary(lc);
-            return engineers + ksc.UnassignedEngineers * Database.SettingsSC.IdleSalaryMult;
+            return engineers + ksc.UnassignedEngineers * Database.SettingsSC.EngineerIdleSalaryMult;
         }
 
         public double GetEffectiveEngineersForSalary(LCSpaceCenter ksc) => GetEffectiveIntegrationEngineersForSalary(ksc);
@@ -935,12 +957,12 @@ namespace RP0
             if (lc.IsOperational && lc.Engineers > 0)
             {
                 if (!lc.IsActive)
-                    return lc.Engineers * Database.SettingsSC.IdleSalaryMult;
+                    return lc.Engineers * Database.SettingsSC.EngineerIdleSalaryMult;
 
                 if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
                 {
                     int num = Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));
-                    return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.IdleSalaryMult;
+                    return num * lc.RushSalary + (lc.Engineers - num) * Database.SettingsSC.EngineerIdleSalaryMult;
                 }
 
                 return lc.Engineers * lc.RushSalary;
@@ -952,6 +974,8 @@ namespace RP0
         public double GetBudgetDelta(double deltaTime)
         {
             // note NetUpkeepPerDay is negative or 0.
+
+            if (MaintenanceHandler.Instance == null) return 0;
 
             double averageSubsidyPerDay = CurrencyUtils.Funds(TransactionReasonsRP0.Subsidy, MaintenanceHandler.GetAverageSubsidyForPeriod(deltaTime)) * (1d / 365.25d);
             double fundDelta = Math.Min(0d, MaintenanceHandler.Instance.UpkeepPerDayForDisplay + averageSubsidyPerDay) * deltaTime * (1d / 86400d)
@@ -1104,6 +1128,20 @@ namespace RP0
                 // This will only fire the first time, because we make it invalid afterwards by clearing the VP
                 if (vp.IsValid)
                 {
+                    var lc = vp.LC;
+                    if (lc.LCType == LaunchComplexType.Pad && lc.ActiveLPInstance != null)
+                    {
+                        LCLaunchPad lp = lc.ActiveLPInstance;
+                        if (lp != null)
+                        {
+                            lp.lastLoadedVesselId = FlightGlobals.ActiveVessel.id;
+                        }
+                        else
+                        {
+                            RP0Debug.LogWarning("ProcessNewFlight: failed to find active LP instance");
+                        }
+                    }
+
                     dataModule.Data.FacilityBuiltIn = vp.FacilityBuiltIn;
                     dataModule.Data.VesselID = vp.KCTPersistentID;
                     dataModule.Data.LCID = vp.LCID;
@@ -1286,8 +1324,26 @@ namespace RP0
         private static IEnumerator SetSimOrbit(SimulationParams simParams)
         {
             yield return new WaitForEndOfFrame();
-            RP0Debug.Log($"Moving vessel to orbit. {simParams.SimulationBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
-            HyperEdit_Utilities.PutInOrbitAround(simParams.SimulationBody, simParams.SimOrbitAltitude, simParams.SimInclination);
+
+            CelestialBody body = simParams.SimulationBody;
+            if (simParams.SimOrbitAp == 0 && simParams.SimOrbitPe == 0)
+            {
+                double sma = simParams.SimOrbitAltitude + body.Radius;
+                double ecc = 0.0000001;    // Just a really smol value to prevent Ap and Pe from flickering around
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, simParams.SimMNA, simParams.SimArgPe, 0.0); // selBodyIndex, ecc, sma, inc, LAN, mna, argPe, ObT
+                FloatingOrigin.ResetTerrainShaderOffset();
+            }
+            else
+            {
+                double ra = simParams.SimOrbitAp + body.Radius;
+                double rp = simParams.SimOrbitPe + body.Radius;
+                double sma = (ra + rp) / 2;
+                double ecc = (ra - rp) / (ra + rp);
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, simParams.SimMNA, simParams.SimArgPe, 0.0); // selBodyIndex, ecc, sma, inc, LAN, mna, argPe, ObT
+                FloatingOrigin.ResetTerrainShaderOffset();
+            }
         }
 
         private void AddSimulationWatermark()
@@ -1818,7 +1874,7 @@ namespace RP0
                 {
                     options.Add(new DialogGUIButtonWithTooltip("Repair failures", QueueRepairFailures)
                     {
-                        tooltipText = "All failures will be repaired without having to leave the flight scene."
+                        tooltipText = "Repair all failures without leaving the flight scene.\nUse the \"Space Center Management\" window to track the time this process takes."
                     });
                 }
             }

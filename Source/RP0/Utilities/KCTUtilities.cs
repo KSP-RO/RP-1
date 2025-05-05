@@ -242,7 +242,7 @@ namespace RP0
                 }
                 if (excludeChutes)
                 {
-                    if (p.Modules["RealChuteModule"] != null)
+                    if (p.Modules.GetModule("RealChuteModule") != null)
                         continue;
                 }
 
@@ -1356,7 +1356,7 @@ namespace RP0
         {
             currentLC.Engineers += delta;
             SCMEvents.OnPersonnelChange.Fire();
-            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
             currentLC.RecalculateBuildRates();
             KCT_GUI.BuildRateForDisplay = null;
         }
@@ -1365,7 +1365,7 @@ namespace RP0
         {
             ksc.Engineers += delta;
             SCMEvents.OnPersonnelChange.Fire();
-            MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+            MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
         }
 
         public static void ChangeResearchers(int delta)

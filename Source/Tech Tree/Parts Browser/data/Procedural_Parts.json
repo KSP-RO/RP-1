@@ -209,7 +209,7 @@
         "entry_cost_mods": "1",
         "identical_part_name": "",
         "module_tags": []
-    }
+    },
     {
         "name": "proceduralPaint",
         "title": "Paint [Procedural]",

@@ -1,0 +1,57 @@
+CONTRACT_TYPE
+{
+	name = moon_spaceStation3Month
+	title = 6 Month Lunar Orbital Stay
+	group = LunarHabitation
+	agent = Stations
+
+	description = <b>Program: Lunar Habitation<br>Type: <color=blue>Optional</color></b><br><br>Crew our lunar orbital station for at least 6 months. 
+
+	synopsis = Launch a lunar space station and crew it for three months.
+
+	completedMessage = Congratulations! You have successfully crewed our Lunar Orbital Station for 6 months!
+
+	//sortKey = 1501 Not sure what to do with this yet
+
+	cancellable = true
+	declinable = false
+	autoAccept = false
+	minExpiry = 0
+	maxExpiry = 0
+	maxCompletions = 1
+	maxSimultaneous = 1
+	deadline = 0
+
+	targetBody = Moon
+
+	// ************ REWARDS ************
+	
+	prestige = Trivial       // 1.0x
+	advanceFunds = 0
+	rewardScience = 0
+	rewardReputation = 600
+	rewardFunds =  0
+	failureReputation = 0 // was @rewardReputation
+	failureFunds = 0
+
+	// ************ REQUIREMENTS ************
+
+	REQUIREMENT
+	{
+		name = ProgramActive
+		type = ProgramActive
+		program = LunarHabitation
+	}
+	// ************ PARAMETERS ************
+    PARAMETER
+		{
+			name = Multi-Month Habitation Analysis 2
+			type = RP1CollectScience
+			title = Conduct Multi-Month Habitation Analysis 2 of your astronauts for 180d
+			notes = This experiment requires 750 units of Research Payload every 30 days.//Placeholder value.
+			targetBody = Moon
+			situation = InSpaceLow
+			experiment = RP0LunarOrbitHabit3
+			fractionComplete = 1
+		}
+}

@@ -2,7 +2,7 @@
 This is a browser/editor application for the RP-1 parts list (converted to json files per mod) that can also generate the needed configs from it, created by [@mattwrobel](https://github.com/mattwrobel)
 
 To get it working:
-   1. Download the ZIP file of the source code
+   1. Download and unzip the ZIP file of the source code
    2. Open RP-1/Source/Tech Tree/Parts Browser/app.exe
    3. Ignore any errors and wait a minute for the web server to start
    4. Open http://localhost:5000/dashboard

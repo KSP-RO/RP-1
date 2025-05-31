@@ -74,6 +74,9 @@
     <Content Include="..\GameData\RP-1\Contracts\SCANSat.cfg">
       <Link>Contracts\SCANSat.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos_Contract_Configs.cfg">
+      <Link>Contracts\Skopos_Contract_Configs.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\StockContracts.cfg">
       <Link>Contracts\StockContracts.cfg</Link>
     </Content>
@@ -628,6 +631,168 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Titan Landing.cfg">
       <Link>Contracts\Saturnine Moon Landings\Titan Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\EarlyNavNetwork3-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\EarlyNavNetwork3-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\EarlyNavNetwork4-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\EarlyNavNetwork4-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\EarlyNavSat-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\EarlyNavSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstComSat-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\FirstComSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstGEOSat-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\FirstGEOSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstGeosync-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\FirstGeosync-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstMolniyaSat-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\FirstMolniyaSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstNavSat-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\FirstNavSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstTundraSat-SCA.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\FirstTundraSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\intermittent_paris_moscow_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\intermittent_paris_moscow_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\intermittent_soviet_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\intermittent_soviet_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\intermittent_transatlantic_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\intermittent_transatlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\intermittent_transpacific_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\intermittent_transpacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\syncom_ship_to_shore.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\syncom_ship_to_shore.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\syncom_transatlantic_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\syncom_transatlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\syncom_transpacific_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 0\syncom_transpacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_havana_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_havana_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_indian_ocean_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_indian_ocean_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_north_atlantic_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_north_atlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_north_pacific_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_north_pacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_orbita.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_orbita.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_paris_moscow_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_paris_moscow_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_south_pacific_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_south_pacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_soviet_tracking_ships.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_soviet_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_ulaanbaatar_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_ulaanbaatar_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_us_tracking_ships.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\l1_us_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\our_world_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 1\our_world_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_atlantic_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_atlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_havana_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_havana_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_indian_ocean_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_indian_ocean_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_intersputnik_europe.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_intersputnik_europe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_moscow_dc.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_moscow_dc.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_orbita.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_orbita.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_pacific_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_pacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_paris_moscow_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_paris_moscow_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_soviet_tracking_ships.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_soviet_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_us_tracking_ships.cfg">
+      <Link>Contracts\Skopos Commercial Applications 2\l2_us_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_atlantic_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_atlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_canunet.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_canunet.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_canunet_rtv_test.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_canunet_rtv_test.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_domestic_us.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_domestic_us.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_ekran_test.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_ekran_test.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_hbo_us_test.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_hbo_us_test.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_hermes_remote_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_hermes_remote_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_indian_ocean_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_indian_ocean_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_intersputnik_asia.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_intersputnik_asia.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_intersputnik_caribbean.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_intersputnik_caribbean.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_marisat.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_marisat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_moskva.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_moskva.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_pacific_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_pacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_paris_moscow_tv.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_paris_moscow_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_soviet_tracking_ships.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_soviet_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_us_territories.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_us_territories.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_volna.cfg">
+      <Link>Contracts\Skopos Commercial Applications 3\l3_volna.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Small Bodies Flyby\Ceres Flyby.cfg">
       <Link>Contracts\Small Bodies Flyby\Ceres Flyby.cfg</Link>

@@ -10,7 +10,7 @@ namespace RP0
         private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), 300, 1);
         private static Vector2 _bodyChooserScrollPos;
 
-        private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _UTString = "", _sDelay = "0";
+        private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _sOrbitMNA = "", _sOrbitArgPe = "", _UTString = "", _sDelay = "0";
         private static bool _fromCurrentUT = true;
         private static bool _circOrbit = true;
 
@@ -79,7 +79,7 @@ namespace RP0
             }
             if (simParams.SimulationBody != Planetarium.fetch.Home || simParams.SimulateInOrbit)
             {
-                _circOrbit = GUILayout.Toggle(_circOrbit, "Circular");
+                _circOrbit = GUILayout.Toggle(_circOrbit, " Circular");
                 if (_circOrbit)
                 {
                     GUILayout.BeginHorizontal();
@@ -87,8 +87,8 @@ namespace RP0
                     _sOrbitAlt = GUILayout.TextField(_sOrbitAlt, GUILayout.Width(100));
                     GUILayout.EndHorizontal();
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label("Min: " + simParams.SimulationBody.atmosphereDepth / 1000);
-                    GUILayout.Label("Max: " + Math.Floor((simParams.SimulationBody.sphereOfInfluence - simParams.SimulationBody.Radius) / 1000));
+                    GUILayout.Label("Min: " + simParams.SimulationBody.atmosphereDepth / 1000 + "km");
+                    GUILayout.Label("Max: " + Math.Floor((simParams.SimulationBody.sphereOfInfluence - simParams.SimulationBody.Radius) / 1000) + "km");
                     GUILayout.EndHorizontal();
                 }
                 else
@@ -109,18 +109,28 @@ namespace RP0
             if (simParams.SimulateInOrbit)
             {
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Delay: (s)");
+                GUILayout.Label("Delay (s): ");
                 _sDelay = GUILayout.TextField(_sDelay, 3, GUILayout.Width(40));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Inclination: ");
+                GUILayout.Label("Inclination (degrees): ");
                 _sOrbitInc = GUILayout.TextField(_sOrbitInc, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("LAN: ");
+                GUILayout.Label("LAN (degrees): ");
                 _sOrbitLAN = GUILayout.TextField(_sOrbitLAN, GUILayout.Width(50));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Mean Anomaly (radians): ");
+                _sOrbitMNA = GUILayout.TextField(_sOrbitMNA, GUILayout.Width(50));
+                GUILayout.EndHorizontal();
+
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Argument of Periapsis (degrees): ");
+                _sOrbitArgPe = GUILayout.TextField(_sOrbitArgPe, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
             }
 
@@ -128,14 +138,21 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Time: ");
             _UTString = GUILayout.TextField(_UTString, GUILayout.Width(110));
-            _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the amount of time entered onto the field. Otherwise the date and time will be set to entered value."));
+            _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the entered value. Otherwise the date and time will be set to the entered value."));
             GUILayout.EndHorizontal();
-            GUILayout.Label("Accepts values with format \"1y 2d 3h 4m 5s\" or \"1960-12-31 23:59\"");
+            if (_fromCurrentUT)
+            {
+                GUILayout.Label("Valid formats: \"1y 2d 3h 4m 5s\" and \"31719845\".");
+            }
+            else
+            {
+                GUILayout.Label("Valid formats: \"1y 2d 3h 4m 5s\", \"31719845\", and \"1960-12-31 23:59:59\".");
+            }
             GUILayout.Space(4);
 
             if (ModUtils.IsTestFlightInstalled || ModUtils.IsTestLiteInstalled)
             {
-                simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures");
+                simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures (TestFlight or TestLite)");
                 GUILayout.Space(4);
             }
 
@@ -234,17 +251,34 @@ namespace RP0
                     simParams.SimLAN = 0;
                 else
                     simParams.SimLAN %= 360;
+
+                if (!double.TryParse(_sOrbitMNA, out simParams.SimMNA))
+                    simParams.SimMNA = Math.PI; // this will set it at apoapsis, good for safety
+                else
+                    simParams.SimMNA %= 2 * Math.PI;
+
+                if (!double.TryParse(_sOrbitArgPe, out simParams.SimArgPe))
+                    simParams.SimArgPe = 0;
+                else
+                    simParams.SimArgPe %= 360;
             }
 
             double currentUT = Planetarium.GetUniversalTime();
             double ut = 0;
-            if (!string.IsNullOrWhiteSpace(_UTString) && !ROUtils.DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))
+            if (_fromCurrentUT && (_UTString.Contains("-") || _UTString.Contains(":"))) // prevent the user from doing 1960-12-31, accidentally selecting "From Now", and then warping 1960 years forward
+            {
+                var message = new ScreenMessage("Value must be of format \"1y 2d 3h 4m 5s\" or \"31719845\" when \"From Now\" is selected.", 6f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+                return;
+            }
+            else if (!string.IsNullOrWhiteSpace(_UTString) && 
+                     ((_UTString.Contains(":") && !System.Text.RegularExpressions.Regex.IsMatch(_UTString, @"^\d{4}-\d{2}-\d{2}")) || 
+                      !ROUtils.DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))) // if string is not empty and ((string has HH:mm but no YYYY-MM-DD) or (string fails TryParseTimeString)), then output failure
             {
                 var message = new ScreenMessage("Please enter a valid time value.", 6f, ScreenMessageStyle.UPPER_CENTER);
                 ScreenMessages.PostScreenMessage(message);
                 return;
             }
-
             simParams.DelayMoveSeconds = 0;
             if (_fromCurrentUT)
             {
@@ -310,7 +344,7 @@ namespace RP0
 
         private static double GetDefaultAltitudeForBody(CelestialBody body)
         {
-            return body.atmosphere ? body.atmosphereDepth + 20000 : 20000;
+            return body.atmosphere ? body.atmosphereDepth + 30000 : 30000;
         }
     }
 }

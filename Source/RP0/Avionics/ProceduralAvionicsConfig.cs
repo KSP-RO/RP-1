@@ -16,36 +16,39 @@ namespace RP0.ProceduralAvionics
 
         public byte[] techNodesSerialized;
 
-        private Dictionary<String, ProceduralAvionicsTechNode> techNodes;
-        public Dictionary<String, ProceduralAvionicsTechNode> TechNodes
+        private Dictionary<string, ProceduralAvionicsTechNode> _techNodes;
+        public Dictionary<string, ProceduralAvionicsTechNode> TechNodes
         {
             get
             {
-                if (techNodes == null)
+                if (_techNodes == null)
                 {
                     InitializeTechNodes();
                 }
-                return techNodes;
+                return _techNodes;
             }
         }
-        private ProceduralAvionicsTechNode[] techNodesSorted;
+
+        private ProceduralAvionicsTechNode[] _techNodesSorted;
         public ProceduralAvionicsTechNode[] TechNodesSorted
         {
             get
             {
-                if (techNodes == null)
+                if (_techNodes == null)
                 {
                     InitializeTechNodes();
                 }
-                return techNodesSorted;
+                return _techNodesSorted;
             }
         }
+
+        public bool IsAvailable => TechNodes.Values.Any(node => node.IsAvailable);
 
         public void Load(ConfigNode node)
         {
             ProceduralAvionicsUtils.Log("Loading Config nodes");
             ConfigNode.LoadObjectFromConfig(this, node);
-            techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
+            _techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
             if (name == null)
             {
                 name = node.GetValue("name");
@@ -56,11 +59,11 @@ namespace RP0.ProceduralAvionics
                 {
                     ProceduralAvionicsTechNode techNode = new ProceduralAvionicsTechNode();
                     techNode.Load(tNode);
-                    techNodes.Add(techNode.name, techNode);
+                    _techNodes.Add(techNode.name, techNode);
                     ProceduralAvionicsUtils.Log("Loaded TechNode: " + techNode.name);
                 }
 
-                List<ProceduralAvionicsTechNode> techNodeList = techNodes.Values.ToList();
+                List<ProceduralAvionicsTechNode> techNodeList = _techNodes.Values.ToList();
                 techNodesSerialized = ObjectSerializer.Serialize(techNodeList);
                 ProceduralAvionicsUtils.Log("Serialized TechNodes");
             }
@@ -78,16 +81,16 @@ namespace RP0.ProceduralAvionics
         public void InitializeTechNodes()
         {
             ProceduralAvionicsUtils.Log("TechNode deserialization needed");
-            techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
+            _techNodes = new Dictionary<string, ProceduralAvionicsTechNode>();
             var techNodeList = techNodesSerialized == null ? new List<ProceduralAvionicsTechNode>() : ObjectSerializer.Deserialize<List<ProceduralAvionicsTechNode>>(techNodesSerialized);
-            techNodesSorted = new ProceduralAvionicsTechNode[techNodeList.Count];
+            _techNodesSorted = new ProceduralAvionicsTechNode[techNodeList.Count];
             foreach (var item in techNodeList)
             {
                 ProceduralAvionicsUtils.Log("Deserialized " + item.name);
-                techNodes.Add(item.name, item);
-                techNodesSorted[item.techLevel] = item;
+                _techNodes.Add(item.name, item);
+                _techNodesSorted[item.techLevel] = item;
             }
-            ProceduralAvionicsUtils.Log("Deserialized " + techNodes.Count + " techNodes");
+            ProceduralAvionicsUtils.Log("Deserialized " + _techNodes.Count + " techNodes");
         }
     }
 }

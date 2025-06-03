@@ -9,7 +9,7 @@ Download (/copy the changes from) the following files.
 - [`SurfaceExperiments.cfg`](https://github.com/Mmeridian/RP-1_Mm/tree/master/GameData/RP-1/Science/Experiments/CrewScience/SurfaceExperiments.cfg)
 - [`Programs.cfg`](https://github.com/Mmeridian/RP-1_Mm/tree/master/GameData/RP-1/Programs/Programs.cfg)
 - [`Groups.cfg`](https://github.com/Mmeridian/RP-1_Mm/tree/master/GameData/RP-1/Contracts/Groups.cfg)
-- Everything in [`Lunar Habitation` folder](https://github.com/Mmeridian/RP-1_Mm/tree/master/GameData/RP-1/Contracts/Lunar%20Habitation)
+- Everything in [`Lunar Habitation` folder](https://github.com/Mmeridian/RP-1_Mm/tree/master/GameData/RP-1/Contracts/Lunar%20Habitation) (minus this file)
 ## Optional tech tree change
 The Mark 2 Lander Cab was moved to the same node as the LM Shelter to allow for non-Apollo hardware completion of the program. 
 

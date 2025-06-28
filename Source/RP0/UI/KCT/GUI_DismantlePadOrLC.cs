@@ -1,11 +1,12 @@
 ﻿using System;
+using UniLinq;
 using UnityEngine;
 
 namespace RP0
 {
     public static partial class KCT_GUI
     {
-        public static void DrawDismantlePadWindow(int windowID)
+        public static void DrawDismantlePadOrLCWindow(int windowID)
         {
             LaunchComplex activeLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
             bool isLC = GUIStates.ShowDismantleLC;
@@ -16,7 +17,7 @@ namespace RP0
 
             if (GUILayout.Button("Yes"))
             {
-                TryDismantleLCorPad(isLC);
+                TryDismantlePadOrLC(isLC);
                 GUIStates.ShowDismantlePad = false;
                 GUIStates.ShowDismantleLC = false;
                 GUIStates.ShowBuildList = true;
@@ -36,7 +37,7 @@ namespace RP0
             CenterWindow(ref _centralWindowPosition);
         }
 
-        private static void TryDismantleLCorPad(bool isLC)
+        private static void TryDismantlePadOrLC(bool isLC)
         {
             LaunchComplex activeLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
             if (isLC)
@@ -46,9 +47,17 @@ namespace RP0
                     ScreenMessages.PostScreenMessage("Dismantle failed: can't dismantle the Hangar", 5f, ScreenMessageStyle.UPPER_CENTER);
                     return;
                 }
+
                 if (!activeLC.CanDismantle)
                 {
                     ScreenMessages.PostScreenMessage("Dismantle failed: Launch Complex in use", 5f, ScreenMessageStyle.UPPER_CENTER);
+                    return;
+                }
+
+                bool hasVesselOnPad = activeLC.LaunchPads.Any(lp => lp.HasVesselWaitingToBeLaunched(out Vessel foundVessel));
+                if (hasVesselOnPad)
+                {
+                    ScreenMessages.PostScreenMessage("Dismantle failed: a vessel is currently waiting on the launch pad.", 5f, ScreenMessageStyle.UPPER_CENTER);
                     return;
                 }
 

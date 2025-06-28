@@ -151,6 +151,7 @@ namespace RP0
                 // FIXME add setup cost if we add setup costs to leaders
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
                 KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
+                KACWrapper.KAC?.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
             }
         }
 

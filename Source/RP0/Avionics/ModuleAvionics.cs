@@ -33,6 +33,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public bool systemEnabled = true;
 
+        [KSPField]
+        public bool canPermaDisable = true;
+
         [KSPField(isPersistant = true, guiActive = true, guiName = "Permanently disabled", groupName = PAWGroup, groupDisplayName = PAWGroup)]
         public bool dead = false;
 
@@ -131,7 +134,6 @@ namespace RP0
         private ModuleResource FindCommandChargeResource() =>
             part.FindModuleImplementing<ModuleCommand>()?.resHandler.inputResources.FirstOrDefault(r => r?.id == PartResourceLibrary.ElectricityHashcode);
 
-
         protected virtual void SetActionsAndGui()
         {
             bool toggleable = GetToggleable();
@@ -143,9 +145,9 @@ namespace RP0
             Actions[nameof(ShutdownAction)].active = (systemEnabled || HighLogic.LoadedSceneIsEditor) && toggleable;
             Actions[nameof(ToggleAction)].active = toggleable;
             Fields[nameof(currentWatts)].guiActive = toggleable;
-            Actions[nameof(KillAction)].active = !dead;
-            Events[nameof(KillEvent)].guiActive = !dead;
-            Events[nameof(KillEvent)].active = !dead;
+            Actions[nameof(KillAction)].active = canPermaDisable && !dead;
+            Events[nameof(KillEvent)].guiActive = canPermaDisable && !dead;
+            Events[nameof(KillEvent)].active = canPermaDisable && !dead;
         }
 
         protected void StageActivated(int stage)
@@ -242,9 +244,11 @@ namespace RP0
             useKerbalismInFlight = KerbalismAPI != null && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().AvionicsUseKerbalism;
             UpdateRate(onRailsCached);
         }
+
         private void OnShipModified(ShipConstruct _) => UpdateRate(onRailsCached);
         private void GoOnRails(Vessel v) => RailChange(v, true);
         private void GoOffRails(Vessel v) => RailChange(v, false);
+
         private void RailChange(Vessel v, bool onRails)
         {
             onRailsCached = onRails;

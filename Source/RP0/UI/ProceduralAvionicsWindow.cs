@@ -1,11 +1,12 @@
 ﻿using ClickThroughFix;
 using RealFuels.Tanks;
+using ROUtils;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UniLinq;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
-using ROUtils;
 
 namespace RP0.ProceduralAvionics
 {
@@ -16,6 +17,7 @@ namespace RP0.ProceduralAvionics
         private Rect _windowRect = new Rect(267, 104, 400, 300);
         private GUIContent _gc;
         private string[] _avionicsConfigNames;
+        private string[] _availColoredConfigNames;
         private int _selectedConfigIndex = 0;
         private float _newControlMass;
         private string _sECAmount = "400";
@@ -27,7 +29,6 @@ namespace RP0.ProceduralAvionics
         private Dictionary<string, string> _tooltipTexts;
         private ModuleProceduralAvionics _module;
         private ModuleFuelTanks _rfPM;
-        private Dictionary<string, FuelTank> _tanksDict = null;
         private FuelTank _ecTank;
 
         public string ControllableMass { get; set; }
@@ -37,10 +38,9 @@ namespace RP0.ProceduralAvionics
             _module = module;
             ControllableMass = $"{module.controllableMass:0.###}";
 
-            _rfPM = module.part.Modules.GetModule<ModuleFuelTanks>();
-            FieldInfo fiDict = typeof(ModuleFuelTanks).GetField("tanksDict", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            _tanksDict = (Dictionary<string, FuelTank>)fiDict.GetValue(_rfPM);
-            _ecTank = _tanksDict["ElectricCharge"];
+            FetchRFModule(_module, out ModuleFuelTanks rfPM, out FuelTank ecTank);
+            _rfPM = rfPM;
+            _ecTank = ecTank;
 
             var settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
             _showInfo1 = settings.AvionicsWindow_ShowInfo1;
@@ -54,7 +54,9 @@ namespace RP0.ProceduralAvionics
         {
             // RF will regenerate all the FuelTank instances if Tank Definition is changed.
             // Thus need to refetch EC tank.
-            _ecTank = _tanksDict["ElectricCharge"];
+            FetchRFModule(_module, out ModuleFuelTanks rfPM, out FuelTank ecTank);
+            _rfPM = rfPM;
+            _ecTank = ecTank;
         }
 
         public void RefreshDisplays()
@@ -69,9 +71,18 @@ namespace RP0.ProceduralAvionics
             {
                 if (_avionicsConfigNames == null)
                 {
-                    _avionicsConfigNames = ProceduralAvionicsTechManager.GetAvailableConfigs().ToArray();
+                    _avionicsConfigNames = ProceduralAvionicsTechManager.GetAllConfigs().ToArray();
                     _selectedConfigIndex = _avionicsConfigNames.IndexOf(_module.avionicsConfigName);
                     _tooltipTexts = new Dictionary<string, string>();
+
+                    if (ProceduralAvionicsTechManager.TechIsEnabled)
+                    {
+                        _availColoredConfigNames = ProceduralAvionicsTechManager.AllAvionicsConfigs.Select(c => c.IsAvailable ? c.name : $"<color=orange>{c.name}</color>").ToArray();
+                    }
+                    else
+                    {
+                        _availColoredConfigNames = _avionicsConfigNames;
+                    }
                 }
 
                 if (_shouldResetUIHeight && Event.current.type == EventType.Layout)
@@ -104,7 +115,7 @@ namespace RP0.ProceduralAvionics
             GUILayout.BeginVertical(HighLogic.Skin.box);
             GUILayout.Label("Choose the avionics type:", HighLogic.Skin.label);
             int oldConfigIdx = _selectedConfigIndex;
-            _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _avionicsConfigNames, HighLogic.Skin.button);
+            _selectedConfigIndex = GUILayout.Toolbar(_selectedConfigIndex, _availColoredConfigNames, HighLogic.Skin.button);
             if (oldConfigIdx != _selectedConfigIndex)
             {
                 _shouldResetUIHeight = true;
@@ -326,10 +337,14 @@ namespace RP0.ProceduralAvionics
                 _shouldResetUIHeight = true;
                 _showROTankSizeWarning = false;
                 _showSizeWarning = false;
-                _module.avionicsTechLevel = techNode.name;
-                _module.CurrentProceduralAvionicsConfig = curCfg;
-                _module.avionicsConfigName = curCfg.name;
-                _module.AvionicsConfigChanged();
+
+                _module.UpdateInSymmetry((ModuleProceduralAvionics pm) =>
+                {
+                    pm.avionicsTechLevel = techNode.name;
+                    pm.CurrentProceduralAvionicsConfig = curCfg;
+                    pm.avionicsConfigName = curCfg.name;
+                    pm.AvionicsConfigChanged();
+                });
                 MonoUtilities.RefreshContextWindows(_module.part);
             }
         }
@@ -373,65 +388,71 @@ namespace RP0.ProceduralAvionics
                 return;
             }
 
-            _module.controllableMass = newControlMass;
-            if (shouldSeekVolume && _module.CanSeekVolume)
+            _module.UpdateInSymmetry((ModuleProceduralAvionics pm) =>
             {
-                _module.SetProcPartVolumeLimit();
-                ApplyCorrectProcTankVolume(0, ecAmount);
-            }
-            else
-            {
-                bool isOverVolumeLimit = _module.ClampControllableMass();
-                if (isOverVolumeLimit)
-                    _module.SetProcPartVolumeLimit();
+                FetchRFModule(pm, out ModuleFuelTanks rfPM, out FuelTank ecTank);
+                pm.controllableMass = newControlMass;
 
-                // ROTank probe cores do not support SeekVolume()
-                _showROTankSizeWarning = isOverVolumeLimit && shouldSeekVolume && !_module.CanSeekVolume;
-                _showSizeWarning = isOverVolumeLimit && !shouldSeekVolume;
-                _module.UpdateControllableMassSlider();
-                _module.SendRemainingVolume();
-
-                _shouldResetUIHeight = true;
-                MonoUtilities.RefreshContextWindows(_module.part);
-
-                // In this case need to clamp EC amount to ensure that it stays within the available volume
-                float avVolume = _module.GetAvionicsVolume();
-                float m3AvailVol = _module.GetAvailableVolume();
-                double m3CurVol = avVolume + _rfPM.totalVolume / 1000;    // l to m³, assume 100% RF utilization
-                double m3MinVol = GetNeededProcTankVolume(0, ecAmount);
-                double m3MissingVol = m3MinVol - m3CurVol;
-                if (m3MissingVol > 1e-6)
+                if (shouldSeekVolume && pm.CanSeekVolume)
                 {
-                    ecAmount = 1;    // Never remove the EC resource entirely
-                    double m3AvailVolForEC = m3AvailVol;
-                    if (m3AvailVolForEC > 0)
+                    pm.SetProcPartVolumeLimit();
+                    ApplyCorrectProcTankVolume(pm, rfPM, ecTank, 0, ecAmount);
+                }
+                else
+                {
+                    bool isOverVolumeLimit = pm.ClampControllableMass();
+                    if (isOverVolumeLimit)
+                        pm.SetProcPartVolumeLimit();
+
+                    // ROTank probe cores do not support SeekVolume()
+                    _showROTankSizeWarning = isOverVolumeLimit && shouldSeekVolume && !pm.CanSeekVolume;
+                    _showSizeWarning = isOverVolumeLimit && !shouldSeekVolume;
+                    pm.UpdateControllableMassSlider();
+                    pm.SendRemainingVolume();
+
+                    _shouldResetUIHeight = true;
+
+                    // In this case need to clamp EC amount to ensure that it stays within the available volume
+                    float avVolume = pm.GetAvionicsVolume();
+                    float m3AvailVol = pm.GetAvailableVolume();
+                    double m3CurVol = avVolume + rfPM.totalVolume / 1000;    // l to m³, assume 100% RF utilization
+                    double m3MinVol = GetNeededProcTankVolume(pm, rfPM, ecTank, 0, ecAmount);
+                    double m3MissingVol = m3MinVol - m3CurVol;
+                    if (m3MissingVol > 1e-6)
                     {
-                        ecAmount = GetECAmountForVolume((float)m3AvailVolForEC);
+                        ecAmount = 1;    // Never remove the EC resource entirely
+                        double m3AvailVolForEC = m3AvailVol;
+                        if (m3AvailVolForEC > 0)
+                        {
+                            ecAmount = GetECAmountForVolume(rfPM, ecTank, (float)m3AvailVolForEC);
+                        }
                     }
                 }
-            }
 
-            Log($"Applying RF tank amount values to {ecAmount}, currently has {_ecTank.amount}/{_ecTank.maxAmount}, volume {_rfPM.AvailableVolume}");
-            _ecTank.maxAmount = ecAmount;
-            _ecTank.amount = ecAmount;
-            _rfPM.PartResourcesChanged();
-            _rfPM.CalculateMass();
-            _module.RefreshDisplays();
+                Log($"Applying RF tank amount values to {ecAmount}, currently has {ecTank.amount}/{ecTank.maxAmount}, volume {rfPM.AvailableVolume}");
+                ecTank.maxAmount = ecAmount;
+                ecTank.amount = ecAmount;
+                rfPM.PartResourcesChanged();
+                rfPM.CalculateMass();
+                pm.RefreshDisplays();
+            });
+
+            MonoUtilities.RefreshContextWindows(_module.part);
         }
 
-        private void ApplyCorrectProcTankVolume(float extraVolumeLiters, float ecAmount)
+        private void ApplyCorrectProcTankVolume(ModuleProceduralAvionics pm, ModuleFuelTanks rfPM, FuelTank ecTank, float extraVolumeLiters, float ecAmount)
         {
-            float m3TotalVolume = GetNeededProcTankVolume(extraVolumeLiters, ecAmount);
-            float avVolume = _module.GetAvionicsVolume();
+            float m3TotalVolume = GetNeededProcTankVolume(pm, rfPM, ecTank, extraVolumeLiters, ecAmount);
+            float avVolume = pm.GetAvionicsVolume();
             Log($"Applying volume {m3TotalVolume}; avionics: {avVolume * 1000}l; tanks: {(m3TotalVolume - avVolume) * 1000}l");
-            _module.SeekVolume(m3TotalVolume);
+            pm.SeekVolume(m3TotalVolume);
         }
 
-        private float GetNeededProcTankVolume(float extraVolumeLiters, float ecAmount)
+        private float GetNeededProcTankVolume(ModuleProceduralAvionics pm, ModuleFuelTanks rfPM, FuelTank ecTank, float extraVolumeLiters, float ecAmount)
         {
-            float utilizationPercent = _rfPM.utilization;
+            float utilizationPercent = rfPM.utilization;
             float utilization = utilizationPercent / 100;
-            float avVolume = _module.GetAvionicsVolume();
+            float avVolume = pm.GetAvionicsVolume();
 
             // The amount of final available volume that RF tanks get is calculated in 3 steps:
             // 1) ModuleProceduralAvionics.GetAvailableVolume()
@@ -440,21 +461,21 @@ namespace RP0.ProceduralAvionics
             //    This is currently set at 1000 for EC which means that 1l of volume can hold 1000 units of EC.
             // The code below runs all these but in reversed order.
 
-            float lVolStep3 = ecAmount / _ecTank.utilization;
+            float lVolStep3 = ecAmount / ecTank.utilization;
             float lVolStep2 = (lVolStep3 + extraVolumeLiters) / utilization;
-            lVolStep2 = Math.Max(lVolStep2, _module.CurrentProceduralAvionicsTechNode.reservedRFTankVolume);
+            lVolStep2 = Math.Max(lVolStep2, pm.CurrentProceduralAvionicsTechNode.reservedRFTankVolume);
             float m3VolStep2 = lVolStep2 / 1000;    // RF volumes are in liters but avionics uses m³
             float m3TotalVolume = Math.Max(avVolume + m3VolStep2, m3VolStep2);
             return m3TotalVolume;
         }
 
-        private float GetECAmountForVolume(float m3Volume)
+        private float GetECAmountForVolume(ModuleFuelTanks rfPM, FuelTank ecTank, float m3Volume)
         {
-            float utilizationPercent = _rfPM.utilization;
+            float utilizationPercent = rfPM.utilization;
             float utilization = utilizationPercent / 100;
 
             float step3 = m3Volume * 1000 * utilization;
-            float ecAmount = step3 * _ecTank.utilization;
+            float ecAmount = step3 * ecTank.utilization;
             return ecAmount;
         }
 
@@ -493,7 +514,7 @@ namespace RP0.ProceduralAvionics
                 sb.AppendLine($"At {calcMass:0.##}t controllable mass:");
                 indent = "  ";
             }
-            sb.AppendLine($"{indent}Mass: {massKG:0.#}kg");
+            sb.AppendLine($"{indent}Avionics mass: {massKG:0.#}kg");
             sb.AppendLine($"{indent}Power consumption: {powerWatts:0.#}W");
 
             sb.AppendLine($"Axial control: {BoolToYesNoString(techNode.allowAxial)}");
@@ -501,6 +522,14 @@ namespace RP0.ProceduralAvionics
             sb.Append($"Sample container: {BoolToYesNoString(techNode.hasScienceContainer)}");
 
             return sb.ToStringAndRelease();
+        }
+
+        private static void FetchRFModule(ModuleAvionics pm, out ModuleFuelTanks rfPM, out FuelTank ecTank)
+        {
+            rfPM = pm.part.FindModuleImplementing<ModuleFuelTanks>();
+            FieldInfo fiDict = typeof(ModuleFuelTanks).GetField("tanksDict", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+            var tanksDict = (Dictionary<string, FuelTank>)fiDict.GetValue(rfPM);
+            ecTank = tanksDict["ElectricCharge"];
         }
 
         private static string BoolToYesNoString(bool b) => b ? "Yes" : "No";

@@ -4130,7 +4130,7 @@
         "spacecraft": "Delta IV",
         "engine_config": "GEM-60",
         "upgrade": false,
-        "entry_cost_mods": "0,GEM-60/TVC,SolidsTVC",
+        "entry_cost_mods": "0,GEM-60/Fixed,SolidsTVC",
         "identical_part_name": "",
         "module_tags": []
     },

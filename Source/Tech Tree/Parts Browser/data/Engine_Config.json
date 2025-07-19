@@ -14885,6 +14885,27 @@
         "module_tags": []
     },
     {
+        "name": "RL10E-3ELL",
+        "title": "RL10E-3ELL",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": "1077",
+        "entry_cost": "0",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "2030",
+        "technology": "hydroloxNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "RL10",
+        "upgrade": true,
+        "entry_cost_mods": "25000,RL10E-3EL,throttlingTP",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RL200-200k",
         "title": "RL200-200k",
         "description": "",

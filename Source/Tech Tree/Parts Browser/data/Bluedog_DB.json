@@ -1531,7 +1531,7 @@
         "title": "LR87 Series",
         "description": "The main engine block for the Titan II/III/IV launch vehicles, with thrust plate. 1.93 O/F Ratio.",
         "mod": "Bluedog DB",
-        "cost": 728,
+        "cost": 784,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
@@ -1545,7 +1545,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": false,
-        "entry_cost_mods": "LR87-AJ-3",
+        "entry_cost_mods": "LR87-AJ-1",
         "identical_part_name": "LR87",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1556,8 +1556,8 @@
         "title": "LR91 Series",
         "description": "The LR91 powered the second stage of Titan launchers. Exhaust from the gas generator provided roll control. Diameter: [2.9 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
-        "cost": 325,
-        "entry_cost": 5000,
+        "cost": 370,
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "1959",
@@ -1570,7 +1570,7 @@
         "spacecraft": "Titan",
         "engine_config": "LR91",
         "upgrade": false,
-        "entry_cost_mods": "LR91-AJ-3",
+        "entry_cost_mods": "LR91-AJ-1",
         "identical_part_name": "LR91",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1581,8 +1581,8 @@
         "title": "LR91 Series",
         "description": "The LR91 powered the second stage of Titan launchers. Exhaust from the gas generator provided roll control. Diameter: [2.9 m]. Plume configured by RealPlume.",
         "mod": "Bluedog DB",
-        "cost": 325,
-        "entry_cost": 5000,
+        "cost": 370,
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "1959",
@@ -1595,7 +1595,7 @@
         "spacecraft": "Titan",
         "engine_config": "LR91",
         "upgrade": false,
-        "entry_cost_mods": "LR91-AJ-3",
+        "entry_cost_mods": "LR91-AJ-1",
         "identical_part_name": "LR91",
         "module_tags": [
             "EngineLiquidTurbo"

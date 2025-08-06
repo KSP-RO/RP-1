@@ -3542,7 +3542,7 @@
         "title": "LR87 Engine",
         "description": "",
         "mod": "ROEngines",
-        "cost": 728,
+        "cost": 784,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
@@ -3556,7 +3556,7 @@
         "spacecraft": "Titan",
         "engine_config": "LR87",
         "upgrade": false,
-        "entry_cost_mods": "LR87-AJ-3",
+        "entry_cost_mods": "LR87-AJ-1",
         "identical_part_name": "LR87",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -3567,7 +3567,7 @@
         "title": "LR87 Engine",
         "description": "",
         "mod": "ROEngines",
-        "cost": 728,
+        "cost": 784,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
@@ -3581,7 +3581,7 @@
         "spacecraft": "Titan",
         "engine_config": "LR87",
         "upgrade": false,
-        "entry_cost_mods": "LR87-AJ-3",
+        "entry_cost_mods": "LR87-AJ-1",
         "identical_part_name": "LR87",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -3592,7 +3592,7 @@
         "title": "LR87 (Shielded)",
         "description": "",
         "mod": "ROEngines",
-        "cost": 728,
+        "cost": 784,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
@@ -3605,7 +3605,7 @@
         "spacecraft": "Titan III",
         "engine_config": "LR87",
         "upgrade": false,
-        "entry_cost_mods": "LR87-AJ-3",
+        "entry_cost_mods": "LR87-AJ-1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -3616,7 +3616,7 @@
         "title": "LR87 Single (Extended Nozzle)",
         "description": "",
         "mod": "ROEngines",
-        "cost": 364,
+        "cost": 392,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "Deprecated",
@@ -3690,7 +3690,7 @@
         "title": "LR87 Single",
         "description": "",
         "mod": "ROEngines",
-        "cost": 364,
+        "cost": 392,
         "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
@@ -3703,7 +3703,7 @@
         "spacecraft": "",
         "engine_config": "LR87",
         "upgrade": false,
-        "entry_cost_mods": "LR87-AJ-3",
+        "entry_cost_mods": "LR87-AJ-1",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -3764,8 +3764,8 @@
         "title": "LR91 Series",
         "description": "",
         "mod": "ROEngines",
-        "cost": 325,
-        "entry_cost": 5000,
+        "cost": 370,
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "1959",
@@ -3778,7 +3778,7 @@
         "spacecraft": "Titan",
         "engine_config": "LR91",
         "upgrade": false,
-        "entry_cost_mods": "LR91-AJ-3",
+        "entry_cost_mods": "LR91-AJ-1",
         "identical_part_name": "LR91",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -3789,8 +3789,8 @@
         "title": "LR91 Series",
         "description": "",
         "mod": "ROEngines",
-        "cost": 325,
-        "entry_cost": 5000,
+        "cost": 370,
+        "entry_cost": 0,
         "category": "ORBITAL",
         "info": "",
         "year": "1959",
@@ -3803,7 +3803,7 @@
         "spacecraft": "Titan",
         "engine_config": "LR91",
         "upgrade": false,
-        "entry_cost_mods": "LR91-AJ-3",
+        "entry_cost_mods": "LR91-AJ-1",
         "identical_part_name": "LR91",
         "module_tags": [
             "EngineLiquidTurbo"

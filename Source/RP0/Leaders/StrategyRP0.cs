@@ -1,5 +1,6 @@
 ﻿using Strategies;
 using KSP.Localization;
+using System.Linq;
 
 namespace RP0
 {
@@ -150,6 +151,16 @@ namespace RP0
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 // FIXME add setup cost if we add setup costs to leaders
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
+                if (RemovePenaltyDuration > 0)
+                {
+                    string alarmID = KACWrapper.KAC?.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Free to Dismiss: {ConfigRP0.Title}", DateActivated + RemovePenaltyDuration);
+                    if (!string.IsNullOrEmpty(alarmID))
+                    {
+                        KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.First(z => z.ID == alarmID);
+
+                        alarm.Notes = $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.";
+                    }
+                }
                 if (LongestDuration > 0)
                 {
                     KACWrapper.KAC?.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);

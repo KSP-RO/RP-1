@@ -2,7 +2,7 @@
     {
         "name": "cryoengine-125-1",
         "title": "Vulcain Series",
-        "description": "1990s high TWR, atmospheric and vacuum use. Vulcain is a gas-generator sustainer engine used on Ariane 5 and intended to be used on Ariane 6. Diameter: [2.1 m]. Plume configured by RealPlume.",
+        "description": "1990s high TWR, atmospheric and vacuum use. Vulcain is a gas-generator sustainer engine that was previously used on Ariane 5 and is now used on Ariane 6. Diameter: [2.1 m]. Plume configured by RealPlume.",
         "mod": "Cryo Engines",
         "cost": 2095,
         "entry_cost": 0,

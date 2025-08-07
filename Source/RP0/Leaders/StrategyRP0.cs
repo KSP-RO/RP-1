@@ -176,11 +176,11 @@ namespace RP0
             }
         }
 
-        internal void CreateAlarm(string title, string description, double UT)
-        {
+        internal void CreateAlarm(string title, string description, double UT, KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew)
+        { // dont set alarmType to contract, it seems to immediately delete itself?
             if (KACWrapper.KAC != null)
             {
-                string alarmID = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, title, UT);
+                string alarmID = KACWrapper.KAC.CreateAlarm(alarmType, title, UT);
                 if (!string.IsNullOrEmpty(alarmID))
                 {
                     KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.First(z => z.ID == alarmID);

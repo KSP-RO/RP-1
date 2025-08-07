@@ -1,6 +1,10 @@
-﻿using Strategies;
-using KSP.Localization;
+﻿using KSP.Localization;
+using RP0.Programs;
+using Strategies;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace RP0
 {
@@ -144,26 +148,88 @@ namespace RP0
             if (useCurrency)
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
-            if (!(this is Programs.ProgramStrategy))
+            UnityEngine.Debug.Log($"CLAYELADDEDLOGS ConfigRP0.Title: {ConfigRP0.Title}");
+            if (this is Programs.ProgramStrategy ps)
+            {
+                CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid penalties.", ps.Program.deadlineUT);
+            }
+            else
             {
                 SpaceCenterManagement.Instance.RecalculateBuildRates();
                 MaintenanceHandler.Instance?.UpdateUpkeep();
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 // FIXME add setup cost if we add setup costs to leaders
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
-                if (RemovePenaltyDuration > 0)
+                if (LeastDuration > 0 || RemovePenaltyDuration > 0 || LongestDuration > 0)
                 {
-                    string alarmID = KACWrapper.KAC?.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Free to Dismiss: {ConfigRP0.Title}", DateActivated + RemovePenaltyDuration);
-                    if (!string.IsNullOrEmpty(alarmID))
-                    {
-                        KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.First(z => z.ID == alarmID);
+                    ClearAlarms(ConfigRP0.Title);
 
-                        alarm.Notes = $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.";
+                    if (LeastDuration > 0)
+                    {
+                        CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed at this time.", DateActivated + LeastDuration);
+                    }
+                    if (RemovePenaltyDuration > 0)
+                    {
+                        CreateAlarm($"Free to Terminate: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration);
+                    }
+                    if (LongestDuration > 0)
+                    {
+                        CreateAlarm($"Retirement: {ConfigRP0.Title}", $"{ConfigRP0.Title} will be removed at this time.", DateActivated + LongestDuration);
                     }
                 }
-                if (LongestDuration > 0)
+            }
+        }
+
+        internal void CreateAlarm(string title, string description, double UT)
+        {
+            if (KACWrapper.KAC != null)
+            {
+                string alarmID = KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, title, UT);
+                if (!string.IsNullOrEmpty(alarmID))
                 {
-                    KACWrapper.KAC?.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
+                    KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.First(z => z.ID == alarmID);
+
+                    alarm.AlarmAction = KACWrapper.KACAPI.AlarmActionEnum.KillWarp;
+                    alarm.Notes = description;
+                }
+            }
+            else
+            {
+                AlarmTypeRaw alarm = new AlarmTypeRaw
+                {
+                    title = title,
+                    description = description,
+                    ut = UT,
+                };
+                AlarmClockScenario.AddAlarm(alarm);
+                alarm.actions.warp = AlarmActions.WarpEnum.KillWarp;
+            }
+        }
+
+        internal void ClearAlarms(string title)
+        {
+            if (KACWrapper.KAC != null)
+            {
+                foreach (KACWrapper.KACAPI.KACAlarm alarm in KACWrapper.KAC.Alarms.Where(a => a.Name.Contains(title)).ToList())
+                {
+                    KACWrapper.KAC.DeleteAlarm(alarm.ID);
+                }
+            }
+            else
+            {
+                List<uint> alarmsToRemove = [];
+
+                foreach (uint id in AlarmClockScenario.Instance.alarms.Keys)
+                {
+                    if (AlarmClockScenario.Instance.alarms.TryGetValue(id, out AlarmTypeBase alarm) && alarm.title != null && alarm.title.Contains(title))
+                    {
+                        alarmsToRemove.Add(id);
+                    }
+                }
+
+                foreach (uint id in alarmsToRemove)
+                {
+                    AlarmClockScenario.DeleteAlarm(id);
                 }
             }
         }
@@ -201,6 +267,12 @@ namespace RP0
                 MaintenanceHandler.Instance?.UpdateUpkeep();
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, false, deactivateRep);
+                if (ConfigRP0.ReactivateCooldown > 0)
+                {
+                    ClearAlarms(ConfigRP0.Title);
+
+                    CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown);
+                }
             }
 
             return true;

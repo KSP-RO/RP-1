@@ -1,10 +1,7 @@
 ﻿using KSP.Localization;
-using RP0.Programs;
 using Strategies;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 
 namespace RP0
 {
@@ -148,7 +145,6 @@ namespace RP0
             if (useCurrency)
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
-            UnityEngine.Debug.Log($"CLAYELADDEDLOGS ConfigRP0.Title: {ConfigRP0.Title}");
             if (this is Programs.ProgramStrategy ps)
             {
                 CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid penalties.", ps.Program.deadlineUT);

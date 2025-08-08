@@ -75,7 +75,7 @@ namespace RP0
                                      HighLogic.CurrentGame.Mode == Game.Modes.SCIENCE_SANDBOX ||
                                      HighLogic.CurrentGame.Mode == Game.Modes.SANDBOX;
 
-        [KSPField(isPersistant = true)] public float SciPointsTotal = -1f;
+        [KSPField(isPersistant = true)] public double SciPointsTotal = -1d;
         [KSPField(isPersistant = true)] public bool IsSimulatedFlight = false;
         [KSPField(isPersistant = true)] public bool ExperimentalPartsEnabled = true;
         [KSPField(isPersistant = true)] public bool DisableFailuresInSim = true;

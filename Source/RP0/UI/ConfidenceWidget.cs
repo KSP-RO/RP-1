@@ -20,7 +20,7 @@ namespace RP0.UI
             Confidence.OnConfidenceChanged.Remove(onConfidenceChanged);
         }
 
-        private void onConfidenceChanged(float confidence, TransactionReasons reason)
+        private void onConfidenceChanged(double confidence, TransactionReasons reason)
         {
             text.text = confidence.ToString("N1");
         }

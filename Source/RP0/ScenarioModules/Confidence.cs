@@ -8,16 +8,16 @@ namespace RP0
         public static Confidence Instance { get; private set; }
 
         [KSPField(isPersistant = true)]
-        private float confidence = 0f;
+        private double confidence = 0d;
 
         [KSPField(isPersistant = true)]
-        private float confidenceEarned = 0f;
+        private double confidenceEarned = 0d;
 
-        public static float CurrentConfidence => Instance == null ? 0 : Instance.confidence;
+        public static double CurrentConfidence => Instance == null ? 0d : Instance.confidence;
 
-        public static float AllConfidenceEarned => Instance == null ? 0 : Instance.confidenceEarned;
+        public static double AllConfidenceEarned => Instance == null ? 0d : Instance.confidenceEarned;
 
-        public static EventData<float, TransactionReasons> OnConfidenceChanged = new EventData<float, TransactionReasons>("OnConfidenceChanged");
+        public static EventData<double, TransactionReasons> OnConfidenceChanged = new EventData<double, TransactionReasons>("OnConfidenceChanged");
 
         public override void OnAwake()
         {
@@ -59,38 +59,38 @@ namespace RP0
 
         private void OnCurrenciesModified(CurrencyModifierQuery query)
         {
-            float sciDelta = query.GetInput(Currency.Science);
-            float conf = 0f;
+            double sciDelta = query.GetInput(Currency.Science);
+            double conf = 0d;
             // Annoyingly Kerbalism uses TransactionReason.None for science transmission
-            if (!SpaceCenterManagement.IsRefundingScience && sciDelta > 0f 
+            if (!SpaceCenterManagement.IsRefundingScience && sciDelta > 0d
                 && (query.reason == TransactionReasons.ScienceTransmission || query.reason == TransactionReasons.VesselRecovery || query.reason == TransactionReasons.None))
             {
                 if (Programs.ProgramHandler.Settings != null)
-                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0f, (float)SpaceCenterManagement.Instance.SciPointsTotal)) * sciDelta;
+                    conf = Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0d, SpaceCenterManagement.Instance.SciPointsTotal)) * sciDelta;
                 else
-                    conf = sciDelta * 2f;
+                    conf = sciDelta * 2d;
 
-                conf = (float)CurrencyUtils.Conf(TransactionReasonsRP0.ScienceTransmission, conf);
+                conf = CurrencyUtils.Conf(TransactionReasonsRP0.ScienceTransmission, conf);
             }
 
             // We'll actually process the confidence change here and use GetTotal, instead of GetEffectDelta
             if (query is CurrencyModifierQueryRP0 cmq)
             {
-                if(conf != 0f)
+                if (conf != 0d)
                     cmq.AddPostDelta(CurrencyRP0.Confidence, conf, false);
 
-                float oldConfidence = confidence;
+                double oldConfidence = confidence;
 
                 confidence += (float)cmq.GetTotal(CurrencyRP0.Confidence, true);
 
-                if (confidence < 0f)
-                    confidence = 0f;
+                if (confidence < 0d)
+                    confidence = 0d;
 
                 if (confidence != oldConfidence)
                 {
-                    float delta = confidence - oldConfidence;
+                    double delta = confidence - oldConfidence;
                     OnConfidenceChanged.Fire(confidence, cmq.reason);
-                    if (delta > 0f)
+                    if (delta > 0d)
                         confidenceEarned += delta;
                 }
             }

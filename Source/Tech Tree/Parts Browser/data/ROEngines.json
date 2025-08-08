@@ -4774,7 +4774,7 @@
         "title": "R-103 Booster",
         "description": "",
         "mod": "ROEngines",
-        "cost": 4,
+        "cost": 12,
         "entry_cost": 0,
         "category": "SOLID",
         "info": "",

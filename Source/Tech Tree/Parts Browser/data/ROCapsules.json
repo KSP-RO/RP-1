@@ -4968,7 +4968,7 @@
         "spacecraft": "Vostok",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "VostokSM",
+        "entry_cost_mods": "VostokSM, S5_4",
         "identical_part_name": "VostokServiceModule",
         "module_tags": [
             "NoResourceCostMult"

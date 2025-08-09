@@ -1119,6 +1119,30 @@
         ]
     },
     {
+        "name": "ROEE-S5_4",
+        "title": "S5.4",
+        "description": "Vostok, Voskhod, and Zenit Deorbit engine.",
+        "mod": "ROEnginesExtended",
+        "cost": "50",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1959",
+        "technology": "orbitalRocketry1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "Vostok",
+        "engine_config": "S5_4",
+        "upgrade": false,
+        "entry_cost_mods": "8000",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Toxic"
+        ]
+    },
+    {
         "name": "ROEE-SR28",
         "title": "SR28",
         "description": "",

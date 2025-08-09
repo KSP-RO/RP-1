@@ -16289,7 +16289,7 @@
         "spacecraft": "Vostok",
         "engine_config": "S5_4",
         "upgrade": false,
-        "entry_cost_mods": "S5-4",
+        "entry_cost_mods": "8000",
         "identical_part_name": "",
         "module_tags": []
     },

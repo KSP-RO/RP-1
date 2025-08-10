@@ -1138,8 +1138,7 @@
         "entry_cost_mods": "S5_4",
         "identical_part_name": "",
         "module_tags": [
-            "EngineLiquidTurbo",
-            "Toxic"
+            "EngineLiquidTurbo"
         ]
     },
     {

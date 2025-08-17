@@ -83,7 +83,7 @@
         "spacecraft": "",
         "engine_config": "KTDU417",
         "upgrade": false,
-        "entry_cost_mods": "10000, throttlingTP",
+        "entry_cost_mods": "10000,KTDU-5A,throttlingTP",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -6218,7 +6218,7 @@
         "spacecraft": "",
         "engine_config": "KTDU5A",
         "upgrade": false,
-        "entry_cost_mods": "20000,HypergolicPumps,PumpReignition",
+        "entry_cost_mods": "15000,S5-4,HypergolicPumps,PumpReignition",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -16281,8 +16281,8 @@
         "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
-        "year": "1959",
-        "technology": "orbitalRocketry1959",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

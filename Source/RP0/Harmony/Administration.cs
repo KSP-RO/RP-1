@@ -378,6 +378,11 @@ namespace RP0.Harmony
             if (!Administration.Instance.SelectedWrapper.strategy.Deactivate())
                 return;
 
+            if (Administration.Instance.SelectedWrapper.strategy is ProgramStrategy ps)
+            {
+                ps.ClearAlarms(ps.Title);
+            }
+
             Administration.Instance.UnselectStrategy();
             Administration.Instance.RedrawPanels();
         }

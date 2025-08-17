@@ -58,6 +58,17 @@ namespace RP0.Harmony
         }
 
         [HarmonyPrefix]
+        [HarmonyPatch("SetReputation")]
+        internal static bool Prefix_SetReputation(Reputation __instance, float value, TransactionReasons reason)
+        {
+            // Bypass the stock rep cap of 1000
+            __instance.rep = value;
+            GameEvents.OnReputationChanged.Fire(value, reason);
+
+            return false;
+        }
+
+        [HarmonyPrefix]
         [HarmonyPatch("onvesselRecoveryProcessing")]
         internal static bool Prefix_onvesselRecoveryProcessing(Reputation __instance, ProtoVessel pv, MissionRecoveryDialog mrDialog, float recoveryScore)
         {

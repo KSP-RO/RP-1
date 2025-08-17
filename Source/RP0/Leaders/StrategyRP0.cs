@@ -213,7 +213,7 @@ namespace RP0
             }
             else
             {
-                List<uint> alarmsToRemove = [];
+                List<uint> alarmsToRemove = new List<uint>();
 
                 foreach (uint id in AlarmClockScenario.Instance.alarms.Keys)
                 {

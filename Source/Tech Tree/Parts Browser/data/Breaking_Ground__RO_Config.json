@@ -1,8 +1,8 @@
 [
     {
-        "name": "RotoServo_00",
-        "title": "RotoServo_00",
-        "description": "RotoServo_00",
+        "name": "rotoServo_00",
+        "title": "rotoServo_00",
+        "description": "rotoServo_00",
         "mod": "Breaking Ground (RO Config)",
         "cost": "0",
         "entry_cost": "0",
@@ -21,9 +21,9 @@
         "module_tags": []
     },
     {
-        "name": "RotoServo_02",
-        "title": "RotoServo_02",
-        "description": "RotoServo_02",
+        "name": "rotoServo_02",
+        "title": "rotoServo_02",
+        "description": "rotoServo_02",
         "mod": "Breaking Ground (RO Config)",
         "cost": "0",
         "entry_cost": "0",
@@ -42,9 +42,9 @@
         "module_tags": []
     },
     {
-        "name": "RotoServo_03",
-        "title": "RotoServo_03",
-        "description": "RotoServo_03",
+        "name": "rotoServo_03",
+        "title": "rotoServo_03",
+        "description": "rotoServo_03",
         "mod": "Breaking Ground (RO Config)",
         "cost": "0",
         "entry_cost": "0",
@@ -63,9 +63,9 @@
         "module_tags": []
     },
     {
-        "name": "RotoServo_04",
-        "title": "RotoServo_04",
-        "description": "RotoServo_04",
+        "name": "rotoServo_04",
+        "title": "rotoServo_04",
+        "description": "rotoServo_04",
         "mod": "Breaking Ground (RO Config)",
         "cost": "0",
         "entry_cost": "0",

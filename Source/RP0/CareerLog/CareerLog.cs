@@ -884,7 +884,7 @@ namespace RP0
             return string.Empty;
         }
 
-        private float GetSciPointTotalFromKCT()
+        private double GetSciPointTotalFromKCT()
         {
             try
             {

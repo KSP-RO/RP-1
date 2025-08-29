@@ -132,7 +132,7 @@ TRAININGTIMES
 		Mk2Pod = Gemini
 	Gemini-Mission = 120
 
-	// Advanced Gemini (Lunar), also include Big Gemini as potential lunar ferry
+	// Gemini Lunar
 	GeminiLunar = 75, Gemini									// 725
 		ROC-GeminiLCMBDB = GeminiLunar		
 		ROC-BigGeminiCabinBDB = Gemini // under the presumption that they'll be used together

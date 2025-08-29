@@ -41,6 +41,8 @@ depends:
     suppress_recommendations: true
   - name: ROUtils
     suppress_recommendations: true
+  - name: Skopos
+    suppress_recommendations: true
 recommends:
   - name: ROLoadingImages
   - name: RSSDateTimeFormatter
@@ -90,9 +92,13 @@ suggests:
   - name: HullcamVDSContinued
   - name: InternalRCS
   - name: NearFutureConstruction
+    suppress_recommendations: true
   - name: NearFutureElectrical
+    suppress_recommendations: true
   - name: NearFutureExploration
+    suppress_recommendations: true
   - name: NearFutureSolar
+    suppress_recommendations: true
   - name: ShuttleOrbiterConstructionKit
   - name: BuranEnergia
   - name: RN-SovietSpacecraft
@@ -112,6 +118,7 @@ conflicts:
   - name: KerbalConstructionTime
   - name: CrowdSourcedScience
   - name: HideEmptyTechNodes
+  - name: CommunityTechTree
   - name: MechJebForAll
   - name: NearFutureElectrical-DecayingRTGs
   - name: KRASH

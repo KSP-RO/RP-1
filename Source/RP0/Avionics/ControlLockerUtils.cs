@@ -40,7 +40,7 @@ namespace RP0
                 float partMass = p.mass + p.resourceMass;
 
                 // get modules
-                bool cmd = false, science = false, avionics = false, clamp = false;
+                bool cmd = false, avionics = false, clamp = false;
                 float partAvionicsMass = 0f;
                 double ecResource = 0;
                 ModuleCommand mC = null;
@@ -62,16 +62,8 @@ namespace RP0
                         if (ecResource > 0 || HighLogic.LoadedSceneIsEditor)
                         {
                             partAvionicsMass += mA.CurrentMassLimit;
-                            axial |= mA.allowAxial;
+                            axial |= !mA.dead && mA.allowAxial;
                             isLimitedByNonInterplanetary |= mA.IsNearEarthAndLockedByInterplanetary;
-                        }
-                    }
-                    else if (m is ModuleScienceCore mSC)
-                    {
-                        science = true;
-                        if (ecResource > 0 || HighLogic.LoadedSceneIsEditor)
-                        {
-                            axial |= mSC.allowAxial;
                         }
                     }
 
@@ -99,7 +91,7 @@ namespace RP0
 
                 // Do we have an unencumbered command module?
                 // if we count clamps, they can give control. If we don't, this works only if the part isn't a clamp.
-                if ((countClamps || !clamp) && cmd && !science && !avionics)
+                if ((countClamps || !clamp) && cmd && !avionics)
                     forceUnlock = true;
                 if (cmd && avionics && mC.minimumCrew > crewCount) // check if need crew
                     avionics = false; // not operational

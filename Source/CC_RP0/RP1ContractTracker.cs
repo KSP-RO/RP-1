@@ -25,10 +25,10 @@ namespace ContractConfigurator.RP0
 
         public RP1ContractTracker()
         {
-             if (ContractTracker == null)
-             {
+            if (ContractTracker == null)
+            {
                 ContractTracker = new Dictionary<string, List<ContractInfo>>();
-             }
+            }
             Instance = this;
         }
 
@@ -44,7 +44,7 @@ namespace ContractConfigurator.RP0
 
         protected void OnContractCompleted(Contract c)
         {
-            if ((c is ConfiguredContract cc))  //note: Only vessels in VPGs are tracked currently
+            if (c is ConfiguredContract cc)  //note: Only vessels in VPGs are tracked currently
             {
                 foreach (VesselParameterGroup vpg in cc.GetChildren().Where(x => x is VesselParameterGroup))
                 {
@@ -91,7 +91,7 @@ namespace ContractConfigurator.RP0
                 CompletionTime = Planetarium.GetUniversalTime()
             };
 
-            if (ContractTracker.TryGetValue(vesselID,out contracts))
+            if (ContractTracker.TryGetValue(vesselID, out contracts))
             {
                 contracts.Add(item);
             }
@@ -126,15 +126,15 @@ namespace ContractConfigurator.RP0
         {
            base.OnSave(node);
            foreach (KeyValuePair<string,List<ContractInfo>> vesselID in ContractTracker)
-            {
-                ConfigNode keyNode = node.AddNode(vesselID.Key);
-                foreach (ContractInfo contract in vesselID.Value)
-                {
-                    ConfigNode contractNode = keyNode.AddNode("Contract");
-                    contractNode.AddValue("Name", contract.Name);
-                    contractNode.AddValue("CompletionTime", contract.CompletionTime);
-                }
-            }
+           {
+               ConfigNode keyNode = node.AddNode(vesselID.Key);
+               foreach (ContractInfo contract in vesselID.Value)
+               {
+                   ConfigNode contractNode = keyNode.AddNode("Contract");
+                   contractNode.AddValue("Name", contract.Name);
+                   contractNode.AddValue("CompletionTime", contract.CompletionTime);
+               }
+           }
         }
 
         private void CheckVPG(VesselParameterGroup vpg)
@@ -147,7 +147,8 @@ namespace ContractConfigurator.RP0
                 param.Enable();
                 param.CheckVPGVessel(vpg.TrackedVessel);
 
-                if (!vpg.Enabled) {
+                if (!vpg.Enabled)
+                {
                     vpg.Enable();
                     vpg.SetState(ParameterState.Incomplete);
                     vpg.Enable();   // Ugh, don't ask why

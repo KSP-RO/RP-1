@@ -84,6 +84,13 @@ namespace RP0
         protected double reactivateCooldown;
         public double ReactivateCooldown => reactivateCooldown;
 
+        /// <summary>
+        /// The amount of seconds after which removing the strategy becomes free. Optional.
+        /// </summary>
+        [Persistent]
+        protected double removePenaltyDuration;
+        public double RemovePenaltyDuration => removePenaltyDuration;
+
         // Will be called by transpiler of stock StrategyConfig.Create()
         // This is needed due to how transpilers work.
         protected static StrategyConfig NewBaseConfig() { return new StrategyConfigRP0(); }

@@ -162,7 +162,7 @@ namespace RP0
             if (_lcData.lcType == LaunchComplexType.Pad)
             {
                 float fracLevel = _lcData.GetPadFracLevel();
-                var pad = new LCLaunchPad(Guid.NewGuid(), Name + "-A", fracLevel);
+                var pad = new LCLaunchPad(Guid.NewGuid(), "LaunchPad 1", fracLevel);
                 pad.isOperational = true;
                 LaunchPads.Add(pad);
             }
@@ -467,6 +467,11 @@ namespace RP0
             {
                 yield return item;
             }
+        }
+
+        public LCLaunchPad FindPadWithLastLaunchedVessel(Guid stockVesselID)
+        {
+            return LaunchPads.Find(lp => lp.lastLoadedVesselId == stockVesselID);
         }
 
         private void CalculateAndSetRates()

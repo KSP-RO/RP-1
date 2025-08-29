@@ -175,7 +175,7 @@ namespace RP0
                 return 1d;
             
             if (double.IsNaN(offset) || double.IsInfinity(offset) || offset * (1d / (86400d * 365.25d)) > 500d)
-                return Database.SettingsSC.YearBasedRateMult.Evaluate(Database.SettingsSC.YearBasedRateMult.maxTime);
+                return Database.SettingsSC.YearBasedRateMult.Evaluate(Database.SettingsSC.YearBasedRateMult.LastTime);
 
             DateTime curDate = _epoch.AddSeconds(Planetarium.GetUniversalTime() + offset);
 
@@ -185,7 +185,7 @@ namespace RP0
                 diffYears = (curDate - new DateTime(endYear, 12, 31, 23, 59, 59)).TotalDays / 365.25;
                 diffYears = Math.Max(0, diffYears);
             }
-            return Database.SettingsSC.YearBasedRateMult.Evaluate((float)diffYears);
+            return Database.SettingsSC.YearBasedRateMult.Evaluate(diffYears);
         }
 
         public void DisableTech()
@@ -238,10 +238,6 @@ namespace RP0
 
         public double IncrementProgress(double UTDiff)
         {
-            // Don't progress blocked items
-            if (GetBlockingTech() != null)
-                return 0d;
-
             double bR = BuildRate;
             if (bR == 0d && PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
                 return 0d;

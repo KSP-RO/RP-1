@@ -1,5 +1,28 @@
 [
     {
+        "name": "RO-A136",
+        "title": "A-136 Atomic Turbo Ramjet",
+        "description": "",
+        "mod": "Advanced Jet Engines",
+        "cost": "1100",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "",
+        "year": "1967",
+        "technology": "prototypeNuclearPropulsion",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "A136",
+        "upgrade": false,
+        "entry_cost_mods": "A-136",
+        "identical_part_name": "",
+        "module_tags": [
+            "Nuclear"
+        ]
+    },
+    {
         "name": "RO-AL7F",
         "title": "AL-7 Turbojet",
         "description": "",
@@ -241,6 +264,27 @@
         "module_tags": []
     },
     {
+        "name": "RO-R13",
+        "title": "R-13 Turbojet",
+        "description": "",
+        "mod": "Advanced Jet Engines",
+        "cost": "436",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "Engine",
+        "year": "1968",
+        "technology": "advancedJetEngines",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "R13",
+        "upgrade": false,
+        "entry_cost_mods": "R-13-300",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RO-R25F",
         "title": "R-25 Turbojet",
         "description": "",
@@ -249,7 +293,7 @@
         "entry_cost": 0,
         "category": "FLIGHT",
         "info": "Engine",
-        "year": "1971",
+        "year": "1972",
         "technology": "efficientSupersonic",
         "era": "",
         "ro": true,

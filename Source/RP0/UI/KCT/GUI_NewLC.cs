@@ -450,7 +450,7 @@ namespace RP0
                 GUILayout.Label(new GUIContent(sBuildTime, "At 100% work rate"), GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
-                double projectedMaintenance = MaintenanceHandler.Instance.ComputeDailyMaintenanceCost(totalCostForMaintenance, isHangar ? FacilityMaintenanceType.Hangar : FacilityMaintenanceType.LC);
+                double projectedMaintenance = MaintenanceHandler.Instance?.ComputeDailyMaintenanceCost(totalCostForMaintenance, isHangar ? FacilityMaintenanceType.Hangar : FacilityMaintenanceType.LC) ?? 0;
 
                 if (projectedMaintenance > 0d)
                 {
@@ -580,7 +580,12 @@ namespace RP0
                     if (isModify)
                         activeLC.Modify(_newLCData, Guid.NewGuid());
                     else
-                        SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Add(new LaunchComplex(_newLCData, SpaceCenterManagement.Instance.ActiveSC));
+                    {
+                        SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Add(new LaunchComplex(_newLCData, SpaceCenterManagement.Instance.ActiveSC)
+                        {
+                            IsOperational = true
+                        });
+                    }
                 }
                 else
                 {

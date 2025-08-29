@@ -22,6 +22,8 @@ namespace RP0
         protected double dateDeactivated;
         public double DateDeactivated => dateDeactivated;
 
+        public double RemovePenaltyDuration => ConfigRP0 != null && ConfigRP0.RemovePenaltyDuration != 0 ? ConfigRP0.RemovePenaltyDuration : LongestDuration;
+
         /// <summary>
         /// A new function that can be selectively overridden and is called when SetupConfig runs
         /// At base it just links to the StrategyConfigRP0
@@ -90,7 +92,7 @@ namespace RP0
         /// <returns></returns>
         public override bool CanDeactivate(ref string reason)
         {
-            if (Planetarium.GetUniversalTime() - DateActivated < LongestDuration &&    // Leader retirement is free
+            if (Planetarium.GetUniversalTime() - DateActivated < RemovePenaltyDuration &&    // Free if leader is retiring or a predetermined duration has been reached
                 !CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.LeaderRemove, 0d, 0d, -DeactivateCost()).CanAfford())
             {
                 reason = Localizer.GetStringByTag("#rp0_Leaders_Remove_CannotAfford");
@@ -116,8 +118,6 @@ namespace RP0
                 return false;
 
             PerformActivate(true);
-
-            
 
             return true;
         }
@@ -150,6 +150,10 @@ namespace RP0
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 // FIXME add setup cost if we add setup costs to leaders
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
+                if (LongestDuration > 0)
+                {
+                    KACWrapper.KAC?.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, $"Retirement: {ConfigRP0.Title}", DateActivated + LongestDuration);
+                }
             }
         }
 
@@ -199,13 +203,13 @@ namespace RP0
         public virtual double DeactivateCost()
         {
             double duration = Planetarium.GetUniversalTime() - DateActivated;
-            if (duration >= LongestDuration)
+            if (duration >= RemovePenaltyDuration)
                 return 0d;
 
             double repMult = 0.2d;
             if (duration > LeastDuration)
             {
-                double frac = duration / (LongestDuration - LeastDuration);
+                double frac = duration / (RemovePenaltyDuration - LeastDuration);
                 repMult *= 0.1d / (frac * 0.5d + 0.1d) - 0.15d * frac;
             }
 

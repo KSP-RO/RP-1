@@ -2,6 +2,7 @@
 using Strategies;
 using System.Collections.Generic;
 using System.Linq;
+using RP0.ModIntegrations;
 
 namespace RP0
 {
@@ -132,6 +133,7 @@ namespace RP0
             isActive = true;
             Register();
             dateActivated = Planetarium.GetUniversalTime();
+            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
 
             // Update ActivatedStrategies to show that this strategy is currently active (and clobber
             // the UT it was last deactivated, if any).
@@ -147,7 +149,7 @@ namespace RP0
 
             if (this is Programs.ProgramStrategy ps)
             {
-                CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid penalties.", ps.Program.deadlineUT);
+                KACMethods.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid penalties.", ps.Program.deadlineUT, alarmType);
             }
             else
             {
@@ -158,74 +160,20 @@ namespace RP0
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
                 if (LeastDuration > 0 || RemovePenaltyDuration > 0 || LongestDuration > 0)
                 {
-                    ClearAlarms(ConfigRP0.Title);
+                    KACMethods.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
 
                     if (LeastDuration > 0)
                     {
-                        CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed at this time.", DateActivated + LeastDuration);
+                        KACMethods.CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed at this time.", DateActivated + LeastDuration, alarmType);
                     }
                     if (RemovePenaltyDuration > 0)
                     {
-                        CreateAlarm($"Free to Terminate: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration);
+                        KACMethods.CreateAlarm($"Free to Terminate: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration, alarmType);
                     }
                     if (LongestDuration > 0)
                     {
-                        CreateAlarm($"Retirement: {ConfigRP0.Title}", $"{ConfigRP0.Title} will be removed at this time.", DateActivated + LongestDuration);
+                        KACMethods.CreateAlarm($"Retirement: {ConfigRP0.Title}", $"{ConfigRP0.Title} will be removed at this time.", DateActivated + LongestDuration, alarmType);
                     }
-                }
-            }
-        }
-
-        internal void CreateAlarm(string title, string description, double UT, KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew)
-        { // dont set alarmType to contract, it seems to immediately delete itself?
-            if (KACWrapper.APIReady)
-            {
-                string alarmID = KACWrapper.KAC.CreateAlarm(alarmType, title, UT);
-                if (!string.IsNullOrEmpty(alarmID))
-                {
-                    KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.First(z => z.ID == alarmID);
-
-                    alarm.AlarmAction = KACWrapper.KACAPI.AlarmActionEnum.KillWarp;
-                    alarm.Notes = description;
-                }
-            }
-            else
-            {
-                AlarmTypeRaw alarm = new AlarmTypeRaw
-                {
-                    title = title,
-                    description = description,
-                    ut = UT,
-                };
-                AlarmClockScenario.AddAlarm(alarm);
-                alarm.actions.warp = AlarmActions.WarpEnum.KillWarp;
-            }
-        }
-
-        internal void ClearAlarms(string title)
-        {
-            if (KACWrapper.APIReady)
-            {
-                foreach (KACWrapper.KACAPI.KACAlarm alarm in KACWrapper.KAC.Alarms.Where(a => a.Name.Contains(title)).ToList())
-                {
-                    KACWrapper.KAC.DeleteAlarm(alarm.ID);
-                }
-            }
-            else
-            {
-                List<uint> alarmsToRemove = new List<uint>();
-
-                foreach (uint id in AlarmClockScenario.Instance.alarms.Keys)
-                {
-                    if (AlarmClockScenario.Instance.alarms.TryGetValue(id, out AlarmTypeBase alarm) && alarm.title != null && alarm.title.Contains(title))
-                    {
-                        alarmsToRemove.Add(id);
-                    }
-                }
-
-                foreach (uint id in alarmsToRemove)
-                {
-                    AlarmClockScenario.DeleteAlarm(id);
                 }
             }
         }
@@ -237,6 +185,8 @@ namespace RP0
         /// <returns></returns>
         public virtual bool DeactivateOverride()
         {
+            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+
             if (!CanBeDeactivated(out _))
                 return false;
 
@@ -265,9 +215,9 @@ namespace RP0
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, false, deactivateRep);
                 if (ConfigRP0.ReactivateCooldown > 0)
                 {
-                    ClearAlarms(ConfigRP0.Title);
+                    KACMethods.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
 
-                    CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown);
+                    KACMethods.CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown, alarmType);
                 }
             }
 

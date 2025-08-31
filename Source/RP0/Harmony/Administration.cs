@@ -380,7 +380,7 @@ namespace RP0.Harmony
 
             if (Administration.Instance.SelectedWrapper.strategy is ProgramStrategy ps)
             {
-                ps.ClearAlarms(ps.Title);
+                ModIntegrations.KACMethods.DeleteAllAlarmsWithTitle(ps.Title);
             }
 
             Administration.Instance.UnselectStrategy();

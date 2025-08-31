@@ -3,11 +3,13 @@ using System.Linq;
 
 namespace RP0.ModIntegrations
 {
+    /// <summary>
+    /// Adds methods for using alarms with KAC if available, otherwise falls back to the stock alarm clock.
+    /// </summary>
     public static class KACMethods
     {
         /// <summary>
         /// Creates an alarm.
-        /// Uses KAC if available, otherwise falls back to the stock alarm clock.
         /// </summary>
         /// <returns>
         /// AlarmID
@@ -46,7 +48,6 @@ namespace RP0.ModIntegrations
 
         /// <summary>
         /// Deletes all alarms that contain (or start with) a certain string in their title.
-        /// Uses KAC if available, otherwise falls back to the stock alarm clock.
         /// </summary>
         /// <returns>
         /// Success
@@ -98,7 +99,6 @@ namespace RP0.ModIntegrations
 
         /// <summary>
         /// Deletes the alarm with a certain id (uint must be converted to string first).
-        /// Uses KAC if available, otherwise falls back to the stock alarm clock.
         /// </summary>
         /// <returns>
         /// Success
@@ -132,7 +132,6 @@ namespace RP0.ModIntegrations
 
         /// <summary>
         /// Determines if an alarm with a certain id exists (uint must be converted to string first).
-        /// Uses KAC if available, otherwise falls back to the stock alarm clock.
         /// </summary>
         /// <returns>
         /// Alarm exists
@@ -162,7 +161,6 @@ namespace RP0.ModIntegrations
 
         /// <summary>
         /// Determines if an alarm that contains a certain string in its title exists.
-        /// Uses KAC if available, otherwise falls back to the stock alarm clock.
         /// </summary>
         /// <returns>
         /// Alarm exists, out parameter id as string

@@ -1,8 +1,9 @@
 {
   "runtimeOptions": {
     "additionalProbingPaths": [
-      "%USERPROFILE%\\.dotnet\\store\\|arch|\\|tfm|",
-      "%USERPROFILE%\\.nuget\\packages"
+      "C:\\Users\\Clayel\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\Clayel\\.nuget\\packages",
+      "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
     ]
   }
 }

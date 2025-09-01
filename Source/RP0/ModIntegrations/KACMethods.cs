@@ -62,12 +62,12 @@ namespace RP0.ModIntegrations
                 bool predicate(KACWrapper.KACAPI.KACAlarm a) => useStartsWith ? a.Name.StartsWith(title) : a.Name.Contains(title);
                 foreach (KACWrapper.KACAPI.KACAlarm alarm in KACWrapper.KAC.Alarms.Where(predicate).ToList())
                 {
+                    RP0Debug.Log(s1 + alarm.ID);
                     if (!KACWrapper.KAC.DeleteAlarm(alarm.ID))
                     {
                         RP0Debug.LogError(s2 + alarm.ID);
                         successful = false;
                     }
-                    else RP0Debug.Log(s1 + alarm.ID);
                 }
                 return successful;
             }
@@ -86,12 +86,12 @@ namespace RP0.ModIntegrations
 
                 foreach (uint id in alarmsToRemove)
                 {
+                    RP0Debug.Log(s1 + id);
                     if (!AlarmClockScenario.DeleteAlarm(id))
                     {
                         RP0Debug.LogError(s2 + id);
                         successful = false;
                     }
-                    else RP0Debug.Log(s1 + id);
                 }
                 return successful;
             }

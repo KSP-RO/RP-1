@@ -18,7 +18,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>$(KSPRoot)\GameData\RP-1\Plugins\</OutputPath>
+    <OutputPath>..\..\GameData\RP-1\Plugins\</OutputPath>
     <DefineConstants>TRACE;DEBUG;ENABLE_PROFILER</DefineConstants>
     <DebugType>portable</DebugType>
     <PlatformTarget>x64</PlatformTarget>
@@ -27,7 +27,7 @@
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
-    <OutputPath>$(KSPRoot)\GameData\RP-1\Plugins\</OutputPath>
+    <OutputPath>..\..\GameData\RP-1\Plugins\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
@@ -52,7 +52,6 @@
     <Compile Include="Harmony\Vessel.cs" />
     <Compile Include="Harmony\RealAntennas.cs" />
     <Compile Include="Harmony\ROHeatshields.cs" />
-    <Compile Include="ModIntegrations\KACMethods.cs" />
     <Compile Include="ModIntegrations\KSCSwitcherInterop.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
     <Compile Include="Programs\ProgramModifier.cs" />

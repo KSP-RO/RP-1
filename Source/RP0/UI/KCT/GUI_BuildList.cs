@@ -432,7 +432,7 @@ namespace RP0
                 GUILayout.Label("     Work rate:", GUILayout.Width(90));
                 GUILayout.Label(new GUIContent(constr.workRate.ToString("P0"), $"rate{identifier}¶Daily cost multiplier: {constr.RushMultiplier:P0}"), GetLabelRightAlignStyle(), GUILayout.Width(40));
                 
-                float newWorkRate = GUILayout.HorizontalSlider(constr.workRate, 0f, 1.5f, GUILayout.Width(150));
+                float newWorkRate = GUILayout.HorizontalSlider((float)constr.workRate, 0f, 1.5f, GUILayout.Width(150));
                 constr.workRate = Mathf.RoundToInt(newWorkRate * 20f) * 0.05f;
 
                 GUILayout.Label("Remaining Cost:", GUILayout.Width(100));
@@ -1225,8 +1225,16 @@ namespace RP0
                             {
                                 if (meetsChecks)
                                 {
-                                    b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
-                                    vesselLC.Recon_Rollout.Add(tmpRollout);
+                                    bool padClear = !foundPad.HasVesselWaitingToBeLaunched(out Vessel foundVessel);
+                                    if (padClear)
+                                    {
+                                        b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
+                                        vesselLC.Recon_Rollout.Add(tmpRollout);
+                                    }
+                                    else
+                                    {
+                                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutVesselOnPad", "Cannot Roll out!", $"{foundVessel.vesselName} is already waiting on the launch pad.", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                                    }
                                 }
                                 else
                                 {

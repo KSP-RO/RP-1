@@ -159,7 +159,7 @@ namespace RP0
             if (_efficiency == _MaxEfficiency)
                 return;
 
-            double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((float)((_efficiency - _MinEfficiency) / _EfficiencyRange));
+            double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((_efficiency - _MinEfficiency) / _EfficiencyRange);
             double delta = _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
             IncreaseEfficiency(delta, true);
         }
@@ -199,7 +199,7 @@ namespace RP0
             {
                 remainingTime -= timestep;
                 weightedEff += newEff * timestep;
-                double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
+                double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((newEff - _MinEfficiency) / _EfficiencyRange);
                 newEff += _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
                 if (newEff >= _MaxEfficiency)
                 {
@@ -239,7 +239,7 @@ namespace RP0
             }
             for (int i = steps; i-- > 0;)
             {
-                double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((float)((newEff - _MinEfficiency) / _EfficiencyRange));
+                double eval = Database.SettingsSC.EngineerSkillupRate.Evaluate((newEff - _MinEfficiency) / _EfficiencyRange);
                 newEff += _EfficiencyGainMult * eval * timestep * portionEngineers * (1d / (365.25d * 86400d));
                 if (newEff >= _MaxEfficiency)
                 {

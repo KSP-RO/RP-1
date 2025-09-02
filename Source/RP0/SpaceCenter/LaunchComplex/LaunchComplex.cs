@@ -469,6 +469,11 @@ namespace RP0
             }
         }
 
+        public LCLaunchPad FindPadWithLastLaunchedVessel(Guid stockVesselID)
+        {
+            return LaunchPads.Find(lp => lp.lastLoadedVesselId == stockVesselID);
+        }
+
         private void CalculateAndSetRates()
         {
             _strategyRateMultiplier = CurrencyUtils.Rate(LCType == LaunchComplexType.Pad ? TransactionReasonsRP0.RateIntegrationVAB : TransactionReasonsRP0.RateIntegrationSPH);

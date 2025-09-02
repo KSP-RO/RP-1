@@ -51,6 +51,12 @@ namespace RP0
         /// </summary>
         [Persistent] public string launchSiteName = "LaunchPad";
 
+        /// <summary>
+        /// ID of the last vessel that was rolled out and loaded into the flight scene.
+        /// Used for keeping track of vessels that are just sitting on the pad in flight scene, waiting to be launched.
+        /// </summary>
+        [Persistent] public Guid lastLoadedVesselId;
+
         public ConfigNode DestructionNode = new ConfigNode("DestructionState");
 
         public bool IsDestroyed
@@ -129,6 +135,12 @@ namespace RP0
 
         public bool Delete(out string failReason)
         {
+            if (HasVesselWaitingToBeLaunched(out Vessel foundVessel))
+            {
+                failReason = $"vessel {foundVessel.vesselName} is currently waiting on the launch pad";
+                return false;
+            }
+
             foreach (LCSpaceCenter currentKSC in SpaceCenterManagement.Instance.KSCs)
             {
                 foreach (LaunchComplex currentLC in currentKSC.LaunchComplexes)
@@ -233,6 +245,22 @@ namespace RP0
             {
                 RP0Debug.LogError("Error while calling SetActive: " + ex);
             }
+        }
+
+        public bool HasVesselWaitingToBeLaunched(out Vessel v)
+        {
+            v = null;
+            if (lastLoadedVesselId == default)
+                return false;
+
+            Vessel foundVessel = FlightGlobals.FindVessel(lastLoadedVesselId);
+            if (foundVessel?.situation == Vessel.Situations.PRELAUNCH)
+            {
+                v = foundVessel;
+                return true;
+            }
+
+            return false;
         }
 
         public void UpdateLaunchpadDestructionState(bool upgradeRepair)

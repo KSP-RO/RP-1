@@ -20,11 +20,11 @@ namespace RP0
         [Persistent]
         public bool upgradeProcessed = false;
         [Persistent]
-        public float workRate = 1f;
+        public double workRate = 1d;
 
         private double _buildRate = -1d;
 
-        public double RushMultiplier => workRate > 1f ? Database.SettingsSC.ConstructionRushCost.Evaluate(workRate) : 1d;
+        public double RushMultiplier => workRate > 1d ? Database.SettingsSC.ConstructionRushCost.Evaluate(workRate) : 1d;
 
         public double RemainingCost => -CurrencyUtils.Funds(
             FacilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction,

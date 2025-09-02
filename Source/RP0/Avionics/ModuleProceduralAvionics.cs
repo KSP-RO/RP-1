@@ -1,12 +1,12 @@
-﻿using RealFuels.Tanks;
+using RealFuels.Tanks;
+using ROUtils;
 using System;
 using System.Collections.Generic;
-using UniLinq;
 using System.Reflection;
+using UniLinq;
 using UnityEngine;
 using UnityEngine.Profiling;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
-using ROUtils;
 
 namespace RP0.ProceduralAvionics
 {
@@ -130,7 +130,8 @@ namespace RP0.ProceduralAvionics
             return avionicsMass + GetShieldingMass(avionicsMass);
         }
 
-        private float GetShieldingMass(float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * CurrentProceduralAvionicsTechNode.shieldingMassFactor;
+        private float GetShieldingMass(float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * CurrentProceduralAvionicsTechNode.shieldingMassFactor; // use ^(2/3) to convert volume into surface
+        private static float GetShieldingMass(ProceduralAvionicsTechNode techNode, float avionicsMass) => Mathf.Pow(avionicsMass, 2f / 3) * techNode.shieldingMassFactor;
 
         protected override float GetEnabledkW() => GetEnabledkW(CurrentProceduralAvionicsTechNode, GetInternalMassLimit());
         internal static float GetEnabledkW(ProceduralAvionicsTechNode techNode, float controllableMass) => GetPolynomial(controllableMass, techNode.powerExponent, techNode.powerConstant, techNode.powerFactor) / 1000f;
@@ -277,7 +278,12 @@ namespace RP0.ProceduralAvionics
         {
             Fields[nameof(avionicsConfigName)].guiActiveEditor = true;
             var range = Fields[nameof(avionicsConfigName)].uiControlEditor as UI_ChooseOption;
-            range.options = ProceduralAvionicsTechManager.GetPurchasedConfigs().ToArray();
+            range.options = ProceduralAvionicsTechManager.GetAllConfigs().ToArray();
+
+            if (ProceduralAvionicsTechManager.TechIsEnabled)
+            {
+                range.display = ProceduralAvionicsTechManager.AllAvionicsConfigs.Select(c => c.IsAvailable ? c.name : $"<color=orange>{c.name}</color>").ToArray();
+            }
 
             if (string.IsNullOrEmpty(avionicsConfigName))
             {
@@ -359,8 +365,18 @@ namespace RP0.ProceduralAvionics
 
         private void ControllableMassChanged(BaseField arg1, object arg2)
         {
-            Profiler.BeginSample("RP0ProcAvi ControllableMassChanged");
             Log($"ControllableMassChanged to {arg1.GetValue(this)} from {arg2}");
+            float newVal = controllableMass;
+            UpdateInSymmetry((ModuleProceduralAvionics pm) =>
+            {
+                pm.SetControllableMassTo(newVal);
+            });
+        }
+
+        private void SetControllableMassTo(float newVal)
+        {
+            Profiler.BeginSample("RP0ProcAvi ControllableMassChanged");
+            controllableMass = newVal;
             if (float.IsNaN(controllableMass))
             {
                 RP0Debug.LogError("[RP0ProcAvi] - ControllableMassChanged tried to set to NAN! Resetting to 0.");
@@ -385,8 +401,19 @@ namespace RP0.ProceduralAvionics
 
         private void AvionicsConfigChanged(BaseField f, object obj)
         {
-            avionicsTechLevel = ProceduralAvionicsTechManager.GetMaxUnlockedTech(avionicsConfigName);
-            AvionicsConfigChanged();
+            string tlName = ProceduralAvionicsTechManager.GetMaxUnlockedTech(avionicsConfigName);
+            if (string.IsNullOrEmpty(tlName))
+            {
+                tlName = ProceduralAvionicsTechManager.GetFirstTech(avionicsConfigName);
+                if (string.IsNullOrEmpty(tlName))
+                    RP0Debug.LogError("[RP0ProcAvi] AvionicsConfigChanged, trying to set unknown config: " + avionicsConfigName);
+            }
+
+            UpdateInSymmetry((ModuleProceduralAvionics pm) =>
+            {
+                pm.avionicsTechLevel = tlName;
+                pm.AvionicsConfigChanged();
+            });
         }
 
         internal void ShowGUIChanged(BaseField f, object obj)
@@ -676,10 +703,25 @@ namespace RP0.ProceduralAvionics
             else if (controllableMass <= 0)
                 controllableMass = techNode.interplanetary ? 0.5f : 100f;
 
-            massKG = GetAvionicsMass(techNode, controllableMass) * 1000;
+            float avionicsMass = GetAvionicsMass(techNode, controllableMass);
+            massKG = (avionicsMass + GetShieldingMass(techNode, avionicsMass))*1000;
             cost = GetAvionicsCost(controllableMass, techNode);
             powerWatts = GetEnabledkW(techNode, controllableMass) * 1000;
             return controllableMass;
+        }
+
+        internal void UpdateInSymmetry(Action<ModuleProceduralAvionics> updateAction)
+        {
+            updateAction(this);
+            foreach (Part p in part.symmetryCounterparts)
+            {
+                updateAction(p.Modules.GetModule<ModuleProceduralAvionics>());
+                if (p.PartActionWindow  != null)
+                {
+                    p.PartActionWindow.displayDirty = true;
+                    p.PartActionWindow.UpdateWindow();
+                }
+            }
         }
     }
 }

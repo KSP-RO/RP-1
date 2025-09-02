@@ -247,7 +247,7 @@
     <Compile Include="UI\KCT\GUI_Airlaunch.cs" />
     <Compile Include="UI\KCT\GUI_ClearLaunch.cs" />
     <Compile Include="UI\KCT\GUI_CrewSelect.cs" />
-    <Compile Include="UI\KCT\GUI_DismantlePad.cs" />
+    <Compile Include="UI\KCT\GUI_DismantlePadOrLC.cs" />
     <Compile Include="UI\KCT\GUI_Editor.cs" />
     <Compile Include="UI\KCT\GUI_FirstRun.cs" />
     <Compile Include="UI\KCT\GUI_NewPad.cs" />

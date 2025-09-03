@@ -378,6 +378,11 @@ namespace RP0.Harmony
             if (!Administration.Instance.SelectedWrapper.strategy.Deactivate())
                 return;
 
+            if (Administration.Instance.SelectedWrapper.strategy is ProgramStrategy ps)
+            {
+                ModIntegrations.KACMethods.DeleteAllAlarmsWithTitle(ps.Title);
+            }
+
             Administration.Instance.UnselectStrategy();
             Administration.Instance.RedrawPanels();
         }

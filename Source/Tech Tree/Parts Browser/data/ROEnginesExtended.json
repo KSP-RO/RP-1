@@ -1,29 +1,5 @@
 [
     {
-        "name": "ROE-AR2",
-        "title": "AR-1/2",
-        "description": "",
-        "mod": "ROEnginesExtended",
-        "cost": "91",
-        "entry_cost": "0",
-        "category": "ORBITAL",
-        "info": "",
-        "year": "1957",
-        "technology": "orbitalRocketry1956",
-        "era": "",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "",
-        "engine_config": "AR2",
-        "upgrade": false,
-        "entry_cost_mods": "XLR42-NA-2",
-        "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo"
-        ]
-    },
-    {
         "name": "ROEE-AJ1200",
         "title": "AJ1200",
         "description": "",
@@ -116,6 +92,30 @@
         "upgrade": false,
         "entry_cost_mods": "AR-1",
         "identical_part_name": "AR1",
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
+    },
+    {
+        "name": "ROEE-AR2",
+        "title": "AR-1/2",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "91",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1957",
+        "technology": "orbitalRocketry1956",
+        "era": "",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "AR2",
+        "upgrade": false,
+        "entry_cost_mods": "XLR42-NA-2",
+        "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
         ]

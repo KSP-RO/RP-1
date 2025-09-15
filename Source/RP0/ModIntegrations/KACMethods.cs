@@ -59,7 +59,7 @@ namespace RP0.ModIntegrations
             bool successful = true;
             if (KACWrapper.APIReady)
             {
-                bool predicate(KACWrapper.KACAPI.KACAlarm a) => useStartsWith ? a.Name.StartsWith(title) : a.Name.Contains(title);
+                bool predicate(KACWrapper.KACAPI.KACAlarm a) => a.Name != null && (useStartsWith ? a.Name.StartsWith(title) : a.Name.Contains(title));
                 foreach (KACWrapper.KACAPI.KACAlarm alarm in KACWrapper.KAC.Alarms.Where(predicate).ToList())
                 {
                     if (!KACWrapper.KAC.DeleteAlarm(alarm.ID))
@@ -75,7 +75,7 @@ namespace RP0.ModIntegrations
             {
                 List<uint> alarmsToRemove = new List<uint>();
 
-                bool predicate(AlarmTypeBase a) => useStartsWith ? a.title.StartsWith(title) : a.title.Contains(title);
+                bool predicate(AlarmTypeBase a) => a.title != null && (useStartsWith ? a.title.StartsWith(title) : a.title.Contains(title));
                 foreach (uint id in AlarmClockScenario.Instance.alarms.Keys)
                 {
                     if (AlarmClockScenario.Instance.alarms.TryGetValue(id, out AlarmTypeBase alarm) && alarm.title != null && predicate(alarm))
@@ -138,7 +138,7 @@ namespace RP0.ModIntegrations
         /// </returns>
         public static bool AlarmExistsID(string id)
         {
-            if (id == null) return false;
+            if (id == null || id == "") return false;
             if (KACWrapper.APIReady)
             {
                 KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == id);
@@ -168,7 +168,7 @@ namespace RP0.ModIntegrations
         public static bool AlarmExistsTitle(string title, out string id)
         {
             id = "";
-            if (title == null) return false;
+            if (title == null || title == "") return false;
             if (KACWrapper.APIReady)
             {
                 KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.Contains(title));

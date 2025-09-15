@@ -1,7 +1,5 @@
 ﻿using KSP.Localization;
 using Strategies;
-using System.Collections.Generic;
-using System.Linq;
 using RP0.ModIntegrations;
 
 namespace RP0

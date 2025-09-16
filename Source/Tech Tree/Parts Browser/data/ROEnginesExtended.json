@@ -945,7 +945,9 @@
         "upgrade": false,
         "entry_cost_mods": "RLA-1200",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidTurbo"
+        ]
     },
     {
         "name": "ROEE-RLA300",

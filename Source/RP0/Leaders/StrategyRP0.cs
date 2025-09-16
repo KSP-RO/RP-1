@@ -1,7 +1,6 @@
 ﻿using KSP.Localization;
 using Strategies;
 using RP0.ModIntegrations;
-using System;
 
 namespace RP0
 {

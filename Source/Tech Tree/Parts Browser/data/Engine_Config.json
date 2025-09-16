@@ -413,7 +413,7 @@
         "spacecraft": "",
         "engine_config": "RD100",
         "upgrade": true,
-        "entry_cost_mods": "22000, RD101-TP",
+        "entry_cost_mods": "12000,YF-Family-Early",
         "identical_part_name": "",
         "module_tags": []
     },

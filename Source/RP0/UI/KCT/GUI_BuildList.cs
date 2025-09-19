@@ -218,18 +218,18 @@ namespace RP0
                 if (KCTSettings.Instance.AutoAlarms && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
-                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft()) || !KACMethods.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId))
+                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft()) || !AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId))
                     {
                         SpaceCenterManagement.Instance.AlarmUT = buildItem.GetTimeLeft() + UT;
                         string id;
-                        if (KACMethods.AlarmExistsTitle(buildItem.GetItemName(), out id) || (buildItem is ReconRolloutProject r && KACMethods.AlarmExistsTitle(r.launchPadID, out id)))
+                        if (AlarmHelper.AlarmExistsTitle(buildItem.GetItemName(), out id) || (buildItem is ReconRolloutProject r && AlarmHelper.AlarmExistsTitle(r.launchPadID, out id)))
                         {
                             SpaceCenterManagement.Instance.AlarmId = id;
                         }
                         else // old alarm, need to delete to get the new alarm for the new buildItem
                         {
                             txt = "RP-1: ";
-                            if (!KACMethods.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !KACMethods.DeleteAllAlarmsWithTitle(txt, true))
+                            if (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(txt, true))
                             {
                                 RP0Debug.Log("No old alarm found, new alarm being created!");
                             }
@@ -267,7 +267,7 @@ namespace RP0
                             KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
                             if (buildItem.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
                             else if (buildItem.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
-                            SpaceCenterManagement.Instance.AlarmId = KACMethods.CreateAlarm(txt, "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
+                            SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm(txt, "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
                         }
                     }
                 }

@@ -423,13 +423,13 @@ namespace RP0.Crew
         {
             double completeUT = Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft();
             string alarmTxt = $"{currentCourse.GetItemName()} - {student.name}";
-            KACMethods.CreateAlarm("RP-1: " + alarmTxt, "", completeUT, KACWrapper.KACAPI.AlarmTypeEnum.Crew);
+            AlarmHelper.CreateAlarm("RP-1: " + alarmTxt, "", completeUT, KACWrapper.KACAPI.AlarmTypeEnum.Crew);
         }
 
         private static void CreateReturnToDutyAlarm(ProtoCrewMember crew)
         {
             string alarmTxt = $"Return to duty - {crew.name}";
-            KACMethods.CreateAlarm("RP-1: " + alarmTxt, "", crew.inactiveTimeEnd, KACWrapper.KACAPI.AlarmTypeEnum.Crew);
+            AlarmHelper.CreateAlarm("RP-1: " + alarmTxt, "", crew.inactiveTimeEnd, KACWrapper.KACAPI.AlarmTypeEnum.Crew);
         }
 
         private void UpdateActiveCourseMap()

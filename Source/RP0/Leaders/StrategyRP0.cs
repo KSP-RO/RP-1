@@ -131,7 +131,6 @@ namespace RP0
             isActive = true;
             Register();
             dateActivated = Planetarium.GetUniversalTime();
-            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
 
             // Update ActivatedStrategies to show that this strategy is currently active (and clobber
             // the UT it was last deactivated, if any).
@@ -145,9 +144,11 @@ namespace RP0
             if (useCurrency)
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
+            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+
             if (this is Programs.ProgramStrategy ps)
             {
-                KACMethods.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid penalties.", ps.Program.deadlineUT, alarmType);
+                AlarmHelper.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid penalties.", ps.Program.deadlineUT, alarmType);
             }
             else
             {
@@ -158,19 +159,19 @@ namespace RP0
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
                 if (LeastDuration > 0 || RemovePenaltyDuration > 0 || LongestDuration > 0)
                 {
-                    KACMethods.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
+                    AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
 
                     if (LeastDuration > 0)
                     {
-                        KACMethods.CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed at this time.", DateActivated + LeastDuration, alarmType);
+                        AlarmHelper.CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed at this time.", DateActivated + LeastDuration, alarmType);
                     }
                     if (RemovePenaltyDuration > 0)
                     {
-                        KACMethods.CreateAlarm($"Free to Terminate: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration, alarmType);
+                        AlarmHelper.CreateAlarm($"Free to Terminate: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration, alarmType);
                     }
                     if (LongestDuration > 0)
                     {
-                        KACMethods.CreateAlarm($"Retirement: {ConfigRP0.Title}", $"{ConfigRP0.Title} will be removed at this time.", DateActivated + LongestDuration, alarmType);
+                        AlarmHelper.CreateAlarm($"Retirement: {ConfigRP0.Title}", $"{ConfigRP0.Title} will be removed at this time.", DateActivated + LongestDuration, alarmType);
                     }
                 }
             }
@@ -213,9 +214,9 @@ namespace RP0
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, false, deactivateRep);
                 if (ConfigRP0.ReactivateCooldown > 0)
                 {
-                    KACMethods.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
+                    AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
 
-                    KACMethods.CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown, alarmType);
+                    AlarmHelper.CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown, alarmType);
                 }
             }
 

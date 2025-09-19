@@ -1,30 +1,39 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using KACAPI = RP0.KACWrapper.KACAPI;
+using KACAlarm = RP0.KACWrapper.KACAPI.KACAlarm;
 
 namespace RP0.ModIntegrations
 {
     /// <summary>
     /// Adds methods for using alarms with KAC if available, otherwise falls back to the stock alarm clock.
     /// </summary>
-    public static class KACMethods
+    public static class AlarmHelper
     {
         /// <summary>
         /// Creates an alarm.
         /// </summary>
+        /// <remarks>
+        /// Do not pass in Contract or ContractAuto as the alarmType, KAC seems to immediately delete the alarm for some reason.
+        /// </remarks>
         /// <returns>
         /// AlarmID
         /// </returns>
-        public static string CreateAlarm(string title, string description, double UT, KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw)
-        { // dont set alarmType to contract, it seems to immediately delete itself?
+        public static string CreateAlarm(string title, string description, double UT, KACAPI.AlarmTypeEnum alarmType = KACAPI.AlarmTypeEnum.Raw)
+        {
             string s = "Alarm created with ID: ";
             if (KACWrapper.APIReady)
             {
+                if (alarmType == KACAPI.AlarmTypeEnum.Contract || alarmType == KACAPI.AlarmTypeEnum.ContractAuto)
+                { // no idea what causes KAC to immediately delete these alarms, so just don't allow them
+                    alarmType = KACAPI.AlarmTypeEnum.Raw;
+                }
                 string alarmID = KACWrapper.KAC.CreateAlarm(alarmType, title, UT);
                 if (!string.IsNullOrEmpty(alarmID))
                 {
-                    KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == alarmID);
+                    KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == alarmID);
 
-                    alarm.AlarmAction = KACWrapper.KACAPI.AlarmActionEnum.KillWarp;
+                    alarm.AlarmAction = KACAPI.AlarmActionEnum.KillWarp;
                     alarm.Notes = description;
                 }
                 RP0Debug.Log(s + alarmID);
@@ -57,10 +66,10 @@ namespace RP0.ModIntegrations
             string s1 = "Alarm deleted with ID: ";
             string s2 = "Could not delete alarm with ID: ";
             bool successful = true;
+            bool predicate(string alarmTitle) => alarmTitle != null && (useStartsWith ? alarmTitle.StartsWith(title) : alarmTitle.Contains(title));
             if (KACWrapper.APIReady)
             {
-                bool predicate(KACWrapper.KACAPI.KACAlarm a) => a.Name != null && (useStartsWith ? a.Name.StartsWith(title) : a.Name.Contains(title));
-                foreach (KACWrapper.KACAPI.KACAlarm alarm in KACWrapper.KAC.Alarms.Where(predicate).ToList())
+                foreach (KACAlarm alarm in KACWrapper.KAC.Alarms.Where(a => predicate(a.Name)).ToList())
                 {
                     if (!KACWrapper.KAC.DeleteAlarm(alarm.ID))
                     {
@@ -73,18 +82,8 @@ namespace RP0.ModIntegrations
             }
             else
             {
-                List<uint> alarmsToRemove = new List<uint>();
-
-                bool predicate(AlarmTypeBase a) => a.title != null && (useStartsWith ? a.title.StartsWith(title) : a.title.Contains(title));
-                foreach (uint id in AlarmClockScenario.Instance.alarms.Keys)
-                {
-                    if (AlarmClockScenario.Instance.alarms.TryGetValue(id, out AlarmTypeBase alarm) && alarm.title != null && predicate(alarm))
-                    {
-                        alarmsToRemove.Add(id);
-                    }
-                }
-
-                foreach (uint id in alarmsToRemove)
+                foreach (uint id in AlarmClockScenario.Instance.alarms.Keys
+                    .Where(id => AlarmClockScenario.Instance.alarms.TryGetValue(id, out AlarmTypeBase alarm) && predicate(alarm.title)).ToList())
                 {
                     if (!AlarmClockScenario.DeleteAlarm(id))
                     {
@@ -138,12 +137,11 @@ namespace RP0.ModIntegrations
         /// </returns>
         public static bool AlarmExistsID(string id)
         {
-            if (id == null || id == "") return false;
+            if (string.IsNullOrEmpty(id)) return false;
             if (KACWrapper.APIReady)
             {
-                KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == id);
-                if (alarm == null) return false;
-                else return true;
+                KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == id);
+                return alarm != null;
             }
             else
             {
@@ -168,10 +166,10 @@ namespace RP0.ModIntegrations
         public static bool AlarmExistsTitle(string title, out string id)
         {
             id = "";
-            if (title == null || title == "") return false;
+            if (string.IsNullOrEmpty(title)) return false;
             if (KACWrapper.APIReady)
             {
-                KACWrapper.KACAPI.KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.Contains(title));
+                KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.Contains(title));
                 if (alarm == null) return false;
                 else
                 {

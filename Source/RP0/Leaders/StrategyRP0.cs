@@ -184,8 +184,6 @@ namespace RP0
         /// <returns></returns>
         public virtual bool DeactivateOverride()
         {
-            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
-
             if (!CanBeDeactivated(out _))
                 return false;
 
@@ -203,8 +201,9 @@ namespace RP0
             if (!string.IsNullOrEmpty(ConfigRP0.RemoveOnDeactivateTag))
                 Programs.ProgramHandler.Instance.ActivatedStrategies[ConfigRP0.RemoveOnDeactivateTag] = dateDeactivated; // will stomp the previous one.
 
-
             Unregister();
+
+            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
 
             if (!(this is Programs.ProgramStrategy))
             {

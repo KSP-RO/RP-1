@@ -72,12 +72,13 @@ namespace RP0.ModIntegrations
             {
                 foreach (KACAlarm alarm in KACWrapper.KAC.Alarms.Where(a => predicate(a.Name)).ToList())
                 {
-                    if (!KACWrapper.KAC.DeleteAlarm(alarm.ID))
+                    string id = alarm.ID;
+                    if (!KACWrapper.KAC.DeleteAlarm(id))
                     {
-                        RP0Debug.LogError(s2 + alarm.ID);
+                        RP0Debug.LogError(s2 + id);
                         successful = false;
                     }
-                    else RP0Debug.Log(s1 + alarm.ID);
+                    else RP0Debug.Log(s1 + id);
                 }
                 return successful;
             }

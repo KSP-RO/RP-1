@@ -232,9 +232,8 @@ namespace RP0
                             RP0Debug.Log("Old alarm deleted, new alarm being created!");
                         }
 
-                        if (buildItem.GetProjectType() == ProjectType.Reconditioning)
+                        if (buildItem.GetProjectType() == ProjectType.Reconditioning && buildItem is ReconRolloutProject reconRoll)
                         {
-                            ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
                             if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
                             {
                                 txt += $"{reconRoll.launchPadID} Reconditioning";

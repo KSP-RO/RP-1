@@ -66,12 +66,15 @@ namespace RP0.ModIntegrations
         {
             string s1 = "Alarm deleted with ID: ";
             string s2 = "Could not delete alarm with ID: ";
+            string s3 = "No alarms found with title: " + title;
             bool successful = true;
+            bool foundAlarm = false;
             bool predicate(string alarmTitle) => alarmTitle != null && (useStartsWith ? alarmTitle.StartsWith(title) : alarmTitle.Contains(title));
             if (UseKAC)
             {
                 foreach (KACAlarm alarm in KACWrapper.KAC.Alarms.Where(a => predicate(a.Name)).ToList())
                 {
+                    foundAlarm = true;
                     string id = alarm.ID;
                     if (!KACWrapper.KAC.DeleteAlarm(id))
                     {
@@ -80,6 +83,11 @@ namespace RP0.ModIntegrations
                     }
                     else RP0Debug.Log(s1 + id);
                 }
+                if (!foundAlarm)
+                {
+                    RP0Debug.LogWarning(s3);
+                    successful = false;
+                }
                 return successful;
             }
             else
@@ -87,12 +95,18 @@ namespace RP0.ModIntegrations
                 foreach (uint id in AlarmClockScenario.Instance.alarms.Keys
                     .Where(id => AlarmClockScenario.Instance.alarms.TryGetValue(id, out AlarmTypeBase alarm) && predicate(alarm.title)).ToList())
                 {
+                    foundAlarm = true;
                     if (!AlarmClockScenario.DeleteAlarm(id))
                     {
                         RP0Debug.LogError(s2 + id);
                         successful = false;
                     }
                     else RP0Debug.Log(s1 + id);
+                }
+                if (!foundAlarm)
+                {
+                    RP0Debug.LogWarning(s3);
+                    successful = false;
                 }
                 return successful;
             }

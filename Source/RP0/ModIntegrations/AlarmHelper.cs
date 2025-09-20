@@ -9,6 +9,8 @@ namespace RP0.ModIntegrations
     /// </summary>
     public static class AlarmHelper
     {
+        private static bool UseKAC => KACWrapper.APIReady;
+
         /// <summary>
         /// Creates an alarm.
         /// </summary>
@@ -21,7 +23,7 @@ namespace RP0.ModIntegrations
         public static string CreateAlarm(string title, string description, double UT, KACAPI.AlarmTypeEnum alarmType = KACAPI.AlarmTypeEnum.Raw)
         {
             string s = "Alarm created with ID: ";
-            if (KACWrapper.APIReady)
+            if (UseKAC)
             {
                 if (alarmType == KACAPI.AlarmTypeEnum.Contract || alarmType == KACAPI.AlarmTypeEnum.ContractAuto)
                 { // no idea what causes KAC to immediately delete these alarms, so just don't allow them
@@ -66,7 +68,7 @@ namespace RP0.ModIntegrations
             string s2 = "Could not delete alarm with ID: ";
             bool successful = true;
             bool predicate(string alarmTitle) => alarmTitle != null && (useStartsWith ? alarmTitle.StartsWith(title) : alarmTitle.Contains(title));
-            if (KACWrapper.APIReady)
+            if (UseKAC)
             {
                 foreach (KACAlarm alarm in KACWrapper.KAC.Alarms.Where(a => predicate(a.Name)).ToList())
                 {
@@ -106,7 +108,7 @@ namespace RP0.ModIntegrations
             string s1 = "Alarm deleted with ID: ";
             string s2 = "Could not delete alarm with ID: ";
             bool successful;
-            if (KACWrapper.APIReady)
+            if (UseKAC)
             {
                 successful = KACWrapper.KAC.DeleteAlarm(id);
                 RP0Debug.Log((successful ? s1 : s2) + id);
@@ -137,7 +139,7 @@ namespace RP0.ModIntegrations
         public static bool AlarmExistsID(string id)
         {
             if (string.IsNullOrEmpty(id)) return false;
-            if (KACWrapper.APIReady)
+            if (UseKAC)
             {
                 KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == id);
                 return alarm != null;
@@ -166,7 +168,7 @@ namespace RP0.ModIntegrations
         {
             id = "";
             if (string.IsNullOrEmpty(title)) return false;
-            if (KACWrapper.APIReady)
+            if (UseKAC)
             {
                 KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.Name.Contains(title));
                 if (alarm == null) return false;

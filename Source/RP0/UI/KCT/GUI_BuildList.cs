@@ -218,57 +218,50 @@ namespace RP0
                 if (KCTSettings.Instance.AutoAlarms && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
-                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft()) || !AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId))
+                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft()))
                     {
+                        // old alarm, need to delete to get the new alarm for the new buildItem
                         SpaceCenterManagement.Instance.AlarmUT = buildItem.GetTimeLeft() + UT;
-                        string id;
-                        if (AlarmHelper.AlarmExistsTitle(buildItem.GetItemName(), out id) || (buildItem is ReconRolloutProject r && AlarmHelper.AlarmExistsTitle(r.launchPadID, out id)))
+                        txt = "RP-1: ";
+                        if (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(txt, true))
                         {
-                            SpaceCenterManagement.Instance.AlarmId = id;
+                            RP0Debug.Log("No old alarm found, new alarm being created!");
                         }
-                        else // old alarm, need to delete to get the new alarm for the new buildItem
+                        else
                         {
-                            txt = "RP-1: ";
-                            if (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(txt, true))
-                            {
-                                RP0Debug.Log("No old alarm found, new alarm being created!");
-                            }
-                            else
-                            {
-                                RP0Debug.Log("Old alarm deleted, new alarm being created!");
-                            }
+                            RP0Debug.Log("Old alarm deleted, new alarm being created!");
+                        }
 
-                            if (buildItem.GetProjectType() == ProjectType.Reconditioning)
+                        if (buildItem.GetProjectType() == ProjectType.Reconditioning)
+                        {
+                            ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
+                            if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
                             {
-                                ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
-                                if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
-                                {
-                                    txt += $"{reconRoll.launchPadID} Reconditioning";
-                                }
-                                else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
-                                {
-                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                                    txt += $"{associated.shipName} rollout at {reconRoll.launchPadID}";
-                                }
-                                else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
-                                {
-                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                                    txt += $"{associated.shipName} rollback at {reconRoll.launchPadID}";
-                                }
-                                else
-                                {
-                                    txt += $"{buildItem.GetItemName()} Complete";
-                                }
+                                txt += $"{reconRoll.launchPadID} Reconditioning";
+                            }
+                            else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
+                            {
+                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                txt += $"{associated.shipName} rollout at {reconRoll.launchPadID}";
+                            }
+                            else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
+                            {
+                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                txt += $"{associated.shipName} rollback at {reconRoll.launchPadID}";
                             }
                             else
                             {
                                 txt += $"{buildItem.GetItemName()} Complete";
                             }
-                            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
-                            if (buildItem.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
-                            else if (buildItem.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
-                            SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm(txt, "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
                         }
+                        else
+                        {
+                            txt += $"{buildItem.GetItemName()} Complete";
+                        }
+                        KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
+                        if (buildItem.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+                        else if (buildItem.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
+                        SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm(txt, "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
                     }
                 }
             }

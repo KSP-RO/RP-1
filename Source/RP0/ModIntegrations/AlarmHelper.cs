@@ -69,10 +69,10 @@ namespace RP0.ModIntegrations
             string s3 = "No alarms found with title: " + title;
             bool successful = true;
             bool foundAlarm = false;
-            bool predicate(string alarmTitle) => alarmTitle != null && (useStartsWith ? alarmTitle.StartsWith(title) : alarmTitle.Contains(title));
+            bool hasTitle(string alarmTitle) => alarmTitle != null && (useStartsWith ? alarmTitle.StartsWith(title) : alarmTitle.Contains(title));
             if (UseKAC)
             {
-                foreach (KACAlarm alarm in KACWrapper.KAC.Alarms.Where(a => predicate(a.Name)).ToList())
+                foreach (KACAlarm alarm in KACWrapper.KAC.Alarms.Where(a => hasTitle(a.Name)).ToList())
                 {
                     foundAlarm = true;
                     string id = alarm.ID;
@@ -93,7 +93,7 @@ namespace RP0.ModIntegrations
             else
             {
                 foreach (uint id in AlarmClockScenario.Instance.alarms.Keys
-                    .Where(id => AlarmClockScenario.Instance.alarms.TryGetValue(id, out AlarmTypeBase alarm) && predicate(alarm.title)).ToList())
+                    .Where(id => AlarmClockScenario.Instance.alarms.TryGetValue(id, out AlarmTypeBase alarm) && hasTitle(alarm.title)).ToList())
                 {
                     foundAlarm = true;
                     if (!AlarmClockScenario.DeleteAlarm(id))

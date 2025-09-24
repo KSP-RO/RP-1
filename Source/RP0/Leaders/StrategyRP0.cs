@@ -148,7 +148,7 @@ namespace RP0
 
             if (this is Programs.ProgramStrategy ps)
             {
-                AlarmHelper.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid penalties.", ps.Program.deadlineUT, alarmType);
+                AlarmHelper.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid reputation penalties and severely reduced payout.", ps.Program.deadlineUT, alarmType);
             }
             else
             {
@@ -163,11 +163,11 @@ namespace RP0
 
                     if (LeastDuration > 0)
                     {
-                        AlarmHelper.CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed at this time.", DateActivated + LeastDuration, alarmType);
+                        AlarmHelper.CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed with a fee at this time.", DateActivated + LeastDuration, alarmType);
                     }
                     if (RemovePenaltyDuration > 0)
                     {
-                        AlarmHelper.CreateAlarm($"Free to Terminate: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration, alarmType);
+                        AlarmHelper.CreateAlarm($"Free to Remove: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration, alarmType);
                     }
                     if (LongestDuration > 0)
                     {

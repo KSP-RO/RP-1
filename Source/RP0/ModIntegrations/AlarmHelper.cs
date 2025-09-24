@@ -59,6 +59,9 @@ namespace RP0.ModIntegrations
         /// <summary>
         /// Deletes all alarms that contain (or start with) a certain string in their title.
         /// </summary>
+        /// <remarks>
+        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
+        /// </remarks>
         /// <returns>
         /// Success
         /// </returns>
@@ -115,6 +118,9 @@ namespace RP0.ModIntegrations
         /// <summary>
         /// Deletes the alarm with a certain id (uint must be converted to string first).
         /// </summary>
+        /// <remarks>
+        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
+        /// </remarks>
         /// <returns>
         /// Success
         /// </returns>

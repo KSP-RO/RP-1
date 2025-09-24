@@ -218,12 +218,12 @@ namespace RP0
                 if (KCTSettings.Instance.AutoAlarms && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
-                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft()))
+                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft(), 1))
                     {
                         // old alarm, need to delete to get the new alarm for the new buildItem
                         SpaceCenterManagement.Instance.AlarmUT = buildItem.GetTimeLeft() + UT;
                         txt = "RP-1: ";
-                        if (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(txt, true))
+                        if (string.IsNullOrEmpty(SpaceCenterManagement.Instance.AlarmId) || (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(txt, true)))
                         {
                             RP0Debug.Log("No old alarm found, new alarm being created!");
                         }
@@ -258,7 +258,7 @@ namespace RP0
                             txt += $"{buildItem.GetItemName()} Complete";
                         }
                         KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
-                        if (buildItem.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+                        if (buildItem.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew; // TODO, get the specific crew member being trained?
                         else if (buildItem.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
                         SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm(txt, "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
                     }

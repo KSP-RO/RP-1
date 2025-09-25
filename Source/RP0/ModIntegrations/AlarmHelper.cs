@@ -57,6 +57,42 @@ namespace RP0.ModIntegrations
         }
 
         /// <summary>
+        /// Deletes the alarm with a certain id (uint must be converted to string first).
+        /// </summary>
+        /// <remarks>
+        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
+        /// </remarks>
+        /// <returns>
+        /// Success
+        /// </returns>
+        public static bool DeleteAlarmWithID(string id)
+        {
+            string s1 = "Alarm deleted with ID: ";
+            string s2 = "Could not delete alarm with ID: ";
+            bool successful;
+            if (UseKAC)
+            {
+                successful = KACWrapper.KAC.DeleteAlarm(id);
+                RP0Debug.Log((successful ? s1 : s2) + id);
+                return successful;
+            }
+            else
+            {
+                if (uint.TryParse(id, out uint alarmID))
+                {
+                    successful = AlarmClockScenario.DeleteAlarm(alarmID);
+                    RP0Debug.Log((successful ? s1 : s2) + id);
+                    return successful;
+                }
+                else
+                {
+                    RP0Debug.LogError("Could not parse alarm ID " + id + " to uint");
+                    return false;
+                }
+            }
+        }
+
+        /// <summary>
         /// Deletes all alarms that contain (or start with) a certain string in their title.
         /// </summary>
         /// <remarks>
@@ -112,42 +148,6 @@ namespace RP0.ModIntegrations
                     successful = false;
                 }
                 return successful;
-            }
-        }
-
-        /// <summary>
-        /// Deletes the alarm with a certain id (uint must be converted to string first).
-        /// </summary>
-        /// <remarks>
-        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
-        /// </remarks>
-        /// <returns>
-        /// Success
-        /// </returns>
-        public static bool DeleteAlarmWithID(string id)
-        {
-            string s1 = "Alarm deleted with ID: ";
-            string s2 = "Could not delete alarm with ID: ";
-            bool successful;
-            if (UseKAC)
-            {
-                successful = KACWrapper.KAC.DeleteAlarm(id);
-                RP0Debug.Log((successful ? s1 : s2) + id);
-                return successful;
-            }
-            else
-            {
-                if (uint.TryParse(id, out uint alarmID))
-                {
-                    successful = AlarmClockScenario.DeleteAlarm(alarmID);
-                    RP0Debug.Log((successful ? s1 : s2) + id);
-                    return successful;
-                }
-                else
-                {
-                    RP0Debug.LogError("Could not parse alarm ID " + id + " to uint");
-                    return false;
-                }
             }
         }
 

@@ -82,8 +82,8 @@ namespace RP0
         [KSPField(isPersistant = true)] public int Researchers = 0;
         [KSPField(isPersistant = true)] public int Applicants = 0;
 
-        [KSPField(isPersistant = true)] public string KACAlarmId = string.Empty;
-        [KSPField(isPersistant = true)] public double KACAlarmUT = 0;
+        [KSPField(isPersistant = true)] public string AlarmId = string.Empty;
+        [KSPField(isPersistant = true)] public double AlarmUT = 0;
 
         [KSPField(isPersistant = true)] public bool ErroredDuringOnLoad = false;
 

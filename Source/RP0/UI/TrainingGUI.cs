@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
+using RP0.ModIntegrations;
 
 namespace RP0.Crew
 {
@@ -141,12 +142,12 @@ namespace RP0.Crew
                             LeaveCourse(currentCourse, student);
                     }
 
-                    if (KACWrapper.APIReady && GUILayout.Button(_nautRowAlarmBtnContent, HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                    if (GUILayout.Button(_nautRowAlarmBtnContent, HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                     {
                         CreateCourseFinishAlarm(student, currentCourse);
                     }
                 }
-                else if (KACWrapper.APIReady && isInactive && GUILayout.Button(_nautRowAlarmBtnContent, HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                else if (isInactive && GUILayout.Button(_nautRowAlarmBtnContent, HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                 {
                     CreateReturnToDutyAlarm(student);
                 }
@@ -422,13 +423,13 @@ namespace RP0.Crew
         {
             double completeUT = Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft();
             string alarmTxt = $"{currentCourse.GetItemName()} - {student.name}";
-            KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, completeUT);
+            AlarmHelper.CreateAlarm("RP-1: " + alarmTxt, "", completeUT, KACWrapper.KACAPI.AlarmTypeEnum.Crew);
         }
 
         private static void CreateReturnToDutyAlarm(ProtoCrewMember crew)
         {
             string alarmTxt = $"Return to duty - {crew.name}";
-            KACWrapper.KAC.CreateAlarm(KACWrapper.KACAPI.AlarmTypeEnum.Crew, alarmTxt, crew.inactiveTimeEnd);
+            AlarmHelper.CreateAlarm("RP-1: " + alarmTxt, "", crew.inactiveTimeEnd, KACWrapper.KACAPI.AlarmTypeEnum.Crew);
         }
 
         private void UpdateActiveCourseMap()

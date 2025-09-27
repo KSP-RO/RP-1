@@ -57,6 +57,9 @@ namespace RP0.Crew
         public bool RetirementEnabled = true;
         public bool CrewRnREnabled = true;
         public bool IsMissionTrainingEnabled;
+        public double ProfTrainRate;
+        public double MissionTrainRate;
+
         private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
         private Dictionary<string, Tuple<TrainingTemplate, TrainingTemplate>> _partSynsHandled = new Dictionary<string, Tuple<TrainingTemplate, TrainingTemplate>>();
@@ -483,6 +486,8 @@ namespace RP0.Crew
             RetirementEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsRetirementEnabled;
             CrewRnREnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsCrewRnREnabled;
             IsMissionTrainingEnabled = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().IsMissionTrainingEnabled;
+            ProfTrainRate = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().ProfTrainRate;
+            MissionTrainRate = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().MissionTrainRate;
             GenerateTrainingTemplates();
         }
 

@@ -332,7 +332,7 @@ namespace RP0
             // So we use EditorLogic.fetch.launchSiteName to align with expected behavior (launch at the site the user picks)
 
             // There also exists a seemingly stock bug where if a vessel is loaded automatically in one editor after entering it,
-            // Then the user switchs to the other editor, EditorLogic.fetch.launchSiteName won't run ValidLaunchSite() and will stay stuck as what it was before,
+            // Then the user switches to the other editor, EditorLogic.fetch.launchSiteName won't run ValidLaunchSite() and will stay stuck as what it was before,
             // So we need to check for ValidLaunchSite() as well.
             // SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName is always valid, but that only applies to the VAB of course
             string launchSiteName = EditorLogic.fetch.launchSiteName;

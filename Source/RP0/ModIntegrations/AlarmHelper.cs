@@ -34,11 +34,24 @@ namespace RP0.ModIntegrations
                 {
                     KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == alarmID);
 
-                    alarm.AlarmAction = KACAPI.AlarmActionEnum.KillWarp;
-                    alarm.Notes = description;
+                    if (alarm != null)
+                    {
+                        alarm.AlarmAction = KACAPI.AlarmActionEnum.KillWarp;
+                        alarm.Notes = description;
+                        RP0Debug.Log(s + alarmID);
+                        return alarmID;
+                    }
+                    else
+                    {
+                        RP0Debug.LogError($"KAC Alarm with ID: {alarmID} could not be found.");
+                        return alarmID;
+                    }
                 }
-                RP0Debug.Log(s + alarmID);
-                return alarmID;
+                else
+                {
+                    RP0Debug.LogError($"KAC Alarm could not be created.");
+                    return "";
+                }
             }
             else
             {

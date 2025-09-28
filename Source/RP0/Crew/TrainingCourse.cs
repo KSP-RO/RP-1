@@ -167,27 +167,10 @@ namespace RP0.Crew
                     if (student == null)
                         continue;
 
-                    if (student.flightLog.Count > 0)
-                        student.ArchiveFlightLog();
-
-                    // First, expire any old mission trainings.
-                    if (_template.training.type == CrewHandler.TrainingType_Mission)
-                    {
-                        // Expire any previous mission trainings because only 1 should be active at a time
-                        for (int i = student.careerLog.Count; i-- > 0;)
-                        {
-                            FlightLog.Entry e = student.careerLog.Entries[i];
-                            if (e.type == CrewHandler.TrainingType_Mission)
-                            {
-                                CrewHandler.Instance.RemoveExpiration(student.name, e);
-                                CrewHandler.ExpireFlightLogEntry(e);
-                            }
-                        }
-                    }
-                    else if (_template.training.type == CrewHandler.TrainingType_Proficiency)
+                    // First, make sure we haven't completed this proficiency training before
+                    if (_template.training.type == CrewHandler.TrainingType_Proficiency)
                     {
                         bool hasCompletedProficiency = false;
-                        // Make sure we haven't completed this proficiency training before
                         for (int i = student.careerLog.Count; i-- > 0;)
                         {
                             FlightLog.Entry e = student.careerLog.Entries[i];
@@ -203,7 +186,25 @@ namespace RP0.Crew
                             continue;
                         }
                     }
-                    else
+
+                    if (student.flightLog.Count > 0)
+                        student.ArchiveFlightLog();
+
+                    // Expire any old mission trainings.
+                    if (_template.training.type == CrewHandler.TrainingType_Mission)
+                    {
+                        // Expire any previous mission trainings because only 1 should be active at a time
+                        for (int i = student.careerLog.Count; i-- > 0;)
+                        {
+                            FlightLog.Entry e = student.careerLog.Entries[i];
+                            if (e.type == CrewHandler.TrainingType_Mission)
+                            {
+                                CrewHandler.Instance.RemoveExpiration(student.name, e);
+                                CrewHandler.ExpireFlightLogEntry(e);
+                            }
+                        }
+                    }
+                    else if (_template.training.type != CrewHandler.TrainingType_Proficiency)
                     {
                         RP0Debug.LogError($"Unknown training type {_template.training.type} for course {_template.name} of student {student.name}!");
                         return;

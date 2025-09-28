@@ -194,6 +194,7 @@ namespace RP0.Crew
                             if (e.target == _template.training.target)
                             {
                                 hasCompletedProficiency = true;
+                                break;
                             }
                         }
                         if (hasCompletedProficiency)

@@ -198,13 +198,13 @@ namespace RP0.Crew
                         }
                         if (hasCompletedProficiency)
                         {
-                            RP0Debug.LogWarning($"{student.name} has already completed proficiency training for {_template.training.target}");
+                            RP0Debug.LogWarning($"{student.name} has already completed Proficiency training for {_template.training.target}!");
                             break;
                         }
                     }
                     else
                     {
-                        RP0Debug.LogError($"Unknown training type {_template.training.type} for course {_template.name} of student {student.name}");
+                        RP0Debug.LogError($"Unknown training type {_template.training.type} for course {_template.name} of student {student.name}!");
                         return;
                     }
 

@@ -200,7 +200,7 @@ namespace RP0.Crew
                         if (hasCompletedProficiency)
                         {
                             RP0Debug.LogWarning($"{student.name} has already completed Proficiency training for {_template.training.target}!");
-                            break;
+                            continue;
                         }
                     }
                     else

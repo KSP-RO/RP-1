@@ -167,30 +167,10 @@ namespace RP0.Crew
                     if (student == null)
                         continue;
 
-                    // First, make sure we haven't completed this proficiency training before
-                    if (_template.training.type == CrewHandler.TrainingType_Proficiency)
-                    {
-                        bool hasCompletedProficiency = false;
-                        for (int i = student.careerLog.Count; i-- > 0;)
-                        {
-                            FlightLog.Entry e = student.careerLog.Entries[i];
-                            if (e.target == _template.training.target)
-                            {
-                                hasCompletedProficiency = true;
-                                break;
-                            }
-                        }
-                        if (hasCompletedProficiency)
-                        {
-                            RP0Debug.LogWarning($"{student.name} has already completed Proficiency training for {_template.training.target}!");
-                            continue;
-                        }
-                    }
-
                     if (student.flightLog.Count > 0)
                         student.ArchiveFlightLog();
 
-                    // Expire any old mission trainings.
+                    // First, expire any old mission trainings.
                     if (_template.training.type == CrewHandler.TrainingType_Mission)
                     {
                         // Expire any previous mission trainings because only 1 should be active at a time

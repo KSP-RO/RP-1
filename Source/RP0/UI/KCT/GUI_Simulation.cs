@@ -314,7 +314,7 @@ namespace RP0
             KCTUtilities.MakeSimulationSave();
 
             // Create the LaunchedVessel fresh instead of cloning the EditorVessel, since it's possible that the player
-            // may have changed the vessel slightly since the last time the coroutine updated the EditorVessell.
+            // may have changed the vessel slightly since the last time the coroutine updated the EditorVessel.
             SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
             // Just in case, let's set the LCID
             SpaceCenterManagement.Instance.LaunchedVessel.LCID = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LCID : SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ID;
@@ -326,10 +326,25 @@ namespace RP0
             }
             EditorLogic.fetch.ship.SaveShip().Save(tempFile);
             SpaceCenterManagement.Instance.IsSimulatedFlight = true;
+            // EditorLogic.fetch.launchSiteName will always default to LaunchPad or Runway when entering the editor, and can only be changed to a different launch site in the editor,
+            // So we can use SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName if it isn't changed
+            // If it is changed inside of the editor, then SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName might not match it,
+            // So we use EditorLogic.fetch.launchSiteName to align with expected behavior (launch at the site the user picks)
+
+            // There also exists a seemingly stock bug where if a vessel is loaded automatically in one editor after entering it,
+            // Then the user switchs to the other editor, EditorLogic.fetch.launchSiteName won't run ValidLaunchSite() and will stay stuck as what it was before,
+            // So we need to check for ValidLaunchSite() as well.
+            // SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName is always valid, but that only applies to the VAB of course
             string launchSiteName = EditorLogic.fetch.launchSiteName;
-            if (launchSiteName == "LaunchPad" && SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad)
+            if ((launchSiteName == "LaunchPad" || !EditorDriver.ValidLaunchSite(launchSiteName)) && SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Pad)
             {
                 launchSiteName = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ActiveLPInstance.launchSiteName;
+            }
+            else if (!EditorDriver.ValidLaunchSite(launchSiteName) && SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Hangar)
+            {
+                // If some mechanic is added to select a different default launch site for the SPH, then this will need to be updated to reflect that
+                // For now, we can just use "Runway", since that's what the SPH always defaults to when one enters it
+                launchSiteName = "Runway";
             }
             SpaceCenterManagement.Instance.StartCoroutine(CallbackUtil.DelayedCallback(1, delegate
             {

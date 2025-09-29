@@ -134,20 +134,15 @@ namespace RP0
                 GUILayout.EndHorizontal();
             }
 
+            string s1 = "Valid formats: \"1y 2d 3h 4m 5s\" and \"31719845\".";
+            string s2 = "Valid formats: \"1y 2d 3h 4m 5s\", \"31719845\", and \"1960-12-31 23:59:59\".";
+
             GUILayout.Space(4);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Time: ");
+            GUILayout.Label(new GUIContent("Time: ", _fromCurrentUT ? s1 : s2));
             _UTString = GUILayout.TextField(_UTString, GUILayout.Width(110));
             _fromCurrentUT = GUILayout.Toggle(_fromCurrentUT, new GUIContent(" From Now", "If selected the game will warp forwards by the entered value. Otherwise the date and time will be set to the entered value."));
             GUILayout.EndHorizontal();
-            if (_fromCurrentUT)
-            {
-                GUILayout.Label("Valid formats: \"1y 2d 3h 4m 5s\" and \"31719845\".");
-            }
-            else
-            {
-                GUILayout.Label("Valid formats: \"1y 2d 3h 4m 5s\", \"31719845\", and \"1960-12-31 23:59:59\".");
-            }
             GUILayout.Space(4);
 
             if (ModUtils.IsTestFlightInstalled || ModUtils.IsTestLiteInstalled)

@@ -52,6 +52,7 @@
     <Compile Include="Harmony\Vessel.cs" />
     <Compile Include="Harmony\RealAntennas.cs" />
     <Compile Include="Harmony\ROHeatshields.cs" />
+    <Compile Include="ModIntegrations\AlarmHelper.cs" />
     <Compile Include="ModIntegrations\KSCSwitcherInterop.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
     <Compile Include="Programs\ProgramModifier.cs" />

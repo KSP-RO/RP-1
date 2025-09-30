@@ -124,7 +124,7 @@ namespace RP0
                 KCTSettings.Instance.DisableAllMessages = _disableAllMsgs;
                 KCTSettings.Instance.ShowSimWatermark = _showSimWatermark;
                 KCTSettings.Instance.OverrideLaunchButton = _overrideLaunchBtn;
-                KCTSettings.Instance.AutoKACAlarms = _autoAlarms;
+                KCTSettings.Instance.AutoAlarms = _autoAlarms;
                 KCTSettings.Instance.CleanUpKSCDebris = _cleanUpKSCDebris;
                 KCTSettings.Instance.UseDates = _useDates;
                 KCTSettings.Instance.InPlaceEdit = _inPlaceEdit;
@@ -180,7 +180,7 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
-            _autoAlarms = GUILayout.Toggle(_autoAlarms, "Auto KAC Alarms", HighLogic.Skin.button);
+            _autoAlarms = GUILayout.Toggle(_autoAlarms, "Auto Alarms", HighLogic.Skin.button);
             _overrideLaunchBtn = GUILayout.Toggle(_overrideLaunchBtn, "Override Launch Button", HighLogic.Skin.button);
             //useBlizzyToolbar = GUILayout.Toggle(useBlizzyToolbar, "Use Toolbar Mod", HighLogic.Skin.button);
             _disableAllMsgs = !GUILayout.Toggle(!_disableAllMsgs, "Use Message System", HighLogic.Skin.button);
@@ -303,7 +303,7 @@ namespace RP0
             _disableAllMsgs = KCTSettings.Instance.DisableAllMessages;
             _showSimWatermark = KCTSettings.Instance.ShowSimWatermark;
             _overrideLaunchBtn = KCTSettings.Instance.OverrideLaunchButton;
-            _autoAlarms = KCTSettings.Instance.AutoKACAlarms;
+            _autoAlarms = KCTSettings.Instance.AutoAlarms;
             _cleanUpKSCDebris = KCTSettings.Instance.CleanUpKSCDebris;
             _useDates = KCTSettings.Instance.UseDates;
             _inPlaceEdit = KCTSettings.Instance.InPlaceEdit;

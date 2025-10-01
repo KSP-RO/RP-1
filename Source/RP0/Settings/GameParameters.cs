@@ -53,6 +53,15 @@ namespace RP0
         [GameParameters.CustomFloatParameterUI("Research Rate", minValue = 0.1f, maxValue = 1.5f, stepCount = 15, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
         public float ResearchRate = 1f;
 
+        [GameParameters.CustomFloatParameterUI("Unlock Credit rate", minValue = 0.1f, maxValue = 2f, stepCount = 20, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER)]
+        public float UnlockCredRate = 1f;
+
+        [GameParameters.CustomFloatParameterUI("Crew Proficiency training rate", minValue = 0.5f, maxValue = 5f, stepCount = 46, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER, toolTip = "Value of 0.5 means training takes twice as long; 2 means training is twice as fast as normal.")]
+        public float ProfTrainRate = 1f;
+
+        [GameParameters.CustomFloatParameterUI("Crew Mission training rate", minValue = 0.5f, maxValue = 5f, stepCount = 46, displayFormat = "N1", gameMode = GameParameters.GameMode.CAREER, toolTip = "Value of 0.5 means training takes twice as long; 2 means training is twice as fast as normal.")]
+        public float MissionTrainRate = 1f;
+
         [GameParameters.CustomFloatParameterUI("Kerbal Death Fixed Rep Loss", minValue = 20f, maxValue = 200f, stepCount = 31, displayFormat = "N0", gameMode = GameParameters.GameMode.CAREER)]
         public float RepLossNautDeathFixed = 50f;
 
@@ -106,6 +115,9 @@ namespace RP0
                     StartingUnlockCredit = 75000f;
                     BuildRate = 1.5f;
                     ResearchRate = 1.5f;
+                    UnlockCredRate = 1f;
+                    ProfTrainRate = 1f;
+                    MissionTrainRate = 1f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
@@ -115,6 +127,9 @@ namespace RP0
                     StartingUnlockCredit = 50000f;
                     BuildRate = 1.2f;
                     ResearchRate = 1.2f;
+                    UnlockCredRate = 1f;
+                    ProfTrainRate = 1f;
+                    MissionTrainRate = 1f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
@@ -124,6 +139,9 @@ namespace RP0
                     StartingUnlockCredit = 25000f;
                     BuildRate = 1f;
                     ResearchRate = 1f;
+                    UnlockCredRate = 1f;
+                    ProfTrainRate = 1f;
+                    MissionTrainRate = 1f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
@@ -133,6 +151,9 @@ namespace RP0
                     StartingUnlockCredit = 15000f;
                     BuildRate = 1f;
                     ResearchRate = 1f;
+                    UnlockCredRate = 1f;
+                    ProfTrainRate = 1f;
+                    MissionTrainRate = 1f;
                     break;
             }
         }

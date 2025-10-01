@@ -12,12 +12,14 @@ namespace RP0
         [KSPField(isPersistant = true)]
         private double _totalCredit = 0;
 
+        private double _unlockCredRate;
+
         public double TotalCredit => _totalCredit;
 
         public double CreditForTime(double UT)
         {
             double sum = 0d;
-            double mult = UT * Database.SettingsSC.salaryResearchers * (1d / (86400d * 365.25d));
+            double mult = UT * _unlockCredRate * Database.SettingsSC.salaryResearchers * (1d / (86400d * 365.25d));
             
             int res = SpaceCenterManagement.Instance.Researchers;
             int totalCounted = 0;
@@ -244,6 +246,9 @@ namespace RP0
                 Destroy(Instance);
 
             Instance = this;
+
+            GameEvents.OnGameSettingsApplied.Add(LoadSettings);
+            GameEvents.onGameStateLoad.Add(LoadSettings);
         }
 
         public void Start()
@@ -257,9 +262,21 @@ namespace RP0
         {
             GameEvents.OnPartPurchased.Remove(OnPartPurchased);
             GameEvents.OnPartUpgradePurchased.Remove(OnPartUpgradePurchased);
+            GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
+            GameEvents.onGameStateLoad.Remove(LoadSettings);
 
             if (Instance == this)
                 Instance = null;
+        }
+
+        private void LoadSettings(ConfigNode n)
+        {
+            LoadSettings();
+        }
+
+        private void LoadSettings()
+        {
+            _unlockCredRate = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().UnlockCredRate;
         }
     }
 

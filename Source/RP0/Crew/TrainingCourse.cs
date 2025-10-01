@@ -292,11 +292,12 @@ namespace RP0.Crew
             return Completed;
         }
 
-        public static double CalculateBuildRate()
+        public double CalculateBuildRate()
         {
             double r = 1d;
             r *= Database.SettingsCrew.ACTrainingRates[KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             r *= CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
+            r *= Type == TrainingTemplate.TrainingType.Proficiency ? CrewHandler.Instance.ProfTrainRate : CrewHandler.Instance.MissionTrainRate;
             return r;
         }
 

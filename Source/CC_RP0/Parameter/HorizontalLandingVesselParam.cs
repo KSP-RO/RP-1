@@ -7,6 +7,7 @@ namespace ContractConfigurator.RP0
     public class HorizontalLanding : VesselParameter
     {
         protected double glideRatio { get; set; }
+        protected double? maxSrfVel { get; set; }
         protected bool wasPreviouslyMet { get; set; }
         protected float updateFrequency { get; set; }
 
@@ -17,11 +18,12 @@ namespace ContractConfigurator.RP0
         {
         }
 
-        public HorizontalLanding(string title, double descentAngle, float updateFrequency)
+        public HorizontalLanding(string title, double descentAngle, double? maxSrfVel, float updateFrequency)
             : base(title)
         {
             this.title = title ?? $"Land horizontally with a descent angle below {descentAngle}°";
             this.glideRatio = 1 / Math.Tan(Mathf.Deg2Rad * descentAngle);
+            this.maxSrfVel = maxSrfVel;
             this.updateFrequency = updateFrequency;
         }
 
@@ -32,6 +34,11 @@ namespace ContractConfigurator.RP0
             node.AddValue("updateFrequency", updateFrequency);
             node.AddValue("glideRatio", glideRatio);
             node.AddValue("wasPreviouslyMet", wasPreviouslyMet);
+
+            if (maxSrfVel.HasValue)
+            {
+                node.AddValue("maxSrfVel", maxSrfVel);
+            }
         }
 
         protected override void OnParameterLoad(ConfigNode node)
@@ -41,6 +48,7 @@ namespace ContractConfigurator.RP0
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
             glideRatio = ConfigNodeUtil.ParseValue<double>(node, "glideRatio");
             wasPreviouslyMet = ConfigNodeUtil.ParseValue<bool>(node, "wasPreviouslyMet");
+            maxSrfVel = ConfigNodeUtil.ParseValue(node, "maxSrfVel", (double?)null);
         }
 
         protected override bool VesselMeetsCondition(Vessel vessel)
@@ -48,6 +56,10 @@ namespace ContractConfigurator.RP0
             if (!vessel.LandedOrSplashed && !vessel.packed)
             {
                 wasPreviouslyMet = vessel.horizontalSrfSpeed > Math.Abs(vessel.verticalSpeed) * glideRatio;
+                if (maxSrfVel.HasValue)
+                {
+                    wasPreviouslyMet &= maxSrfVel < vessel.srfSpeed;
+                }
             }
 
             return wasPreviouslyMet;

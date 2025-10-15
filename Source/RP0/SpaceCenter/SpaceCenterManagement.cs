@@ -637,7 +637,7 @@ namespace RP0
             catch (Exception ex)
             {
                 ErroredDuringOnLoad = true;
-                RP0Debug.LogError("ERROR! An error while KCT loading data occurred. Things will be seriously broken!\n" + ex);
+                RP0Debug.LogError("ERROR! An error occurred while loading SCM data. Things will be seriously broken!\n" + ex);
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "errorPopup", "Error Loading RP-1 Data", "ERROR! An error occurred while loading RP-1 data. Things will be seriously broken! Please report this error to RP-1 GitHub and attach the log file. The game will be UNPLAYABLE in this state!", "Understood", false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
         }
@@ -1239,7 +1239,7 @@ namespace RP0
             {
                 if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id != vesselId)
                 {
-                    ScreenMessages.PostScreenMessage("[KCT] Airlaunch cancelled", 5f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
+                    ScreenMessages.PostScreenMessage("Airlaunch cancelled", 5f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
                     yield break;
                 }
 
@@ -1249,7 +1249,7 @@ namespace RP0
                     FlightGlobals.ActiveVessel.situation = Vessel.Situations.LANDED;
                 }
 
-                ScreenMessages.PostScreenMessage($"[KCT] Launching in {i}...", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
+                ScreenMessages.PostScreenMessage($"Airlaunching in {i}...", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
                 yield return _wfsOne;
             }
 

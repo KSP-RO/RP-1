@@ -1,3 +1,6 @@
+//THIS FILE IS DISABLED UNTIL SOMEBODY FIGURES OUT HOW TO MAKE KERBALISM SUPPORT CONFIGURABLE HARD DRIVES
+//replace the existing file with this file if someone figures it out
+
 // ============================================================================
 // KERBALISM_HDD_SIZES - Temporary tweaking values
 // ============================================================================
@@ -712,14 +715,8 @@ KERBALISM_HDD_SIZES
 {
 	@MODULE[HardDrive]
 	{
-		%dataCapacity = 0				// will be upgraded with partupgrades later
+		%dataCapacity = 1				// doesn't matter, it will be changed later
 		%sampleCapacity = 1
-		%maxDataCapacityFactor = 10		// Sure, just add more tape
-		%dataCapacityCost = 50			// You can't un-upgrade, so this has to be universal. Be conservative and set it fairly low
-		%dataCapacityMass = 0.001		// See above. Set to 1 kg I guess
-		%maxSampleCapacityFactor = 10	// max 10 slots 
-		%sampleCapacityCost = 20		// 20 funds for each additional slot (random value)
-		%sampleCapacityMass = 0.005		// 5 kg for each slot
 	}
 }
 // ============================================================================
@@ -960,81 +957,6 @@ KERBALISM_HDD_SIZES
 	}
 }
 // ============================================================================
-//HDD capacity/sample storage Upgrades.
-// ============================================================================
-
-// Applies upgrades to procedural avionics hard drives
-@PART[proceduralAvionics|ROT-ProbeCore]:AFTER[RP-0-KerbalismHardDrives]
-{
-	@MODULE[HardDrive]
-	{
-		%UPGRADES
-		{
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-Early
-				techRequired__ = earlyAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralEarly/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-Basic
-				techRequired__ = basicAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralBasic/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-1961
-				techRequired__ = interplanetaryProbes
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-1964
-				techRequired__ = matureAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralMature/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-1969
-				techRequired__ = largeScaleAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-1975
-				techRequired__ = advancedAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-1990
-				techRequired__ = longTermAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-1998
-				techRequired__ = internationalAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralInternational/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-2010
-				techRequired__ = modernAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralModern/data$
-			}
-			UPGRADE
-			{
-				name__ = HDD-Upgrade-2020
-				techRequired__ = advModernAvionics
-				dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/data$
-			}
-		}
-	}
-}
-
-// ============================================================================
 // Internal(Private) Drive upgrades
 // these have to be done by hand to avoid patching groups. (labs mainly)
 // ============================================================================
@@ -1111,5 +1033,553 @@ KERBALISM_HDD_SIZES
 		experiment_id = RP0photos3
 		dataCapacity = 0
 		sampleCapacity = #$@KERBALISM_HDD_SIZES/PRIVATE_DRIVES/Photography3/samples$
+	}
+}
+
+
+// ============================================================================
+// Procedural avionics integration
+// Configurable options based on tech level
+// ============================================================================
+@PART[proceduralAvionics|ROT-ProbeCore]:AFTER[RP-0-KerbalismHardDrives]
+{
+
+	!MODULE[HardDrive] {}
+
+	MODULE
+	{
+		name = HardDrive
+		title = Sample Container
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		dataCapacity = 0
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Early
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralEarly/data$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralEarly/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralEarly/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Basic
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralBasic/data$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralBasic/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralBasic/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Interplanetary
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Mature
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralMature/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralMature/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralMature/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Mature Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Large Scale
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Large Scale Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Advanced
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Advanced Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Long Term
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Long Term Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//RAM, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = International
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralInternational/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//Flash, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralInternational/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralInternational/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = International Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 100		//RAM, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Modern
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralModern/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//Flash, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralModern/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralModern/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Modern Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 100		//RAM, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Advanced Modern
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//Flash, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Advanced Modern Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 100		//RAM, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/mass$
+	}
+	MODULE
+	{
+		name = Configure
+		title = Data Storage
+		slots = 1
+
+		SETUP
+		{
+			name = None
+			desc = Empty slot for mass or cost savings, should you not require any storage. Use this for booster avionics.
+		}
+
+		SETUP
+		{
+			name = Sample Container
+			desc = A container for samples with no data storage capacity. Use for film return, sample recovery, etc.
+			cost = 0
+			mass = 0
+			tech = unlockParts
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Sample Container
+			}
+		}
+
+		SETUP
+		{
+			name = Early Tape Recorder
+			desc = A basic, heavily miniaturized tape drive, capable of storing a few hours of data from early science experiments.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralEarly/cost$	//same as a TV camera
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralEarly/mass$	//0.23 kg
+			tech = earlyAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Early
+			}
+		}
+
+		SETUP
+		{
+			name = Basic Tape Recorder
+			desc = Although essentially the same as the early tape recorder, increased size allows for more tape to be loaded, improving capacity.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralBasic/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralBasic/mass$
+			tech = basicAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Basic
+			}
+		}
+		SETUP
+		{
+			name = 1961 Tape Recorder
+			desc = A full-size tape drive for more advanced satellites, this is capable of storing much more data, such as slow-scan TV images.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/mass$
+			tech = interplanetaryProbes
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Interplanetary
+			}
+		}
+		SETUP
+		{
+			name = 1964 Tape Recorder
+			desc = Transistorized electronics allow for better read/write sensitivity, enabling more data to be stored on the same length of tape.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralMature/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralMature/mass$
+			tech = matureAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Mature
+			}
+		}
+		SETUP
+		{
+			name = 1964 Compact Tape Recorder
+			desc = A heavily miniaturized tape recorder for very small probes. However, this comes at a cost and performance is much worse than it's larger contemporaries.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/mass$
+			tech = matureAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Mature Small
+			}
+		}
+		SETUP
+		{
+			name = 1969 Digital Tape Recorder
+			desc = Using a digital computer to digitize and compress data increases the effective capacity that can be stored on a data tape by an order of magnitude.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/mass$
+			tech = largeScaleAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title	
+			  id_value = Large Scale
+			}
+		}
+		SETUP
+		{
+			name = 1969 Compact Digital Tape Recorder
+			desc = A heavily miniaturized tape recorder for very small probes. However, this comes at a cost and performance is much worse than it's larger contemporaries.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/mass$
+			tech = largeScaleAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Large Scale Small
+			}
+		}
+		SETUP
+		{
+			name = 1975 Digital Tape Recorder
+			desc = Advances in integrated circuits allows better data compression, smaller control electronics, and continued improvements to data density.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/mass$
+			tech = advancedAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Advanced
+			}
+		}
+		SETUP
+		{
+			name = 1975 Compact Digital Tape Recorder
+			desc = A heavily miniaturized tape recorder for very small probes. However, this comes at a cost and performance is much worse than it's larger contemporaries.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/mass$
+			tech = advancedAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Advanced Small
+			}
+		}
+		SETUP
+		{
+			name = 1990 Digital Tape Recorder
+			desc = Advances in integrated circuits allows better data compression, smaller control electronics, and continued improvements to data density.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/mass$
+			tech = longTermAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Long Term
+			}
+		}
+		SETUP
+		{
+			name = 1990 Random Access Memory
+			desc = Dynamic Random Access Memory chips (DRAM) have improved enough to be competitive with magnetic tape technology. Although performance is still worse than contemporary tape recorders, DRAM is much cheaper and can be easily scaled by just adding more chips.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/mass$
+			tech = longTermAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Long Term Small
+			}
+		}
+		SETUP
+		{
+			name = 1998 Solid State Recorder
+			desc = Flash Memory, Random Access Memory, and other solid state storage techniques are now advanced enough to offer superior performance to magnetic data tape, although at a high price.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralInternational/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralInternational/mass$
+			tech = internationalAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = International
+			}
+		}
+		SETUP
+		{
+			name = 1998 Random Access Memory
+			desc = RAM chips continue to improve at an exponential rate, offering compact, lightweight data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/mass$
+			tech = internationalAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = International Small
+			}
+		}
+		SETUP
+		{
+			name = 2010 Solid State Recorder
+			desc = Flash storage continues to improve at an exponential rate, offering low cost bulk data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralModern/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralModern/mass$
+			tech = modernAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Modern
+			}
+		}
+		SETUP
+		{
+			name = 2010 Random Access Memory
+			desc = RAM chips continue to improve at an exponential rate, offering compact, lightweight data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/mass$
+			tech = modernAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Modern Small
+			}
+		}
+		SETUP
+		{
+			name = 2020 Solid State Recorder
+			desc = Flash storage continues to improve at an exponential rate, offering low cost bulk data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/mass$
+			tech = advModernAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Advanced Modern
+			}
+		}
+		SETUP
+		{
+			name = 2020 Random Access Memory
+			desc = RAM chips continue to improve at an exponential rate, offering compact, lightweight data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/mass$
+			tech = advModernAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Advanced Modern Small
+			}
+		}
 	}
 }

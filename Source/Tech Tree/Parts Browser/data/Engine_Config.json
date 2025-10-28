@@ -8783,7 +8783,7 @@
         "engine_config": "A-4",
         "upgrade": false,
         "entry_cost_mods": "1",
-        "identical_part_name": "A-4",
+        "identical_part_name": "",
         "module_tags": []
     },
     {

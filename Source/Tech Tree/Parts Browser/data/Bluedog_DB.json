@@ -1232,22 +1232,24 @@
         "title": "",
         "description": "",
         "mod": "Bluedog DB",
-        "cost": 100,
+        "cost": 130,
         "entry_cost": 8000,
         "category": "ORBITAL",
         "info": "",
-        "year": "1964",
-        "technology": "orbitalRocketry1964",
+        "year": "1950",
+        "technology": "earlyRocketry",
         "era": "04-ADV",
         "ro": true,
         "orphan": false,
-        "rp0_conf": false,
+        "rp0_conf": true,
         "spacecraft": "Diamant",
         "engine_config": "Vexin",
         "upgrade": false,
-        "entry_cost_mods": "Vesta-sounding-rocket",
+        "entry_cost_mods": "Vesta",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
     },
     {
         "name": "bluedog_Explorer1",

@@ -57,7 +57,13 @@ namespace RP0
 
         public virtual string GetItemName() => name;
         public double GetFractionComplete() => progress / BP;
-        public double GetTimeLeft() => (BP - progress) / GetBuildRate();
+
+        public double GetTimeLeft()
+        {
+            double br = GetBuildRate();
+            return br > 0 ? (BP - progress) / br : double.PositiveInfinity;
+        }
+
         public double GetTimeLeftEst(double offset) => GetTimeLeft();
         public ProjectType GetProjectType() => ProjectType.KSC;
         public bool IsComplete() => progress >= BP;

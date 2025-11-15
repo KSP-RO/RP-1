@@ -294,6 +294,29 @@
         ]
     },
     {
+        "name": "ROEE-Coralie",
+        "title": "Coralie",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "130",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1958",
+        "technology": "orbitalRocketry1958",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Vexin",
+        "upgrade": false,
+        "entry_cost_mods": "Coralie",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
         "name": "ROEE-E2",
         "title": "Engine 2",
         "description": "",

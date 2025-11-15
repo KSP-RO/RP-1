@@ -8261,7 +8261,7 @@
         "spacecraft": "X-15",
         "engine_config": "XLR99",
         "upgrade": false,
-        "entry_cost_mods": "XLR99-RM-2",
+        "entry_cost_mods": "XLR99-RM-1",
         "identical_part_name": "XLR99",
         "module_tags": [
             "EngineLiquidTurbo"

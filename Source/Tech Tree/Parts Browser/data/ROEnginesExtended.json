@@ -1458,7 +1458,7 @@
         "cost": 333,
         "entry_cost": 0,
         "category": "ORBITAL",
-        "info": "",
+        "info": "Deprecated",
         "year": "1962",
         "technology": "orbitalRocketry1962",
         "era": "",
@@ -1468,7 +1468,7 @@
         "spacecraft": "",
         "engine_config": "XLR99",
         "upgrade": false,
-        "entry_cost_mods": "XLR99-RM-2A",
+        "entry_cost_mods": "XLR99-RM-3",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

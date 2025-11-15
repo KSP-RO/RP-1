@@ -3010,7 +3010,7 @@
         "spacecraft": "",
         "engine_config": "Vexin",
         "upgrade": true,
-        "entry_cost_mods": "Valois",
+        "entry_cost_mods": "5000,Valois",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -3208,7 +3208,7 @@
         "spacecraft": "Diamant 2",
         "engine_config": "Dropt",
         "upgrade": false,
-        "entry_cost_mods": "Rubis",
+        "entry_cost_mods": "15000,Rubis",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -16164,7 +16164,7 @@
         "spacecraft": "Diamant BP4",
         "engine_config": "Rita",
         "upgrade": false,
-        "entry_cost_mods": "0,SolidsPUPE,SolidsFiber",
+        "entry_cost_mods": "25000,SolidsPUPE,SolidsFiber",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -16186,7 +16186,7 @@
         "spacecraft": "Diamant A",
         "engine_config": "Rubis",
         "upgrade": false,
-        "entry_cost_mods": "0,SolidsPUPE,SolidsFiber",
+        "entry_cost_mods": "1000,SolidsPUPE,SolidsFiber",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -18268,7 +18268,7 @@
         "spacecraft": "Diamant A",
         "engine_config": "Topaze",
         "upgrade": false,
-        "entry_cost_mods": "0,SolidsPUPE",
+        "entry_cost_mods": "6000,SolidsPUPE",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -18598,7 +18598,7 @@
         "spacecraft": "Diamant",
         "engine_config": "Vexin",
         "upgrade": true,
-        "entry_cost_mods": "Vexin",
+        "entry_cost_mods": "10000,Vexin,NTOOxidizer",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -18686,7 +18686,7 @@
         "spacecraft": "Diamant",
         "engine_config": "Vexin",
         "upgrade": false,
-        "entry_cost_mods": "VeroniqueAGI",
+        "entry_cost_mods": "5000,VeroniqueAGI",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -18708,7 +18708,7 @@
         "spacecraft": "Diamant",
         "engine_config": "Vexin",
         "upgrade": true,
-        "entry_cost_mods": "Vesta",
+        "entry_cost_mods": "10000,Vesta",
         "identical_part_name": "",
         "module_tags": []
     },

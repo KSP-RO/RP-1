@@ -317,6 +317,29 @@
         ]
     },
     {
+        "name": "ROEE-Dropt",
+        "title": "P0.68 Dropt",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "230",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1962",
+        "technology": "solids1962",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Dropt",
+        "upgrade": false,
+        "entry_cost_mods": "Dropt",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROEE-E2",
         "title": "Engine 2",
         "description": "",
@@ -1144,6 +1167,52 @@
         ]
     },
     {
+        "name": "ROEE-Rita",
+        "title": "P4 Rita",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "190",
+        "entry_cost": "0",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1960",
+        "technology": "orbitalRocketry1960",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Rita",
+        "upgrade": false,
+        "entry_cost_mods": "Rita",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
+        "name": "ROEE-Rubis",
+        "title": "P0.6 Rubis",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "220",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1960",
+        "technology": "solids1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Rubis",
+        "upgrade": false,
+        "entry_cost_mods": "Rubis",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "ROEE-S5_4",
         "title": "S5.4",
         "description": "Vostok, Voskhod, and Zenit Deorbit engine.",
@@ -1447,6 +1516,29 @@
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "ROEE-Topaze",
+        "title": "P2.2 Topaze",
+        "description": "",
+        "mod": "ROEnginesExtended",
+        "cost": "150",
+        "entry_cost": "0",
+        "category": "SOLID",
+        "info": "",
+        "year": "1958",
+        "technology": "solids1958",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "Topaze",
+        "upgrade": false,
+        "entry_cost_mods": "Topaze",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
         ]
     },
     {

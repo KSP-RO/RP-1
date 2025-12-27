@@ -21,7 +21,7 @@ namespace RP0InstallChecker
             if (!AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals("KSPCommunityFixes") && (new Version(a.versionMajor, a.versionMinor, a.versionRevision)) >= minKSPCFVer))
             {
                 string titleText = "Incorrect RP-1 Installation";
-                string contentText = "Make sure you have installed version 1.30.0 or above of KSPCommunityFixes. RP-1 will not load without this installed.";
+                string contentText = "Make sure you have installed KSPCommunityFixes version 1.30.0 or above. RP-1 will not load without this installed.";
                 ShowErrorDialog(titleText, contentText);
                 return;
             }
@@ -30,7 +30,7 @@ namespace RP0InstallChecker
             if (assembliesToCheck.Any(an => !AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals(an, StringComparison.OrdinalIgnoreCase))))
             {
                 string titleText = "Incorrect RP-1 Installation";
-                string contentText = "This could be caused by downloading the RP-1 repo or some specific branch directly from GitHub, or by not installing or not updating dependencies. " +
+                string contentText = "One or more critical .dll files has not loaded. This could be caused by downloading the RP-1 repo or some specific branch directly from GitHub, or by not installing or not updating dependencies. " +
                     "Make sure to follow the install guide located in the RP-1 wiki.\n\n" +
                     "If the goal was to obtain the latest developmental version of RP-1, then please use the link at the top of the RP-1 readme.";
                 ShowErrorDialog(titleText, contentText);
@@ -40,7 +40,7 @@ namespace RP0InstallChecker
             if (AssemblyLoader.loadedAssemblies.Any(a => a.name.Equals("KerbalConstructionTime", StringComparison.OrdinalIgnoreCase)))
             {
                 string titleText = "Incorrect RP-1 Installation";
-                string contentText = "You still have a KerbalConstructionTime dll (RP0KCT.dll). Please uninstall RP-1 and properly reinstall it to remove this dll. " +
+                string contentText = "You still have a KerbalConstructionTime .dll file (RP0KCT.dll). Please uninstall RP-1 and properly reinstall it to remove this .dll file. " +
                     "Make sure to follow the install guide located in the RP-1 wiki.\n\n" +
                     "If the goal was to obtain the latest developmental version of RP-1, then please use the link at the top of the RP-1 readme after uninstalling this RP-1 install.";
                 ShowErrorDialog(titleText, contentText);

@@ -721,8 +721,12 @@ namespace RP0
             return intact;
         }
 
+        /// <remarks>
+        /// Do not pass in an error value greater than or equal to 1. (100%)
+        /// </remarks>
         public static bool IsApproximatelyEqual(double d1, double d2, double error = 0.01)
         {
+            if (error >= 1) error = 0.01;
             return (1 - error) <= (d1 / d2) && (d1 / d2) <= (1 + error);
         }
 

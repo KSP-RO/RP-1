@@ -276,7 +276,7 @@
         "spacecraft": "",
         "engine_config": "A-4",
         "upgrade": false,
-        "entry_cost_mods": "A-4",
+        "entry_cost_mods": "Model39b",
         "identical_part_name": "A-4",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -301,7 +301,7 @@
         "spacecraft": "",
         "engine_config": "A-4",
         "upgrade": false,
-        "entry_cost_mods": "A-4",
+        "entry_cost_mods": "Model39b",
         "identical_part_name": "A-4",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -3809,26 +3809,24 @@
         ]
     },
     {
-        "name": "ROE-LR91-RN",
-        "title": "LR91 Series",
+        "name": "ROE-LR91-4V",
+        "title": "LR91 Series (4-vernier)",
         "description": "",
         "mod": "ROEngines",
-        "cost": 370,
-        "entry_cost": 0,
+        "cost": "370",
+        "entry_cost": "0",
         "category": "ORBITAL",
         "info": "",
         "year": "1959",
         "technology": "orbitalRocketry1959",
-        "era": "",
         "ro": true,
-        "rp0": true,
         "orphan": false,
         "rp0_conf": true,
-        "spacecraft": "Titan",
+        "spacecraft": "",
         "engine_config": "LR91",
         "upgrade": false,
         "entry_cost_mods": "LR91-AJ-1",
-        "identical_part_name": "LR91",
+        "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -8263,7 +8261,7 @@
         "spacecraft": "X-15",
         "engine_config": "XLR99",
         "upgrade": false,
-        "entry_cost_mods": "XLR99-RM-2",
+        "entry_cost_mods": "XLR99-RM-1",
         "identical_part_name": "XLR99",
         "module_tags": [
             "EngineLiquidTurbo"

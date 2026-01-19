@@ -69,7 +69,7 @@ namespace RP0.Crew
 
         public bool MeetsStudentReqs(ProtoCrewMember student)
         {
-            if (!(student.type == ProtoCrewMember.KerbalType.Crew && (_template.seatMax <= 0 || Students.Count < _template.seatMax) && !student.inactive 
+            if (!(student.type == ProtoCrewMember.KerbalType.Crew && (_template.seatMax <= 0 || Students.Count < _template.seatMax) && !student.inactive
                 && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && !Students.Contains(student)))
                 return false;
 
@@ -105,7 +105,7 @@ namespace RP0.Crew
         {
             AddStudent(HighLogic.CurrentGame.CrewRoster[student]);
         }
-        
+
         public void RemoveStudent(ProtoCrewMember student)
         {
             if (Students.Contains(student))
@@ -146,7 +146,7 @@ namespace RP0.Crew
 
 
             var sb = StringBuilderCache.Acquire();
-            
+
             foreach (var student in Students)
             {
                 student.inactive = false;
@@ -184,6 +184,11 @@ namespace RP0.Crew
                             }
                         }
                     }
+                    else if (_template.training.type != CrewHandler.TrainingType_Proficiency)
+                    {
+                        RP0Debug.LogError($"Unknown training type {_template.training.type} for course {_template.name} of student {student.name}!");
+                        return;
+                    }
 
                     // Create a new TrainingExpiration if needed
                     if (_template.expiration > 0d)
@@ -196,6 +201,7 @@ namespace RP0.Crew
                         expireTime += Planetarium.GetUniversalTime();
 
                         CrewHandler.Instance.AddExpiration(new TrainingExpiration(student.name, expireTime, new TrainingFlightEntry(_template.training.type, _template.training.target)));
+
                     }
 
                     double retireTimeOffset = CrewHandler.Instance.GetRetirementOffsetForTraining(student, length, _template.training.type, _template.training.target, student.careerLog.Entries.Count - 1);
@@ -286,11 +292,12 @@ namespace RP0.Crew
             return Completed;
         }
 
-        public static double CalculateBuildRate()
+        public double CalculateBuildRate()
         {
             double r = 1d;
             r *= Database.SettingsCrew.ACTrainingRates[KCTUtilities.GetFacilityLevel(SpaceCenterFacility.AstronautComplex)];
             r *= CurrencyUtils.Rate(TransactionReasonsRP0.RateTraining);
+            r *= Type == TrainingTemplate.TrainingType.Proficiency ? CrewHandler.Instance.ProfTrainRate : CrewHandler.Instance.MissionTrainRate;
             return r;
         }
 

@@ -1,0 +1,1585 @@
+//THIS FILE IS DISABLED UNTIL SOMEBODY FIGURES OUT HOW TO MAKE KERBALISM SUPPORT CONFIGURABLE HARD DRIVES
+//replace the existing file with this file if someone figures it out
+
+// ============================================================================
+// KERBALISM_HDD_SIZES - Temporary tweaking values
+// ============================================================================
+// Tweaking hints
+//
+// data - baseline size in Mb (keep in mind it gets 4 big upgrades, don't go overboard)
+// samples - sample slots. this one is counter-intuitive, as most experiments
+// occupy multiple slots per run. Slot size is tied to data scales in kerbalism's
+// back-end, and samples have large data values for lab analysis purposes.
+// ============================================================================
+// Change values here, they'll get copied and patched later in this file.
+// Anything that modifies tech tree positions
+// (such as unmanned tech trees, or Probes Before Crew for example)
+// will need a patch to balance these values, otherwise they make no sense.
+// Patching mods that add a ton of command modules is a nightmare.
+// General balancing idea: based on unlock tiers. Probes get on average
+// 1.5 - 2 times more data storage due to lack of sample storage.
+// ============================================================================
+// HDD Upgrades at : T1, T4, T6, T8 	- 		2-8-64-512		(times the base value)
+// Sample Upgrades at: T3, T6			-		2-7				(times the base value)
+KERBALISM_HDD_SIZES
+{
+// ====================================================================================================================================================================================================================================
+													//MAKE SURE NO FIELDS ARE LEFT EMPTY OR COMMENTED OUT IN THIS SECTION, OTHERWISE MM WILL THROW ERRORS
+// ====================================================================================================================================================================================================================================
+
+	//Procedural Avionics memory options
+	//sources:
+	//	[1] https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1958-003A
+	//	[2] https://ntrs.nasa.gov/citations/19650068117
+	//	[3] https://ntrs.nasa.gov/citations/19660023785
+	//	[4] https://pwg.gsfc.nasa.gov/Education/wexp13.html
+	//	[5] https://ntrs.nasa.gov/citations/19640007992
+	//	[6] https://airandspace.si.edu/collection-objects/data-recorder-magnetic-tape-meteorological-satellite-tiros/nasm_A19980293000
+	//	[7] https://airandspace.si.edu/collection-objects/recorder-tape-explorer-3/nasm_A19700332000
+	//	[8] https://ntrs.nasa.gov/citations/19660004870
+	//	[9] https://ntrs.nasa.gov/citations/19660017475
+	//	[10] https://nssdc.gsfc.nasa.gov/nmc/spacecraft/display.action?id=1969-014A
+	//	[11] https://doi.org/10.2514/6.1968-1140
+	//	[12] https://ntrs.nasa.gov/citations/19730012128
+	//	[13] https://ntrs.nasa.gov/citations/19720026205
+	//	[14] https://ntrs.nasa.gov/citations/19710017236
+	//	[15] https://ntrs.nasa.gov/citations/20190002224
+	//	[16] https://doi.org/10.1029/JB080i017p02357
+	//	[17] https://ntrs.nasa.gov/citations/19650011857
+	//	[18] https://ntrs.nasa.gov/citations/19680027088
+	//	[19] https://ntrs.nasa.gov/citations/19670005554
+	//	[20] https://ntrs.nasa.gov/citations/19720013159
+	//	[21] https://atmos.washington.edu/~mars/viking/mission/Viking-don-bane.pdf
+	//	[22] https://informs-sim.org/wsc75papers/1975_0054.pdf
+	//	[23] https://honeysucklecreek.net/dss44/viking.html
+	//	[24] https://ntrs.nasa.gov/citations/19790008720
+	//	[25] https://ntrs.nasa.gov/citations/19740019265
+	//	[26] https://atmos.nmsu.edu/data_and_services/atmospheres_data/PIONEER_Venus/logs/Pioneer.pdf
+	//	[27] https://honeysucklecreek.net/dss44/pioneer_venus.html
+	//	[28] https://articles.adsabs.harvard.edu//full/1977SSRv...20..283C/0000283.000.html
+	//	[29] https://articles.adsabs.harvard.edu//full/2004ESASP.544...37B/0000037.000.html
+	//	[30] https://ntrs.nasa.gov/citations/19650013560
+	//	[31] https://ntrs.nasa.gov/citations/19760014165
+	//	[32] https://ntrs.nasa.gov/citations/20210005208
+	//	[33] https://pds-atmospheres.nmsu.edu/jsdap/tourguide/4TOUR.pdf
+	//	[34] https://landsat.gsfc.nasa.gov/article/imaging-the-past/
+	//	[35] https://web.archive.org/web/20160412202239/http://landsat.usgs.gov//about_landsat3.php
+	//	[36] https://ntrs.nasa.gov/citations/19850004597
+	//	[37] https://doi.org/10.2514/6.1983-98
+	//	[38] https://ntrs.nasa.gov/citations/20110001599
+	//	[39] https://ntrs.nasa.gov/citations/19950010798
+	//	[40] https://ntrs.nasa.gov/citations/19870011586
+	//	[41] https://ntrs.nasa.gov/citations/20210005111
+	//	[42] https://articles.adsabs.harvard.edu//full/1996ESASP.394..938C/0000941.000.html
+	//	[43] https://doi.org/10.1029/2000JE001306
+	//	[44] https://web.archive.org/web/20110312111641/http://www2.jpl.nasa.gov/files/misc/mcoarrivehq.pdf
+	//	[45] https://web.archive.org/web/20070824103010/http://www.nasa.gov/pdf/168019main_MESSENGER_71504_PressKit.pdf
+	//	[46] https://marketing.us.baesystems.com/interactives/spacetech/index.html
+	//	[47] https://www.mrcy.com/products/data-storage-and-transfer/space-data-recorders/model-rh3440
+	//Try to normalize hard drive mass
+	//Tape drive mass is should be fairly non-linear. Modern data tape appears to weight micrograms per square inch, and space age tape is probably
+	//not that much heavier. Bigger reels, idlers, drive motors, etc. will also increase in mass with tape length but not by much.
+	
+	ProcAvonics
+	{
+		data = 0
+		samples = 1
+		sampleCost = 20
+	}
+	//I don't think we need sample capacity gated by tech progression? Just keep the old system of allowing everything to have sample capacity
+	//Define it here and just reference it everywhere else
+	ProcAvonicsSamples
+	{
+		samples = 1
+		sampleCost = 20
+		sampleMass = 0.005
+	}
+	//=========================
+	//Explorer III (1958) tape recorder
+	//Explorer III tape recorder was 0.23 kg [1]
+	//Explorer III tape recorder could hold about 2 hours of Geiger counter data [2, p.12]/[3, p.581]
+	//Explorer III could record a count rate up to 128 counts/second, implying it was stored as a 7-bit value [4]
+	//7 bit/s for 2 hours is about 6.3 kB of data
+	//Tape was advanced in 0.005" steps with ~1 step/s? ~3 feet of tape for 2 hours [3, p.581]
+	//=========================
+	//Vanguard 2 (1959) tape recorder
+	//75 feet of (1/4"?) tape, total mass 1.5 lbs (0.68 kg), stored 50 minutes of data [30, p.2-4]
+	//=========================
+	//SCORE (1958) carried tape recorders identical to Vanguard 2 [30, p.4]
+	//SCORE could store 4 minutes of voice with a bandwidth of ~5 kHz [31, p.2-4]
+	//Doing some generous analog-to-digital conversion, that is about 1.2 million bits, or 150 kB
+	ProceduralEarly	//1956-58
+	{
+		//Based on Explorer 3. Heavily miniaturized, pretty bad
+		//Mass: 0.23 kg
+		//Capacity: 6.3 kB
+		//27 kB/kg
+		//Cost: 33
+		//5238 funds/MB
+		mass = 0.00023
+		data = 0.0063
+		cost = 33
+	}
+	ProceduralBasic	//1959-60
+	{
+		//Based on SCORE/Vanguard, although capacity nerfed since the data capacity is based on (low quality) analog recordings
+		//Slightly better than Explorer 3, but most just benefitting from larger scale
+		//Mass: 0.66 kg
+		//Capacity: 25 kB
+		//38 kB/kg
+		//Cost: 50
+		//2000 funds/MB
+		mass = 0.00066
+		data = 0.025
+		cost = 50
+	}
+	//=========================
+	//TIROS-1 (1960) tape recorder (TIROS-X also carried two tape recorders of similar performance [9])
+	//carried 200 ft of 1/4" tape, with a total mass of 4 lbs (1.8 kg)
+	//TIROS-1 tape recorder could hold 32 TV images. TV images had a bandwidth of 62.5 kHz and took 2 seconds to read out [5, p.23]
+	//Doing some generous analog-to-digital conversion, that is about 4 million bits, or 500 kB
+	ProceduralInterplanetary	//1961
+	{
+		//Based on Mariner R, mildly nerfed for earlier node
+		//More of the same, mildly improved tape drive, benefitting from larger scale
+		//Mass: 2 kg
+		//Capacity: 125 kB
+		//63 kB/kg
+		//Cost: 100
+		//800 funds/MB
+		mass = 0.002
+		data = 0.125
+		cost = 100
+	}
+	//=========================
+	//Mariner R '62 (1/2)
+	//10^6 bits [3, p.321]
+	//carried 80-90 feet of 1" tape? [8, p.224]
+	//=========================
+	//OSO-1 (1962)
+	//285 feet of 1/4" tape [8, p.244]
+	//5 lbs [8, p.251]
+	//=========================
+	//Mariner Mars '64 (3/4)
+	//5.24*10^6 bits [11, p.4], 5.2*10^6 bits [8, p.249] = 655 kB
+	//7.66 kg [19, p.104]
+	//330 feet of 1/4" tape [19, p.72]
+	//=========================
+	//Nimbus 1 (1964)
+	//carried 200 feet of (1/4") tape, with a total mass of 8 lbs (3.6 kg) and a bit density of 250 bits/in [30, p.16]
+	//Capacity of 600,000 bits (75 kB)
+	//=========================
+	//OGO 1/2 (1964/1965)
+	//4.3*10^7 bits storage [8, p.237]
+	//3375 bits per linear inch (9 tracks at 375 bits/inch) [8, p.237]
+	//~1061 feet of tape. 1" tape?
+	//=========================
+	//Mariner 5 (1967)
+	//Modified Mariner '64 flight spare
+	//1x10^6 bits, 8.78 kg [19, p.55], 8.78 kg [20, p.95]
+	//=========================
+	//Advanced Recorder (1965)
+	//Prototype carried 1200 feet of 1/4" tape, with a total mass of 10 lbs (4.5 kg)
+	//Assuming similar bit density to Nimbus, 3.6 million bit capacity (450 kB)
+	ProceduralMature	//1964-66
+	{
+		//Based on Mariner Mars '64
+		//More mild improvements, more benefits from scale
+		//Mass: 8 kg
+		//Capacity: 700 kB
+		//88 kB/kg
+		//Cost: 200
+		//286 funds/MB
+		mass = 0.008
+		data = 0.700
+		cost = 200
+	}
+	ProceduralMatureSmall
+	{
+		//Since these tape drives have grown enough (8 kg) that it'll be tricky to put them very small probes, make a smaller one (0.5 kg)
+		//Not actually that much better than the SCORE/Vanguard tape recorder due to scaling, but beginning of transisterized electronics and
+		//better tape will help a little
+		//Mass: 0.5 kg
+		//Capacity: 20 kB
+		//40 kB/kg
+		//Cost: 25
+		//1250 funds/MB
+		mass = 0.0005
+		data = 0.020
+		cost = 25
+	}
+	//=========================
+	//Mariner Orbiter '69 Concept (1965)
+	//66*10^6 bits (8.25 MB), 4.99 kg [17, p. 5-152]
+	//1850 ft of 1/2" tape required (with conventional tape recoreder)
+	//=========================
+	//Mariner Mars '69 (6/7) tape recorder
+	//1.57*10^8 bit equivalent analog recorder and 2.3*10^7 bit digital recorder [13, p.1]
+	//Both recorders held 365 feet of 1/4" tape [13, p.1]
+	//recorders were basically identical to the unit used on Mariner IV. Gain in capacity just from digital compression? [14, p.3]
+	//=========================
+	//Based on Mariner Mars '71 (8/9) tape recorder
+	//1.8*10^8 bit all-digital system, 11 kg [12, p.17]
+	//1.8*10^8 bit all-digital system, 11.09 kg + 1.1864 kg harness [13, p.23]
+	//550 feet of 1/2" tape [13, p.4]
+	ProceduralLargeScale	//1967-71
+	{
+		//First big jump in performance, fully digital electronics and the beginning of data compression greatly increases effective capacity
+		//Based on Mariner Mars '69 (Digital) tape recorder. Much cheaper from digital electronics
+		//Mass: 8 kg
+		//Capacity: 3 MB
+		//375 kB/kg
+		//Cost: 200
+		//67 funds/MB
+		mass = 0.008
+		data = 3
+		cost = 200
+	}
+	ProceduralLargeScaleSmall
+	{
+		//Since these tape drives have grown enough (8 kg) that it'll be tricky to put them very small probes, make a smaller one (0.5 kg)
+		//Roughly the same ratio as before, although a little worse since computers for compressing data probably won't scale as well
+		//Mass: 0.5 kg
+		//Capacity: 50 kB
+		//100 kB/kg
+		//Cost: 25
+		//500 funds/MB
+		mass = 0.0005
+		data = 0.050
+		cost = 25
+	}
+	//=========================
+	//Landsat 1/2/3 (1972)
+	//2x 76 lbs tape recorders, 1800 feet of 2" tape [34]
+	//3.75 GB [34]
+	//30-minute 15 Mbps recorder. 15 Mbps * 30 minutes = 27 Gb = 3.375 GB [35]
+	//=========================
+	//Pioneer 10/11 (1973)
+	//49,152 data bits [15, p.38]. This might mean words, not bits?
+	//=========================
+	//Mariner 10 (1973)
+	//Mariner 10 tape recorder held around 70 TV frames at most? [16, p.2360]
+	//700*832*8 bits per pixel * 70 = 40.768 MB minimum?
+	//=========================
+	//Viking (1975)
+	//Each Orbiter and Lander carried two identical tape recorders
+	//640*10^6 bits? (80 MB) [21, p.3]
+	//5.6*10^8 bits (70 MB) of visual imaging data, or 8*10^7 bits (10 MB) of IR, engineering or lander data, each [22, p.413]
+	//"3.3 kg less than the Mariner ... recorders" [23] Referring to Mariner '71? 12.2764 - 3.3 = ~8.98 kg
+	//=========================
+	//Voyager (1977)
+	//Viking Digital Tape Recorder with light modifications for improved reliability?
+	//536 million bits (67 MB) [24, p.2]
+	//1/2" tape, 328 meters [34, p.12]
+	//"around 9 kg" [36, p.17]. Viking mostly identical, ~8.98 kg
+	//=========================
+	//Pioneer Venus (1978)
+	//Orbiter carried two redundant core memory modules with a total capacity of 1,048,576 bits (131 kB) [26, p.41][27][28, p.288]
+	//Total mass 5.5 kg [25, p.4-87]
+	//Descent probes carried (large and small) carried identical command data units [29, p.40] with 3072 bits of storage [28, p.293]
+	//Descent probes use solid-state (bipolar semiconductor) memory (Computer Microtechnology CM2150?) [25, p.4-57]
+	//Semiconductor memory constructed with bipolar transistors is expected to weight 11-14 kg/megabit, MOS transistor memory 2.2 kg/megabit,
+	//But MOS transistors are less mature [25, p.4-53]
+	//A core/plated wire memory unit for the probes was also proposed, with a mass of ~0.45 kg per 590 bit unit [25, p.4-55]
+	ProceduralAdvanced	//1972-80
+	{
+		//This is a really wide era, I'll shoot towards the more iconic end. More digital compression, MOSFETs, better tape, etc. leads to
+		//continued rapid growth in capacity
+		//Based on Voyager/Viking tape recorder
+		//Mass: 8 kg
+		//Capacity: 60 MB
+		//7500 kB/kg
+		//Cost: 500
+		//8 funds/MB
+		mass = 0.008
+		data = 60
+		cost = 500
+	}
+	ProceduralAdvancedSmall
+	{
+		//This is entering the RAM era (Pioneer Venus probes) but those were still not very good, main advantage was G-tolerance (which we can't
+		//enforce...). Just make it another small tape drive
+		//Mass: 0.5 kg
+		//Capacity: 750 kB
+		//1500 kB/kg
+		//Cost: 100
+		//133 funds/MB
+		mass = 0.0005
+		data = 0.750
+		cost = 100
+	}
+	//=========================
+	//Landsat 5 (1984)
+	//No tape recorder carried, direct transmission (to ground station or TDRS) only
+	//=========================
+	//Galileo (1986)
+	//114 MB tape recorder
+	//~75 million usable bits (93.75 MB) [32, p.1]
+	//900 Mb (112.5 MB) [33, p.27]
+	//"around 9 kg" [36, p.17], 19.8 lbs [41, p.6]
+	//"A single Galileo or Voyager tape recorder costs $1.7 million" (1984 $) [36, p.16]
+	//1850 feet of (1/2"?) tape [41, p.6]
+	//Roughly same mass and dimensions as Voyager/Viking tape recorder, this is probably just a Voyager tape recorder with better compression
+	//Galileo Probe ASI needs 12,408 bits of storage, and NEP needs 800 bits [37, p.8]
+	//1.651 kB total storage
+	//Data storage is just RAM chips integrated into command data unit, and mass is given for the whole unit...
+	//MOSFET DRAM chips contemporary with the RCA 1800 (1978, microprocessor type used on Galileo) could hold about 16 kB/chip
+	//Using scaling data from [25, p.4-53] for MOSFET memory. Divide masses by 8 since we are assuming 16 kB/chip instead of 2 kB/chip
+	//~0.275 kg/Mbit (with 1978 equivalent MOSFET DRAM), 2.2 kg/MB
+	//=========================
+	//Ulysses (1986)
+	//Two 45 million bit tape recorders [39, p.306]
+	//=========================
+	//Magellan (1989)
+	//Two digital tape recorders, 225 MB
+	//1.8x10^9 bits (each?), 22 lbs, 1968 feet of (1/2"?) tape [41, p.6]
+	//=========================
+	//HST (1990)
+	//Originally launched with 3 Engineer/Science Data Recorders
+	//Recorders are 20 lbs each, and store 12 billion bits (1.5 GB) [38, p.5-10]
+	//22? lbs [41, p.6]
+	//1.2*10^9 bits at high tape speed, 1.5*10^8 at low speed [41, p.6]
+	//Data capacity of 0.15 GB, not 1.5 GB?
+	//"used reel-to-reel tape recorders designed in the 1970s" [38, p.7-4]. These are just the Voyager/Viking recorders again, aren't they...
+	//2068 feet of (1/2"?) tape [41, p.6]
+	//=========================
+	//Mars Observer (1992)
+	//Carried two 1.5*10^9 bit digital tape recorders (187.5 MB) [40, p.25]
+	//=========================
+	//Mars Global Surveyor (1996)
+	//Four 0.75 Gbit digital data recorders (93.75 MB) [43, p.23295]
+	//=========================
+	//Mars Pathfinder (1996)
+	//128 MBytes of RAM, 4 MBytes(?) EEPROM, no other data storage [42, p.942]
+	//=========================
+	//Cassini-Huygens (1997)
+	//Solid state data storage using MOSFET DRAM
+	//1.8*10^9 bits (2.0*10^9 with error correction bits) [41, p.6]
+	//30 lbs [41, p.6]
+	//=========================
+	//HST SM2 (1997)
+	//Starting with Service Mission 2, E/STR tape recorders were gradually replaced with SSR Solid State Recorders
+	//roughly same dimensions as E/STR, but capacity of ~12 GB [38, p.5-10]
+	
+	ProceduralLongTerm	//1986-1997
+	{
+		//End of the tape era. More improvements in compression, data density, tape, etc. Most tape drives here are just Voyager tape recorder
+		//derivatives with better electronics and more tape. Fairly cost-optimized, but no huge improvements
+		//Based on Hubble ESTR
+		//Mass: 10 kg
+		//Capacity: 150 MB
+		//15000 kB/kg
+		//Cost: 500
+		//3.33 funds/MB
+		mass = 0.010
+		data = 150
+		cost = 500
+	}
+	ProceduralLongTermSmall
+	{
+		//RAM chips are actually competitive with tape recorders. RAM chips are pricey but allow basically arbitrary scaling
+		//Start at 0.1 kg instead, loosely based on Cassini, same data density as previous small tape recorder though
+		//Mass: 0.1 kg
+		//Capacity: 150 kB
+		//1500 kB/kg
+		//Cost: 20
+		//133 funds/MB
+		mass = 0.0001
+		data = 0.150
+		cost = 20
+	}
+	//=========================
+	//Deep Space 1 (1998)
+	//RAD6000
+	//=========================
+	//Lunar Prospector (1998)
+	//Harris 80C86, 64 kB EEPROM, 64 kB SRAM
+	//=========================
+	//Mars Climate Orbiter (1998)
+	//RAD6000, 128 MB DRAM, 18 MB Flash [44, p.19]
+	//=========================
+	//Mars Polar Lander (1999)
+	//RAD6000
+	//=========================
+	//Mars Odyssey (2001)
+	//RAD6000
+	//=========================
+	//MER (2003)
+	//RAD6000
+	//=========================
+	//Spitzer Space Telescope (2003)
+	//RAD6000
+	//=========================
+	//MESSENGER (2004)
+	//Two 1 GByte solid state data recorders [45, p.28]
+	//=========================
+	//Mars Reconnaissance Orbiter (2005)
+	//RAD750
+	//=========================
+	//New Horizons (2006)
+	//=========================
+	//STEREO (2006)
+	//=========================
+	//Dawn (2007)
+	//RAD6000
+	//=========================
+	//Kepler (2009)
+	//RAD750
+	//=========================
+	//Lunar Reconnaissance Orbiter (2009)
+	//RAD750
+	//=========================
+	//Juno (2011)
+	//RAD750
+	//=========================
+	//Spacecraft from the late 90s onwards generally just use a COTS computer (RAD6000, RAD750. 80C86, etc.) with onboard RAM used for data storage
+	//For flagship spacecraft requiring more data storage, off the shelf solid state data recorders (probably flash memory) are used. Since these
+	//components are integral to the main computer, nobody provides mass breakdowns for these components specifically. However, since they are
+	//using mostly COTS parts, their mass can be estimated
+	//=========================
+	//RAD6000 (first flight 1998?)
+	//Based on PowerPC 600, which entered the market in 1992. A typical SDRAM chip from 1992 had a capacity of 16 Mbit (citation needed)
+	//Scaling data in [25, p.4-53] from using a 2 kbit chip to a 16 Mbit chip, about 0.3 grams/megabit (2.25 grams/MB)
+	//=========================
+	//RAD750 (first flight 2005?)
+	//Based on PowerPC 750, which entered the market in 1997. A typical SDRAM chip from 1997 had a capacity of 64 Mbit (citation needed)
+	//Scaling data in [25, p.4-53] from using a 2 kbit chip to a 64 Mbit chip, about 0.03 grams/megabit (0.256 grams/MB)
+	//=========================
+	//RH3440 SSDR [47] (2021)
+	//440 GB capacity, 620 grams. ~710 MB/gram
+	ProceduralInternational	//1998-2008
+	{
+		//Well into RAM/Flash Era, RAD6000 in common use, RAD750 entering use
+		//Chunky flash/NAND unit, Based on Hubble SSR
+		//Mass: 10 kg
+		//Capacity: 12,000 MB
+		//1200000 kB/kg
+		//Cost: 1000
+		//0.083 funds/MB
+		mass = 0.010
+		data = 12000
+		cost = 1000
+	}
+	ProceduralInternationalSmall
+	{
+		//Well into RAM/Flash Era, RAD6000 in common use, RAD750 entering use
+		//RAM-only storage, based on RAD6000
+		//Mass: 0.01 kg
+		//Capacity: 4 MB
+		//400000 kB/kg
+		//Cost: 5
+		//1.25 funds/MB
+		mass = 0.00001
+		data = 4
+		cost = 5
+	}
+	ProceduralModern	//2009-2018
+	{
+		//Flash/NAND unit, but not very chunky any more
+		//Based on RD3440 SSDR, roughly doubling mass for support electronics? And again to nerf for 2018 performance
+		//Mass: 1 kg
+		//Capacity: 200,000 MB
+		//200000000 kB/kg
+		//Cost: 1000
+		//0.005 funds/MB
+		mass = 0.001
+		data = 200000
+		cost = 1000
+	}
+	ProceduralModernSmall
+	{
+		//Based on RAD750, fairly outdated by 2009, much less 2018, but it's still being flown
+		//Mass: 0.01 kg
+		//Capacity: 32 MB
+		//3200000 kB/kg
+		//Cost: 5
+		//0.156 funds/MB
+		mass = 0.00001
+		data = 32
+		cost = 5
+	}
+	ProceduralAdvModern	//2019-2028
+	{
+		//Flash/NAND unit, but not very chunky any more
+		//Based on RH304T SSDR, roughly doubling mass for support electronics?
+		//Mass: 1 kg
+		//Capacity: 3,000,000 MB
+		//3000000000 kB/kg
+		//Cost: 500
+		//0.0002 funds/MB
+		mass = 0.001
+		data = 3000000
+		cost = 500
+	}
+	ProceduralAdvModernSmall
+	{
+		//RAD750 will probably manage to live to 2028 but whatever
+		//Scale based on Flash/NAND memory
+		//Mass: 0.01 kg
+		//Capacity: 320 MB
+		//32000000 kB/kg
+		//Cost: 5
+		//0.0156 funds/MB
+		mass = 0.00001
+		data = 320
+		cost = 5
+	}
+
+	//General probes
+	tiros-1
+	{
+		data = 0.15
+		samples = 0
+	}
+
+	vanguard-2
+	{
+		data = 0.15
+		samples = 0
+	}
+
+	vanguard-3
+	{
+		data = 0.15
+		samples = 0
+	}
+
+	RO_earlyControllableCore
+	{
+		data = 0.0005
+		samples = 0
+	}
+
+	RO_probeCoreCubeEarly
+	{
+		data = 0.01
+		samples = 0
+	}
+
+	pioneer_6_7_8_9
+	{
+		data = 0.001904
+		samples = 0
+	}
+
+	surveyor
+	{
+		data = 0.002
+		samples = 0
+	}
+
+	HECS2_ProbeCore
+	{
+		data = 0.5
+		samples = 0
+	}
+
+	roverBody
+	{
+		data = 0.02
+		samples = 1
+	}
+
+	pioneer_10_11
+	{
+		data = 0.006144
+		samples = 0
+	}
+
+	voyager
+	{
+		data = 65.42
+		samples = 0
+	}
+
+	//Manned Spacecrafts
+	mercury
+	{
+		data = 0.150							//Mercury could afford do carry a good-sized tape recorder
+		samples = 2								//so I'm adding this for balance
+	}
+
+	gemini
+	{
+		data = 1							//gemini was capable of storing 4096 39-bit words 
+		samples = 3								//later upgraded with magnetic tapes to 7.5x capacity
+	}
+
+	apollo
+	{
+		data = 5							//AGC was capable of storing 38k (36k fixed, 2k erasable) 16-bit words
+		samples = 5								//some reports say it was upgraded in later flights, but unsure
+	}
+
+	skylab
+	{
+		data = 5							//skylab had a 16384 16-bit words memory
+		samples = 12								//later upgraded to increase reliability with 24K capacity magnetic tapes (same style of Gemini, but much faster)
+	}
+
+	shuttle
+	{
+		data = 16.375							//the shuttle computer memories were 104K or 106496 words of 32 bits
+		samples = 12								//the addition of the mass memory unit brought the memory to 8 million 16-bit words (again, same crew-dependant system)
+	}
+
+	orion
+	{
+		data = 10000								//10 GB, just a guessed gameplay value
+		samples = 12
+	}
+
+	ScienceLabs
+	{
+		data = 10
+		samples = 10
+		sampleCost = 10
+	}
+
+	sampleReturn
+	{
+		data = 0
+		samples = 5
+		sampleCost = 50
+	}
+
+	PRIVATE_DRIVES									//this is internal storage for samples.
+	{												//It can only store samples for the experiment it's attached to
+		MysteryGoo
+		{
+			data = 0
+			samples = 3
+		}
+
+		Photography1
+		{
+			data = 0
+			samples = 22
+		}
+		
+		Photography1a
+		{
+			data = 0
+			samples = 10
+		}
+
+		Photography2
+		{
+			data = 0
+			samples = 10
+		}
+
+		Photography3
+		{
+			data = 0
+			samples = 2
+		}
+
+		Drills										//Unused till drill check is implemented.
+		{
+			data = 0
+			samples = 1
+		}
+	}
+}
+
+// ====================================================================================================================================================================================================================================
+// ====================================================================================================================================================================================================================================
+															//THERE IS NOTHING TO BE TWEAKED FURTHER. ALL CHANGES SHOULD BE DONE ABOVE THIS TEXT!
+// ====================================================================================================================================================================================================================================
+// ====================================================================================================================================================================================================================================
+
+// ============================================================================
+// Remove stock science data containers, add hard-drives/sample containers instead
+// Setting default drive sizes for all parts, even modded ones
+// modded parts will need separate tweaks in their own configs
+// ============================================================================
+
+// missed this one
+@PART[*]:HAS[@MODULE[ModuleScienceContainer]]:FOR[RO-KerbalismHardDrives]
+{
+	!MODULE[ModuleScienceContainer] {}
+}
+
+@PART[*]:HAS[@MODULE[ModuleCommand]]:BEFORE[RO-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+		title = Data Storage
+		dataCapacity = 0.0001      // data size in Mb
+		sampleCapacity = 0      // sample size in slots
+	}
+}
+@PART[proceduralAvionics|ROT-ProbeCore]:FOR[RP-0-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		%dataCapacity = 1				// doesn't matter, it will be changed later
+		%sampleCapacity = 1
+	}
+}
+// ============================================================================
+// Adding HardDrive module for snowflakes so they can get patched.
+// ============================================================================
+@PART[*]:HAS[@MODULE[Laboratory]]:BEFORE[RO-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+	}
+}
+
+@PART[kerbalEVA*]:HAS[@MODULE[ModuleTripLogger]]:BEFORE[RO-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+	}
+}
+
+// ============================================================================
+// Individual part patches. Copies the values from above.
+// Stop scrolling, there's not much you can fiddle with further.
+// Do Not Touch! (please?)
+// ============================================================================
+@PART[tiros-1]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/tiros-1/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/tiros-1/samples$
+	}
+}
+
+@PART[vanguard-2]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/vanguard-2/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/vanguard-2/samples$
+	}
+}
+
+@PART[vanguard-3]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/vanguard-3/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/vanguard-3/samples$
+	}
+}
+
+@PART[pioneer_6_7_8_9]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/pioneer_6_7_8_9/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/pioneer_6_7_8_9/samples$
+	}
+}
+
+@PART[RO_probeCoreCubeEarly]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/RO_probeCoreCubeEarly/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/RO_probeCoreCubeEarly/samples$
+	}
+}
+
+@PART[rn_surveyor3|RO_surveyorCore]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/surveyor/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/surveyor/samples$
+	}
+}
+
+@PART[RO_earlyControllableCore|SXTHECSRanger]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/RO_earlyControllableCore/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/RO_earlyControllableCore/samples$
+	}
+}
+
+@PART[HECS2_ProbeCore]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/HECS2_ProbeCore/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/HECS2_ProbeCore/samples$
+	}
+}
+
+@PART[pioneer_10_11]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/pioneer_10_11/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/pioneer_10_11/samples$
+	}
+}
+
+@PART[rn_voyager]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/voyager/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/voyager/samples$
+	}
+}
+
+@PART[roverBody|roverBody_v2]:FOR[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		@dataCapacity = #$@KERBALISM_HDD_SIZES/roverBody/data$
+		@sampleCapacity = #$@KERBALISM_HDD_SIZES/roverBody/samples$
+	}
+}
+
+@PART[FASAMercuryPod|mk1pod|mk1pod_v2|rn_vostok_sc|rn_voskhod_sc|landerCabinSmall|FASA_Gemini_Lander_Pod|rn_vostok_sc|rn_voskhod_sc|ok_sa|ROC-MercuryCM|ROC-MercuryCMBDB|ROC-VostokCapsule|ROC-VoskhodCapsule]:FOR[RO-KerbalismHardDrives]
+{
+	!MODULE[HardDrive] {}
+	MODULE
+	{
+		name = HardDrive
+		title = Data Storage
+		dataCapacity = #$@KERBALISM_HDD_SIZES/mercury/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/mercury/samples$
+	}
+}
+
+@PART[FASAGeminiPod2|FASAGeminiPod2White|ROAdvCapsule|RO-Mk1Cockpit|RO-Mk1CockpitInline|MK1CrewCabin|ok_bo_fem|ok_bo_male|rn_zond_sa|rn_lok_sa|rn_lok_bo|D2_pod|ROC-GeminiCM|ROC-GeminiCMBDB|ROC-GeminiLCMBDB|ROC-DynaBody|ROC-DynaCockpitMoroz|ROC-D2CM|ROC-D2MissionModule1]:FOR[RO-KerbalismHardDrives]
+{
+	!MODULE[HardDrive] {}
+	MODULE
+	{
+		name = HardDrive
+		title = Data Storage
+		dataCapacity = #$@KERBALISM_HDD_SIZES/gemini/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/gemini/samples$
+	}
+}
+
+@PART[mk1-3pod|SSTU-SC-B-CM|SSTU-SC-B-CMX|SSTU-LC2-POD|APOLLO_CM|FASAApollo_CM|bluedog_Apollo_Block2_Capsule|LEM_ASCENT_STAGE|FASALM_AscentStage|bluedog_LEM_Ascent_Cockpit|landerCabinMedium|mk2LanderCan|mk2LanderCabin_v2|SXTLander|mk2Cockpit_Inline|mk2Cockpit_Standard|mk2CrewCabin|rn_va_capsule|t_af_bo|ROC-ApolloCMBlockIII|ROC-ApolloCMBDBBlockIII|ROC-ApolloCM|ROC-ApolloCMBDB|ROC-LEMAscent|ROC-LEMAscentBDB|ROC-D2MissionModule2|ROC-LEMAscentTaxiBDB|ROC-LEMShelterBDB]:FOR[RO-KerbalismHardDrives]
+{
+	!MODULE[HardDrive] {}
+	MODULE
+	{
+		name = HardDrive
+		title = Data Storage
+		dataCapacity = #$@KERBALISM_HDD_SIZES/apollo/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/apollo/samples$
+	}
+}
+
+@PART[SXTISSHabISK30|crewCabin|SXTSPKTRCabin|skylab]:FOR[RO-KerbalismHardDrives]
+{
+	!MODULE[HardDrive] {}
+	MODULE
+	{
+		name = HardDrive
+		title = Data Storage
+		dataCapacity = #$@KERBALISM_HDD_SIZES/skylab/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/skylab/samples$
+	}
+}
+
+@PART[mk3Cockpit_Shuttle|rn_astp_bo|tg_bo|benjee10_shuttle_forwardFuselage]:FOR[RO-KerbalismHardDrives]
+{
+	!MODULE[HardDrive] {}
+	MODULE
+	{
+		name = HardDrive
+		title = Data Storage
+		dataCapacity = #$@KERBALISM_HDD_SIZES/shuttle/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/shuttle/samples$
+	}
+}
+
+@PART[XOrionPodX|SSTU-SC-C-CM|SSTU-SC-C-CMX|ROC-OrionCM|ROC-CSTCM]:FOR[RO-KerbalismHardDrives]
+{
+	!MODULE[HardDrive] {}
+	MODULE
+	{
+		name = HardDrive
+		title = Data Storage
+		dataCapacity = #$@KERBALISM_HDD_SIZES/orion/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/orion/samples$
+	}
+}
+
+@PART[*]:HAS[@MODULE[Laboratory]]:AFTER[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		%title = Laboratory Storage
+		%dataCapacity = #$@KERBALISM_HDD_SIZES/ScienceLabs/data$
+		%sampleCapacity = #$@KERBALISM_HDD_SIZES/ScienceLabs/samples$
+		%sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ScienceLabs/sampleCost$
+	}
+}
+
+// ============================================================================
+// RP-0 Return Capsule
+// ============================================================================
+@PART[RP0-SampleReturnCapsule|neo.stardust.collector]:AFTER[RP-0-KerbalismHardDrives]
+{
+	!MODULE[HardDrive] {}
+
+	MODULE
+	{
+		name = HardDrive
+		dataCapacity = #$@KERBALISM_HDD_SIZES/sampleReturn/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/sampleReturn/samples$
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/sampleReturn/sampleCost$
+	}
+}
+
+// ============================================================================
+// EVAs can't be upgraded, so we give them unlimited space.
+// a) they need the capacity to move data between drives
+// b) they can't use it in any other way, except for EVA reports and surface
+// samples. So no matter how much they get here, it won't be OP
+// c) you can't use EVAs to store data for very long, after 8h they're dead
+// ============================================================================
+@PART[kerbalEVA*]:HAS[@MODULE[ModuleTripLogger]]:AFTER[RO-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		%dataCapacity = -1
+		%sampleCapacity = -1
+	}
+}
+// ============================================================================
+// Internal(Private) Drive upgrades
+// these have to be done by hand to avoid patching groups. (labs mainly)
+// ============================================================================
+@PART[GooExperiment|SXTProbeGooo]:AFTER[RP-0-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+		dataCapacity = 0
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/PRIVATE_DRIVES/MysteryGoo/samples$
+		experiment_id = RP0bioScan1
+	}
+}
+@PART[BioCapsule]:AFTER[RP-0-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+		dataCapacity = 0
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/PRIVATE_DRIVES/MysteryGoo/samples$
+		experiment_id = RP0bioScan2
+	}
+}
+@PART[sputnik2]:AFTER[RP-0-KerbalismHardDrives]
+{
+	@MODULE[HardDrive]
+	{
+		%sampleCapacity = #$@KERBALISM_HDD_SIZES/PRIVATE_DRIVES/MysteryGoo/samples$
+	}
+}
+
+// Photography 1
+@PART[science_module]:AFTER[RP-0-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+		experiment_id = RP0photos1
+		dataCapacity = 0
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/PRIVATE_DRIVES/Photography1/samples$
+	}
+}
+
+// Photography 1
+@PART[RO-BasicFilmCamera]:AFTER[RP-0-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+		experiment_id = RP0photos1a
+		dataCapacity = 0
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/PRIVATE_DRIVES/Photography1a/samples$
+	}
+}
+
+// Photography 2
+@PART[RO-ImprovedFilmCamera|ROC-ZenitCapsule]:AFTER[RP-0-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+		experiment_id = RP0photos2
+		dataCapacity = 0
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/PRIVATE_DRIVES/Photography2/samples$
+	}
+}
+
+// Photography 3
+@PART[RO-HighResFilmCamera]:AFTER[RP-0-KerbalismHardDrives]
+{
+	MODULE
+	{
+		name = HardDrive
+		experiment_id = RP0photos3
+		dataCapacity = 0
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/PRIVATE_DRIVES/Photography3/samples$
+	}
+}
+
+
+// ============================================================================
+// Procedural avionics integration
+// Configurable options based on tech level
+// ============================================================================
+@PART[proceduralAvionics|ROT-ProbeCore]:AFTER[RP-0-KerbalismHardDrives]
+{
+
+	!MODULE[HardDrive] {}
+
+	MODULE
+	{
+		name = HardDrive
+		title = Sample Container
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		dataCapacity = 0
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Early
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralEarly/data$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralEarly/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralEarly/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Basic
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralBasic/data$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralBasic/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralBasic/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Interplanetary
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Mature
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralMature/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralMature/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralMature/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Mature Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Large Scale
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Large Scale Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Advanced
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Advanced Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Long Term
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//No reason why you can't just stack more tape
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/cost$
+		@dataCapacityCost *= 0.5	//50% of original module cost, just adding tape is fairly cheap (citation needed)
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/mass$
+		@dataCapacityMass *= 0.5	//50% of original module mass?
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Long Term Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//RAM, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = International
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralInternational/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//Flash, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralInternational/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralInternational/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = International Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 100		//RAM, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Modern
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralModern/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//Flash, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralModern/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralModern/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Modern Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 100		//RAM, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Advanced Modern
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 10		//Flash, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/mass$
+	}
+	MODULE
+	{
+		name = HardDrive
+		title = Advanced Modern Small
+		dataCapacity = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/data$
+		sampleCapacity = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/samples$
+		maxSampleCapacityFactor = 10
+		sampleCapacityCost = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleCost$
+		sampleCapacityMass = #$@KERBALISM_HDD_SIZES/ProcAvonicsSamples/sampleMass$
+		maxDataCapacityFactor = 100		//RAM, completely linear scaling
+		dataCapacityCost = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/cost$
+		dataCapacityMass = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/mass$
+	}
+	MODULE
+	{
+		name = Configure
+		title = Data Storage
+		slots = 1
+
+		SETUP
+		{
+			name = None
+			desc = Empty slot for mass or cost savings, should you not require any storage. Use this for booster avionics.
+		}
+
+		SETUP
+		{
+			name = Sample Container
+			desc = A container for samples with no data storage capacity. Use for film return, sample recovery, etc.
+			cost = 0
+			mass = 0
+			tech = unlockParts
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Sample Container
+			}
+		}
+
+		SETUP
+		{
+			name = Early Tape Recorder
+			desc = A basic, heavily miniaturized tape drive, capable of storing a few hours of data from early science experiments.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralEarly/cost$	//same as a TV camera
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralEarly/mass$	//0.23 kg
+			tech = earlyAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Early
+			}
+		}
+
+		SETUP
+		{
+			name = Basic Tape Recorder
+			desc = Although essentially the same as the early tape recorder, increased size allows for more tape to be loaded, improving capacity.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralBasic/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralBasic/mass$
+			tech = basicAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Basic
+			}
+		}
+		SETUP
+		{
+			name = 1961 Tape Recorder
+			desc = A full-size tape drive for more advanced satellites, this is capable of storing much more data, such as slow-scan TV images.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralInterplanetary/mass$
+			tech = interplanetaryProbes
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Interplanetary
+			}
+		}
+		SETUP
+		{
+			name = 1964 Tape Recorder
+			desc = Transistorized electronics allow for better read/write sensitivity, enabling more data to be stored on the same length of tape.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralMature/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralMature/mass$
+			tech = matureAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Mature
+			}
+		}
+		SETUP
+		{
+			name = 1964 Compact Tape Recorder
+			desc = A heavily miniaturized tape recorder for very small probes. However, this comes at a cost and performance is much worse than it's larger contemporaries.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralMatureSmall/mass$
+			tech = matureAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Mature Small
+			}
+		}
+		SETUP
+		{
+			name = 1969 Digital Tape Recorder
+			desc = Using a digital computer to digitize and compress data increases the effective capacity that can be stored on a data tape by an order of magnitude.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralLargeScale/mass$
+			tech = largeScaleAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title	
+			  id_value = Large Scale
+			}
+		}
+		SETUP
+		{
+			name = 1969 Compact Digital Tape Recorder
+			desc = A heavily miniaturized tape recorder for very small probes. However, this comes at a cost and performance is much worse than it's larger contemporaries.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralLargeScaleSmall/mass$
+			tech = largeScaleAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Large Scale Small
+			}
+		}
+		SETUP
+		{
+			name = 1975 Digital Tape Recorder
+			desc = Advances in integrated circuits allows better data compression, smaller control electronics, and continued improvements to data density.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralAdvanced/mass$
+			tech = advancedAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Advanced
+			}
+		}
+		SETUP
+		{
+			name = 1975 Compact Digital Tape Recorder
+			desc = A heavily miniaturized tape recorder for very small probes. However, this comes at a cost and performance is much worse than it's larger contemporaries.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralAdvancedSmall/mass$
+			tech = advancedAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Advanced Small
+			}
+		}
+		SETUP
+		{
+			name = 1990 Digital Tape Recorder
+			desc = Advances in integrated circuits allows better data compression, smaller control electronics, and continued improvements to data density.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralLongTerm/mass$
+			tech = longTermAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Long Term
+			}
+		}
+		SETUP
+		{
+			name = 1990 Random Access Memory
+			desc = Dynamic Random Access Memory chips (DRAM) have improved enough to be competitive with magnetic tape technology. Although performance is still worse than contemporary tape recorders, DRAM is much cheaper and can be easily scaled by just adding more chips.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralLongTermSmall/mass$
+			tech = longTermAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Long Term Small
+			}
+		}
+		SETUP
+		{
+			name = 1998 Solid State Recorder
+			desc = Flash Memory, Random Access Memory, and other solid state storage techniques are now advanced enough to offer superior performance to magnetic data tape, although at a high price.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralInternational/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralInternational/mass$
+			tech = internationalAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = International
+			}
+		}
+		SETUP
+		{
+			name = 1998 Random Access Memory
+			desc = RAM chips continue to improve at an exponential rate, offering compact, lightweight data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralInternationalSmall/mass$
+			tech = internationalAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = International Small
+			}
+		}
+		SETUP
+		{
+			name = 2010 Solid State Recorder
+			desc = Flash storage continues to improve at an exponential rate, offering low cost bulk data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralModern/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralModern/mass$
+			tech = modernAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Modern
+			}
+		}
+		SETUP
+		{
+			name = 2010 Random Access Memory
+			desc = RAM chips continue to improve at an exponential rate, offering compact, lightweight data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralModernSmall/mass$
+			tech = modernAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Modern Small
+			}
+		}
+		SETUP
+		{
+			name = 2020 Solid State Recorder
+			desc = Flash storage continues to improve at an exponential rate, offering low cost bulk data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralAdvModern/mass$
+			tech = advModernAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Advanced Modern
+			}
+		}
+		SETUP
+		{
+			name = 2020 Random Access Memory
+			desc = RAM chips continue to improve at an exponential rate, offering compact, lightweight data storage.
+			cost = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/cost$
+			mass = #$@KERBALISM_HDD_SIZES/ProceduralAdvModernSmall/mass$
+			tech = advModernAvionics
+			
+			MODULE
+			{
+			  type = HardDrive
+			  id_field = title
+			  id_value = Advanced Modern Small
+			}
+		}
+	}
+}

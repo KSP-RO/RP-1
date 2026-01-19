@@ -21,14 +21,14 @@ namespace RP0
 
         private static void OnDialogSpawn()
         {
-            UIHolder.Instance.HideIfShowing();
+            UIHolder.Instance?.HideIfShowing();
             KCT_GUI.BackupUIState();
             KCT_GUI.HideAll();
         }
 
         private static void OnDialogDismiss()
         {
-            UIHolder.Instance.ShowIfWasHidden();
+            UIHolder.Instance?.ShowIfWasHidden();
             KCT_GUI.RestorePrevUIState();
         }
     }

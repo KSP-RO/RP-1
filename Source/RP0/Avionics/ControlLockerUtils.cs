@@ -33,8 +33,6 @@ namespace RP0
                 return LockLevel.Unlocked;
             }
 
-            int crewCount = (HighLogic.LoadedSceneIsFlight) ? vessel.GetCrewCount() : CrewAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
-
             foreach (Part p in parts)
             {
                 // add up mass

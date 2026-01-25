@@ -1,6 +1,7 @@
 ﻿using KSP.UI;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 
 namespace RP0
 {
@@ -32,8 +33,6 @@ namespace RP0
                 return LockLevel.Unlocked;
             }
 
-            int crewCount = (HighLogic.LoadedSceneIsFlight) ? vessel.GetCrewCount() : CrewAssignmentDialog.Instance.GetManifest().GetAllCrew(false).Count;
-
             foreach (Part p in parts)
             {
                 // add up mass
@@ -43,16 +42,14 @@ namespace RP0
                 bool cmd = false, avionics = false, clamp = false;
                 float partAvionicsMass = 0f;
                 double ecResource = 0;
-                ModuleCommand mC = null;
                 foreach (PartModule m in p.Modules)
                 {
                     if (m is ModuleCommand || m is ModuleAvionics)
                         p.GetConnectedResourceTotals(PartResourceLibrary.ElectricityHashcode, out ecResource, out double _);
 
-                    if (m is ModuleCommand && (ecResource > 0 || HighLogic.LoadedSceneIsEditor))
+                    if (m is ModuleCommand mC && (IsValidModuleCommand(mC) || HighLogic.LoadedSceneIsEditor))
                     {
                         cmd = true;
-                        mC = m as ModuleCommand;
                     }
 
                     if (m is ModuleAvionics)
@@ -93,8 +90,6 @@ namespace RP0
                 // if we count clamps, they can give control. If we don't, this works only if the part isn't a clamp.
                 if ((countClamps || !clamp) && cmd && !avionics)
                     forceUnlock = true;
-                if (cmd && avionics && mC.minimumCrew > crewCount) // check if need crew
-                    avionics = false; // not operational
                 if (avionics)
                     maxMass = Math.Max(maxMass, partAvionicsMass);
             }
@@ -103,6 +98,14 @@ namespace RP0
                 return axial ? LockLevel.Axial : LockLevel.Locked;
 
             return LockLevel.Unlocked;
+        }
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private static bool IsValidModuleCommand(ModuleCommand mC)
+        {
+            return mC.ModuleState == ModuleCommand.ModuleControlState.Nominal ||
+                   mC.ModuleState == ModuleCommand.ModuleControlState.PartialProbe ||
+                   mC.ModuleState == ModuleCommand.ModuleControlState.PartialManned;
         }
     }
 }

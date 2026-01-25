@@ -923,15 +923,16 @@ namespace RP0
                 if (!SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled)
                 {
                     SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled = true;
-                    UILaunchsiteController controller = UnityEngine.Object.FindObjectOfType<UILaunchsiteController>();
-                    if (controller == null)
+                    var arr = Resources.FindObjectsOfTypeAll(typeof(UILaunchsiteController));    // Apparently this version of Unity has no saner way for including gameobjects that are disabled
+                    var uiObj = arr.FirstOrDefault(obj => obj is UILaunchsiteController c && c.gameObject.scene.IsValid());    // Leave the innocent UI prefab alone
+                    if (uiObj == null)
                     {
                         RP0Debug.Log("UILaunchsiteController is null");
                     }
                     else
                     {
                         RP0Debug.Log("Killing UILaunchsiteController");
-                        UnityEngine.Object.Destroy(controller);
+                        UnityEngine.Object.Destroy(uiObj);
                     }
                 }
             }

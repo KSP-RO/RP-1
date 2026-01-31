@@ -1,4 +1,4 @@
-<p align="center">
+<p align="center"> 
  <img src="https://github.com/KSP-RO/RP-1/blob/master/Source/RP-1%20Logo.png" width=150 alt="RP-1 Logo"/>
 </p>
 <p align="center">

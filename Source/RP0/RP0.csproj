@@ -407,6 +407,10 @@
       <HintPath>$(ReferencePath)/UnityEngine.JSONSerializeModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.AudioModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.AudioModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="ConfigurableStart\README.md" />

@@ -18,7 +18,7 @@ namespace RP0
         [Persistent]
         public bool ShowSimWatermark;
         [Persistent]
-        public bool AutoKACAlarms;
+        public bool AutoAlarms;
         [Persistent]
         public bool OverrideLaunchButton;
         [Persistent]
@@ -39,7 +39,7 @@ namespace RP0
             DisableAllMessages = true;
             ShowSimWatermark = true;
             OverrideLaunchButton = true;
-            AutoKACAlarms = false;
+            AutoAlarms = false;
             PreferBlizzyToolbar = false;
             CleanUpKSCDebris = true;
             UseDates = true;

@@ -1307,9 +1307,13 @@ namespace RP0
             {
                 return GetTimeLeft(out newEff);
             }
+
             newEff = LC.Efficiency;
             double bp = buildPoints;
             double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
+            if (rate == 0)
+                return double.PositiveInfinity;
+
             double bpLeft = bp - progress;
             if (newEff == LCEfficiency.MaxEfficiency)
                 return bpLeft / (rate * newEff);

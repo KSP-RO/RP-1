@@ -52,6 +52,7 @@
     <Compile Include="Harmony\Vessel.cs" />
     <Compile Include="Harmony\RealAntennas.cs" />
     <Compile Include="Harmony\ROHeatshields.cs" />
+    <Compile Include="ModIntegrations\AlarmHelper.cs" />
     <Compile Include="ModIntegrations\KSCSwitcherInterop.cs" />
     <Compile Include="ModIntegrations\TFInterop.cs" />
     <Compile Include="Programs\ProgramModifier.cs" />
@@ -404,6 +405,10 @@
     </Reference>
     <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.JSONSerializeModule.dll">
       <HintPath>$(ReferencePath)/UnityEngine.JSONSerializeModule.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.AudioModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.AudioModule.dll</HintPath>
       <Private>False</Private>
     </Reference>
   </ItemGroup>

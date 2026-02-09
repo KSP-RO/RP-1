@@ -253,7 +253,7 @@ namespace RP0.ProceduralAvionics
 
         private void SetFallbackConfigForLegacyCraft()
         {
-            if (HighLogic.LoadedSceneIsEditor && !ProceduralAvionicsTechManager.GetAvailableConfigs().Contains(avionicsConfigName))
+            if (HighLogic.LoadedSceneIsEditor && !ProceduralAvionicsTechManager.GetAllConfigs().Contains(avionicsConfigName))
             {
                 string s = avionicsConfigName;
                 avionicsConfigName = ProceduralAvionicsTechManager.GetPurchasedConfigs().First();

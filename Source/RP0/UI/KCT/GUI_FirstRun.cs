@@ -62,7 +62,7 @@ namespace RP0
             if (!SpaceCenterManagement.Instance.StarterLCBuilding)
             {
                 GUILayout.Label($"{step++}) Build a starting Launch Complex.");
-                GUILayout.Label("With a contract accepted, now it's time to create and integrate a vessel to complete it. If it's a rocket, you'll need a launch complex to launch it. Go to the VAB and make your rocket, then click New the Integration Info (was KCT) window. The LC properties will be set to support that vessel. Once you have LCs built you can also modify them the same way.");
+                GUILayout.Label("With a contract accepted, now it's time to create and integrate a vessel to complete it. If it's a rocket, you'll need a launch complex to launch it. Go to the VAB and make your rocket, then click New in the Integration Info window. The LC properties will be set to support that vessel. Once you have LCs built you can also modify them the same way.");
                 if (GUILayout.Button($"Go to VAB", HighLogic.Skin.button))
                 {
                     EnterVAB();

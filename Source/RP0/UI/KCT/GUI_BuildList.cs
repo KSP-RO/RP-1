@@ -218,7 +218,7 @@ namespace RP0
                 if (KCTSettings.Instance.AutoAlarms && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
                 {
                     double UT = Planetarium.GetUniversalTime();
-                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft(), 1))
+                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft()))
                     {
                         // old alarm, need to delete to get the new alarm for the new buildItem
                         SpaceCenterManagement.Instance.AlarmUT = buildItem.GetTimeLeft() + UT;

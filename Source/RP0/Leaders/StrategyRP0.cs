@@ -161,15 +161,15 @@ namespace RP0
                 {
                     AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
 
-                    if (LeastDuration > 0)
+                    if (LeastDuration > 0 && _settings._MakeAlarmCooldownOver)
                     {
                         AlarmHelper.CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed with a fee at this time.", DateActivated + LeastDuration, alarmType);
                     }
-                    if (RemovePenaltyDuration > 0)
+                    if (RemovePenaltyDuration > 0 && _settings._MakeAlarmFreeRemove)
                     {
                         AlarmHelper.CreateAlarm($"Free to Remove: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration, alarmType);
                     }
-                    if (LongestDuration > 0)
+                    if (LongestDuration > 0 && _settings._MakeAlarmRetirement)
                     {
                         AlarmHelper.CreateAlarm($"Retirement: {ConfigRP0.Title}", $"{ConfigRP0.Title} will be removed at this time.", DateActivated + LongestDuration, alarmType);
                     }

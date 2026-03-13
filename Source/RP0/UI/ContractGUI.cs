@@ -18,6 +18,9 @@ namespace RP0
 
         private static string _newspaperTitle = "Space Gazette";
         private static bool _useLastScreenshot = false;
+        private static bool _MakeAlarmCooldownOver = false;
+        private static bool _MakeAlarmFreeRemove = false;
+        private static bool _MakeAlarmRetirement = false;
 
         private RP0Settings _settings;
 
@@ -96,6 +99,25 @@ namespace RP0
                 GUILayout.Space(10f);
                 _useLastScreenshot = GUILayout.Toggle(_useLastScreenshot, "Use last screenshot instead of auto screenshot for Newspaper");
                 _settings.UseLastScreenshot = _useLastScreenshot;
+            }
+            finally
+            {
+                GUILayout.EndVertical();
+            }
+            try
+            {
+                GUILayout.Space(10f);
+                GUILayout.Space(10f);
+                GUILayout.Label($"Use this area to toggle the creation of automatic KAC alarms for events related to leaders.", BoldLabel);
+                GUILayout.Space(10f);
+                _MakeAlarmCooldownOver = GUILayout.Toggle(_MakeAlarmCooldownOver, "Firing cooldown over");
+                GUILayout.Space(5f);
+                _MakeAlarmFreeRemove = GUILayout.Toggle(_MakeAlarmFreeRemove, "Free to remove with no penalty");
+                GUILayout.Space(5f);
+                _MakeAlarmRetirement = GUILayout.Toggle(_MakeAlarmRetirement, "Retirement");
+                _settings._MakeAlarmCooldownOver = _MakeAlarmCooldownOver;
+                _settings._MakeAlarmFreeRemove= _MakeAlarmFreeRemove;
+                _settings._MakeAlarmRetirement = _MakeAlarmRetirement;
             }
             finally
             {

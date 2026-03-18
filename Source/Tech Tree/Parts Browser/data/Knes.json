@@ -16,7 +16,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -27,7 +27,7 @@
         "title": "Viking Crew Capsule",
         "description": "",
         "mod": "Knes",
-        "cost": "1500",
+        "cost": 4000,
         "entry_cost": "0",
         "category": "COMMAND",
         "info": "",
@@ -39,7 +39,7 @@
         "spacecraft": "ESAViking",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "VikingCapsule",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
@@ -65,7 +65,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "VikingCapsule",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -88,7 +88,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "VikingCapsule",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -109,7 +109,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "VikingCapsule",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -132,7 +132,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -155,7 +155,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Avionics",
@@ -181,7 +181,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -204,7 +204,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -227,7 +227,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -250,7 +250,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -273,7 +273,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -296,7 +296,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -319,7 +319,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -342,7 +342,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -365,7 +365,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "VikingCapsule",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -388,7 +388,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "VikingCapsule",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -411,7 +411,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "VikingCapsule",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -434,7 +434,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": []
     }

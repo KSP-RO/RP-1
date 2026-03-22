@@ -85,9 +85,9 @@ namespace RP0
         public int WeatherPayload = SettingsGUI.MinPayload;
         public string NewspaperTitle = "Space Gazette";
         public bool UseLastScreenshot = false;
-        public bool MakeAlarmCooldownOver = false;
-        public bool MakeAlarmFreeRemove = false;
-        public bool MakeAlarmRetirement = false;
+        public bool MakeAlarmCooldownOver = true;
+        public bool MakeAlarmFreeRemove = true;
+        public bool MakeAlarmRetirement = true;
 
         public bool AirlaunchTipShown = false;
         public bool Avionics_InterplanetaryWarningShown = false;

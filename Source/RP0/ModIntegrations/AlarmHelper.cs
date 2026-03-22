@@ -71,7 +71,6 @@ namespace RP0.ModIntegrations
                 }
                 else
                 {
-                    
                     RP0Debug.LogError($"Stock Alarm could not be created.");
                     return "";
                 }

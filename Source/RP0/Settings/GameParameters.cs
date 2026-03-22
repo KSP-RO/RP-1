@@ -80,14 +80,21 @@ namespace RP0
         [GameParameters.CustomParameterUI("Show tooling reminders", toolTip = "When enabled, a warning is shown on integration when the vessel has untooled parts.")]
         public bool ShowToolingReminders = true;
 
+        [GameParameters.CustomParameterUI("Make cooldown alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader can be removed with a penalty.")]
+        public bool MakeAlarmCooldownOver = false;
+
+        [GameParameters.CustomParameterUI("Make free to remove alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader can be removed without penalties.")]
+        public bool MakeAlarmFreeRemove = true;
+
+        //[GameParameters.CustomParameterUI("Make retirement alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader will retire on their own.")]
+        // retirement of leaders is not used anymore, uncomment this if it is added back
+        public bool MakeAlarmRetirement = true;
+
         // The following values are persisted to the savegame but are not shown in the difficulty settings UI
-        public int CommsPayload = SettingsGUI.MinPayload;
-        public int WeatherPayload = SettingsGUI.MinPayload;
+        public int CommsPayload = ContractGUI.MinPayload;
+        public int WeatherPayload = ContractGUI.MinPayload;
         public string NewspaperTitle = "Space Gazette";
         public bool UseLastScreenshot = false;
-        public bool MakeAlarmCooldownOver = true;
-        public bool MakeAlarmFreeRemove = true;
-        public bool MakeAlarmRetirement = true;
 
         public bool AirlaunchTipShown = false;
         public bool Avionics_InterplanetaryWarningShown = false;

@@ -15,7 +15,7 @@ namespace RP0
         private readonly ToolingGUI _toolUI = new ToolingGUI();
         private readonly Crew.TrainingGUI _fsUI = new Crew.TrainingGUI();
         private readonly AvionicsGUI _avUI = new AvionicsGUI();
-        private readonly SettingsGUI _settingsUI = new SettingsGUI();
+        private readonly ContractGUI _contractUI = new ContractGUI();
         private readonly CareerLogGUI _logUI = new CareerLogGUI();
 
         public TopWindow()
@@ -43,7 +43,7 @@ namespace RP0
             _toolUI.Start();
             _fsUI.Start();
             _avUI.Start();
-            _settingsUI.Start();
+            _contractUI.Start();
             _logUI.Start();
         }
 
@@ -53,7 +53,7 @@ namespace RP0
             _toolUI.Destroy();
             _fsUI.Destroy();
             _avUI.Destroy();
-            _settingsUI.Destroy();
+            _contractUI.Destroy();
             _logUI.Destroy();
         }
 
@@ -78,8 +78,8 @@ namespace RP0
                 SwitchTabTo(UITab.Training);
             if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
                 SwitchTabTo(UITab.Avionics);
-            if (ShouldShowTab(UITab.Settings) && RenderToggleButton("Settings", _currentTab == UITab.Settings))
-                SwitchTabTo(UITab.Settings);
+            if (ShouldShowTab(UITab.Contracts) && RenderToggleButton("Settings", _currentTab == UITab.Contracts))
+                SwitchTabTo(UITab.Contracts);
             if (ShouldShowTab(UITab.CareerLog) && RenderToggleButton("Career Log", _currentTab == UITab.CareerLog))
                 SwitchTabTo(UITab.CareerLog);
             GUILayout.EndHorizontal();
@@ -134,8 +134,8 @@ namespace RP0
                         case UITab.Avionics:
                             _avUI.RenderAvionicsTab();
                             break;
-                        case UITab.Settings:
-                            _settingsUI.RenderSettingsTab();
+                        case UITab.Contracts:
+                            _contractUI.RenderContractsTab();
                             break;
                         case UITab.CareerLog:
                             _logUI.RenderTab();

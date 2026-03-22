@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RP0
 {
-    public class SettingsGUI : UIBase
+    public class ContractGUI : UIBase
     {
         public const int MinPayload = 400;
         public const int MaxPayload = 10000;
@@ -18,9 +18,6 @@ namespace RP0
 
         private static string _newspaperTitle = "Space Gazette";
         private static bool _useLastScreenshot = false;
-        private static bool _makeAlarmCooldownOver = false;
-        private static bool _makeAlarmFreeRemove = false;
-        private static bool _makeAlarmRetirement = false;
 
         private RP0Settings _settings;
 
@@ -32,7 +29,7 @@ namespace RP0
             _newspaperTitle = _settings.NewspaperTitle;
         }
 
-        public void RenderSettingsTab()
+        public void RenderContractsTab()
         {
             GUILayout.BeginVertical();
             try
@@ -105,26 +102,26 @@ namespace RP0
                 GUILayout.EndVertical();
             }
 
-            GUILayout.BeginVertical();
-            try
-            {
-                GUILayout.Space(10f);
-                GUILayout.Space(10f);
-                GUILayout.Label($"Use this area to toggle the creation of automatic KAC alarms for events related to leaders.", BoldLabel);
-                GUILayout.Space(10f);
-                _makeAlarmCooldownOver = GUILayout.Toggle(_makeAlarmCooldownOver, "Firing cooldown over");
-                GUILayout.Space(5f);
-                _makeAlarmFreeRemove = GUILayout.Toggle(_makeAlarmFreeRemove, "Free to remove with no penalty");
-                //GUILayout.Space(5f);
-                //_makeAlarmRetirement = GUILayout.Toggle(_makeAlarmRetirement, "Retirement"); // retirement isnt really used anymore, uncomment this if it is added back
-                _settings.MakeAlarmCooldownOver = _makeAlarmCooldownOver;
-                _settings.MakeAlarmFreeRemove = _makeAlarmFreeRemove;
-                _settings.MakeAlarmRetirement = _makeAlarmRetirement;
-            }
-            finally
-            {
-                GUILayout.EndVertical();
-            }
+            //GUILayout.BeginVertical();
+            //try
+            //{
+            //    GUILayout.Space(10f);
+            //    GUILayout.Space(10f);
+            //    GUILayout.Label($"Use this area to toggle the creation of automatic KAC alarms for events related to leaders.", BoldLabel);
+            //    GUILayout.Space(10f);
+            //    _makeAlarmCooldownOver = GUILayout.Toggle(_makeAlarmCooldownOver, "Firing cooldown over");
+            //    GUILayout.Space(5f);
+            //    _makeAlarmFreeRemove = GUILayout.Toggle(_makeAlarmFreeRemove, "Free to remove with no penalty");
+            //    //GUILayout.Space(5f);
+            //    //_makeAlarmRetirement = GUILayout.Toggle(_makeAlarmRetirement, "Retirement"); // retirement isnt really used anymore, uncomment this if it is added back
+            //    _settings.MakeAlarmCooldownOver = _makeAlarmCooldownOver;
+            //    _settings.MakeAlarmFreeRemove = _makeAlarmFreeRemove;
+            //    _settings.MakeAlarmRetirement = _makeAlarmRetirement;
+            //}
+            //finally
+            //{
+            //    GUILayout.EndVertical();
+            //}
         }
     }
 }

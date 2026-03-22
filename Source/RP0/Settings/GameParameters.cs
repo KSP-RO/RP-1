@@ -81,10 +81,13 @@ namespace RP0
         public bool ShowToolingReminders = true;
 
         // The following values are persisted to the savegame but are not shown in the difficulty settings UI
-        public int CommsPayload = ContractGUI.MinPayload;
-        public int WeatherPayload = ContractGUI.MinPayload;
+        public int CommsPayload = SettingsGUI.MinPayload;
+        public int WeatherPayload = SettingsGUI.MinPayload;
         public string NewspaperTitle = "Space Gazette";
         public bool UseLastScreenshot = false;
+        public bool MakeAlarmCooldownOver = false;
+        public bool MakeAlarmFreeRemove = false;
+        public bool MakeAlarmRetirement = false;
 
         public bool AirlaunchTipShown = false;
         public bool Avionics_InterplanetaryWarningShown = false;

@@ -228,7 +228,7 @@
     <Compile Include="UI\TopWindow.cs" />
     <Compile Include="UI\UIBase.cs" />
     <Compile Include="UI\UIHolder.cs" />
-    <Compile Include="UI\ContractGUI.cs" />
+    <Compile Include="UI\SettingsGUI.cs" />
     <Compile Include="UI\Tooltip.cs" />
     <Compile Include="UI\ToolingGUI.cs" />
     <Compile Include="UI\AvionicsGUI.cs" />

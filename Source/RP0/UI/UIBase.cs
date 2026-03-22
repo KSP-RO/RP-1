@@ -7,7 +7,7 @@ namespace RP0
         public enum UITab
         {
             Budget, Facilities, Integration, Construction, AstronautCosts, Tooling, ToolingType,
-            Astronauts, Training, NewCourse, Naut, Avionics, Contracts, CareerLog, Programs
+            Astronauts, Training, NewCourse, Naut, Avionics, Settings, CareerLog, Programs
         };
 
         protected GUIStyle RightLabel, BoldLabel, BoldRightLabel, PressedButton, InfoButton;
@@ -66,7 +66,7 @@ namespace RP0
                 case UITab.Tooling:
                 case UITab.ToolingType:
                 case UITab.AstronautCosts:
-                case UITab.Contracts:
+                case UITab.Settings:
                 case UITab.CareerLog:
                     return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case UITab.Avionics:

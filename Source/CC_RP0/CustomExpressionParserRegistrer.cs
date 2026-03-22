@@ -56,17 +56,17 @@ namespace ContractConfigurator.RP0
 
         private static void RegisterRP0Hooks()
         {
-            ContractGUI.WithdrawContractAction = WithdrawContract;
+            SettingsGUI.WithdrawContractAction = WithdrawContract;
         }
 
         private static int GetCommsPayload()
         {
-            return ContractGUI.CommsPayload;
+            return SettingsGUI.CommsPayload;
         }
 
         private static int GetWeatherPayload()
         {
-            return ContractGUI.WeatherPayload;
+            return SettingsGUI.WeatherPayload;
         }
 
         private static bool WithdrawContract(string contractName)

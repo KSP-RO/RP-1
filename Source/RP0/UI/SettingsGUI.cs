@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace RP0
 {
-    public class ContractGUI : UIBase
+    public class SettingsGUI : UIBase
     {
         public const int MinPayload = 400;
         public const int MaxPayload = 10000;
@@ -18,6 +18,9 @@ namespace RP0
 
         private static string _newspaperTitle = "Space Gazette";
         private static bool _useLastScreenshot = false;
+        private static bool _makeAlarmCooldownOver = false;
+        private static bool _makeAlarmFreeRemove = false;
+        private static bool _makeAlarmRetirement = false;
 
         private RP0Settings _settings;
 
@@ -29,7 +32,7 @@ namespace RP0
             _newspaperTitle = _settings.NewspaperTitle;
         }
 
-        public void RenderContractsTab()
+        public void RenderSettingsTab()
         {
             GUILayout.BeginVertical();
             try
@@ -96,6 +99,27 @@ namespace RP0
                 GUILayout.Space(10f);
                 _useLastScreenshot = GUILayout.Toggle(_useLastScreenshot, "Use last screenshot instead of auto screenshot for Newspaper");
                 _settings.UseLastScreenshot = _useLastScreenshot;
+            }
+            finally
+            {
+                GUILayout.EndVertical();
+            }
+
+            GUILayout.BeginVertical();
+            try
+            {
+                GUILayout.Space(10f);
+                GUILayout.Space(10f);
+                GUILayout.Label($"Use this area to toggle the creation of automatic KAC alarms for events related to leaders.", BoldLabel);
+                GUILayout.Space(10f);
+                _makeAlarmCooldownOver = GUILayout.Toggle(_makeAlarmCooldownOver, "Firing cooldown over");
+                GUILayout.Space(5f);
+                _makeAlarmFreeRemove = GUILayout.Toggle(_makeAlarmFreeRemove, "Free to remove with no penalty");
+                GUILayout.Space(5f);
+                _makeAlarmRetirement = GUILayout.Toggle(_makeAlarmRetirement, "Retirement");
+                _settings.MakeAlarmCooldownOver = _makeAlarmCooldownOver;
+                _settings.MakeAlarmFreeRemove = _makeAlarmFreeRemove;
+                _settings.MakeAlarmRetirement = _makeAlarmRetirement;
             }
             finally
             {

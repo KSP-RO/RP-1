@@ -145,10 +145,14 @@ namespace RP0
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
             KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+            RP0Settings _settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
 
             if (this is Programs.ProgramStrategy ps)
             {
-                AlarmHelper.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed before this time to avoid reputation penalties and severely reduced payout.", ps.Program.deadlineUT, alarmType);
+                if (_settings.MakeAlarmProgramComplete)
+                {
+                    AlarmHelper.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed before this time to avoid reputation penalties and severely reduced payout.", ps.Program.deadlineUT, alarmType);
+                }
             }
             else
             {
@@ -157,7 +161,6 @@ namespace RP0
                 Programs.ProgramHandler.Instance.OnLeaderChange();
                 // FIXME add setup cost if we add setup costs to leaders
                 CareerLog.Instance?.AddLeaderEvent(Config.Name, true, 0d);
-                RP0Settings _settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
                 if (LeastDuration > 0 || RemovePenaltyDuration > 0 || LongestDuration > 0)
                 {
                     AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);

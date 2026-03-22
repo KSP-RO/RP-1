@@ -101,27 +101,6 @@ namespace RP0
             {
                 GUILayout.EndVertical();
             }
-
-            //GUILayout.BeginVertical();
-            //try
-            //{
-            //    GUILayout.Space(10f);
-            //    GUILayout.Space(10f);
-            //    GUILayout.Label($"Use this area to toggle the creation of automatic KAC alarms for events related to leaders.", BoldLabel);
-            //    GUILayout.Space(10f);
-            //    _makeAlarmCooldownOver = GUILayout.Toggle(_makeAlarmCooldownOver, "Firing cooldown over");
-            //    GUILayout.Space(5f);
-            //    _makeAlarmFreeRemove = GUILayout.Toggle(_makeAlarmFreeRemove, "Free to remove with no penalty");
-            //    //GUILayout.Space(5f);
-            //    //_makeAlarmRetirement = GUILayout.Toggle(_makeAlarmRetirement, "Retirement"); // retirement isnt really used anymore, uncomment this if it is added back
-            //    _settings.MakeAlarmCooldownOver = _makeAlarmCooldownOver;
-            //    _settings.MakeAlarmFreeRemove = _makeAlarmFreeRemove;
-            //    _settings.MakeAlarmRetirement = _makeAlarmRetirement;
-            //}
-            //finally
-            //{
-            //    GUILayout.EndVertical();
-            //}
         }
     }
 }

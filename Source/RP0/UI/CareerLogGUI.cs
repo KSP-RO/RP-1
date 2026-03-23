@@ -23,6 +23,7 @@ namespace RP0
                 _serverUrl = Encoding.UTF8.GetString(bytes);
             }
             _token = settings?.CareerLog_Token;
+            _serverUrl = "https://rp1careerlog.azurewebsites.net/api/CareerLogs/";
         }
 
         public void RenderTab()

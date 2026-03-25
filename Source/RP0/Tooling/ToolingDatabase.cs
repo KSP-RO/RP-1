@@ -14,8 +14,9 @@ namespace RP0
     }
     public class ToolingDatabase
     {
-        protected const float comparisonHigh = 1.04f;
-        protected const float comparisonLow = 0.96f;
+        public const float toolingMargin = .04f;
+        protected const float comparisonHigh = 1.00f + toolingMargin;
+        protected const float comparisonLow = 1.00f - toolingMargin;
         protected const float epsilon = 1e-6f;
 
         public static float GetLowComparison(float value) => value * (comparisonLow - epsilon);

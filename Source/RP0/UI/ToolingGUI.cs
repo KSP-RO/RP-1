@@ -287,7 +287,7 @@ namespace RP0
                 GUILayout.Label("×", HighLogic.Skin.label);
                 if (values[i] > 1e-6f)
                 {
-                    toolingMargin = $"Low Tolerance: {ToolingDatabase.GetLowComparison(values[i]):F3} {parameters[i].Unit}\nHigh Tolerance: {ToolingDatabase.GetHighComparison(values[i]):F3} {parameters[i].Unit}";
+                    toolingMargin = $"Margin: {ToolingDatabase.toolingMargin * 100}%\nLow Tolerance: {ToolingDatabase.GetLowComparison(values[i]):F3} {parameters[i].Unit}\nHigh Tolerance: {ToolingDatabase.GetHighComparison(values[i]):F3} {parameters[i].Unit}";
                 }
                 GUILayout.Label(new GUIContent($"{values[i]:F3} {parameters[i].Unit}", $"{toolingMargin}"), HighLogic.Skin.label, GUILayout.Width(80));
             }

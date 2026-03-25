@@ -279,7 +279,7 @@ namespace RP0
 
         private void DisplayRow(float[] values, Parameter[] parameters)
         {
-            string toolingMargin = "";
+            string toolingMargin;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"{values[0]:F3} {parameters[0].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
             for (int i = 1; i < values.Length; ++i)

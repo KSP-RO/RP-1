@@ -290,7 +290,7 @@ namespace RP0
                     toolingMargin = $"Margin: {ToolingDatabase.toolingMargin * 100}%\nLow Tolerance: {ToolingDatabase.GetLowComparison(values[i]):F3} {parameters[i].Unit}\nHigh Tolerance: {ToolingDatabase.GetHighComparison(values[i]):F3} {parameters[i].Unit}";
                 }
                 else { toolingMargin = ""; }
-                GUILayout.Label(new GUIContent($"{values[i]:F3} {parameters[i].Unit}", $"{toolingMargin}"), HighLogic.Skin.label, GUILayout.Width(80));
+                GUILayout.Label(new GUIContent($"{values[i]:F3} {parameters[i].Unit}", toolingMargin), HighLogic.Skin.label, GUILayout.Width(80));
             }
             GUILayout.EndHorizontal();
         }

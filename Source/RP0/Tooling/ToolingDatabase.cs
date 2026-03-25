@@ -14,12 +14,13 @@ namespace RP0
     }
     public class ToolingDatabase
     {
-        protected static float comparisonEpsilonHigh = 1.04f;
-        protected static float comparisonEpsilonLow = 0.96f;
+        protected static float comparisonHigh = 1.04f;
+        protected static float comparisonLow = 0.96f;
+        protected const float epsilon = 1e-6f;
 
         protected static int EpsilonCompare(float a, float b)
         {
-            if (a > b * comparisonEpsilonLow && a < b * comparisonEpsilonHigh)
+            if (a > b * (comparisonLow - epsilon) && a < b * (comparisonHigh + epsilon))
                 return 0;
 
             return a.CompareTo(b);

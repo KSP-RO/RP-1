@@ -611,6 +611,22 @@ namespace RP0
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
+
+            if (techList.Count > 0)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Work rate:", GUILayout.Width(90));
+                GUILayout.Label(techList[0].workRate.ToString("P0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+                float newWorkRate = GUILayout.HorizontalSlider((float)techList[0].workRate, 0f, 1f, GUILayout.Width(150));
+                double newWorkRateQuantized = Mathf.RoundToInt(newWorkRate * 20f) * 0.05d;
+                if (newWorkRateQuantized != techList[0].workRate)
+                {
+                    foreach (var tech in techList)
+                        tech.workRate = newWorkRateQuantized;
+                    MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
+                }
+                GUILayout.EndHorizontal();
+            }
         }
 
         private static int CompareBuildItems(ISpaceCenterProject a, ISpaceCenterProject b)

@@ -18,12 +18,18 @@ namespace RP0
 
         public double CreditForTime(double UT)
         {
-            double sum = 0d;
-            double mult = UT * _unlockCredRate * Database.SettingsSC.salaryResearchers * (1d / (86400d * 365.25d));
+            if (SpaceCenterManagement.Instance.TechList.Count == 0)
+                return 0d;
+
+            double workRate = SpaceCenterManagement.Instance.TechList[0].workRate;
+            if (workRate == 0d) return 0d;
+
+            double mult = UT * _unlockCredRate * workRate * Database.SettingsSC.salaryResearchers * (1d / (86400d * 365.25d));
             
             int res = SpaceCenterManagement.Instance.Researchers;
             int totalCounted = 0;
             
+            double sum = 0d;
             foreach (var kvp in Database.SettingsSC.researchersToUnlockCreditSalaryMultipliers)
             {
                 if (totalCounted >= res)

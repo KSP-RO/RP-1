@@ -279,12 +279,18 @@ namespace RP0
 
         private void DisplayRow(float[] values, Parameter[] parameters)
         {
+            string toolingMargin;
             GUILayout.BeginHorizontal();
             GUILayout.Label($"{values[0]:F3} {parameters[0].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
             for (int i = 1; i < values.Length; ++i)
             {
                 GUILayout.Label("×", HighLogic.Skin.label);
-                GUILayout.Label($"{values[i]:F3} {parameters[i].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
+                if (values[i] > 1e-6f)
+                {
+                    toolingMargin = $"Margin: {ToolingDatabase.toolingMargin * 100}%\nLow Tolerance: {ToolingDatabase.GetLowComparison(values[i]):F3} {parameters[i].Unit}\nHigh Tolerance: {ToolingDatabase.GetHighComparison(values[i]):F3} {parameters[i].Unit}";
+                }
+                else { toolingMargin = ""; }
+                GUILayout.Label(new GUIContent($"{values[i]:F3} {parameters[i].Unit}", toolingMargin), HighLogic.Skin.label, GUILayout.Width(80));
             }
             GUILayout.EndHorizontal();
         }

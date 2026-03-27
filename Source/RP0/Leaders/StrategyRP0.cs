@@ -145,10 +145,14 @@ namespace RP0
                 CurrencyUtils.ProcessCurrency(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true);
 
             KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+            RP0Settings _settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
 
             if (this is Programs.ProgramStrategy ps)
             {
-                AlarmHelper.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed at this time to avoid reputation penalties and severely reduced payout.", ps.Program.deadlineUT, alarmType);
+                if (_settings.MakeAlarmProgramComplete)
+                {
+                    AlarmHelper.CreateAlarm($"Deadline: {ConfigRP0.Title}", $"{ConfigRP0.Title} must be completed before this time to avoid reputation penalties and severely reduced payout.", ps.Program.deadlineUT, alarmType);
+                }
             }
             else
             {
@@ -161,15 +165,15 @@ namespace RP0
                 {
                     AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
 
-                    if (LeastDuration > 0)
+                    if (LeastDuration > 0 && _settings.MakeAlarmCooldownOver)
                     {
                         AlarmHelper.CreateAlarm($"Firing Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed with a fee at this time.", DateActivated + LeastDuration, alarmType);
                     }
-                    if (RemovePenaltyDuration > 0)
+                    if (RemovePenaltyDuration > 0 && _settings.MakeAlarmFreeRemove)
                     {
                         AlarmHelper.CreateAlarm($"Free to Remove: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be removed without paying a penalty fee at this time.", DateActivated + RemovePenaltyDuration, alarmType);
                     }
-                    if (LongestDuration > 0)
+                    if (LongestDuration > 0 && _settings.MakeAlarmRetirement)
                     {
                         AlarmHelper.CreateAlarm($"Retirement: {ConfigRP0.Title}", $"{ConfigRP0.Title} will be removed at this time.", DateActivated + LongestDuration, alarmType);
                     }

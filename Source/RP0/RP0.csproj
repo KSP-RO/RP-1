@@ -49,6 +49,7 @@
     <Compile Include="ConfigurableStart\Utilities.cs" />
     <Compile Include="Harmony\FlightInputHandler.cs" />
     <Compile Include="Harmony\ModuleRCS.cs" />
+    <Compile Include="Harmony\ScreenContractTools.cs" />
     <Compile Include="Harmony\Vessel.cs" />
     <Compile Include="Harmony\RealAntennas.cs" />
     <Compile Include="Harmony\ROHeatshields.cs" />

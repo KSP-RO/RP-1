@@ -63,9 +63,17 @@ namespace RP0.ModIntegrations
                 };
                 AlarmClockScenario.AddAlarm(alarm);
                 alarm.actions.warp = AlarmActions.WarpEnum.KillWarp;
-                string alarmID = alarm.Id.ToString();
-                RP0Debug.Log(s + alarmID);
-                return alarmID;
+                if (alarm.Id != 0u)
+                {
+                    string alarmID = alarm.Id.ToString();
+                    RP0Debug.Log(s + alarmID);
+                    return alarmID;
+                }
+                else
+                {
+                    RP0Debug.LogError($"Stock Alarm could not be created.");
+                    return "";
+                }
             }
         }
 
@@ -99,7 +107,7 @@ namespace RP0.ModIntegrations
                 }
                 else
                 {
-                    RP0Debug.LogError("Could not parse alarm ID " + id + " to uint");
+                    RP0Debug.LogError("Could not parse stock alarm ID " + id + " to uint");
                     return false;
                 }
             }
@@ -186,7 +194,7 @@ namespace RP0.ModIntegrations
                 }
                 else
                 {
-                    RP0Debug.LogError("Could not parse alarm ID " + id + " to uint");
+                    RP0Debug.LogError("Could not parse stock alarm ID " + id + " to uint");
                     return false;
                 }
             }

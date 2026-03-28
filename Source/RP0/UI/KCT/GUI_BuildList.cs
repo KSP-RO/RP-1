@@ -26,7 +26,7 @@ namespace RP0
 
         private static double _accumulatedTimeBefore;
 
-        private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton;
+        private static GUIStyle _redText, _yellowText, _greenText, _blobText, _yellowButton, _redButton, _greenButton, _boldLabel;
         private static GUIContent _emptyTexture, _settingsTexture, _planeTexture, _rocketTexture, _techTexture, _constructTexture, 
             _reconTexture, _rolloutTexture, _rollbackTexture, _airlaunchTexture, _recoveryTexture, _hangarTexture, _repairTexture;
         private const int _width1 = 120;
@@ -103,6 +103,9 @@ namespace RP0
             _greenButton.normal.textColor = Color.green;
             _greenButton.hover.textColor = Color.green;
             _greenButton.active.textColor = Color.green;
+
+            _boldLabel = new GUIStyle(GUI.skin.label);
+            _boldLabel.fontStyle = FontStyle.Bold;
 
             _airlaunchTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_airlaunch16", false));
             _constructTexture = new GUIContent(GameDatabase.Instance.GetTexture("RP-1/Resources/KCT_construct16", false));
@@ -766,7 +769,7 @@ namespace RP0
             foreach (var lc in SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes)
             {
                 foreach (var b in lc.Warehouse)
-                    RenderWarehouseRow(b, idx++, true);
+                    RenderWarehouseRow(b, idx++);
             }
             if(idx == 0)
                 GUILayout.Label("No vessels in storage!");
@@ -859,39 +862,109 @@ namespace RP0
 
         private static void RenderBuildList()
         {
-            LaunchComplex activeLC = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LC : SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
+            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(450));
 
-            RenderBuildlistHeader();
-
-            _scrollPos = GUILayout.BeginScrollView(_scrollPos, GUILayout.Height(375));
-
-            if (activeLC.LCType == LaunchComplexType.Pad)
+            if (HighLogic.LoadedSceneIsFlight)
             {
-                RenderRepairs();
-                RenderRollouts();
+                // Recover button shown once at the top in flight, not per LC
+                LCSpaceCenter kscFlight = SpaceCenterManagement.Instance.ActiveSC;
+                bool anyVab = kscFlight.LaunchComplexes.Find(lc => lc.IsOperational && lc.LCType == LaunchComplexType.Pad) != null;
+                bool anyHangar = kscFlight.Hangar.IsOperational;
+                if (anyVab && KCTUtilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) &&
+                    GUILayout.Button("Recover Active Vessel To Warehouse"))
+                {
+                    if (!KCTUtilities.RecoverActiveVesselToStorage(ProjectType.VAB))
+                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                }
+                else if (anyHangar && KCTUtilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) &&
+                    GUILayout.Button("Recover Active Vessel To Warehouse"))
+                {
+                    if (!KCTUtilities.RecoverActiveVesselToStorage(ProjectType.SPH))
+                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                }
             }
-            RenderVesselsBeingBuilt(activeLC);
-            RenderWarehouse();
+
+            LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
+            int warehouseIdx = 0;
+            bool anyContent = false;
+            bool firstLC = true;
+            foreach (LaunchComplex lc in ksc.LaunchComplexes)
+            {
+                if (!lc.IsOperational) continue;
+                if (!firstLC)
+                    GUILayout.Label("__________________________________________________");
+                firstLC = false;
+                RenderLCHeader(lc);
+                bool lcHasContent = lc.BuildList.Count > 0 || lc.Warehouse.Count > 0
+                    || lc.Recon_Rollout.Count > 0 || lc.VesselRepairs.Count > 0;
+                if (lcHasContent)
+                {
+                    anyContent = true;
+                    if (lc.LCType == LaunchComplexType.Pad)
+                    {
+                        RenderRepairs(lc);
+                        RenderRollouts(lc);
+                    }
+                    if (lc.BuildList.Count > 0)
+                        RenderVesselsBeingBuilt(lc);
+                    if (lc.Warehouse.Count > 0)
+                        warehouseIdx = RenderWarehouseSection(lc, warehouseIdx);
+                }
+            }
+            if (!anyContent)
+                GUILayout.Label("No vessels integrating or in storage. Go to the VAB or SPH to start building.");
 
             GUILayout.EndScrollView();
-
-            RenderLaunchComplexControls();
-            RenderLaunchPadControls();
+            RenderLCManagementRow();
         }
 
-        private static void RenderBuildlistHeader()
+        private static void RenderLCHeader(LaunchComplex lc)
         {
+            GUILayout.Space(4);
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Name:");
-            GUILayout.Label("Progress:", GUILayout.Width(_width1 / 2));
-            GUILayout.Label(KCTSettings.Instance.UseDates ? "Completes:" : "Time Left:", GUILayout.Width(_width2));
+            GUILayout.Label(lc.LCType == LaunchComplexType.Pad ? _rocketTexture : _hangarTexture, GUILayout.ExpandWidth(false));
+            GUILayout.Label($"{lc.Name} ({lc.SupportedMassAsPrettyText})", _boldLabel, GUILayout.Width(BuildListWindowPosition.width * 0.6f));
+            GUILayout.Label(new GUIContent($"{lc.Engineers}/{lc.MaxEngineers} eng", "Engineers assigned / max"), GUILayout.ExpandWidth(false));
+            GUILayout.FlexibleSpace();
+            bool oldRushing = lc.IsRushing;
+            lc.IsRushing = GUILayout.Toggle(lc.IsRushing, new GUIContent("Rush",
+                $"Enable rush integration.\nRate: {Database.SettingsSC.RushRateMult:N1}x\nSalary cost: {Database.SettingsSC.RushSalaryMult:N1}x{(lc.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"),
+                GUILayout.ExpandWidth(false));
+            if (oldRushing != lc.IsRushing)
+                KCTUtilities.ChangeEngineers(lc, 0);
             GUILayout.EndHorizontal();
         }
 
-        private static void RenderRollouts()
+        private static void RenderLCManagementRow()
         {
-            LaunchComplex activeLC = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LC : SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
-            foreach (ReconRolloutProject reconditioning in activeLC.Recon_Rollout.FindAll(r => r.RRType == ReconRolloutProject.RolloutReconType.Reconditioning))
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button(new GUIContent("New LC", "Design and build a new Launch Complex"), GUILayout.ExpandWidth(false)))
+            {
+                GUIStates.ShowNewLC = true;
+                GUIStates.ShowModifyLC = false;
+                GUIStates.ShowLCManagement = false;
+                _centralWindowPosition.width = 300;
+                _centralWindowPosition.height = 1;
+            }
+            LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
+            if (ksc.LaunchComplexes.Count > 1 &&
+                GUILayout.Button(new GUIContent("Manage LCs", "View, reorder, and manage all Launch Complexes"), GUILayout.ExpandWidth(false)))
+            {
+                GUIStates.ShowLCManagement = !GUIStates.ShowLCManagement;
+                if (GUIStates.ShowLCManagement)
+                {
+                    Rect parentPos = BuildListWindowPosition;
+                    _manageLCWindowPosition.x = parentPos.center.x - _manageLCWindowPosition.width / 2f;
+                    _manageLCWindowPosition.y = parentPos.center.y;
+                    _manageLCWindowPosition.height = 1;
+                }
+            }
+            GUILayout.EndHorizontal();
+        }
+
+        private static void RenderRollouts(LaunchComplex lc)
+        {
+            foreach (ReconRolloutProject reconditioning in lc.Recon_Rollout.FindAll(r => r.RRType == ReconRolloutProject.RolloutReconType.Reconditioning))
             {
                 GUILayout.BeginHorizontal();
                 double tLeft = reconditioning.GetTimeLeft();
@@ -909,10 +982,9 @@ namespace RP0
             }
         }
 
-        private static void RenderRepairs()
+        private static void RenderRepairs(LaunchComplex lc)
         {
-            LaunchComplex activeLC = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LC : SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
-            foreach (VesselRepairProject repair in activeLC.VesselRepairs)
+            foreach (VesselRepairProject repair in lc.VesselRepairs)
             {
                 GUILayout.BeginHorizontal();
                 double tLeft = repair.GetTimeLeft();
@@ -925,7 +997,7 @@ namespace RP0
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
                     DialogGUIBase[] options = new DialogGUIBase[2];
-                    options[0] = new DialogGUIButton("Yes", () => activeLC.VesselRepairs.Remove(repair));
+                    options[0] = new DialogGUIButton("Yes", () => lc.VesselRepairs.Remove(repair));
                     options[1] = new DialogGUIButton("No", () => { });
                     MultiOptionDialog diag = new MultiOptionDialog("scrapVesselPopup", $"Are you sure you want to cancel this repair?",
                         "Cancel Repair", null, options: options);
@@ -1033,43 +1105,35 @@ namespace RP0
             }
         }
 
-        private static void RenderWarehouse()
+        private static int RenderWarehouseSection(LaunchComplex lc, int startIdx = 0)
         {
-            LaunchComplex activeLC = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LC : SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
-            bool isPad = activeLC.LCType == LaunchComplexType.Pad;
-            GUILayout.Label("__________________________________________________");
-            GUILayout.BeginHorizontal();
-            GUILayout.Label(isPad ? _rocketTexture : _planeTexture, GUILayout.ExpandWidth(false));
-            GUILayout.Label("Storage");
-            GUILayout.EndHorizontal();
-            if (HighLogic.LoadedSceneIsFlight && 
-                (isPad ? KCTUtilities.IsVabRecoveryAvailable(FlightGlobals.ActiveVessel) : KCTUtilities.IsSphRecoveryAvailable(FlightGlobals.ActiveVessel) ) &&
-                GUILayout.Button("Recover Active Vessel To Warehouse"))
+            bool isPad = lc.LCType == LaunchComplexType.Pad;
+            if (lc.Warehouse.Count > 0)
             {
-                if (!KCTUtilities.RecoverActiveVesselToStorage(isPad ? ProjectType.VAB : ProjectType.SPH))
-                {
-                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "vesselRecoverErrorPopup", "Error!", "There was an error while recovering the ship. Sometimes reloading the scene and trying again works. Sometimes a vessel just can't be recovered this way and you must use the stock recover system.", KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), false, HighLogic.UISkin).HideGUIsWhilePopup();
-                }
+                GUILayout.BeginHorizontal();
+                GUILayout.Label(isPad ? _rocketTexture : _planeTexture, GUILayout.ExpandWidth(false));
+                GUILayout.Label("Storage");
+                GUILayout.EndHorizontal();
             }
-            if (activeLC.Warehouse.Count == 0)
+
+            if (lc.Warehouse.Count == 0)
             {
                 GUILayout.Label("No vessels in storage!\nThey will be stored here when they are complete.");
             }
 
-            for (int i = 0; i < activeLC.Warehouse.Count; i++)
+            for (int i = 0; i < lc.Warehouse.Count; i++)
             {
-                VesselProject b = activeLC.Warehouse[i];
-                RenderWarehouseRow(b, i, false);
+                RenderWarehouseRow(lc.Warehouse[i], startIdx + i);
             }
+            return startIdx + lc.Warehouse.Count;
         }
 
-        private static void RenderWarehouseRow(VesselProject b, int listIdx, bool isCombinedList)
+        private static void RenderWarehouseRow(VesselProject b, int listIdx)
         {
             if (!b.AllPartsValid)
                 return;
 
             LaunchComplex vesselLC = b.LC;
-
             bool isPad = vesselLC != SpaceCenterManagement.Instance.ActiveSC.Hangar;
 
             string launchSite = b.launchSite;
@@ -1091,11 +1155,11 @@ namespace RP0
                         case ReconRolloutProject.RolloutReconType.Recovery: recovery = rr; break;
                         case ReconRolloutProject.RolloutReconType.Rollback: rollback = rr; break;
                         case ReconRolloutProject.RolloutReconType.Rollout: rollout = rr; break;
-                        // any other type is wrong.
+                        // any other type is wrong
                     }
                 }
                 else if (isPad && rr.RRType == ReconRolloutProject.RolloutReconType.Rollout && rr.launchPadID == launchSite)
-                    padRollout = rr; // something else is being rollout out to this launchsite.
+                    padRollout = rr;    // something else is being rolled out to this launchsite
             }
             ReconRolloutProject airlaunchPrep = !isPad ? vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == vpID) : null;
 
@@ -1188,28 +1252,14 @@ namespace RP0
                     LaunchPadState lpState = LaunchPadState.None;
                     if (rollout == null && rollback == null)
                     {
-                        if (isCombinedList)
-                        {
-                            foundPad = vesselLC.FindFreeLaunchPad();
-                            if (foundPad != null)
-                                lpState = LaunchPadState.Free;
-                            else
-                                lpState = vesselLC.GetBestLaunchPadState();
-                        }
-                        else
-                        {
-                            lpState = vesselLC.ActiveLPInstance.State;
-                            if (padRollout == null && vesselLC.GetReconRollout(ReconRolloutProject.RolloutReconType.None, launchSite) == null)
-                            {
-                                foundPad = vesselLC.ActiveLPInstance;
-                            }
-                        }
+                        foundPad = vesselLC.LaunchPads.Find(lp => lp.State == LaunchPadState.Free);
+                        lpState = foundPad != null ? LaunchPadState.Free : vesselLC.GetBestLaunchPadState();
                     }
 
                     if (!HighLogic.LoadedSceneIsEditor && lpState > LaunchPadState.Nonoperational) //rollout if the pad isn't busy
                     {
-                        List<string> facilityChecks = new List<string>();
-                        bool meetsChecks = b.MeetsFacilityRequirements(facilityChecks);
+                        List<string> failedFacilityChecks = new List<string>();
+                        bool meetsChecks = b.MeetsFacilityRequirements(failedFacilityChecks);
 
                         GUIStyle btnColor = _greenButton;
                         if (lpState == LaunchPadState.Destroyed)
@@ -1224,38 +1274,7 @@ namespace RP0
                         GUIContent rolloutText = listIdx == _mouseOnRolloutButton ? RP0DTUtils.GetColonFormattedTimeWithTooltip(tmpRollout.GetTimeLeft(), "rollout"+ vpID) : new GUIContent("Rollout");
                         if (GUILayout.Button(rolloutText, btnColor, GUILayout.ExpandWidth(false)))
                         {
-                            if (foundPad != null && lpState == LaunchPadState.Free)
-                            {
-                                if (meetsChecks)
-                                {
-                                    bool padClear = !foundPad.HasVesselWaitingToBeLaunched(out Vessel foundVessel);
-                                    if (padClear)
-                                    {
-                                        b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
-                                        vesselLC.Recon_Rollout.Add(tmpRollout);
-                                    }
-                                    else
-                                    {
-                                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutVesselOnPad", "Cannot Roll out!", $"{foundVessel.vesselName} is already waiting on the launch pad.", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                                    }
-                                }
-                                else
-                                {
-                                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                                }
-                            }
-                            else if (lpState == LaunchPadState.Destroyed)
-                            {
-                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutDestroyedPopup", "Cannot Roll out!", "You must repair the launchpad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                            }
-                            else if (lpState == LaunchPadState.Reconditioning)
-                            {
-                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutReconditioningPopup", "Cannot Roll out!", "You must finish reconditioning at least one pad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                            }
-                            else if (lpState != LaunchPadState.Free)
-                            {
-                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutBusyPopup", "Cannot Roll out!", isCombinedList ? "All pads are in use by other vessels" : "This launchpad is in use by another vessel.", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                            }
+                            ProcessRollout(b, tmpRollout, foundPad, lpState, failedFacilityChecks);
                         }
                         if (Event.current.type == EventType.Repaint)
                             if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
@@ -1281,7 +1300,7 @@ namespace RP0
                         }
                     }
                     else if (HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
-                             (rollout != null && rollout.IsComplete()))
+                             rollout != null && rollout.IsComplete())
                     {
                         LCLaunchPad pad = vesselLC.LaunchPads.Find(lp => lp.name == rollout.launchPadID);
                         bool operational = pad != null && !pad.IsDestroyed && pad.isOperational;
@@ -1297,154 +1316,28 @@ namespace RP0
                             launchTxt = "Reconditioning";
                             btnColor = _yellowButton;
                         }
+
                         if (GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button("Roll Back", GUILayout.ExpandWidth(false)))
                         {
                             rollout.SwitchDirection();
                         }
-                        else if (!GameSettings.MODIFIER_KEY.GetKey() && GUILayout.Button(launchTxt, btnColor, GUILayout.ExpandWidth(false)))
+                        else if (!HighLogic.LoadedSceneIsEditor && HighLogic.LoadedScene != GameScenes.TRACKSTATION &&
+                                 !GameSettings.MODIFIER_KEY.GetKey() &&
+                                 GUILayout.Button(launchTxt, btnColor, GUILayout.ExpandWidth(false)))
                         {
-                            if (b.launchSiteIndex >= 0)
-                            {
-                                vesselLC.SwitchLaunchPad(b.launchSiteIndex);
-                            }
-                            b.launchSiteIndex = vesselLC.ActiveLaunchPadIndex;
-
-                            List<string> facilityChecks = new List<string>();
-                            if (b.MeetsFacilityRequirements(facilityChecks))
-                            {
-                                if (pad == null)
-                                {
-                                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchNoPad", "Cannot Launch!", "Somehow this vessel is not associated with a launch pad!", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                                }
-                                else if (!operational)
-                                {
-                                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchRepairPopup", "Cannot Launch!", "You must repair the launchpad before you can launch a vessel from it!", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                                }
-                                else if (vesselLC.GetReconditioning(launchSite) is ReconRolloutProject recon)
-                                {
-                                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {RP0DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
-                                    ScreenMessages.PostScreenMessage(message);
-                                }
-                                else
-                                {
-                                    SpaceCenterManagement.Instance.LaunchedVessel = b;
-                                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
-                                    {
-                                        GUIStates.ShowBLPlus = false;
-                                        if (!b.IsCrewable())
-                                            b.Launch();
-                                        else
-                                        {
-                                            GUIStates.ShowBuildList = false;
-
-                                            SpaceCenterManagement.ToolbarControl?.SetFalse();
-
-                                            _centralWindowPosition.height = 1;
-                                            AssignInitialCrew();
-                                            GUIStates.ShowShipRoster = true;
-                                        }
-                                    }
-                                    else
-                                    {
-                                        GUIStates.ShowBuildList = false;
-                                        GUIStates.ShowClearLaunch = true;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                            }
+                            ProcessRocketLaunch(b, launchSite, pad);
                         }
                     }
                 }
                 else
                 {
-                    if (!HighLogic.LoadedSceneIsEditor)
-                    {
-                        if (airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
-                        {
-                            var tmpPrep = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.AirlaunchMount, vpID);
-                            if (tmpPrep.cost > 0d)
-                                GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
-                            GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? RP0DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch"+ vpID) : new GUIContent("Prep for airlaunch");
-                            if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
-                            {
-                                AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
-                                if (!lvl.CanLaunchVessel(b, out string failedReason))
-                                {
-                                    ScreenMessages.PostScreenMessage($"Vessel failed validation: {failedReason}", 6f, ScreenMessageStyle.UPPER_CENTER);
-                                }
-                                else
-                                {
-                                    vesselLC.Recon_Rollout.Add(tmpPrep);
-                                }
-                            }
-                            if (Event.current.type == EventType.Repaint)
-                                if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
-                                    _mouseOnAirlaunchButton = listIdx;
-                                else if (listIdx == _mouseOnAirlaunchButton)
-                                    _mouseOnAirlaunchButton = -1;
-                        }
-                        else if (airlaunchPrep != null)
-                        {
-                            GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : RP0DTUtils.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch"+airlaunchPrep.associatedID);
-                            if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
-                            {
-                                airlaunchPrep.SwitchDirection();
-                            }
-                        }
-                    }
+                    RenderMountUnmountAirlaunch(b, airlaunchPrep, listIdx);
 
                     string launchBtnText = airlaunchPrep != null ? "Airlaunch" : "Launch";
-                    if (HighLogic.LoadedScene != GameScenes.TRACKSTATION && (airlaunchPrep == null || airlaunchPrep.IsComplete()) &&
+                    if (!HighLogic.LoadedSceneIsEditor && HighLogic.LoadedScene != GameScenes.TRACKSTATION && (airlaunchPrep == null || airlaunchPrep.IsComplete()) &&
                         GUILayout.Button(launchBtnText, GUILayout.ExpandWidth(false)))
                     {
-                        List<string> facilityChecks = new List<string>();
-                        if (b.MeetsFacilityRequirements(facilityChecks))
-                        {
-                            bool operational = KCTUtilities.IsLaunchFacilityIntact(ProjectType.SPH);
-                            if (!operational)
-                            {
-                                ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
-                            }
-                            else
-                            {
-                                GUIStates.ShowBLPlus = false;
-                                SpaceCenterManagement.Instance.LaunchedVessel = b;
-
-                                if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
-                                {
-                                    if (airlaunchPrep != null)
-                                    {
-                                        GUIStates.ShowBuildList = false;
-                                        GUIStates.ShowAirlaunch = true;
-                                    }
-                                    else if (!b.IsCrewable())
-                                    {
-                                        b.Launch();
-                                    }
-                                    else
-                                    {
-                                        GUIStates.ShowBuildList = false;
-                                        SpaceCenterManagement.ToolbarControl?.SetFalse();
-                                        _centralWindowPosition.height = 1;
-                                        AssignInitialCrew();
-                                        GUIStates.ShowShipRoster = true;
-                                    }
-                                }
-                                else
-                                {
-                                    GUIStates.ShowBuildList = false;
-                                    GUIStates.ShowClearLaunch = true;
-                                    GUIStates.ShowAirlaunch = airlaunchPrep != null;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex (the Hangar) it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
-                        }
+                        ProcessPlaneLaunch(b, airlaunchPrep);
                     }
                 }
             }
@@ -1452,162 +1345,381 @@ namespace RP0
             GUILayout.EndHorizontal();
         }
 
-        private static void RenderLaunchComplexControls()
+        private static void ProcessRollout(VesselProject b, ReconRolloutProject tmpRollout, LCLaunchPad foundPad, LaunchPadState lpState, List<string> failedFacilityChecks)
         {
-            LaunchComplex activeLC = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LC : SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
-
-            GUILayout.BeginHorizontal();
-            // Don't allow switching in edit mode
-            int lcCount = SpaceCenterManagement.EditorShipEditingMode ? 1 : SpaceCenterManagement.Instance.ActiveSC.LaunchComplexCount;
-            if (lcCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
+            if (foundPad != null && lpState == LaunchPadState.Free)
             {
-                SpaceCenterManagement.Instance.ActiveSC.SwitchToPrevLaunchComplex();
-            }
-            GUILayout.FlexibleSpace();
-            string lcText = $"{activeLC.Name} ({activeLC.SupportedMassAsPrettyText})";
-            string lcTooltip = $"Size limit: {activeLC.SupportedSizeAsPrettyText}\nHuman-Rated: {(activeLC.IsHumanRated ? "Yes" : "No")}";
-            GUILayout.Label(new GUIContent(lcText, lcTooltip));
-
-            if (GUILayout.Button(new GUIContent("Rename", "Rename Complex"), GUILayout.ExpandWidth(false)))
-            {
-                _renameType = RenameType.LaunchComplex;
-                _newName = activeLC.Name;
-                GUIStates.ShowDismantlePad = false;
-                GUIStates.ShowModifyLC = false;
-                GUIStates.ShowDismantleLC = false;
-                GUIStates.ShowNewPad = false;
-                GUIStates.ShowNewLC = false;
-                GUIStates.ShowLCResources = false;
-                GUIStates.ShowRename = true;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-                _centralWindowPosition.width = 300;
-            }
-            bool canModify = activeLC.CanDismantle && !GUIStates.ShowPersonnelWindow;
-            const string modifyFailTooltip = "Currently in use! No projects can be underway or\nvessels at pads/airlaunching, though vessels can be in storage.";
-            const string staffWindowFailTooltip = "Staff window open";
-            if (!HighLogic.LoadedSceneIsEditor && activeLC.LCType == LaunchComplexType.Pad && GUILayout.Button(new GUIContent("Dismantle", canModify ? "Dismantle this launch complex. All stored vessels will be scrapped." : GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip),
-                canModify ? GUI.skin.button : _redButton, GUILayout.ExpandWidth(false)))
-            {
-                if (canModify)
+                bool meetsChecks = failedFacilityChecks == null || failedFacilityChecks.Count == 0;
+                if (meetsChecks)
                 {
+                    LaunchComplex vesselLC = b.LC;
+                    List<LCLaunchPad> freePads = vesselLC.LaunchPads.FindAll(lp => lp.State == LaunchPadState.Free);
+                    if (freePads != null && freePads.Count > 1)
+                    {
+                        // Multiple free pads — let the player pick one
+                        List<DialogGUIBase> opts = new List<DialogGUIBase>();
+                        foreach (LCLaunchPad pad in freePads)
+                        {
+                            LCLaunchPad capturedPad = pad;
+                            opts.Add(new DialogGUIButton(capturedPad.name, () =>
+                            {
+                                if (!capturedPad.HasVesselWaitingToBeLaunched(out Vessel waitingVessel))
+                                {
+                                    b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(capturedPad);
+                                    tmpRollout.launchPadID = capturedPad.name;
+                                    vesselLC.Recon_Rollout.Add(tmpRollout);
+                                }
+                                else
+                                {
+                                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutVesselOnPad", "Cannot Roll out!", $"{waitingVessel.vesselName} is already waiting on the launch pad.", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                                }
+                            }));
+                        }
+                        opts.Add(new DialogGUIButton("Cancel", () => { }));
+                        PopupDialog.SpawnPopupDialog(new MultiOptionDialog("padPickerPopup", "Select a launch pad to roll out to:", "Roll Out", null, opts.ToArray()), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                    }
+                    else
+                    {
+                        bool padClear = !foundPad.HasVesselWaitingToBeLaunched(out Vessel foundVessel);
+                        if (padClear)
+                        {
+                            b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
+                            vesselLC.Recon_Rollout.Add(tmpRollout);
+                        }
+                        else
+                        {
+                            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutVesselOnPad", "Cannot Roll out!", $"{foundVessel.vesselName} is already waiting on the launch pad.", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                        }
+                    }
+                }
+                else
+                {
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", failedFacilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                }
+            }
+            else if (lpState == LaunchPadState.Destroyed)
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutDestroyedPopup", "Cannot Roll out!", "You must repair the launchpad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            else if (lpState == LaunchPadState.Reconditioning)
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutReconditioningPopup", "Cannot Roll out!", "You must finish reconditioning at least one pad before you can roll out to it!", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            else if (lpState != LaunchPadState.Free)
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotRollOutBusyPopup", "Cannot Roll out!", "All pads are in use by other vessels", "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+        }
+
+        private static void ProcessRocketLaunch(VesselProject b, string launchSite, LCLaunchPad pad)
+        {
+            LaunchComplex vesselLC = pad.LC;
+            if (b.launchSiteIndex >= 0)
+            {
+                vesselLC.SwitchLaunchPad(b.launchSiteIndex);
+            }
+            b.launchSiteIndex = vesselLC.ActiveLaunchPadIndex;
+
+            List<string> facilityChecks = new List<string>();
+            if (!b.MeetsFacilityRequirements(facilityChecks))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            else
+            {
+                if (vesselLC.GetReconditioning(launchSite) is ReconRolloutProject recon)
+                {
+                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {RP0DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                    ScreenMessages.PostScreenMessage(message);
+                }
+                else
+                {
+                    SpaceCenterManagement.Instance.LaunchedVessel = b;
+                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
+                    {
+                        GUIStates.ShowBLPlus = false;
+                        if (!b.IsCrewable())
+                            b.Launch();
+                        else
+                        {
+                            GUIStates.ShowBuildList = false;
+
+                            SpaceCenterManagement.ToolbarControl?.SetFalse();
+
+                            _centralWindowPosition.height = 1;
+                            AssignInitialCrew();
+                            GUIStates.ShowShipRoster = true;
+                        }
+                    }
+                    else
+                    {
+                        GUIStates.ShowBuildList = false;
+                        GUIStates.ShowClearLaunch = true;
+                    }
+                }
+            }
+        }
+
+        private static void ProcessPlaneLaunch(VesselProject b, ReconRolloutProject airlaunchPrep)
+        {
+            List<string> facilityChecks = new List<string>();
+            if (!b.MeetsFacilityRequirements(facilityChecks))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex (the Hangar) it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            else
+            {
+                bool operational = KCTUtilities.IsLaunchFacilityIntact(ProjectType.SPH);
+                if (!operational)
+                {
+                    ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
+                }
+                else
+                {
+                    GUIStates.ShowBLPlus = false;
+                    SpaceCenterManagement.Instance.LaunchedVessel = b;
+
+                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
+                    {
+                        if (airlaunchPrep != null)
+                        {
+                            GUIStates.ShowBuildList = false;
+                            GUIStates.ShowAirlaunch = true;
+                        }
+                        else if (!b.IsCrewable())
+                        {
+                            b.Launch();
+                        }
+                        else
+                        {
+                            GUIStates.ShowBuildList = false;
+                            SpaceCenterManagement.ToolbarControl?.SetFalse();
+                            _centralWindowPosition.height = 1;
+                            AssignInitialCrew();
+                            GUIStates.ShowShipRoster = true;
+                        }
+                    }
+                    else
+                    {
+                        GUIStates.ShowBuildList = false;
+                        GUIStates.ShowClearLaunch = true;
+                        GUIStates.ShowAirlaunch = airlaunchPrep != null;
+                    }
+                }
+            }
+        }
+
+        private static void RenderMountUnmountAirlaunch(VesselProject b, ReconRolloutProject airlaunchPrep, int listIdx)
+        {
+            if (airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
+            {
+                string vpID = b.shipID.ToString();
+                var tmpPrep = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.AirlaunchMount, vpID);
+                if (tmpPrep.cost > 0d)
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
+                GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? RP0DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch" + vpID) : new GUIContent("Prep for airlaunch");
+                if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
+                {
+                    AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
+                    if (!lvl.CanLaunchVessel(b, out string failedReason))
+                    {
+                        ScreenMessages.PostScreenMessage($"Vessel failed validation: {failedReason}", 6f, ScreenMessageStyle.UPPER_CENTER);
+                    }
+                    else
+                    {
+                        LaunchComplex vesselLC = b.LC;
+                        vesselLC.Recon_Rollout.Add(tmpPrep);
+                    }
+                }
+                if (Event.current.type == EventType.Repaint)
+                    if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))
+                        _mouseOnAirlaunchButton = listIdx;
+                    else if (listIdx == _mouseOnAirlaunchButton)
+                        _mouseOnAirlaunchButton = -1;
+            }
+            else if (airlaunchPrep != null)
+            {
+                GUIContent btnText = airlaunchPrep.IsComplete() ? new GUIContent("Unmount") : RP0DTUtils.GetColonFormattedTimeWithTooltip(airlaunchPrep.GetTimeLeft(), "airlaunch" + airlaunchPrep.associatedID);
+                if (GUILayout.Button(btnText, GUILayout.ExpandWidth(false)))
+                {
+                    airlaunchPrep.SwitchDirection();
+                }
+            }
+        }
+
+        public static void DrawLCManagentWindow(int id)
+        {
+            LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
+            int count = ksc.LaunchComplexes.Count;
+
+            GUILayout.BeginVertical();
+            for (int i = 0; i < count; i++)
+            {
+                LaunchComplex lc = ksc.LaunchComplexes[i];
+                bool isHangar = i == LCSpaceCenter.HangarIndex;
+
+                GUILayout.BeginHorizontal();
+
+                GUI.enabled = !isHangar && i > LCSpaceCenter.HangarIndex + 1;
+                if (GUILayout.Button("▲", GUILayout.Width(22)))
+                    ksc.SwapLaunchComplexes(i, i - 1);
+
+                GUI.enabled = !isHangar && i < count - 1;
+                if (GUILayout.Button("▼", GUILayout.Width(22)))
+                    ksc.SwapLaunchComplexes(i, i + 1);
+
+                GUI.enabled = lc.IsOperational;
+                string lcText = $"{lc.Name} ({lc.SupportedMassAsPrettyText})";
+                string lcTooltip = $"Size limit: {lc.SupportedSizeAsPrettyText}\nHuman-Rated: {(lc.IsHumanRated ? "Yes" : "No")}";
+                GUILayout.Label(new GUIContent(lcText, lcTooltip));
+
+                GUI.enabled = true;
+                if (GUILayout.Button(new GUIContent("Rename", "Rename this Launch Complex"), GUILayout.ExpandWidth(false)))
+                {
+                    ksc.SwitchLaunchComplex(i);
+                    _renameType = RenameType.LaunchComplex;
+                    _newName = lc.Name;
                     GUIStates.ShowDismantlePad = false;
                     GUIStates.ShowModifyLC = false;
-                    GUIStates.ShowDismantleLC = true;
+                    GUIStates.ShowDismantleLC = false;
                     GUIStates.ShowNewPad = false;
                     GUIStates.ShowNewLC = false;
                     GUIStates.ShowLCResources = false;
+                    GUIStates.ShowLCManagement = false;
+                    GUIStates.ShowRename = true;
+                    GUIStates.ShowBuildList = false;
+                    GUIStates.ShowBLPlus = false;
+                    _centralWindowPosition.width = 300;
+                }
+
+                bool canDismantle = !isHangar && lc.LCType == LaunchComplexType.Pad && !HighLogic.LoadedSceneIsEditor;
+                if (canDismantle)
+                {
+                    bool canDismantleNow = lc.CanDismantle;
+                    const string dismantleFailTooltip = "Currently in use! No projects can be underway or vessels at pads/airlaunching.";
+                    if (GUILayout.Button(new GUIContent("Dismantle", canDismantleNow ? "Dismantle this Launch Complex." : dismantleFailTooltip),
+                        canDismantleNow ? GUI.skin.button : _redButton, GUILayout.ExpandWidth(false)))
+                    {
+                        if (canDismantleNow)
+                        {
+                            ksc.SwitchLaunchComplex(i);
+                            GUIStates.ShowDismantlePad = false;
+                            GUIStates.ShowModifyLC = false;
+                            GUIStates.ShowDismantleLC = true;
+                            GUIStates.ShowNewPad = false;
+                            GUIStates.ShowNewLC = false;
+                            GUIStates.ShowLCResources = false;
+                            GUIStates.ShowLCManagement = false;
+                            GUIStates.ShowRename = false;
+                            GUIStates.ShowBuildList = false;
+                            GUIStates.ShowBLPlus = false;
+                            _centralWindowPosition.width = 300;
+                            _centralWindowPosition.height = 1;
+                        }
+                        else
+                        {
+                            PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", dismantleFailTooltip, "Can't Dismantle", null,
+                                new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                        }
+                    }
+                }
+
+                if (!isHangar && lc.LCType == LaunchComplexType.Pad && !HighLogic.LoadedSceneIsEditor &&
+                    GUILayout.Button(new GUIContent("New Pad", "Build an additional launch pad for this LC"), GUILayout.ExpandWidth(false)))
+                {
+                    ksc.SwitchLaunchComplex(i);
+                    _newName = $"LaunchPad {(lc.LaunchPads.Count + 1)}";
+                    GUIStates.ShowDismantlePad = false;
+                    GUIStates.ShowModifyLC = false;
+                    GUIStates.ShowDismantleLC = false;
+                    GUIStates.ShowNewPad = true;
+                    GUIStates.ShowNewLC = false;
+                    GUIStates.ShowLCResources = false;
+                    GUIStates.ShowLCManagement = false;
                     GUIStates.ShowRename = false;
                     GUIStates.ShowBuildList = false;
                     GUIStates.ShowBLPlus = false;
                     _centralWindowPosition.width = 300;
                     _centralWindowPosition.height = 1;
                 }
-                else
-                {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTCantModify", GUIStates.ShowPersonnelWindow ? staffWindowFailTooltip : modifyFailTooltip, "Can't Dismantle", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin).HideGUIsWhilePopup();
-                }
-            }
-            GUILayout.FlexibleSpace();
-            if (lcCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
-            {
-                SpaceCenterManagement.Instance.ActiveSC.SwitchToNextLaunchComplex();
-            }
-            GUILayout.EndHorizontal();
-        }
 
-        private static void RenderLaunchPadControls()
-        {
-            LaunchComplex activeLC = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LC : SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
-
-            GUILayout.BeginHorizontal();
-            bool oldRushing = activeLC.IsRushing;
-            activeLC.IsRushing = GUILayout.Toggle(activeLC.IsRushing, new GUIContent("Rush",
-                $"Enable rush integration.\nRate: {Database.SettingsSC.RushRateMult:N1}x\nSalary cost: {Database.SettingsSC.RushSalaryMult:N1}x{(activeLC.LCType == LaunchComplexType.Pad ? "\nLC will not gain efficiency" : string.Empty)}"));
-            if (oldRushing != activeLC.IsRushing)
-                KCTUtilities.ChangeEngineers(activeLC, 0); // fire event to recalc salaries.
-
-            LCLaunchPad activePad = activeLC.ActiveLPInstance;
-            
-            GUILayout.Space(15);
-
-            if (activePad == null)
-            {
-                // Hangar, no pads to switch
                 GUILayout.EndHorizontal();
-                return;
-            }
 
-            int lpCount = activeLC.LaunchPadCount;
-            if (lpCount > 1 && GUILayout.Button("<<", GUILayout.ExpandWidth(false)))
-            {
-                activeLC.SwitchToPrevLaunchPad();
-            }
-            GUILayout.FlexibleSpace();
-            GUILayout.Label(new GUIContent(activePad.name, "Uses Launch Complex limits"));
+                if (lc.LCType == LaunchComplexType.Pad)
+                {
+                    int lpCount = lc.LaunchPadCount;
+                    for (int j = 0; j < lc.LaunchPads.Count; j++)
+                    {
+                        LCLaunchPad pad = lc.LaunchPads[j];
+                        GUILayout.BeginHorizontal();
+                        GUILayout.Space(44); // indent under LC name
+                        GUILayout.Label(pad.name, GUILayout.ExpandWidth(true));
 
-            if (GUILayout.Button(new GUIContent("Rename", "Rename pad"), GUILayout.ExpandWidth(false)))
-            {
-                _renameType = RenameType.Pad;
-                _newName = activePad.name;
-                GUIStates.ShowDismantlePad = false;
-                GUIStates.ShowModifyLC = false;
-                GUIStates.ShowDismantleLC = false;
-                GUIStates.ShowNewPad = false;
-                GUIStates.ShowNewLC = false;
-                GUIStates.ShowLCResources = false;
-                GUIStates.ShowRename = true;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-            }
-            if (GUILayout.Button(new GUIContent("Location", "Choose KerbalKonstructs launch site"), GUILayout.ExpandWidth(false)))
-            {
-                _launchSites = KCTUtilities.GetLaunchSites(true);
-                if (_launchSites.Any())
-                {
-                    _isSelectingLaunchSiteForVessel = false;
-                    GUIStates.ShowLaunchSiteSelector = true;
-                    _centralWindowPosition.width = 300;
+                        if (GUILayout.Button(new GUIContent("Rename", "Rename this launch pad"), GUILayout.ExpandWidth(false)))
+                        {
+                            ksc.SwitchLaunchComplex(i);
+                            lc.SwitchLaunchPad(j);
+                            _renameType = RenameType.Pad;
+                            _newName = pad.name;
+                            GUIStates.ShowDismantlePad = false;
+                            GUIStates.ShowModifyLC = false;
+                            GUIStates.ShowDismantleLC = false;
+                            GUIStates.ShowNewPad = false;
+                            GUIStates.ShowNewLC = false;
+                            GUIStates.ShowLCResources = false;
+                            GUIStates.ShowLCManagement = false;
+                            GUIStates.ShowRename = true;
+                            GUIStates.ShowBuildList = false;
+                            GUIStates.ShowBLPlus = false;
+                        }
+
+                        if (GUILayout.Button(new GUIContent("Location", "Choose KerbalKonstructs launch site"), GUILayout.ExpandWidth(false)))
+                        {
+                            _launchSites = KCTUtilities.GetLaunchSites(true);
+                            if (_launchSites.Any())
+                            {
+                                ksc.SwitchLaunchComplex(i);
+                                lc.SwitchLaunchPad(j);
+                                _isSelectingLaunchSiteForVessel = false;
+                                GUIStates.ShowLaunchSiteSelector = true;
+                                GUIStates.ShowLCManagement = false;
+                                _centralWindowPosition.width = 300;
+                            }
+                            else
+                            {
+                                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available!", "No Launch Sites", null,
+                                    new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                            }
+                        }
+
+                        if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle this pad"), GUILayout.ExpandWidth(false)))
+                        {
+                            ksc.SwitchLaunchComplex(i);
+                            lc.SwitchLaunchPad(j);
+                            _centralWindowPosition.height = 1;
+                            GUIStates.ShowDismantlePad = true;
+                            GUIStates.ShowModifyLC = false;
+                            GUIStates.ShowDismantleLC = false;
+                            GUIStates.ShowNewPad = false;
+                            GUIStates.ShowNewLC = false;
+                            GUIStates.ShowLCResources = false;
+                            GUIStates.ShowLCManagement = false;
+                            GUIStates.ShowRename = false;
+                            GUIStates.ShowBuildList = false;
+                            GUIStates.ShowBLPlus = false;
+                        }
+
+                        GUILayout.EndHorizontal();
+                    }
                 }
-                else
-                {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("KCTNoLaunchsites", "No launch sites available!", "No Launch Sites", null, new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"), () => { })), false, HighLogic.UISkin).HideGUIsWhilePopup();
-                }
             }
-            if (GUILayout.Button(new GUIContent("New", "Build a new launch pad"), GUILayout.ExpandWidth(false)))
-            {
-                _newName = $"LaunchPad {(activeLC.LaunchPads.Count + 1)}";
-                GUIStates.ShowDismantlePad = false;
-                GUIStates.ShowModifyLC = false;
-                GUIStates.ShowDismantleLC = false;
-                GUIStates.ShowNewPad = true;
-                GUIStates.ShowNewLC = false;
-                GUIStates.ShowLCResources = false;
-                GUIStates.ShowRename = false;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-                _centralWindowPosition.width = 300;
-                _centralWindowPosition.height = 1;
-            }
-            if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle the launch pad. Can be used to lower maintenance costs by getting rid of unused pads."), GUILayout.ExpandWidth(false)))
-            {
-                _centralWindowPosition.height = 1;
-                GUIStates.ShowDismantlePad = true;
-                GUIStates.ShowModifyLC = false;
-                GUIStates.ShowDismantleLC = false;
-                GUIStates.ShowNewPad = false;
-                GUIStates.ShowNewLC = false;
-                GUIStates.ShowLCResources = false;
-                GUIStates.ShowRename = false;
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowBLPlus = false;
-            }
-            GUILayout.FlexibleSpace();
-            if (lpCount > 1 && GUILayout.Button(">>", GUILayout.ExpandWidth(false)))
-            {
-                activeLC.SwitchToNextLaunchPad();
-            }
-            GUILayout.EndHorizontal();
+            if (GUILayout.Button("Close"))
+                GUIStates.ShowLCManagement = false;
+            GUILayout.EndVertical();
+
+            ClampWindow(ref _manageLCWindowPosition);
+            if (!Input.GetMouseButtonDown(1) && !Input.GetMouseButtonDown(2))
+                GUI.DragWindow();
         }
 
         public static void CancelTechNode(int index, bool initialCancel = true)

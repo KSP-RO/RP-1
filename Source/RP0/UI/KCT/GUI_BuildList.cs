@@ -1107,15 +1107,6 @@ namespace RP0
 
         private static int RenderWarehouseSection(LaunchComplex lc, int startIdx = 0)
         {
-            bool isPad = lc.LCType == LaunchComplexType.Pad;
-            if (lc.Warehouse.Count > 0)
-            {
-                GUILayout.BeginHorizontal();
-                GUILayout.Label(isPad ? _rocketTexture : _planeTexture, GUILayout.ExpandWidth(false));
-                GUILayout.Label("Storage");
-                GUILayout.EndHorizontal();
-            }
-
             if (lc.Warehouse.Count == 0)
             {
                 GUILayout.Label("No vessels in storage!\nThey will be stored here when they are complete.");

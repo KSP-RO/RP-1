@@ -293,6 +293,18 @@ namespace RP0
         public string lcID;
         public string lcModID;
         public EditorFacility builtAt;
+        public double effectiveCost;
+        public double buildPoints;
+        public string launchSite;
+        public bool humanRated;
+        public float cost;
+        public float mass;
+        public int numStages;
+        public int numStageParts;
+        public double stagePartCost;
+        public float emptyCost;
+        public float emptyMass;
+        public Vector3 shipSize;
 
         public LaunchEventDto()
         {
@@ -307,6 +319,18 @@ namespace RP0
             lcID = le.LCID;
             lcModID = le.LCModID;
             builtAt = le.BuiltAt;
+            effectiveCost = le.EffectiveCost;
+            buildPoints = le.BuildPoints;
+            launchSite = le.LaunchSite;
+            humanRated = le.HumanRated;
+            cost = le.Cost;
+            mass = le.Mass;
+            numStages = le.NumStages;
+            numStageParts = le.NumStageParts;
+            stagePartCost = le.StagePartCost;
+            emptyCost = le.EmptyCost;
+            emptyMass = le.EmptyMass;
+            shipSize = le.ShipSize;
         }
 
         public override string ToString()

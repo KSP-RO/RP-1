@@ -1147,6 +1147,8 @@ namespace RP0
                     dataModule.Data.LCID = vp.LCID;
                     if (dataModule.Data.LCID != Guid.Empty)
                         dataModule.Data.LCModID = vp.LC.ModID;
+
+                    CareerLog.Instance?.AddPendingLaunch(FlightGlobals.ActiveVessel.id, vp);
                 }
             }
 

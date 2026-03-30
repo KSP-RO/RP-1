@@ -42,6 +42,7 @@
   <ItemGroup>
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
+    <Compile Include="CareerLog\PendingLaunchData.cs" />
     <Compile Include="ConfigurableStart\DateHandler.cs" />
     <Compile Include="ConfigurableStart\PresetPickerGUI.cs" />
     <Compile Include="ConfigurableStart\Scenario.cs" />

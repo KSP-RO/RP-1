@@ -64,6 +64,11 @@ namespace RP0
         private readonly PersistentList<TechResearchEvent> _techEvents = new PersistentList<TechResearchEvent>();
         [KSPField(isPersistant = true)]
         private readonly PersistentList<LeaderEvent> _leaderEvents = new PersistentList<LeaderEvent>();
+        /// <summary>
+        /// Stores data about vessels that are loaded onto the pad but haven't actually launched yet.
+        /// </summary>
+        [KSPField(isPersistant = true)]
+        private readonly PersistentDictionary<Guid, PendingLaunchData> _pendingLaunches = new PersistentDictionaryValueTypeKey<Guid, PendingLaunchData>();
 
         private bool _eventsBound = false;
         private bool _launched = false;
@@ -213,6 +218,9 @@ namespace RP0
         {
             base.OnLoad(node);
 
+            if (HighLogic.LoadedScene == GameScenes.SPACECENTER && _pendingLaunches.Count > 0)
+                StartCoroutine(CheckAndCleanPendingLaunches());
+
             if (LoadedSaveVersion < CurrentVersion)
             {
                 if (LoadedSaveVersion < 1)
@@ -262,6 +270,18 @@ namespace RP0
                 Part = part,
                 Type = type
             });
+        }
+
+        public void AddPendingLaunch(Guid vesselId, VesselProject vp)
+        {
+            if (!IsEnabled || vp?.IsValid != true) return;
+
+            if (_pendingLaunches.ContainsKey(vesselId))
+            {
+                RP0Debug.LogWarning($"Vessel {vesselId} already has pending launch data, skipping...");
+                return;
+            }
+            _pendingLaunches.Add(vesselId, new PendingLaunchData(vp));
         }
 
         public void ExportToFile(string path)
@@ -755,7 +775,12 @@ namespace RP0
                 RP0Debug.Log($"Launching {FlightGlobals.ActiveVessel?.vesselName}");
 
                 _launched = true;
-                _launchedVessels.Add(new LaunchEvent(Planetarium.GetUniversalTime())
+
+                Guid g = ev.host.id;
+                if (_pendingLaunches.TryGetValue(g, out PendingLaunchData pending))
+                    _pendingLaunches.Remove(g);
+
+                _launchedVessels.Add(new LaunchEvent(Planetarium.GetUniversalTime(), pending)
                 {
                     VesselName = FlightGlobals.ActiveVessel?.vesselName,
                     VesselUID = ev.host.GetKCTVesselId(),
@@ -925,6 +950,21 @@ namespace RP0
                 State = state,
                 FacilityID = id
             });
+        }
+
+        private IEnumerator CheckAndCleanPendingLaunches()
+        {
+            yield return new WaitForFixedUpdate();
+
+            Guid[] dictKeys = _pendingLaunches.Keys.ToArray();
+            foreach (var g in dictKeys)
+            {
+                Vessel v = FlightGlobals.FindVessel(g);
+                if (v == null)
+                {
+                    _pendingLaunches.Remove(g);
+                }
+            }
         }
     }
 }

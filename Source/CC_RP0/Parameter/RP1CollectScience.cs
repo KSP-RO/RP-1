@@ -144,8 +144,8 @@ namespace ContractConfigurator.RP0
                     string biomeStr = string.IsNullOrEmpty(biome) ? (targetBody?.displayName) : new Biome(targetBody, biome).ToString();
                     string situationStr = situation != null ? situation.Value.Print().ToLower() :
                         location != null ? Localizer.GetStringByTag(location.Value == BodyLocation.Surface ? "#cc.science.location.Surface" : "#cc.science.location.Space") : null;
-                    string fractionStr = $"{Math.Round(fractionComplete):P0} ";
-                    string fracBiomeStr = fractionCompleteBiome.HasValue ? $" (each {Math.Round(fractionCompleteBiome.Value):P0} complete)" : string.Empty;
+                    string fractionStr = $"{fractionComplete:P0} ";
+                    string fracBiomeStr = fractionCompleteBiome.HasValue ? $" (each {fractionCompleteBiome.Value:P0} complete)" : string.Empty;
 
                     if (_expandedBiomes)
                     {

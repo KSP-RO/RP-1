@@ -141,18 +141,7 @@ namespace RP0
                 excessCost = 0d;
                 _totalCredit -= cost;
             }
-            if (CareerLog.Instance?.CurrentPeriod != null)
-            {
-                double spent = cost - excessCost;
-                CareerLog.Instance.CurrentPeriod.SpentUnlockCredit += spent;
-                if (reason == TransactionReasonsRP0.ToolingPurchase)
-                    CareerLog.Instance.CurrentPeriod.ToolingFees += spent; // only add spent unlock credit, the currency change event will cover the rest
-                else if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock)
-                    CareerLog.Instance.CurrentPeriod.EntryCosts += spent;
-                else
-                    // If it's *not* one of these two reasons, something has gone wrong.
-                    RP0Debug.LogWarning($"Spent unlock cost for reason that is not tooling or part unlock: {reason.ToString()}");
-            }
+            CareerLog.Instance?.UnlockCreditSpent(cost - excessCost, reason);
             return excessCost;
         }
 

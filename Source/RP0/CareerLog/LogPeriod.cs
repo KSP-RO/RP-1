@@ -115,9 +115,6 @@ namespace RP0
         [Persistent]
         public double Reputation;
 
-        [Persistent]
-        public double HeadlinesHype;
-
         public LogPeriod()
         {
         }

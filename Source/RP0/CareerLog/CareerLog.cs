@@ -71,11 +71,6 @@ namespace RP0
 
         public static CareerLog Instance { get; private set; }
 
-        /// <summary>
-        /// Default means to get hype for career not using Headlines
-        /// </summary>
-        public static Func<double> GetHeadlinesHype = () => { return 0; };
-
         public LogPeriod CurrentPeriod
         { 
             get
@@ -222,105 +217,11 @@ namespace RP0
             {
                 if (LoadedSaveVersion < 1)
                 {
-                    foreach (ConfigNode n in node.GetNodes("LOGPERIODS"))
-                    {
-                        foreach (ConfigNode pn in n.GetNodes("LOGPERIOD"))
-                        {
-                            var lp = new LogPeriod(pn);
-                            double periodStart = lp.StartUT;
-                            try
-                            {
-                                _periodDict.Add(periodStart, lp);
-                            }
-                            catch
-                            {
-                                RP0Debug.LogError($"LOGPERIOD for {periodStart} already exists, skipping...");
-                            }
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("CONTRACTS"))
-                    {
-                        foreach (ConfigNode cn in n.GetNodes("CONTRACT"))
-                        {
-                            var c = new ContractEvent(cn);
-                            _contractDict.Add(c);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("LAUNCHEVENTS"))
-                    {
-                        foreach (ConfigNode ln in n.GetNodes("LAUNCHEVENT"))
-                        {
-                            var l = new LaunchEvent(ln);
-                            _launchedVessels.Add(l);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("FAILUREEVENTS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("FAILUREEVENT"))
-                        {
-                            var f = new FailureEvent(fn);
-                            _failures.Add(f);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("LCS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("LC"))
-                        {
-                            var lc = new LCLogItem(fn);
-                            _lcs.Add(lc);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("FACILITYCONSTRUCTIONS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTRUCTION"))
-                        {
-                            var fc = new FacilityConstruction(fn);
-                            _facilityConstructions.Add(fc);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("LPCONSTRUCTIONS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("LPCONSTRUCTION"))
-                        {
-                            var fc = new LPConstruction(fn);
-                            _lpConstructions.Add(fc);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("FACILITYCONSTREVENTS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTREVENT"))
-                        {
-                            var fc = new FacilityConstructionEvent(fn);
-                            _facilityConstructionEvents.Add(fc);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("TECHS"))
-                    {
-                        foreach (ConfigNode tn in n.GetNodes("TECH"))
-                        {
-                            var te = new TechResearchEvent(tn);
-                            _techEvents.Add(te);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("LEADEREVENTS"))
-                    {
-                        foreach (ConfigNode ln in n.GetNodes("LEADEREVENT"))
-                        {
-                            var le = new LeaderEvent(ln);
-                            _leaderEvents.Add(le);
-                        }
-                    }
+                    RP0Debug.LogError($"CareerLog no longer supports loading saves from v2.4.0 or earlier");
+                    return;
                 }
 
+                // Add any migration logic here if needed
                 LoadedSaveVersion = CurrentVersion;
             }
         }
@@ -349,6 +250,7 @@ namespace RP0
             });
         }
 
+        // Called from TestFlight with Reflection
         public void AddFailureEvent(Vessel v, string part, string type)
         {
             if (!IsEnabled) return;
@@ -390,7 +292,6 @@ namespace RP0
                     p.OtherFees.ToString("F0"),
                     p.Confidence.ToString("F1"),
                     p.Reputation.ToString("F1"),
-                    p.HeadlinesHype.ToString("F1"),
                     string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
                                                       .Select(l => l.VesselName)
                                                       .ToArray()),
@@ -413,7 +314,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract rep rewards", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Hiring researchers", "Hiring engineers", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
+            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract rep rewards", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Hiring researchers", "Hiring engineers", "Other Fees", "Confidence", "Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -607,8 +508,7 @@ namespace RP0
                 fundsGainMult = logPeriod.FundsGainMult,
                 numNautsKilled = logPeriod.NumNautsKilled,
                 confidence = logPeriod.Confidence,
-                reputation = logPeriod.Reputation,
-                headlinesHype = logPeriod.HeadlinesHype
+                reputation = logPeriod.Reputation
             };
         }
 
@@ -629,7 +529,6 @@ namespace RP0
                 _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmount(_prevPeriod.StartUT, _prevPeriod.EndUT);
                 _prevPeriod.Confidence = Confidence.CurrentConfidence;
                 _prevPeriod.Reputation = Reputation.CurrentRep;
-                _prevPeriod.HeadlinesHype = GetHeadlinesHype();
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);
@@ -844,21 +743,6 @@ namespace RP0
                 DisplayName = c.Title,
                 InternalName = internalName
             });
-        }
-
-        public void ProgramAccepted(Program p)
-        {
-            // TODO
-        }
-
-        public void ProgramObjectivesMet(Program p)
-        {
-            // TODO
-        }
-
-        public void ProgramCompleted(Program p)
-        {
-            // TODO
         }
 
         private void VesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> ev)

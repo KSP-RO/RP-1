@@ -285,7 +285,6 @@ namespace RP0.Programs
             p.deadlineUT = p.acceptedUT + p.DurationYears * secsPerYear;
 
             Confidence.Instance.AddConfidence(-p.confidenceCosts[speed], TransactionReasonsRP0.ProgramActivation.Stock());
-            CareerLog.Instance?.ProgramAccepted(p);
 
             return p;
         }
@@ -368,7 +367,6 @@ namespace RP0.Programs
         public void MarkObjectivesComplete()
         {
             objectivesCompletedUT = Planetarium.GetUniversalTime();
-            CareerLog.Instance?.ProgramObjectivesMet(this);
             if (KSP.UI.Screens.MessageSystem.Instance != null)
             {
                 KSP.UI.Screens.MessageSystem.Instance.AddMessage(new KSP.UI.Screens.MessageSystem.Message("Program Complete", 
@@ -399,7 +397,6 @@ namespace RP0.Programs
             }
             RP0Debug.Log($"Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT) / secsPerYear}. Adding {repDelta} rep.");
 
-            CareerLog.Instance?.ProgramCompleted(this);
             Milestones.MilestoneHandler.Instance.OnProgramComplete(name);
         }
 

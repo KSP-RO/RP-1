@@ -771,6 +771,21 @@ namespace RP0
             }
         }
 
+        public void IncreaseSpentUnlockCredit(double spentCredit, TransactionReasonsRP0 reason) 
+        {
+            // this function signature is inconsistent with the other currency-change events
+            // but the whole point is that this can't operate off of CurrenciesModified, since unlock credit isn't tracked by that event
+            CurrentPeriod.SpentUnlockCredit += spentCredit;
+            if (reason == TransactionReasonsRP0.ToolingPurchase)
+            {
+                CurrentPeriod.ToolingFees += spentCredit;
+            }
+            else if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock)
+            {
+                CurrentPeriod.EntryCosts += spentCredit;
+            }
+        }
+
         private void ContractAccepted(Contract c)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled || c.AutoAccept) return;   // Do not record the Accept event for record contracts

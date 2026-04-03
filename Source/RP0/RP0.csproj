@@ -43,6 +43,7 @@
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
     <Compile Include="CareerLog\PendingLaunchData.cs" />
+    <Compile Include="CareerLog\StageStats.cs" />
     <Compile Include="ConfigurableStart\DateHandler.cs" />
     <Compile Include="ConfigurableStart\PresetPickerGUI.cs" />
     <Compile Include="ConfigurableStart\Scenario.cs" />
@@ -424,7 +425,16 @@
     <Publicize Include="Assembly-CSharp" />
     <DoNotPublicize Include="Assembly-CSharp:BaseField`1.OnValueModified" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Reference Include="$(KSPRoot)/GameData/MechJeb2/Plugins/MechJebLib.dll">
+      <HintPath>$(ReferencePath)/MechJebLib.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/GameData/MechJeb2/Plugins/MechJebLibBindings.dll">
+      <HintPath>$(ReferencePath)/MechJebLibBindings.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
   </PropertyGroup>

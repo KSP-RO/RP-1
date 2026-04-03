@@ -38,6 +38,8 @@ namespace RP0
         public string KCTPersistentID;
         [Persistent]
         public Vector3 ShipSize = Vector3.zero;
+        [Persistent]
+        public PersistentList<StageStats> Stages = new PersistentList<StageStats>();
 
         public PendingLaunchData() { }
 

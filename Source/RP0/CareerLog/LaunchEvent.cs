@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ROUtils.DataTypes;
+using UnityEngine;
 
 namespace RP0
 {
@@ -40,6 +41,8 @@ namespace RP0
         public float EmptyMass = 0;
         [Persistent]
         public Vector3 ShipSize = Vector3.zero;
+        [Persistent]
+        public PersistentList<StageStats> Stages = new PersistentList<StageStats>();
 
         /// <summary>
         /// Used only for deserialization.
@@ -73,6 +76,7 @@ namespace RP0
             EmptyCost = data.EmptyCost;
             EmptyMass = data.EmptyMass;
             ShipSize = data.ShipSize;
+            Stages.AddRange(data.Stages);
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using Contracts;
 using Csv;
+using MechJebLib.FuelFlowSimulation;
+using MechJebLibBindings.FuelFlowSimulation;
 using ROUtils.DataTypes;
 using RP0.Programs;
 using System;
@@ -281,7 +283,71 @@ namespace RP0
                 RP0Debug.LogWarning($"Vessel {vesselId} already has pending launch data, skipping...");
                 return;
             }
-            _pendingLaunches.Add(vesselId, new PendingLaunchData(vp));
+
+            var data = new PendingLaunchData(vp);
+            _pendingLaunches.Add(vesselId, data);
+
+            Vessel vessel = FlightGlobals.ActiveVessel;
+            if (vessel?.id == vesselId)
+            {
+                StartCoroutine(StartStageStatsSimRoutine(vessel, data));
+            }
+        }
+
+        private IEnumerator StartStageStatsSimRoutine(Vessel vessel, PendingLaunchData data)
+        {
+            // Need to wait until all the parts to get properly initialized
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForEndOfFrame();
+
+            if (vessel == null)
+            {
+                RP0Debug.LogError($"StartStageStatsSimRoutine: Vessel {data.ShipName} ({data.ShipID}) no longer found");
+                yield break;
+            }
+
+            try
+            {
+                var simManager = new SimVesselManager();
+                simManager.Build(vessel);
+                simManager.SetConditions(0d, 0d, 0d);
+                simManager.StartFuelFlowSimulationJob();
+                StartCoroutine(CollectSimulationResultRoutine(simManager, data));
+            }
+            catch (Exception ex)
+            {
+                RP0Debug.LogError($"Failed to start FuelFlowSimulation for {data.ShipName} ({data.ShipID}): {ex}");
+            }
+        }
+
+        private IEnumerator CollectSimulationResultRoutine(SimVesselManager simManager, PendingLaunchData data)
+        {
+
+            float deadline = Time.realtimeSinceStartup + 5f;
+            while (!simManager.FuelFlowSimulation.ResultReady && Time.realtimeSinceStartup < deadline)
+                yield return null;
+
+            try
+            {
+                if (simManager.FuelFlowSimulation.ResultReady)
+                {
+                    // Skip the initial/unstaged state.
+                    // Same as the Show/Hide 0 option in MJ stage stats window
+                    for (int i = 0; i < simManager.Segments.Count - 1; i++)
+                    {
+                        FuelStats seg = simManager.Segments[i];
+                        data.Stages.Add(new StageStats(seg));
+                    }
+                }
+                else
+                {
+                    RP0Debug.LogWarning($"FuelFlowSimulation timed out for {data.ShipName} ({data.ShipID})");
+                }
+            }
+            finally
+            {
+                simManager.Release();
+            }
         }
 
         public void ExportToFile(string path)

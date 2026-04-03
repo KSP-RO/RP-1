@@ -141,7 +141,7 @@ namespace RP0
                 excessCost = 0d;
                 _totalCredit -= cost;
             }
-            CareerLog.Instance?.UnlockCreditSpent(cost - excessCost, reason);
+            CareerLog.Instance?.IncreaseSpentUnlockCredit(cost - excessCost, reason);
             return excessCost;
         }
 

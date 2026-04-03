@@ -771,7 +771,8 @@ namespace RP0
             }
         }
 
-        public void UnlockCreditSpent(double spentCredit, TransactionReasonsRP0 reason) {
+        public void IncreaseSpentUnlockCredit(double spentCredit, TransactionReasonsRP0 reason) 
+        {
             // this function signature is inconsistent with the other currency-change events
             // but the whole point is that this can't operate off of CurrenciesModified, since unlock credit isn't tracked by that event
             CurrentPeriod.SpentUnlockCredit += spentCredit;

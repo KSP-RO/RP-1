@@ -110,7 +110,10 @@ namespace RP0
                             }
                             else
                             {
-                                KCTUtilities.TryAddVesselToBuildList(b.CreateCopy(), skipPartChecks: true, SpaceCenterManagement.Instance.ActiveSC.ActiveLC);
+                                var copy = b.CreateCopy();
+                                LaunchComplex targetLC = FindCompatibleLCForPlan(copy);
+                                if (targetLC != null)
+                                    KCTUtilities.TryAddVesselToBuildList(copy, skipPartChecks: true, targetLC);
                             }
                         }
                     }
@@ -177,6 +180,43 @@ namespace RP0
         private static void RemoveVesselFromPlans()
         {
             SpaceCenterManagement.Instance.BuildPlans.RemoveAt(_planToDelete);
+        }
+
+        private static LaunchComplex FindCompatibleLCForPlan(VesselProject vp)
+        {
+            LCSpaceCenter sc = SpaceCenterManagement.Instance.ActiveSC;
+
+            if (vp.Type == ProjectType.SPH)
+            {
+                if (sc.Hangar.IsOperational)
+                    return sc.Hangar;
+
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "buildPlansNoLCPopup",
+                    "No Suitable Launch Complex!",
+                    "The Hangar is not operational. Wait for it to finish renovating before integrating this vessel.",
+                    "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                return null;
+            }
+
+            bool anyOperational = false;
+            for (int i = 0; i < sc.LaunchComplexes.Count; i++)
+            {
+                LaunchComplex lc = sc.LaunchComplexes[i];
+                if (lc.LCType != LaunchComplexType.Pad || !lc.IsOperational)
+                    continue;
+
+                anyOperational = true;
+                if (vp.MeetsFacilityRequirements(lc.Stats, null))
+                    return lc;
+            }
+
+            string msg = anyOperational
+                ? "No operational launch complex can accommodate this vessel. Modify or build a compatible launch complex."
+                : "No operational launch complex exists. Build a launch complex (or wait for one to finish construction) before integrating this vessel.";
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "buildPlansNoLCPopup",
+                "No Suitable Launch Complex!", msg,
+                "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+            return null;
         }
     }
 }

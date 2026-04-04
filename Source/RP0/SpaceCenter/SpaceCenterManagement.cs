@@ -1177,7 +1177,7 @@ namespace RP0
             {
                 if (alParams.KSPVesselId == Guid.Empty)
                     alParams.KSPVesselId = FlightGlobals.ActiveVessel.id;
-                StartCoroutine(AirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
+                StartCoroutine(AirlaunchUtils.DoAirlaunchRoutine(alParams, FlightGlobals.ActiveVessel.id));
 
                 // Clear the KCT vessel ID but keep KSP's own ID.
                 // 'Revert To Launch' state is saved some frames after the scene got loaded so LaunchedVessel is no longer there.
@@ -1228,58 +1228,6 @@ namespace RP0
                 }
                 LaunchedCrew.Clear();
             }
-        }
-
-        internal IEnumerator AirlaunchRoutine(AirlaunchParams launchParams, Guid vesselId, bool skipCountdown = false)
-        {
-            if (!skipCountdown)
-                yield return _wfsTwo;
-
-            for (int i = 10; i > 0 && !skipCountdown; i--)
-            {
-                if (FlightGlobals.ActiveVessel == null || FlightGlobals.ActiveVessel.id != vesselId)
-                {
-                    ScreenMessages.PostScreenMessage("Airlaunch cancelled", 5f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
-                    yield break;
-                }
-
-                if (i == 1 && FlightGlobals.ActiveVessel.situation == Vessel.Situations.PRELAUNCH)
-                {
-                    // Make sure that the vessel situation transitions from Prelaunch to Landed before airlaunching
-                    FlightGlobals.ActiveVessel.situation = Vessel.Situations.LANDED;
-                }
-
-                ScreenMessages.PostScreenMessage($"Airlaunching in {i}...", 1f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
-                yield return _wfsOne;
-            }
-
-            KCTUtilities.DoAirlaunch(launchParams);
-
-            if (ModUtils.IsPrincipiaInstalled)
-                StartCoroutine(ClobberPrincipia());
-        }
-
-        /// <summary>
-        /// Need to keep the vessel in Prelaunch state for a while if Principia is installed.
-        /// Otherwise the vessel will spin out in a random way.
-        /// </summary>
-        /// <returns></returns>
-        private IEnumerator ClobberPrincipia()
-        {
-            if (FlightGlobals.ActiveVessel == null)
-                yield return null;
-
-            const int maxFramesWaited = 250;
-            int i = 0;
-            do
-            {
-                FlightGlobals.ActiveVessel.situation = Vessel.Situations.PRELAUNCH;
-                yield return new WaitForFixedUpdate();
-            } while (FlightGlobals.ActiveVessel.packed && i++ < maxFramesWaited);
-            // Need to fire this so trip logger etc notice we're flying now.
-            RP0Debug.Log($"Finished clobbering vessel situation of {FlightGlobals.ActiveVessel.name} to PRELAUNCH (for Prinicipia stability), now firing change event to FLYING.");
-            FlightGlobals.ActiveVessel.situation = Vessel.Situations.FLYING;
-            GameEvents.onVesselSituationChange.Fire(new GameEvents.HostedFromToAction<Vessel, Vessel.Situations>(FlightGlobals.ActiveVessel, Vessel.Situations.PRELAUNCH, Vessel.Situations.FLYING));
         }
 
         private void ProcessSimulation()

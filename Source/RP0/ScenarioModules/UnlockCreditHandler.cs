@@ -118,14 +118,14 @@ namespace RP0
                 total += kvp.Value;
 
             total *= cmqMultiplier;
-            double excess = SpendCredit(total);
+            double excess = SpendCredit(total, TransactionReasonsRP0.PartOrUpgradeUnlock);
 
             // Finally, pay for the excess.
             if (excess > 0d)
                 Funding.Instance.AddFunds(-excess * recipCMQMult, TransactionReasonsRP0.PartOrUpgradeUnlock.Stock());
         }
 
-        public double SpendCredit(double cost)
+        public double SpendCredit(double cost, TransactionReasonsRP0 reason)
         {
             if (_totalCredit == 0d)
                 return cost;
@@ -134,17 +134,14 @@ namespace RP0
             if (_totalCredit < cost)
             {
                 excessCost = cost - _totalCredit;
-                if (CareerLog.Instance?.CurrentPeriod != null)
-                    CareerLog.Instance.CurrentPeriod.SpentUnlockCredit += _totalCredit;
                 _totalCredit = 0;
             }
             else
             {
                 excessCost = 0d;
                 _totalCredit -= cost;
-                if (CareerLog.Instance?.CurrentPeriod != null)
-                    CareerLog.Instance.CurrentPeriod.SpentUnlockCredit += cost;
             }
+            CareerLog.Instance?.IncreaseSpentUnlockCredit(cost - excessCost, reason);
             return excessCost;
         }
 
@@ -171,7 +168,7 @@ namespace RP0
         {
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
             double postCMQCost = -cmq.GetTotal(CurrencyRP0.Funds, true);
-            double remainingCost = SpendCredit(postCMQCost);
+            double remainingCost = SpendCredit(postCMQCost, reason);
             Funding.Instance.AddFunds(-(float)(remainingCost * (cost / postCMQCost)), reason.Stock());
         }
 
@@ -199,7 +196,7 @@ namespace RP0
             }
 
             // Actually spend credit and get (post-effect) remainder
-            double remainingCost = SpendCredit(postCMQCost);
+            double remainingCost = SpendCredit(postCMQCost, TransactionReasonsRP0.PartOrUpgradeUnlock);
 
             // Refresh description to show new credit remaining
             if (KSP.UI.Screens.RDController.Instance != null)

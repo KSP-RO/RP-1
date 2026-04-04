@@ -11,6 +11,7 @@ namespace RP0
 
         private static Rect _centralWindowPosition = new Rect((Screen.width - 150) / 2, (Screen.height - 50) / 2, 150, 50);
         private static Rect _blPlusPosition = new Rect(Screen.width - 500, 40, 100, 1);
+        private static Rect _manageLCWindowPosition = new Rect(Screen.width - 880, 40, 450, 1);
         private static Rect _lcResourcesPosition = new Rect(_centralWindowPosition.xMin - 150, _centralWindowPosition.yMin, 250, 200);
         private static Vector2 _scrollPos;
         private static Vector2 _scrollPos2;
@@ -73,6 +74,8 @@ namespace RP0
                     _personnelPosition = DrawWindowWithTooltipSupport(_personnelPosition, "DrawPersonnelWindow", "Staffing", DrawPersonnelWindow);
                 if (GUIStates.ShowBLPlus)
                     _blPlusPosition = DrawWindowWithTooltipSupport(_blPlusPosition, "DrawBLPlusWindow", "Options", DrawBLPlusWindow);
+                if (GUIStates.ShowLCManagement)
+                    _manageLCWindowPosition = DrawWindowWithTooltipSupport(_manageLCWindowPosition, "DrawLCManagentWindow", "Launch Complexes", DrawLCManagentWindow);
                 if (GUIStates.ShowDismantlePad)
                     _centralWindowPosition = DrawWindowWithTooltipSupport(_centralWindowPosition, "DrawDismantlePadWindow", "Dismantle Pad", DrawDismantlePadOrLCWindow);
                 if (GUIStates.ShowDismantleLC)
@@ -266,6 +269,7 @@ namespace RP0
             GUIStates.ShowPresetSaver = false;
             GUIStates.ShowLaunchSiteSelector = false;
             GUIStates.ShowAirlaunch = false;
+            GUIStates.ShowLCManagement = false;
             GUIStates.ShowSimulationGUI = false;
             GUIStates.ShowSimConfig = false;
             GUIStates.ShowSimBodyChooser = false;

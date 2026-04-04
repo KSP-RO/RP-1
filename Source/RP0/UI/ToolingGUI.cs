@@ -277,14 +277,28 @@ namespace RP0
             GUILayout.EndHorizontal();
         }
 
+        private string GetToolingMargin(float value, string unit)
+        {
+            if (value > 1e-6f)
+            {
+                return $"Margin: {ToolingDatabase.toolingMargin * 100:F3}%\nLow Tolerance: {ToolingDatabase.GetLowComparison(value):F3} {unit}\nHigh Tolerance: {ToolingDatabase.GetHighComparison(value):F3} {unit}";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         private void DisplayRow(float[] values, Parameter[] parameters)
         {
+            string toolingMargin = GetToolingMargin(values[0], parameters[0].Unit);
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"{values[0]:F3} {parameters[0].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
+            GUILayout.Label(new GUIContent($"{values[0]:F3} {parameters[0].Unit}", toolingMargin), HighLogic.Skin.label, GUILayout.Width(80));
             for (int i = 1; i < values.Length; ++i)
             {
                 GUILayout.Label("×", HighLogic.Skin.label);
-                GUILayout.Label($"{values[i]:F3} {parameters[i].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
+                toolingMargin = GetToolingMargin(values[i], parameters[i].Unit);
+                GUILayout.Label(new GUIContent($"{values[i]:F3} {parameters[i].Unit}", toolingMargin), HighLogic.Skin.label, GUILayout.Width(80));
             }
             GUILayout.EndHorizontal();
         }

@@ -336,7 +336,11 @@ namespace RP0
             }
 
             if (SpaceCenterManagement.Instance.TechList.Count > 0)
-                ResearchSalaryPerDay = Researchers * Database.SettingsSC.salaryResearchers / 365.25d;
+            {
+                double wr = SpaceCenterManagement.Instance.TechList[0].workRate;
+                double idleMult = Database.SettingsSC.ResearcherIdleSalaryMult;
+                ResearchSalaryPerDay = Researchers * Database.SettingsSC.salaryResearchers / 365.25d * (idleMult + (1d - idleMult) * wr);
+            }
             else
                 ResearchSalaryPerDay = Researchers * Database.SettingsSC.salaryResearchers * Database.SettingsSC.ResearcherIdleSalaryMult / 365.25d;
 

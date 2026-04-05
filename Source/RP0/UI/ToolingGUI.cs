@@ -14,6 +14,7 @@ namespace RP0
             public float ToolingCost;
             public float UntooledMultiplier;
             public float TotalCost;
+            public Part Part;
         };
 
         private const float UpdateInterval = 0.5f;
@@ -26,6 +27,7 @@ namespace RP0
         private readonly List<UntooledPart> _untooledParts = new List<UntooledPart>();
         private Vector2 _toolingTypesScroll = new Vector2();
         private Vector2 _untooledTypesScroll = new Vector2();
+        private Part _highlightedPart = null;
 
         public UITab RenderToolingTab()
         {
@@ -68,6 +70,7 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
+            Part newHighlightedPart = null;
             if (_isToolingTempDisabled || _untooledParts.Count > 0)
             {
                 GUILayout.BeginHorizontal();
@@ -87,6 +90,12 @@ namespace RP0
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -up.TotalCost):N0}", RightLabel, GUILayout.Width(72));
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -(up.TotalCost - untooledExtraCost)):N0}", RightLabel, GUILayout.Width(72));
                     GUILayout.EndHorizontal();
+                    if (Event.current.type == EventType.Repaint && up.Part != null)
+                    {
+                        Rect rowRect = GUILayoutUtility.GetLastRect();
+                        if (rowRect.Contains(Event.current.mousePosition))
+                            newHighlightedPart = up.Part;
+                    }
                 }
                 GUILayout.EndScrollView();
 
@@ -105,6 +114,18 @@ namespace RP0
                     Debug.LogException(ex);
                 }
                 GUILayout.EndVertical();
+            }
+
+            if (Event.current.type == EventType.Repaint && newHighlightedPart != _highlightedPart)
+            {
+                if (_highlightedPart != null)
+                    _highlightedPart.SetHighlightDefault();
+                _highlightedPart = newHighlightedPart;
+                if (_highlightedPart != null)
+                {
+                    _highlightedPart.SetHighlightColor(Color.yellow);
+                    _highlightedPart.SetHighlightType(Part.HighlightType.AlwaysOn);
+                }
             }
 
             return _currentToolingType == null ? UITab.Tooling : UITab.ToolingType;
@@ -240,6 +261,7 @@ namespace RP0
                             up.Name = $"{p.partInfo.title} ({mT.ToolingTypeTitle}) {mT.GetToolingParameterInfo()}";
                             up.ToolingCost = mT.GetToolingCost();
                             up.UntooledMultiplier = mT.untooledMultiplier;
+                            up.Part = p;
                             if (_parts.Contains(p))
                             {
                                 up.TotalCost = 0f;
@@ -258,6 +280,12 @@ namespace RP0
 
             _parts.Clear();
             _allTooledCost = EditorLogic.fetch.ship.GetShipCosts(out _, out _) - totalUntooledExtraCost;
+
+            if (_highlightedPart != null && !_untooledParts.Exists(up => up.Part == _highlightedPart))
+            {
+                _highlightedPart.SetHighlightDefault();
+                _highlightedPart = null;
+            }
         }
 
         private static float GetUntooledExtraCost(UntooledPart uP)

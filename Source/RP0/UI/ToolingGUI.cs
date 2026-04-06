@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Smooth.Slinq;
 using RP0.Tooling;
 using System;
@@ -57,6 +58,8 @@ namespace RP0
             MaybeUpdate();
 
             Part newEditorHoveredPart = Mouse.HoveredPart;
+            if (newEditorHoveredPart != null && EventSystem.current.IsPointerOverGameObject())
+                newEditorHoveredPart = null;
             if (newEditorHoveredPart != _editorHoveredPart)
             {
                 _editorHoveredPart = newEditorHoveredPart;

@@ -107,6 +107,12 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
+            Part pawPart = null;
+            List<UIPartActionWindow> pawWindows = UIPartActionController.Instance?.windows;
+            if (pawWindows != null && pawWindows.Count == 1)
+                pawPart = pawWindows[0].part;
+            Part rowHighlightPart = _editorHoveredPart ?? pawPart;
+
             Part newHighlightedPart = null;
             if (_isToolingTempDisabled || _untooledParts.Count > 0)
             {
@@ -121,7 +127,7 @@ namespace RP0
                 foreach (UntooledPart up in _untooledParts)
                 {
                     if (Event.current.type == EventType.Repaint &&
-                        up.Part != null && up.Part == _editorHoveredPart &&
+                        up.Part != null && up.Part == rowHighlightPart &&
                         _partRowRects.TryGetValue(up.Part, out Rect highlightRect))
                     {
                         GUI.DrawTexture(highlightRect, HighlightRowTex);

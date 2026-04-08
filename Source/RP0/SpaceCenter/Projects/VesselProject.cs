@@ -116,6 +116,15 @@ namespace RP0
         private double _buildRate = -1d;
         private double _leaderEffect = -1d;
         public double LeaderEffect => _leaderEffect < 0 ? UpdateLeaderEffect() : _leaderEffect;
+        private double _modifiedEC = -1d;
+        public double ModifiedEC 
+        { 
+            get
+            {
+                if (_modifiedEC < 0) UpdateLeaderEffect();
+                return _modifiedEC;
+            } 
+        }
 
         internal ShipConstruct _ship;
 
@@ -1287,15 +1296,15 @@ namespace RP0
 
         public double UpdateLeaderEffect()
         {
-            double modifiedEC = effectiveCost;
+            _modifiedEC = effectiveCost;
             double globalMult = ApplyGlobalCostModifiers();
             foreach (var t in tagEffectiveCosts)
             {
                 double ec = t.ec * Leaders.LeaderUtils.GetPartEffectiveCostEffect(t.tags);
-                modifiedEC += (ec - t.ec) * globalMult;
+                _modifiedEC += (ec - t.ec) * globalMult;
             }
-            modifiedEC *= Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
-            double modifiedBP = Formula.GetVesselBuildPoints(modifiedEC);
+            _modifiedEC *= Leaders.LeaderUtils.GetGlobalEffectiveCostEffect(globalTags, resourceAmounts);
+            double modifiedBP = Formula.GetVesselBuildPoints(_modifiedEC);
             if (modifiedBP < 1d)
                 modifiedBP = 1d;
 

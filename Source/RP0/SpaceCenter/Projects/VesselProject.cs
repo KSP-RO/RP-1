@@ -45,6 +45,14 @@ namespace RP0
             }
         }
 
+        private class ECCalculationState
+        {
+            public Dictionary<string, double> ResourceAmounts = new Dictionary<string, double>();
+            public HashSet<string> GlobalTags = new HashSet<string>();
+            public List<TagsToEC> TagEffectiveCosts = new List<TagsToEC>();
+            public bool HumanRated;
+        }
+
         [Persistent]
         public double progress;
         [Persistent]
@@ -110,6 +118,10 @@ namespace RP0
         public double LeaderEffect => _leaderEffect < 0 ? UpdateLeaderEffect() : _leaderEffect;
 
         internal ShipConstruct _ship;
+
+        // Temporary helper collections used during EC calculations
+        private static readonly Dictionary<string, double> _tempResourceAmounts = new Dictionary<string, double>();
+        private static List<string> _tempTags = null;
 
         public double BuildRate => _lc.CanIntegrate ? ( (_buildRate < 0 ? UpdateBuildRate() : _buildRate)
             * (LC == null ? 1d : _lc.Efficiency * _lc.RushRate) ) : 0d;
@@ -208,7 +220,7 @@ namespace RP0
             tanksFull = AreTanksFull(s.parts);
             isCrewable = IsCrewable(s.parts);
 
-            effectiveCost = GetEffectiveCost(s.parts);
+            RecalculateEffectiveCost(s.parts);
             buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
 
             HashSet<int> stages = new HashSet<int>();
@@ -328,7 +340,7 @@ namespace RP0
             numStages = stages.Count;
             // FIXME ignore stageable part count and cost - it'll be fixed when we put this back in the editor.
 
-            effectiveCost = GetEffectiveCost(vessel.parts);
+            RecalculateEffectiveCost(vessel.parts);
             buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
             flag = HighLogic.CurrentGame.flagURL;
 
@@ -387,19 +399,10 @@ namespace RP0
             ShipNodeCompressed.Node.SetValue("size", KSPUtil.WriteVector(ShipSize));
         }
 
-        public void RecalculateFromNode(bool setValues = true)
+        public void RecalculateFromNode()
         {
-            bool oldHR = humanRated;
-            double ec = GetEffectiveCost(ExtractedPartNodes);
-            if (setValues)
-            {
-                effectiveCost = ec;
-                buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
-            }
-            else
-            {
-                humanRated = oldHR;
-            }
+            RecalculateEffectiveCost(ExtractedPartNodes);
+            buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
         }
 
         private ConfigNode SanitizeShipNode(ConfigNode node)
@@ -951,10 +954,60 @@ namespace RP0
             return res;
         }
 
-        private double GetResourceEffectiveCost()
+        public void RecalculateEffectiveCost(List<Part> parts)
+        {
+            Profiler.BeginSample("RP0RecalculateEffectiveCost");
+            var state = new ECCalculationState();
+            effectiveCost = ComputeEffectiveCost(parts, state);
+            ApplyCostState(state);
+            Profiler.EndSample();
+        }
+
+        public void RecalculateEffectiveCost(List<ConfigNode> parts)
+        {
+            Profiler.BeginSample("RP0RecalculateEffectiveCost");
+            var state = new ECCalculationState();
+            effectiveCost = ComputeEffectiveCost(parts, state);
+            ApplyCostState(state);
+            Profiler.EndSample();
+        }
+
+        public static double GetEffectiveCost(List<Part> parts)
+        {
+            Profiler.BeginSample("RP0GetEffectiveCost");
+            var state = new ECCalculationState();
+            double result = ComputeEffectiveCost(parts, state);
+            Profiler.EndSample();
+            return result;
+        }
+
+        public static double GetEffectiveCost(List<ConfigNode> parts)
+        {
+            Profiler.BeginSample("RP0GetEffectiveCost");
+            var state = new ECCalculationState();
+            double result = ComputeEffectiveCost(parts, state);
+            Profiler.EndSample();
+            return result;
+        }
+
+        private static double ComputeEffectiveCost(IEnumerable<object> parts, ECCalculationState state)
+        {
+            double totalEffectiveCost = 0;
+            foreach (object o in parts)
+                totalEffectiveCost += GetEffectiveCostInternal(o, state);
+            totalEffectiveCost += GetResourceEffectiveCost(state);
+
+            double globalMultiplier = ApplyGlobalCostModifiers(state);
+            double multipliedCost = totalEffectiveCost * globalMultiplier;
+            RP0Debug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
+
+            return multipliedCost;
+        }
+
+        private static double GetResourceEffectiveCost(ECCalculationState state)
         {
             double total = 0d;
-            foreach (var kvp in resourceAmounts)
+            foreach (var kvp in state.ResourceAmounts)
             {
                 double mult = Database.SettingsSC.GetResourceVariableMult(kvp.Key) - 1d;
                 if (mult == 0d)
@@ -965,44 +1018,20 @@ namespace RP0
             return total;
         }
 
-        public double GetEffectiveCost(List<Part> parts)
-        {
-            Profiler.BeginSample("RP0GetEffectiveCost");
-            resourceAmounts.Clear();
-            globalTags.Clear();
-            tagEffectiveCosts.Clear();
-            double totalEffectiveCost = 0;
-            foreach (Part p in parts)
-            {
-                totalEffectiveCost += GetEffectiveCostInternal(p);
-            }
-            totalEffectiveCost += GetResourceEffectiveCost();
-
-            double globalMultiplier = ApplyGlobalCostModifiers();
-            double multipliedCost = totalEffectiveCost * globalMultiplier;
-            RP0Debug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
-
-            Profiler.EndSample();
-            return multipliedCost;
-        }
-
-        public double GetEffectiveCost(List<ConfigNode> parts)
+        private void ApplyCostState(ECCalculationState state)
         {
             resourceAmounts.Clear();
+            foreach (var kvp in state.ResourceAmounts)
+                resourceAmounts[kvp.Key] = kvp.Value;
+
             globalTags.Clear();
+            foreach (var tag in state.GlobalTags)
+                globalTags.Add(tag);
+
             tagEffectiveCosts.Clear();
-            double totalEffectiveCost = 0;
-            foreach (ConfigNode p in parts)
-            {
-                totalEffectiveCost += GetEffectiveCostInternal(p);
-            }
-            totalEffectiveCost += GetResourceEffectiveCost();
+            tagEffectiveCosts.AddRange(state.TagEffectiveCosts);
 
-            double globalMultiplier = ApplyGlobalCostModifiers();
-            double multipliedCost = totalEffectiveCost * globalMultiplier;
-            RP0Debug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
-
-            return multipliedCost;
+            humanRated = state.HumanRated;
         }
         
         // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
@@ -1023,10 +1052,7 @@ namespace RP0
             fuelMass = (float)fMass;
         }
 
-        private static Dictionary<string, double> _tempResourceAmounts = new Dictionary<string, double>();
-        private static List<string> _tempTags = null;
-
-        private double GetEffectiveCostInternal(object o)
+        private static double GetEffectiveCostInternal(object o, ECCalculationState state)
         {
             ConfigNode partNode = o as ConfigNode;
             Part partRef = o as Part;
@@ -1080,13 +1106,13 @@ namespace RP0
             double partMultiplier = Database.SettingsSC.GetPartVariable(name);
 
             // TODO: Add support for upgraded tags here
-            double moduleMultiplier = FindApplyTags(o);
+            double moduleMultiplier = FindApplyTags(o, state);
 
             foreach (var kvp in _tempResourceAmounts)
             {
-                resourceAmounts.TryGetValue(kvp.Key, out double amt);
+                state.ResourceAmounts.TryGetValue(kvp.Key, out double amt);
                 amt += kvp.Value;
-                resourceAmounts[kvp.Key] = amt;
+                state.ResourceAmounts[kvp.Key] = amt;
             }
             
             double effectiveCost = partMultiplier * moduleMultiplier * cost;
@@ -1162,7 +1188,7 @@ namespace RP0
             if (effectiveCost < 0)
                 effectiveCost = 0;
 
-            UpdateTagECs(effectiveCost);
+            UpdateTagECs(effectiveCost, state);
 
             RP0Debug.Log($"Eff cost for {name}: {effectiveCost} (cost: {cost}; dryCost: {dryCost}; wetMass: {wetMass}; dryMass: {dryMass}; partMultiplier: {partMultiplier}; moduleMultiplier: {moduleMultiplier})");
 
@@ -1172,12 +1198,12 @@ namespace RP0
             return effectiveCost;
         }
 
-        private void UpdateTagECs(double ec)
+        private static void UpdateTagECs(double ec, ECCalculationState state)
         {
             if (_tempTags == null)
                 return;
 
-            foreach (var t in tagEffectiveCosts)
+            foreach (var t in state.TagEffectiveCosts)
             {
                 if (!t.SameTags(_tempTags))
                     continue;
@@ -1189,7 +1215,7 @@ namespace RP0
             var holder = new TagsToEC();
             holder.tags.AddRange(_tempTags);
             holder.ec = ec;
-            tagEffectiveCosts.Add(holder);
+            state.TagEffectiveCosts.Add(holder);
         }
 
         public double ApplyGlobalCostModifiers()
@@ -1207,7 +1233,22 @@ namespace RP0
             return costMod;
         }
 
-        private double FindApplyTags(object o)
+        private static double ApplyGlobalCostModifiers(ECCalculationState state)
+        {
+            state.HumanRated = false;
+            double costMod = 1d;
+            foreach (string x in state.GlobalTags)
+            {
+                if (Database.KCTCostModifiers.TryGetValue(x, out var mod))
+                {
+                    costMod *= mod.globalMult;
+                    state.HumanRated |= mod.isHumanRating;
+                }
+            }
+            return costMod;
+        }
+
+        private static double FindApplyTags(object o, ECCalculationState state)
         {
             double mult = 1;
             _tempTags = ModuleTagList.GetTags(o);
@@ -1220,7 +1261,7 @@ namespace RP0
                 {
                     mult *= mod.partMult;
                     if (mod.globalMult != 1d)
-                        globalTags.Add(mod.name);
+                        state.GlobalTags.Add(mod.name);
                 }
             }
             return mult;

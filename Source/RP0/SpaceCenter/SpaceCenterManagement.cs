@@ -624,9 +624,9 @@ namespace RP0
                             foreach (var lc in ksc.LaunchComplexes)
                             {
                                 foreach (var vp in lc.BuildList)
-                                    vp.RecalculateFromNode(true);
+                                    vp.RecalculateFromNode();
                                 foreach (var vp in lc.Warehouse)
-                                    vp.RecalculateFromNode(true);
+                                    vp.RecalculateFromNode();
                             }
                         }
                     }

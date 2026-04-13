@@ -17,9 +17,9 @@ namespace RP0.UI
             public double effectiveCost;
             public double effectiveCostModifier;
 
-            public override bool Equals(object o)
+            public override bool Equals(object obj)
             {
-                if (o is CostEntry other)
+                if (obj is CostEntry other)
                     return Equals(other);
                 else
                     return false;

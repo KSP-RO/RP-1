@@ -11,11 +11,29 @@ namespace RP0.UI
 {
     public class CostBreakdownGUI : UIBase
     {
-        private record struct CostEntry
+        private struct CostEntry
         {
             public string name;
             public double effectiveCost;
             public double effectiveCostModifier;
+
+            public override bool Equals(object o)
+            {
+                if (o is CostEntry other)
+                    return Equals(other);
+                else
+                    return false;
+            }
+
+            private bool Equals(CostEntry other)
+            {
+                return effectiveCost == other.effectiveCost && effectiveCostModifier == other.effectiveCostModifier && name == other.name;
+            }
+
+            public override int GetHashCode()
+            {
+                return (name, effectiveCost, effectiveCostModifier).GetHashCode();
+            }
         }
         
         private float _lastUpdateTrigger = 0f;

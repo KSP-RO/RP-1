@@ -960,6 +960,19 @@ namespace RP0
                 if (!lc.IsActive)
                     return lc.Engineers * Database.SettingsSC.EngineerIdleSalaryMult;
 
+                if (lc.LCType == LaunchComplexType.Hangar)
+                {
+                    int maxCap = lc.BuildList.Count > 0 ? lc.MaxEngineersFor(lc.BuildList[0]) : 0;
+                    foreach (var rr in lc.Recon_Rollout)
+                    {
+                        if (rr.KeepsLCActive && !rr.IsComplete())
+                            maxCap = Math.Max(maxCap, lc.MaxEngineersFor(rr.mass, rr.vesselBP, rr.isHumanRated));
+                    }
+
+                    int working = Math.Min(lc.Engineers, maxCap);
+                    return working * lc.RushSalary + (lc.Engineers - working) * Database.SettingsSC.EngineerIdleSalaryMult;
+                }
+
                 if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
                 {
                     int num = Math.Min(lc.Engineers, lc.MaxEngineersFor(lc.BuildList[0]));

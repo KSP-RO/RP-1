@@ -1391,6 +1391,7 @@ namespace RP0
                         if (padClear)
                         {
                             b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
+                            tmpRollout.launchPadID = foundPad.name;
                             vesselLC.Recon_Rollout.Add(tmpRollout);
                         }
                         else

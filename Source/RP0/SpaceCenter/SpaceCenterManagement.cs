@@ -311,6 +311,7 @@ namespace RP0
         private void EditorStart()
         {
             KCT_GUI.BuildRateForDisplay = null;
+            _hasFirstRecalculated = false;
             if (!KCT_GUI.IsPrimarilyDisabled)
             {
                 IsEditorRecalcuationRequired = true;
@@ -1368,9 +1369,12 @@ namespace RP0
             {
                 if (EditorDriver.fetch != null && !EditorDriver.fetch.restartingEditor)
                 {
+                    bool isFirstRecalc = !_hasFirstRecalculated;
                     _hasFirstRecalculated = true;
                     IsEditorRecalcuationRequired = false;
                     RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                    if (isFirstRecalc)
+                        KCT_GUI.BuildRateForDisplay = null;
                 }
                 // make sure we're not destructing
                 else if (!_hasFirstRecalculated && this != null)

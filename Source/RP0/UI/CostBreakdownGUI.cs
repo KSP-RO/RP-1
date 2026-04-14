@@ -16,28 +16,11 @@ namespace RP0.UI
             public string name;
             public double effectiveCost;
             public double effectiveCostModifier;
-
-            public override bool Equals(object obj)
-            {
-                if (obj is CostEntry other)
-                    return Equals(other);
-                else
-                    return false;
-            }
-
-            private bool Equals(CostEntry other)
-            {
-                return effectiveCost == other.effectiveCost && effectiveCostModifier == other.effectiveCostModifier && name == other.name;
-            }
-
-            public override int GetHashCode()
-            {
-                return (name, effectiveCost, effectiveCostModifier).GetHashCode();
-            }
         }
         
         private float _lastUpdateTrigger = 0f;
         private readonly Dictionary<CostEntry, int> _partCosts = new Dictionary<CostEntry, int>();
+        private readonly List<KeyValuePair<CostEntry, int>> _cachedSortedPartCosts = new List<KeyValuePair<CostEntry, int>>();
         private readonly List<Part> _singlePart = new List<Part>(); // dummy list for calling GetEffectiveCost, to avoid extra allocations
         private Vector2 _partCostsScroll = new Vector2();
         private bool _isToolingTempDisabled = false;
@@ -83,7 +66,7 @@ namespace RP0.UI
             GUILayout.EndHorizontal();
 
             _partCostsScroll = GUILayout.BeginScrollView(_partCostsScroll, GUILayout.Height(300), GUILayout.Width(500));
-            foreach (var kvp in _partCosts.OrderByDescending(kvp => kvp.Key.effectiveCost * kvp.Key.effectiveCostModifier * kvp.Value))
+            foreach (var kvp in _cachedSortedPartCosts)
             {
                 CostEntry entry = kvp.Key;
                 int multiplicity = kvp.Value;
@@ -130,10 +113,10 @@ namespace RP0.UI
             // Stall a frame.
 
             var parts = ship?.Parts; 
+            _partCosts.Clear();
+            _cachedSortedPartCosts.Clear();
             if (parts?.Count > 0)
             {
-                _partCosts.Clear();
-
                 for (int i = parts.Count - 1; i >= 0; --i)
                 {
                     Part p = parts[i];
@@ -152,6 +135,7 @@ namespace RP0.UI
                     else
                         _partCosts.Add(entry, 1);
                 }
+                _cachedSortedPartCosts.AddRange(_partCosts.OrderByDescending(kvp => kvp.Key.effectiveCost * kvp.Key.effectiveCostModifier * kvp.Value));
             }
         }
 

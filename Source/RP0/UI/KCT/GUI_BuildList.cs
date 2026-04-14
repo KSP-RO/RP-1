@@ -1661,7 +1661,9 @@ namespace RP0
                         LCLaunchPad pad = lc.LaunchPads[j];
                         GUILayout.BeginHorizontal();
                         GUILayout.Space(44); // indent under LC name
-                        GUILayout.Label(pad.name, GUILayout.ExpandWidth(true));
+                        bool hasKKSite = pad.launchSiteName != "LaunchPad" && !string.IsNullOrEmpty(pad.launchSiteName);
+                        string padLabel = hasKKSite ? $"{pad.name} ({pad.launchSiteName})" : pad.name;
+                        GUILayout.Label(padLabel, GUILayout.ExpandWidth(true));
 
                         if (GUILayout.Button(new GUIContent("Rename", "Rename this launch pad"), GUILayout.ExpandWidth(false)))
                         {
@@ -1945,6 +1947,7 @@ namespace RP0
                     {
                         activeLC.ActiveLPInstance.launchSiteName = launchsite;
                         _isSelectingLaunchSiteForVessel = true; // reset
+                        GUIStates.ShowLCManagement = true;
                     }
                     GUIStates.ShowLaunchSiteSelector = false;
                 }

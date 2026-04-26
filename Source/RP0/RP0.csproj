@@ -40,6 +40,7 @@
       $(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Addons\RnDUpgradeTips.cs" />
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
     <Compile Include="ConfigurableStart\DateHandler.cs" />
@@ -338,6 +339,10 @@
       <HintPath>$(ReferencePath)/RealFuels.dll</HintPath>
       <Private>False</Private>
     </Reference>
+		<Reference Include="$(KSPRoot)/GameData/ROLib/Plugins/ROLib.dll">
+			<HintPath>$(ReferencePath)/ROLib.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
     <Reference Include="$(KSPRoot)/GameData/ROUtils/Plugins/ROUtils.dll">
       <HintPath>$(ReferencePath)/ROUtils.dll</HintPath>
       <Private>False</Private>

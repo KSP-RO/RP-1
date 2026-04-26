@@ -1,8 +1,10 @@
 ﻿using RealFuels;
+using RealFuels.Tanks;
 using ROUtils.DataTypes;
 using RP0.UI;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace RP0.Addons
@@ -12,21 +14,25 @@ namespace RP0.Addons
     {
         private class UpgradeLine
         {
+            public delegate bool ValidPartModuleFilter(PartModule pm);
+
             private readonly string _id;
             private readonly string[] _upgradeNames;
             private readonly string _moduleName;
             private readonly string _displayName;
             private bool _subscribedToPAWEvent;
+            private readonly ValidPartModuleFilter _filter;
 
             public int bestUpgrade { get; private set; } = -1;
             public int bestUnpurchasedUpgrade { get; private set; } = -1;
 
-            public UpgradeLine(string id, string moduleName, string displayName, string[] names)
+            public UpgradeLine(string id, string moduleName, string displayName, string[] names, ValidPartModuleFilter filter = null)
             {
                 _id = id;
                 _moduleName = moduleName;
                 _displayName = displayName;
                 _upgradeNames = names;
+                _filter = filter;
                 bestUpgrade = _upgradeNames.IndexOf(Instance.GetBestShownUpgradeName(id));
                 UpdateUpgradeInfo();
             }
@@ -62,7 +68,8 @@ namespace RP0.Addons
 
             private void OnPartActionUIShown(UIPartActionWindow paw, Part part)
             {
-                if (bestUnpurchasedUpgrade > bestUpgrade && part.Modules.Contains(_moduleName))
+                // If there is any module that matches the given name AND meets the filter requirement, show the tip.
+                if (bestUnpurchasedUpgrade > bestUpgrade && part.Modules.modules.Any(pm => pm.ClassName == _moduleName && (_filter == null || _filter(pm))))
                     ShowAvailableTechTip();
             }
 
@@ -75,7 +82,7 @@ namespace RP0.Addons
 
                 var upgrade = GetUpgrade(bestUnpurchasedUpgrade);
 
-                string txt = $"{upgrade.title}: {upgrade.description}\n";
+                string txt = $"<b>{upgrade.title}</b>\n{upgrade.description}";
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0f, 0f);
                 string costStr = cmq.GetCostLineOverride(true, false, false, true);
                 double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds, false);
@@ -130,10 +137,7 @@ namespace RP0.Addons
 
         public static RnDUpgradeTips Instance { get; private set; }
 
-        private UpgradeLine _fairings;
-        private UpgradeLine _hardDrives;
-        private UpgradeLine _mli;
-        private UpgradeLine _x2;
+        private readonly List<UpgradeLine> _upgradeLines = new List<UpgradeLine>();
 
         [KSPField(isPersistant = true)]
         private PersistentDictionaryValueTypes<string, string> _bestUpgrades = new PersistentDictionaryValueTypes<string, string>();
@@ -152,33 +156,39 @@ namespace RP0.Addons
             {
                 fairings[i] = "PFTech-Fairing-" + fairings[i];
             }
-            _fairings = new UpgradeLine("fairings", "ProceduralFairingSide", "Fairing Density", fairings);
+            _upgradeLines.Add(new UpgradeLine("fairings", "ProceduralFairingSide", "Fairing Density", fairings));
 
             string[] hardDrives = { "Early", "Basic", "1961", "1964", "1969", "1975", "1990", "1998", "2010", "2020" };
             for (int i = hardDrives.Length - 1; i >= 0; --i)
             {
                 hardDrives[i] = "HDD-Upgrade-" + hardDrives[i];
             }
-            _hardDrives = new UpgradeLine("storage", "ModuleProceduralAvionics", "Data Storage", hardDrives);
+            _upgradeLines.Add(new UpgradeLine("storage", "ModuleProceduralAvionics", "Data Storage", hardDrives));
 
             string[] mli = new string[5];
             for (int i = 0; i < 5; ++i)
             {
                 mli[i] = $"MLI.Upgrade{i+1}";
             }
-            _mli = new UpgradeLine("mli", "ModuleFuelTanks", "Multi-Layer Insulation", mli);
+            _upgradeLines.Add(new UpgradeLine("mli", "ModuleFuelTanks", "Multi-Layer Insulation", mli, pm => {
+                // Only fire for conventional or isogrid tanks.
+                return pm is ModuleFuelTanks tank && (tank.type.StartsWith("Tank-Sep") || tank.type.StartsWith("Tank-Iso"));
+            }));
 
-            _x2 = new UpgradeLine("x2", "ModuleUnpressurizedCockpit", "X-1 Service Ceiling", ["X2CockpitUpgrade"]);
+            _upgradeLines.Add(new UpgradeLine("mliBalloon", "ModuleFuelTanks", "Multi-Layer Insulation (Balloon)", ["RFTech-MLI-UpgradeBalloon"], pm => {
+                // Only fire for balloon
+                return pm is ModuleFuelTanks tank && tank.type.StartsWith("Tank-Balloon");
+            }));
+
+            _upgradeLines.Add(new UpgradeLine("x2", "ModuleUnpressurizedCockpit", "X-1 Service Ceiling", ["X2CockpitUpgrade"]));
         }
 
         public void OnDestroy()
         {
             if (Instance == this)
                 Instance = null;
-            _fairings.OnDestroy();
-            _hardDrives.OnDestroy();
-            _mli.OnDestroy();
-            _x2.OnDestroy();
+            foreach (UpgradeLine line in _upgradeLines)
+                line.OnDestroy();
         }
 
         public string GetBestShownUpgradeName(string id)

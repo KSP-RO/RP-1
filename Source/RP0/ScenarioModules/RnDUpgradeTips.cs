@@ -27,7 +27,7 @@ namespace RP0.Addons
                 _moduleName = moduleName;
                 _displayName = displayName;
                 _upgradeNames = names;
-                bestUpgrade = Instance.GetOrCreateUpgradeIndex(id);
+                bestUpgrade = _upgradeNames.IndexOf(Instance.GetBestShownUpgradeName(id));
                 UpdateUpgradeInfo();
             }
 
@@ -56,7 +56,8 @@ namespace RP0.Addons
                     _subscribedToPAWEvent = true;
                     GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
                 }
-                Instance.UpdateUpgradeIndex(_id, bestUpgrade);
+                if (bestUpgrade != -1)
+                    Instance.UpdateBestShownUpgradeName(_id, _upgradeNames[bestUpgrade]);
             }
 
             private void OnPartActionUIShown(UIPartActionWindow paw, Part part)
@@ -95,7 +96,7 @@ namespace RP0.Addons
                             PartUpgradeManager.Handler.SetUnlocked(upgrade.name, true);
                             GameEvents.OnPartUpgradePurchased.Fire(upgrade);
                             bestUpgrade = bestUnpurchasedUpgrade;
-                            Instance.UpdateUpgradeIndex(_id, bestUpgrade);
+                            Instance.UpdateBestShownUpgradeName(_id, upgrade.name);
                         }
                     }, () => cmq.CanAfford(), 100, -1, true) 
                     { tooltipText = $"Spending {creditAmtToUse:N0} unlock credit\n(Base cost {costStr})" };
@@ -108,7 +109,7 @@ namespace RP0.Addons
                     new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_DontShowAgain"), () => 
                     { 
                         bestUpgrade = bestUnpurchasedUpgrade;
-                        Instance.UpdateUpgradeIndex(_id, bestUpgrade);
+                        Instance.UpdateBestShownUpgradeName(_id, upgrade.name);
                     }
                 )));
 
@@ -135,7 +136,7 @@ namespace RP0.Addons
         private UpgradeLine _x2;
 
         [KSPField(isPersistant = true)]
-        private PersistentDictionaryValueTypes<string, int> _bestUpgrades = new PersistentDictionaryValueTypes<string, int>();
+        private PersistentDictionaryValueTypes<string, string> _bestUpgrades = new PersistentDictionaryValueTypes<string, string>();
 
         public override void OnAwake()
         {
@@ -180,17 +181,17 @@ namespace RP0.Addons
             _x2.OnDestroy();
         }
 
-        public int GetOrCreateUpgradeIndex(string id)
+        public string GetBestShownUpgradeName(string id)
         {
-            if (_bestUpgrades.TryGetValue(id, out int index))
-                return index;
-            return _bestUpgrades[id] = -1;
+            if (_bestUpgrades.TryGetValue(id, out string name))
+                return name;
+            return null;
         }
 
-        public void UpdateUpgradeIndex(string id, int index)
+        public void UpdateBestShownUpgradeName(string id, string name)
         {
-            RP0Debug.Log($"Upgrade {id} set to {index}");
-            _bestUpgrades[id] = index;
+            RP0Debug.Log($"[RnDUpgradeTips] Upgrade {id} set to {name}");
+            _bestUpgrades[id] = name;
         }
     }
 }

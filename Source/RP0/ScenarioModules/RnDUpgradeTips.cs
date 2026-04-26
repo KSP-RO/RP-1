@@ -1,4 +1,5 @@
 ﻿using RealFuels;
+using ROUtils.DataTypes;
 using RP0.UI;
 using System;
 using System.Collections.Generic;
@@ -6,11 +7,12 @@ using UnityEngine;
 
 namespace RP0.Addons
 {
-    [KSPAddon(KSPAddon.Startup.EditorAny, false)]
-    public class RnDUpgradeTips : MonoBehaviour
+    [KSPScenario((ScenarioCreationOptions)480, [GameScenes.EDITOR])]
+    public class RnDUpgradeTips : ScenarioModule
     {
         private class UpgradeLine
         {
+            private readonly string _id;
             private readonly string[] _upgradeNames;
             private readonly string _moduleName;
             private readonly string _displayName;
@@ -19,15 +21,18 @@ namespace RP0.Addons
             public int bestUpgrade { get; private set; } = -1;
             public int bestUnpurchasedUpgrade { get; private set; } = -1;
 
-            public UpgradeLine(string moduleName, string displayName, string[] names)
+            public UpgradeLine(string id, string moduleName, string displayName, string[] names)
             {
+                _id = id;
                 _moduleName = moduleName;
                 _displayName = displayName;
                 _upgradeNames = names;
+                bestUpgrade = Instance.GetOrCreateUpgradeIndex(id);
+                UpdateUpgradeInfo();
             }
 
             public void OnDestroy()
-            { 
+            {
                 if (_subscribedToPAWEvent) GameEvents.onPartActionUIShown.Remove(OnPartActionUIShown);
             }
 
@@ -36,11 +41,10 @@ namespace RP0.Addons
                 return PartUpgradeManager.Handler.GetUpgrade(_upgradeNames[index]);
             }
 
-            public int UpdateUpgradeInfo(int skipIndex)
+            public void UpdateUpgradeInfo()
             {
-                bestUpgrade = skipIndex;
                 bestUnpurchasedUpgrade = -1;
-                for (int i = skipIndex + 1; i < _upgradeNames.Length; ++i)
+                for (int i = bestUpgrade + 1; i < _upgradeNames.Length; ++i)
                 {
                     if (PartUpgradeManager.Handler.IsUnlocked(_upgradeNames[i]))
                         bestUpgrade = i;
@@ -52,7 +56,7 @@ namespace RP0.Addons
                     _subscribedToPAWEvent = true;
                     GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
                 }
-                return bestUpgrade;
+                Instance.UpdateUpgradeIndex(_id, bestUpgrade);
             }
 
             private void OnPartActionUIShown(UIPartActionWindow paw, Part part)
@@ -91,7 +95,7 @@ namespace RP0.Addons
                             PartUpgradeManager.Handler.SetUnlocked(upgrade.name, true);
                             GameEvents.OnPartUpgradePurchased.Fire(upgrade);
                             bestUpgrade = bestUnpurchasedUpgrade;
-                            UpdateShownUpgradeIndex(_displayName, bestUpgrade);
+                            Instance.UpdateUpgradeIndex(_id, bestUpgrade);
                         }
                     }, () => cmq.CanAfford(), 100, -1, true) 
                     { tooltipText = $"Spending {creditAmtToUse:N0} unlock credit\n(Base cost {costStr})" };
@@ -104,7 +108,7 @@ namespace RP0.Addons
                     new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_DontShowAgain"), () => 
                     { 
                         bestUpgrade = bestUnpurchasedUpgrade;
-                        UpdateShownUpgradeIndex(_displayName, bestUpgrade);
+                        Instance.UpdateUpgradeIndex(_id, bestUpgrade);
                     }
                 )));
 
@@ -130,12 +134,13 @@ namespace RP0.Addons
         private UpgradeLine _mli;
         private UpgradeLine _x2;
 
-        internal void Awake()
+        [KSPField(isPersistant = true)]
+        private PersistentDictionaryValueTypes<string, int> _bestUpgrades = new PersistentDictionaryValueTypes<string, int>();
+
+        public override void OnAwake()
         {
             if (Instance != null)
-            {
                 Destroy(Instance);
-            }
             Instance = this;
         }
 
@@ -146,57 +151,46 @@ namespace RP0.Addons
             {
                 fairings[i] = "PFTech-Fairing-" + fairings[i];
             }
-            _fairings = new UpgradeLine("ProceduralFairingSide", "Fairing Density", fairings);
+            _fairings = new UpgradeLine("fairings", "ProceduralFairingSide", "Fairing Density", fairings);
 
             string[] hardDrives = { "Early", "Basic", "1961", "1964", "1969", "1975", "1990", "1998", "2010", "2020" };
             for (int i = hardDrives.Length - 1; i >= 0; --i)
             {
                 hardDrives[i] = "HDD-Upgrade-" + hardDrives[i];
             }
-            _hardDrives = new UpgradeLine("ModuleProceduralAvionics", "Data Storage", hardDrives);
+            _hardDrives = new UpgradeLine("storage", "ModuleProceduralAvionics", "Data Storage", hardDrives);
 
             string[] mli = new string[5];
             for (int i = 0; i < 5; ++i)
             {
                 mli[i] = $"MLI.Upgrade{i+1}";
             }
-            _mli = new UpgradeLine("ModuleFuelTanks", "Multi-Layer Insulation", mli);
+            _mli = new UpgradeLine("mli", "ModuleFuelTanks", "Multi-Layer Insulation", mli);
 
-            _x2 = new UpgradeLine("ModuleUnpressurizedCockpit", "X-1 Service Ceiling", ["X2CockpitUpgrade"]);
-            
-            var rp0Settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
-            rp0Settings.FairingTLTipShown = _fairings.UpdateUpgradeInfo(rp0Settings.FairingTLTipShown);
-            rp0Settings.HardDriveTipShown = _hardDrives.UpdateUpgradeInfo(rp0Settings.HardDriveTipShown);
-            rp0Settings.MLITipShown = _mli.UpdateUpgradeInfo(rp0Settings.MLITipShown);
-            rp0Settings.X2TipShown = _x2.UpdateUpgradeInfo(rp0Settings.X2TipShown);
+            _x2 = new UpgradeLine("x2", "ModuleUnpressurizedCockpit", "X-1 Service Ceiling", ["X2CockpitUpgrade"]);
         }
 
-        internal void OnDestroy()
+        public void OnDestroy()
         {
+            if (Instance == this)
+                Instance = null;
             _fairings.OnDestroy();
             _hardDrives.OnDestroy();
             _mli.OnDestroy();
             _x2.OnDestroy();
         }
 
-        private static void UpdateShownUpgradeIndex(string displayName, int index)
+        public int GetOrCreateUpgradeIndex(string id)
         {
-            var rp0Settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
-            switch (displayName)
-            {
-                case "Fairing Density":
-                    rp0Settings.FairingTLTipShown = index;
-                    break;
-                case "Data Storage":
-                    rp0Settings.HardDriveTipShown = index;
-                    break;
-                case "Multi-Layer Insulation":
-                    rp0Settings.MLITipShown = index;
-                    break;
-                case "X-1 Service Ceiling":
-                    rp0Settings.X2TipShown = index;
-                    break;
-            }
+            if (_bestUpgrades.TryGetValue(id, out int index))
+                return index;
+            return _bestUpgrades[id] = -1;
+        }
+
+        public void UpdateUpgradeIndex(string id, int index)
+        {
+            RP0Debug.Log($"Upgrade {id} set to {index}");
+            _bestUpgrades[id] = index;
         }
     }
 }

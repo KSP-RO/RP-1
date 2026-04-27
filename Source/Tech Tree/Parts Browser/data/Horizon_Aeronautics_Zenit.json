@@ -108,6 +108,7 @@
         "entry_cost_mods": "RD-120",
         "identical_part_name": "RD-120",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -133,6 +134,7 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

@@ -77,8 +77,8 @@
         "title": "Atlas Modular Tank (Conventional Structure)",
         "description": "",
         "mod": "ROTanks",
-        "cost": 1,
-        "entry_cost": 1,
+        "cost": "1",
+        "entry_cost": "1",
         "category": "MATERIALS",
         "info": "",
         "year": "1957",
@@ -93,7 +93,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-BalloonTank",
@@ -214,7 +216,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-CMES-Tank-Balloon",
@@ -284,7 +288,9 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-GenericTank",
@@ -355,7 +361,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-KatnissTank-Balloon",
@@ -425,7 +433,9 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-LanderTank-Integral",
@@ -498,7 +508,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-MiscTank-Balloon",
@@ -592,7 +604,9 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-MiscTank-Separate",
@@ -614,7 +628,9 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-MiscTank-ServiceModule",
@@ -753,7 +769,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-Nose-ServiceModule",
@@ -897,7 +915,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-RingDecoupler",
@@ -1016,7 +1036,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "ROT-ToroidalTank",
@@ -1071,8 +1093,8 @@
         "title": "Modular Toroidal Tank (Stringer)",
         "description": "",
         "mod": "ROTanks",
-        "cost": 0,
-        "entry_cost": 1,
+        "cost": "0",
+        "entry_cost": "1",
         "category": "MATERIALS",
         "info": "",
         "year": "0",
@@ -1087,6 +1109,8 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     }
 ]

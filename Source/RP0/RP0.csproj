@@ -147,6 +147,7 @@
     <Compile Include="Harmony\Administration.cs" />
     <Compile Include="Harmony\RDController.cs" />
     <Compile Include="Harmony\PartListTooltip.cs" />
+    <Compile Include="Harmony\PartListTooltipUpgradeStats.cs" />
     <Compile Include="Harmony\RDPartList.cs" />
     <Compile Include="Harmony\ScienceWidget.cs" />
     <Compile Include="Harmony\FundsWidget.cs" />

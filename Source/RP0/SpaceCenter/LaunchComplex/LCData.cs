@@ -41,13 +41,21 @@ namespace RP0
         public bool IsMassWithinUpAndDowngradeMargins => IsMassWithinUpgradeMargin && IsMassWithinDowngradeMargin;
         public static float CalcMassMin(float massMax)
         {
-            float frac = 0.75f;
-            if (HighLogic.CurrentGame != null)
-                frac = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().LCMassMinFraction;
-            return Mathf.Floor(massMax * frac);
+            if (massMax == float.MaxValue) return 0f;
+            return Mathf.Floor(massMax * GetMassMinFraction());
         }
         public float MassMin => CalcMassMin(massMax);
-        public static float CalcMassMaxFromMin(float massMin) => Mathf.Ceil(massMin / 0.75f);
+        public static float CalcMassMaxFromMin(float massMin)
+        {
+            float frac = GetMassMinFraction();
+            return frac > 0f ? Mathf.Ceil(massMin / frac) : massMin;
+        }
+
+        private static float GetMassMinFraction()
+        {
+            if (HighLogic.CurrentGame == null) return 0.75f;
+            return HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().LCMassMinFraction;
+        }
 
         public static readonly LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());
 

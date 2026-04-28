@@ -39,7 +39,13 @@ namespace RP0
         public bool IsMassWithinUpgradeMargin => massMax <= MaxPossibleMass;
         public bool IsMassWithinDowngradeMargin => massMax >= MinPossibleMass;
         public bool IsMassWithinUpAndDowngradeMargins => IsMassWithinUpgradeMargin && IsMassWithinDowngradeMargin;
-        public static float CalcMassMin(float massMax) => massMax == float.MaxValue ? 0f : Mathf.Floor(massMax * 0.75f);
+        public static float CalcMassMin(float massMax)
+        {
+            float frac = 0.75f;
+            if (HighLogic.CurrentGame != null)
+                frac = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().LCMassMinFraction;
+            return Mathf.Floor(massMax * frac);
+        }
         public float MassMin => CalcMassMin(massMax);
         public static float CalcMassMaxFromMin(float massMin) => Mathf.Ceil(massMin / 0.75f);
 

@@ -68,6 +68,9 @@ namespace RP0
         [GameParameters.CustomFloatParameterUI("Kerbal Death Percent Rep Loss", minValue = 0.05f, maxValue = 0.5f, stepCount = 46, displayFormat = "P0", gameMode = GameParameters.GameMode.CAREER)]
         public float RepLossNautDeathPercent = 0.1f;
 
+        [GameParameters.CustomFloatParameterUI("Launch Complex min tonnage", minValue = 0f, maxValue = 1f, stepCount = 21, displayFormat = "P0", gameMode = GameParameters.GameMode.CAREER, toolTip = "Minimum vessel mass an LC accepts, as a fraction of its max tonnage. Lower values let one LC launch a wider range of vehicles. Stock is 75%.")]
+        public float LCMassMinFraction = 0.75f;
+
         [GameParameters.CustomParameterUI("Enable career progress logging", gameMode = GameParameters.GameMode.CAREER)]
         public bool CareerLogEnabled = true;
 
@@ -131,6 +134,7 @@ namespace RP0
                     UnlockCredRate = 1f;
                     ProfTrainRate = 1f;
                     MissionTrainRate = 1f;
+                    LCMassMinFraction = 0f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
@@ -143,6 +147,7 @@ namespace RP0
                     UnlockCredRate = 1f;
                     ProfTrainRate = 1f;
                     MissionTrainRate = 1f;
+                    LCMassMinFraction = 0.5f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
@@ -155,6 +160,7 @@ namespace RP0
                     UnlockCredRate = 1f;
                     ProfTrainRate = 1f;
                     MissionTrainRate = 1f;
+                    LCMassMinFraction = 0.75f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
@@ -167,6 +173,7 @@ namespace RP0
                     UnlockCredRate = 1f;
                     ProfTrainRate = 1f;
                     MissionTrainRate = 1f;
+                    LCMassMinFraction = 0.85f;
                     break;
             }
         }

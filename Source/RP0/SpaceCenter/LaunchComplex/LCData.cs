@@ -41,8 +41,9 @@ namespace RP0
         public bool IsMassWithinUpAndDowngradeMargins => IsMassWithinUpgradeMargin && IsMassWithinDowngradeMargin;
         public static float CalcMassMin(float massMax)
         {
-            if (massMax == float.MaxValue) return 0f;
-            return Mathf.Floor(massMax * GetMassMinFraction());
+            if (massMax < float.MaxValue)
+                return Mathf.Floor(massMax * GetMassMinFraction());
+            return 0f;
         }
         public float MassMin => CalcMassMin(massMax);
         public static float CalcMassMaxFromMin(float massMin)

@@ -4,7 +4,6 @@ using RealFuels;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text;
 using UnityEngine;
 
 namespace RP0.Harmony
@@ -13,6 +12,7 @@ namespace RP0.Harmony
     internal class PatchPartListTooltipUpgradeStats
     {
         private const string UpgradePrefix = "RFUpgrade_";
+        private const double FloatEpsilon = 1e-9;
 
         private struct ConfigPair { public ConfigNode Config; public ConfigNode Baseline; }
         private static Dictionary<string, ConfigPair> _cache;
@@ -58,23 +58,30 @@ namespace RP0.Harmony
                 if (prefab == null) continue;
                 foreach (PartModule module in prefab.Modules)
                 {
-                    if (!(module is ModuleEngineConfigsBase mecb) || mecb.configs == null) continue;
-
-                    ConfigNode baseline = null;
-                    foreach (ConfigNode c in mecb.configs)
-                    {
-                        if (c.GetValue("name") == mecb.configuration) { baseline = c; break; }
-                    }
-                    if (baseline == null && mecb.configs.Count > 0) baseline = mecb.configs[0];
-
-                    foreach (ConfigNode c in mecb.configs)
-                    {
-                        string n = c.GetValue("name");
-                        if (string.IsNullOrEmpty(n) || _cache.ContainsKey(n)) continue;
-                        _cache[n] = new ConfigPair { Config = c, Baseline = baseline };
-                    }
+                    if (module is ModuleEngineConfigsBase mecb && mecb.configs != null)
+                        IndexConfigs(mecb);
                 }
             }
+        }
+
+        private static void IndexConfigs(ModuleEngineConfigsBase mecb)
+        {
+            ConfigNode baseline = FindBaseline(mecb);
+            foreach (ConfigNode c in mecb.configs)
+            {
+                string n = c.GetValue("name");
+                if (string.IsNullOrEmpty(n) || _cache.ContainsKey(n)) continue;
+                _cache[n] = new ConfigPair { Config = c, Baseline = baseline };
+            }
+        }
+
+        private static ConfigNode FindBaseline(ModuleEngineConfigsBase mecb)
+        {
+            foreach (ConfigNode c in mecb.configs)
+            {
+                if (c.GetValue("name") == mecb.configuration) return c;
+            }
+            return mecb.configs.Count > 0 ? mecb.configs[0] : null;
         }
 
         private static string BuildStatsBlock(ConfigNode cfg, ConfigNode baseline)
@@ -84,47 +91,71 @@ namespace RP0.Harmony
             int ignitions = ParseInt(cfg.GetValue("ignitions"), int.MinValue);
             (double ispVac, double ispSL) = ReadIsp(cfg);
 
-            double bMaxT = baseline != null ? ParseDouble(baseline.GetValue("maxThrust")) : double.NaN;
-            (double bIspVac, double bIspSL) = baseline != null ? ReadIsp(baseline) : (double.NaN, double.NaN);
+            bool hasBase = baseline != null;
+            double bMaxT = hasBase ? ParseDouble(baseline.GetValue("maxThrust")) : double.NaN;
+            (double bIspVac, double bIspSL) = hasBase ? ReadIsp(baseline) : (double.NaN, double.NaN);
+            bool sameAsBaseline = hasBase && baseline.GetValue("name") == cfg.GetValue("name");
 
-            bool sameAsBaseline = baseline != null && baseline.GetValue("name") == cfg.GetValue("name");
-
-            var sb = new StringBuilder();
-            sb.Append("<b>Engine stats");
-            if (baseline != null && !sameAsBaseline)
-                sb.Append(" (vs ").Append(baseline.GetValue("name")).Append(")");
-            sb.Append(":</b>");
-
-            if (!double.IsNaN(ispVac))
+            var lines = new List<string>
             {
-                sb.Append("\n  Isp vac: ").Append(F(ispVac, "0.#")).Append(" s");
-                AppendDelta(sb, ispVac, bIspVac, "0.#", " s");
-            }
-            if (!double.IsNaN(ispSL))
-            {
-                sb.Append("\n  Isp SL:  ").Append(F(ispSL, "0.#")).Append(" s");
-                AppendDelta(sb, ispSL, bIspSL, "0.#", " s");
-            }
-            if (!double.IsNaN(maxT))
-            {
-                sb.Append("\n  Thrust:  ").Append(F(maxT, "0.##")).Append(" kN");
-                AppendDelta(sb, maxT, bMaxT, "0.##", " kN");
-                if (!double.IsNaN(minT) && minT > 0 && minT < maxT)
-                    sb.Append("  (throttles to ").Append(F(minT / maxT * 100.0, "0")).Append("%)");
-            }
-            if (ignitions != int.MinValue)
-                sb.Append("\n  Ignitions: ").Append(ignitions == 0 ? "Unlimited" : ignitions.ToString(CultureInfo.InvariantCulture));
+                BuildHeader(baseline, sameAsBaseline),
+                BuildIspLine("Isp vac", ispVac, bIspVac),
+                BuildIspLine("Isp SL", ispSL, bIspSL),
+                BuildThrustLine(maxT, minT, bMaxT),
+                BuildIgnitionsLine(ignitions),
+                BuildBoolFlagLine(cfg, "ullage", "Ullage required"),
+                BuildBoolFlagLine(cfg, "pressureFed", "Pressure-fed"),
+                BuildPropellantsLine(cfg),
+            };
+            lines.RemoveAll(string.IsNullOrEmpty);
+            return string.Join("\n", lines.ToArray());
+        }
 
-            if (cfg.HasValue("ullage"))
-                sb.Append("\n  Ullage required: ").Append(ParseBool(cfg.GetValue("ullage")) ? "Yes" : "No");
-            if (cfg.HasValue("pressureFed"))
-                sb.Append("\n  Pressure-fed: ").Append(ParseBool(cfg.GetValue("pressureFed")) ? "Yes" : "No");
+        private static string BuildHeader(ConfigNode baseline, bool sameAsBaseline)
+        {
+            string vsClause = (baseline != null && !sameAsBaseline) ? " (vs " + baseline.GetValue("name") + ")" : "";
+            return "<b>Engine stats" + vsClause + ":</b>";
+        }
 
+        private static string BuildIspLine(string label, double v, double baseline)
+        {
+            if (double.IsNaN(v)) return null;
+            return label + ": " + F(v, "0.#") + " s" + DeltaSuffix(v, baseline, "0.#", " s");
+        }
+
+        private static string BuildThrustLine(double maxT, double minT, double bMaxT)
+        {
+            if (double.IsNaN(maxT)) return null;
+            string throttle = (!double.IsNaN(minT) && minT > 0 && minT < maxT)
+                ? "  (throttles to " + F(minT / maxT * 100.0, "0") + "%)"
+                : "";
+            return "Thrust: " + F(maxT, "0.##") + " kN" + DeltaSuffix(maxT, bMaxT, "0.##", " kN") + throttle;
+        }
+
+        private static string BuildIgnitionsLine(int ignitions)
+        {
+            if (ignitions == int.MinValue) return null;
+            return "Ignitions: " + (ignitions == 0 ? "Unlimited" : ignitions.ToString(CultureInfo.InvariantCulture));
+        }
+
+        private static string BuildBoolFlagLine(ConfigNode cfg, string key, string label)
+        {
+            if (!cfg.HasValue(key)) return null;
+            return label + ": " + (ParseBool(cfg.GetValue(key)) ? "Yes" : "No");
+        }
+
+        private static string BuildPropellantsLine(ConfigNode cfg)
+        {
             string fuelPair = ReadPropellants(cfg);
-            if (!string.IsNullOrEmpty(fuelPair))
-                sb.Append("\n  Propellant: ").Append(fuelPair);
+            return string.IsNullOrEmpty(fuelPair) ? null : "Propellant: " + fuelPair;
+        }
 
-            return sb.ToString();
+        private static string DeltaSuffix(double v, double baseline, string fmt, string unit)
+        {
+            if (double.IsNaN(baseline)) return "";
+            double d = v - baseline;
+            if (Math.Abs(d) < FloatEpsilon) return "";
+            return " (" + (d > 0 ? "+" : "") + F(d, fmt) + unit + ")";
         }
 
         private static (double vac, double sl) ReadIsp(ConfigNode cfg)
@@ -142,7 +173,7 @@ namespace RP0.Harmony
                 if (atm < minAtm) { minAtm = atm; vac = isp; }
                 if (atm > maxAtm) { maxAtm = atm; sl = isp; }
             }
-            if (minAtm == maxAtm) sl = double.NaN;
+            if (Math.Abs(maxAtm - minAtm) < FloatEpsilon) sl = double.NaN;
             return (vac, sl);
         }
 
@@ -158,13 +189,6 @@ namespace RP0.Harmony
                 if (!string.IsNullOrEmpty(n)) fuels.Add(n);
             }
             return string.Join(" / ", fuels.ToArray());
-        }
-
-        private static void AppendDelta(StringBuilder sb, double v, double baseline, string fmt, string unit)
-        {
-            if (double.IsNaN(baseline) || baseline == v) return;
-            double d = v - baseline;
-            sb.Append(" (").Append(d > 0 ? "+" : "").Append(F(d, fmt)).Append(unit).Append(")");
         }
 
         private static string F(double v, string fmt) => v.ToString(fmt, CultureInfo.InvariantCulture);

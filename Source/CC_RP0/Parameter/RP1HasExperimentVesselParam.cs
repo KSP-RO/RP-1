@@ -47,13 +47,20 @@ namespace ContractConfigurator.RP0
             {
                 foreach (Experiment exp in p.FindModulesImplementingReadOnly<Experiment>())
                 {
-                    if (exp.isEnabled && (exp.experiment_id == experiment || exp.ExpInfo.IncludedExperiments.Any(inc => inc.ExperimentId == experiment)))
+                    if (exp.isEnabled && IncludesExperiment(exp.ExpInfo, experiment))
                     {
                         return true;
                     }
                 }
             }
             return false;
+        }
+
+        // Does exp include an experiment with id `id`?
+        private bool IncludesExperiment(ExperimentInfo exp, string id)
+        {
+            // Kerbalism makes sure there are no loops in the traversal.
+            return exp.ExperimentId == id || exp.IncludedExperiments.Any(info => IncludesExperiment(info, id));
         }
     }
 }

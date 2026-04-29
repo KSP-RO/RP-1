@@ -50,6 +50,10 @@
       <HintPath>$(ReferencePath)/ContractConfigurator.dll</HintPath>
       <Private>False</Private>
     </Reference>
+    <Reference Include="$(KSPRoot)/GameData/Kerbalism/Kerbalism112.kbin">
+      <HintPath>$(ReferencePath)/Kerbalism112.kbin</HintPath>
+      <Private>False</Private>
+    </Reference>
     <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/System.dll">
       <HintPath>$(ReferencePath)/System.dll</HintPath>
       <Private>False</Private>
@@ -66,6 +70,8 @@
   <ItemGroup>
     <Compile Include="Behaviour\AcceptContractBehaviour.cs" />
     <Compile Include="BehaviourFactory\AcceptContractBehaviourFactory.cs" />
+    <Compile Include="ParameterFactory\RP1HasExperimentVesselParamFactory.cs" />
+    <Compile Include="ParameterFactory\RP1HasSamplesVesselParamFactory.cs" />
     <Compile Include="ParameterFactory\VesselBuiltAtFactory.cs" />
     <Compile Include="Parameter\AvionicsCheckVesselParam.cs" />
     <Compile Include="ParameterFactory\AvionicsCheckFactory.cs" />
@@ -79,6 +85,8 @@
     <Compile Include="Parameter\DownrangeDistanceVesselParam.cs" />
     <Compile Include="ParameterFactory\HorizontalLandingFactory.cs" />
     <Compile Include="Parameter\HorizontalLandingVesselParam.cs" />
+    <Compile Include="Parameter\RP1HasSamplesVesselParam.cs" />
+    <Compile Include="Parameter\RP1HasExperimentVesselParam.cs" />
     <Compile Include="Parameter\VesselBuiltAt.cs" />
     <Compile Include="Requirement\ProgramActiveRequirement.cs" />
     <Compile Include="RP1ContractTracker.cs" />

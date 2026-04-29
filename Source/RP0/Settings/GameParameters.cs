@@ -134,7 +134,6 @@ namespace RP0
                     UnlockCredRate = 1f;
                     ProfTrainRate = 1f;
                     MissionTrainRate = 1f;
-                    LCMassMinFraction = 0f;
                     break;
                 case GameParameters.Preset.Normal:
                     IncludeCraftFiles = true;
@@ -147,7 +146,6 @@ namespace RP0
                     UnlockCredRate = 1f;
                     ProfTrainRate = 1f;
                     MissionTrainRate = 1f;
-                    LCMassMinFraction = 0.5f;
                     break;
                 case GameParameters.Preset.Moderate:
                     IncludeCraftFiles = false;
@@ -160,7 +158,6 @@ namespace RP0
                     UnlockCredRate = 1f;
                     ProfTrainRate = 1f;
                     MissionTrainRate = 1f;
-                    LCMassMinFraction = 0.75f;
                     break;
                 case GameParameters.Preset.Hard:
                     IncludeCraftFiles = false;
@@ -173,7 +170,6 @@ namespace RP0
                     UnlockCredRate = 1f;
                     ProfTrainRate = 1f;
                     MissionTrainRate = 1f;
-                    LCMassMinFraction = 0.85f;
                     break;
             }
         }

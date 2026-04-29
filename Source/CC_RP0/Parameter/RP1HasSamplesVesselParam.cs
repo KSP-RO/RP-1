@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace ContractConfigurator.RP0
 {
-    public class RP1HasSamplesVesselParam : VesselParameter
+    public class RP1HasSamples : VesselParameter
     {
         protected string experiment { get; set; }
 
@@ -13,13 +13,13 @@ namespace ContractConfigurator.RP0
         private float updateFrequency = DEFAULT_UPDATE_FREQUENCY;
         internal const float DEFAULT_UPDATE_FREQUENCY = 2.5f; // This really shouldn't change that often.
 
-        public RP1HasSamplesVesselParam()
+        public RP1HasSamples()
             : base(null)
         {
             lastUpdate = Time.fixedTime;
         }
 
-        public RP1HasSamplesVesselParam(string experiment, string title)
+        public RP1HasSamples(string experiment, string title)
             : base(title)
         {
             lastUpdate = Time.fixedTime;
@@ -29,12 +29,14 @@ namespace ContractConfigurator.RP0
         protected override void OnParameterLoad(ConfigNode node)
         {
             base.OnParameterLoad(node);
+            updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
             experiment = ConfigNodeUtil.ParseValue<string>(node, "experiment");
         }
 
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
+            node.AddValue("updateFrequency", updateFrequency);
             node.AddValue("experiment", experiment);
         }
 

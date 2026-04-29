@@ -2,7 +2,7 @@
 
 namespace ContractConfigurator.RP0
 {
-    public class RP1HasSamplesVesselParamFactory : ParameterFactory
+    public class RP1HasExperimentFactory : ParameterFactory
     {
         protected string experiment;
 
@@ -17,7 +17,7 @@ namespace ContractConfigurator.RP0
 
         public override ContractParameter Generate(Contract contract)
         {
-            return new RP1HasSamplesVesselParam(experiment, title);
+            return new RP1HasExperiment(experiment, title);
         }
     }
 }

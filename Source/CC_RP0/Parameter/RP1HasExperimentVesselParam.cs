@@ -6,16 +6,16 @@ using UniLinq;
 
 namespace ContractConfigurator.RP0
 {
-    public class RP1HasExperimentVesselParam : VesselParameter
+    public class RP1HasExperiment : VesselParameter
     {
         protected string experiment { get; set; }
 
-        public RP1HasExperimentVesselParam()
+        public RP1HasExperiment()
             : base(null)
         {
         }
 
-        public RP1HasExperimentVesselParam(string experiment, string title)
+        public RP1HasExperiment(string experiment, string title)
             : base(title)
         {
             this.experiment = experiment;

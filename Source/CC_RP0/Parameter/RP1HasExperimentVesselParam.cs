@@ -1,8 +1,8 @@
 ﻿using ContractConfigurator.Parameters;
 using KERBALISM;
 using KSP.Localization;
-using System.Linq;
-using UnityEngine;
+using KSPCommunityFixes;
+using UniLinq;
 
 namespace ContractConfigurator.RP0
 {
@@ -13,7 +13,6 @@ namespace ContractConfigurator.RP0
         public RP1HasExperimentVesselParam()
             : base(null)
         {
-            experiment = "RP0telemetry1";
         }
 
         public RP1HasExperimentVesselParam(string experiment, string title)
@@ -46,7 +45,7 @@ namespace ContractConfigurator.RP0
             if (vessel == null) return false;
             foreach (Part p in vessel.Parts)
             {
-                foreach (Experiment exp in p.FindModulesImplementing<Experiment>())
+                foreach (Experiment exp in p.FindModulesImplementingReadOnly<Experiment>())
                 {
                     if (exp.isEnabled && (exp.experiment_id == experiment || exp.ExpInfo.IncludedExperiments.Any(inc => inc.ExperimentId == experiment)))
                     {

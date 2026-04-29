@@ -54,6 +54,10 @@
       <HintPath>$(ReferencePath)/Kerbalism112.kbin</HintPath>
       <Private>False</Private>
     </Reference>
+		<Reference Include="$(KSPRoot)/GameData/KSPCommunityFixes/Plugins/KSPCommunityFixes.dll">
+			<HintPath>$(ReferencePath)/KSPCommunityFixes.dll</HintPath>
+			<Private>False</Private>
+		</Reference>
     <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/System.dll">
       <HintPath>$(ReferencePath)/System.dll</HintPath>
       <Private>False</Private>

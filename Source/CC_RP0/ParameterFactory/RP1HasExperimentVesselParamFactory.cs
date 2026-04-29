@@ -10,7 +10,7 @@ namespace ContractConfigurator.RP0
         {
             bool valid = base.Load(configNode);
 
-            valid &= ConfigNodeUtil.ParseValue<string>(configNode, "experiment", x => experiment = x, this, "RP0telemetry1");
+            valid &= ConfigNodeUtil.ParseValue<string>(configNode, "experiment", x => experiment = x, this);
 
             return valid;
         }

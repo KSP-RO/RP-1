@@ -1,7 +1,6 @@
 ﻿using ContractConfigurator.Parameters;
 using KERBALISM;
 using KSP.Localization;
-using System.Linq;
 using UnityEngine;
 
 namespace ContractConfigurator.RP0

@@ -4,10 +4,10 @@ using ROUtils.DataTypes;
 using RP0.UI;
 using System;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
 
-namespace RP0.Addons
+namespace RP0
 {
     [KSPScenario((ScenarioCreationOptions)480, [GameScenes.EDITOR])]
     public class RnDUpgradeTips : ScenarioModule
@@ -21,6 +21,7 @@ namespace RP0.Addons
             private readonly string _moduleName;
             private readonly string _displayName;
             private bool _subscribedToPAWEvent;
+            private bool _firedAlready = false;
             private readonly ValidPartModuleFilter _filter;
 
             public int bestUpgrade { get; private set; } = -1;
@@ -69,8 +70,10 @@ namespace RP0.Addons
             private void OnPartActionUIShown(UIPartActionWindow paw, Part part)
             {
                 // If there is any module that matches the given name AND meets the filter requirement, show the tip.
-                if (bestUnpurchasedUpgrade > bestUpgrade && part.Modules.modules.Any(pm => pm.ClassName == _moduleName && (_filter == null || _filter(pm))))
+                if (!_firedAlready && bestUnpurchasedUpgrade > bestUpgrade && part.Modules.modules.Any(pm => pm.ClassName == _moduleName && (_filter == null || _filter(pm)))) {
+                    _firedAlready = true;
                     ShowAvailableTechTip();
+                }
             }
 
             private void ShowAvailableTechTip()
@@ -86,7 +89,6 @@ namespace RP0.Addons
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0f, 0f);
                 string costStr = cmq.GetCostLineOverride(true, false, false, true);
                 double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds, false);
-                double invertCMQOp = upgrade.entryCost / trueTotal;
                 double creditAmtToUse = Math.Min(trueTotal, UnlockCreditHandler.Instance.TotalCredit);
                 cmq.AddPostDelta(CurrencyRP0.Funds, creditAmtToUse, true);
                 string afterCreditLine = cmq.GetCostLineOverride(true, false, true, true, true);
@@ -103,7 +105,7 @@ namespace RP0.Addons
                             PartUpgradeManager.Handler.SetUnlocked(upgrade.name, true);
                             GameEvents.OnPartUpgradePurchased.Fire(upgrade);
                             bestUpgrade = bestUnpurchasedUpgrade;
-                            Instance.UpdateBestShownUpgradeName(_id, upgrade.name);
+                            UpdateUpgradeInfo();
                         }
                     }, () => cmq.CanAfford(), 100, -1, true) 
                     { tooltipText = $"Spending {creditAmtToUse:N0} unlock credit\n(Base cost {costStr})" };
@@ -116,7 +118,7 @@ namespace RP0.Addons
                     new DialogGUIButton(KSP.Localization.Localizer.GetStringByTag("#rp0_GameplayTip_DontShowAgain"), () => 
                     { 
                         bestUpgrade = bestUnpurchasedUpgrade;
-                        Instance.UpdateBestShownUpgradeName(_id, upgrade.name);
+                        UpdateUpgradeInfo();
                     }
                 )));
 

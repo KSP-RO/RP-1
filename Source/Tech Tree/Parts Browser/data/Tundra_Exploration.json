@@ -16,7 +16,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "capsuleCrewDragon",
+        "entry_cost_mods": "capsulesDragonCrew",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -39,7 +39,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "capsuleCrewDragon",
+        "entry_cost_mods": "capsulesDragonCrew",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
@@ -64,7 +64,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "capsuleCrewDragon",
+        "entry_cost_mods": "capsulesDragonCrew",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -198,7 +198,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "capsuleCrewDragon",
+        "entry_cost_mods": "capsulesDragonCrew",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -221,7 +221,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "capsuleCrewDragon",
+        "entry_cost_mods": "capsulesDragonCrew",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"

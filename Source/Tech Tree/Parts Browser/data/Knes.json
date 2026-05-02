@@ -144,7 +144,7 @@
         "description": "",
         "mod": "Knes",
         "cost": "8500",
-        "entry_cost": "120000",
+        "entry_cost": 0,
         "category": "SPACEPLANES",
         "info": "",
         "year": "1981",

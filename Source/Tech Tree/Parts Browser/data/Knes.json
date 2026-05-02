@@ -39,7 +39,7 @@
         "spacecraft": "ESAViking",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "VikingCapsule",
+        "entry_cost_mods": "capsulesViking",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
@@ -65,7 +65,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "VikingCapsule",
+        "entry_cost_mods": "capsulesViking",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -88,7 +88,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "VikingCapsule",
+        "entry_cost_mods": "capsulesViking",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -109,7 +109,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "VikingCapsule",
+        "entry_cost_mods": "capsuleSViking",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -365,7 +365,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "VikingCapsule",
+        "entry_cost_mods": "capsulesViking",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -388,7 +388,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "VikingCapsule",
+        "entry_cost_mods": "capsulesViking",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -434,7 +434,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "VikingCapsule",
+        "entry_cost_mods": "capsulesViking",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -634,7 +634,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Callisto",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -678,7 +678,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -699,7 +699,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -720,7 +720,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -741,7 +741,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -762,7 +762,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -783,7 +783,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -806,7 +806,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": [
             "EngineSolid"
@@ -829,7 +829,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": [
             "Reentry"
@@ -852,7 +852,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
@@ -877,7 +877,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -898,7 +898,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -919,7 +919,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -940,7 +940,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "MRC",
+        "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
         "module_tags": []
     }

@@ -84,8 +84,9 @@ namespace RP0
                 controls.Add(new DialogGUILabel(msg));
 
                 var upgrade = GetUpgrade(bestUnpurchasedUpgrade);
-
-                string txt = $"<b>{upgrade.title}</b>\n{upgrade.description}";
+                int noteLoc = upgrade.description.IndexOf("NOTE:");
+                if (noteLoc == -1) noteLoc = upgrade.description.Length;
+                string txt = $"<b>{upgrade.title}</b>\n{upgrade.description.Substring(0, noteLoc)}";
                 var cmq = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.PartOrUpgradeUnlock, -upgrade.entryCost, 0f, 0f);
                 string costStr = cmq.GetCostLineOverride(true, false, false, true);
                 double trueTotal = -cmq.GetTotal(CurrencyRP0.Funds, false);

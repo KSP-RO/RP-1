@@ -137,7 +137,7 @@ namespace RP0
                     GUIStates.ShowBuildList = true;
                     RefreshToolbarState();
                 }
-                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTKSCLock);
+                if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) InputLockManager.RemoveControlLock(SpaceCenterManagement.SCMKSCLock);
 
                 SpaceCenterManagement.Instance.RecalculateBuildRates();
 

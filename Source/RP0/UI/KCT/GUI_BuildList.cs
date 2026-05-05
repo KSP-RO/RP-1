@@ -614,6 +614,22 @@ namespace RP0
                 GUILayout.EndHorizontal();
             }
             GUILayout.EndScrollView();
+
+            if (techList.Count > 0)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Work rate:", GUILayout.Width(90));
+                GUILayout.Label(techList[0].workRate.ToString("P0"), GetLabelRightAlignStyle(), GUILayout.Width(40));
+                float newWorkRate = GUILayout.HorizontalSlider((float)techList[0].workRate, 0f, 1f, GUILayout.Width(150));
+                double newWorkRateQuantized = Mathf.RoundToInt(newWorkRate * 20f) * 0.05d;
+                if (newWorkRateQuantized != techList[0].workRate)
+                {
+                    foreach (var tech in techList)
+                        tech.workRate = newWorkRateQuantized;
+                    MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
+                }
+                GUILayout.EndHorizontal();
+            }
         }
 
         private static int CompareBuildItems(ISpaceCenterProject a, ISpaceCenterProject b)
@@ -1375,6 +1391,7 @@ namespace RP0
                         if (padClear)
                         {
                             b.launchSiteIndex = vesselLC.LaunchPads.IndexOf(foundPad);
+                            tmpRollout.launchPadID = foundPad.name;
                             vesselLC.Recon_Rollout.Add(tmpRollout);
                         }
                         else
@@ -1644,7 +1661,9 @@ namespace RP0
                         LCLaunchPad pad = lc.LaunchPads[j];
                         GUILayout.BeginHorizontal();
                         GUILayout.Space(44); // indent under LC name
-                        GUILayout.Label(pad.name, GUILayout.ExpandWidth(true));
+                        bool hasKKSite = pad.launchSiteName != "LaunchPad" && !string.IsNullOrEmpty(pad.launchSiteName);
+                        string padLabel = hasKKSite ? $"{pad.name} ({pad.launchSiteName})" : pad.name;
+                        GUILayout.Label(padLabel, GUILayout.ExpandWidth(true));
 
                         if (GUILayout.Button(new GUIContent("Rename", "Rename this launch pad"), GUILayout.ExpandWidth(false)))
                         {
@@ -1928,6 +1947,7 @@ namespace RP0
                     {
                         activeLC.ActiveLPInstance.launchSiteName = launchsite;
                         _isSelectingLaunchSiteForVessel = true; // reset
+                        GUIStates.ShowLCManagement = true;
                     }
                     GUIStates.ShowLaunchSiteSelector = false;
                 }

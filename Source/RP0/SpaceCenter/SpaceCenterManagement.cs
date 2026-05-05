@@ -163,8 +163,8 @@ namespace RP0
         private double _lastRateUpdateUT = 0;
         private double _lastYearMultUpdateUT = 0;
 
-        internal const string KCTLaunchLock = "KCTLaunchLock";
-        internal const string KCTKSCLock = "KCTKSCLock";
+        internal const string SCMLaunchLock = "SCMLaunchLock";
+        internal const string SCMKSCLock = "SCMKSCLock";
         private const float BUILD_TIME_INTERVAL = 0.5f;
         private const float YEAR_MULT_TIME_INTERVAL = 86400 * 7;
 
@@ -234,17 +234,17 @@ namespace RP0
             }
 
             if (KCT_GUI.IsPrimarilyDisabled &&
-                InputLockManager.GetControlLock(KCTLaunchLock) == ControlTypes.EDITOR_LAUNCH)
+                InputLockManager.GetControlLock(SCMLaunchLock) == ControlTypes.EDITOR_LAUNCH)
             {
-                InputLockManager.RemoveControlLock(KCTLaunchLock);
+                InputLockManager.RemoveControlLock(SCMLaunchLock);
             }
 
             KACWrapper.InitKACWrapper();
 
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
             {
-                if (InputLockManager.GetControlLock(KCTKSCLock) == ControlTypes.KSC_FACILITIES)
-                    InputLockManager.RemoveControlLock(KCTKSCLock);
+                if (InputLockManager.GetControlLock(SCMKSCLock) == ControlTypes.KSC_FACILITIES)
+                    InputLockManager.RemoveControlLock(SCMKSCLock);
                 return;
             }
 
@@ -311,6 +311,7 @@ namespace RP0
         private void EditorStart()
         {
             KCT_GUI.BuildRateForDisplay = null;
+            _hasFirstRecalculated = false;
             if (!KCT_GUI.IsPrimarilyDisabled)
             {
                 IsEditorRecalcuationRequired = true;
@@ -624,9 +625,9 @@ namespace RP0
                             foreach (var lc in ksc.LaunchComplexes)
                             {
                                 foreach (var vp in lc.BuildList)
-                                    vp.RecalculateFromNode(true);
+                                    vp.RecalculateFromNode();
                                 foreach (var vp in lc.Warehouse)
-                                    vp.RecalculateFromNode(true);
+                                    vp.RecalculateFromNode();
                             }
                         }
                     }
@@ -958,6 +959,19 @@ namespace RP0
             {
                 if (!lc.IsActive)
                     return lc.Engineers * Database.SettingsSC.EngineerIdleSalaryMult;
+
+                if (lc.LCType == LaunchComplexType.Hangar)
+                {
+                    int maxCap = lc.BuildList.Count > 0 ? lc.MaxEngineersFor(lc.BuildList[0]) : 0;
+                    foreach (var rr in lc.Recon_Rollout)
+                    {
+                        if (rr.KeepsLCActive && !rr.IsComplete())
+                            maxCap = Math.Max(maxCap, lc.MaxEngineersFor(rr.mass, rr.vesselBP, rr.isHumanRated));
+                    }
+
+                    int working = Math.Min(lc.Engineers, maxCap);
+                    return working * lc.RushSalary + (lc.Engineers - working) * Database.SettingsSC.EngineerIdleSalaryMult;
+                }
 
                 if (lc.IsHumanRated && lc.BuildList.Count > 0 && !lc.BuildList[0].humanRated)
                 {
@@ -1368,9 +1382,12 @@ namespace RP0
             {
                 if (EditorDriver.fetch != null && !EditorDriver.fetch.restartingEditor)
                 {
+                    bool isFirstRecalc = !_hasFirstRecalculated;
                     _hasFirstRecalculated = true;
                     IsEditorRecalcuationRequired = false;
                     RecalculateEditorBuildTime(EditorLogic.fetch.ship);
+                    if (isFirstRecalc)
+                        KCT_GUI.BuildRateForDisplay = null;
                 }
                 // make sure we're not destructing
                 else if (!_hasFirstRecalculated && this != null)

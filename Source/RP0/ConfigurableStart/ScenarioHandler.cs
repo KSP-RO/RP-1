@@ -43,6 +43,8 @@ namespace RP0.ConfigurableStart
             }
         }
 
+        public string SelectedKSC { get; set; }
+
         public void SetCurrentScenarioFromName(string name)
         {
             if (!string.IsNullOrEmpty(name) && LoadedScenarios.ContainsKey(name))
@@ -88,6 +90,20 @@ namespace RP0.ConfigurableStart
         {
             PresetPickerGUI.Instance?.SetVisible(false);
             if (CurrentScenario == null || CurrentScenario.ScenarioName == EmptyScenarioName) return;
+
+            // Add the LastKSC proto before scene transition so that KSCLoader.OnGameStateCreated
+            // reads the desired site and calls SetSiteAndResetCamera with it on first SpaceCenter load.
+            if (KSCSwitcherInterop.IsKSCSwitcherInstalled && !string.IsNullOrEmpty(SelectedKSC))
+            {
+                Game game = HighLogic.CurrentGame;
+                if (game != null)
+                {
+                    ProtoScenarioModule lastKscProto = game.scenarios.FirstOrDefault(s => s.moduleName == "LastKSC");
+                    if (lastKscProto == null && KSCSwitcherInterop.LastKSCType != null)
+                        lastKscProto = game.AddProtoScenarioModule(KSCSwitcherInterop.LastKSCType, GameScenes.TRACKSTATION);
+                    KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
+                }
+            }
 
             switch (HighLogic.CurrentGame.Mode)
             {
@@ -240,6 +256,15 @@ namespace RP0.ConfigurableStart
                 {
                     Dictionary<string, float> engines = Utilities.DictionaryFromCommaSeparatedString<float>(scn.TFStartingDU);
                     TFInterop.SetFlightDataForParts(engines);
+                }
+
+                if (KSCSwitcherInterop.IsKSCSwitcherInstalled && !string.IsNullOrEmpty(SelectedKSC))
+                {
+                    SpaceCenterManagement.Instance.SetActiveKSC(SelectedKSC);
+                    KSCSwitcherInterop.SetLastKSCSite(SelectedKSC);
+                    // CreateNewGame saves before onGameNewStart fires, so the sfs lacks the initial KSC state.
+                    ProtoScenarioModule lastKscProto = HighLogic.CurrentGame?.scenarios?.FirstOrDefault(s => s.moduleName == "LastKSC");
+                    KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
                 }
 
                 foreach (LCData lcData in scn.LCs)

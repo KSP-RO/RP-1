@@ -31,6 +31,9 @@ namespace RP0
         public double lcCostMultiplier = 2d;
 
         [Persistent]
+        public double lcMassMinFraction = 0.75d;
+
+        [Persistent]
         public PersistentListValueType<double> nautYearlyUpkeepPerFacLevel = new PersistentListValueType<double>();
 
         [Persistent]

@@ -163,8 +163,8 @@ namespace RP0
         private double _lastRateUpdateUT = 0;
         private double _lastYearMultUpdateUT = 0;
 
-        internal const string KCTLaunchLock = "KCTLaunchLock";
-        internal const string KCTKSCLock = "KCTKSCLock";
+        internal const string SCMLaunchLock = "SCMLaunchLock";
+        internal const string SCMKSCLock = "SCMKSCLock";
         private const float BUILD_TIME_INTERVAL = 0.5f;
         private const float YEAR_MULT_TIME_INTERVAL = 86400 * 7;
 
@@ -234,17 +234,17 @@ namespace RP0
             }
 
             if (KCT_GUI.IsPrimarilyDisabled &&
-                InputLockManager.GetControlLock(KCTLaunchLock) == ControlTypes.EDITOR_LAUNCH)
+                InputLockManager.GetControlLock(SCMLaunchLock) == ControlTypes.EDITOR_LAUNCH)
             {
-                InputLockManager.RemoveControlLock(KCTLaunchLock);
+                InputLockManager.RemoveControlLock(SCMLaunchLock);
             }
 
             KACWrapper.InitKACWrapper();
 
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
             {
-                if (InputLockManager.GetControlLock(KCTKSCLock) == ControlTypes.KSC_FACILITIES)
-                    InputLockManager.RemoveControlLock(KCTKSCLock);
+                if (InputLockManager.GetControlLock(SCMKSCLock) == ControlTypes.KSC_FACILITIES)
+                    InputLockManager.RemoveControlLock(SCMKSCLock);
                 return;
             }
 

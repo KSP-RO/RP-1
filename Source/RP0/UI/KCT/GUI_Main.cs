@@ -123,13 +123,13 @@ namespace RP0
             {
                 if (!_isKSCLocked)
                 {
-                    InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, SpaceCenterManagement.KCTKSCLock);
+                    InputLockManager.SetControlLock(ControlTypes.KSC_FACILITIES, SpaceCenterManagement.SCMKSCLock);
                     _isKSCLocked = true;
                 }
             }
             else if (_isKSCLocked)
             {
-                InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTKSCLock);
+                InputLockManager.RemoveControlLock(SpaceCenterManagement.SCMKSCLock);
                 _isKSCLocked = false;
             }
 

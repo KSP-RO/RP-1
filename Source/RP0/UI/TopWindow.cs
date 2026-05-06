@@ -1,4 +1,5 @@
 ﻿using ClickThroughFix;
+using RP0.UI;
 using System;
 using UnityEngine;
 
@@ -13,6 +14,7 @@ namespace RP0
 
         private readonly MaintenanceGUI _maintUI = new MaintenanceGUI();
         private readonly ToolingGUI _toolUI = new ToolingGUI();
+        private readonly CostBreakdownGUI _costUI = new CostBreakdownGUI();
         private readonly Crew.TrainingGUI _fsUI = new Crew.TrainingGUI();
         private readonly AvionicsGUI _avUI = new AvionicsGUI();
         private readonly ContractGUI _contractUI = new ContractGUI();
@@ -41,6 +43,7 @@ namespace RP0
         {
             _maintUI.Start();
             _toolUI.Start();
+            _costUI.Start();
             _fsUI.Start();
             _avUI.Start();
             _contractUI.Start();
@@ -51,6 +54,7 @@ namespace RP0
         {
             _maintUI.Destroy();
             _toolUI.Destroy();
+            _costUI.Destroy();
             _fsUI.Destroy();
             _avUI.Destroy();
             _contractUI.Destroy();
@@ -67,13 +71,19 @@ namespace RP0
 
         private void UpdateSelectedTab()
         {
+            GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             if (ShouldShowTab(UITab.Budget) && RenderToggleButton("Budget", _currentTab == UITab.Budget))
                 SwitchTabTo(UITab.Budget);
             if (ShouldShowTab(UITab.Tooling) && RenderToggleButton("Tooling", _currentTab == UITab.Tooling))
                 SwitchTabTo(UITab.Tooling);
+            if (ShouldShowTab(UITab.CostBreakdown) && RenderToggleButton("Cost Breakdown", _currentTab == UITab.CostBreakdown))
+                SwitchTabTo(UITab.CostBreakdown);
             if (ShouldShowTab(UITab.Astronauts) && RenderToggleButton("Astronauts", _currentTab == UITab.Astronauts))
                 SwitchTabTo(UITab.Astronauts);
+            GUILayout.EndHorizontal();
+
+            GUILayout.BeginHorizontal();
             if (ShouldShowTab(UITab.Training) && RenderToggleButton("Training", _currentTab == UITab.Training))
                 SwitchTabTo(UITab.Training);
             if (ShouldShowTab(UITab.Avionics) && RenderToggleButton("Avionics", _currentTab == UITab.Avionics))
@@ -83,6 +93,7 @@ namespace RP0
             if (ShouldShowTab(UITab.CareerLog) && RenderToggleButton("Career Log", _currentTab == UITab.CareerLog))
                 SwitchTabTo(UITab.CareerLog);
             GUILayout.EndHorizontal();
+            GUILayout.EndVertical();
         }
 
         public void DrawWindow(int windowID)
@@ -139,6 +150,9 @@ namespace RP0
                             break;
                         case UITab.CareerLog:
                             _logUI.RenderTab();
+                            break;
+                        case UITab.CostBreakdown:
+                            _costUI.RenderCostBreakdownTab();
                             break;
                         default:    // can't happen
                             break;

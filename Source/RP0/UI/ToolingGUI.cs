@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using Smooth.Slinq;
 using RP0.Tooling;
 using System;
@@ -14,6 +15,7 @@ namespace RP0
             public float ToolingCost;
             public float UntooledMultiplier;
             public float TotalCost;
+            public Part Part;
         };
 
         private const float UpdateInterval = 0.5f;
@@ -26,10 +28,47 @@ namespace RP0
         private readonly List<UntooledPart> _untooledParts = new List<UntooledPart>();
         private Vector2 _toolingTypesScroll = new Vector2();
         private Vector2 _untooledTypesScroll = new Vector2();
+        private Part _highlightedPart = null;
+        private Part _editorHoveredPart = null;
+        private Texture2D _highlightRowStyle = null;
+        private readonly Dictionary<Part, Rect> _partRowRects = new Dictionary<Part, Rect>();
+
+        private Texture2D HighlightRowTex
+        {
+            get
+            {
+                if (_highlightRowStyle == null)
+                {
+                    _highlightRowStyle = new Texture2D(1, 1);
+                    _highlightRowStyle.SetPixel(0, 0, new Color(1f, 1f, 0f, 0.15f));
+                    _highlightRowStyle.Apply();
+                }
+                return _highlightRowStyle;
+            }
+        }
+
+        protected override void OnDestroy()
+        {
+            if (_highlightRowStyle != null)
+                UnityEngine.Object.Destroy(_highlightRowStyle);
+        }
 
         public UITab RenderToolingTab()
         {
             MaybeUpdate();
+
+            Part newEditorHoveredPart = Mouse.HoveredPart;
+            if (newEditorHoveredPart != null && EventSystem.current.IsPointerOverGameObject())
+                newEditorHoveredPart = null;
+            if (newEditorHoveredPart != _editorHoveredPart)
+            {
+                _editorHoveredPart = newEditorHoveredPart;
+                if (_editorHoveredPart != null && _partRowRects.TryGetValue(_editorHoveredPart, out Rect r))
+                {
+                    float rowMid = r.y + r.height / 2f;
+                    _untooledTypesScroll.y = Mathf.Max(0f, rowMid - 102f);
+                }
+            }
 
             if (!_isToolingTempDisabled && !ToolingManager.Instance.toolingEnabled)
             {
@@ -68,6 +107,13 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
+            Part pawPart = null;
+            List<UIPartActionWindow> pawWindows = UIPartActionController.Instance?.windows;
+            if (pawWindows != null && pawWindows.Count == 1)
+                pawPart = pawWindows[0].part;
+            Part rowHighlightPart = _editorHoveredPart ?? pawPart;
+
+            Part newHighlightedPart = null;
             if (_isToolingTempDisabled || _untooledParts.Count > 0)
             {
                 GUILayout.BeginHorizontal();
@@ -80,6 +126,12 @@ namespace RP0
                 _untooledTypesScroll = GUILayout.BeginScrollView(_untooledTypesScroll, GUILayout.Height(204), GUILayout.Width(572));
                 foreach (UntooledPart up in _untooledParts)
                 {
+                    if (Event.current.type == EventType.Repaint &&
+                        up.Part != null && up.Part == rowHighlightPart &&
+                        _partRowRects.TryGetValue(up.Part, out Rect highlightRect))
+                    {
+                        GUI.DrawTexture(highlightRect, HighlightRowTex);
+                    }
                     GUILayout.BeginHorizontal();
                     GUILayout.Label(up.Name, BoldLabel, GUILayout.Width(312));
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -up.ToolingCost):N0}", RightLabel, GUILayout.Width(72));
@@ -87,6 +139,13 @@ namespace RP0
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -up.TotalCost):N0}", RightLabel, GUILayout.Width(72));
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -(up.TotalCost - untooledExtraCost)):N0}", RightLabel, GUILayout.Width(72));
                     GUILayout.EndHorizontal();
+                    if (Event.current.type == EventType.Repaint && up.Part != null)
+                    {
+                        Rect rowRect = GUILayoutUtility.GetLastRect();
+                        _partRowRects[up.Part] = rowRect;
+                        if (rowRect.Contains(Event.current.mousePosition))
+                            newHighlightedPart = up.Part;
+                    }
                 }
                 GUILayout.EndScrollView();
 
@@ -105,6 +164,18 @@ namespace RP0
                     Debug.LogException(ex);
                 }
                 GUILayout.EndVertical();
+            }
+
+            if (Event.current.type == EventType.Repaint && newHighlightedPart != _highlightedPart)
+            {
+                if (_highlightedPart != null)
+                    _highlightedPart.SetHighlightDefault();
+                _highlightedPart = newHighlightedPart;
+                if (_highlightedPart != null)
+                {
+                    _highlightedPart.SetHighlightColor(Color.yellow);
+                    _highlightedPart.SetHighlightType(Part.HighlightType.AlwaysOn);
+                }
             }
 
             return _currentToolingType == null ? UITab.Tooling : UITab.ToolingType;
@@ -240,6 +311,7 @@ namespace RP0
                             up.Name = $"{p.partInfo.title} ({mT.ToolingTypeTitle}) {mT.GetToolingParameterInfo()}";
                             up.ToolingCost = mT.GetToolingCost();
                             up.UntooledMultiplier = mT.untooledMultiplier;
+                            up.Part = p;
                             if (_parts.Contains(p))
                             {
                                 up.TotalCost = 0f;
@@ -258,6 +330,12 @@ namespace RP0
 
             _parts.Clear();
             _allTooledCost = EditorLogic.fetch.ship.GetShipCosts(out _, out _) - totalUntooledExtraCost;
+
+            if (_highlightedPart != null && !_untooledParts.Exists(up => up.Part == _highlightedPart))
+            {
+                _highlightedPart.SetHighlightDefault();
+                _highlightedPart = null;
+            }
         }
 
         private static float GetUntooledExtraCost(UntooledPart uP)
@@ -277,14 +355,28 @@ namespace RP0
             GUILayout.EndHorizontal();
         }
 
+        private string GetToolingMargin(float value, string unit)
+        {
+            if (value > 1e-6f)
+            {
+                return $"Margin: {ToolingDatabase.toolingMargin * 100:F3}%\nLow Tolerance: {ToolingDatabase.GetLowComparison(value):F3} {unit}\nHigh Tolerance: {ToolingDatabase.GetHighComparison(value):F3} {unit}";
+            }
+            else
+            {
+                return "";
+            }
+        }
+
         private void DisplayRow(float[] values, Parameter[] parameters)
         {
+            string toolingMargin = GetToolingMargin(values[0], parameters[0].Unit);
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"{values[0]:F3} {parameters[0].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
+            GUILayout.Label(new GUIContent($"{values[0]:F3} {parameters[0].Unit}", toolingMargin), HighLogic.Skin.label, GUILayout.Width(80));
             for (int i = 1; i < values.Length; ++i)
             {
                 GUILayout.Label("×", HighLogic.Skin.label);
-                GUILayout.Label($"{values[i]:F3} {parameters[i].Unit}", HighLogic.Skin.label, GUILayout.Width(80));
+                toolingMargin = GetToolingMargin(values[i], parameters[i].Unit);
+                GUILayout.Label(new GUIContent($"{values[i]:F3} {parameters[i].Unit}", toolingMargin), HighLogic.Skin.label, GUILayout.Width(80));
             }
             GUILayout.EndHorizontal();
         }

@@ -43,7 +43,7 @@ namespace RP0
         public float MassMin => CalcMassMin(massMax);
         public static float CalcMassMaxFromMin(float massMin) => MassMinFraction > 0f ? Mathf.Ceil(massMin / MassMinFraction) : massMin;
 
-        private static float MassMinFraction => (float)Database.SettingsSC.lcMassMinFraction;
+        private static float MassMinFraction => Database.SettingsSC.lcMassMinFraction;
 
         public static readonly LCData StartingHangar = new LCData("Hangar", float.MaxValue, float.MaxValue, new Vector3(40f, 10f, 40f), LaunchComplexType.Hangar, true, new PersistentDictionaryValueTypes<string, double>());
 

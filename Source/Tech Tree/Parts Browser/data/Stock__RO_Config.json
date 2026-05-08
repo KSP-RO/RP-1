@@ -1007,7 +1007,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "Reentry"
         ]
     },
     {
@@ -5606,8 +5607,10 @@
         "entry_cost_mods": "30000,spaceCockpit",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "Reentry"
         ]
     },
     {
@@ -5632,9 +5635,10 @@
         "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "HumanRated",
             "NoResourceCostMult",
-            "NonReentryRated"
+            "Reentry"
         ]
     },
     {
@@ -5661,7 +5665,7 @@
         "module_tags": [
             "HumanRated",
             "NoResourceCostMult",
-            "NonReentryRated"
+            "Reentry"
         ]
     },
     {
@@ -6055,8 +6059,10 @@
         "entry_cost_mods": "STS",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "Reentry"
         ]
     },
     {

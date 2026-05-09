@@ -30,19 +30,17 @@ namespace RP0.Harmony
             bool isRecord = ContractUtils.ContractIsRecord(configuredContract);
             foreach (var kvp in __instance.contractList)
             {
-                if (ContractSystem.Instance.GetContractByGuid(kvp.Key) is ContractConfigurator.ConfiguredContract cc)
+                if (ContractSystem.Instance.GetContractByGuid(kvp.Key) is ContractConfigurator.ConfiguredContract cc &&
+                    ((isRecord && ContractUtils.ContractIsSkoposMaintenance(cc)) || (!isRecord && ContractUtils.ContractIsRecord(cc))))
                 {
-                    if ((isRecord && ContractUtils.ContractIsSkoposMaintenance(cc)) || (!isRecord && ContractUtils.ContractIsRecord(cc)))
+                    int idx = __instance.cascadingList.ruiList.cascadingList.GetIndex(kvp.Value.header);
+                    if (idx < 0)
                     {
-                        int idx = __instance.cascadingList.ruiList.cascadingList.GetIndex(kvp.Value.header);
-                        if (idx < 0)
-                        {
-                            RP0Debug.LogError($"ContractsApp patcher: {cc.contractType.name} can't be found in UI list despite its guid existing in dictionary!");
-                            continue;
-                        }
-                        if (index < 0 || idx < index)
-                            index = idx;
+                        RP0Debug.LogError($"ContractsApp patcher: {cc.contractType.name} can't be found in UI list despite its guid existing in dictionary!");
+                        continue;
                     }
+                    if (index < 0 || idx < index)
+                        index = idx;
                 }
             }
             UnityEngine.UI.Button button;

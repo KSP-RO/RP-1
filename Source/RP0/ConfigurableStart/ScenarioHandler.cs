@@ -657,8 +657,6 @@ namespace RP0.ConfigurableStart
                 fi.SetValue(contract, state);
             if ((fi = baseT.GetField("seed", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
                 fi.SetValue(contract, seed);
-            if ((fi = baseT.GetField("agent", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
-                fi.SetValue(contract, Contracts.Agents.AgentList.Instance.GetSuitableAgentForContract(contract));
             contract.FundsFailure = Math.Max(contract.FundsFailure, contract.FundsAdvance);
             contract.GetType().GetMethod("SetupID", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(contract, null);
 
@@ -676,6 +674,8 @@ namespace RP0.ConfigurableStart
                 fi.SetValue(contract, contractType.completedMessage);
             if ((fi = t.GetField("notes", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
                 fi.SetValue(contract, contractType.notes);
+            if ((fi = t.GetField("agent", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
+                fi.SetValue(contract, contractType.agent);
 
             // set expiry and deadline type to none
             if ((fi = t.GetField("expiryType", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)

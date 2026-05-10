@@ -58,6 +58,8 @@ namespace RP0.UI
         protected override void OnDestroy()
         {
             GameEvents.onEditorShipModified.Remove(ShipModifiedEvent);
+            if (_highlightRowStyle != null)
+                UnityEngine.Object.Destroy(_highlightRowStyle);
         }
 
         public UITab RenderCostBreakdownTab()
@@ -88,7 +90,7 @@ namespace RP0.UI
                 if (_hoveredPart != null && _partMap.TryGetValue(_hoveredPart, out CostEntry entry) && _costRects.TryGetValue(entry, out Rect r))
                 {
                     float rowMid = r.y + r.height / 2f;
-                    _partCostsScroll.y = Mathf.Max(0f, rowMid - 102f);
+                    _partCostsScroll.y = Mathf.Max(0f, rowMid - 150f);
                 }
             }
 
@@ -154,28 +156,32 @@ namespace RP0.UI
 
             if (Event.current.type == EventType.Repaint && !newHoveredEntry.Equals(_hoveredEntry))
             {
-                if (_cachedHighlightedParts.Count != 0)
-                {
-                    foreach (Part p in _cachedHighlightedParts)
-                    {
-                        p.SetHighlightDefault();
-                    }
-                    _cachedHighlightedParts.Clear();
-                }
-                _hoveredEntry = newHoveredEntry;
-                if (!_hoveredEntry.Equals(DummyEntry) && _partLookup != null)
-                {
-                    _cachedHighlightedParts.AddRange(_partLookup[_hoveredEntry]);
-                    foreach (Part p in _cachedHighlightedParts)
-                    {
-                        p.SetHighlightColor(Color.yellow);
-                        p.SetHighlightType(Part.HighlightType.AlwaysOn);
-                    }
-                }
-                _hoveredEntry = newHoveredEntry;
+                ChangeHoveredEntry(newHoveredEntry);
             }
 
             return UITab.CostBreakdown;
+        }
+
+        private void ChangeHoveredEntry(CostEntry newHoveredEntry)
+        {
+            if (_cachedHighlightedParts.Count != 0)
+            {
+                foreach (Part p in _cachedHighlightedParts)
+                {
+                    p.SetHighlightDefault();
+                }
+                _cachedHighlightedParts.Clear();
+            }
+            _hoveredEntry = newHoveredEntry;
+            if (!_hoveredEntry.Equals(DummyEntry) && _partLookup != null)
+            {
+                _cachedHighlightedParts.AddRange(_partLookup[_hoveredEntry]);
+                foreach (Part p in _cachedHighlightedParts)
+                {
+                    p.SetHighlightColor(Color.yellow);
+                    p.SetHighlightType(Part.HighlightType.AlwaysOn);
+                }
+            }
         }
 
         private void ShipModifiedEvent(ShipConstruct ship)

@@ -616,7 +616,7 @@ namespace RP0.ConfigurableStart
                 {
                     if (contractName == subType.name)
                     {
-                        var contract = ForceGenerate(subType, 0, new System.Random().Next(), Contracts.Contract.State.Generated);
+                        var contract = ForceGenerate(subType, subType.prestige?.FirstOrDefault() ?? 0, new System.Random().Next(), Contracts.Contract.State.Generated);
 
                         if (contract is null)
                         {

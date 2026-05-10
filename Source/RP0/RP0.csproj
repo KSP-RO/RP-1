@@ -47,7 +47,6 @@
     <Compile Include="ConfigurableStart\Scenario.cs" />
     <Compile Include="ConfigurableStart\ScenarioHandler.cs" />
     <Compile Include="ConfigurableStart\Utilities.cs" />
-    <Compile Include="Harmony\ContractConfigurator.cs" />
     <Compile Include="Harmony\FlightInputHandler.cs" />
     <Compile Include="Harmony\ModuleRCS.cs" />
     <Compile Include="Harmony\ScreenContractTools.cs" />

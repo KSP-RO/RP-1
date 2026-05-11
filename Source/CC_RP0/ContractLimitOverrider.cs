@@ -5,7 +5,7 @@ namespace ContractConfigurator.RP0
 {
     /// <summary>
     /// ContractConfigurator sets Contract Limits based on the prestige level of the contract.
-    /// RP-1 doesn't want that, so we just override it to only use the limit that the trivial prestige level would have.
+    /// RP-1 doesn't want that, so we just override all of the limits to be the normal max active contracts limit.
     /// </summary>
     [KSPAddon(KSPAddon.Startup.AllGameScenes, false)]
     public class ContractLimitOverrider : MonoBehaviour

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 namespace ContractConfigurator.RP0
 {
@@ -11,7 +12,16 @@ namespace ContractConfigurator.RP0
     {
         internal void Start()
         {
-            HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().contractLimitPrestigeOverride = ContractConfiguratorParameters.ContractLimitPrestigeOverride.Trivial;
+            int level = (int)Math.Round(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl) *
+                ScenarioUpgradeableFacilities.GetFacilityLevelCount(SpaceCenterFacility.MissionControl));
+            float rep = Reputation.Instance.reputation;
+            float mult = HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().ActiveContractMultiplier;
+
+            int contractLimit = Math.Max(2, (int)Math.Round((rep + rep * level / 3) * mult / 200 + 6 + level));
+
+            HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().trivialContractLimit = contractLimit;
+            HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().significantContractLimit = contractLimit;
+            HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().exceptionalContractLimit = contractLimit;
         }
     }
 }

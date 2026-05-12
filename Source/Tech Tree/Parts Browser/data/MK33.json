@@ -18,7 +18,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Hydrolox"
+        ]
     },
     {
         "name": "Mk33AftTank",
@@ -39,7 +41,10 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry",
+            "TankIsogrid"
+        ]
     },
     {
         "name": "Mk33AftTankHollow",
@@ -60,7 +65,10 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry",
+            "TankIsogrid"
+        ]
     },
     {
         "name": "Mk33Cockpit",
@@ -107,7 +115,9 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "Mk33InnerElevon",
@@ -128,7 +138,9 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "Mk33MidTank",
@@ -149,7 +161,10 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry",
+            "TankIsogrid"
+        ]
     },
     {
         "name": "Mk33OuterElevon",
@@ -170,7 +185,9 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "Mk33ProbeCore",
@@ -191,7 +208,10 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Instruments",
+            "Reentry"
+        ]
     },
     {
         "name": "Mk33Tailfin",
@@ -212,14 +232,16 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "Mk33Wing",
         "title": "VentureStar Main Wing",
         "description": "",
         "mod": "MK33",
-        "cost": 1500,
+        "cost": "1500",
         "entry_cost": "",
         "category": "SPACEPLANES",
         "info": "",
@@ -233,7 +255,9 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "aeroCone",
@@ -254,7 +278,9 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "cargoRamp",
@@ -275,7 +301,9 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "wbiMk33CargoBay",
@@ -296,6 +324,8 @@
         "upgrade": false,
         "entry_cost_mods": "VentureStar",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     }
 ]

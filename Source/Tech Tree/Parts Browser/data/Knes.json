@@ -395,7 +395,7 @@
         ]
     },
     {
-        "name": "_French_Hermes_OME_Engine",
+        "name": "RO_French_Hermes_OME_Engine",
         "title": "Callisto OME Thruster",
         "description": "Callisto's Orbital Maneuvering Engine",
         "mod": "Knes",
@@ -418,7 +418,7 @@
         ]
     },
     {
-        "name": "_Knes_Control_LowProfile_RCS_0625",
+        "name": "RO_Knes_Control_LowProfile_RCS_0625",
         "title": "Viking RCS",
         "description": "",
         "mod": "Knes",
@@ -441,7 +441,7 @@
         ]
     },
     {
-        "name": "_Knes_French_Hermes",
+        "name": "RO_Knes_French_Hermes",
         "title": "Callisto",
         "description": "The original version of the Hermes spaceplane as developed by CNES. To distinguish it from the larger ESA version, it is referred to as Callisto.\n",
         "mod": "Knes",
@@ -467,7 +467,7 @@
         ]
     },
     {
-        "name": "_Knes_French_Hermes_Adapter_s1875",
+        "name": "RO_Knes_French_Hermes_Adapter_s1875",
         "title": "Callisto Adapter",
         "description": "",
         "mod": "Knes",
@@ -488,7 +488,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_French_Hermes_Crew_Module",
+        "name": "RO_Knes_French_Hermes_Crew_Module",
         "title": "Callisto Pressurized Payload Module",
         "description": "",
         "mod": "Knes",
@@ -509,7 +509,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_French_Hermes_Docking_Module",
+        "name": "RO_Knes_French_Hermes_Docking_Module",
         "title": "Callisto Docking Module",
         "description": "",
         "mod": "Knes",
@@ -530,7 +530,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_French_Hermes_Elevon",
+        "name": "RO_Knes_French_Hermes_Elevon",
         "title": "Callisto Elevon",
         "description": "",
         "mod": "Knes",
@@ -553,7 +553,7 @@
         ]
     },
     {
-        "name": "_Knes_French_Hermes_Rudder",
+        "name": "RO_Knes_French_Hermes_Rudder",
         "title": "Callisto Rudder",
         "description": "",
         "mod": "Knes",
@@ -576,7 +576,7 @@
         ]
     },
     {
-        "name": "_Knes_French_Hermes_Structural_Dock",
+        "name": "RO_Knes_French_Hermes_Structural_Dock",
         "title": "Callisto Docking Structure",
         "description": "",
         "mod": "Knes",
@@ -597,7 +597,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_French_Hermes_Structural_Platform",
+        "name": "RO_Knes_French_Hermes_Structural_Platform",
         "title": "Callisto Structural Platform",
         "description": "",
         "mod": "Knes",
@@ -618,7 +618,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_French_Hermes_Wings",
+        "name": "RO_Knes_French_Hermes_Wings",
         "title": "Callisto Wing",
         "description": "",
         "mod": "Knes",
@@ -641,7 +641,7 @@
         ]
     },
     {
-        "name": "_Knes_Hermes_Adapter",
+        "name": "RO_Knes_Hermes_Adapter",
         "title": "Hermes Adapter",
         "description": "",
         "mod": "Knes",
@@ -662,7 +662,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_Utility_Adapter_09375_0625",
+        "name": "RO_Knes_Utility_Adapter_09375_0625",
         "title": "MRC Cargo Small Thruster Set",
         "description": "A small set of thrusters at the end of Cargo SM for manoeuvres.",
         "mod": "Knes",
@@ -683,7 +683,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_mrk_Cargo",
+        "name": "RO_Knes_mrk_Cargo",
         "title": "MRC Cargo Capsule",
         "description": "Reusable descent capsule designed for use in MRC Cargo versions.",
         "mod": "Knes",
@@ -704,7 +704,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_mrk_Decoupler",
+        "name": "RO_Knes_mrk_Decoupler",
         "title": "Multi-Role Capsule Decoupler",
         "description": "",
         "mod": "Knes",
@@ -725,7 +725,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_mrk_ECBM",
+        "name": "RO_Knes_mrk_ECBM",
         "title": "MRC ECBM Passive",
         "description": "",
         "mod": "Knes",
@@ -746,7 +746,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_mrk_ECBM_Active",
+        "name": "RO_Knes_mrk_ECBM_Active",
         "title": "MRC ECBM Active",
         "description": "The Enhanced Common Berthing Mechanism is the docking port through which the MRC docks to the CBM found on Freedom/ISS. This is the active version.\n",
         "mod": "Knes",
@@ -767,7 +767,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_mrk_HeatSheild",
+        "name": "RO_Knes_mrk_HeatSheild",
         "title": "Multi-Role Capsule Heatshield",
         "description": "",
         "mod": "Knes",
@@ -790,7 +790,7 @@
         ]
     },
     {
-        "name": "_Knes_mrk_LES",
+        "name": "RO_Knes_mrk_LES",
         "title": "Multi-Role Capsule LES",
         "description": "",
         "mod": "Knes",
@@ -813,7 +813,7 @@
         ]
     },
     {
-        "name": "_Knes_mrk_Parachute",
+        "name": "RO_Knes_mrk_Parachute",
         "title": "Multi-Role Capsule Parachute",
         "description": "",
         "mod": "Knes",
@@ -836,7 +836,7 @@
         ]
     },
     {
-        "name": "_Knes_mrk_Pod",
+        "name": "RO_Knes_mrk_Pod",
         "title": "Multi-Role Capsule",
         "description": "The Multi-Role Capsule was proposed by British Aerospace as a cheaper, safer & simpler alternative to the Hermes spaceplane.",
         "mod": "Knes",
@@ -861,7 +861,7 @@
         ]
     },
     {
-        "name": "_Knes_mrk_SM_Cargo",
+        "name": "RO_Knes_mrk_SM_Cargo",
         "title": "Multi-Role Capsule Service Module",
         "description": "A service module for the MRC built for delivering cargo to LEO.",
         "mod": "Knes",
@@ -882,7 +882,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_mrk_SM_Extended",
+        "name": "RO_Knes_mrk_SM_Extended",
         "title": "MRC SM (Extended)",
         "description": "An extended service module for the MRC. Features expanded propellant tanks for high Delta-V operations and supplementary life support for extended duration missions.",
         "mod": "Knes",
@@ -903,7 +903,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_mrk_SM_Rescue",
+        "name": "RO_Knes_mrk_SM_Rescue",
         "title": "MRC Rescue SM",
         "description": "",
         "mod": "Knes",
@@ -924,7 +924,7 @@
         "module_tags": []
     },
     {
-        "name": "_Knes_mrk_Thruster",
+        "name": "RO_Knes_mrk_Thruster",
         "title": "MRC OAMS",
         "description": "",
         "mod": "Knes",

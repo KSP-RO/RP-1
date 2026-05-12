@@ -90,7 +90,9 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesViking",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "EngineSolid"
+        ]
     },
     {
         "name": "Knes_Heatshield_09375",
@@ -418,6 +420,174 @@
         ]
     },
     {
+        "name": "RO_Knes_ATV_Adapter",
+        "title": "ATV Nose Adapter",
+        "description": "",
+        "mod": "Knes",
+        "cost": 50,
+        "entry_cost": "",
+        "category": "COMMAND",
+        "info": "",
+        "year": "1975",
+        "technology": "improvedCapsules",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ATV",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_ATV_Antenna",
+        "title": "ATV Antenna",
+        "description": "",
+        "mod": "Knes",
+        "cost": 50,
+        "entry_cost": "",
+        "category": "COMMS",
+        "info": "",
+        "year": "1975",
+        "technology": "deepSpaceComms",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ATV",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_ATV_Cargo",
+        "title": "ATV Pressurised Cargo Module",
+        "description": "",
+        "mod": "Knes",
+        "cost": 1500,
+        "entry_cost": "",
+        "category": "COMMAND",
+        "info": "",
+        "year": "1975",
+        "technology": "improvedCapsules",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ATV",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_ATV_Flat_Adapter",
+        "title": "ATV Flat Adapter",
+        "description": "",
+        "mod": "Knes",
+        "cost": 250,
+        "entry_cost": "",
+        "category": "COMMAND",
+        "info": "",
+        "year": "1975",
+        "technology": "improvedCapsules",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ATV",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_ATV_RCS_A",
+        "title": "ATV RCS A",
+        "description": "",
+        "mod": "Knes",
+        "cost": 150,
+        "entry_cost": "",
+        "category": "RCS",
+        "info": "",
+        "year": "1975",
+        "technology": "spaceStationControl",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ATV",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_ATV_RCS_B",
+        "title": "ATV RCS B",
+        "description": "",
+        "mod": "Knes",
+        "cost": 150,
+        "entry_cost": "",
+        "category": "RCS",
+        "info": "",
+        "year": "1975",
+        "technology": "spaceStationControl",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ATV",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_ATV_SM",
+        "title": "ATV Serivce Module",
+        "description": "",
+        "mod": "Knes",
+        "cost": 250,
+        "entry_cost": "",
+        "category": "COMMAND",
+        "info": "",
+        "year": "1975",
+        "technology": "improvedCapsules",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ATV",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_ATV_SolarPanel",
+        "title": "ATV Solar Panel",
+        "description": "",
+        "mod": "Knes",
+        "cost": 250,
+        "entry_cost": "",
+        "category": "POWER",
+        "info": "",
+        "year": "1975",
+        "technology": "spaceStationSolarPanels",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ATV",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
         "name": "RO_Knes_Control_LowProfile_RCS_0625",
         "title": "Viking RCS",
         "description": "",
@@ -506,7 +676,10 @@
         "upgrade": false,
         "entry_cost_mods": "Callisto",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult"
+        ]
     },
     {
         "name": "RO_Knes_French_Hermes_Docking_Module",
@@ -662,6 +835,165 @@
         "module_tags": []
     },
     {
+        "name": "RO_Knes_STEAM_09375_cargo",
+        "title": "STEAM Science Lab Module B",
+        "description": "",
+        "mod": "Knes",
+        "cost": 750,
+        "entry_cost": "",
+        "category": "STATIONS",
+        "info": "",
+        "year": "1975",
+        "technology": "earlySpaceStations",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "5000, stationsEarly",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult"
+        ]
+    },
+    {
+        "name": "RO_Knes_STEAM_125_cargo",
+        "title": "STEAM Pressurised Cargo Module A",
+        "description": "",
+        "mod": "Knes",
+        "cost": 500,
+        "entry_cost": "",
+        "category": "STATIONS",
+        "info": "",
+        "year": "1975",
+        "technology": "earlySpaceStations",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "500, stationsEarly",
+        "identical_part_name": "",
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
+    },
+    {
+        "name": "RO_Knes_STEAM_CrystalLab",
+        "title": "STEAM Pressurised Cargo Module B",
+        "description": "",
+        "mod": "Knes",
+        "cost": 500,
+        "entry_cost": "",
+        "category": "STATIONS",
+        "info": "",
+        "year": "1975",
+        "technology": "earlySpaceStations",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "500, stationsEarly",
+        "identical_part_name": "",
+        "module_tags": [
+            "NoResourceCostMult"
+        ]
+    },
+    {
+        "name": "RO_Knes_STEAM_Hatch",
+        "title": "STEAM Airlock Module",
+        "description": "",
+        "mod": "Knes",
+        "cost": 150,
+        "entry_cost": "",
+        "category": "STATIONS",
+        "info": "",
+        "year": "1975",
+        "technology": "earlySpaceStations",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "1000, stationsEarly",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated"
+        ]
+    },
+    {
+        "name": "RO_Knes_STEAM_Node",
+        "title": "STEAM Node",
+        "description": "",
+        "mod": "Knes",
+        "cost": 100,
+        "entry_cost": "",
+        "category": "STATIONS",
+        "info": "",
+        "year": "1975",
+        "technology": "earlySpaceStations",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "250, stationsEarly",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_STEAM_Power_Module",
+        "title": "STEAM Power Module",
+        "description": "",
+        "mod": "Knes",
+        "cost": 500,
+        "entry_cost": "",
+        "category": "STATIONS",
+        "info": "",
+        "year": "1975",
+        "technology": "earlySpaceStations",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "250, stationsEarly",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "RO_Knes_STEAM_ScienceLab",
+        "title": "STEAM Science Lab Module A",
+        "description": "",
+        "mod": "Knes",
+        "cost": 750,
+        "entry_cost": "",
+        "category": "STATIONS",
+        "info": "",
+        "year": "1975",
+        "technology": "earlySpaceStations",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "5000, stationsEarly",
+        "identical_part_name": "",
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult"
+        ]
+    },
+    {
         "name": "RO_Knes_Utility_Adapter_09375_0625",
         "title": "MRC Cargo Small Thruster Set",
         "description": "A small set of thrusters at the end of Cargo SM for manoeuvres.",
@@ -701,7 +1033,10 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult",
+            "Reentry"
+        ]
     },
     {
         "name": "RO_Knes_mrk_Decoupler",
@@ -743,7 +1078,9 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "RO_Knes_mrk_ECBM_Active",
@@ -764,7 +1101,9 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "RO_Knes_mrk_HeatSheild",
@@ -879,7 +1218,10 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult",
+            "TankServiceModule"
+        ]
     },
     {
         "name": "RO_Knes_mrk_SM_Extended",
@@ -900,7 +1242,10 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "NoResourceCostMult",
+            "TankServiceModule"
+        ]
     },
     {
         "name": "RO_Knes_mrk_SM_Rescue",
@@ -911,8 +1256,8 @@
         "entry_cost": "",
         "category": "COMMAND",
         "info": "",
-        "year": "1968",
-        "technology": "matureCapsules",
+        "year": "1975",
+        "technology": "improvedCapsules",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,
@@ -921,7 +1266,11 @@
         "upgrade": false,
         "entry_cost_mods": "capsulesMRC",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
     },
     {
         "name": "RO_Knes_mrk_Thruster",

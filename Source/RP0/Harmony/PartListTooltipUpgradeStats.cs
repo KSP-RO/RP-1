@@ -17,6 +17,8 @@ namespace RP0.Harmony
         private struct ConfigPair { public ConfigNode Config; public ConfigNode Baseline; }
         private static Dictionary<string, ConfigPair> _cache;
 
+        internal static void ResetCache() => _cache = null;
+
         [HarmonyPostfix]
         [HarmonyPatch("Setup")]
         [HarmonyPatch(new Type[] { typeof(AvailablePart), typeof(PartUpgradeHandler.Upgrade), typeof(Callback<PartListTooltip>), typeof(RenderTexture) })]
@@ -108,7 +110,7 @@ namespace RP0.Harmony
                 BuildPropellantsLine(cfg),
             };
             lines.RemoveAll(string.IsNullOrEmpty);
-            return string.Join("\n", lines.ToArray());
+            return string.Join("\n", lines);
         }
 
         private static string BuildHeader(ConfigNode baseline, bool sameAsBaseline)
@@ -127,7 +129,7 @@ namespace RP0.Harmony
         {
             if (double.IsNaN(maxT)) return null;
             string throttle = (!double.IsNaN(minT) && minT > 0 && minT < maxT)
-                ? "  (throttles to " + F(minT / maxT * 100.0, "0") + "%)"
+                ? "  (throttles to " + F(minT / maxT * 100.0, "0.#") + "%)"
                 : "";
             return "Thrust: " + F(maxT, "0.##") + " kN" + DeltaSuffix(maxT, bMaxT, "0.##", " kN") + throttle;
         }
@@ -188,7 +190,7 @@ namespace RP0.Harmony
                 string n = p.GetValue("name");
                 if (!string.IsNullOrEmpty(n)) fuels.Add(n);
             }
-            return string.Join(" / ", fuels.ToArray());
+            return string.Join(" / ", fuels);
         }
 
         private static string F(double v, string fmt) => v.ToString(fmt, CultureInfo.InvariantCulture);
@@ -201,5 +203,15 @@ namespace RP0.Harmony
 
         private static bool ParseBool(string s) =>
             !string.IsNullOrEmpty(s) && bool.TryParse(s, out bool b) && b;
+    }
+
+    [KSPAddon(KSPAddon.Startup.Instantly, true)]
+    internal class RFUpgradeStatsCacheReset : MonoBehaviour
+    {
+        internal void Awake()
+        {
+            DontDestroyOnLoad(this);
+            GameEvents.OnPartLoaderLoaded.Add(PatchPartListTooltipUpgradeStats.ResetCache);
+        }
     }
 }

@@ -1,15 +1,15 @@
 CONTRACT_TYPE
 {
-	name = AdvPlane_SatDeployment_90_Rep
-	title = Spaceplane Satellite Deployment (90° Inclination)
+	name = AdvPlane_LDEF
+	title = Long Duration Exposure Facility
 	group = AdvSpacePlanes
 	agent = Federation Aeronautique Internationale
 
-	description = <b>Program: Advanced Spaceplanes<br>Type: <color=blue>Optional</color></b><br><br>A telecommunications company has contracted us to deploy a new communications satellite using one of our spaceplanes. Launch the spaceplane, deploy the satellite into the target orbit, and return the crew safely to the runway.
-	synopsis = Deploy a communications satellite from a spaceplane into LEO.
+	description = <b>Program: Advanced Spaceplanes<br>Type: <color=green>Required</color></b><br><br>While we have sent up countless satellites, we have never studied the effects of space on materials and technology with hands-on samples. Launch one of our spaceplanes, deploy a satellite, recover it after a few days and return the crew and satellite safely to the runway.
+	synopsis = Deploy satellite and recover it after a few days.
 
-	completedMessage = Excellent work! The satellite has been successfully deployed and is now operational. The client is delighted.
-	sortKey = 407
+	completedMessage = Excellent work! The satellite will be studied with great care!
+	sortKey = 401
 
 	cancellable = true
 	declinable = true
@@ -21,42 +21,6 @@ CONTRACT_TYPE
 	deadline = 0
 
 	targetBody = HomeWorld()
-
-	DATA
-	{
-		type = int
-		index = $RepeatSatDeploy_Count + 0
-	}
-	
-	DATA
-	{
-		type = List<double>
-		tierAlts = [ 200000.0, 400000.0, 550000.0, 700000.0 ]
-	}
-
-	DATA
-	{
-		type = int
-		tierIndex = Min(@index, 3)
-	}
-
-	DATA
-	{
-		type = double
-		minPeA = @tierAlts.ElementAt(@tierIndex)
-		maxApA = @minPeA + 100000.0
-	}
-
-	BEHAVIOUR
-	{
-		name = IncrementTheCount
-		type = Expression
-		
-		CONTRACT_COMPLETED_SUCCESS
-		{
-			RepeatSatDeploy_Count = $RepeatSatDeploy_Count + 1
-		}
-	}
 
 	// ************ REWARDS ************
 	prestige = Significant
@@ -73,13 +37,6 @@ CONTRACT_TYPE
 		name = ProgramActive
 		type = ProgramActive
 		program = AdvSpacePlanes
-	}
-
-	REQUIREMENT
-	{
-		name = CompleteContract
-		type = CompleteContract
-		contractType = AdvPlane_SatDeployment_90
 	}
 
 	// ************ MISSION PARAMETERS ************
@@ -123,36 +80,76 @@ CONTRACT_TYPE
 		{
 			name = ReachOrbit
 			type = Orbit
-			minPeA = @/minPeA
-			maxApA = @/maxApA
-			minInclination = 88.0
-			maxInclination = 92.0
+			minPeA = 160000
 			targetBody = HomeWorld()
 			title = Reach deployment orbit
 			disableOnStateChange = true
 			hideChildren = true
 		}
+	}
+
+	PARAMETER
+	{
+		name = LDEF_FreeFlight
+		type = VesselParameterGroup
+		title = Deploy satellite for independent free-flight
+		define = LDEF_Vessel
+		completeInSequence = true 
 
 		PARAMETER
 		{
-			name = DeployPayload
+			name = Uncrewed
+			type = HasCrew
+			maxCrew = 0
+			title = Satellite must be independent of the spaceplane
+			hideChildren = true
+		}
+		PARAMETER 
+		{ 
+			name = HasPayload
 			type = HasResource
 			resource = ComSatPayload
-			maxQuantity = 0
-			title = Deploy the satellite payload
+			minQuantity = 4499.9 
 			hideChildren = true
-			completeInSequence = true
+		}
+		PARAMETER
+		{
+			name = LDEFOrbit
+			type = Orbit
+			minPeA = 160000
+			targetBody = HomeWorld()
+			disableOnStateChange = false
+			hideChildren = true
+		}
+		PARAMETER
+		{
+			name = ExposureDuration
+			type = Duration
+			duration = 7d
+			preWaitText = Waiting for satellite separation and stable orbit.
+			waitingText = Satellite is exposing experiments to space...
+			completionText = Exposure complete. Ready for retrieval.
 		}
 	}
 
 	PARAMETER
 	{
-		name = LandingVesselGroup
+		name = SpaceplaneRetrieval
 		type = VesselParameterGroup
-		title = Land with a descent angle lower than 10 degrees
-		vessel = DeploymentVessel
-		hideChildren = true
+		title = Retrieve LDEF and return home
+		vessel = SpaceplaneVessel
+		completeInSequence = true
 
+		PARAMETER
+		{
+			name = DockWithLDEF
+			type = Docking
+			vessel = LDEF_Vessel
+			title = Grapple/Dock with the free-flying satellite
+			hideChildren = true
+			completeInSequence = true
+		}
+		
 		PARAMETER
 		{
 			name = HorizontalLanding
@@ -161,7 +158,6 @@ CONTRACT_TYPE
 			hideChildren = true
 			completeInSequence = true
 		}
-
 		PARAMETER
 		{
 			name = ReturnHome

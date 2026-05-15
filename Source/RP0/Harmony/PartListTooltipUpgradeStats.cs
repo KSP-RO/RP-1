@@ -1,6 +1,7 @@
 using HarmonyLib;
 using KSP.UI.Screens.Editor;
 using RealFuels;
+using ROUtils;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
@@ -205,12 +206,12 @@ namespace RP0.Harmony
             !string.IsNullOrEmpty(s) && bool.TryParse(s, out bool b) && b;
     }
 
-    [KSPAddon(KSPAddon.Startup.Instantly, true)]
-    internal class RFUpgradeStatsCacheReset : MonoBehaviour
+    public class RFUpgradeStatsCacheReset : HostedSingleton
     {
-        internal void Awake()
+        public RFUpgradeStatsCacheReset(SingletonHost host) : base(host) { }
+
+        public override void Awake()
         {
-            DontDestroyOnLoad(this);
             GameEvents.OnPartLoaderLoaded.Add(PatchPartListTooltipUpgradeStats.ResetCache);
         }
     }

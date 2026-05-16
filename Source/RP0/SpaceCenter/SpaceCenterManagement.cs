@@ -1287,25 +1287,128 @@ namespace RP0
         {
             yield return new WaitForEndOfFrame();
 
-            CelestialBody body = simParams.SimulationBody;
-            if (simParams.SimOrbitAp == 0 && simParams.SimOrbitPe == 0)
+            bool isHyperbolic = simParams.SimOrbitMode == SimOrbitMode.Hyperbolic;
+            // For hyperbolic mode, staging happens in a parking orbit around the origin body so
+            // dropped stages don't fall into the target's atmosphere. The target-body hyperbolic
+            // insertion is applied after autostage completes.
+            CelestialBody firstBody = isHyperbolic ? simParams.SimOriginBody : simParams.SimulationBody;
+            double lanFirst = double.IsNaN(simParams.SimLAN) ? 0.0 : simParams.SimLAN;
+
+            if (isHyperbolic)
             {
-                double sma = simParams.SimOrbitAltitude + body.Radius;
-                double ecc = 0.0000001;    // Just a really smol value to prevent Ap and Pe from flickering around
-                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
-                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, simParams.SimMNA, simParams.SimArgPe, 0.0); // selBodyIndex, ecc, sma, inc, LAN, mna, argPe, ObT
-                FloatingOrigin.ResetTerrainShaderOffset();
+                double parkAlt = GetDefaultAltitudeForBody(simParams.SimOriginBody);
+                double sma = parkAlt + firstBody.Radius;
+                RP0Debug.Log($"Hyperbolic sim: parking at {firstBody.bodyName} alt={parkAlt:F0}m for staging.");
+                FlightGlobals.fetch.SetShipOrbit(firstBody.flightGlobalsIndex, 1e-7, sma, simParams.SimInclination, lanFirst, Math.PI, simParams.SimArgPe, 0.0);
             }
-            else
+            else if (simParams.SimOrbitMode == SimOrbitMode.Circular)
             {
-                double ra = simParams.SimOrbitAp + body.Radius;
-                double rp = simParams.SimOrbitPe + body.Radius;
+                double sma = simParams.SimOrbitAltitude + firstBody.Radius;
+                double ecc = 0.0000001;
+                RP0Debug.Log($"Moving vessel to orbit. {firstBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(firstBody.flightGlobalsIndex, ecc, sma, simParams.SimInclination, lanFirst, simParams.SimMNA, simParams.SimArgPe, 0.0);
+            }
+            else // Elliptical
+            {
+                double ra = simParams.SimOrbitAp + firstBody.Radius;
+                double rp = simParams.SimOrbitPe + firstBody.Radius;
                 double sma = (ra + rp) / 2;
                 double ecc = (ra - rp) / (ra + rp);
-                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
-                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, simParams.SimMNA, simParams.SimArgPe, 0.0); // selBodyIndex, ecc, sma, inc, LAN, mna, argPe, ObT
+                RP0Debug.Log($"Moving vessel to orbit. {firstBody.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(firstBody.flightGlobalsIndex, ecc, sma, simParams.SimInclination, lanFirst, simParams.SimMNA, simParams.SimArgPe, 0.0);
+            }
+            FloatingOrigin.ResetTerrainShaderOffset();
+
+            if (simParams.SimAutostageTarget >= 0)
+            {
+                yield return new WaitForSeconds(Math.Max(0.25f, simParams.SimAutostageDelay));
+                int safety = 64;
+                while (StageManager.CurrentStage > simParams.SimAutostageTarget && safety-- > 0)
+                {
+                    RP0Debug.Log($"Autostage: activating stage, current={StageManager.CurrentStage}, target={simParams.SimAutostageTarget}");
+                    StageManager.ActivateNextStage();
+                    yield return new WaitForSeconds(simParams.SimAutostageDelay);
+                }
+            }
+
+            if (isHyperbolic)
+            {
+                CelestialBody target = simParams.SimulationBody;
+                double mu = target.gravParameter;
+                double rp = simParams.SimHyperbolicPeAlt + target.Radius;
+                // TWP-style Insertion ΔV is the burn at periapsis from the approach speed down to circular.
+                //   v_peri_hyper = ΔV + √(μ/rp)
+                //   v∞² = v_peri_hyper² - 2μ/rp
+                // If ΔV is too small to need a hyperbolic at this rp, v∞² goes non-positive — clamp to a
+                // tiny positive value so the orbit is still hyperbolic (and surface a log warning).
+                double vPeriHyper = simParams.SimHyperbolicInsertionDV + Math.Sqrt(mu / rp);
+                double vInfSq = vPeriHyper * vPeriHyper - 2.0 * mu / rp;
+                if (vInfSq <= 0)
+                {
+                    RP0Debug.LogWarning($"Insertion ΔV {simParams.SimHyperbolicInsertionDV:F1} m/s is below escape at rp={rp:F0}m around {target.bodyName}; clamping to marginal hyperbolic.");
+                    vInfSq = 1.0;
+                }
+                double vInf = Math.Sqrt(vInfSq);
+                double sma = -mu / vInfSq;
+                double ecc = 1.0 + rp * vInfSq / mu;
+                // Hyperbolic mean motion: n = sqrt(μ / |a|³). Positive TimeToPe means "before periapsis",
+                // which is negative time since periapsis, so MNA = -n * TimeToPe. NaN = auto: earliest in SOI.
+                double n = Math.Sqrt(mu / Math.Pow(-sma, 3));
+                double tToPe = double.IsNaN(simParams.SimHypTimeToPe)
+                    ? MaxTToPeInSOI(sma, ecc, n, target.sphereOfInfluence)
+                    : simParams.SimHypTimeToPe;
+                double mna = -n * tToPe;
+                double lan = double.IsNaN(simParams.SimLAN)
+                    ? ComputeApproachLAN(target, simParams.SimOriginBody)
+                    : simParams.SimLAN;
+                RP0Debug.Log($"Hyperbolic insertion: target={target.bodyName} ΔV={simParams.SimHyperbolicInsertionDV:F1}m/s → v∞={vInf:F1}m/s rp={rp:F0}m sma={sma:F0} ecc={ecc:F4} LAN={lan:F1}° MNA={mna:F3} (tToPe={simParams.SimHypTimeToPe:F0}s)");
+                // Pause physics through the cross-SOI teleport to avoid the altimeter / floating-origin
+                // briefly reporting the old body's reference frame after the second SetShipOrbit.
+                OrbitPhysicsManager.HoldVesselUnpack(2);
+                yield return new WaitForFixedUpdate();
+                FlightGlobals.fetch.SetShipOrbit(target.flightGlobalsIndex, ecc, sma, simParams.SimInclination, lan, mna, simParams.SimArgPe, 0.0);
+                FloatingOrigin.ResetTerrainShaderOffset();
+                yield return new WaitForFixedUpdate();
                 FloatingOrigin.ResetTerrainShaderOffset();
             }
+        }
+
+        // Earliest (most-negative-MNA) inbound point still inside the body's SOI for a hyperbolic
+        // orbit with the given sma (<0), ecc (>1), mean motion n. Returns seconds-before-periapsis.
+        private static double MaxTToPeInSOI(double sma, double ecc, double n, double soi)
+        {
+            double p = sma * (1.0 - ecc * ecc);  // semi-latus rectum, > 0 for hyperbola
+            double cosNu = (p / soi - 1.0) / ecc;
+            if (cosNu <= -1.0 || cosNu >= 1.0) return 3600.0;  // SOI doesn't intersect, fall back to 1h
+            // Inbound side: ν < 0, so sin ν < 0 and hyperbolic anomaly H < 0.
+            double sinNu = -Math.Sqrt(1.0 - cosNu * cosNu);
+            double sinhH = sinNu * Math.Sqrt(ecc * ecc - 1.0) / (1.0 + ecc * cosNu);
+            double H = Math.Log(sinhH + Math.Sqrt(sinhH * sinhH + 1.0));  // asinh
+            double M = ecc * sinhH - H;
+            double t = M / n;  // negative
+            return -t;
+        }
+
+        private static double ComputeApproachLAN(CelestialBody target, CelestialBody origin)
+        {
+            if (origin == null || target == null) return 0.0;
+            Vector3d toOrigin = (origin.position - target.position).normalized;
+            // Project toOrigin onto target's equatorial plane (perpendicular to its rotation axis = transform.up).
+            // The body's transform.right / .forward span the equator; we take the angle of the projected vector
+            // and use it as the longitude of the asymptote, which we hand SetShipOrbit as the LAN.
+            Vector3d north = target.transform.up;
+            Vector3d east = target.transform.right;
+            Vector3d ref0 = target.transform.forward;
+            double x = Vector3d.Dot(toOrigin, ref0);
+            double y = Vector3d.Dot(toOrigin, east);
+            double lanDeg = Math.Atan2(y, x) * UtilMath.Rad2Deg;
+            if (lanDeg < 0) lanDeg += 360.0;
+            return lanDeg;
+        }
+
+        private static double GetDefaultAltitudeForBody(CelestialBody body)
+        {
+            return body.atmosphere ? body.atmosphereDepth + 30000 : 30000;
         }
 
         private void AddSimulationWatermark()

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using ROUtils;
@@ -12,10 +12,11 @@ namespace RP0
         private static Vector2 _bodyChooserScrollPos;
         private static CelestialBody _bodyChooserRoot;
         private static Dictionary<CelestialBody, List<CelestialBody>> _bodyChooserChildren;
+        private static bool _bodyChooserForOrigin;
 
         private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _sOrbitMNA = "", _sOrbitArgPe = "", _UTString = "", _sDelay = "0";
+        private static string _sHypInsertionDV = "", _sHypPeAlt = "", _sHypTimeToPe = "", _sAutostageTarget = "", _sAutostageDelay = "1";
         private static bool _fromCurrentUT = true;
-        private static bool _circOrbit = true;
 
         public static void DrawSimulationWindow(int windowID)
         {
@@ -57,33 +58,42 @@ namespace RP0
         {
             SimulationParams simParams = SpaceCenterManagement.Instance.SimulationParams;
             GUILayout.BeginVertical();
-            GUILayout.BeginHorizontal();
-            GUILayout.Label("Body: ");
+
             if (simParams == null) simParams = SpaceCenterManagement.Instance.SimulationParams = new SimulationParams();
-            if (simParams.SimulationBody == null)
-            {
-                simParams.SimulationBody = Planetarium.fetch.Home;
-            }
+            if (simParams.SimulationBody == null) simParams.SimulationBody = Planetarium.fetch.Home;
+
+            bool isHyperbolic = simParams.SimOrbitMode == SimOrbitMode.Hyperbolic;
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(isHyperbolic ? "Target body: " : "Body: ");
             GUILayout.Label(simParams.SimulationBody.bodyName);
             if (GUILayout.Button("Select", GUILayout.ExpandWidth(false)))
             {
+                _bodyChooserForOrigin = false;
                 GUIStates.ShowSimConfig = false;
                 GUIStates.ShowSimBodyChooser = true;
                 _centralWindowPosition.height = 1;
                 _simulationConfigPosition.height = 1;
             }
             GUILayout.EndHorizontal();
-            if (simParams.SimulationBody == Planetarium.fetch.Home)
+
             {
+                bool atHome = simParams.SimulationBody == Planetarium.fetch.Home;
+                // Non-Home or hyperbolic always implies "start in orbit"; let the user see the toggle but it's a no-op there.
+                bool forcedOn = !atHome || isHyperbolic;
+                if (forcedOn) simParams.SimulateInOrbit = true;
                 bool changed = simParams.SimulateInOrbit;
+                GUI.enabled = !forcedOn;
                 simParams.SimulateInOrbit = GUILayout.Toggle(simParams.SimulateInOrbit, " Start in orbit");
+                GUI.enabled = true;
                 if (simParams.SimulateInOrbit != changed)
                     _simulationConfigPosition.height = 1;
             }
-            if (simParams.SimulationBody != Planetarium.fetch.Home || simParams.SimulateInOrbit)
+            if (simParams.SimulationBody != Planetarium.fetch.Home || simParams.SimulateInOrbit || isHyperbolic)
             {
-                _circOrbit = GUILayout.Toggle(_circOrbit, " Circular");
-                if (_circOrbit)
+                DrawOrbitModeRow(simParams);
+
+                if (simParams.SimOrbitMode == SimOrbitMode.Circular)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Orbit Altitude (km): ");
@@ -94,7 +104,7 @@ namespace RP0
                     GUILayout.Label("Max: " + Math.Floor((simParams.SimulationBody.sphereOfInfluence - simParams.SimulationBody.Radius) / 1000) + "km");
                     GUILayout.EndHorizontal();
                 }
-                else
+                else if (simParams.SimOrbitMode == SimOrbitMode.Elliptical)
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Orbit Periapsis (km): ");
@@ -103,6 +113,31 @@ namespace RP0
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Orbit Apoapsis (km): ");
                     _sOrbitAp = GUILayout.TextField(_sOrbitAp, GUILayout.Width(100));
+                    GUILayout.EndHorizontal();
+                }
+                else // Hyperbolic
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Origin body: ");
+                    GUILayout.Label(simParams.SimOriginBody != null ? simParams.SimOriginBody.bodyName : "(none)");
+                    if (GUILayout.Button("Select", GUILayout.ExpandWidth(false)))
+                    {
+                        _bodyChooserForOrigin = true;
+                        GUIStates.ShowSimConfig = false;
+                        GUIStates.ShowSimBodyChooser = true;
+                        _centralWindowPosition.height = 1;
+                        _simulationConfigPosition.height = 1;
+                    }
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(new GUIContent("Insertion ΔV (m/s): ", "Insertion / capture ΔV at the target body from a transfer-window planner. Should match the periapsis altitude TWP assumed."));
+                    _sHypInsertionDV = GUILayout.TextField(_sHypInsertionDV, GUILayout.Width(80));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Periapsis altitude (km): ");
+                    _sHypPeAlt = GUILayout.TextField(_sHypPeAlt, GUILayout.Width(80));
                     GUILayout.EndHorizontal();
                 }
 
@@ -122,18 +157,39 @@ namespace RP0
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("LAN (degrees): ");
+                GUILayout.Label(new GUIContent("LAN (degrees): ", isHyperbolic ? "Leave blank to auto-orient the approach plane toward the origin body." : ""));
                 _sOrbitLAN = GUILayout.TextField(_sOrbitLAN, GUILayout.Width(50));
                 GUILayout.EndHorizontal();
 
+                if (isHyperbolic)
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label(new GUIContent("Time to periapsis: ", "Seconds before periapsis at which to place the vessel. Accepts \"3h\", \"1d 2h\", or plain seconds. 0 = at periapsis."));
+                    _sHypTimeToPe = GUILayout.TextField(_sHypTimeToPe, GUILayout.Width(80));
+                    GUILayout.EndHorizontal();
+                }
+                else
+                {
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Mean Anomaly (radians): ");
+                    _sOrbitMNA = GUILayout.TextField(_sOrbitMNA, GUILayout.Width(50));
+                    GUILayout.EndHorizontal();
+
+                    GUILayout.BeginHorizontal();
+                    GUILayout.Label("Argument of Periapsis (degrees): ");
+                    _sOrbitArgPe = GUILayout.TextField(_sOrbitArgPe, GUILayout.Width(50));
+                    GUILayout.EndHorizontal();
+                }
+
+                GUILayout.Space(4);
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Mean Anomaly (radians): ");
-                _sOrbitMNA = GUILayout.TextField(_sOrbitMNA, GUILayout.Width(50));
+                GUILayout.Label(new GUIContent("Autostage to stage: ", "Blank disables autostage. Vessel will stage repeatedly until the current stage equals this number."));
+                _sAutostageTarget = GUILayout.TextField(_sAutostageTarget, 3, GUILayout.Width(40));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label("Argument of Periapsis (degrees): ");
-                _sOrbitArgPe = GUILayout.TextField(_sOrbitArgPe, GUILayout.Width(50));
+                GUILayout.Label("Stage delay (s): ");
+                _sAutostageDelay = GUILayout.TextField(_sAutostageDelay, 5, GUILayout.Width(40));
                 GUILayout.EndHorizontal();
             }
 
@@ -171,6 +227,19 @@ namespace RP0
             GUILayout.EndVertical();
             CheckEditorLock();
             CenterWindow(ref _simulationConfigPosition);
+        }
+
+        private static readonly string[] _orbitModeLabels = { "Circular", "Elliptical", "Hyperbolic" };
+
+        private static void DrawOrbitModeRow(SimulationParams simParams)
+        {
+            int prev = (int)simParams.SimOrbitMode;
+            int sel = GUILayout.SelectionGrid(prev, _orbitModeLabels, 3);
+            if (sel != prev)
+            {
+                simParams.SimOrbitMode = (SimOrbitMode)sel;
+                _simulationConfigPosition.height = 1;
+            }
         }
 
         public static void DrawBodyChooser(int windowID)
@@ -240,7 +309,11 @@ namespace RP0
 
         private static void SelectSimBody(CelestialBody body)
         {
-            SpaceCenterManagement.Instance.SimulationParams.SimulationBody = body;
+            if (_bodyChooserForOrigin)
+                SpaceCenterManagement.Instance.SimulationParams.SimOriginBody = body;
+            else
+                SpaceCenterManagement.Instance.SimulationParams.SimulationBody = body;
+            _bodyChooserForOrigin = false;
             GUIStates.ShowSimBodyChooser = false;
             GUIStates.ShowSimConfig = true;
             _centralWindowPosition.height = 1;
@@ -263,13 +336,20 @@ namespace RP0
             }
 
             CelestialBody body = simParams.SimulationBody;
+            bool isHyperbolic = simParams.SimOrbitMode == SimOrbitMode.Hyperbolic;
 
-            if (body != Planetarium.fetch.Home)
+            if (body != Planetarium.fetch.Home || isHyperbolic)
                 simParams.SimulateInOrbit = true;
+
+            if (isHyperbolic && simParams.SimOriginBody == null)
+            {
+                ScreenMessages.PostScreenMessage(new ScreenMessage("Hyperbolic mode requires an origin body", 6f, ScreenMessageStyle.UPPER_CENTER));
+                return;
+            }
 
             if (simParams.SimulateInOrbit)
             {
-                if (_circOrbit)
+                if (simParams.SimOrbitMode == SimOrbitMode.Circular)
                 {
                     if (!double.TryParse(_sOrbitAlt, out simParams.SimOrbitAltitude))
                         simParams.SimOrbitAltitude = GetDefaultAltitudeForBody(body);
@@ -278,7 +358,7 @@ namespace RP0
 
                     simParams.SimOrbitPe = simParams.SimOrbitAp = 0;
                 }
-                else
+                else if (simParams.SimOrbitMode == SimOrbitMode.Elliptical)
                 {
                     if (!double.TryParse(_sOrbitPe, out simParams.SimOrbitPe))
                         simParams.SimOrbitPe = GetDefaultAltitudeForBody(body);
@@ -291,26 +371,73 @@ namespace RP0
 
                     simParams.SimOrbitAltitude = 0;
                 }
+                else // Hyperbolic
+                {
+                    if (!double.TryParse(_sHypInsertionDV, out simParams.SimHyperbolicInsertionDV) || simParams.SimHyperbolicInsertionDV <= 0)
+                    {
+                        ScreenMessages.PostScreenMessage(new ScreenMessage("Enter a positive insertion ΔV", 6f, ScreenMessageStyle.UPPER_CENTER));
+                        return;
+                    }
+                    if (!double.TryParse(_sHypPeAlt, out simParams.SimHyperbolicPeAlt))
+                        simParams.SimHyperbolicPeAlt = GetDefaultAltitudeForBody(body) / 1000.0;  // km
+                    // For hyperbolic insertion we deliberately allow periapsis BELOW the atmosphere
+                    // so the user can simulate aerobraking. Only cap the upper bound at the SOI.
+                    simParams.SimHyperbolicPeAlt = Math.Min(
+                        Math.Max(1000.0 * simParams.SimHyperbolicPeAlt, 1000.0),
+                        body.sphereOfInfluence - body.Radius - 1000.0);
+                    simParams.SimOrbitAltitude = simParams.SimOrbitPe = simParams.SimOrbitAp = 0;
+                }
 
                 if (!double.TryParse(_sOrbitInc, out simParams.SimInclination))
                     simParams.SimInclination = 0;
                 else
                     simParams.SimInclination %= 360;
 
-                if (!double.TryParse(_sOrbitLAN, out simParams.SimLAN))
+                if (string.IsNullOrWhiteSpace(_sOrbitLAN))
+                    simParams.SimLAN = double.NaN;  // signal to SetSimOrbit: auto-compute for hyperbolic, else 0
+                else if (!double.TryParse(_sOrbitLAN, out simParams.SimLAN))
                     simParams.SimLAN = 0;
                 else
                     simParams.SimLAN %= 360;
 
-                if (!double.TryParse(_sOrbitMNA, out simParams.SimMNA))
-                    simParams.SimMNA = Math.PI; // this will set it at apoapsis, good for safety
-                else
-                    simParams.SimMNA %= 2 * Math.PI;
-
-                if (!double.TryParse(_sOrbitArgPe, out simParams.SimArgPe))
+                if (isHyperbolic)
+                {
+                    // SimMNA is computed from SimHypTimeToPe inside SetSimOrbit (needs sma and μ).
+                    // NaN signals "use the earliest time still inside the target's SOI".
+                    simParams.SimMNA = 0;
                     simParams.SimArgPe = 0;
+                    if (string.IsNullOrWhiteSpace(_sHypTimeToPe))
+                    {
+                        simParams.SimHypTimeToPe = double.NaN;
+                    }
+                    else if (!ROUtils.DTUtils.TryParseTimeString(_sHypTimeToPe, isTimespan: true, out double tToPe)
+                             && !double.TryParse(_sHypTimeToPe, out tToPe))
+                    {
+                        ScreenMessages.PostScreenMessage(new ScreenMessage("Couldn't parse time to periapsis; using earliest in SOI", 6f, ScreenMessageStyle.UPPER_CENTER));
+                        simParams.SimHypTimeToPe = double.NaN;
+                    }
+                    else
+                    {
+                        simParams.SimHypTimeToPe = tToPe;
+                    }
+                }
                 else
-                    simParams.SimArgPe %= 360;
+                {
+                    if (!double.TryParse(_sOrbitMNA, out simParams.SimMNA))
+                        simParams.SimMNA = Math.PI; // apoapsis, good for safety
+                    else
+                        simParams.SimMNA %= 2 * Math.PI;
+
+                    if (!double.TryParse(_sOrbitArgPe, out simParams.SimArgPe))
+                        simParams.SimArgPe = 0;
+                    else
+                        simParams.SimArgPe %= 360;
+                }
+
+                if (string.IsNullOrWhiteSpace(_sAutostageTarget) || !int.TryParse(_sAutostageTarget, out simParams.SimAutostageTarget))
+                    simParams.SimAutostageTarget = -1;
+                if (!float.TryParse(_sAutostageDelay, out simParams.SimAutostageDelay) || simParams.SimAutostageDelay < 0)
+                    simParams.SimAutostageDelay = 1.0f;
             }
 
             double currentUT = Planetarium.GetUniversalTime();
@@ -321,8 +448,8 @@ namespace RP0
                 ScreenMessages.PostScreenMessage(message);
                 return;
             }
-            else if (!string.IsNullOrWhiteSpace(_UTString) && 
-                     ((_UTString.Contains(":") && !System.Text.RegularExpressions.Regex.IsMatch(_UTString, @"^\d{4}-\d{2}-\d{2}")) || 
+            else if (!string.IsNullOrWhiteSpace(_UTString) &&
+                     ((_UTString.Contains(":") && !System.Text.RegularExpressions.Regex.IsMatch(_UTString, @"^\d{4}-\d{2}-\d{2}")) ||
                       !ROUtils.DTUtils.TryParseTimeString(_UTString, isTimespan: !_fromCurrentUT, out ut))) // if string is not empty and ((string has HH:mm but no YYYY-MM-DD) or (string fails TryParseTimeString)), then output failure
             {
                 var message = new ScreenMessage("Please enter a valid time value.", 6f, ScreenMessageStyle.UPPER_CENTER);

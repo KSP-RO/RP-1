@@ -1,6 +1,7 @@
 ﻿using ROUtils;
 using ROUtils.DataTypes;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace RP0
 {
@@ -29,6 +30,9 @@ namespace RP0
 
         [Persistent]
         public double lcCostMultiplier = 2d;
+
+        [Persistent]
+        public float lcMassMinFraction = 0.75f;
 
         [Persistent]
         public PersistentListValueType<double> nautYearlyUpkeepPerFacLevel = new PersistentListValueType<double>();
@@ -107,6 +111,7 @@ namespace RP0
         public override void Load(ConfigNode node)
         {
             base.Load(node);
+            lcMassMinFraction = Mathf.Clamp01(lcMassMinFraction);
             foreach (var k in nautYearlyUpkeepPerTraining.Keys)
             {
                 nautUpkeepTrainings.Add(k);

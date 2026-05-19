@@ -111,8 +111,9 @@ namespace RP0
         private PersistentHashSetValueType<string> partNames = new PersistentHashSetValueType<string>();
         [Persistent]
         private PersistentCompressedCraftNode ShipNodeCompressed = new PersistentCompressedCraftNode();
-
+        [Persistent]
         public string LandedAt = "";
+
         private double _buildRate = -1d;
         private double _leaderEffect = -1d;
         public double LeaderEffect => _leaderEffect < 0 ? UpdateLeaderEffect() : _leaderEffect;

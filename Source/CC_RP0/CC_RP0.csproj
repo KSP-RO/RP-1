@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Behaviour\AcceptContractBehaviour.cs" />
     <Compile Include="BehaviourFactory\AcceptContractBehaviourFactory.cs" />
+    <Compile Include="ContractLimitOverrider.cs" />
     <Compile Include="ParameterFactory\RP1HasExperimentFactory.cs" />
     <Compile Include="ParameterFactory\RP1HasSamplesFactory.cs" />
     <Compile Include="ParameterFactory\VesselBuiltAtFactory.cs" />

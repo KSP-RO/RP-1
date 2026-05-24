@@ -185,7 +185,7 @@
         "technology": "improvedSpaceplanes",
         "era": "",
         "ro": true,
-        "orphan": true,
+        "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Buran",
         "engine_config": "",

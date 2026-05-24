@@ -395,8 +395,10 @@
         "entry_cost_mods": "20000,protoSpaceCockpit",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "Reentry"
         ]
     },
     {
@@ -421,8 +423,10 @@
         "entry_cost_mods": "20000,protoSpaceCockpit",
         "identical_part_name": "",
         "module_tags": [
+            "Cockpit",
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "Reentry"
         ]
     },
     {
@@ -446,7 +450,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "RO-Mk1FuselagePres",
@@ -469,7 +475,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "RO-OldFighterCockpit",

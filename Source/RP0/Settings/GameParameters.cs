@@ -106,7 +106,6 @@ namespace RP0
         public bool AvionicsWindow_ShowInfo3 = true;
         public bool NeverShowUntrainedReminders = false;
         public bool NeverShowHSFProgramReminders = false;
-        public int RATLTipShown = 0;
 
         public string CareerLog_URL;
         public string CareerLog_Token;

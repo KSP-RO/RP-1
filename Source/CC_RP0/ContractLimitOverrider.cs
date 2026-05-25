@@ -16,7 +16,7 @@ namespace ContractConfigurator.RP0
             {
                 int maxActive = GameVariables.Instance.GetActiveContractsLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl));
 
-                RP0Debug.Log($"Setting trivial, significant, and exceptional contract limits to {maxActive}.", true);
+                RP0Debug.Log($"Setting trivial, significant, and exceptional contract limits to {maxActive}.");
 
                 HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().trivialContractLimit = maxActive;
                 HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().significantContractLimit = maxActive;

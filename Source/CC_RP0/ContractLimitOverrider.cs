@@ -10,18 +10,38 @@ namespace ContractConfigurator.RP0
     [KSPAddon(KSPAddon.Startup.AllGameScenes, false)]
     public class ContractLimitOverrider : MonoBehaviour
     {
-        internal void Start()
+        internal void UpdateContractLimits()
         {
             if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
                 int maxActive = GameVariables.Instance.GetActiveContractsLimit(ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.MissionControl));
 
-                RP0Debug.Log($"Setting trivial, significant, and exceptional contract limits to {maxActive}.");
+                RP0Debug.Log($"Setting trivial, significant, and exceptional contract limits to {maxActive}.", true);
 
                 HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().trivialContractLimit = maxActive;
                 HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().significantContractLimit = maxActive;
                 HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().exceptionalContractLimit = maxActive;
             }
+        }
+
+        internal void OnKSCFacilityUpgraded(Upgradeables.UpgradeableFacility facility, int _)
+        {
+            if (facility.name == "MissionControl")
+            {
+                UpdateContractLimits();
+            }
+        }
+
+        internal void Start()
+        {
+            UpdateContractLimits();
+
+            GameEvents.OnKSCFacilityUpgraded.Add(OnKSCFacilityUpgraded);
+        }
+
+        internal void OnDestroy()
+        {
+            GameEvents.OnKSCFacilityUpgraded.Remove(OnKSCFacilityUpgraded);
         }
     }
 }

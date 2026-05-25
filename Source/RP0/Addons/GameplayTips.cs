@@ -12,10 +12,6 @@ namespace RP0
         private static bool _airlaunchTipShown;
         private static bool _isInterplanetaryWarningShown;
 
-        private bool _subcribedToPAWEvent;
-        private bool _hasNewPurchasableRATL;
-        private int _highestUnlockableRALvl;
-
         public static GameplayTips Instance { get; private set; }
 
         internal void Awake()
@@ -56,29 +52,6 @@ namespace RP0
                 }
 
                 StartCoroutine(CheckLandedWhileActuallyFlying());
-            }
-            else if (HighLogic.LoadedSceneIsEditor)
-            {
-                LoadRAUpgradeStatus(rp0Settings);
-
-                if (_hasNewPurchasableRATL)
-                {
-                    GameEvents.onPartActionUIShown.Add(OnPartActionUIShown);
-                    _subcribedToPAWEvent = true;
-                }
-            }
-        }
-
-        internal void OnDestroy()
-        {
-            if (_subcribedToPAWEvent) GameEvents.onPartActionUIShown.Remove(OnPartActionUIShown);
-        }
-
-        private void OnPartActionUIShown(UIPartActionWindow paw, Part part)
-        {
-            if (_hasNewPurchasableRATL && part.Modules.Contains("ModuleRealAntenna"))
-            {
-                ShowRATechAvailableTip();
             }
         }
 
@@ -147,23 +120,6 @@ namespace RP0
 
             double ecTotal = ship.Parts.Sum(p => p.Resources.Get("ElectricCharge")?.maxAmount ?? 0);
             return ecTotal > 10000;
-        }
-
-        private void ShowRATechAvailableTip()
-        {
-            var rp0Settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
-            rp0Settings.RATLTipShown = _highestUnlockableRALvl;
-            _hasNewPurchasableRATL = false;
-
-            string msg = $"Communications Tech Level {_highestUnlockableRALvl} has been researched but not purchased. Purchase it in the R&D building to use higher-tech comms.";
-            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
-                                         new Vector2(0.5f, 0.5f),
-                                         "ShowRATLTip",
-                                         "New comms tech available",
-                                         msg,
-                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
-                                         false,
-                                         HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
         private IEnumerator CheckLandedWhileActuallyFlying()
@@ -284,29 +240,6 @@ namespace RP0
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text"),
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 300, options);
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
-        }
-
-        private void LoadRAUpgradeStatus(RP0Settings rp0Settings)
-        {
-            _highestUnlockableRALvl = rp0Settings.RATLTipShown;
-            const int tlUpgradeCount = 9;
-            for (int i = rp0Settings.RATLTipShown + 1; i <= tlUpgradeCount; i++)
-            {
-                string upgradeName = "commsTL" + i;
-                if (PartUpgradeManager.Handler.IsEnabled(upgradeName))
-                {
-                    rp0Settings.RATLTipShown = i;
-                    continue;
-                }
-        
-                if (PartUpgradeManager.Handler.IsAvailableToUnlock(upgradeName))
-                {
-                    _highestUnlockableRALvl = i;
-                    _hasNewPurchasableRATL = true;
-                    continue;
-                }
-                break;
-            }
         }
     }
 }

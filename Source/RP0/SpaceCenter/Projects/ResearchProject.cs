@@ -78,6 +78,8 @@ namespace RP0
         public string techID;
         [Persistent]
         public double progress;
+        [Persistent]
+        public double workRate = 1d;
         public ProtoTechNode ProtoNode;
 
         protected NodeType nodeType
@@ -102,7 +104,7 @@ namespace RP0
                 {
                     UpdateBuildRate(Math.Max(SpaceCenterManagement.Instance.TechList.IndexOf(this), 0));
                 }
-                return _buildRate;
+                return _buildRate * workRate;
             }
         }
 
@@ -227,6 +229,7 @@ namespace RP0
 
                 rate *= CurrencyUtils.Rate(TransactionReasonsRP0.RateResearch);
                 rate *= Leaders.LeaderUtils.GetResearchRateEffect(nodeType, techID);
+                rate *= workRate;
 
                 return (scienceCost - progress) / rate;
             }

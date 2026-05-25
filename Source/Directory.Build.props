@@ -1,0 +1,5 @@
+<Project>
+  <!-- Use Roslyn 4.8 (C# 12) on CI where Mono's bundled Roslyn only supports C# 8 -->
+  <Import Project="$(MSBuildThisFileDirectory)packages\Microsoft.Net.Compilers.Toolset.4.8.0\build\Microsoft.Net.Compilers.Toolset.props"
+          Condition="Exists('$(MSBuildThisFileDirectory)packages\Microsoft.Net.Compilers.Toolset.4.8.0\build\Microsoft.Net.Compilers.Toolset.props')" />
+</Project>

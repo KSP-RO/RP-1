@@ -45,18 +45,18 @@ jobs:
             RealAntennas
             RealFuels
             ROUtils
+            ROLib
             SolverEngines
             ToolbarController
 
       # Install .NET SDKs
-      - name: Setup .NET Core 3.1
-        uses: actions/setup-dotnet@v1
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 3.1.x
-      - name: Setup .NET 5.0
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 5.0.x
+          dotnet-version: 8.0.x
+
+      - name: Install Mono MSBuild
+        run: sudo apt-get install -y mono-devel
 
       - name: Update AssemblyInfo
         uses: KSP-RO/BuildTools/update-assembly-info@master
@@ -65,7 +65,7 @@ jobs:
           tag: ${{ github.event.release.tag_name }}
 
       - name: Build mod solution
-        run: msbuild ${{ github.workspace }}/Source/RP0.sln /t:build /restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" /p:KSPRoot="${{ env.KSP_ROOT }}"
+        run: msbuild ${{ github.workspace }}/Source/RP0-CI.slnf /t:build /restore /p:RestorePackagesConfig=true /p:Configuration=Release /p:ReferencePath="${{ steps.download-assemblies.outputs.ksp-dll-path }}" /p:KSPRoot="${{ env.KSP_ROOT }}"
 
       - name: Remove excess DLLs
         uses: KSP-RO/BuildTools/remove-excess-dlls@master

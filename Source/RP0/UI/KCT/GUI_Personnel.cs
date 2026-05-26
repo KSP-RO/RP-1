@@ -19,7 +19,6 @@ namespace RP0
 
         private static void DrawPersonnelWindow(int windowID)
         {
-            int oldByModifier = _buyModifier;
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 _buyModifier = _buyModifierMultsPersonnel[1];
@@ -36,7 +35,6 @@ namespace RP0
             {
                 _buyModifier = _buyModifierMultsPersonnel[0];
             }
-            bool isCostCacheInvalid = _buyModifier != oldByModifier;
 
             GUILayout.BeginVertical();
 
@@ -69,14 +67,14 @@ namespace RP0
             if (KSPUtils.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
             GUILayout.EndHorizontal();
 
-            if (_personnelWindowHolder == 0)    //VAB
+            if (_personnelWindowHolder == 0)
             {
-                RenderEngineersSection(isCostCacheInvalid);
+                RenderKSCEngineersSection();
             }
 
-            if (_personnelWindowHolder == 2)    //R&D
+            if (_personnelWindowHolder == 2)
             {
-                RenderResearchersSection(isCostCacheInvalid);
+                RenderResearchersSection();
             }
 
             GUILayout.Label($"Hold LeftShift for x10, LeftCtrl for x100, and {GameSettings.MODIFIER_KEY.primary} for Max Possible", GetLabelCenterAlignStyle());
@@ -91,7 +89,7 @@ namespace RP0
                 GUI.DragWindow();
         }
 
-        private static void RenderEngineersSection(bool isCostCacheInvalid)
+        private static void RenderEngineersSection()
         {
             LCSpaceCenter KSC = SpaceCenterManagement.Instance.ActiveSC;
             LaunchComplex currentLC = KSC.LaunchComplexes[_LCIndex];
@@ -103,7 +101,7 @@ namespace RP0
             GUILayout.Label($"{KSC.UnassignedEngineers}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
-            RenderHireFire(false, out int fireAmount, out int hireAmount);
+            RenderHireFire(false, out int _, out int _);
 
             GUILayout.BeginHorizontal();
             int lcCount = KSC.LaunchComplexCount;
@@ -159,14 +157,6 @@ namespace RP0
                 assignDelta = assignAmt;
             else if (_currentPersonnelHover == PersonnelButtonHover.Unassign)
                 assignDelta = -unassignAmt;
-            int freeDelta = 0;
-            switch (_currentPersonnelHover)
-            {
-                case PersonnelButtonHover.Assign: freeDelta = -assignAmt; break;
-                case PersonnelButtonHover.Unassign: freeDelta = unassignAmt; break;
-                case PersonnelButtonHover.Hire: freeDelta = hireAmount; break;
-                case PersonnelButtonHover.Fire: freeDelta = -fireAmount; break;
-            }
 
             double efficiency = currentLC.Efficiency;
             double stratMult = currentLC.StrategyRateMultiplier;
@@ -235,7 +225,7 @@ namespace RP0
             GUILayout.EndHorizontal();
         }
 
-        private static void RenderResearchersSection(bool isCostCacheInvalid)
+        private static void RenderResearchersSection()
         {
             if (_currentPersonnelHover == PersonnelButtonHover.Assign
                 || _currentPersonnelHover == PersonnelButtonHover.Unassign)

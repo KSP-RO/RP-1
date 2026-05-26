@@ -336,6 +336,22 @@ namespace RP0.Programs
             return 0f;
         }
 
+        public float RepToConfidenceForParam(ContractParameter param, bool isAwarding)
+        {
+            foreach (Program p in ActivePrograms)
+                if (p.optionalParams.Contains(param.ID))
+                    return p.RepToConfidence;
+
+            if (isAwarding)
+                return 0f;
+
+            foreach (Program p in CompletedPrograms)
+                if (p.optionalParams.Contains(param.ID))
+                    return p.RepToConfidence;
+
+            return 0f;
+        }
+
         private void OnContractAccept(Contract data)
         {
             if (SpaceCenterManagement.Instance.StartedProgram)
@@ -371,15 +387,10 @@ namespace RP0.Programs
                     SpaceCenterManagement.Instance.Applicants += applicants;
 
                 // Handle Confidence
+                // Note: optional parameter confidence is awarded at parameter completion time (see PatchContractParameter.Postfix_AwardCompletion).
                 float repToConf = RepToConfidenceForContract(cc, true);
                 if (repToConf > 0f)
-                {
-                    float rep = 0;
-                    foreach (var param in cc.AllParameters)
-                        if (param.Optional && param.ReputationCompletion > 0 && param.State == ParameterState.Complete)
-                            rep += param.ReputationCompletion;
-                    Confidence.Instance.AddConfidence(repToConf * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
-                }
+                    Confidence.Instance.AddConfidence(repToConf * data.ReputationCompletion, TransactionReasons.ContractReward);
             }
         }
 

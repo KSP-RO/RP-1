@@ -149,6 +149,13 @@ namespace RP0
                 for (int i = 0; i < p.CrewCapacity; i++)
                 {
                     GUILayout.BeginHorizontal();
+                    // Clear the slot if the assigned crew member started training after being assigned
+                    if (i < launchedCrew.Count && launchedCrew[i].PCM != null && launchedCrew[i].PCM.inactive)
+                    {
+                        launchedCrew[i].PCM = null;
+                        _availableCrew = GetAvailableCrew();
+                    }
+
                     if (i < launchedCrew.Count && launchedCrew[i].PCM != null)
                     {
                         foundAssignableCrew = true;
@@ -649,6 +656,15 @@ namespace RP0
                 {
                     ProtoCrewMember pcm = assign?.PCM;
                     if (pcm == null) continue;
+
+                    if (pcm.inactive)
+                    {
+                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "crewInTrainingPopup", "Cannot Launch!",
+                            $"{pcm.name} is currently in training and cannot be launched. Please remove them from the crew manifest.",
+                            "OK", false, HighLogic.UISkin);
+                        return;
+                    }
+
                     ModuleInventoryPart inv = pcm.KerbalInventoryModule;
                     inv.storedParts.Clear();
 

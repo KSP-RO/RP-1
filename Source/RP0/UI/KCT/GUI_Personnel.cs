@@ -1,6 +1,7 @@
-using System;
-using UnityEngine;
 using ROUtils;
+using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace RP0
 {
@@ -16,6 +17,7 @@ namespace RP0
         private static readonly int[] _buyModifierMultsPersonnel = { 1, 10, 100, int.MaxValue };
         private enum PersonnelButtonHover { None, Hire, Fire, Assign, Unassign };
         private static PersonnelButtonHover _currentPersonnelHover = PersonnelButtonHover.None;
+        private static int _pendingWorkers = int.MinValue;
 
         private static void DrawPersonnelWindow(int windowID)
         {
@@ -63,13 +65,19 @@ namespace RP0
             }
 
             GUILayout.BeginHorizontal();
-            if (GUILayout.Button("Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
+            if (GUILayout.Button("KSC Engineers")) { _personnelWindowHolder = 0; _personnelPosition.height = 1; }
+            if (KSCSwitcherInterop.IsKSCSwitcherInstalled && GUILayout.Button("All Engineers")) { _personnelWindowHolder = 1; _personnelPosition.height = 1; }
             if (KSPUtils.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
             GUILayout.EndHorizontal();
 
             if (_personnelWindowHolder == 0)
             {
                 RenderKSCEngineersSection();
+            }
+
+            if (_personnelWindowHolder == 1)
+            {
+                RenderAllEngineersSection();
             }
 
             if (_personnelWindowHolder == 2)
@@ -89,7 +97,7 @@ namespace RP0
                 GUI.DragWindow();
         }
 
-        private static void RenderEngineersSection()
+        private static void RenderKSCEngineersSection()
         {
             LCSpaceCenter KSC = SpaceCenterManagement.Instance.ActiveSC;
             LaunchComplex currentLC = KSC.LaunchComplexes[_LCIndex];
@@ -97,8 +105,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             GUILayout.Label("Engineers:", GUILayout.Width(100));
             GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(100));
-            GUILayout.Label($"Unassigned:", GetLabelRightAlignStyle(), GUILayout.Width(100));
-            GUILayout.Label($"{KSC.UnassignedEngineers}", GetLabelRightAlignStyle());
+            GUILayout.Label("Unassigned:", GetLabelRightAlignStyle(), GUILayout.Width(100));
+            GUILayout.Label(KSC.UnassignedEngineers.ToString("N0"), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             RenderHireFire(false, out int _, out int _);
@@ -223,6 +231,78 @@ namespace RP0
                 }
             }
             GUILayout.EndHorizontal();
+        }
+
+        private static void RenderAllEngineersSection()
+        {
+            List<(string id, string displayName)> sites = KSCSwitcherInterop.GetAvailableSites();
+            if (sites == null) { return; }
+
+            LCSpaceCenter activeSC = SpaceCenterManagement.Instance.ActiveSC;
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("KSC");
+            GUILayout.Label("(Total Engineers : Unassigned Engineers)", GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            for (int i = 0; i < SpaceCenterManagement.Instance.KSCs.Count; ++i)
+            {
+                LCSpaceCenter KSC = SpaceCenterManagement.Instance.KSCs[i];
+
+                if (KSC.Engineers == 0 && KSC.UnassignedEngineers == 0)
+                    continue;
+
+                bool isActiveSC = KSC == activeSC;
+                string displayName = sites.Find(s => s.id == KSC.KSCName).displayName;
+                if (string.IsNullOrEmpty(displayName))
+                    displayName = KSC.KSCName;
+
+                GUILayout.BeginHorizontal();
+                if (isActiveSC)
+                {
+                    displayName = $"<color=lime>{displayName}</color>";
+                }
+                GUILayout.Label(displayName, GUILayout.Width(200));
+                GUILayout.Label($"({KSC.Engineers:N0} : {KSC.UnassignedEngineers:N0})", GetLabelRightAlignStyle(), GUILayout.Width(100));
+                if (isActiveSC)
+                {
+                    if (_pendingWorkers != int.MinValue)
+                    {
+                        GUILayout.Space(10);
+                        if (GUILayout.Button("Cancel", GUILayout.Width(100)))
+                        {
+                            _pendingWorkers = int.MinValue;
+                        }
+                    }
+                    else
+                    {
+                        GUILayout.Space(10);
+                        int workers = _buyModifier;
+                        if (workers == int.MaxValue)
+                            workers = KSC.UnassignedEngineers;
+
+                        bool canAfford = workers <= KSC.UnassignedEngineers;
+                        GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                        if (GUILayout.Button($"Relocate {workers:N0}", style, GUILayout.ExpandWidth(false), GUILayout.Width(100)) && canAfford && workers > 0)
+                        {
+                            _pendingWorkers = workers;
+                        }
+                    }
+                }
+                else if (_pendingWorkers != int.MinValue)
+                {
+                    GUILayout.Space(10);
+                    if (GUILayout.Button($"Transfer {_pendingWorkers:N0} Here", GUILayout.ExpandWidth(false), GUILayout.Width(100)))
+                    {
+                        KCTUtilities.ChangeEngineers(activeSC, -_pendingWorkers);
+                        activeSC.RecalculateBuildRates(false);
+                        KCTUtilities.ChangeEngineers(KSC, _pendingWorkers);
+                        KSC.RecalculateBuildRates(false);
+                        _pendingWorkers = int.MinValue;
+                    }
+                }
+                GUILayout.EndHorizontal();
+            }
         }
 
         private static void RenderResearchersSection()

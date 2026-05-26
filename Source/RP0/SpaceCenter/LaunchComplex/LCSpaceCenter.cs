@@ -100,7 +100,7 @@ namespace RP0
             }
         }
 
-        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 1 && Hangar.IsEmpty;
+        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 1 && Hangar.IsEmpty && Engineers == 0;
 
         public override string ToString() => KSCName;
 

@@ -248,9 +248,9 @@ namespace RP0
             {
                 LCSpaceCenter KSC = SpaceCenterManagement.Instance.KSCs[i];
 
-                bool cannotTransfer = KSC.Engineers == 0 && KSC.UnassignedEngineers == 0;
-                if (cannotTransfer && KSC != activeSC)
-                    continue; // this does mean that you need to hire at least 1 engineer at a KSC before you can start transferring more. the alternative is worse
+                bool isEmpty = KSC.IsEmpty;
+                if (isEmpty && KSC != activeSC)
+                    continue;
 
                 bool isActiveSC = KSC == activeSC;
                 string displayName = KSCSwitcherInterop.GetSiteDisplayName(KSC.KSCName);
@@ -262,7 +262,7 @@ namespace RP0
                 }
                 GUILayout.Label(displayName, GUILayout.MinWidth(200));
                 GUILayout.Label($"({KSC.Engineers:N0} : {KSC.UnassignedEngineers:N0})", GetLabelRightAlignStyle(), GUILayout.MinWidth(150));
-                if (isActiveSC && !cannotTransfer)
+                if (isActiveSC && !isEmpty)
                 {
                     if (awaitingTransfer)
                     {

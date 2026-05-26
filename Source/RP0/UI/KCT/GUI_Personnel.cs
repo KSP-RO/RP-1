@@ -438,7 +438,7 @@ namespace RP0
             int startCount = lc == null ? SpaceCenterManagement.Instance.Researchers : lc.Engineers;
             bool b3 = numStaff > startCount;
 
-            string errorMessage = (!b1 ? "Failed to parse staff count!\n" : "") + (!b2 ? "Failed to parse reserve funds!\n" : "") + (b1 && !b3 ? "Staff count cannot be less than or the same as the existing amount!" : "");
+            string errorMessage = (!b1 ? "Failed to parse staff count!\n" : "") + (!b2 ? "Failed to parse reserve funds!\n" : "") + (b1 && !b3 ? "Staff count must be greater than the existing amount!" : "");
 
             if (!string.IsNullOrEmpty(errorMessage))
             {

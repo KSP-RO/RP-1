@@ -35,7 +35,7 @@ namespace RP0
                     if (_isKSCSwitcherInstalled.Value)
                     {
                         Type t = a.GetType("regexKSP.KSCLoader");
-                         var fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
+                        var fiKSCSwInstance = t?.GetField("instance", BindingFlags.Public | BindingFlags.Static);
                         _kscLoaderInstance = fiKSCSwInstance?.GetValue(null);
                         var fiKSCSwSites = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
                         _sites = fiKSCSwSites.GetValue(_kscLoaderInstance);
@@ -60,6 +60,37 @@ namespace RP0
                     }
                 }
                 return _isKSCSwitcherInstalled.Value;
+            }
+        }
+
+        private static List<(string id, string displayName, double latitude, double longitude)> _allSites = null;
+        public static List<(string id, string displayName, double latitude, double longitude)> AllSites
+        {
+            get
+            {
+                if (_allSites == null)
+                {
+                    if (!IsKSCSwitcherInstalled) return null;
+
+                    var rawList = _fiKSCSwSitesList.GetValue(_sites) as List<ConfigNode>;
+                    if (rawList == null) return null;
+
+                    _allSites = new List<(string id, string displayName, double latitude, double longitude)>(rawList.Count);
+                    foreach (ConfigNode site in rawList)
+                    {
+                        string id = site.GetValue("name");
+                        if (string.IsNullOrEmpty(id)) continue;
+                        string displayName = site.GetValue("displayName");
+                        if (string.IsNullOrEmpty(displayName)) displayName = id;
+                        ConfigNode PQSCity = site.GetNode("PQSCity");
+                        double.TryParse(PQSCity?.GetValue("latitude"), out double latitude);
+                        double.TryParse(PQSCity?.GetValue("longitude"), out double longitude);
+
+                        _allSites.Add((id, displayName, latitude, longitude));
+                    }
+                    _allSites.Sort((a, b) => string.Compare(a.displayName, b.displayName, StringComparison.OrdinalIgnoreCase));
+                }
+                return _allSites;
             }
         }
 
@@ -89,26 +120,6 @@ namespace RP0
             return groundStationName;
         }
 
-        public static List<(string id, string displayName)> GetAvailableSites()
-        {
-            if (!IsKSCSwitcherInstalled) return null;
-
-            var rawList = _fiKSCSwSitesList.GetValue(_sites) as List<ConfigNode>;
-            if (rawList == null) return null;
-
-            var result = new List<(string id, string displayName)>(rawList.Count);
-            foreach (ConfigNode site in rawList)
-            {
-                string id = site.GetValue("name");
-                if (string.IsNullOrEmpty(id)) continue;
-                string displayName = site.GetValue("displayName");
-                if (string.IsNullOrEmpty(displayName)) displayName = id;
-                result.Add((id, displayName));
-            }
-            result.Sort((a, b) => string.Compare(a.displayName, b.displayName, StringComparison.OrdinalIgnoreCase));
-            return result;
-        }
-
         public static void SetLastKSCSite(string siteName)
         {
             if (!IsKSCSwitcherInstalled || string.IsNullOrEmpty(siteName)) return;
@@ -130,6 +141,34 @@ namespace RP0
             var cn = _miKSCSwGetSiteByName.Invoke(_sites, new object[] { siteName }) as ConfigNode;
             if (cn == null) return;
             _miKSCSwSetSiteAndResetCamera.Invoke(null, new object[] { cn, false });
+        }
+
+        public static string GetSiteDisplayName(string siteName)
+        {
+            if (!IsKSCSwitcherInstalled || string.IsNullOrEmpty(siteName)) return siteName;
+
+            string displayName = AllSites.Find(s => s.id == siteName).displayName;
+            return string.IsNullOrEmpty(displayName) ? siteName : displayName;
+        }
+
+        public static (double latitude, double longitude) GetSiteLatLong(string siteName)
+        {
+            if (!IsKSCSwitcherInstalled || string.IsNullOrEmpty(siteName)) return (0d, 0d);
+
+            var site = AllSites.Find(s => s.id == siteName);
+            return (site.latitude, site.longitude);
+        }
+
+        public static double GreatCircleDistance(string siteA, string siteB)
+        {
+            (double latA, double longA) = GetSiteLatLong(siteA);
+            (double latB, double longB) = GetSiteLatLong(siteB);
+            CelestialBody home = FlightGlobals.GetHomeBody();
+
+            Vector3d NVectorA = home.GetRelSurfaceNVector(latA, longA);
+            Vector3d NVectorB = home.GetRelSurfaceNVector(latB, longB);
+
+            return home.Radius * Math.Acos(Vector3d.Dot(NVectorA, NVectorB));
         }
     }
 }

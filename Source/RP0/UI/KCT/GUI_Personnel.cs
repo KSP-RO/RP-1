@@ -455,9 +455,9 @@ namespace RP0
                 string dialogName = "warpToStaff";
                 string dialogTitle = $"Auto hire {(isResearch ? "researchers" : "engineers")}";
 
-                if (SpaceCenterManagement.Instance.fundTarget.IsValid)
+                if (SpaceCenterManagement.Instance.fundTarget.IsValid || SpaceCenterManagement.Instance.transferTarget.IsValid)
                 {
-                    string msg = "This functionality cannot be used while there's Warp To Fund Target in progress.";
+                    string msg = "This functionality cannot be used while there is a Warp To Fund Target or engineer transferring in progress.";
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(dialogName, msg, dialogTitle, HighLogic.UISkin,
                             new DialogGUIButton("Understood", () => { })
@@ -498,9 +498,9 @@ namespace RP0
                 string dialogName = "warpToTransfer";
                 string dialogTitle = "Transfer engineers";
 
-                if (SpaceCenterManagement.Instance.fundTarget.IsValid)
+                if (SpaceCenterManagement.Instance.fundTarget.IsValid || SpaceCenterManagement.Instance.staffTarget.IsValid)
                 {
-                    string msg = "This functionality cannot be used while there's Warp To Fund Target in progress.";
+                    string msg = "This functionality cannot be used while there is a Warp To Fund Target or automatic staff hiring in progress.";
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(dialogName, msg, dialogTitle, HighLogic.UISkin,
                             new DialogGUIButton("Understood", () => { })

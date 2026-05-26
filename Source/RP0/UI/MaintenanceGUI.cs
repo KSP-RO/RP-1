@@ -254,7 +254,7 @@ namespace RP0
             UIHolder.Instance.HideWindow();
             if (SpaceCenterManagement.Instance.staffTarget.IsValid || SpaceCenterManagement.Instance.transferTarget.IsValid)
             {
-                string msg = "This functionality cannot be used while there's automatic staff hiring or engineer transferring in progress.";
+                string msg = "This functionality cannot be used while there is automatic staff hiring or engineer transferring in progress.";
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("warpToFunds", msg, "Warp To Funds", HighLogic.UISkin,
                         new DialogGUIButton("Understood", () =>

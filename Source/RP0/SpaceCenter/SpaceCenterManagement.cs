@@ -929,11 +929,6 @@ namespace RP0
             ActiveSC = ksc;
         }
 
-        public LCSpaceCenter FindKSC(string KSCName)
-        {
-            return KSCs.Find(k => k.KSCName == KSCName);
-        }
-
         public void ClearLPLastLaunchForVessel(Guid stockVesselID)
         {
             foreach (LCSpaceCenter ksc in KSCs)

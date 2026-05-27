@@ -1,7 +1,5 @@
 ﻿using ROUtils.DataTypes;
 using System;
-using UnityEngine;
-using static FinePrint.ContractDefs;
 
 namespace RP0
 {

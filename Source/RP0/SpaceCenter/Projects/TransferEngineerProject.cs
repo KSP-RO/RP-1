@@ -32,7 +32,14 @@ namespace RP0
         private LCSpaceCenter _originalSC = null;
         public LCSpaceCenter OriginalSC
         {
-            get => _originalSC;
+            get
+            {
+                if (_originalSC == null && !string.IsNullOrEmpty(originalSCID))
+                {
+                    _originalSC = SpaceCenterManagement.Instance.FindKSC(originalSCID);
+                }
+                return _originalSC;
+            }
             set
             {
                 _originalSC = value;
@@ -44,7 +51,14 @@ namespace RP0
         private LCSpaceCenter _targetSC = null;
         public LCSpaceCenter TargetSC
         {
-            get => _targetSC;
+            get 
+            {
+                if (_targetSC == null && !string.IsNullOrEmpty(targetSCID))
+                {
+                    _targetSC = SpaceCenterManagement.Instance.FindKSC(targetSCID);
+                }
+                return _targetSC;
+            }
             set
             {
                 _targetSC = value;

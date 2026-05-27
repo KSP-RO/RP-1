@@ -942,6 +942,11 @@ namespace RP0
             }
         }
 
+        public LCSpaceCenter FindKSC(string KSCName)
+        {
+            return KSCs.Find(k => k.KSCName == KSCName);
+        }
+
         #endregion
 
         #region Budget

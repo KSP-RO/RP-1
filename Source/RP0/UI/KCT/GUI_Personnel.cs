@@ -288,11 +288,6 @@ namespace RP0
                 }
                 GUILayout.EndHorizontal();
             }
-
-            if (i == 0)
-            {
-                GUILayout.Label("No KSCs with engineers found.");
-            }
         }
 
         private static void RenderResearchersSection()

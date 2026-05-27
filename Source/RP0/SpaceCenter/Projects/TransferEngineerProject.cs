@@ -29,18 +29,6 @@ namespace RP0
         [Persistent]
         private double transferCost; // per engineer
 
-        private LCSpaceCenter _targetSC = null;
-        public LCSpaceCenter TargetSC
-        {
-            get => _targetSC;
-            set
-            {
-                _targetSC = value;
-                targetSCID = _targetSC.KSCName;
-                targetSCName = KSCSwitcherInterop.GetSiteDisplayName(targetSCID);
-            }
-        }
-
         private LCSpaceCenter _originalSC = null;
         public LCSpaceCenter OriginalSC
         {
@@ -50,6 +38,18 @@ namespace RP0
                 _originalSC = value;
                 originalSCID = _originalSC.KSCName;
                 originalSCName = KSCSwitcherInterop.GetSiteDisplayName(originalSCID);
+            }
+        }
+
+        private LCSpaceCenter _targetSC = null;
+        public LCSpaceCenter TargetSC
+        {
+            get => _targetSC;
+            set
+            {
+                _targetSC = value;
+                targetSCID = _targetSC.KSCName;
+                targetSCName = KSCSwitcherInterop.GetSiteDisplayName(targetSCID);
             }
         }
 

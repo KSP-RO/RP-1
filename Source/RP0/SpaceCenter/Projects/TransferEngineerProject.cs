@@ -66,7 +66,7 @@ namespace RP0
             OriginalSC = originalSC;
             TargetSC = targetSC;
             double distanceFraction = KSCSwitcherInterop.GreatCircleDistance(originalSCID, targetSCID) / (Math.PI * FlightGlobals.GetHomeBody().Radius); // divide by half-circumference
-            transferCost = distanceFraction * Database.SettingsSC.HireCost / 10d; // max cost of 30 funds per engineer
+            transferCost = Math.Max(distanceFraction * Database.SettingsSC.HireCost / 10d, 5d); // max cost of 30 funds per engineer, min of 5
         }
 
         public void Clear()

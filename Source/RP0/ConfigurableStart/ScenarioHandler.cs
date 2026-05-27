@@ -616,7 +616,13 @@ namespace RP0.ConfigurableStart
                 {
                     if (contractName == subType.name)
                     {
-                        var contract = ForceGenerate(subType, 0, new System.Random().Next(), Contracts.Contract.State.Generated);
+                        Contracts.Contract.ContractPrestige prestige = Contracts.Contract.ContractPrestige.Trivial;
+                        if (subType.dataNode.IsDeterministic("prestige") && subType.prestige.Count == 1) // this is from ContractConfigurator.Util.MissionControlUI.GetPrestige()
+                        {
+                            prestige = subType.prestige.First();
+                        }
+                        
+                        var contract = ForceGenerate(subType, prestige, new System.Random().Next(), Contracts.Contract.State.Generated);
 
                         if (contract is null)
                         {

@@ -410,7 +410,7 @@ namespace RP0
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(dialogName, "", dialogTitle, HighLogic.UISkin,
                             isResearch ? new DialogGUISpace(0f) : new DialogGUILabel($"LC: {currentLC.Name}"),
-                            new DialogGUILabel($"Final count {(isResearch ? "" : $"(max: {currentLC.MaxEngineers:N0})")}"),
+                            new DialogGUILabel($"Final count (current: {curCount}{(isResearch ? ")" : $", max: {currentLC.MaxEngineers:N0})")}"),
                             new DialogGUITextInput(sNumStaff, false, 7, (string n) =>
                             {
                                 sNumStaff = n;

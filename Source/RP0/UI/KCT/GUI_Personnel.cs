@@ -242,8 +242,6 @@ namespace RP0
             GUILayout.EndHorizontal();
             int i;
 
-            // TODO engineers from hammaguir are getting deleted for some reason
-
             for (i = 0; i < SpaceCenterManagement.Instance.KSCs.Count; ++i)
             {
                 LCSpaceCenter KSC = SpaceCenterManagement.Instance.KSCs[i];

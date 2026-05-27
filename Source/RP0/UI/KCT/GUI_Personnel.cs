@@ -260,7 +260,7 @@ namespace RP0
                 {
                     displayName = $"<color=lime>{displayName}</color>";
                 }
-                GUILayout.Label(displayName, GUILayout.MinWidth(200));
+                GUILayout.Label(displayName, GUILayout.MinWidth(100));
                 GUILayout.Label($"({KSC.Engineers:N0} : {KSC.UnassignedEngineers:N0})", GetLabelRightAlignStyle(), GUILayout.MinWidth(150));
                 if (isActiveSC && !isEmpty)
                 {

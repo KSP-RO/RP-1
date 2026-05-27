@@ -9,10 +9,10 @@ namespace RP0
         private double reserveFunds = 0d;
 
         [Persistent]
-        private int startCrewCount = 0; // this should be changed to startStaffCount on a save-breaking update
+        private int startCrewCount = 0; // TODO: this should be changed to startStaffCount on a save-breaking update
 
         [Persistent]
-        private int targetCrewCount = 0; // this should be changed to targetStaffCount on a save-breaking update
+        private int targetCrewCount = 0; // TODO: this should be changed to targetStaffCount on a save-breaking update
 
         [Persistent]
         private Guid _lcID = Guid.Empty;

@@ -240,9 +240,8 @@ namespace RP0
             GUILayout.Label("KSC");
             GUILayout.Label("(Total Engineers : Unassigned Engineers)", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
-            int i;
 
-            for (i = 0; i < SpaceCenterManagement.Instance.KSCs.Count; ++i)
+            for (int i = 0; i < SpaceCenterManagement.Instance.KSCs.Count; ++i)
             {
                 LCSpaceCenter KSC = SpaceCenterManagement.Instance.KSCs[i];
 

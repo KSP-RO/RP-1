@@ -18,6 +18,12 @@ namespace RP0
         private static string _sHypInsertionDV = "", _sHypPeAlt = "", _sHypTimeToPe = "", _sAutostageTarget = "", _sAutostageDelay = "1";
         private static bool _fromCurrentUT = true;
 
+        // Editor-side preview: parts with inverseStage > _sAutostageTarget will be shed (and the
+        // shed vessels destroyed) when the sim begins. Highlighted red while the sim config window
+        // is up so the player can see what's about to be dropped.
+        private static int _autostageHighlightTarget = int.MinValue;
+        private static readonly HashSet<Part> _autostageHighlightedParts = new HashSet<Part>();
+
         public static void DrawSimulationWindow(int windowID)
         {
             GUILayout.BeginVertical();
@@ -183,9 +189,10 @@ namespace RP0
 
                 GUILayout.Space(4);
                 GUILayout.BeginHorizontal();
-                GUILayout.Label(new GUIContent("Autostage to stage: ", "Blank disables autostage. Vessel will stage repeatedly until the current stage equals this number."));
+                GUILayout.Label(new GUIContent("Autostage to stage: ", "Blank disables autostage. Parts in stages above this number will be shed and destroyed at sim start (highlighted red in the editor)."));
                 _sAutostageTarget = GUILayout.TextField(_sAutostageTarget, 3, GUILayout.Width(40));
                 GUILayout.EndHorizontal();
+                UpdateAutostageHighlights();
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Stage delay (s): ");
@@ -213,11 +220,13 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Simulate"))
             {
+                ClearAutostageHighlights();
                 StartSim(simParams);
             }
 
             if (GUILayout.Button("Cancel"))
             {
+                ClearAutostageHighlights();
                 GUIStates.ShowSimConfig = false;
                 _centralWindowPosition.height = 1;
                 _unlockEditor = true;
@@ -537,6 +546,43 @@ namespace RP0
         private static double GetDefaultAltitudeForBody(CelestialBody body)
         {
             return body.atmosphere ? body.atmosphereDepth + 30000 : 30000;
+        }
+
+        private static void UpdateAutostageHighlights()
+        {
+            int target;
+            if (string.IsNullOrWhiteSpace(_sAutostageTarget) || !int.TryParse(_sAutostageTarget, out target) || target < 0)
+                target = -1;
+
+            if (target == _autostageHighlightTarget) return;
+            _autostageHighlightTarget = target;
+
+            foreach (Part p in _autostageHighlightedParts)
+            {
+                if (p != null) p.SetHighlightDefault();
+            }
+            _autostageHighlightedParts.Clear();
+
+            if (target < 0 || EditorLogic.fetch == null || EditorLogic.fetch.ship == null) return;
+
+            foreach (Part p in EditorLogic.fetch.ship.parts)
+            {
+                if (p.inverseStage <= target) continue;
+                p.highlightType = Part.HighlightType.AlwaysOn;
+                p.SetHighlightColor(XKCDColors.Red);
+                p.SetHighlight(true, false);
+                _autostageHighlightedParts.Add(p);
+            }
+        }
+
+        private static void ClearAutostageHighlights()
+        {
+            foreach (Part p in _autostageHighlightedParts)
+            {
+                if (p != null) p.SetHighlightDefault();
+            }
+            _autostageHighlightedParts.Clear();
+            _autostageHighlightTarget = int.MinValue;
         }
     }
 }

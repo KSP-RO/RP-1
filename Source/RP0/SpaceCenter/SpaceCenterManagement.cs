@@ -1287,55 +1287,13 @@ namespace RP0
         {
             yield return new WaitForEndOfFrame();
 
-            bool isHyperbolic = simParams.SimOrbitMode == SimOrbitMode.Hyperbolic;
-            // For hyperbolic mode, staging happens in a parking orbit around the origin body so
-            // dropped stages don't fall into the target's atmosphere. The target-body hyperbolic
-            // insertion is applied after autostage completes.
-            CelestialBody firstBody = isHyperbolic ? simParams.SimOriginBody : simParams.SimulationBody;
-            double lanFirst = double.IsNaN(simParams.SimLAN) ? 0.0 : simParams.SimLAN;
+            CelestialBody body = simParams.SimulationBody;
+            double lan = double.IsNaN(simParams.SimLAN) ? 0.0 : simParams.SimLAN;
 
-            if (isHyperbolic)
+            if (simParams.SimOrbitMode == SimOrbitMode.Hyperbolic)
             {
-                double parkAlt = GetDefaultAltitudeForBody(simParams.SimOriginBody);
-                double sma = parkAlt + firstBody.Radius;
-                RP0Debug.Log($"Hyperbolic sim: parking at {firstBody.bodyName} alt={parkAlt:F0}m for staging.");
-                FlightGlobals.fetch.SetShipOrbit(firstBody.flightGlobalsIndex, 1e-7, sma, simParams.SimInclination, lanFirst, Math.PI, simParams.SimArgPe, 0.0);
-            }
-            else if (simParams.SimOrbitMode == SimOrbitMode.Circular)
-            {
-                double sma = simParams.SimOrbitAltitude + firstBody.Radius;
-                double ecc = 0.0000001;
-                RP0Debug.Log($"Moving vessel to orbit. {firstBody.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
-                FlightGlobals.fetch.SetShipOrbit(firstBody.flightGlobalsIndex, ecc, sma, simParams.SimInclination, lanFirst, simParams.SimMNA, simParams.SimArgPe, 0.0);
-            }
-            else // Elliptical
-            {
-                double ra = simParams.SimOrbitAp + firstBody.Radius;
-                double rp = simParams.SimOrbitPe + firstBody.Radius;
-                double sma = (ra + rp) / 2;
-                double ecc = (ra - rp) / (ra + rp);
-                RP0Debug.Log($"Moving vessel to orbit. {firstBody.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
-                FlightGlobals.fetch.SetShipOrbit(firstBody.flightGlobalsIndex, ecc, sma, simParams.SimInclination, lanFirst, simParams.SimMNA, simParams.SimArgPe, 0.0);
-            }
-            FloatingOrigin.ResetTerrainShaderOffset();
-
-            if (simParams.SimAutostageTarget >= 0)
-            {
-                yield return new WaitForSeconds(Math.Max(0.25f, simParams.SimAutostageDelay));
-                int safety = 64;
-                while (StageManager.CurrentStage > simParams.SimAutostageTarget && safety-- > 0)
-                {
-                    RP0Debug.Log($"Autostage: activating stage, current={StageManager.CurrentStage}, target={simParams.SimAutostageTarget}");
-                    StageManager.ActivateNextStage();
-                    yield return new WaitForSeconds(simParams.SimAutostageDelay);
-                }
-            }
-
-            if (isHyperbolic)
-            {
-                CelestialBody target = simParams.SimulationBody;
-                double mu = target.gravParameter;
-                double rp = simParams.SimHyperbolicPeAlt + target.Radius;
+                double mu = body.gravParameter;
+                double rp = simParams.SimHyperbolicPeAlt + body.Radius;
                 // TWP-style Insertion ΔV is the burn at periapsis from the approach speed down to circular.
                 //   v_peri_hyper = ΔV + √(μ/rp)
                 //   v∞² = v_peri_hyper² - 2μ/rp
@@ -1345,7 +1303,7 @@ namespace RP0
                 double vInfSq = vPeriHyper * vPeriHyper - 2.0 * mu / rp;
                 if (vInfSq <= 0)
                 {
-                    RP0Debug.LogWarning($"Insertion ΔV {simParams.SimHyperbolicInsertionDV:F1} m/s is below escape at rp={rp:F0}m around {target.bodyName}; clamping to marginal hyperbolic.");
+                    RP0Debug.LogWarning($"Insertion ΔV {simParams.SimHyperbolicInsertionDV:F1} m/s is below escape at rp={rp:F0}m around {body.bodyName}; clamping to marginal hyperbolic.");
                     vInfSq = 1.0;
                 }
                 double vInf = Math.Sqrt(vInfSq);
@@ -1355,22 +1313,70 @@ namespace RP0
                 // which is negative time since periapsis, so MNA = -n * TimeToPe. NaN = auto: earliest in SOI.
                 double n = Math.Sqrt(mu / Math.Pow(-sma, 3));
                 double tToPe = double.IsNaN(simParams.SimHypTimeToPe)
-                    ? MaxTToPeInSOI(sma, ecc, n, target.sphereOfInfluence)
+                    ? MaxTToPeInSOI(sma, ecc, n, body.sphereOfInfluence)
                     : simParams.SimHypTimeToPe;
                 double mna = -n * tToPe;
-                double lan = double.IsNaN(simParams.SimLAN)
-                    ? ComputeApproachLAN(target, simParams.SimOriginBody)
-                    : simParams.SimLAN;
-                RP0Debug.Log($"Hyperbolic insertion: target={target.bodyName} ΔV={simParams.SimHyperbolicInsertionDV:F1}m/s → v∞={vInf:F1}m/s rp={rp:F0}m sma={sma:F0} ecc={ecc:F4} LAN={lan:F1}° MNA={mna:F3} (tToPe={simParams.SimHypTimeToPe:F0}s)");
-                // Pause physics through the cross-SOI teleport to avoid the altimeter / floating-origin
-                // briefly reporting the old body's reference frame after the second SetShipOrbit.
-                OrbitPhysicsManager.HoldVesselUnpack(2);
-                yield return new WaitForFixedUpdate();
-                FlightGlobals.fetch.SetShipOrbit(target.flightGlobalsIndex, ecc, sma, simParams.SimInclination, lan, mna, simParams.SimArgPe, 0.0);
-                FloatingOrigin.ResetTerrainShaderOffset();
-                yield return new WaitForFixedUpdate();
-                FloatingOrigin.ResetTerrainShaderOffset();
+                if (double.IsNaN(simParams.SimLAN))
+                    lan = ComputeApproachLAN(body, simParams.SimOriginBody);
+                RP0Debug.Log($"Hyperbolic insertion: target={body.bodyName} ΔV={simParams.SimHyperbolicInsertionDV:F1}m/s → v∞={vInf:F1}m/s rp={rp:F0}m sma={sma:F0} ecc={ecc:F4} LAN={lan:F1}° MNA={mna:F3} (tToPe={tToPe:F0}s)");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, lan, mna, simParams.SimArgPe, 0.0);
             }
+            else if (simParams.SimOrbitMode == SimOrbitMode.Circular)
+            {
+                double sma = simParams.SimOrbitAltitude + body.Radius;
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, 1e-7, sma, simParams.SimInclination, lan, simParams.SimMNA, simParams.SimArgPe, 0.0);
+            }
+            else // Elliptical
+            {
+                double ra = simParams.SimOrbitAp + body.Radius;
+                double rp = simParams.SimOrbitPe + body.Radius;
+                double sma = (ra + rp) / 2;
+                double ecc = (ra - rp) / (ra + rp);
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, lan, simParams.SimMNA, simParams.SimArgPe, 0.0);
+            }
+            FloatingOrigin.ResetTerrainShaderOffset();
+
+            if (simParams.SimAutostageTarget >= 0)
+            {
+                yield return new WaitForSeconds(Math.Max(0.25f, simParams.SimAutostageDelay));
+                yield return TriggerSimStaging(simParams.SimAutostageTarget);
+            }
+        }
+
+        // Fire only the decouplers in stages above SimAutostageTarget, then delete the resulting
+        // debris vessels. Used instead of StageManager.ActivateNextStage() so engines / chutes
+        // in dropped stages don't fire (which would be wrong in a hyperbolic target-SOI sim and
+        // pointless in any sim that starts in orbit).
+        private static IEnumerator TriggerSimStaging(int autostageTarget)
+        {
+            Vessel active = FlightGlobals.ActiveVessel;
+            var preStaging = new HashSet<Guid>(FlightGlobals.Vessels.Select(v => v.id));
+            int triggered = 0;
+            foreach (Part p in active.parts.ToList())
+            {
+                if (p.inverseStage <= autostageTarget) continue;
+                foreach (PartModule m in p.Modules)
+                {
+                    if (m is ModuleDecouple md && !md.isDecoupled) { md.Decouple(); triggered++; }
+                    else if (m is ModuleAnchoredDecoupler mad && !mad.isDecoupled) { mad.Decouple(); triggered++; }
+                }
+            }
+            RP0Debug.Log($"Sim staging: triggered {triggered} decoupler(s) in parts with inverseStage > {autostageTarget}");
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+
+            int deleted = 0;
+            foreach (Vessel v in FlightGlobals.Vessels.ToList())
+            {
+                if (v != FlightGlobals.ActiveVessel && !preStaging.Contains(v.id))
+                {
+                    v.Die();
+                    deleted++;
+                }
+            }
+            if (deleted > 0) RP0Debug.Log($"Sim staging: removed {deleted} shed debris vessel(s)");
         }
 
         // Earliest (most-negative-MNA) inbound point still inside the body's SOI for a hyperbolic
@@ -1404,11 +1410,6 @@ namespace RP0
             double lanDeg = Math.Atan2(y, x) * UtilMath.Rad2Deg;
             if (lanDeg < 0) lanDeg += 360.0;
             return lanDeg;
-        }
-
-        private static double GetDefaultAltitudeForBody(CelestialBody body)
-        {
-            return body.atmosphere ? body.atmosphereDepth + 30000 : 30000;
         }
 
         private void AddSimulationWatermark()

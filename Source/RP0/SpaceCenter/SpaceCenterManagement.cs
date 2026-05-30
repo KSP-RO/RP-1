@@ -560,6 +560,10 @@ namespace RP0
                         KSCs.RemoveAt(i);
                         any = true;
                     }
+                    else if (ksc.KSCName != null && ksc.DisplayName == null)
+                    {
+                        ksc.DisplayName = KSCSwitcherInterop.GetSiteDisplayName(ksc.KSCName);
+                    }
 
                     if (any) KCTUtilities.RefreshGroundStationActiveState();
                 }

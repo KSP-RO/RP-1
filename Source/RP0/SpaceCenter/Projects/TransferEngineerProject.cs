@@ -5,6 +5,13 @@ namespace RP0
 {
     public class TransferEngineerProject : ConfigNodePersistenceBase, ISpaceCenterProject, IConfigNode
     {
+        public enum EngineerTransferType
+        {
+            None,
+            OutTransfer,
+            InTransfer
+        }
+
         [Persistent]
         private double reserveFunds = 0d;
 
@@ -18,13 +25,7 @@ namespace RP0
         private string originalSCID;
 
         [Persistent]
-        private string originalSCName;
-
-        [Persistent]
         private string targetSCID;
-
-        [Persistent]
-        private string targetSCName;
 
         [Persistent]
         private double transferCost; // per engineer
@@ -44,7 +45,6 @@ namespace RP0
             {
                 _originalSC = value;
                 originalSCID = _originalSC.KSCName;
-                originalSCName = KSCSwitcherInterop.GetSiteDisplayName(originalSCID);
             }
         }
 
@@ -63,7 +63,6 @@ namespace RP0
             {
                 _targetSC = value;
                 targetSCID = _targetSC.KSCName;
-                targetSCName = KSCSwitcherInterop.GetSiteDisplayName(targetSCID);
             }
         }
 
@@ -77,6 +76,8 @@ namespace RP0
             this.reserveFunds = reserveFunds;
             OriginalSC = originalSC;
             TargetSC = targetSC;
+            originalSC.EngineerTransferType = EngineerTransferType.OutTransfer;
+            targetSC.EngineerTransferType = EngineerTransferType.InTransfer;
             double distanceFraction = KSCSwitcherInterop.GreatCircleDistance(originalSCID, targetSCID) / (Math.PI * FlightGlobals.GetHomeBody().Radius); // divide by half-circumference
             transferCost = Math.Max(distanceFraction * Database.SettingsSC.HireCost / 10d, 5d); // max cost of 30 funds per engineer, min of 5
         }
@@ -84,6 +85,8 @@ namespace RP0
         public void Clear()
         {
             targetAmount = transferredAmount = 0;
+            if (OriginalSC != null) OriginalSC.EngineerTransferType = EngineerTransferType.None;
+            if (TargetSC != null) TargetSC.EngineerTransferType = EngineerTransferType.None;
         }
 
         public double GetBuildRate()
@@ -101,7 +104,7 @@ namespace RP0
 
         public string GetItemName()
         {
-            return $"Transfer {transferredAmount}/{targetAmount} engineers from {originalSCName} to {targetSCName}";
+            return $"Transfer {transferredAmount}/{targetAmount} engineers from {OriginalSC.DisplayName} to {TargetSC.DisplayName}";
         }
 
         public ProjectType GetProjectType()

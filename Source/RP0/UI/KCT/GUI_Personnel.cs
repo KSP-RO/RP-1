@@ -16,7 +16,7 @@ namespace RP0
         private static readonly int[] _buyModifierMultsPersonnel = { 1, 10, 100, int.MaxValue };
         private enum PersonnelButtonHover { None, Hire, Fire, Assign, Unassign };
         private static PersonnelButtonHover _currentPersonnelHover = PersonnelButtonHover.None;
-        private static bool awaitingTransfer = false;
+        private static LCSpaceCenter originalSC = null;
 
         private static void DrawPersonnelWindow(int windowID)
         {
@@ -234,56 +234,62 @@ namespace RP0
 
         private static void RenderAllEngineersSection()
         {
-            LCSpaceCenter activeSC = SpaceCenterManagement.Instance.ActiveSC;
-
             GUILayout.BeginHorizontal();
-            GUILayout.Label("KSC");
-            GUILayout.Label("(Total Engineers : Unassigned Engineers)", GetLabelRightAlignStyle());
+            GUILayout.Label("KSC (Total Engineers : Unassigned Engineers)");
             GUILayout.EndHorizontal();
 
             for (int i = 0; i < SpaceCenterManagement.Instance.KSCs.Count; ++i)
             {
                 LCSpaceCenter KSC = SpaceCenterManagement.Instance.KSCs[i];
 
+                bool isActiveSC = KSC == SpaceCenterManagement.Instance.ActiveSC;
                 bool isEmpty = KSC.IsEmpty;
-                if (isEmpty && KSC != activeSC)
+                if (isEmpty && !isActiveSC)
                     continue;
 
-                bool isActiveSC = KSC == activeSC;
-                string displayName = KSCSwitcherInterop.GetSiteDisplayName(KSC.KSCName);
+                string site = KSC.DisplayName;
 
                 GUILayout.BeginHorizontal();
                 if (isActiveSC)
                 {
-                    displayName = $"<color=lime>{displayName}</color>";
+                    site = $"<color=lime>{site}</color>";
                 }
-                GUILayout.Label(displayName, GUILayout.MinWidth(100));
-                GUILayout.Label($"({KSC.Engineers:N0} : {KSC.UnassignedEngineers:N0})", GetLabelRightAlignStyle(), GUILayout.MinWidth(150));
-                if (isActiveSC && !isEmpty)
+                site = $"{site} ({KSC.Engineers:N0} : {KSC.UnassignedEngineers:N0})";
+                switch (KSC.EngineerTransferType)
                 {
-                    if (awaitingTransfer)
-                    {
-                        GUILayout.Space(10);
-                        if (GUILayout.Button("Cancel", GUILayout.Width(100)))
-                        {
-                            awaitingTransfer = false;
-                        }
-                    }
-                    else
+                    case TransferEngineerProject.EngineerTransferType.OutTransfer:
+                        site = $"{site} (Transferring Out)";
+                        break;
+                    case TransferEngineerProject.EngineerTransferType.InTransfer:
+                        site = $"{site} (Transferring In)";
+                        break;
+                }
+                GUILayout.Label(site, GUILayout.MinWidth(300));
+                if (originalSC == null)
+                {
+                    if (!isEmpty)
                     {
                         GUILayout.Space(10);
                         bool canAfford = KSC.UnassignedEngineers >= 1;
                         GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
-                        if (GUILayout.Button($"Relocate", style, GUILayout.Width(100)) && canAfford)
+                        if (GUILayout.Button("Relocate", style, GUILayout.Width(100)) && canAfford)
                         {
-                            awaitingTransfer = true;
+                            originalSC = KSC;
                         }
                     }
                 }
-                else if (awaitingTransfer)
+                else if (originalSC == KSC)
                 {
                     GUILayout.Space(10);
-                    RenderTransferButton(activeSC, KSC);
+                    if (GUILayout.Button("Cancel", GUILayout.Width(100)))
+                    {
+                        originalSC = null;
+                    }
+                }
+                else
+                {
+                    GUILayout.Space(10);
+                    RenderTransferButton(originalSC, KSC);
                 }
                 GUILayout.EndHorizontal();
             }
@@ -586,9 +592,10 @@ namespace RP0
             }
             else
             {
+                SpaceCenterManagement.Instance.transferTarget?.Clear();
                 TransferEngineerProject target = new TransferEngineerProject(numEngineers, reserveFunds, originalSC, targetSC);
                 SpaceCenterManagement.Instance.transferTarget = target;
-                awaitingTransfer = false;
+                KCT_GUI.originalSC = null;
             }
         }
 

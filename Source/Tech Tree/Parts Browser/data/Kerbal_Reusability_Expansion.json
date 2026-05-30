@@ -1,6 +1,6 @@
 [
     {
-        "name": "Grid Fin L",
+        "name": "Grid?Fin?L",
         "title": "Grid Fin (Large)",
         "description": "",
         "mod": "Kerbal Reusability Expansion",
@@ -21,7 +21,7 @@
         "module_tags": []
     },
     {
-        "name": "Grid Fin L Titanium",
+        "name": "Grid?Fin?L?Titanium",
         "title": "Titanium Grid Fin (Large)",
         "description": "",
         "mod": "Kerbal Reusability Expansion",
@@ -42,7 +42,7 @@
         "module_tags": []
     },
     {
-        "name": "Grid Fin M",
+        "name": "Grid?Fin?M",
         "title": "Grid Fin (Medium)",
         "description": "",
         "mod": "Kerbal Reusability Expansion",
@@ -63,7 +63,7 @@
         "module_tags": []
     },
     {
-        "name": "Grid Fin M Titanium",
+        "name": "Grid?Fin?M?Titanium",
         "title": "Titanium Grid Fin (Medium)",
         "description": "",
         "mod": "Kerbal Reusability Expansion",
@@ -84,7 +84,7 @@
         "module_tags": []
     },
     {
-        "name": "Grid Fin S",
+        "name": "Grid?Fin?S",
         "title": "Grid Fin (Small)",
         "description": "",
         "mod": "Kerbal Reusability Expansion",
@@ -105,7 +105,7 @@
         "module_tags": []
     },
     {
-        "name": "Grid Fin S Titanium",
+        "name": "Grid?Fin?S?Titanium",
         "title": "Titanium Grid Fin (Small)",
         "description": "",
         "mod": "Kerbal Reusability Expansion",

@@ -42,7 +42,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, 2ndGenCockpit",
+        "entry_cost_mods": "1000,2ndGenCockpit",
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
@@ -172,7 +172,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "20000, 4thGenCockpit",
+        "entry_cost_mods": "20000,4thGenCockpit",
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
@@ -198,7 +198,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "30000, 4thGenCockpit",
+        "entry_cost_mods": "30000,4thGenCockpit",
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
@@ -224,7 +224,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "10000, 4thGenCockpit",
+        "entry_cost_mods": "10000,4thGenCockpit",
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
@@ -250,7 +250,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "50000, 5thGenCockpit",
+        "entry_cost_mods": "50000,5thGenCockpit",
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",
@@ -328,7 +328,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "2000, 2ndGenCockpit",
+        "entry_cost_mods": "2000,2ndGenCockpit",
         "identical_part_name": "",
         "module_tags": [
             "Cockpit",

@@ -1217,7 +1217,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Kliper",
         "identical_part_name": "",
         "module_tags": [
             "NoResourceCostMult"

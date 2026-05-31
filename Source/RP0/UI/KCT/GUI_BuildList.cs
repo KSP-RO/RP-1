@@ -235,15 +235,14 @@ namespace RP0
             if (KCTSettings.Instance.AutoAlarms && buildItem != null && (buildItem != nextThing || txt != itemText || !AlarmHelper.AlarmExistsTitle(txt, out string _)))
             {
                 RP0Debug.Log($"Triggering old alarm deletion");
-                // old alarm, need to delete to get the new alarm for the new nextThing
                 string alarmPrefix = "RP-1: ";
                 if (string.IsNullOrEmpty(SpaceCenterManagement.Instance.AlarmId) || (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(alarmPrefix, true)))
                 {
-                    RP0Debug.Log("No old alarm found, new alarm being created!");
+                    RP0Debug.Log("No old alarm found");
                 }
                 else
                 {
-                    RP0Debug.Log("Old alarm deleted, new alarm being created!");
+                    RP0Debug.Log("Old alarm deleted");
                 }
 
                 if (nextThing != null)

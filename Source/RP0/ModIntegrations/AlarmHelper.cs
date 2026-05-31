@@ -15,7 +15,7 @@ namespace RP0.ModIntegrations
         /// Creates an alarm.
         /// </summary>
         /// <remarks>
-        /// Do not pass in Contract or ContractAuto as the alarmType, KAC seems to immediately delete the alarm for some reason.
+        /// Do not pass in Contract or ContractAuto as the alarmType, KAC immediately deletes the alarm due to https://github.com/linuxgurugamer/KerbalAlarmClock/issues/14.
         /// </remarks>
         /// <returns>
         /// AlarmID
@@ -26,7 +26,7 @@ namespace RP0.ModIntegrations
             if (UseKAC)
             {
                 if (alarmType == KACAPI.AlarmTypeEnum.Contract || alarmType == KACAPI.AlarmTypeEnum.ContractAuto)
-                { // no idea what causes KAC to immediately delete these alarms, so just don't allow them
+                {
                     alarmType = KACAPI.AlarmTypeEnum.Raw;
                 }
                 string alarmID = KACWrapper.KAC.CreateAlarm(alarmType, title, UT);

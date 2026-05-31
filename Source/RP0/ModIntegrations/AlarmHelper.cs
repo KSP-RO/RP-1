@@ -43,7 +43,8 @@ namespace RP0.ModIntegrations
                     }
                     else
                     {
-                        RP0Debug.LogError($"KAC Alarm with ID: {alarmID} could not be found.");
+                        //RP0Debug.LogError($"KAC Alarm with ID: {alarmID} could not be found."); // this is usually fine, because KAC waits until the end of the frame to add the alarm
+                        RP0Debug.Log($"KAC Alarm with ID: {alarmID} could not be found.");
                         return alarmID;
                     }
                 }
@@ -80,9 +81,6 @@ namespace RP0.ModIntegrations
         /// <summary>
         /// Deletes the alarm with a certain id (uint must be converted to string first).
         /// </summary>
-        /// <remarks>
-        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
-        /// </remarks>
         /// <returns>
         /// Success
         /// </returns>
@@ -116,9 +114,6 @@ namespace RP0.ModIntegrations
         /// <summary>
         /// Deletes all alarms that contain (or start with) a certain string in their title.
         /// </summary>
-        /// <remarks>
-        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
-        /// </remarks>
         /// <returns>
         /// Success
         /// </returns>
@@ -145,7 +140,8 @@ namespace RP0.ModIntegrations
                 }
                 if (!foundAlarm)
                 {
-                    RP0Debug.LogWarning(s3);
+                    //RP0Debug.LogWarning(s3); // this is usually fine, because KAC waits until the end of the frame to delete the alarm
+                    RP0Debug.Log(s3);
                     successful = false;
                 }
                 return successful;

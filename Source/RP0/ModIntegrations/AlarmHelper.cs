@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using KACAPI = RP0.KACWrapper.KACAPI;
+﻿using UniLinq;
 using KACAlarm = RP0.KACWrapper.KACAPI.KACAlarm;
+using KACAPI = RP0.KACWrapper.KACAPI;
 
 namespace RP0.ModIntegrations
 {
@@ -15,7 +15,7 @@ namespace RP0.ModIntegrations
         /// Creates an alarm.
         /// </summary>
         /// <remarks>
-        /// Do not pass in Contract or ContractAuto as the alarmType, KAC seems to immediately delete the alarm for some reason.
+        /// Do not pass in Contract or ContractAuto as the alarmType, KAC immediately deletes the alarm due to https://github.com/linuxgurugamer/KerbalAlarmClock/issues/14.
         /// </remarks>
         /// <returns>
         /// AlarmID
@@ -26,7 +26,7 @@ namespace RP0.ModIntegrations
             if (UseKAC)
             {
                 if (alarmType == KACAPI.AlarmTypeEnum.Contract || alarmType == KACAPI.AlarmTypeEnum.ContractAuto)
-                { // no idea what causes KAC to immediately delete these alarms, so just don't allow them
+                {
                     alarmType = KACAPI.AlarmTypeEnum.Raw;
                 }
                 string alarmID = KACWrapper.KAC.CreateAlarm(alarmType, title, UT);
@@ -43,7 +43,7 @@ namespace RP0.ModIntegrations
                     }
                     else
                     {
-                        RP0Debug.LogError($"KAC Alarm with ID: {alarmID} could not be found.");
+                        RP0Debug.Log($"KAC Alarm with ID: {alarmID} could not be found."); // this is usually fine, because KAC waits until the end of the frame to add the alarm
                         return alarmID;
                     }
                 }
@@ -78,11 +78,52 @@ namespace RP0.ModIntegrations
         }
 
         /// <summary>
-        /// Deletes the alarm with a certain id (uint must be converted to string first).
+        /// Finds the alarm with a certain id and updates its properties.
         /// </summary>
-        /// <remarks>
-        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
-        /// </remarks>
+        /// <returns>
+        /// Success
+        /// </returns>
+        public static bool ChangeAlarm(string id, string title, string description, double UT)
+        {
+            string s = $"Alarm with ID: {id} changed to have title: {title}, description: {description}, and time: {UT}.";
+            if (UseKAC)
+            {
+                KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == id);
+                if (alarm == null)
+                {
+                    RP0Debug.LogError($"KAC Alarm with ID: {id} could not be found.");
+                    return false;
+                }
+                alarm.Name = title;
+                alarm.Notes = description;
+                alarm.AlarmTime = UT;
+                // KAC does not let you change the alarm type of an alarm after it has been made
+                RP0Debug.Log(s);
+                return true;
+            }
+            else
+            {
+                if (!uint.TryParse(id, out uint alarmID))
+                {
+                    RP0Debug.LogError("Could not parse stock alarm ID " + id + " to uint");
+                    return false;
+                }
+                if (!AlarmClockScenario.Instance.alarms.TryGetValue(alarmID, out AlarmTypeBase alarm) || alarm == null)
+                {
+                    RP0Debug.LogError("Could not find stock alarm with ID " + id);
+                    return false;
+                }
+                alarm.title = title;
+                alarm.description = description;
+                alarm.ut = UT;
+                RP0Debug.Log(s);
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Deletes the alarm with a certain id.
+        /// </summary>
         /// <returns>
         /// Success
         /// </returns>
@@ -116,9 +157,6 @@ namespace RP0.ModIntegrations
         /// <summary>
         /// Deletes all alarms that contain (or start with) a certain string in their title.
         /// </summary>
-        /// <remarks>
-        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
-        /// </remarks>
         /// <returns>
         /// Success
         /// </returns>
@@ -145,7 +183,7 @@ namespace RP0.ModIntegrations
                 }
                 if (!foundAlarm)
                 {
-                    RP0Debug.LogWarning(s3);
+                    RP0Debug.Log(s3); // this is usually fine, because KAC waits until the end of the frame to delete the alarm
                     successful = false;
                 }
                 return successful;
@@ -173,7 +211,7 @@ namespace RP0.ModIntegrations
         }
 
         /// <summary>
-        /// Determines if an alarm with a certain id exists (uint must be converted to string first).
+        /// Determines if an alarm with a certain id exists.
         /// </summary>
         /// <returns>
         /// Alarm exists

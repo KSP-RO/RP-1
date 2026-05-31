@@ -131,6 +131,7 @@ namespace RP0
             GUILayout.Label("Next:", _windowSkin.label);
             ISpaceCenterProject nextThing = KCTUtilities.GetNextThingToFinish();
             string txt = "";
+            double timeLeft = nextThing?.GetTimeLeft() ?? 0d;
             if (nextThing != null)
             {
                 txt = nextThing.GetItemName();
@@ -152,14 +153,14 @@ namespace RP0
                                 {
                                     VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
                                     txt = $"{associated.shipName} Rollout at {reconRoll.launchPadID}";
-                                    locTxt = reconRoll.launchPadID;
+                                    locTxt = "";
                                     break;
                                 }
                                 case ReconRolloutProject.RolloutReconType.Rollback:
                                 {
                                     VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
                                     txt = $"{associated.shipName} Rollback at {reconRoll.launchPadID}";
-                                    locTxt = reconRoll.launchPadID;
+                                    locTxt = "";
                                     break;
                                 }
                                 case ReconRolloutProject.RolloutReconType.Recovery:
@@ -196,7 +197,7 @@ namespace RP0
                     case ProjectType.SPH:
                         if (nextThing is VesselProject vp)
                         {
-                            locTxt = vp == null || vp.LC == null ? "Vessel" : vp.LC.Name;
+                            locTxt = vp.LC == null ? "Vessel" : vp.LC.Name;
                         }
                         break;
                     case ProjectType.TechNode:
@@ -213,11 +214,11 @@ namespace RP0
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
-                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(nextThing.GetTimeLeft(), txt+locTxt+nextThing.GetItemName()));
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(timeLeft, txt+locTxt+nextThing.GetItemName()));
 
                 if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0)
                 {
-                    string tooltip = nextThing.GetTimeLeft() > 86400d * 365.25 * 5 ? null : $"√ Gain/Loss:\n{(SpaceCenterManagement.Instance.GetBudgetDelta(nextThing.GetTimeLeft())):N0}";
+                    string tooltip = timeLeft > 86400d * 365.25 * 5 ? null : $"√ Gain/Loss:\n{(SpaceCenterManagement.Instance.GetBudgetDelta(timeLeft)):N0}";
                     if (GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", tooltip)))
                         KCTWarpController.Create(null); // warp to next item
                 }
@@ -232,27 +233,36 @@ namespace RP0
                 GUILayout.Label("No Active Projects");
             }
             GUILayout.EndHorizontal();
-            if (KCTSettings.Instance.AutoAlarms && buildItem != null && (buildItem != nextThing || txt != itemText || !AlarmHelper.AlarmExistsTitle(txt, out string _)))
+            double UT = Planetarium.GetUniversalTime();
+            bool staleAlarm = buildItem != nextThing || itemText != txt || (timeLeft > 100 && !KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, timeLeft));
+            // if the timeLeft is less than 100, the difference might be less than a second due to frame times, so we don't care about it
+            if (KCTSettings.Instance.AutoAlarms && buildItem != null && (staleAlarm || !AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId)))
             {
-                RP0Debug.Log($"Triggering old alarm deletion");
-                string alarmPrefix = "RP-1: ";
-                if (string.IsNullOrEmpty(SpaceCenterManagement.Instance.AlarmId) || (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(alarmPrefix, true)))
+                SpaceCenterManagement.Instance.AlarmUT = timeLeft + UT;
+                if (nextThing == null)
                 {
-                    RP0Debug.Log("No old alarm found");
+                    if (string.IsNullOrEmpty(SpaceCenterManagement.Instance.AlarmId) || (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId)))
+                    {
+                        RP0Debug.Log("No old alarm found");
+                    }
+                    else
+                    {
+                        RP0Debug.Log("Old alarm deleted");
+                    }
+                    SpaceCenterManagement.Instance.AlarmId = "";
                 }
-                else
+                else if (!AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId))
                 {
-                    RP0Debug.Log("Old alarm deleted");
-                }
-
-                if (nextThing != null)
-                {
-                    RP0Debug.Log($"Triggering new alarm creation");
-                    SpaceCenterManagement.Instance.AlarmUT = nextThing.GetTimeLeft() + Planetarium.GetUniversalTime();
+                    RP0Debug.Log($"Creating new alarm");
                     KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
                     if (nextThing.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew; // TODO, get the specific crew member(s) being trained?
                     else if (nextThing.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
-                    SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm($"{alarmPrefix}{txt}", "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
+                    SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm($"RP-1: {txt}", "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
+                }
+                else
+                {
+                    RP0Debug.Log($"Changing existing alarm");
+                    AlarmHelper.ChangeAlarm(SpaceCenterManagement.Instance.AlarmId, $"RP-1: {txt}", "", SpaceCenterManagement.Instance.AlarmUT);
                 }
             }
             buildItem = nextThing;

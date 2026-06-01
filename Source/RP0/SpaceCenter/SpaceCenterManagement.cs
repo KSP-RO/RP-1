@@ -1665,6 +1665,15 @@ namespace RP0
                         vp.launchSiteIndex = -1;
                     }
                     Profiler.EndSample();
+
+                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Recovery && rr.IsComplete())
+                    {
+                        if (KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vpRec)
+                        {
+                            currentLC.Recon_Rollout.Add(rr.CreateFollowOnRefurbishment(vpRec));
+                            RP0Debug.Log($"Initiated follow-on refurbishment for {vpRec.shipName}");
+                        }
+                    }
                 }
 
                 for (int i = currentLC.VesselRepairs.Count; i-- > 0;)
@@ -1680,12 +1689,15 @@ namespace RP0
             }
             else
             {
-                // Process reconditioning even for LCs that have no engineers or are inactive
+                // Process reconditioning and refurbishment even for LCs that have no engineers or are inactive
                 for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
                 {
                     var rr = currentLC.Recon_Rollout[i];
-                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
+                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning ||
+                        rr.RRType == ReconRolloutProject.RolloutReconType.Refurbishment)
+                    {
                         rr.IncrementProgress(UTDiff);
+                    }
                 }
             }
 

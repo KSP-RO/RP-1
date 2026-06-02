@@ -66,14 +66,15 @@ namespace RP0
         //   window planner. Internally translated to v∞ using the periapsis altitude.
         // SimHyperbolicPeAlt: periapsis altitude above the target body, in meters.
         // SimHypTimeToPe: seconds before periapsis at which the vessel is placed on the approach.
+        // SimHypTransferTime: heliocentric transfer duration (seconds) from the origin body to the
+        //   target. Departure UT = arrival UT − this; used to Lambert-solve the arrival v∞ direction,
+        //   which orients the approach hyperbola. Arrival UT is the sim's SimulationUT.
         [Persistent]
-        public double SimHyperbolicInsertionDV, SimHyperbolicPeAlt, SimHypTimeToPe;
+        public double SimHyperbolicInsertionDV, SimHyperbolicPeAlt, SimHypTimeToPe, SimHypTransferTime;
 
-        // Autostage: -1 disables. Otherwise, stage repeatedly until StageManager.CurrentStage <= SimAutostageTarget.
+        // Autostage: -1 disables. Otherwise shed (decouple) every stage above SimAutostageTarget at sim start.
         [Persistent]
         public int SimAutostageTarget = -1;
-        [Persistent]
-        public float SimAutostageDelay = 1.0f;
 
         public void Reset()
         {

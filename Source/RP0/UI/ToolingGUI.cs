@@ -4,6 +4,7 @@ using UnityEngine.EventSystems;
 using Smooth.Slinq;
 using RP0.Tooling;
 using System;
+using UniLinq;
 
 namespace RP0
 {
@@ -22,6 +23,7 @@ namespace RP0
 
         private string _currentToolingType;
         private string _currentToolingTitle;
+        private List<string> _currentUnderlyingTypes;
         private bool _isToolingTempDisabled = false;
         private float _nextUpdate = 0f;
         private float _allTooledCost;
@@ -82,6 +84,7 @@ namespace RP0
             }
 
             _currentToolingType = _currentToolingTitle = null;
+            _currentUnderlyingTypes = null;
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.Label("Tooling Types", HighLogic.Skin.label);
@@ -90,7 +93,7 @@ namespace RP0
 
             int counter = 0;
             GUILayout.BeginHorizontal();
-            foreach (string type in ToolingDatabase.toolings.Keys)
+            foreach (var grouped in GetGroupedToolingTypes())
             {
                 if (counter % 3 == 0 && counter != 0)
                 {
@@ -98,11 +101,12 @@ namespace RP0
                     GUILayout.BeginHorizontal();
                 }
                 counter++;
-                string title = ToolingManager.Instance.GetTitleForTooling(type);
+                string title = GetGroupTitle(grouped.Key);
                 if (GUILayout.Button(title, HighLogic.Skin.button))
                 {
-                    _currentToolingType = type;
+                    _currentToolingType = grouped.Key;
                     _currentToolingTitle = title;
+                    _currentUnderlyingTypes = grouped.Value;
                 }
             }
             GUILayout.EndHorizontal();
@@ -181,6 +185,117 @@ namespace RP0
             return _currentToolingType == null ? UITab.Tooling : UITab.ToolingType;
         }
 
+        // Returns the ordered list of tooling-type buttons to show, paired with the DB keys each one covers.
+        // Avionics types are collapsed by category letter (all tech levels of "Avionics-N*" share one entry).
+        // Tank types are collapsed by construction (Conventional / Isogrid / Balloon / Fuselage / ServiceModule)
+        // so a player can search for an existing tooled diameter without picking material first. Non-tank,
+        // non-avionics types pass through unchanged.
+        private static IEnumerable<KeyValuePair<string, List<string>>> GetGroupedToolingTypes()
+        {
+            var groups = new Dictionary<string, List<string>>();
+            var order = new List<string>();
+            foreach (string type in ToolingDatabase.toolings.Keys)
+            {
+                string key = GetGroupingKey(type);
+                if (!groups.TryGetValue(key, out var list))
+                {
+                    list = new List<string>();
+                    groups[key] = list;
+                    order.Add(key);
+                }
+                list.Add(type);
+            }
+            order.Sort((a, b) => string.Compare(GetGroupTitle(a), GetGroupTitle(b), StringComparison.OrdinalIgnoreCase));
+            foreach (var key in order)
+                yield return new KeyValuePair<string, List<string>>(key, groups[key]);
+        }
+
+        // Category keys for tank groupings. Prefix "Tank-" is reused so GetParametersForToolingType
+        // routes them to the diameter/length parameter set the same way bare "Tank-*" DB keys would.
+        // Conventional / Isogrid / Balloon / Fuselage each have a non-HP and an HP variant; ServiceModule
+        // and Shielded have no HP. HP buttons only appear when at least one underlying type matched.
+        private const string TankConventional   = "Tank-Conventional";
+        private const string TankConventionalHP = "Tank-ConventionalHP";
+        private const string TankIsogrid        = "Tank-Isogrid";
+        private const string TankIsogridHP     = "Tank-IsogridHP";
+        private const string TankBalloon        = "Tank-Balloon";
+        private const string TankBalloonHP      = "Tank-BalloonHP";
+        private const string TankFuselage       = "Tank-Fuselage";
+        private const string TankFuselageHP     = "Tank-FuselageHP";
+        private const string TankServiceModule  = "Tank-ServiceModule";
+        private const string TankShieldedKey    = "Tank-Shielded";
+        private const string TankCryogenic      = "Tank-Cryogenic";
+        private const string TankOther          = "Tank-Other";
+
+        private static readonly Dictionary<string, string> _groupTitles = new Dictionary<string, string>
+        {
+            { TankConventional,   "Conventional Tanks"    },
+            { TankConventionalHP, "HP Conventional Tanks" },
+            { TankIsogrid,        "Isogrid Tanks"         },
+            { TankIsogridHP,      "HP Isogrid Tanks"      },
+            { TankBalloon,        "Balloon Tanks"         },
+            { TankBalloonHP,      "HP Balloon Tanks"      },
+            { TankFuselage,       "Fuselage"              },
+            { TankFuselageHP,     "HP Fuselage"           },
+            { TankServiceModule,  "Service Modules"       },
+            { TankShieldedKey,    "Shielded Tanks"        },
+            { TankCryogenic,      "Cryogenic Tanks"       },
+            { TankOther,          "Other Tanks"           },
+        };
+
+        private static string GetGroupTitle(string groupKey)
+            => _groupTitles.TryGetValue(groupKey, out var t) ? t : ToolingManager.Instance.GetTitleForTooling(groupKey);
+
+        private static string GetGroupingKey(string toolingType)
+        {
+            string avionicsPrefix = ModuleToolingProcAvionics.MainToolingType + "-";
+            if (toolingType.StartsWith(avionicsPrefix) && toolingType.Length > avionicsPrefix.Length)
+                return toolingType.Substring(0, avionicsPrefix.Length + 1);
+
+            if (!IsTankTooling(toolingType)) return toolingType;
+
+            // Single-bucket categories (no HP variants in the data).
+            if (toolingType == "ServiceModule" || toolingType.StartsWith("SM-")) return TankServiceModule;
+            if (toolingType == "TankShielded") return TankShieldedKey;
+            if (toolingType == "Cryogenic" || toolingType == "BalloonCryo") return TankCryogenic;
+
+            bool hp = toolingType.EndsWith("-HP");
+            if (toolingType.StartsWith("Tank-Iso-"))                          return hp ? TankIsogridHP  : TankIsogrid;
+            if (toolingType.StartsWith("Tank-Balloon-") || toolingType == "Balloon")
+                                                                              return hp ? TankBalloonHP  : TankBalloon;
+            if (toolingType == "Fuselage")                                    return hp ? TankFuselageHP : TankFuselage;
+            if (toolingType.StartsWith("Tank-Sep-"))                          return hp ? TankConventionalHP : TankConventional;
+            return TankOther;  // legacy RF types we don't know how to place: Default, ElectricPropulsion, etc.
+        }
+
+
+        // RF TANK_DEFINITION names that RP-1 patches (see GameData/RP-1/ProcCosts.cfg), plus the RP-1
+        // tank tooling families. Anything not in this set is treated as non-tank and passes through —
+        // matters when grouping the Conventional fallback so we don't sweep ProcAvionics /
+        // PayloadFairing / Structural / Battery / CrewTube etc. into it.
+        // NOTE: "Structural" is intentionally *not* in this list — it's the toolingType assigned to
+        // proceduralStructural / proceduralNoseCone / ROT-ModularCargoBay (and the legacy RF Structural
+        // tank type). It passes through to get its own button so structural-skin tooling is searchable
+        // without picking material first, the same way the tank categories work.
+        private static bool IsTankTooling(string toolingType)
+        {
+            if (toolingType.StartsWith("Tank-") || toolingType.StartsWith("SM-")) return true;
+            switch (toolingType)
+            {
+                case "Default":
+                case "Cryogenic":
+                case "Fuselage":
+                case "ServiceModule":
+                case "Balloon":
+                case "BalloonCryo":
+                case "ElectricPropulsion":
+                case "TankShielded":
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
         public void RenderTypeTab()
         {
             GUILayout.BeginHorizontal();
@@ -191,10 +306,16 @@ namespace RP0
 
             Parameter[] parameters = Parameters.GetParametersForToolingType(_currentToolingType);
             DisplayTypeHeadings(parameters);
-            _toolingTypesScroll = GUILayout.BeginScrollView(_toolingTypesScroll, GUILayout.Width(360), GUILayout.Height(300));
+            // Match the Untooled Parts list width above (3*80 + 312 + scrollbar padding) so the
+            // tooling rows have room for the subcategory-prefixed badges ("Modular Booster Tank - Al").
+            _toolingTypesScroll = GUILayout.BeginScrollView(_toolingTypesScroll, GUILayout.Width(572), GUILayout.Height(300));
             try
             {
-                var entries = ToolingDatabase.toolings[_currentToolingType];
+                // For grouped types (e.g. "Avionics-N") merge entries across all underlying tech-level keys.
+                // For pass-through types _currentUnderlyingTypes contains the single matching DB key.
+                var entries = _currentUnderlyingTypes != null
+                    ? ToolingDatabase.GetMergedEntries(_currentUnderlyingTypes)
+                    : ToolingDatabase.toolings[_currentToolingType];
                 var values = new float[parameters.Length];
                 DisplayRows(entries, 0, values, parameters);
             }
@@ -367,7 +488,7 @@ namespace RP0
             }
         }
 
-        private void DisplayRow(float[] values, Parameter[] parameters)
+        private void DisplayRow(float[] values, Parameter[] parameters, ToolingEntry leaf)
         {
             string toolingMargin = GetToolingMargin(values[0], parameters[0].Unit);
             GUILayout.BeginHorizontal();
@@ -378,23 +499,59 @@ namespace RP0
                 toolingMargin = GetToolingMargin(values[i], parameters[i].Unit);
                 GUILayout.Label(new GUIContent($"{values[i]:F3} {parameters[i].Unit}", toolingMargin), HighLogic.Skin.label, GUILayout.Width(80));
             }
+            if (leaf?.Sources != null && leaf.Sources.Count > 0)
+            {
+                var materials = leaf.Sources
+                    .OrderBy(ExtractTrailingInt)
+                    .ThenBy(MaterialLabel)
+                    .Select(MaterialLabel);
+                GUILayout.Label($"  [{string.Join(", ", materials)}]", HighLogic.Skin.label);
+            }
             GUILayout.EndHorizontal();
         }
 
         private void DisplayRows(List<ToolingEntry> entries, int parameterIndex, float[] values, Parameter[] parameters)
         {
             if (entries == null) return;
-            if (parameterIndex == parameters.Length)
-            {
-                DisplayRow(values, parameters);
-                return;
-            }
-
             foreach (var toolingEntry in entries)
             {
                 values[parameterIndex] = toolingEntry.Value;
-                DisplayRows(toolingEntry.Children, parameterIndex + 1, values, parameters);
+                if (parameterIndex + 1 == parameters.Length)
+                    DisplayRow(values, parameters, toolingEntry);
+                else
+                    DisplayRows(toolingEntry.Children, parameterIndex + 1, values, parameters);
             }
+        }
+
+        // Drops the construction segment from Tank-* keys since the bucket title already conveys
+        // it ("Conventional Tanks", "Isogrid Tanks", ...). SM-* keeps its numeral suffix. Other
+        // dashed keys (Avionics-N3) drop the prefix; bare names pass through.
+        //   "Tank-Sep-Al"      -> "Al"
+        //   "Tank-Iso-AlCu-HP" -> "AlCu"   (HP redundant -- button title says HP)
+        //   "SM-II"            -> "SM-II"  (bare numeral would be ambiguous)
+        //   "Avionics-N3"      -> "N3"
+        //   "Cryogenic"        -> "Cryogenic"
+        private static string MaterialLabel(string sourceType)
+        {
+            if (sourceType.StartsWith("Tank-"))
+            {
+                var rest = sourceType.Substring(5);
+                int dash = rest.IndexOf('-');
+                var material = dash >= 0 ? rest.Substring(dash + 1) : rest;
+                if (material.EndsWith("-HP")) material = material.Substring(0, material.Length - 3);
+                return material;
+            }
+            if (sourceType.StartsWith("SM-")) return sourceType;
+            int dashG = sourceType.IndexOf('-');
+            return dashG >= 0 ? sourceType.Substring(dashG + 1) : sourceType;
+        }
+
+        // Pulls the trailing integer off a key so "Avionics-N3" sorts before "Avionics-N10".
+        private static int ExtractTrailingInt(string s)
+        {
+            int i = s.Length;
+            while (i > 0 && char.IsDigit(s[i - 1])) i--;
+            return i < s.Length && int.TryParse(s.Substring(i), out int n) ? n : 0;
         }
     }
 }

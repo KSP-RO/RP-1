@@ -304,7 +304,7 @@ namespace RP0.ProceduralAvionics
             bool isCurrent = techNode == _module.CurrentProceduralAvionicsTechNode;
             if (isCurrent)
             {
-                _gc.text = BuildTechName(techNode);
+                _gc.text = BuildTechName(curCfg, techNode);
                 GUILayout.BeginHorizontal();
                 GUILayout.Toggle(true, _gc, HighLogic.Skin.button);
                 DrawUnlockButton(curCfg.name, techNode, unlockCost);
@@ -324,7 +324,7 @@ namespace RP0.ProceduralAvionics
             }
             else
             {
-                _gc.text = $"Switch to {BuildTechName(techNode)}";
+                _gc.text = $"Switch to {BuildTechName(curCfg, techNode)}";
                 GUILayout.BeginHorizontal();
                 switchedConfig = GUILayout.Button(_gc, HighLogic.Skin.button);
                 switchedConfig |= DrawUnlockButton(curCfg.name, techNode, unlockCost);
@@ -490,9 +490,11 @@ namespace RP0.ProceduralAvionics
             return tooltip;
         }
 
-        private string BuildTechName(ProceduralAvionicsTechNode techNode) 
+        private string BuildTechName(ProceduralAvionicsConfig curCfg, ProceduralAvionicsTechNode techNode)
         {
-            string title = techNode.dispName ?? techNode.name;
+            // Abbreviation matches the tooling type suffix (see ModuleToolingProcAvionics.ToolingType)
+            // so players can cross-reference configure-avionics names with tooling entries.
+            string title = $"{techNode.dispName ?? techNode.name} ({curCfg.name[0]}{techNode.techLevel})";
             return techNode.IsAvailable ? title : $"<color=orange>{title}</color>";
         }
 

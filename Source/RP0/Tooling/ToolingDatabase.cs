@@ -7,6 +7,11 @@ namespace RP0
         public float Value { get; set; }
         public List<ToolingEntry> Children { get; } = new List<ToolingEntry>();
 
+        // Set on merged-leaf entries to record which DB type(s) supplied this exact
+        // (mass, diameter, length) combination. Null on entries that live in the database
+        // proper, and on non-leaf merged entries.
+        public HashSet<string> Sources { get; set; }
+
         public ToolingEntry(float value)
         {
             Value = value;
@@ -95,6 +100,48 @@ namespace RP0
             }
 
             return level;
+        }
+
+        // Returns a freshly-merged tree combining the entries of every supplied type.
+        // Used by the tooling UI to collapse grouped types (e.g. all Avionics-N* tech levels
+        // under one Avionics-N entry) without mutating the underlying database.
+        public static List<ToolingEntry> GetMergedEntries(IEnumerable<string> types)
+        {
+            var merged = new List<ToolingEntry>();
+            foreach (var type in types)
+            {
+                if (toolings.TryGetValue(type, out var entries))
+                {
+                    foreach (var entry in entries)
+                        MergeEntryInto(merged, entry, type);
+                }
+            }
+            return merged;
+        }
+
+        private static void MergeEntryInto(List<ToolingEntry> target, ToolingEntry source, string sourceType)
+        {
+            int existing = GetEntryIndex(source.Value, target, out int insertionIndex);
+            ToolingEntry dest;
+            if (existing >= 0)
+            {
+                dest = target[existing];
+            }
+            else
+            {
+                dest = new ToolingEntry(source.Value);
+                target.Insert(insertionIndex, dest);
+            }
+            if (source.Children.Count == 0)
+            {
+                if (dest.Sources == null) dest.Sources = new HashSet<string>();
+                dest.Sources.Add(sourceType);
+            }
+            else
+            {
+                foreach (var child in source.Children)
+                    MergeEntryInto(dest.Children, child, sourceType);
+            }
         }
 
         public static bool UnlockTooling(string type, params float[] parameters)

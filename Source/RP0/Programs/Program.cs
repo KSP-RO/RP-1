@@ -152,6 +152,8 @@ namespace RP0.Programs
 
         public List<string> optionalContracts = new List<string>();
 
+        public List<string> optionalParams = new List<string>();
+
         public RequirementBlock RequirementsBlock;
         public RequirementBlock ObjectivesBlock;
 
@@ -205,6 +207,7 @@ namespace RP0.Programs
             _objectivesPredicate = toCopy._objectivesPredicate;
             programsToDisableOnAccept = toCopy.programsToDisableOnAccept;
             optionalContracts = toCopy.optionalContracts;
+            optionalParams = toCopy.optionalParams;
             speed = toCopy.speed;
             confidenceCosts = new Dictionary<Speed, float>(toCopy.confidenceCosts);
             repToConfidence = toCopy.repToConfidence;
@@ -260,6 +263,13 @@ namespace RP0.Programs
             {
                 foreach (Value v in cn.values)
                     optionalContracts.Add(v.name);
+            }
+
+            cn = node.GetNode("OPTIONAL_PARAMS");
+            if (cn != null)
+            {
+                foreach (Value v in cn.values)
+                    optionalParams.Add(v.name);
             }
 
             LoadConfidenceCosts(node, confidenceCosts);

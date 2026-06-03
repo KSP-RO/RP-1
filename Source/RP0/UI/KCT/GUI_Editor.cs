@@ -113,7 +113,7 @@ namespace RP0
             if (SpaceCenterManagement.EditorUnlockCosts > 0)
             {
                 showCredit = true;
-                GUILayout.Label($"Unlock Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -SpaceCenterManagement.EditorUnlockCosts):N1}");
+                GUILayout.Label($"Unlock Cost: √{SpaceCenterManagement.EditorUnlockCosts:N1}");
             }
 
             if (SpaceCenterManagement.EditorToolingCosts > 0)

@@ -1387,6 +1387,9 @@ namespace RP0
             if (timeLeft < 86400d)
                 return timeLeft;
 
+            if (LC?.EfficiencySource == null)
+                return timeLeft;
+
             double portion = LC.Engineers / (double)LC.MaxEngineers;
             for (int i = 0; i < 4; ++i)
             {

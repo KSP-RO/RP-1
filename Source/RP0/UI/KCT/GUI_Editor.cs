@@ -58,7 +58,10 @@ namespace RP0
             double rateWithCurEngis = KCTUtilities.GetBuildRate(SpaceCenterManagement.Instance.ActiveSC.ActiveLC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic
                 * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
-            int maxEngineers = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.MaxEngineersFor(SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated);
+            int engineersUsed = Math.Min(
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.MaxEngineersFor(SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated),
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers
+            );
 
             RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
 
@@ -97,7 +100,7 @@ namespace RP0
 
             if (bR > 0d && rateWithCurEngis > 0d)
             {
-                double effectiveEngCount = bR / rateWithCurEngis * maxEngineers;
+                double effectiveEngCount = bR / rateWithCurEngis * engineersUsed;
                 double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.EngineerIdleSalaryMult);
                 double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));

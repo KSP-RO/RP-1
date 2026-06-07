@@ -207,8 +207,6 @@ namespace RP0
 
             Unregister();
 
-            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
-
             if (!(this is Programs.ProgramStrategy))
             {
                 SpaceCenterManagement.Instance.RecalculateBuildRates();
@@ -218,8 +216,13 @@ namespace RP0
                 if (ConfigRP0.ReactivateCooldown > 0)
                 {
                     AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
+                    RP0Settings _settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
 
-                    AlarmHelper.CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown, alarmType);
+                    if (_settings.MakeAlarmHiringCooldownOver)
+                    {
+                        KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+                        AlarmHelper.CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown, alarmType);
+                    }
                 }
             }
 

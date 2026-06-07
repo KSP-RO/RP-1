@@ -24,6 +24,23 @@ namespace RP0
         private string _currentToolingType;
         private string _currentToolingTitle;
         private List<string> _currentUnderlyingTypes;
+        // Last part we auto-switched the bucket on. Reset to null when no PAW is open or the user
+        // manually clicked a bucket button, so subsequent PAWs trigger the auto-switch again.
+        private Part _lastAutoSwitchPart;
+
+        // Per-frame cache of the Refit-button context, recomputed at the top of RenderTypeTab so
+        // DisplayRow doesn't redo PawTarget / GetModule<ModuleFuelTanks> / GetGroupingKey on every
+        // row x OnGUI pass. _rowRefitDisabledTip is non-null when the button is disabled (no PAW or
+        // wrong bucket) -- DisplayRow shows it instead of computing a per-row "Refit X to ..." tip.
+        private Part _rowPawTarget;
+        private bool _rowRefitEnabled;
+        private string _rowRefitDisabledTip;
+
+        // Cached merged-entries list for the current bucket. ToolingDatabase.Generation bumps on
+        // any tooling-DB mutation, so we recompute only when the DB or the bucket changes.
+        private string _mergedCacheKey;
+        private int _mergedCacheGeneration = -1;
+        private List<ToolingEntry> _mergedCache;
         private bool _isToolingTempDisabled = false;
         private float _nextUpdate = 0f;
         private float _allTooledCost;
@@ -91,9 +108,12 @@ namespace RP0
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
+            var grouped_list = GetGroupedToolingTypes().ToList();
+            TryAutoSwitchBucket(grouped_list);
+
             int counter = 0;
             GUILayout.BeginHorizontal();
-            foreach (var grouped in GetGroupedToolingTypes())
+            foreach (var grouped in grouped_list)
             {
                 if (counter % 3 == 0 && counter != 0)
                 {
@@ -107,6 +127,8 @@ namespace RP0
                     _currentToolingType = grouped.Key;
                     _currentToolingTitle = title;
                     _currentUnderlyingTypes = grouped.Value;
+                    // Suppress auto-switch until the PAW target changes, so a manual pick sticks.
+                    _lastAutoSwitchPart = ToolingPartResizer.PawTarget();
                 }
             }
             GUILayout.EndHorizontal();
@@ -185,9 +207,28 @@ namespace RP0
             return _currentToolingType == null ? UITab.Tooling : UITab.ToolingType;
         }
 
+        // Switches the current bucket to match whatever part has its PAW open, if that part's tank
+        // type maps to one of the buckets we know about. Only fires once per PAW target so a
+        // manual bucket pick survives until the user opens a different part's PAW.
+        private void TryAutoSwitchBucket(List<KeyValuePair<string, List<string>>> grouped_list)
+        {
+            var pawForAutoSwitch = ToolingPartResizer.PawTarget();
+            if (pawForAutoSwitch == null) { _lastAutoSwitchPart = null; return; }
+            if (pawForAutoSwitch == _lastAutoSwitchPart) return;
+            _lastAutoSwitchPart = pawForAutoSwitch;
+            var pawType = ToolingPartResizer.CurrentTankType(pawForAutoSwitch);
+            if (string.IsNullOrEmpty(pawType)) return;
+            var bucketKey = GetGroupingKey(pawType);
+            var match = grouped_list.FirstOrDefault(g => g.Key == bucketKey);
+            if (match.Value == null) return;
+            _currentToolingType = bucketKey;
+            _currentToolingTitle = GetGroupTitle(bucketKey);
+            _currentUnderlyingTypes = match.Value;
+        }
+
         // Returns the ordered list of tooling-type buttons to show, paired with the DB keys each one covers.
         // Avionics types are collapsed by category letter (all tech levels of "Avionics-N*" share one entry).
-        // Tank types are collapsed by construction (Conventional / Isogrid / Balloon / Fuselage / ServiceModule)
+        // Tank types are collapsed by construction (Stringer / Isogrid / Balloon / Fuselage / ServiceModule)
         // so a player can search for an existing tooled diameter without picking material first. Non-tank,
         // non-avionics types pass through unchanged.
         private static IEnumerable<KeyValuePair<string, List<string>>> GetGroupedToolingTypes()
@@ -298,6 +339,11 @@ namespace RP0
 
         public void RenderTypeTab()
         {
+            // Same auto-switch behaviour as RenderToolingTab: opening a PAW on a different tank
+            // jumps into that tank's bucket. Needed here because the user is already inside a
+            // bucket page (RenderToolingTab doesn't run), and otherwise the page is stuck.
+            TryAutoSwitchBucket(GetGroupedToolingTypes().ToList());
+
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
             GUILayout.Label($"Toolings for type {_currentToolingTitle}", HighLogic.Skin.label);
@@ -306,24 +352,58 @@ namespace RP0
 
             Parameter[] parameters = Parameters.GetParametersForToolingType(_currentToolingType);
             DisplayTypeHeadings(parameters);
+            UpdateRowRefitContext();
             // Match the Untooled Parts list width above (3*80 + 312 + scrollbar padding) so the
             // tooling rows have room for the subcategory-prefixed badges ("Modular Booster Tank - Al").
             _toolingTypesScroll = GUILayout.BeginScrollView(_toolingTypesScroll, GUILayout.Width(572), GUILayout.Height(300));
             try
             {
-                // For grouped types (e.g. "Avionics-N") merge entries across all underlying tech-level keys.
-                // For pass-through types _currentUnderlyingTypes contains the single matching DB key.
-                var entries = _currentUnderlyingTypes != null
-                    ? ToolingDatabase.GetMergedEntries(_currentUnderlyingTypes)
-                    : ToolingDatabase.toolings[_currentToolingType];
                 var values = new float[parameters.Length];
-                DisplayRows(entries, 0, values, parameters);
+                DisplayRows(GetEntriesForCurrentBucket(), 0, values, parameters);
             }
             catch (Exception ex)
             {
                 Debug.LogException(ex);
             }
             GUILayout.EndScrollView();
+        }
+
+        // For grouped types (e.g. "Avionics-N") merge entries across all underlying tech-level keys.
+        // For pass-through types _currentUnderlyingTypes contains the single matching DB key.
+        // Cached per (bucket, ToolingDatabase.Generation): the merge is O(N*M*log M) work, and the
+        // result is invariant unless toolings is mutated.
+        private List<ToolingEntry> GetEntriesForCurrentBucket()
+        {
+            if (_currentUnderlyingTypes == null)
+                return ToolingDatabase.toolings[_currentToolingType];
+            int gen = ToolingDatabase.Generation;
+            if (_mergedCache == null || _mergedCacheKey != _currentToolingType || _mergedCacheGeneration != gen)
+            {
+                _mergedCache = ToolingDatabase.GetMergedEntries(_currentUnderlyingTypes);
+                _mergedCacheKey = _currentToolingType;
+                _mergedCacheGeneration = gen;
+            }
+            return _mergedCache;
+        }
+
+        // Resolves the PAW target, current RF tank type, and bucket-match check ONCE per frame so
+        // DisplayRow can read pre-computed state instead of re-walking UIPartActionController and
+        // Part.Modules per row.
+        private void UpdateRowRefitContext()
+        {
+            _rowPawTarget = ToolingPartResizer.PawTarget();
+            if (_rowPawTarget == null)
+            {
+                _rowRefitEnabled = false;
+                _rowRefitDisabledTip = "Open a part's PAW (right-click) to enable.";
+                return;
+            }
+            string currentType = ToolingPartResizer.CurrentTankType(_rowPawTarget);
+            bool bucketMatch = currentType != null && GetGroupingKey(currentType) == _currentToolingType;
+            _rowRefitEnabled = bucketMatch;
+            _rowRefitDisabledTip = bucketMatch
+                ? null
+                : $"{_rowPawTarget.partInfo?.title} is a {currentType ?? "non-tank"} part -- switch to its bucket to refit.";
         }
 
         private static void RenderToolAllButton()
@@ -506,6 +586,34 @@ namespace RP0
                     .ThenBy(MaterialLabel)
                     .Select(MaterialLabel);
                 GUILayout.Label($"  [{string.Join(", ", materials)}]", HighLogic.Skin.label);
+
+                // Refit button: writes these dims (and switches material if needed) to the part
+                // whose PAW is currently open. Disabled when the PAW's tank type belongs to a
+                // different bucket - refit only crosses materials within the same construction
+                // family (for a Tank-Sep-* part we don't want an Isogrid Tanks refit to apply).
+                // PAW target, current type, and bucket-match are resolved once per frame in
+                // UpdateRowRefitContext; only the per-row "Refit X to ..." tip and targetType need
+                // the row's leaf.Sources, and we skip both when the button is disabled.
+                if (parameters.Length == 2)
+                {
+                    GUILayout.FlexibleSpace();
+                    var prev = GUI.enabled;
+                    GUI.enabled = _rowRefitEnabled;
+                    string tip;
+                    string targetType = null;
+                    if (_rowRefitDisabledTip != null)
+                    {
+                        tip = _rowRefitDisabledTip;
+                    }
+                    else
+                    {
+                        targetType = ToolingPartResizer.PickRfType(_rowPawTarget, leaf.Sources);
+                        tip = $"Refit {_rowPawTarget.partInfo?.title} to {targetType} at d={values[0]:F3}m, L={values[1]:F3}m";
+                    }
+                    if (GUILayout.Button(new GUIContent("Refit", tip), HighLogic.Skin.button, GUILayout.Width(60), GUILayout.Height(20)))
+                        ToolingPartResizer.Resize(_rowPawTarget, values[0], values[1], targetType);
+                    GUI.enabled = prev;
+                }
             }
             GUILayout.EndHorizontal();
         }
@@ -527,7 +635,7 @@ namespace RP0
         // it ("Conventional Tanks", "Isogrid Tanks", ...). SM-* keeps its numeral suffix. Other
         // dashed keys (Avionics-N3) drop the prefix; bare names pass through.
         //   "Tank-Sep-Al"      -> "Al"
-        //   "Tank-Iso-AlCu-HP" -> "AlCu"   (HP redundant -- button title says HP)
+        //   "Tank-Iso-AlCu-HP" -> "AlCu"   (HP redundant — button title says HP)
         //   "SM-II"            -> "SM-II"  (bare numeral would be ambiguous)
         //   "Avionics-N3"      -> "N3"
         //   "Cryogenic"        -> "Cryogenic"

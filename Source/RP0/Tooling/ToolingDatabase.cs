@@ -38,6 +38,11 @@ namespace RP0
 
         public static Dictionary<string, List<ToolingEntry>> toolings = new Dictionary<string, List<ToolingEntry>>();
 
+        // Bumps on every mutation (UnlockTooling adding entries, Load wiping the table).
+        // Lets the UI cache derived views (e.g. merged grouped entries) and invalidate
+        // without scanning the whole tree each frame.
+        public static int Generation { get; private set; }
+
         protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min)
         {
             min = 0;
@@ -165,6 +170,7 @@ namespace RP0
                 entries = entries[entryIndex].Children;
             }
 
+            if (toolingUnlocked) Generation++;
             return toolingUnlocked;
         }
 
@@ -177,6 +183,7 @@ namespace RP0
         private static void LoadDBFromNode(ConfigNode node)
         {
             toolings.Clear();
+            Generation++;
 
             if (node == null) return;
 

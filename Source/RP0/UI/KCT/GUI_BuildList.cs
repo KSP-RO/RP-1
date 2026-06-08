@@ -10,7 +10,7 @@ namespace RP0
 {
     public static partial class KCT_GUI
     {
-        public enum VesselPadStatus { InStorage, RollingOut, RolledOut, RollingBack, Recovering };
+        public enum VesselPadStatus { InStorage, RollingOut, RolledOut, RollingBack, Recovering, Refurbishing };
         public enum RenameType { None, Vessel, Pad, LaunchComplex };
 
         public static Rect BuildListWindowPosition = new Rect(Screen.width - 400, 40, 500, 1);
@@ -1151,7 +1151,7 @@ namespace RP0
                 else
                     launchSite = b.LC.ActiveLPInstance.name;
             }
-            ReconRolloutProject rollout = null, rollback = null, recovery = null, padRollout = null;
+            ReconRolloutProject rollout = null, rollback = null, recovery = null, padRollout = null, refurbishment = null;
             string vpID = b.shipID.ToString();
             foreach (var rr in vesselLC.Recon_Rollout)
             {
@@ -1162,7 +1162,7 @@ namespace RP0
                         case ReconRolloutProject.RolloutReconType.Recovery: recovery = rr; break;
                         case ReconRolloutProject.RolloutReconType.Rollback: rollback = rr; break;
                         case ReconRolloutProject.RolloutReconType.Rollout: rollout = rr; break;
-                        // any other type is wrong
+                        case ReconRolloutProject.RolloutReconType.Refurbishment: refurbishment = rr; break;
                     }
                 }
                 else if (isPad && rr.RRType == ReconRolloutProject.RolloutReconType.Rollout && rr.launchPadID == launchSite)
@@ -1170,14 +1170,16 @@ namespace RP0
             }
             ReconRolloutProject airlaunchPrep = !isPad ? vesselLC.Recon_Rollout.FirstOrDefault(r => r.associatedID == vpID) : null;
 
-            ISpaceCenterProject typeIcon = rollout ?? rollback ?? recovery ?? null;
+            ISpaceCenterProject typeIcon = rollout ?? rollback ?? recovery ?? refurbishment ?? null;
             typeIcon = typeIcon ?? airlaunchPrep;
             typeIcon = typeIcon ?? b;
 
             VesselPadStatus padStatus = VesselPadStatus.InStorage;
             if (recovery != null)
                 padStatus = VesselPadStatus.Recovering;
-            if ( isPad && rollback != null)
+            if (refurbishment != null)
+                padStatus = VesselPadStatus.Refurbishing;
+            if (isPad && rollback != null)
                 padStatus = VesselPadStatus.RollingBack;
 
             GUIStyle textColor = GUI.skin.label;
@@ -1204,6 +1206,11 @@ namespace RP0
                 status = "Recovering";
                 textColor = _redText;
             }
+            else if (refurbishment != null)
+            {
+                status = "Refurbishing";
+                textColor = _redText;
+            }
             else if (airlaunchPrep != null)
             {
                 if (airlaunchPrep.IsComplete())
@@ -1221,7 +1228,7 @@ namespace RP0
                 textColor = _redText;
 
             GUILayout.BeginHorizontal();
-            if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && (padStatus != VesselPadStatus.Recovering))
+            if (b.LC.IsOperational && !HighLogic.LoadedSceneIsEditor && padStatus != VesselPadStatus.Recovering && padStatus != VesselPadStatus.Refurbishing)
             {
                 if (GUILayout.Button("*", GUILayout.Width(_butW)))
                 {
@@ -1246,10 +1253,14 @@ namespace RP0
             }
 
             GUILayout.Label($"{status}   ", textColor, GUILayout.ExpandWidth(false));
-            
+
             if (recovery != null)
             {
-                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery"+ vpID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(recovery.GetTimeLeft(), "recovery" + vpID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+            }
+            else if (refurbishment != null)
+            {
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(refurbishment.GetTimeLeft(), "refurb" + vpID), GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             }
             else
             {

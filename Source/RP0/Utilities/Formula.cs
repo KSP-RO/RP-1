@@ -215,6 +215,86 @@ namespace RP0
             return Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
         }
 
+        /// <summary>
+        /// Refurbishment BP: lighter than a full rollout, heavier than reconditioning.
+        /// Uses the same costDelta base as rollout/recovery but scaled down.
+        /// </summary>
+        public static double GetRefurbishmentBP(VesselProject vessel)
+        {
+            double costDeltaHighPow;
+            double costDelta = vessel.effectiveCost - vessel.cost;
+            if (costDelta < 0.001d)
+            {
+                costDelta = 0.001d;
+                costDeltaHighPow = 0.001d;
+            }
+            else
+            {
+                costDeltaHighPow = costDelta - 30000d;
+                if (costDeltaHighPow < 0.001d)
+                    costDeltaHighPow = 0.001d;
+            }
+            // 40% of a roll-out?
+            return (Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d) * 0.4d;
+        }
+
+        /// <summary>
+        /// Refurbishment cost: between reconditioning (0.2x rollout) and a full rollout.
+        /// Uses the same subsidy pattern as other ops costs.
+        /// </summary>
+        public static double GetRefurbishmentCost(VesselProject vessel)
+        {
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+                return 0;
+
+            double rolloutCost = GetRolloutCost(vessel);
+
+            // Human-rated systems incur a severe recovery penalty,
+            // as you need to be far more careful with handling it
+            // 4.0 multiplier is something we should tweak
+            double hrPenalty = vessel.humanRated ? 4.0d : 1.0d;
+
+            double result = rolloutCost * 0.4d * hrPenalty;
+
+            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion
+                - GetRefurbishmentBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+
+            return result * 0.5d;
+        }
+
+        /// <summary>
+        /// Recovery cost scales with distance from KSC.
+        /// At zero distance (e.g. runway), cost is near zero.
+        /// At maximum distance, cost approaches the rollout cost.
+        /// Uses the same subsidy pattern as other ops costs.
+        /// </summary>
+        public static double GetRecoveryCost(VesselProject vessel, double distanceFraction)
+        {
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+                return 0;
+
+            double rolloutCost = GetRolloutCost(vessel);
+            
+            // Human-rated systems incur a severe recovery penalty,
+            // as you need to be far more careful with handling it
+            // 4.0 multiplier is something we should tweak
+            //double hrPenalty = vessel.humanRated ? 4.0d : 1.0d; 
+
+            // Commented out for now. If added back in, multiply the below result variable with hrPenalty
+
+            // distanceFraction [0,1] makes cost either near 0 or all the way to equal to roll-out
+            double result = rolloutCost * distanceFraction;
+            
+            double recoveryBP = vessel.FacilityBuiltIn == EditorFacility.SPH
+                ? GetRecoveryBPSPH(vessel)
+                : GetRecoveryBPVAB(vessel);
+                
+            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion
+                - recoveryBP * distanceFraction * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+                
+            return Math.Max(0d, result * 0.5d);
+        }
+
         public static double ResourceTankCost(string res, double amount, bool isModify, LaunchComplexType type)
         {
             var def = TankDefSMIV;

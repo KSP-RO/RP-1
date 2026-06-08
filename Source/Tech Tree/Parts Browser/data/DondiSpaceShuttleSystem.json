@@ -1,31 +1,5 @@
 [
     {
-        "name": "97215 ",
-        "title": "Shuttle Orbiter",
-        "description": "The Space Shuttle Orbiter, comprising the crew cabin, fuselage, engine mount, and delta wings as a single integrated assembly. Features a custom aerodynamic model derived from NASA technical documents for realistic lift and drag during reentry and landing.",
-        "mod": "DondiSpaceShuttleSystem",
-        "cost": 109000,
-        "entry_cost": "",
-        "category": "SPACEPLANES",
-        "info": "",
-        "year": "1981",
-        "technology": "spaceShuttles",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "STS",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "STS",
-        "identical_part_name": "ShuttleCabin",
-        "module_tags": [
-            "Cockpit",
-            "HumanRated",
-            "NoResourceCostMult",
-            "Reentry"
-        ]
-    },
-    {
         "name": "AIRLOCK",
         "title": "Shuttle Airlock",
         "description": "",
@@ -342,6 +316,32 @@
         "entry_cost_mods": "STS",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "ShuttleOrbiter",
+        "title": "Shuttle Orbiter",
+        "description": "The Space Shuttle Orbiter, comprising the crew cabin, fuselage, engine mount, and delta wings as a single integrated assembly. Features a custom aerodynamic model derived from NASA technical documents for realistic lift and drag during reentry and landing.",
+        "mod": "DondiSpaceShuttleSystem",
+        "cost": 97215,
+        "entry_cost": "",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1981",
+        "technology": "spaceShuttles",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "STS",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "STS",
+        "identical_part_name": "ShuttleCabin",
+        "module_tags": [
+            "Cockpit",
+            "HumanRated",
+            "NoResourceCostMult",
+            "Reentry"
+        ]
     },
     {
         "name": "ShuttleSSME",

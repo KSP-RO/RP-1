@@ -36,6 +36,82 @@ namespace RP0
         public PersistentDictionaryValueTypes<string, ResourceTagType> ResourceTagTypes = new PersistentDictionaryValueTypes<string, ResourceTagType>();
     }
 
+    /// <summary>
+    /// Holds raw cfg data from SCMREFURBTECHS nodes only.
+    /// Recovery transport is handled by RecoveryTechLevel (self-contained, lazy-loaded).
+    /// Loaded once at game start by KCTDataLoader; RecalculateAndApply() must be
+    /// called separately once ResearchAndDevelopment is live (scene load + tech unlock).
+    /// </summary>
+    public class RecoveryTechSettings
+    {
+        public double RefurbishmentRateBase = 1.0d;
+
+        public struct RefurbTechEntry
+        {
+            public string techID;
+            public double rateRefurbishment;
+            public double costRefurbishment;
+            public double splashdownPenaltyMult; // 1.0 = no change, 0.5 = 50% reduction
+        }
+
+        public readonly List<RefurbTechEntry> RefurbEntries = new List<RefurbTechEntry>();
+
+        public void Load(ConfigNode refurbNode)
+        {
+            RefurbEntries.Clear();
+
+            if (refurbNode == null)
+                return;
+
+            if (refurbNode.HasNode("BASE"))
+            {
+                var b = refurbNode.GetNode("BASE");
+                b.TryGetValue("RateRefurbishment", ref RefurbishmentRateBase);
+            }
+
+            foreach (ConfigNode tech in refurbNode.GetNodes("TECH"))
+            {
+                var e = new RefurbTechEntry();
+                e.techID = tech.GetValue("id");
+                e.rateRefurbishment  = 1.0d;
+                e.costRefurbishment  = 1.0d;
+                e.splashdownPenaltyMult = 1.0d;
+                tech.TryGetValue("RateRefurbishment",    ref e.rateRefurbishment);
+                tech.TryGetValue("CostRefurbishment",    ref e.costRefurbishment);
+                tech.TryGetValue("SplashdownPenaltyMult", ref e.splashdownPenaltyMult);
+                if (!string.IsNullOrEmpty(e.techID))
+                    RefurbEntries.Add(e);
+            }
+        }
+
+        /// <summary>
+        /// Walks all cfg entries, multiplies in any whose tech has been researched,
+        /// and writes the results into Database.SettingsSC.
+        /// Call this on scene load and in the OnTechnologyResearched handler.
+        /// ResearchAndDevelopment must be live when this is called.
+        /// </summary>
+        public void RecalculateAndApply()
+        {
+            double refurbRate = RefurbishmentRateBase;
+            double refurbCost = 1.0d;
+            double splashdown = 1.0d;
+
+            foreach (var e in RefurbEntries)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(e.techID) == RDTech.State.Available)
+                {
+                    refurbRate *= e.rateRefurbishment;
+                    refurbCost *= e.costRefurbishment;
+                    splashdown *= e.splashdownPenaltyMult;
+                }
+            }
+
+            Database.SettingsSC.RefurbishmentRateBase  = refurbRate;
+            Database.SettingsSC.RefurbishmentCostMult  = refurbCost;
+            Database.SettingsSC.SplashdownPenaltyMult  = splashdown;
+        }
+    }
+
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class Database : MonoBehaviour
     {
@@ -56,6 +132,13 @@ namespace RP0
 
         public static readonly SpaceCenterSettings SettingsSC = new SpaceCenterSettings();
         public static readonly CrewSettings SettingsCrew = new CrewSettings();
+
+        /// <summary>
+        /// Raw cfg data for refurbishment tech progression.
+        /// Recovery transport is self-contained in RecoveryTechLevel (lazy-loaded from SCMRECOVERYTECHS).
+        /// Call SettingsRecovery.RecalculateAndApply() once ResearchAndDevelopment is live.
+        /// </summary>
+        public static readonly RecoveryTechSettings SettingsRecovery = new RecoveryTechSettings();
 
         private void Awake()
         {
@@ -118,7 +201,7 @@ namespace RP0
 
     public class KCTDataLoader : LoadingSystem
     {
-        private const int NumLoaders = 8;
+        private const int NumLoaders = 9; // was 8; +1 for LoadRefurbishmentTechSettings
 
         private IEnumerator LoadRoutine()
         {
@@ -138,7 +221,10 @@ namespace RP0
             
             yield return StartCoroutine(LoadSpaceCenterSettings());
             _progress = ++idx;
-            
+
+            yield return StartCoroutine(LoadRefurbishmentTechSettings());
+            _progress = ++idx;
+
             yield return StartCoroutine(LoadCrewSettings());
             _progress = ++idx;
             
@@ -236,6 +322,20 @@ namespace RP0
                 Database.SettingsSC.Load(n);
                 yield return null;
             }
+        }
+
+        /// <summary>
+        /// Loads raw SCMREFURBTECHS cfg data into Database.SettingsRecovery.
+        /// RecalculateAndApply() is NOT called here because ResearchAndDevelopment is not
+        /// yet live during loading. Call it from your scene-load and OnTechnologyResearched hooks.
+        /// Recovery transport (SCMRECOVERYTECHS) is self-contained in RecoveryTechLevel
+        /// and does not need a loader here.
+        /// </summary>
+        private IEnumerator LoadRefurbishmentTechSettings()
+        {
+            ConfigNode refurbNode = GameDatabase.Instance.GetConfigNodes("SCMREFURBTECHS")?.FirstOrDefault();
+            Database.SettingsRecovery.Load(refurbNode);
+            yield return null;
         }
 
         private IEnumerator LoadCrewSettings()

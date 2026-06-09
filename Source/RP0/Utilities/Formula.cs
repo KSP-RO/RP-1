@@ -216,57 +216,62 @@ namespace RP0
         }
 
         /// <summary>
-        /// Refurbishment BP: lighter than a full rollout, heavier than reconditioning.
-        /// Uses the same costDelta base as rollout/recovery but scaled down.
+        /// Refurbishment BP: lighter than a full rollout (~40%), heavier than reconditioning.
+        /// Penalises splashdown recoveries and human-rated craft.
+        /// Tech progression reduces BP via Database.SettingsSC.RefurbishmentRateBase (higher = faster).
+        ///
+        /// Design anchors:
+        ///   STS orbiter (human-rated, reentry, runway): ~6 months early, ~3 months mature.
+        ///   F9 booster (non-human, propulsive landing): ~3 months 2016, ~30 days 2020+.
         /// </summary>
         public static double GetRefurbishmentBP(VesselProject vessel)
         {
-            double costDeltaHighPow;
             double costDelta = vessel.effectiveCost - vessel.cost;
-            if (costDelta < 0.001d)
-            {
-                costDelta = 0.001d;
-                costDeltaHighPow = 0.001d;
-            }
-            else
-            {
-                costDeltaHighPow = costDelta - 30000d;
-                if (costDeltaHighPow < 0.001d)
-                    costDeltaHighPow = 0.001d;
-            }
-            // 40% of a roll-out?
-            return (Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d) * 0.4d;
+            if (costDelta < 0.001d) costDelta = 0.001d;
+            double costDeltaHighPow = Math.Max(0.001d, costDelta - 30000d);
+
+            double bp = (Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d) * 0.4d;
+
+            // Human-rated craft require far more rigorous inspection and certification
+            if (vessel.humanRated)
+                bp *= 3.0d;
+
+            // Splashdown: saltwater exposure, drying, decontamination.
+            // SplashdownPenaltyMult is reduced by materials science techs via SCMREFURBTECHS.
+            // 1.0 = full 1.5x penalty; 0.5 = halved penalty; 0.0 = no penalty.
+            bool splashedDown = vessel.LandedAt?.Contains("Splashdown") ?? false;
+            if (splashedDown)
+                bp *= 1.5d * Database.SettingsSC.SplashdownPenaltyMult;
+
+            // Apply tech-driven rate base: higher value = less BP = faster refurbishment
+            bp /= Database.SettingsSC.RefurbishmentRateBase;
+
+            return bp;
         }
 
         /// <summary>
-        /// Refurbishment cost: between reconditioning (0.2x rollout) and a full rollout.
-        /// Uses the same subsidy pattern as other ops costs.
+        /// Refurbishment cost: between reconditioning (0.2x rollout) and a full rollout (~40%).
+        /// Uses the same engineer-subsidy pattern as other ops costs.
+        /// Reduced by tech via Database.SettingsSC.RefurbishmentCostMult.
         /// </summary>
         public static double GetRefurbishmentCost(VesselProject vessel)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            double rolloutCost = GetRolloutCost(vessel);
-
-            // Human-rated systems incur a severe recovery penalty,
-            // as you need to be far more careful with handling it
-            // 4.0 multiplier is something we should tweak
-            double hrPenalty = vessel.humanRated ? 4.0d : 1.0d;
-
-            double result = rolloutCost * 0.4d * hrPenalty;
-
+            double bp = GetRefurbishmentBP(vessel);
+            double result = GetRolloutCost(vessel) * 0.4d;
             result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion
-                - GetRefurbishmentBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
-
-            return result * 0.5d;
+                - bp * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            return result * 0.5d * Database.SettingsSC.RefurbishmentCostMult;
         }
 
         /// <summary>
         /// Recovery cost scales with distance from KSC.
-        /// At zero distance (e.g. runway), cost is near zero.
-        /// At maximum distance, cost approaches the rollout cost.
-        /// Uses the same subsidy pattern as other ops costs.
+        /// At zero distance (runway landing), cost approaches zero.
+        /// At maximum distance (antipodal), cost approaches rollout cost.
+        /// Uses the same engineer-subsidy pattern as other ops costs.
+        /// Cost does not vary by transport mode or tech — purely distance-driven.
         /// </summary>
         public static double GetRecoveryCost(VesselProject vessel, double distanceFraction)
         {
@@ -334,7 +339,6 @@ namespace RP0
         /// i.e. if you are removing HR from an LC,
         /// make a new LCData with it off, and call
         /// GetCloseness(newLCData, orig)
-        /// </summary>
         /// </summary>
         /// <param name="ourStats"></param>
         /// <param name="otherStats"></param>

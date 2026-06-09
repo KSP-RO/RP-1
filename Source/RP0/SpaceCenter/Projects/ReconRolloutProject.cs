@@ -34,8 +34,9 @@ namespace RP0
                     case RolloutReconType.Rollback:
                         return TransactionReasonsRP0.RocketRollout;
                     case RolloutReconType.Recovery:
-                    case RolloutReconType.Refurbishment:
                         return TransactionReasonsRP0.VesselRecovery;
+                    case RolloutReconType.Refurbishment:
+                        return TransactionReasonsRP0.VesselRefurbishment;
                     case RolloutReconType.Reconditioning:
                         return TransactionReasonsRP0.StructureRepair;
                     case RolloutReconType.AirlaunchMount:
@@ -57,8 +58,9 @@ namespace RP0
                     case RolloutReconType.Rollback:
                         return TransactionReasonsRP0.RateRollout;
                     case RolloutReconType.Recovery:
-                    case RolloutReconType.Refurbishment:
                         return TransactionReasonsRP0.RateRecovery;
+                    case RolloutReconType.Refurbishment:
+                        return TransactionReasonsRP0.RateRefurbishment;
                     case RolloutReconType.Reconditioning:
                         return TransactionReasonsRP0.RateReconditioning;
                     case RolloutReconType.AirlaunchMount:
@@ -167,8 +169,10 @@ namespace RP0
         /// Calculates recovery BP and cost.
         /// Base BP comes from vessel type (SPH/VAB).
         /// Transit time scales with distance from KSC.
-        /// Cost is a daily rate multiplied by expected transit duration.
-        /// Runway landings reduce time by 25%.
+        /// Transport mode (Air > Truck > Barge) is selected by vessel mass via
+        /// RecoveryTechLevel.GetTransportLevel; its TransitRate divides the BP.
+        /// Runway landings reduce transit time by 25%.
+        /// Cost scales purely with distance — unaffected by transport mode or tech.
         /// </summary>
         private void InitRecovery(VesselProject vessel)
         {
@@ -177,12 +181,19 @@ namespace RP0
                 : Formula.GetRecoveryBPVAB(vessel);
 
             double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
-            double distanceFraction = vessel.kscDistance / maxDist;
+            double distanceFraction = vessel.kscDistance / maxDist; // 0..1
 
+            // Transit time grows linearly with distance; doubles at maximum range
             BP = baseBP * (1d + distanceFraction);
 
+            // Runway landings skip most of the transit overhead
             if (vessel.LandedAt?.Contains("Runway") ?? false)
                 BP *= 0.75;
+
+            // Select transport mode by mass and apply its transit rate.
+            // vessel.GetTotalMass() returns tonnes; GetTransportLevel expects kg.
+            var transport = RecoveryTechLevel.GetTransportLevel(vessel.GetTotalMass() * 1000d);
+            BP /= transport.TransitRate;
 
             cost = Formula.GetRecoveryCost(vessel, distanceFraction);
         }

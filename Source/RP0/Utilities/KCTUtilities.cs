@@ -889,6 +889,9 @@ namespace RP0
                 //check for symmetry parts and remove those references if they can't be found
                 SpaceCenterManagement.Instance.RecoveredVessel.RemoveMissingSymmetry();
 
+                // Lock the vessel's progress to fully built for Refurbishment pipeline
+                SpaceCenterManagement.Instance.RecoveredVessel.progress = SpaceCenterManagement.Instance.RecoveredVessel.buildPoints;
+
                 // debug, save to a file
                 SpaceCenterManagement.Instance.RecoveredVessel.UpdateNodeAndSave("KCTVesselSave", false);
 

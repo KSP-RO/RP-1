@@ -1057,7 +1057,9 @@ namespace RP0
             {
                 if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollout ||
                     rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning ||
-                    rr.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
+                    rr.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount ||
+                    rr.RRType == ReconRolloutProject.RolloutReconType.Recovery ||
+                    rr.RRType == ReconRolloutProject.RolloutReconType.Refurbishment)
                 {
                     double t = rr.GetTimeLeft();
                     double fac = 1d;
@@ -1822,12 +1824,34 @@ namespace RP0
             bool isSPHAllowed = KCTUtilities.IsSphRecoveryAvailable(v);
             bool isVABAllowed = KCTUtilities.IsVabRecoveryAvailable(v);
             var options = new List<DialogGUIBase>();
+            
             if (!v.isEVA)
             {
                 string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(Database.SettingsSC.VABRecoveryTech);
                 string techLimitText = string.IsNullOrEmpty(nodeTitle) ? string.Empty :
                                        $"\nAdditionally requires {nodeTitle} tech node to be researched (unless the vessel is in Prelaunch state).";
-                string genericReuseText = "Allows the vessel to be launched again after a short recovery delay.";
+                
+                // Create a temporary VesselProject to run through the Formula estimators
+                ProjectType projType = isSPHAllowed ? ProjectType.SPH : ProjectType.VAB;
+                VesselProject dummyVessel = new VesselProject(v, projType);
+                
+                // Calculate distance fraction for recovery scaling
+                double distanceFraction = 0d;
+                if (SpaceCenter.Instance != null && SpaceCenter.Instance.cb != null)
+                {
+                    double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
+                    distanceFraction = Math.Min(1d, dummyVessel.kscDistance / maxDist);
+                }
+
+                // Fetch BP and Cost calculations
+                double recBP = projType == ProjectType.SPH ? Formula.GetRecoveryBPSPH(dummyVessel) : Formula.GetRecoveryBPVAB(dummyVessel);
+                double recCost = Formula.GetRecoveryCost(dummyVessel, distanceFraction);
+                double refBP = Formula.GetRefurbishmentBP(dummyVessel);
+                double refCost = Formula.GetRefurbishmentCost(dummyVessel);
+
+                // Format
+                string genericReuseText = $"Intact Recovery & Refurbishment\nEst. Transport BP: {recBP:N0}\nEst. Refurb BP: {refBP:N0}\nEst. Total Cost: √{recCost + refCost:N0}";
+                // -----------------------------------------
 
                 options.Add(new DialogGUIButtonWithTooltip("Recover to SPH", RecoverToSPH)
                 {

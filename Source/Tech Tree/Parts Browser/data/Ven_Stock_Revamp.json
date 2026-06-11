@@ -637,6 +637,7 @@
         "entry_cost_mods": "0, BE-4",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

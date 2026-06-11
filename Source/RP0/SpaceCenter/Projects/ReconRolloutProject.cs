@@ -190,12 +190,10 @@ namespace RP0
             if (vessel.LandedAt?.Contains("Runway") ?? false)
                 BP *= 0.75;
 
-            // Select transport mode by mass and apply its transit rate.
-            // vessel.GetTotalMass() returns tonnes; GetTransportLevel expects kg.
-            var transport = RecoveryTechLevel.GetTransportLevel(vessel.GetTotalMass() * 1000d);
-            BP /= transport.TransitRate;
+            // Apply global tech-based recovery multipliers
+            BP /= Database.SettingsRecovery.ActiveRecoveryRateMult;
 
-            cost = Formula.GetRecoveryCost(vessel, distanceFraction);
+            cost = Formula.GetRecoveryCost(vessel, distanceFraction) * Database.SettingsRecovery.ActiveRecoveryCostMult;
         }
 
         /// <summary>

@@ -279,11 +279,6 @@ namespace RP0
                 return 0;
 
             double rolloutCost = GetRolloutCost(vessel);
-            
-            // Human-rated systems incur a severe recovery penalty,
-            // as you need to be far more careful with handling it
-            // 4.0 multiplier is something we should tweak
-            //double hrPenalty = vessel.humanRated ? 4.0d : 1.0d; 
 
             // Commented out for now. If added back in, multiply the below result variable with hrPenalty
 

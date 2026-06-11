@@ -105,9 +105,6 @@ namespace RP0
 
         // -----------------------------------------------------------------------
         // Refurbishment tech progression
-        // These are written by RecoveryTechSettings.RecalculateAndApply() and
-        // read by Formula.GetRefurbishmentBP and Formula.GetRefurbishmentCost.
-        // Do not set these in cfg — they are computed at runtime from SCMREFURBTECHS.
         // -----------------------------------------------------------------------
 
         /// <summary>
@@ -115,20 +112,20 @@ namespace RP0
         /// Higher = faster (divides refurbishment BP in Formula.GetRefurbishmentBP).
         /// Starts at the BASE.RateRefurbishment value in RefurbishmentLevels.cfg.
         /// </summary>
-        public double RefurbishmentRateBase = 1.0d;
+        public double RefurbishmentRateBase { get; set; } = 1.0d;
 
         /// <summary>
         /// Effective refurbishment cost multiplier accumulated from researched techs.
         /// Applied as a final multiplier in Formula.GetRefurbishmentCost. Lower = cheaper.
         /// </summary>
-        public double RefurbishmentCostMult = 1.0d;
+        public double RefurbishmentCostMult { get; set; } = 1.0d;
 
         /// <summary>
         /// Splashdown BP penalty multiplier accumulated from researched techs.
         /// Applied in Formula.GetRefurbishmentBP when vessel landed in water.
         /// 1.0 = full 1.5x penalty; 0.5 = halved; 0.0 = no penalty.
         /// </summary>
-        public double SplashdownPenaltyMult = 1.0d;
+        public double SplashdownPenaltyMult { get; set; } = 1.0d;
 
         // -----------------------------------------------------------------------
 

@@ -40,7 +40,6 @@
       $(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="RecoveryTechLevel.cs" />
     <Compile Include="ScenarioModules\RnDUpgradeTips.cs" />
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
@@ -62,7 +61,6 @@
     <Compile Include="Singletons\LeaderNotifications.cs" />
     <Compile Include="SpaceCenter\Projects\HireStaffProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />
-    <Compile Include="SpaceCenter\RecoveryTechLevel.cs" />
     <Compile Include="UI\CostBreakdownGUI.cs" />
     <Compile Include="UI\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />

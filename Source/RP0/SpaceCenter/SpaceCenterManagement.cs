@@ -1849,8 +1849,16 @@ namespace RP0
                 double refBP = Formula.GetRefurbishmentBP(dummyVessel);
                 double refCost = Formula.GetRefurbishmentCost(dummyVessel);
 
+                // Convert BP to days
+                LaunchComplex activeLC = dummyVessel.LC ?? SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
+                double refurbRate = Formula.GetReconditioningBuildRate(activeLC, false);
+                if (refurbRate <= 0) refurbRate = 1d; // Failsafe
+
+                double recDays = Math.Ceiling(recBP / 86400d);
+                double refDays = Math.Ceiling((refBP / refurbRate) / 86400d);
+
                 // Format
-                string genericReuseText = $"Intact Recovery & Refurbishment\nEst. Transport BP: {recBP:N0}\nEst. Refurb BP: {refBP:N0}\nEst. Total Cost: √{recCost + refCost:N0}";
+                string genericReuseText = $"Recovery time: {recDays} days for {recCost:N0} funds\nRefurbishment time: {refDays} days for {refCost:N0} funds\nTotal cost: {recCost + refCost:N0} funds";
                 // -----------------------------------------
 
                 options.Add(new DialogGUIButtonWithTooltip("Recover to SPH", RecoverToSPH)

@@ -22,7 +22,6 @@ namespace RP0.ModIntegrations
         /// </returns>
         public static string CreateAlarm(string title, string description, double UT, KACAPI.AlarmTypeEnum alarmType = KACAPI.AlarmTypeEnum.Raw)
         {
-            string s = "Alarm created with ID: ";
             if (UseKAC)
             {
                 if (alarmType == KACAPI.AlarmTypeEnum.Contract || alarmType == KACAPI.AlarmTypeEnum.ContractAuto)
@@ -38,12 +37,12 @@ namespace RP0.ModIntegrations
                     {
                         alarm.AlarmAction = KACAPI.AlarmActionEnum.KillWarp;
                         alarm.Notes = description;
-                        RP0Debug.Log(s + alarmID);
+                        RP0Debug.Log($"Alarm created with ID: {alarmID}");
                         return alarmID;
                     }
                     else
                     {
-                        RP0Debug.Log($"KAC Alarm with ID: {alarmID} could not be found."); // this is usually fine, because KAC waits until the end of the frame to add the alarm
+                        RP0Debug.LogWarning($"KAC Alarm with ID: {alarmID} could not be found.");
                         return alarmID;
                     }
                 }
@@ -66,7 +65,7 @@ namespace RP0.ModIntegrations
                 if (alarm.Id != 0u)
                 {
                     string alarmID = alarm.Id.ToString();
-                    RP0Debug.Log(s + alarmID);
+                    RP0Debug.Log($"Alarm created with ID: {alarmID}");
                     return alarmID;
                 }
                 else
@@ -85,7 +84,6 @@ namespace RP0.ModIntegrations
         /// </returns>
         public static bool ChangeAlarm(string id, string title, string description, double UT)
         {
-            string s = $"Alarm with ID: {id} changed to have title: {title}, description: {description}, and time: {UT}.";
             if (UseKAC)
             {
                 KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == id);
@@ -98,7 +96,7 @@ namespace RP0.ModIntegrations
                 alarm.Notes = description;
                 alarm.AlarmTime = UT;
                 // KAC does not let you change the alarm type of an alarm after it has been made
-                RP0Debug.Log(s);
+                RP0Debug.Log($"Alarm with ID: {id} changed to have title: {title}, description: {description}, and time: {UT}.");
                 return true;
             }
             else
@@ -116,7 +114,7 @@ namespace RP0.ModIntegrations
                 alarm.title = title;
                 alarm.description = description;
                 alarm.ut = UT;
-                RP0Debug.Log(s);
+                RP0Debug.Log($"Alarm with ID: {id} changed to have title: {title}, description: {description}, and time: {UT}.");
                 return true;
             }
         }
@@ -129,13 +127,11 @@ namespace RP0.ModIntegrations
         /// </returns>
         public static bool DeleteAlarmWithID(string id)
         {
-            string s1 = "Alarm deleted with ID: ";
-            string s2 = "Could not delete alarm with ID: ";
             bool successful;
             if (UseKAC)
             {
                 successful = KACWrapper.KAC.DeleteAlarm(id);
-                RP0Debug.Log((successful ? s1 : s2) + id);
+                RP0Debug.Log((successful ? "Alarm deleted with ID: " : "Could not delete alarm with ID: ") + id);
                 return successful;
             }
             else
@@ -143,7 +139,7 @@ namespace RP0.ModIntegrations
                 if (uint.TryParse(id, out uint alarmID))
                 {
                     successful = AlarmClockScenario.DeleteAlarm(alarmID);
-                    RP0Debug.Log((successful ? s1 : s2) + id);
+                    RP0Debug.Log((successful ? "Alarm deleted with ID: " : "Could not delete alarm with ID: ") + id);
                     return successful;
                 }
                 else
@@ -162,9 +158,6 @@ namespace RP0.ModIntegrations
         /// </returns>
         public static bool DeleteAllAlarmsWithTitle(string title, bool useStartsWith = false)
         {
-            string s1 = "Alarm deleted with ID: ";
-            string s2 = "Could not delete alarm with ID: ";
-            string s3 = "No alarms found with title: " + title;
             bool successful = true;
             bool foundAlarm = false;
             bool hasTitle(string alarmTitle) => alarmTitle != null && (useStartsWith ? alarmTitle.StartsWith(title) : alarmTitle.Contains(title));
@@ -176,14 +169,14 @@ namespace RP0.ModIntegrations
                     string id = alarm.ID;
                     if (!KACWrapper.KAC.DeleteAlarm(id))
                     {
-                        RP0Debug.LogError(s2 + id);
+                        RP0Debug.LogError($"Could not delete alarm with ID: {id}");
                         successful = false;
                     }
-                    else RP0Debug.Log(s1 + id);
+                    else RP0Debug.Log($"Alarm deleted with ID: {id}");
                 }
                 if (!foundAlarm)
                 {
-                    RP0Debug.Log(s3); // this is usually fine, because KAC waits until the end of the frame to delete the alarm
+                    RP0Debug.LogWarning($"No alarms found with title: {title}");
                     successful = false;
                 }
                 return successful;
@@ -196,14 +189,14 @@ namespace RP0.ModIntegrations
                     foundAlarm = true;
                     if (!AlarmClockScenario.DeleteAlarm(id))
                     {
-                        RP0Debug.LogError(s2 + id);
+                        RP0Debug.LogError($"Could not delete alarm with ID: {id}");
                         successful = false;
                     }
-                    else RP0Debug.Log(s1 + id);
+                    else RP0Debug.Log($"Alarm deleted with ID: {id}");
                 }
                 if (!foundAlarm)
                 {
-                    RP0Debug.LogWarning(s3);
+                    RP0Debug.LogWarning($"No alarms found with title: {title}");
                     successful = false;
                 }
                 return successful;

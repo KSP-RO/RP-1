@@ -32,8 +32,8 @@ namespace RP0
         private const int _width1 = 120;
         private const int _width2 = 100;
         private const int _butW = 20;
-        private static ISpaceCenterProject buildItem;
-        private static string itemText;
+        private static ISpaceCenterProject _prevBuildItem;
+        private static string _prevItemText;
 
         public static void SelectList(string list)
         {
@@ -234,9 +234,9 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
             double UT = Planetarium.GetUniversalTime();
-            bool staleAlarm = buildItem != nextThing || itemText != txt || (timeLeft > 100 && !KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, timeLeft));
+            bool staleAlarm = _prevBuildItem != nextThing || _prevItemText != txt || (timeLeft > 100 && !KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, timeLeft));
             // if the timeLeft is less than 100, the difference might be less than a second due to frame times, so we don't care about it
-            if (KCTSettings.Instance.AutoAlarms && buildItem != null && (staleAlarm || !AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId)))
+            if (KCTSettings.Instance.AutoAlarms && _prevBuildItem != null && (staleAlarm || !AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId)))
             {
                 SpaceCenterManagement.Instance.AlarmUT = timeLeft + UT;
                 if (nextThing == null)
@@ -265,8 +265,8 @@ namespace RP0
                     AlarmHelper.ChangeAlarm(SpaceCenterManagement.Instance.AlarmId, $"RP-1: {txt}", "", SpaceCenterManagement.Instance.AlarmUT);
                 }
             }
-            buildItem = nextThing;
-            itemText = txt;
+            _prevBuildItem = nextThing;
+            _prevItemText = txt;
 
             GUILayout.BeginHorizontal();
 

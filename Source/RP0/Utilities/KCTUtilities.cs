@@ -542,7 +542,7 @@ namespace RP0
 
                 string rName = rNode.GetValue("name");
                 double amt = double.Parse(rNode.GetValue("maxAmount"));
-                if (!resourceAmounts.TryGetValue(rName, out double amtPt) || amtPt != amt) 
+                if (!resourceAmounts.TryGetValue(rName, out double amtPt) || Math.Abs(amtPt - amt) > 0.00001) 
                     return PartCompareResult.RESOURCES_DIFF;
             }
             return PartCompareResult.EQUAL;

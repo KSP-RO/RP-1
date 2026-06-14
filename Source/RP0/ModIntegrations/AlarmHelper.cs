@@ -42,7 +42,7 @@ namespace RP0.ModIntegrations
                     }
                     else
                     {
-                        RP0Debug.LogWarning($"KAC Alarm with ID: {alarmID} could not be found.");
+                        RP0Debug.LogError($"KAC Alarm with ID: {alarmID} could not be found.");
                         return alarmID;
                     }
                 }

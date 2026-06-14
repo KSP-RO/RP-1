@@ -215,6 +215,86 @@ namespace RP0
             return Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
         }
 
+        /// <summary>
+        /// Refurbishment BP: lighter than a full rollout (~40%), heavier than reconditioning.
+        /// Penalises splashdown recoveries and human-rated craft.
+        /// Tech progression reduces BP via Database.SettingsSC.RefurbishmentRateBase (higher = faster).
+        ///
+        /// Design anchors:
+        ///   STS orbiter (human-rated, reentry, runway): ~6 months early, ~3 months mature.
+        ///   F9 booster (non-human, propulsive landing): ~3 months 2016, ~30 days 2020+.
+        /// </summary>
+        public static double GetRefurbishmentBP(VesselProject vessel)
+        {
+            double costDelta = vessel.effectiveCost - vessel.cost;
+            if (costDelta < 0.001d) costDelta = 0.001d;
+            double costDeltaHighPow = Math.Max(0.001d, costDelta - 30000d);
+
+            double bp = (Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d) * 0.4d;
+
+            // Human-rated craft require far more rigorous inspection and certification
+            if (vessel.humanRated)
+                bp *= 3.0d;
+
+            // Splashdown: saltwater exposure, drying, decontamination.
+            // SplashdownPenaltyMult is reduced by materials science techs via SCMREFURBTECHS.
+            // 1.0 = full 1.5x penalty; 0.5 = halved penalty; 0.0 = no penalty.
+            bool splashedDown = vessel.LandedAt?.Contains("Splashdown") ?? false;
+            if (splashedDown)
+                bp *= 1.5d * Database.SettingsSC.SplashdownPenaltyMult;
+
+            // Apply tech-driven rate base: higher value = less BP = faster refurbishment
+            bp /= Database.SettingsSC.RefurbishmentRateBase;
+
+            return bp;
+        }
+
+        /// <summary>
+        /// Refurbishment cost: between reconditioning (0.2x rollout) and a full rollout (~40%).
+        /// Uses the same engineer-subsidy pattern as other ops costs.
+        /// Reduced by tech via Database.SettingsSC.RefurbishmentCostMult.
+        /// </summary>
+        public static double GetRefurbishmentCost(VesselProject vessel)
+        {
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+                return 0;
+
+            double bp = GetRefurbishmentBP(vessel);
+            double result = GetRolloutCost(vessel) * 0.4d;
+            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion
+                - bp * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            return result * 0.5d * Database.SettingsSC.RefurbishmentCostMult;
+        }
+
+        /// <summary>
+        /// Recovery cost scales with distance from KSC.
+        /// At zero distance (runway landing), cost approaches zero.
+        /// At maximum distance (antipodal), cost approaches rollout cost.
+        /// Uses the same engineer-subsidy pattern as other ops costs.
+        /// Cost does not vary by transport mode or tech — purely distance-driven.
+        /// </summary>
+        public static double GetRecoveryCost(VesselProject vessel, double distanceFraction)
+        {
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+                return 0;
+
+            double rolloutCost = GetRolloutCost(vessel);
+
+            // Commented out for now. If added back in, multiply the below result variable with hrPenalty
+
+            // distanceFraction [0,1] makes cost either near 0 or all the way to equal to roll-out
+            double result = rolloutCost * distanceFraction;
+            
+            double recoveryBP = vessel.FacilityBuiltIn == EditorFacility.SPH
+                ? GetRecoveryBPSPH(vessel)
+                : GetRecoveryBPVAB(vessel);
+                
+            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion
+                - recoveryBP * distanceFraction * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+                
+            return Math.Max(0d, result * 0.5d);
+        }
+
         public static double ResourceTankCost(string res, double amount, bool isModify, LaunchComplexType type)
         {
             var def = TankDefSMIV;
@@ -254,7 +334,6 @@ namespace RP0
         /// i.e. if you are removing HR from an LC,
         /// make a new LCData with it off, and call
         /// GetCloseness(newLCData, orig)
-        /// </summary>
         /// </summary>
         /// <param name="ourStats"></param>
         /// <param name="otherStats"></param>

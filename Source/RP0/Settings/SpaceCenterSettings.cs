@@ -103,6 +103,32 @@ namespace RP0
         [Persistent]
         public PersistentDictionaryValueTypes<string, double> Resource_Variables = new PersistentDictionaryValueTypes<string, double>();
 
+        // -----------------------------------------------------------------------
+        // Refurbishment tech progression
+        // -----------------------------------------------------------------------
+
+        /// <summary>
+        /// Effective refurbishment speed multiplier accumulated from researched techs.
+        /// Higher = faster (divides refurbishment BP in Formula.GetRefurbishmentBP).
+        /// Starts at the BASE.RateRefurbishment value in RefurbishmentLevels.cfg.
+        /// </summary>
+        public double RefurbishmentRateBase { get; set; } = 1.0d;
+
+        /// <summary>
+        /// Effective refurbishment cost multiplier accumulated from researched techs.
+        /// Applied as a final multiplier in Formula.GetRefurbishmentCost. Lower = cheaper.
+        /// </summary>
+        public double RefurbishmentCostMult { get; set; } = 1.0d;
+
+        /// <summary>
+        /// Splashdown BP penalty multiplier accumulated from researched techs.
+        /// Applied in Formula.GetRefurbishmentBP when vessel landed in water.
+        /// 1.0 = full 1.5x penalty; 0.5 = halved; 0.0 = no penalty.
+        /// </summary>
+        public double SplashdownPenaltyMult { get; set; } = 1.0d;
+
+        // -----------------------------------------------------------------------
+
         public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
         public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();
         public double ResearcherEfficiency => ResearcherEfficiencyUpgrades.GetMultiplier()

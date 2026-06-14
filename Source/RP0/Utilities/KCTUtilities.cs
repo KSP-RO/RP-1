@@ -512,7 +512,9 @@ namespace RP0
         {
             double origTotalBP;
             double oldProgressBP;
+            double origCost = ship.effectiveCost;
 
+            // Is this even required? Merging doesn't work AFAIK - and it should not be possible at all with LCs anyway
             if (SpaceCenterManagement.Instance.MergedVessels.Count == 0)
             {
                 origTotalBP = ship.buildPoints;
@@ -520,19 +522,55 @@ namespace RP0
             }
             else
             {
-                double totalEffectiveCost = ship.effectiveCost;
                 foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
                 {
-                    totalEffectiveCost += v.effectiveCost;
+                    origCost += v.effectiveCost;
                 }
-
-                origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
+                origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(origCost);
                 oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 
             double newTotalBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
-            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
-            newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
+            double newCost = SpaceCenterManagement.Instance.EditorVessel.effectiveCost;
+
+            // Get the cost of the added parts
+            double costDelta = newCost - origCost;
+
+            if (costDelta > 0)
+            {
+                // Calculate the BP required for the added parts
+                double standaloneAddedBP = Formula.GetVesselBuildPoints(costDelta);
+
+                // New progress is the difference between the total and the added
+                newProgressBP = Math.Max(0, newTotalBP - standaloneAddedBP);
+
+                // Safety clamp
+                newProgressBP = Math.Min(newProgressBP, oldProgressBP + (newTotalBP - origTotalBP));
+            }
+            else if (costDelta < 0)
+            {
+                // No parts added, use the minimum progress (to avoid >100%)
+                newProgressBP = Math.Min(oldProgressBP, newTotalBP);
+            }
+            else
+            {
+                // There is still one exploit where the player exchanges a part of equal EC and mass, but honestly? Does such a part even exist?
+                double newMass = SpaceCenterManagement.Instance.EditorVessel.GetTotalMass();
+                double oldMass = ship.mass;
+
+                if (Math.Abs(newMass - oldMass) > 0.001)
+                {
+                    // Small penalty if parts were exchanged - unhappy with this
+                    double refitPenalty = newTotalBP * 0.05;
+                    newProgressBP = Math.Max(0, oldProgressBP - refitPenalty);
+                }
+                else
+                {
+                    // No parts added, use the minimum progress (to avoid >100%)
+                    newProgressBP = Math.Min(oldProgressBP, newTotalBP);
+                }
+            }
+
             originalCompletionPercent = oldProgressBP / origTotalBP;
             newCompletionPercent = newProgressBP / newTotalBP;
         }
@@ -850,6 +888,9 @@ namespace RP0
 
                 //check for symmetry parts and remove those references if they can't be found
                 SpaceCenterManagement.Instance.RecoveredVessel.RemoveMissingSymmetry();
+
+                // Lock the vessel's progress to fully built for Refurbishment pipeline
+                SpaceCenterManagement.Instance.RecoveredVessel.progress = SpaceCenterManagement.Instance.RecoveredVessel.buildPoints;
 
                 // debug, save to a file
                 SpaceCenterManagement.Instance.RecoveredVessel.UpdateNodeAndSave("KCTVesselSave", false);

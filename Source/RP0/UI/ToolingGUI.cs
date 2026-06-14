@@ -41,6 +41,48 @@ namespace RP0
         private string _mergedCacheKey;
         private int _mergedCacheGeneration = -1;
         private List<ToolingEntry> _mergedCache;
+
+        // Cached grouped-tooling button list, keyed on ToolingDatabase.Generation so the per-frame
+        // RenderToolingTab / RenderTypeTab passes don't re-walk ToolingDatabase.toolings.Keys and
+        // re-allocate the group dictionary every OnGUI call.
+        private int _groupedCacheGeneration = -1;
+        private List<KeyValuePair<string, List<string>>> _groupedCache;
+
+        // Category keys for tank groupings. Prefix "Tank-" is reused so GetParametersForToolingType
+        // routes them to the diameter/length parameter set the same way bare "Tank-*" DB keys would.
+        // Conventional / Isogrid / Balloon / Fuselage each have a non-HP and an HP variant; ServiceModule
+        // and Shielded have no HP. HP buttons only appear when at least one underlying type matched.
+        private const string TankConventional   = "Tank-Conventional";
+        private const string TankConventionalHP = "Tank-ConventionalHP";
+        private const string TankIsogrid        = "Tank-Isogrid";
+        private const string TankIsogridHP      = "Tank-IsogridHP";
+        private const string TankBalloon        = "Tank-Balloon";
+        private const string TankBalloonHP      = "Tank-BalloonHP";
+        private const string TankFuselage       = "Tank-Fuselage";
+        private const string TankFuselageHP     = "Tank-FuselageHP";
+        private const string TankServiceModule  = "Tank-ServiceModule";
+        private const string TankShieldedKey    = "Tank-Shielded";
+        private const string TankCryogenic      = "Tank-Cryogenic";
+        private const string TankOther          = "Tank-Other";
+
+        // Titles are prefixed "Tank (...)" so every tank bucket sorts together, and the HP / Non-HP
+        // qualifier sits first inside the parens so all HP variants cluster and all Non-HP variants
+        // cluster within that block (siimav review: HP and base families sorted non-adjacently).
+        private static readonly Dictionary<string, string> _groupTitles = new Dictionary<string, string>
+        {
+            { TankConventional,   "Tank (Non-HP Conventional)" },
+            { TankConventionalHP, "Tank (HP Conventional)"     },
+            { TankIsogrid,        "Tank (Non-HP Isogrid)"      },
+            { TankIsogridHP,      "Tank (HP Isogrid)"          },
+            { TankBalloon,        "Tank (Non-HP Balloon)"      },
+            { TankBalloonHP,      "Tank (HP Balloon)"          },
+            { TankFuselage,       "Tank (Non-HP Fuselage)"     },
+            { TankFuselageHP,     "Tank (HP Fuselage)"         },
+            { TankServiceModule,  "Tank (Service Module)"      },
+            { TankShieldedKey,    "Tank (Shielded)"            },
+            { TankCryogenic,      "Tank (Cryogenic)"           },
+            { TankOther,          "Tank (Other)"               },
+        };
         private bool _isToolingTempDisabled = false;
         private float _nextUpdate = 0f;
         private float _allTooledCost;
@@ -108,12 +150,12 @@ namespace RP0
             GUILayout.FlexibleSpace();
             GUILayout.EndHorizontal();
 
-            var grouped_list = GetGroupedToolingTypes().ToList();
-            TryAutoSwitchBucket(grouped_list);
+            List<KeyValuePair<string, List<string>>> groupedList = GetGroupedToolingTypesCached();
+            TryAutoSwitchBucket(groupedList);
 
             int counter = 0;
             GUILayout.BeginHorizontal();
-            foreach (var grouped in grouped_list)
+            foreach (KeyValuePair<string, List<string>> grouped in groupedList)
             {
                 if (counter % 3 == 0 && counter != 0)
                 {
@@ -207,38 +249,58 @@ namespace RP0
             return _currentToolingType == null ? UITab.Tooling : UITab.ToolingType;
         }
 
-        // Switches the current bucket to match whatever part has its PAW open, if that part's tank
-        // type maps to one of the buckets we know about. Only fires once per PAW target so a
-        // manual bucket pick survives until the user opens a different part's PAW.
-        private void TryAutoSwitchBucket(List<KeyValuePair<string, List<string>>> grouped_list)
+        /// <summary>
+        /// Switches the current bucket to match whatever part has its PAW open, if that part's tank
+        /// type maps to one of the buckets we know about. Only fires once per PAW target so a
+        /// manual bucket pick survives until the user opens a different part's PAW.
+        /// </summary>
+        private void TryAutoSwitchBucket(List<KeyValuePair<string, List<string>>> groupedList)
         {
-            var pawForAutoSwitch = ToolingPartResizer.PawTarget();
+            Part pawForAutoSwitch = ToolingPartResizer.PawTarget();
             if (pawForAutoSwitch == null) { _lastAutoSwitchPart = null; return; }
             if (pawForAutoSwitch == _lastAutoSwitchPart) return;
             _lastAutoSwitchPart = pawForAutoSwitch;
-            var pawType = ToolingPartResizer.CurrentTankType(pawForAutoSwitch);
+            string pawType = ToolingPartResizer.CurrentTankType(pawForAutoSwitch);
             if (string.IsNullOrEmpty(pawType)) return;
-            var bucketKey = GetGroupingKey(pawType);
-            var match = grouped_list.FirstOrDefault(g => g.Key == bucketKey);
+            string bucketKey = GetGroupingKey(pawType);
+            KeyValuePair<string, List<string>> match = groupedList.FirstOrDefault(g => g.Key == bucketKey);
             if (match.Value == null) return;
             _currentToolingType = bucketKey;
             _currentToolingTitle = GetGroupTitle(bucketKey);
             _currentUnderlyingTypes = match.Value;
         }
 
-        // Returns the ordered list of tooling-type buttons to show, paired with the DB keys each one covers.
-        // Avionics types are collapsed by category letter (all tech levels of "Avionics-N*" share one entry).
-        // Tank types are collapsed by construction (Stringer / Isogrid / Balloon / Fuselage / ServiceModule)
-        // so a player can search for an existing tooled diameter without picking material first. Non-tank,
-        // non-avionics types pass through unchanged.
-        private static IEnumerable<KeyValuePair<string, List<string>>> GetGroupedToolingTypes()
+        /// <summary>
+        /// Returns the cached grouped-tooling button list, rebuilding only when ToolingDatabase.Generation
+        /// changes. Both RenderToolingTab and RenderTypeTab call this every frame, so caching avoids
+        /// re-walking ToolingDatabase.toolings.Keys and re-allocating the group dictionary each pass.
+        /// </summary>
+        private List<KeyValuePair<string, List<string>>> GetGroupedToolingTypesCached()
+        {
+            int gen = ToolingDatabase.Generation;
+            if (_groupedCache == null || _groupedCacheGeneration != gen)
+            {
+                _groupedCache = GetGroupedToolingTypes();
+                _groupedCacheGeneration = gen;
+            }
+            return _groupedCache;
+        }
+
+        /// <summary>
+        /// Builds the ordered list of tooling-type buttons to show, paired with the DB keys each one covers.
+        /// Avionics types are collapsed by category letter (all tech levels of "Avionics-N*" share one entry).
+        /// Tank types are collapsed by construction (Conventional / Isogrid / Balloon / Fuselage / ServiceModule)
+        /// so a player can search for an existing tooled diameter without picking material first. Non-tank,
+        /// non-avionics types pass through unchanged.
+        /// </summary>
+        private static List<KeyValuePair<string, List<string>>> GetGroupedToolingTypes()
         {
             var groups = new Dictionary<string, List<string>>();
             var order = new List<string>();
             foreach (string type in ToolingDatabase.toolings.Keys)
             {
                 string key = GetGroupingKey(type);
-                if (!groups.TryGetValue(key, out var list))
+                if (!groups.TryGetValue(key, out List<string> list))
                 {
                     list = new List<string>();
                     groups[key] = list;
@@ -247,46 +309,25 @@ namespace RP0
                 list.Add(type);
             }
             order.Sort((a, b) => string.Compare(GetGroupTitle(a), GetGroupTitle(b), StringComparison.OrdinalIgnoreCase));
-            foreach (var key in order)
-                yield return new KeyValuePair<string, List<string>>(key, groups[key]);
+            var result = new List<KeyValuePair<string, List<string>>>(order.Count);
+            foreach (string key in order)
+                result.Add(new KeyValuePair<string, List<string>>(key, groups[key]));
+            return result;
         }
 
-        // Category keys for tank groupings. Prefix "Tank-" is reused so GetParametersForToolingType
-        // routes them to the diameter/length parameter set the same way bare "Tank-*" DB keys would.
-        // Conventional / Isogrid / Balloon / Fuselage each have a non-HP and an HP variant; ServiceModule
-        // and Shielded have no HP. HP buttons only appear when at least one underlying type matched.
-        private const string TankConventional   = "Tank-Conventional";
-        private const string TankConventionalHP = "Tank-ConventionalHP";
-        private const string TankIsogrid        = "Tank-Isogrid";
-        private const string TankIsogridHP     = "Tank-IsogridHP";
-        private const string TankBalloon        = "Tank-Balloon";
-        private const string TankBalloonHP      = "Tank-BalloonHP";
-        private const string TankFuselage       = "Tank-Fuselage";
-        private const string TankFuselageHP     = "Tank-FuselageHP";
-        private const string TankServiceModule  = "Tank-ServiceModule";
-        private const string TankShieldedKey    = "Tank-Shielded";
-        private const string TankCryogenic      = "Tank-Cryogenic";
-        private const string TankOther          = "Tank-Other";
-
-        private static readonly Dictionary<string, string> _groupTitles = new Dictionary<string, string>
-        {
-            { TankConventional,   "Conventional Tanks"    },
-            { TankConventionalHP, "HP Conventional Tanks" },
-            { TankIsogrid,        "Isogrid Tanks"         },
-            { TankIsogridHP,      "HP Isogrid Tanks"      },
-            { TankBalloon,        "Balloon Tanks"         },
-            { TankBalloonHP,      "HP Balloon Tanks"      },
-            { TankFuselage,       "Fuselage"              },
-            { TankFuselageHP,     "HP Fuselage"           },
-            { TankServiceModule,  "Service Modules"       },
-            { TankShieldedKey,    "Shielded Tanks"        },
-            { TankCryogenic,      "Cryogenic Tanks"       },
-            { TankOther,          "Other Tanks"           },
-        };
-
+        /// <summary>Resolves a grouping key to its button title, falling back to the DB title.</summary>
         private static string GetGroupTitle(string groupKey)
-            => _groupTitles.TryGetValue(groupKey, out var t) ? t : ToolingManager.Instance.GetTitleForTooling(groupKey);
+            => _groupTitles.TryGetValue(groupKey, out string t) ? t : ToolingManager.Instance.GetTitleForTooling(groupKey);
 
+        private static bool IsServiceModuleTank(string t) => t == "ServiceModule" || t.StartsWith("SM-");
+        private static bool IsShieldedTank(string t)      => t == "TankShielded";
+        private static bool IsCryoTank(string t)          => t == "Cryogenic" || t == "BalloonCryo";
+        private static bool IsIsogridTank(string t)       => t.StartsWith("Tank-Iso-");
+        private static bool IsBalloonTank(string t)       => t.StartsWith("Tank-Balloon-") || t == "Balloon";
+        private static bool IsFuselageTank(string t)      => t == "Fuselage";
+        private static bool IsConventionalTank(string t)  => t.StartsWith("Tank-Sep-");
+
+        /// <summary>Maps a raw tooling type to the category-bucket key its button belongs under.</summary>
         private static string GetGroupingKey(string toolingType)
         {
             string avionicsPrefix = ModuleToolingProcAvionics.MainToolingType + "-";
@@ -296,16 +337,15 @@ namespace RP0
             if (!IsTankTooling(toolingType)) return toolingType;
 
             // Single-bucket categories (no HP variants in the data).
-            if (toolingType == "ServiceModule" || toolingType.StartsWith("SM-")) return TankServiceModule;
-            if (toolingType == "TankShielded") return TankShieldedKey;
-            if (toolingType == "Cryogenic" || toolingType == "BalloonCryo") return TankCryogenic;
+            if (IsServiceModuleTank(toolingType)) return TankServiceModule;
+            if (IsShieldedTank(toolingType))      return TankShieldedKey;
+            if (IsCryoTank(toolingType))          return TankCryogenic;
 
             bool hp = toolingType.EndsWith("-HP");
-            if (toolingType.StartsWith("Tank-Iso-"))                          return hp ? TankIsogridHP  : TankIsogrid;
-            if (toolingType.StartsWith("Tank-Balloon-") || toolingType == "Balloon")
-                                                                              return hp ? TankBalloonHP  : TankBalloon;
-            if (toolingType == "Fuselage")                                    return hp ? TankFuselageHP : TankFuselage;
-            if (toolingType.StartsWith("Tank-Sep-"))                          return hp ? TankConventionalHP : TankConventional;
+            if (IsIsogridTank(toolingType))      return hp ? TankIsogridHP      : TankIsogrid;
+            if (IsBalloonTank(toolingType))      return hp ? TankBalloonHP      : TankBalloon;
+            if (IsFuselageTank(toolingType))     return hp ? TankFuselageHP     : TankFuselage;
+            if (IsConventionalTank(toolingType)) return hp ? TankConventionalHP : TankConventional;
             return TankOther;  // legacy RF types we don't know how to place: Default, ElectricPropulsion, etc.
         }
 
@@ -342,7 +382,7 @@ namespace RP0
             // Same auto-switch behaviour as RenderToolingTab: opening a PAW on a different tank
             // jumps into that tank's bucket. Needed here because the user is already inside a
             // bucket page (RenderToolingTab doesn't run), and otherwise the page is stuck.
-            TryAutoSwitchBucket(GetGroupedToolingTypes().ToList());
+            TryAutoSwitchBucket(GetGroupedToolingTypesCached());
 
             GUILayout.BeginHorizontal();
             GUILayout.FlexibleSpace();
@@ -581,7 +621,7 @@ namespace RP0
             }
             if (leaf?.Sources != null && leaf.Sources.Count > 0)
             {
-                var materials = leaf.Sources
+                IEnumerable<string> materials = leaf.Sources
                     .OrderBy(ExtractTrailingInt)
                     .ThenBy(MaterialLabel)
                     .Select(MaterialLabel);
@@ -597,7 +637,7 @@ namespace RP0
                 if (parameters.Length == 2)
                 {
                     GUILayout.FlexibleSpace();
-                    var prev = GUI.enabled;
+                    bool prev = GUI.enabled;
                     GUI.enabled = _rowRefitEnabled;
                     string tip;
                     string targetType = null;
@@ -608,7 +648,18 @@ namespace RP0
                     else
                     {
                         targetType = ToolingPartResizer.PickRfType(_rowPawTarget, leaf.Sources);
-                        tip = $"Refit {_rowPawTarget.partInfo?.title} to {targetType} at d={values[0]:F3}m, L={values[1]:F3}m";
+                        if (targetType == null)
+                        {
+                            // Bucket matches but the part can't accept any material this row is
+                            // tooled for (tech-locked or incompatible) -- refuse instead of forcing
+                            // an invalid tank type onto it.
+                            GUI.enabled = false;
+                            tip = $"{_rowPawTarget.partInfo?.title} can't use any material this tooling is for (tech-locked or incompatible).";
+                        }
+                        else
+                        {
+                            tip = $"Refit {_rowPawTarget.partInfo?.title} to {targetType} at d={values[0]:F3}m, L={values[1]:F3}m";
+                        }
                     }
                     if (GUILayout.Button(new GUIContent("Refit", tip), HighLogic.Skin.button, GUILayout.Width(60), GUILayout.Height(20)))
                         ToolingPartResizer.Resize(_rowPawTarget, values[0], values[1], targetType);
@@ -643,9 +694,9 @@ namespace RP0
         {
             if (sourceType.StartsWith("Tank-"))
             {
-                var rest = sourceType.Substring(5);
+                string rest = sourceType.Substring(5);
                 int dash = rest.IndexOf('-');
-                var material = dash >= 0 ? rest.Substring(dash + 1) : rest;
+                string material = dash >= 0 ? rest.Substring(dash + 1) : rest;
                 if (material.EndsWith("-HP")) material = material.Substring(0, material.Length - 3);
                 return material;
             }

@@ -491,7 +491,7 @@ namespace RP0
             }
             newShip.LC.RecalculateBuildRates();
 
-            GetShipEditProgress(editableShip, out double progressBP, out _, out _);
+            GetShipEditProgress(editableShip, out _, out double progressBP, out _, out _);
             newShip.progress = progressBP;
             RP0Debug.Log($"Finished? {newShip.IsFinished}");
             if (newShip.IsFinished)
@@ -508,15 +508,64 @@ namespace RP0
             HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
-        public static void GetShipEditProgress(VesselProject ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
+        public enum PartCompareResult
         {
+            EQUAL, NAME_DIFF, COST_DIFF, MASS_DIFF, RESOURCES_DIFF, NOT_PRESENT
+        }
+
+        public static PartCompareResult ComparePart(ConfigNode cn, Part pt)
+        {
+            // confignode from original craft, part from new craft
+            string name = GetPartNameFromNode(cn);
+            if (pt.partInfo.name != name) 
+            {
+                return PartCompareResult.NAME_DIFF;
+            }
+            AvailablePart availablePart = GetAvailablePartByName(name);
+            if (availablePart == null)
+                return PartCompareResult.EQUAL; // no part to compare against, be lenient I guess?
+
+            Dictionary<string, double> resourceAmounts = new Dictionary<string, double>();
+            VesselProject.GetPartCostsAndMass(pt, out float dryCostPt, out _, out float dryMassPt, out _, resourceAmounts);
+            ShipConstruction.GetPartCostsAndMass(cn, availablePart, out float dryCost, out _, out float dryMass, out _);
+
+            if (Math.Abs(dryCost - dryCostPt) > 0.00001)
+                return PartCompareResult.COST_DIFF;
+
+            else if (Math.Abs(dryMass - dryMassPt) > 0.00001)
+                return PartCompareResult.MASS_DIFF;
+
+            foreach (ConfigNode rNode in cn.nodes)
+            {
+                if (rNode.name != "RESOURCE")
+                    continue;
+
+                string rName = rNode.GetValue("name");
+                double amt = double.Parse(rNode.GetValue("maxAmount"));
+                if (!resourceAmounts.TryGetValue(rName, out double amtPt) || amtPt != amt) 
+                    return PartCompareResult.RESOURCES_DIFF;
+            }
+            return PartCompareResult.EQUAL;
+        }
+
+        public static void GetShipEditProgress(VesselProject ship, out double similarityProgressBP, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
+        {
+            Profiler.BeginSample("RP0GetShipEditProgress");
             double origTotalBP;
             double oldProgressBP;
+            Dictionary<string, HashSet<ConfigNode>> parts = new Dictionary<string, HashSet<ConfigNode>>();
 
             if (SpaceCenterManagement.Instance.MergedVessels.Count == 0)
             {
                 origTotalBP = ship.buildPoints;
                 oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
+                foreach (ConfigNode part in ship.ExtractedPartNodes)
+                {
+                    string name = GetPartNameFromNode(part);
+                    if (!parts.TryGetValue(name, out HashSet<ConfigNode> nodes))
+                        nodes = parts[name] = new HashSet<ConfigNode>();
+                    nodes.Add(part);
+                }
             }
             else
             {
@@ -524,17 +573,66 @@ namespace RP0
                 foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
                 {
                     totalEffectiveCost += v.effectiveCost;
+                    foreach (ConfigNode part in v.ExtractedPartNodes)
+                    {
+                        string name = GetPartNameFromNode(part);
+                        if (!parts.TryGetValue(name, out HashSet<ConfigNode> nodes))
+                            nodes = parts[name] = new HashSet<ConfigNode>();
+                        nodes.Add(part);
+                    }
                 }
 
                 origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
                 oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 
+            List<Part> matchingParts = new List<Part>();
+            Dictionary<Part, PartCompareResult> nonmatchingParts = new Dictionary<Part, PartCompareResult>();
+
+            foreach (Part p in EditorLogic.fetch.ship.parts)
+            {
+                ConfigNode match = null;
+                if (!parts.ContainsKey(p.partInfo.name))
+                {
+                    RP0Debug.Log($"Nonmatching part: {p.partInfo.name}, NOT_PRESENT");
+                    continue;
+                }
+                PartCompareResult bestResult = PartCompareResult.NOT_PRESENT;
+                foreach (ConfigNode cn in parts[p.partInfo.name])
+                {
+                    PartCompareResult res = ComparePart(cn, p);
+                    if (res == PartCompareResult.EQUAL)
+                    {
+                        match = cn;
+                        break;
+                    }
+                    bestResult = (res < bestResult) ? res : bestResult;
+                }
+                if (match != null)
+                {
+                    parts[p.partInfo.name].Remove(match);
+                    matchingParts.Add(p);
+                }
+                else
+                {
+                    nonmatchingParts.Add(p, bestResult);
+                    RP0Debug.Log($"Nonmatching part: {p.partInfo.name}, {bestResult}");
+                }
+            }
+
+            double editProgressBP = Formula.GetVesselBuildPoints(VesselProject.GetEffectiveCost(matchingParts));
+            RP0Debug.Log($"Matching BP: {editProgressBP}");
+
             double newTotalBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
-            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
-            newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
+
+            newProgressBP = Math.Min(newTotalBP, oldProgressBP) - (origTotalBP - editProgressBP) * Database.SettingsSC.PartRemovalTimePenalty; // contribution from old craft
+            RP0Debug.Log($"BP after Removal Penalty: {newProgressBP}");
+            similarityProgressBP = newProgressBP;
+            newProgressBP = Math.Max(0, newProgressBP - (newTotalBP - editProgressBP) * Database.SettingsSC.PartAdditionTimePenalty);
+            RP0Debug.Log($"BP after Additive Penalty: {newProgressBP}");
             originalCompletionPercent = oldProgressBP / origTotalBP;
             newCompletionPercent = newProgressBP / newTotalBP;
+            Profiler.EndSample();
         }
 
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)

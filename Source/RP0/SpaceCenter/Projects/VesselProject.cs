@@ -138,7 +138,15 @@ namespace RP0
 
         public bool IsValid => Type != ProjectType.None;
 
-        private List<ConfigNode> ExtractedPartNodes => ShipNodeCompressed.Node.GetNodes("PART").ToList();
+        public List<ConfigNode> ExtractedPartNodes 
+        {
+            get 
+            {
+                if (ShipNodeCompressed.Node == null) 
+                    StoreShipConstruct(_ship);
+                return ShipNodeCompressed.Node?.GetNodes("PART").ToList();
+            }
+        }
 
         public bool IsFinished => progress >= buildPoints;
 
@@ -1045,7 +1053,7 @@ namespace RP0
         }
         
         // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
-        private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass, Dictionary<string, double> resources)
+        public static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass, Dictionary<string, double> resources)
         {
             dryCost = (float)GetPartCosts(p, false);
             fuelCost = (float)GetPartCosts(p) - dryCost;

@@ -323,9 +323,10 @@ namespace RP0
             double fullVesselBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect;
             double effic = editedVessel.LC.Efficiency;
-            KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
-            GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
-            GUILayout.Label($"Edited: {newCompletionPercent:P2}");
+            GUILayout.Label($"Original: {Math.Max(0, SpaceCenterManagement.Instance.oldEditProgressPercentage):P2}");
+            GUILayout.Label(new GUIContent($"Similarity Contribution: {Math.Max(0, SpaceCenterManagement.Instance.similarityProgressBP / fullVesselBP):P2}", "Percentage of the new total progress before penalties for added parts."));
+            GUILayout.Label($"Edited: {SpaceCenterManagement.Instance.newEditProgressPercentage:P2}");
+            double newProgressBP = SpaceCenterManagement.Instance.editProgressBP;
             
             double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic * editedVessel.LC.StrategyRateMultiplier;

@@ -804,6 +804,8 @@ namespace RP0
             if (ShipSize.sqrMagnitude > 0)
                 return ShipSize;
 
+            if (ShipNodeCompressed.Node is null) // true when first loading VAB
+                return Vector3.zero;
             ShipTemplate template = new ShipTemplate();
             template.LoadShip(ShipNodeCompressed.Node);
             ShipSize = template.GetShipSize();

@@ -150,6 +150,11 @@ namespace RP0
             // show a warning with failure reasons.
             vesselFailedChecks.Clear();
             if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true)) {
+                int count = vesselFailedChecks.Count;
+                if (count > 5) {
+                    vesselFailedChecks.RemoveRange(4, count - 4);
+                    vesselFailedChecks.Add($" + {count-4} errors");
+                }
                 GUILayout.Label("Warning: cannot integrate at this LC:\n- " + String.Join("\n- ", vesselFailedChecks), _yellowText);
             }
 

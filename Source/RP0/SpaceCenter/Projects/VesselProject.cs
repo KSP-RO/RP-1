@@ -118,13 +118,13 @@ namespace RP0
         private double _leaderEffect = -1d;
         public double LeaderEffect => _leaderEffect < 0 ? UpdateLeaderEffect() : _leaderEffect;
         private double _modifiedEC = -1d;
-        public double ModifiedEC 
-        { 
+        public double ModifiedEC
+        {
             get
             {
                 if (_modifiedEC < 0) UpdateLeaderEffect();
                 return _modifiedEC;
-            } 
+            }
         }
 
         internal ShipConstruct _ship;
@@ -575,7 +575,7 @@ namespace RP0
                     lc.SwitchLaunchPad(launchSiteIndex);
 
                 LCLaunchPad pad = lc.ActiveLPInstance;
-                
+
                 launchSiteName = pad.launchSiteName;
             }
 
@@ -587,7 +587,7 @@ namespace RP0
             }));
         }
 
-        public bool ResourcesOK(LCData stats, List<string> failedReasons = null)
+        public bool ResourcesOK(LCData stats, List<string> failedReasons = null, bool shortReasons = false)
         {
             bool pass = true;
             LCResourceType ignoreType = stats.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore;
@@ -609,11 +609,14 @@ namespace RP0
                     return false;
 
                 pass = false;
-                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
+                failedReasons.Add(shortReasons
+                    ? $"Insufficient {kvp.Key} (needs {kvp.Value:N0}, has {lcAmount:N0})"
+                    : $"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
             }
 
             return pass;
         }
+
 
         public bool MeetsFacilityRequirements(List<string> failedReasons)
         {
@@ -631,7 +634,9 @@ namespace RP0
             return MeetsFacilityRequirements(selectedLC.Stats, failedReasons);
         }
 
-        public bool MeetsFacilityRequirements(LCData stats, List<string> failedReasons)
+        // shortReasons toggles shorter error messages for display in the narrow
+        // editor GUI
+        public bool MeetsFacilityRequirements(LCData stats, List<string> failedReasons, bool shortReasons = false)
         {
             if (!KSPUtils.CurrentGameIsCareer())
                 return true;
@@ -642,16 +647,20 @@ namespace RP0
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {stats.massMax:N}");
+                failedReasons.Add(shortReasons
+                    ? $"Too heavy for LC ({totalMass:N})"
+                    : $"Mass limit exceeded, currently at {totalMass:N} tons, max {stats.massMax:N}");
             }
             if (totalMass < stats.MassMin)
             {
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {stats.MassMin:N}");
+                failedReasons.Add(shortReasons
+                    ? $"Too light for LC ({totalMass:N})"
+                    : $"Mass minimum exceeded, currently at {totalMass:N} tons, min {stats.MassMin:N}");
             }
-            if (!ResourcesOK(stats, failedReasons) && failedReasons == null)
+            if (!ResourcesOK(stats, failedReasons, shortReasons) && failedReasons == null)
                 return false;
 
             // Facility doesn't matter here.
@@ -669,7 +678,9 @@ namespace RP0
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add("Vessel is human-rated but launch complex is not");
+                failedReasons.Add(shortReasons
+                    ? "LC is not human-rated"
+                    : "Vessel is human-rated but launch complex is not");
             }
 
             if (HasClamps() && stats.lcType == LaunchComplexType.Hangar)
@@ -677,7 +688,8 @@ namespace RP0
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add("Has launch clamps/GSE but is launching from runway");
+                failedReasons.Add(shortReasons ? "Launch clamps/GSE in hangar"
+                    :"Has launch clamps/GSE but is launching from runway");
             }
 
             return failedReasons == null || failedReasons.Count == 0;
@@ -795,7 +807,7 @@ namespace RP0
             template.LoadShip(ShipNodeCompressed.Node);
             ShipSize = template.GetShipSize();
             ShipNodeCompressed.CompressAndRelease();
-            
+
             return ShipSize;
         }
 
@@ -888,7 +900,7 @@ namespace RP0
 
             if (removed)
                 RP0Debug.Log("Sucessfully removed vessel from LC.");
-            else 
+            else
                 RP0Debug.Log("Still couldn't remove ship!");
 
             return removed;
@@ -1043,7 +1055,7 @@ namespace RP0
 
             humanRated = state.HumanRated;
         }
-        
+
         // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
         private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass, Dictionary<string, double> resources)
         {
@@ -1124,7 +1136,7 @@ namespace RP0
                 amt += kvp.Value;
                 state.ResourceAmounts[kvp.Key] = amt;
             }
-            
+
             double effectiveCost = partMultiplier * moduleMultiplier * cost;
 
             if (partRef.FindModuleImplementing<ModuleEngines>() != null)

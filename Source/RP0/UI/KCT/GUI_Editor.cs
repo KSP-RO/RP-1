@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using ROUtils;
@@ -20,6 +21,7 @@ namespace RP0
         private static readonly GUIContent _gcNewLC = new GUIContent("New LC", "Build a new launch complex to support this vessel, with a margin of 10% to vessel mass and size upgrades.");
         private static readonly GUIContent _gcNoHangar = new GUIContent("Hangar Unavailable", "The Hangar is currently being modified.");
         private static readonly GUIContent _gcSwitchToHangar = new GUIContent("Switch to Hangar", "A Launch Complex is currently selected; this will switch to the Hangar, needed for planes.");
+        private static List<string> vesselFailedChecks = new List<string>();
 
         public static void DrawEditorGUI(int windowID)
         {
@@ -144,10 +146,11 @@ namespace RP0
                 GUILayout.Label(techLabel);
             }
 
-            if (SpaceCenterManagement.Instance.EditorVessel.humanRated && !SpaceCenterManagement.Instance.ActiveSC.ActiveLC.IsHumanRated)
-            {
-                GUILayout.Label("WARNING: Cannot integrate vessel!");
-                GUILayout.Label("Select a human-rated Launch Complex.");
+            // Check that the vessel can be built at the current LC. If it can't
+            // show a warning with failure reasons.
+            vesselFailedChecks.Clear();
+            if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true)) {
+                GUILayout.Label("Warning: cannot integrate at this LC:" + String.Join("\n- ", vesselFailedChecks), _yellowText);
             }
 
             GUILayout.BeginHorizontal();
@@ -326,7 +329,7 @@ namespace RP0
             KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
-            
+
             double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic * editedVessel.LC.StrategyRateMultiplier;
 
@@ -350,7 +353,7 @@ namespace RP0
                         ? buildPoints / (bR * bpLeaderEffect)
                         : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, startingEff, out rolloutEff))
                     : double.NaN;
-                GUILayout.Label(new GUIContent($"Remaining: {RP0DTUtils.GetFormattedTime(buildTime, 0, false)}", 
+                GUILayout.Label(new GUIContent($"Remaining: {RP0DTUtils.GetFormattedTime(buildTime, 0, false)}",
                     idx == -1 ? "Time left takes efficiency increase into account based on assuming vessel will be placed at head of integration list" :
                     "Time left takes efficiency increase into account based on vessel's current place in the integration list"));
 

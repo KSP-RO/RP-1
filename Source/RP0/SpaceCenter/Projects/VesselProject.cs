@@ -610,7 +610,7 @@ namespace RP0
 
                 pass = false;
                 failedReasons.Add(shortReasons
-                    ? $"Insufficient {kvp.Key} (needs {kvp.Value:N0}, has {lcAmount:N0})"
+                    ? $"Insufficient {kvp.Key} ({kvp.Value:N0} > {lcAmount:N0})"
                     : $"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
             }
 
@@ -648,7 +648,7 @@ namespace RP0
                     return false;
 
                 failedReasons.Add(shortReasons
-                    ? $"Too heavy for LC ({totalMass:N})"
+                    ? $"Too heavy for LC ({totalMass:N0})"
                     : $"Mass limit exceeded, currently at {totalMass:N} tons, max {stats.massMax:N}");
             }
             if (totalMass < stats.MassMin)
@@ -657,11 +657,9 @@ namespace RP0
                     return false;
 
                 failedReasons.Add(shortReasons
-                    ? $"Too light for LC ({totalMass:N})"
+                    ? $"Too light for LC ({totalMass:N0})"
                     : $"Mass minimum exceeded, currently at {totalMass:N} tons, min {stats.MassMin:N}");
             }
-            if (!ResourcesOK(stats, failedReasons, shortReasons) && failedReasons == null)
-                return false;
 
             // Facility doesn't matter here.
             Vector3 size = GetShipSize();
@@ -691,6 +689,9 @@ namespace RP0
                 failedReasons.Add(shortReasons ? "Launch clamps/GSE in hangar"
                     :"Has launch clamps/GSE but is launching from runway");
             }
+
+            if (!ResourcesOK(stats, failedReasons, shortReasons) && failedReasons == null)
+                return false;
 
             return failedReasons == null || failedReasons.Count == 0;
         }

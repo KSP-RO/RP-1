@@ -155,7 +155,9 @@ namespace RP0
                     vesselFailedChecks.RemoveRange(4, count - 4);
                     vesselFailedChecks.Add($" + {count-4} errors");
                 }
-                GUILayout.Label("Warning: cannot integrate at this LC:\n- " + String.Join("\n- ", vesselFailedChecks), _yellowText);
+                GUILayout.Label("Warning: cannot integrate at this LC:\n- "
+                    + String.Join("\n- ", vesselFailedChecks)
+                    + "\nModify LC or select another LC", _yellowText);
             }
 
             GUILayout.BeginHorizontal();

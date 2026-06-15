@@ -648,7 +648,7 @@ namespace RP0
                     return false;
 
                 failedReasons.Add(shortReasons
-                    ? $"Too heavy for LC ({totalMass:N0})"
+                    ? $"Too heavy for LC ({totalMass:N0}t)"
                     : $"Mass limit exceeded, currently at {totalMass:N} tons, max {stats.massMax:N}");
             }
             if (totalMass < stats.MassMin)
@@ -657,7 +657,7 @@ namespace RP0
                     return false;
 
                 failedReasons.Add(shortReasons
-                    ? $"Too light for LC ({totalMass:N0})"
+                    ? $"Too light for LC ({totalMass:N0}t)"
                     : $"Mass minimum exceeded, currently at {totalMass:N} tons, min {stats.MassMin:N}");
             }
 

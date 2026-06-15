@@ -610,7 +610,7 @@ namespace RP0
 
                 pass = false;
                 failedReasons.Add(shortReasons
-                    ? $"Insufficient {kvp.Key} ({kvp.Value:N0} > {lcAmount:N0})"
+                    ? $"{kvp.Key}: {kvp.Value:N0}/{lcAmount:N0}"
                     : $"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
             }
 

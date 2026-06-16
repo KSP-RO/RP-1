@@ -634,8 +634,24 @@ namespace RP0
             return MeetsFacilityRequirements(selectedLC.Stats, failedReasons);
         }
 
-        // shortReasons toggles shorter error messages for display in the narrow
-        // editor GUI
+        /// <summary>
+        ///   Checks that this vessel can be integrated at the selected LC
+        /// </summary>
+        /// <param name="stats">The LC's stats used to verify compatibility</param>
+        /// <param name="failedReasons">
+        ///     An initially empty list or <c>null</c> - each unmet requirement will
+        ///     add a string error description to that list (it it isn't <c>null</c>)
+        /// </param>
+        /// <param name="shortReasons">When <c>true</c>, write shorter error messages
+        ///     in <paramref name="failedReasons"/>, used to display warning in
+        ///     the narrow KCT editor GUI. <c>false</c> by default, for warnings
+        ///     that appear in a popup window when attempting to build the vessel
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the vessel can be integrated at the specified LC (in which
+        ///     case <paramref name="failedReasons"/> remains empty), <c>false</c>
+        ///     otherwise.
+        /// </returns>
         public bool MeetsFacilityRequirements(LCData stats, List<string> failedReasons, bool shortReasons = false)
         {
             if (!KSPUtils.CurrentGameIsCareer())

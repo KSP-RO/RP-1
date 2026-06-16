@@ -58,6 +58,10 @@ namespace RP0
             double rateWithCurEngis = KCTUtilities.GetBuildRate(SpaceCenterManagement.Instance.ActiveSC.ActiveLC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic
                 * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
+            int engineersUsed = Math.Min(
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.MaxEngineersFor(SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated),
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers
+            );
 
             RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
 
@@ -96,7 +100,7 @@ namespace RP0
 
             if (bR > 0d && rateWithCurEngis > 0d)
             {
-                double effectiveEngCount = bR / rateWithCurEngis * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers;
+                double effectiveEngCount = bR / rateWithCurEngis * engineersUsed;
                 double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.EngineerIdleSalaryMult);
                 double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
@@ -319,9 +323,10 @@ namespace RP0
             double fullVesselBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect;
             double effic = editedVessel.LC.Efficiency;
-            KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
-            GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
-            GUILayout.Label($"Edited: {newCompletionPercent:P2}");
+            GUILayout.Label($"Original: {Math.Max(0, SpaceCenterManagement.Instance.oldEditProgressPercentage):P2}");
+            GUILayout.Label(new GUIContent($"Similarity Contribution: {Math.Max(0, SpaceCenterManagement.Instance.similarityProgressBP / fullVesselBP):P2}", "Percentage of the new total progress before penalties for added parts."));
+            GUILayout.Label($"Edited: {SpaceCenterManagement.Instance.newEditProgressPercentage:P2}");
+            double newProgressBP = SpaceCenterManagement.Instance.editProgressBP;
             
             double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic * editedVessel.LC.StrategyRateMultiplier;

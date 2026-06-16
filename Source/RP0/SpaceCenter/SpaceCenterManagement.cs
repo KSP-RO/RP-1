@@ -172,6 +172,10 @@ namespace RP0
         public VesselProject EditorVessel = new VesselProject("temp", "LaunchPad", 0d, 0d, string.Empty, 0f, EditorFacility.VAB, false);
         public Guid PreEditorSwapLCID = Guid.Empty;
         public bool IsLaunchSiteControllerDisabled;
+        public double similarityProgressBP;
+        public double editProgressBP; // Mildly computationally heavy. Only valid when editing a craft.
+        public double oldEditProgressPercentage;
+        public double newEditProgressPercentage; 
 
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
@@ -1439,6 +1443,7 @@ namespace RP0
             if (EditorShipEditingMode)
             {
                 EditorVessel.LCID = EditedVessel.LCID;
+                KCTUtilities.GetShipEditProgress(EditedVessel, out similarityProgressBP, out editProgressBP, out oldEditProgressPercentage, out newEditProgressPercentage);
             }
             else
             {

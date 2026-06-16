@@ -555,6 +555,7 @@ namespace RP0
             double oldProgressBP;
             Dictionary<string, HashSet<ConfigNode>> parts = new Dictionary<string, HashSet<ConfigNode>>();
 
+            // Is this even required? Merging doesn't work AFAIK - and it should not be possible at all with LCs anyway
             if (SpaceCenterManagement.Instance.MergedVessels.Count == 0)
             {
                 origTotalBP = ship.buildPoints;
@@ -569,7 +570,6 @@ namespace RP0
             }
             else
             {
-                double totalEffectiveCost = ship.effectiveCost;
                 foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
                 {
                     totalEffectiveCost += v.effectiveCost;
@@ -581,8 +581,7 @@ namespace RP0
                         nodes.Add(part);
                     }
                 }
-
-                origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
+                origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(origCost);
                 oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 

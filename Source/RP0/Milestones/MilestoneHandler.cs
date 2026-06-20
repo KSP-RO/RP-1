@@ -21,7 +21,14 @@ namespace RP0.Milestones
 
         private HashSet<string> _contractParamsCompletedThisFrame = new HashSet<string>();
         private int _tickCount = 0;
+
+        // Frames to wait for contract system startup
         private const int _TicksToStart = 3;
+        // Ambient light boost applied while capturing a milestone screenshot when the subject would
+        // otherwise be too dark to make out. Lerps RenderSettings.ambientLight this fraction towards white.
+        private const float _ScreenshotAmbientBoost = 0.5f;
+        // dot(sunDirection, cameraForward) below this is treated as backlit (camera sees the unlit side).
+        private const float _ScreenshotMinSunFacing = -0.25f;
 
         [KSPField(isPersistant = true)]
         private PersistentHashSetValueType<string> seenMilestones = new PersistentHashSetValueType<string>();
@@ -232,6 +239,24 @@ namespace RP0.Milestones
             float newDist = KSPCameraUtil.GetDistanceToFit(size, FlightCamera.fetch.FieldOfView) * 1.1f + 1f;
             FlightCamera.fetch.SetDistanceImmediate(newDist);
 
+            // Temporarily boost ambient light if the subject would otherwise be too dark to make out:
+            // either the vessel is in a body's shadow / on the night side (no direct sunlight), or it's
+            // backlit so the camera only sees the unlit side. KSP's DynamicAmbientLight overwrites
+            // RenderSettings.ambientLight every Update() from AMBIENTLIGHT_BOOSTFACTOR, so we drive the
+            // boost through that setting and give it one frame to take effect before capturing.
+            float oldAmbientBoost = GameSettings.AMBIENTLIGHT_BOOSTFACTOR;
+            bool boostedAmbient = false;
+            bool inShadow = !FlightGlobals.ActiveVessel.directSunlight;
+            float sunFacing = Sun.Instance != null
+                ? Vector3.Dot(Sun.Instance.sunDirection, FlightCamera.fetch.mainCamera.transform.forward)
+                : 1f;
+            if (inShadow || sunFacing < _ScreenshotMinSunFacing)
+            {
+                GameSettings.AMBIENTLIGHT_BOOSTFACTOR = Mathf.Max(oldAmbientBoost, _ScreenshotAmbientBoost);
+                boostedAmbient = true;
+                yield return null;    // let DynamicAmbientLight apply the new boost before the captured frame renders
+            }
+
             yield return new WaitForEndOfFrame();
 
             int width = Screen.width;
@@ -256,6 +281,9 @@ namespace RP0.Milestones
 
             FlightCamera.fetch.minDistance = oldMin;
             FlightCamera.fetch.SetDistanceImmediate(oldDist);
+
+            if (boostedAmbient)
+                GameSettings.AMBIENTLIGHT_BOOSTFACTOR = oldAmbientBoost;
 
             if (wasShowing)
                 GameEvents.onShowUI.Fire();

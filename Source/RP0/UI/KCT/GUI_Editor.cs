@@ -149,22 +149,28 @@ namespace RP0
             // Check that the vessel can be built at the current LC. If it can't
             // show a warning with failure reasons.
             vesselFailedChecks.Clear();
-            bool isHangar = EditorDriver.editorFacility == EditorFacility.SPH;
-            if (isHangar != (activeLC.LCType == LaunchComplexType.Hangar))
+            if (EditorLogic.fetch.ship.Parts.Count > 0)
             {
-                GUILayout.Label("Warning: wrong LC type, switch to " + (isHangar ? "hangar" : "a rocket LC"), _yellowText);
-            }
-            else if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true))
-            {
-                int count = vesselFailedChecks.Count;
-                if (count > 5)
+                bool isHangar = EditorDriver.editorFacility == EditorFacility.SPH;
+                if (isHangar != (SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Hangar))
                 {
-                    vesselFailedChecks.RemoveRange(4, count - 4);
-                    vesselFailedChecks.Add($"... and {count - 4} more errors");
+                    GUILayout.Label("Warning: wrong LC type, switch to " + (isHangar ? "hangar" : "a rocket LC"), _yellowText);
                 }
-                GUILayout.Label("Warning: cannot integrate at this LC:\n- "
-                    + String.Join("\n- ", vesselFailedChecks)
-                    + "\nModify LC or select another LC", _yellowText);
+                else if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true))
+                {
+                    int count = vesselFailedChecks.Count;
+                    if (count > 5)
+                    {
+                        vesselFailedChecks.RemoveRange(4, count - 4);
+                        vesselFailedChecks.Add($"... and {count - 4} more errors");
+                    }
+                    GUILayout.Label($"Warning: cannot integrate at "
+                        + (isHangar ? "Hangar" : "this LC")
+                        + ":\n- "
+                        + String.Join("\n- ", vesselFailedChecks)
+                        + (isHangar ? "\nModify Hangar" : "\nModify LC or select another LC"),
+                        _yellowText);
+                }
             }
 
             GUILayout.BeginHorizontal();

@@ -155,7 +155,7 @@ namespace RP0
                 if (count > 5)
                 {
                     vesselFailedChecks.RemoveRange(4, count - 4);
-                    vesselFailedChecks.Add($" + {count-4} errors");
+                    vesselFailedChecks.Add($"... and {count - 4} more errors");
                 }
                 GUILayout.Label("Warning: cannot integrate at this LC:\n- "
                     + String.Join("\n- ", vesselFailedChecks)

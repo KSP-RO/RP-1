@@ -149,7 +149,12 @@ namespace RP0
             // Check that the vessel can be built at the current LC. If it can't
             // show a warning with failure reasons.
             vesselFailedChecks.Clear();
-            if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true))
+            bool isHangar = EditorDriver.editorFacility == EditorFacility.SPH;
+            if (isHangar != (activeLC.LCType == LaunchComplexType.Hangar))
+            {
+                GUILayout.Label("Warning: wrong LC type, switch to " + (isHangar ? "hangar" : "a rocket LC"), _yellowText);
+            }
+            else if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true))
             {
                 int count = vesselFailedChecks.Count;
                 if (count > 5)

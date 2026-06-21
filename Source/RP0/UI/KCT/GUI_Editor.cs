@@ -149,9 +149,11 @@ namespace RP0
             // Check that the vessel can be built at the current LC. If it can't
             // show a warning with failure reasons.
             vesselFailedChecks.Clear();
-            if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true)) {
+            if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true))
+            {
                 int count = vesselFailedChecks.Count;
-                if (count > 5) {
+                if (count > 5)
+                {
                     vesselFailedChecks.RemoveRange(4, count - 4);
                     vesselFailedChecks.Add($" + {count-4} errors");
                 }

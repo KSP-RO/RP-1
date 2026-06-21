@@ -336,7 +336,7 @@ namespace RP0
             KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
-
+            
             double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic * editedVessel.LC.StrategyRateMultiplier;
 
@@ -360,7 +360,7 @@ namespace RP0
                         ? buildPoints / (bR * bpLeaderEffect)
                         : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, startingEff, out rolloutEff))
                     : double.NaN;
-                GUILayout.Label(new GUIContent($"Remaining: {RP0DTUtils.GetFormattedTime(buildTime, 0, false)}",
+                GUILayout.Label(new GUIContent($"Remaining: {RP0DTUtils.GetFormattedTime(buildTime, 0, false)}", 
                     idx == -1 ? "Time left takes efficiency increase into account based on assuming vessel will be placed at head of integration list" :
                     "Time left takes efficiency increase into account based on vessel's current place in the integration list"));
 

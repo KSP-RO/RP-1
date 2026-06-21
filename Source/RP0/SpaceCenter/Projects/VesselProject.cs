@@ -118,13 +118,13 @@ namespace RP0
         private double _leaderEffect = -1d;
         public double LeaderEffect => _leaderEffect < 0 ? UpdateLeaderEffect() : _leaderEffect;
         private double _modifiedEC = -1d;
-        public double ModifiedEC
-        {
+        public double ModifiedEC 
+        { 
             get
             {
                 if (_modifiedEC < 0) UpdateLeaderEffect();
                 return _modifiedEC;
-            }
+            } 
         }
 
         internal ShipConstruct _ship;
@@ -575,7 +575,7 @@ namespace RP0
                     lc.SwitchLaunchPad(launchSiteIndex);
 
                 LCLaunchPad pad = lc.ActiveLPInstance;
-
+                
                 launchSiteName = pad.launchSiteName;
             }
 
@@ -616,7 +616,6 @@ namespace RP0
 
             return pass;
         }
-
 
         public bool MeetsFacilityRequirements(List<string> failedReasons)
         {
@@ -826,7 +825,7 @@ namespace RP0
             template.LoadShip(ShipNodeCompressed.Node);
             ShipSize = template.GetShipSize();
             ShipNodeCompressed.CompressAndRelease();
-
+            
             return ShipSize;
         }
 
@@ -919,7 +918,7 @@ namespace RP0
 
             if (removed)
                 RP0Debug.Log("Sucessfully removed vessel from LC.");
-            else
+            else 
                 RP0Debug.Log("Still couldn't remove ship!");
 
             return removed;
@@ -1074,7 +1073,7 @@ namespace RP0
 
             humanRated = state.HumanRated;
         }
-
+        
         // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
         private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass, Dictionary<string, double> resources)
         {
@@ -1155,7 +1154,7 @@ namespace RP0
                 amt += kvp.Value;
                 state.ResourceAmounts[kvp.Key] = amt;
             }
-
+            
             double effectiveCost = partMultiplier * moduleMultiplier * cost;
 
             if (partRef.FindModuleImplementing<ModuleEngines>() != null)

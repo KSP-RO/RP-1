@@ -23,6 +23,29 @@
         ]
     },
     {
+        "name": "Knes_Booster_EAP",
+        "title": "Ariane 5 EAP",
+        "description": "",
+        "mod": "Knes",
+        "cost": "1000",
+        "entry_cost": "15000",
+        "category": "SOLID",
+        "info": "",
+        "year": "1970",
+        "technology": "solids1969",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
+    },
+    {
         "name": "Knes_Command_K-CEV",
         "title": "Kliper",
         "description": "Proposed replacement for the Soyuz capsule. Kliper utilized a lifting body design to reduce re-entry G-loads and support a crew of six. ",
@@ -882,6 +905,29 @@
         "entry_cost_mods": "Hermes",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "RO_Knes_L3S_PAP",
+        "title": "Ariane 4 PAP",
+        "description": "",
+        "mod": "Knes",
+        "cost": "450",
+        "entry_cost": "5000",
+        "category": "SOLID",
+        "info": "",
+        "year": "1960",
+        "technology": "solids1959",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "PAP",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineSolid"
+        ]
     },
     {
         "name": "RO_Knes_STEAM_09375_cargo",

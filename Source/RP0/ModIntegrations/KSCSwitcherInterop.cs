@@ -108,7 +108,7 @@ namespace RP0
 
         public static string GetGroundStationForKSC(string kscName)
         {
-            if (!IsKSCSwitcherInstalled) return null;
+            if (!IsKSCSwitcherInstalled || string.IsNullOrEmpty(kscName)) return null;
 
             if (!_groundStationNameDict.TryGetValue(kscName, out string groundStationName))
             {
@@ -161,6 +161,8 @@ namespace RP0
 
         public static double GreatCircleDistance(string siteA, string siteB)
         {
+            if (!IsKSCSwitcherInstalled || string.IsNullOrEmpty(siteA) || string.IsNullOrEmpty(siteB)) return 0d;
+
             (double latA, double longA) = GetSiteLatLong(siteA);
             (double latB, double longB) = GetSiteLatLong(siteB);
             CelestialBody home = FlightGlobals.GetHomeBody();

@@ -66,7 +66,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-adapter-1875-0625-1",
@@ -132,7 +134,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-adapter-25-1875-1",
@@ -154,7 +158,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-adapter-25-375-1",
@@ -177,7 +183,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-adapter-25-375-2",
@@ -222,7 +230,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-adapter-375-5-2",
@@ -526,7 +536,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-attach-25-1",
@@ -549,7 +561,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m, 3000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-attach-375-1",
@@ -572,7 +586,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m, 4000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-cargo-125-1",
@@ -1790,7 +1806,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m, 5000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-hub-1875-1",
@@ -1812,7 +1830,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-hub-25-1",
@@ -1835,7 +1855,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m, 7000",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-inflatable-centrifuge-125-1",
@@ -2257,7 +2279,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-125-2",
@@ -2280,7 +2304,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-125-3",
@@ -2303,7 +2329,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-1875-1",
@@ -2325,7 +2353,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-1875-2",
@@ -2347,7 +2377,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-1875-3",
@@ -2369,7 +2401,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations305m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-1875-angled-1",
@@ -2391,7 +2425,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-25-1",
@@ -2414,7 +2450,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-25-2",
@@ -2437,7 +2475,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-25-3",
@@ -2460,7 +2500,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations415m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-375-1",
@@ -2483,7 +2525,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-375-2",
@@ -2506,7 +2550,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-tube-375-3",
@@ -2529,7 +2575,9 @@
         "upgrade": false,
         "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "HumanRated"
+        ]
     },
     {
         "name": "sspx-utility-125-1",

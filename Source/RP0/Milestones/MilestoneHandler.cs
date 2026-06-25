@@ -33,6 +33,16 @@ namespace RP0.Milestones
         [KSPField(isPersistant = true)]
         private PersistentHashSetValueType<string> seenMilestones = new PersistentHashSetValueType<string>();
 
+        // Milestones whose screenshot has already been captured in the current timeline. This is
+        // persisted (and therefore rolled back along with the rest of the save state when the player
+        // reverts to launch or loads an earlier save) so that:
+        //  - a contract split across multiple play sessions keeps the screenshot taken when its
+        //    parameter completed, rather than recapturing on final completion in a later session
+        //  - after a revert, the milestone is treated as uncaptured and a fresh screenshot replaces
+        //    the now-stale .png left on disk
+        [KSPField(isPersistant = true)]
+        private PersistentHashSetValueType<string> capturedScreenshots = new PersistentHashSetValueType<string>();
+
         [KSPField(isPersistant = true)]
         private PersistentListValueType<string> queuedMilestones = new PersistentListValueType<string>();
 
@@ -224,7 +234,10 @@ namespace RP0.Milestones
         private IEnumerator CaptureScreenshot(Milestone milestone, bool overwrite)
         {
             string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{milestone.name}.png";
-            if (!overwrite && File.Exists(filePath))
+            // Don't recapture if a screenshot was already taken for this milestone in the current
+            // timeline (e.g. when the relevant contract parameter completed earlier, possibly in a
+            // previous play session).
+            if (!overwrite && capturedScreenshots.Contains(milestone.name))
                 yield break;
 
             bool wasShowing = KSP.UI.UIMasterController.Instance.mainCanvas.enabled;
@@ -278,6 +291,7 @@ namespace RP0.Milestones
 
             var bytes = ImageConversion.EncodeToPNG(result);
             File.WriteAllBytes(filePath, bytes);
+            capturedScreenshots.Add(milestone.name);
 
             FlightCamera.fetch.minDistance = oldMin;
             FlightCamera.fetch.SetDistanceImmediate(oldDist);

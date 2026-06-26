@@ -684,6 +684,8 @@ namespace RP0
             }
             foreach (ISpaceCenterProject course in Crew.CrewHandler.Instance.TrainingCourses)
                 _checkTime(course, ref shortestTime, ref thing);
+            foreach (ISpaceCenterProject rnr in Crew.CrewHandler.Instance.RnRProjects)
+                _checkTime(rnr, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.fundTarget.IsValid)
                 _checkTime(SpaceCenterManagement.Instance.fundTarget, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)

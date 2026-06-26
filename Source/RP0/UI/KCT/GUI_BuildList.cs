@@ -210,6 +210,9 @@ namespace RP0
                         locTxt = txt;
                         txt = "Training";
                         break;
+                    case ProjectType.CrewRnR:
+                        locTxt = string.Empty;
+                        break;
                 }
 
                 GUILayout.Label(txt);
@@ -255,7 +258,7 @@ namespace RP0
                 {
                     RP0Debug.Log($"Creating new alarm");
                     KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
-                    if (nextThing.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew; // TODO, get the specific crew member(s) being trained?
+                    if (nextThing.GetProjectType() == ProjectType.Crew || nextThing.GetProjectType() == ProjectType.CrewRnR) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew; // TODO, get the specific crew member(s) being trained?
                     else if (nextThing.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
                     SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm($"RP-1: {txt}", "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
                 }
@@ -676,6 +679,12 @@ namespace RP0
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
                 _allItems.Add(SpaceCenterManagement.Instance.staffTarget);
 
+            // Astronauts on R&R aren't queued projects, but we surface them here so they slot in
+            // by return-to-duty time. _timeBeforeItem is left at 0 because R&R runs on wall-clock,
+            // independent of the build queue, so its finish time is purely GetTimeLeftEst.
+            // The list is cached in CrewHandler and only rebuilt when nauts change R&R state.
+            _allItems.AddRange(Crew.CrewHandler.Instance.RnRProjects);
+
             // Precalc times and then sort
             foreach (var b in _allItems)
                 _estTimeForItem[b] = b.GetTimeLeftEst(_timeBeforeItem.ValueOrDefault(b));
@@ -861,6 +870,9 @@ namespace RP0
 
                 case ProjectType.VesselRepair:
                     return _repairTexture;
+
+                case ProjectType.CrewRnR:
+                    return _emptyTexture;   // TODO: add a custom texture
             }
 
             return _emptyTexture;

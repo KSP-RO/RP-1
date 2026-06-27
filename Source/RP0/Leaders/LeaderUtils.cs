@@ -53,7 +53,8 @@ namespace RP0.Leaders
                             s.RequirementsBlock.ChildBlocks.Count == 0 &&
                             s.RequirementsBlock.Reqs.Any(r => !r.IsInverted &&
                                                               r is Requirements.ContractRequirement cr &&
-                                                              cr.ContractName == cc.contractType.name));
+                                                              cr.ContractName == cc.contractType.name &&
+                                                              cr.IsAlmostMet));
         }
 
         public static IEnumerable<StrategyConfigRP0> GetLeadersUnlockedByProgram(string programName)

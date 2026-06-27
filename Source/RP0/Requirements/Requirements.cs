@@ -50,6 +50,25 @@ namespace RP0.Requirements
             }
         }
 
+        public bool IsAlmostMet
+        {
+            get
+            {
+                bool isAlmostMet;
+                if (MinCount.HasValue && MinCount > 1)
+                {
+                    int c = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) ? list.Count : 0;
+                    isAlmostMet = c == MinCount - 1;
+                }
+                else
+                {
+                    isAlmostMet = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) && list.Count > 0;
+                }
+
+                return IsInverted ? !isAlmostMet : isAlmostMet;
+            }
+        }
+
         public ContractRequirement()
         {
         }

@@ -62,7 +62,7 @@ namespace RP0.Requirements
                 }
                 else
                 {
-                    isAlmostMet = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) && list.Count > 0;
+                    isAlmostMet = false;
                 }
 
                 return IsInverted ? !isAlmostMet : isAlmostMet;

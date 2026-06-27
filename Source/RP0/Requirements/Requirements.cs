@@ -39,7 +39,7 @@ namespace RP0.Requirements
                 if (MinCount.HasValue && MinCount > 1)
                 {
                     int c = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) ? list.Count : 0;
-                    isMet =  c >= MinCount;
+                    isMet = c >= MinCount;
                 }
                 else
                 {

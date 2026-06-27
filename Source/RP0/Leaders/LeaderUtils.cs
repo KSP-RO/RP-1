@@ -44,7 +44,7 @@ namespace RP0.Leaders
                                                               cr.TechName == techID));
         }
 
-        public static IEnumerable<StrategyConfigRP0> GetLeadersUnlockedByContract(ConfiguredContract cc)
+        public static IEnumerable<StrategyConfigRP0> GetLeadersUnlockedByContract(ConfiguredContract cc, bool unlockNextCompletion)
         {
             return GetAllLeaderStrategies()
                 .Where(s => s.RequirementsBlock != null &&
@@ -54,7 +54,7 @@ namespace RP0.Leaders
                             s.RequirementsBlock.Reqs.Any(r => !r.IsInverted &&
                                                               r is Requirements.ContractRequirement cr &&
                                                               cr.ContractName == cc.contractType.name &&
-                                                              cr.IsAlmostMet));
+                                                              (unlockNextCompletion ? cr.IsAlmostMet : cr.IsStrictlyMet)));
         }
 
         public static IEnumerable<StrategyConfigRP0> GetLeadersUnlockedByProgram(string programName)

@@ -31,62 +31,26 @@ namespace RP0.Requirements
 
         public uint? MinCount { get; set; }
 
-        public override bool IsMet
-        {
-            get
-            {
-                bool isMet;
-                if (MinCount.HasValue && MinCount > 1)
-                {
-                    int c = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) ? list.Count : 0;
-                    isMet = c >= MinCount;
-                }
-                else
-                {
-                    isMet = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) && list.Count > 0;
-                }
+        private bool HasMinCount => MinCount.HasValue && MinCount > 1;
 
-                return IsInverted ? !isMet : isMet;
-            }
-        }
+        private int CompletedCount => ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) ? list.Count : 0;
 
-        public bool IsStrictlyMet
-        {
-            get
-            {
-                bool isStrictlyMet;
-                if (MinCount.HasValue && MinCount > 1)
-                {
-                    int c = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) ? list.Count : 0;
-                    isStrictlyMet = c == MinCount;
-                }
-                else
-                {
-                    isStrictlyMet = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) && list.Count > 0;
-                }
+        private bool ApplyInversion(bool met) => IsInverted ? !met : met;
 
-                return IsInverted ? !isStrictlyMet : isStrictlyMet;
-            }
-        }
+        /// <summary>
+        /// Has been met
+        /// </summary>
+        public override bool IsMet => ApplyInversion(HasMinCount ? CompletedCount >= MinCount : CompletedCount > 0);
 
-        public bool IsAlmostMet
-        {
-            get
-            {
-                bool isAlmostMet;
-                if (MinCount.HasValue && MinCount > 1)
-                {
-                    int c = ConfiguredContract.CompletedContractsByName.TryGetValue(ContractName, out var list) ? list.Count : 0;
-                    isAlmostMet = c == MinCount - 1;
-                }
-                else
-                {
-                    isAlmostMet = false;
-                }
+        /// <summary>
+        /// Has been met on exactly this completion
+        /// </summary>
+        public bool IsStrictlyMet => ApplyInversion(HasMinCount ? CompletedCount == MinCount : CompletedCount > 0);
 
-                return IsInverted ? !isAlmostMet : isAlmostMet;
-            }
-        }
+        /// <summary>
+        /// Will be met on the next completion
+        /// </summary>
+        public bool IsAlmostMet => ApplyInversion(HasMinCount ? CompletedCount == MinCount - 1 : CompletedCount == 0);
 
         public ContractRequirement()
         {

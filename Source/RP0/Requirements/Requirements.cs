@@ -45,7 +45,7 @@ namespace RP0.Requirements
         /// <summary>
         /// Has been met on exactly this completion
         /// </summary>
-        public bool IsStrictlyMet => ApplyInversion(HasMinCount ? CompletedCount == MinCount : CompletedCount > 0);
+        public bool IsStrictlyMet => ApplyInversion(HasMinCount ? CompletedCount == MinCount : CompletedCount == 1);
 
         /// <summary>
         /// Will be met on the next completion

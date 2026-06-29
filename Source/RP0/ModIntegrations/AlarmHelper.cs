@@ -1,6 +1,6 @@
-﻿using System.Linq;
-using KACAPI = RP0.KACWrapper.KACAPI;
+﻿using UniLinq;
 using KACAlarm = RP0.KACWrapper.KACAPI.KACAlarm;
+using KACAPI = RP0.KACWrapper.KACAPI;
 
 namespace RP0.ModIntegrations
 {
@@ -15,18 +15,17 @@ namespace RP0.ModIntegrations
         /// Creates an alarm.
         /// </summary>
         /// <remarks>
-        /// Do not pass in Contract or ContractAuto as the alarmType, KAC seems to immediately delete the alarm for some reason.
+        /// Do not pass in Contract or ContractAuto as the alarmType, KAC immediately deletes the alarm due to https://github.com/linuxgurugamer/KerbalAlarmClock/issues/14.
         /// </remarks>
         /// <returns>
         /// AlarmID
         /// </returns>
         public static string CreateAlarm(string title, string description, double UT, KACAPI.AlarmTypeEnum alarmType = KACAPI.AlarmTypeEnum.Raw)
         {
-            string s = "Alarm created with ID: ";
             if (UseKAC)
             {
                 if (alarmType == KACAPI.AlarmTypeEnum.Contract || alarmType == KACAPI.AlarmTypeEnum.ContractAuto)
-                { // no idea what causes KAC to immediately delete these alarms, so just don't allow them
+                {
                     alarmType = KACAPI.AlarmTypeEnum.Raw;
                 }
                 string alarmID = KACWrapper.KAC.CreateAlarm(alarmType, title, UT);
@@ -38,7 +37,7 @@ namespace RP0.ModIntegrations
                     {
                         alarm.AlarmAction = KACAPI.AlarmActionEnum.KillWarp;
                         alarm.Notes = description;
-                        RP0Debug.Log(s + alarmID);
+                        RP0Debug.Log($"Alarm created with ID: {alarmID}");
                         return alarmID;
                     }
                     else
@@ -66,7 +65,7 @@ namespace RP0.ModIntegrations
                 if (alarm.Id != 0u)
                 {
                     string alarmID = alarm.Id.ToString();
-                    RP0Debug.Log(s + alarmID);
+                    RP0Debug.Log($"Alarm created with ID: {alarmID}");
                     return alarmID;
                 }
                 else
@@ -78,23 +77,61 @@ namespace RP0.ModIntegrations
         }
 
         /// <summary>
-        /// Deletes the alarm with a certain id (uint must be converted to string first).
+        /// Finds the alarm with a certain id and updates its properties.
         /// </summary>
-        /// <remarks>
-        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
-        /// </remarks>
+        /// <returns>
+        /// Success
+        /// </returns>
+        public static bool ChangeAlarm(string id, string title, string description, double UT)
+        {
+            if (UseKAC)
+            {
+                KACAlarm alarm = KACWrapper.KAC.Alarms.FirstOrDefault(a => a.ID == id);
+                if (alarm == null)
+                {
+                    RP0Debug.LogError($"KAC Alarm with ID: {id} could not be found.");
+                    return false;
+                }
+                alarm.Name = title;
+                alarm.Notes = description;
+                alarm.AlarmTime = UT;
+                // KAC does not let you change the alarm type of an alarm after it has been made
+                RP0Debug.Log($"Alarm with ID: {id} changed to have title: {title}, description: {description}, and time: {UT}.");
+                return true;
+            }
+            else
+            {
+                if (!uint.TryParse(id, out uint alarmID))
+                {
+                    RP0Debug.LogError("Could not parse stock alarm ID " + id + " to uint");
+                    return false;
+                }
+                if (!AlarmClockScenario.Instance.alarms.TryGetValue(alarmID, out AlarmTypeBase alarm) || alarm == null)
+                {
+                    RP0Debug.LogError("Could not find stock alarm with ID " + id);
+                    return false;
+                }
+                alarm.title = title;
+                alarm.description = description;
+                alarm.ut = UT;
+                RP0Debug.Log($"Alarm with ID: {id} changed to have title: {title}, description: {description}, and time: {UT}.");
+                return true;
+            }
+        }
+
+        /// <summary>
+        /// Deletes the alarm with a certain id.
+        /// </summary>
         /// <returns>
         /// Success
         /// </returns>
         public static bool DeleteAlarmWithID(string id)
         {
-            string s1 = "Alarm deleted with ID: ";
-            string s2 = "Could not delete alarm with ID: ";
             bool successful;
             if (UseKAC)
             {
                 successful = KACWrapper.KAC.DeleteAlarm(id);
-                RP0Debug.Log((successful ? s1 : s2) + id);
+                RP0Debug.Log((successful ? "Alarm deleted with ID: " : "Could not delete alarm with ID: ") + id);
                 return successful;
             }
             else
@@ -102,7 +139,7 @@ namespace RP0.ModIntegrations
                 if (uint.TryParse(id, out uint alarmID))
                 {
                     successful = AlarmClockScenario.DeleteAlarm(alarmID);
-                    RP0Debug.Log((successful ? s1 : s2) + id);
+                    RP0Debug.Log((successful ? "Alarm deleted with ID: " : "Could not delete alarm with ID: ") + id);
                     return successful;
                 }
                 else
@@ -116,17 +153,11 @@ namespace RP0.ModIntegrations
         /// <summary>
         /// Deletes all alarms that contain (or start with) a certain string in their title.
         /// </summary>
-        /// <remarks>
-        /// KAC gives a null reference if you delete an alarm while the end alarm window is open. This isn't a problem with the stock end alarm window, so I'll just say it's KAC's fault.
-        /// </remarks>
         /// <returns>
         /// Success
         /// </returns>
         public static bool DeleteAllAlarmsWithTitle(string title, bool useStartsWith = false)
         {
-            string s1 = "Alarm deleted with ID: ";
-            string s2 = "Could not delete alarm with ID: ";
-            string s3 = "No alarms found with title: " + title;
             bool successful = true;
             bool foundAlarm = false;
             bool hasTitle(string alarmTitle) => alarmTitle != null && (useStartsWith ? alarmTitle.StartsWith(title) : alarmTitle.Contains(title));
@@ -138,14 +169,14 @@ namespace RP0.ModIntegrations
                     string id = alarm.ID;
                     if (!KACWrapper.KAC.DeleteAlarm(id))
                     {
-                        RP0Debug.LogError(s2 + id);
+                        RP0Debug.LogError($"Could not delete alarm with ID: {id}");
                         successful = false;
                     }
-                    else RP0Debug.Log(s1 + id);
+                    else RP0Debug.Log($"Alarm deleted with ID: {id}");
                 }
                 if (!foundAlarm)
                 {
-                    RP0Debug.LogWarning(s3);
+                    RP0Debug.LogWarning($"No alarms found with title: {title}");
                     successful = false;
                 }
                 return successful;
@@ -158,14 +189,14 @@ namespace RP0.ModIntegrations
                     foundAlarm = true;
                     if (!AlarmClockScenario.DeleteAlarm(id))
                     {
-                        RP0Debug.LogError(s2 + id);
+                        RP0Debug.LogError($"Could not delete alarm with ID: {id}");
                         successful = false;
                     }
-                    else RP0Debug.Log(s1 + id);
+                    else RP0Debug.Log($"Alarm deleted with ID: {id}");
                 }
                 if (!foundAlarm)
                 {
-                    RP0Debug.LogWarning(s3);
+                    RP0Debug.LogWarning($"No alarms found with title: {title}");
                     successful = false;
                 }
                 return successful;
@@ -173,7 +204,7 @@ namespace RP0.ModIntegrations
         }
 
         /// <summary>
-        /// Determines if an alarm with a certain id exists (uint must be converted to string first).
+        /// Determines if an alarm with a certain id exists.
         /// </summary>
         /// <returns>
         /// Alarm exists

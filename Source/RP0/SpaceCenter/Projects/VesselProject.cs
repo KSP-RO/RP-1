@@ -595,7 +595,7 @@ namespace RP0
             }));
         }
 
-        public bool ResourcesOK(LCData stats, List<string> failedReasons = null)
+        public bool ResourcesOK(LCData stats, List<string> failedReasons = null, bool shortReasons = false)
         {
             bool pass = true;
             LCResourceType ignoreType = stats.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore;
@@ -617,7 +617,9 @@ namespace RP0
                     return false;
 
                 pass = false;
-                failedReasons.Add($"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
+                failedReasons.Add(shortReasons
+                    ? $"{kvp.Key}: {kvp.Value:N0} / {lcAmount:N0}"
+                    : $"Insufficient {kvp.Key} at LC: {kvp.Value:N0} required, {lcAmount:N0} available. Modify {(stats.lcType == LaunchComplexType.Pad ? "LC" : "the Hangar")}.");
             }
 
             return pass;
@@ -639,7 +641,25 @@ namespace RP0
             return MeetsFacilityRequirements(selectedLC.Stats, failedReasons);
         }
 
-        public bool MeetsFacilityRequirements(LCData stats, List<string> failedReasons)
+        /// <summary>
+        ///   Checks that this vessel can be integrated at the selected LC
+        /// </summary>
+        /// <param name="stats">The LC's stats used to verify compatibility</param>
+        /// <param name="failedReasons">
+        ///     An initially empty list or <c>null</c> - each unmet requirement will
+        ///     add a string error description to that list (it it isn't <c>null</c>)
+        /// </param>
+        /// <param name="shortReasons">When <c>true</c>, write shorter error messages
+        ///     in <paramref name="failedReasons"/>, used to display warning in
+        ///     the narrow KCT editor GUI. <c>false</c> by default, for warnings
+        ///     that appear in a popup window when attempting to build the vessel
+        /// </param>
+        /// <returns>
+        ///     <c>true</c> if the vessel can be integrated at the specified LC (in which
+        ///     case <paramref name="failedReasons"/> remains empty), <c>false</c>
+        ///     otherwise.
+        /// </returns>
+        public bool MeetsFacilityRequirements(LCData stats, List<string> failedReasons, bool shortReasons = false)
         {
             if (!KSPUtils.CurrentGameIsCareer())
                 return true;
@@ -650,17 +670,19 @@ namespace RP0
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add($"Mass limit exceeded, currently at {totalMass:N} tons, max {stats.massMax:N}");
+                failedReasons.Add(shortReasons
+                    ? $"Too heavy for LC ({totalMass:N0}t)"
+                    : $"Mass limit exceeded, currently at {totalMass:N} tons, max {stats.massMax:N}");
             }
             if (totalMass < stats.MassMin)
             {
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add($"Mass minimum exceeded, currently at {totalMass:N} tons, min {stats.MassMin:N}");
+                failedReasons.Add(shortReasons
+                    ? $"Too light for LC ({totalMass:N0}t)"
+                    : $"Mass minimum exceeded, currently at {totalMass:N} tons, min {stats.MassMin:N}");
             }
-            if (!ResourcesOK(stats, failedReasons) && failedReasons == null)
-                return false;
 
             // Facility doesn't matter here.
             Vector3 size = GetShipSize();
@@ -677,7 +699,9 @@ namespace RP0
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add("Vessel is human-rated but launch complex is not");
+                failedReasons.Add(shortReasons
+                    ? "LC is not human-rated"
+                    : "Vessel is human-rated but launch complex is not");
             }
 
             if (HasClamps() && stats.lcType == LaunchComplexType.Hangar)
@@ -685,8 +709,12 @@ namespace RP0
                 if (failedReasons == null)
                     return false;
 
-                failedReasons.Add("Has launch clamps/GSE but is launching from runway");
+                failedReasons.Add(shortReasons ? "Launch clamps/GSE in hangar"
+                    :"Has launch clamps/GSE but is launching from runway");
             }
+
+            if (!ResourcesOK(stats, failedReasons, shortReasons) && failedReasons == null)
+                return false;
 
             return failedReasons == null || failedReasons.Count == 0;
         }
@@ -799,6 +827,8 @@ namespace RP0
             if (ShipSize.sqrMagnitude > 0)
                 return ShipSize;
 
+            if (ShipNodeCompressed.Node is null) // true when first loading VAB
+                return Vector3.zero;
             ShipTemplate template = new ShipTemplate();
             template.LoadShip(ShipNodeCompressed.Node);
             ShipSize = template.GetShipSize();

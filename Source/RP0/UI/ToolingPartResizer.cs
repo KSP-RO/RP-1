@@ -160,9 +160,9 @@ namespace RP0
         /// </summary>
         private static bool ApplyGeometry(Part p, float diameter, float length)
         {
-            PartModule roTank = p.Modules.Cast<PartModule>().FirstOrDefault(m => m.moduleName == "ModuleROTank");
+            PartModule roTank = p.Modules.GetModule("ModuleROTank");
             if (roTank != null) { ApplyRoTank(p, roTank, diameter, length); return true; }
-            PartModule procPart = p.Modules.Cast<PartModule>().FirstOrDefault(m => m.moduleName == "ProceduralPart");
+            PartModule procPart = p.Modules.GetModule("ProceduralPart");
             if (procPart != null) return ApplyProcShape(p, procPart, diameter, length);
             return false;
         }
@@ -261,7 +261,7 @@ namespace RP0
                 "Truss"                  => "ProceduralShapeHollowTruss",
                 _                        => "ProceduralShapeCylinder",
             };
-            return p.Modules.Cast<PartModule>().FirstOrDefault(m => m.moduleName == moduleName);
+            return p.Modules.GetModule(moduleName);
         }
 
         /// <summary>
@@ -293,7 +293,7 @@ namespace RP0
                 {
                     Part c = counterparts[i];
                     if (c == null || c == masterPart) continue;
-                    PartModule cm = c.Modules.Cast<PartModule>().FirstOrDefault(m => m.moduleName == masterModule.moduleName);
+                    PartModule cm = c.Modules.GetModule(masterModule.moduleName);
                     BaseField cf = cm?.Fields[fieldName];
                     if (cf != null) SetFieldValue(cm, cf, value);
                 }

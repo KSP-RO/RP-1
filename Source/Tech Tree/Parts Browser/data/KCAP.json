@@ -19,6 +19,7 @@
         "entry_cost_mods": "YF-100",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -42,6 +43,7 @@
         "entry_cost_mods": "YF-100",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

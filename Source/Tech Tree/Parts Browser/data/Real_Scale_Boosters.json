@@ -1873,6 +1873,7 @@
         "entry_cost_mods": "RD-180",
         "identical_part_name": "RD-180",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -1976,6 +1977,7 @@
         "entry_cost_mods": "RS-25",
         "identical_part_name": "RS-25",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]

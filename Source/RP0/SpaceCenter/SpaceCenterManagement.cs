@@ -1316,7 +1316,9 @@ namespace RP0
 
             if (simParams.SimAutostageTarget >= 0)
             {
-                yield return new WaitForSeconds(1f);  // let the teleported vessel settle before shedding stages
+                // Wait for the teleported vessel to come off rails before shedding stages.
+                Vessel active = FlightGlobals.ActiveVessel;
+                yield return new WaitUntil(() => active == null || !active.packed);
                 yield return TriggerSimStaging(simParams.SimAutostageTarget);
             }
         }
@@ -1421,8 +1423,8 @@ namespace RP0
                 if (p.inverseStage <= autostageTarget) continue;
                 foreach (PartModule m in p.Modules)
                 {
-                    if (m is ModuleDecouple md && !md.isDecoupled) { md.Decouple(); triggered++; }
-                    else if (m is ModuleAnchoredDecoupler mad && !mad.isDecoupled) { mad.Decouple(); triggered++; }
+                    // ModuleDecouple and ModuleAnchoredDecoupler both derive from ModuleDecouplerBase.
+                    if (m is ModuleDecouplerBase md && !md.isDecoupled) { md.Decouple(); triggered++; }
                 }
             }
             RP0Debug.Log($"Sim staging: triggered {triggered} decoupler(s) in parts with inverseStage > {autostageTarget}");

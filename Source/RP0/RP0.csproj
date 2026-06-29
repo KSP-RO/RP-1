@@ -264,9 +264,9 @@
     <Compile Include="PartModules\ModuleTagList.cs" />
     <Compile Include="Persistence\GUIPosition.cs" />
     <Compile Include="Persistence\KCTVesselData.cs" />
-    <Compile Include="SpaceCenter\LambertSolver.cs" />
     <Compile Include="SpaceCenter\SimulationParams.cs" />
     <Compile Include="Utilities\ECMHelper.cs" />
+    <Compile Include="Utilities\LambertSolver.cs" />
     <Compile Include="SpaceCenter\Projects\ISpaceCenterProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselProject.cs" />
     <Compile Include="UI\KCT\GUI_BuildPlans.cs" />

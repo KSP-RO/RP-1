@@ -5,8 +5,9 @@ namespace RP0
 {
     // Port of the alexmoon / Transfer Window Planner Lambert solver (Sun, F.T., "On the Minimum Time
     // Trajectory and Multiple Solutions of Lambert's Problem", AAS 79-164, 1979). Used to orient the
-    // hyperbolic-approach sim so its arrival v∞ direction matches TWP's: stock TransferMath's solvers
-    // gave a v∞ direction ~1.5° off the value TWP and a real flown trajectory produce.
+    // hyperbolic-approach sim. We use this rather than stock TransferMath because its arrival v∞
+    // direction matched TWP and an actual pad-to-Mars flight to within ~0.1deg of inclination, whereas
+    // TransferMath's solvers came out ~1.5deg off in testing for the cases this feature targets.
     //
     // Validated against Curtis "Orbital Mechanics for Engineering Students" Example 5.2.
     public static class LambertSolver

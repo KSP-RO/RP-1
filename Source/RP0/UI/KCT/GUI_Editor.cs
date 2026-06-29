@@ -424,6 +424,24 @@ namespace RP0
                 SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
                 SpaceCenterManagement.Instance.LaunchedVessel.LCID = editedVessel.LC.ID; // should already be correct, but just in case.
             }
+
+            LaunchComplex editLC = editedVessel.LC;
+            bool canModify = editLC.CanModifyReal;
+            const string editModifyTooltip = "Modify the launch complex to support this vessel's resources, keeping existing support where possible.";
+            const string editModifyFailTooltip = "\n\nA reconditioning, rollout, or repair is currently in progress and must finish first.";
+            if (GUILayout.Button(new GUIContent("Modify LC", editModifyTooltip + (canModify ? string.Empty : editModifyFailTooltip)),
+                canModify ? GUI.skin.button : _yellowButton))
+            {
+                SetFieldsFromVesselKeepOld(SpaceCenterManagement.Instance.EditorVessel, editLC);
+
+                _wasShowBuildList = GUIStates.ShowBuildList;
+                GUIStates.ShowModifyLC = true;
+                GUIStates.ShowBuildList = false;
+                GUIStates.ShowBLPlus = false;
+                GUIStates.ShowNewLC = false;
+                GUIStates.ShowLCResources = false;
+                _centralWindowPosition.width = 300;
+            }
             GUILayout.EndHorizontal();
 
             if (!SpaceCenterManagement.Instance.EditorVessel.AreTanksFull() &&

@@ -4,8 +4,9 @@ using Smooth.Slinq;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using UniLinq;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace RP0.UI
 {
@@ -20,11 +21,34 @@ namespace RP0.UI
         
         private float _lastUpdateTrigger = 0f;
         private readonly Dictionary<CostEntry, int> _partCosts = new Dictionary<CostEntry, int>();
+        private readonly Dictionary<Part, CostEntry> _partMap = new Dictionary<Part, CostEntry>();
+        private ILookup<CostEntry, Part> _partLookup;
+        private readonly Dictionary<CostEntry, Rect> _costRects = new Dictionary<CostEntry, Rect>();
         private readonly List<KeyValuePair<CostEntry, int>> _cachedSortedPartCosts = new List<KeyValuePair<CostEntry, int>>();
         private readonly List<Part> _singlePart = new List<Part>(); // dummy list for calling GetEffectiveCost, to avoid extra allocations
         private Vector2 _partCostsScroll = new Vector2();
         private bool _isToolingTempDisabled = false;
         private IEnumerator _activeUpdate = null; 
+
+        private static CostEntry DummyEntry = new CostEntry { name = "(n/a)", effectiveCost = -1, effectiveCostModifier = 0 };
+        private CostEntry _hoveredEntry;
+        private readonly List<Part> _cachedHighlightedParts = new List<Part>();
+        private Part _hoveredPart;
+        private Texture2D _highlightRowStyle = null;
+
+        private Texture2D HighlightRowTex
+        {
+            get
+            {
+                if (_highlightRowStyle == null)
+                {
+                    _highlightRowStyle = new Texture2D(1, 1);
+                    _highlightRowStyle.SetPixel(0, 0, new Color(1f, 1f, 0f, 0.15f));
+                    _highlightRowStyle.Apply();
+                }
+                return _highlightRowStyle;
+            }
+        }
 
         protected override void OnStart()
         {
@@ -34,6 +58,8 @@ namespace RP0.UI
         protected override void OnDestroy()
         {
             GameEvents.onEditorShipModified.Remove(ShipModifiedEvent);
+            if (_highlightRowStyle != null)
+                UnityEngine.Object.Destroy(_highlightRowStyle);
         }
 
         public UITab RenderCostBreakdownTab()
@@ -45,6 +71,27 @@ namespace RP0.UI
                 GUILayout.Label("No vessel currently detected.", HighLogic.Skin.label, GUILayout.Width(500));
                 GUILayout.EndHorizontal();
                 return UITab.CostBreakdown;
+            }
+
+            if (_partCosts.Count == 0)
+            {
+                GUILayout.BeginHorizontal();
+                GUILayout.Label("Either there are no parts, or cost analysis is still running.", HighLogic.Skin.label, GUILayout.Width(500));
+                GUILayout.EndHorizontal();
+                return UITab.CostBreakdown;
+            }
+
+            Part newHoveredPart = Mouse.HoveredPart;
+            if (newHoveredPart != null && EventSystem.current.IsPointerOverGameObject())
+                newHoveredPart = null;
+            if (newHoveredPart != _hoveredPart)
+            {
+                _hoveredPart = newHoveredPart;
+                if (_hoveredPart != null && _partMap.TryGetValue(_hoveredPart, out CostEntry entry) && _costRects.TryGetValue(entry, out Rect r))
+                {
+                    float rowMid = r.y + r.height / 2f;
+                    _partCostsScroll.y = Mathf.Max(0f, rowMid - 150f);
+                }
             }
 
             GUILayout.BeginHorizontal();
@@ -66,10 +113,18 @@ namespace RP0.UI
             GUILayout.EndHorizontal();
 
             _partCostsScroll = GUILayout.BeginScrollView(_partCostsScroll, GUILayout.Height(300), GUILayout.Width(500));
+
+            CostEntry newHoveredEntry = DummyEntry;
+
             foreach (var kvp in _cachedSortedPartCosts)
             {
                 CostEntry entry = kvp.Key;
                 int multiplicity = kvp.Value;
+                if (Event.current.type == EventType.Repaint && _hoveredPart != null && _partMap.TryGetValue(_hoveredPart, out CostEntry hoveredEntry) &&
+                    entry.Equals(hoveredEntry) && _costRects.TryGetValue(hoveredEntry, out Rect highlightRect))
+                {
+                    GUI.DrawTexture(highlightRect, HighlightRowTex);
+                }
                 GUILayout.BeginHorizontal();
                 string name = entry.name;
                 if (multiplicity > 1)
@@ -79,6 +134,13 @@ namespace RP0.UI
                                                FormatCostAndMultiplier(entry.effectiveCost, entry.effectiveCostModifier) + " per part");
                 GUILayout.Label(costAndTooltip, RightLabel, GUILayout.Width(144));
                 GUILayout.EndHorizontal();
+                if (Event.current.type == EventType.Repaint)
+                {
+                    Rect rowRect = GUILayoutUtility.GetLastRect();
+                    _costRects[entry] = rowRect;
+                    if (rowRect.Contains(Event.current.mousePosition))
+                        newHoveredEntry = entry;
+                }
             }
             GUILayout.EndScrollView();
             GUILayout.BeginVertical();
@@ -91,7 +153,35 @@ namespace RP0.UI
                 Debug.LogException(ex);
             }
             GUILayout.EndVertical();
+
+            if (Event.current.type == EventType.Repaint && !newHoveredEntry.Equals(_hoveredEntry))
+            {
+                ChangeHoveredEntry(newHoveredEntry);
+            }
+
             return UITab.CostBreakdown;
+        }
+
+        private void ChangeHoveredEntry(CostEntry newHoveredEntry)
+        {
+            if (_cachedHighlightedParts.Count != 0)
+            {
+                foreach (Part p in _cachedHighlightedParts)
+                {
+                    p.SetHighlightDefault();
+                }
+                _cachedHighlightedParts.Clear();
+            }
+            _hoveredEntry = newHoveredEntry;
+            if (!_hoveredEntry.Equals(DummyEntry) && _partLookup != null)
+            {
+                _cachedHighlightedParts.AddRange(_partLookup[_hoveredEntry]);
+                foreach (Part p in _cachedHighlightedParts)
+                {
+                    p.SetHighlightColor(Color.yellow);
+                    p.SetHighlightType(Part.HighlightType.AlwaysOn);
+                }
+            }
         }
 
         private void ShipModifiedEvent(ShipConstruct ship)
@@ -114,7 +204,9 @@ namespace RP0.UI
 
             var parts = ship?.Parts; 
             _partCosts.Clear();
+            _partMap.Clear();
             _cachedSortedPartCosts.Clear();
+            _partLookup = null;
             if (parts?.Count > 0)
             {
                 for (int i = parts.Count - 1; i >= 0; --i)
@@ -134,8 +226,10 @@ namespace RP0.UI
                         _partCosts[entry] = value + 1;
                     else
                         _partCosts.Add(entry, 1);
+                    _partMap[p] = entry;
                 }
                 _cachedSortedPartCosts.AddRange(_partCosts.OrderByDescending(kvp => kvp.Key.effectiveCost * kvp.Key.effectiveCostModifier * kvp.Value));
+                _partLookup = _partMap.ToLookup(p => p.Value, p => p.Key);
             }
         }
 

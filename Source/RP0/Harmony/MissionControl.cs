@@ -19,6 +19,13 @@ namespace RP0.Harmony
         {
             if (a is ConfiguredContract ccA && b is ConfiguredContract ccB)
             {
+                // Normal contracts, then Records, then Skopos maintenance
+                bool aSkopos = ContractUtils.ContractIsSkoposMaintenance(ccA);
+                bool bSkopos = ContractUtils.ContractIsSkoposMaintenance(ccB);
+                if (aSkopos != bSkopos)
+                {
+                    return bSkopos ? -1 : 1;
+                }
                 bool aRecord = ContractUtils.ContractIsRecord(ccA);
                 bool bRecord = ContractUtils.ContractIsRecord(ccB);
                 if (aRecord != bRecord)

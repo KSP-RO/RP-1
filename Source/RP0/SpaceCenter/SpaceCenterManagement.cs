@@ -1690,14 +1690,20 @@ namespace RP0
             }
             else
             {
-                // Process reconditioning and refurbishment even for LCs that have no engineers or are inactive
+                // Process non-blocking ops
                 for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
                 {
                     var rr = currentLC.Recon_Rollout[i];
-                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning ||
-                        rr.RRType == ReconRolloutProject.RolloutReconType.Refurbishment)
+                    if (!rr.IsBlocking)
                     {
                         rr.IncrementProgress(UTDiff);
+                        if (rr.RRType == ReconRolloutProject.RolloutReconType.Recovery && 
+                            rr.IsComplete() && 
+                            KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vpRec)
+                        {
+                            currentLC.Recon_Rollout.Add(rr.CreateFollowOnRefurbishment(vpRec));
+                            RP0Debug.Log($"Initiated follow-on refurbishment for {vpRec.shipName}");
+                        }
                     }
                 }
             }
@@ -1889,10 +1895,12 @@ namespace RP0
             
             double recTime = tmpRecover.BP / recoverRate;
             double refTime = tmpRefurb.BP / refurbRate;
+            
+            RP0Debug.Log($"Mass: {dummyVessel.mass}. Distance: {dummyVessel.kscDistance}");
 
-            return $"Recovery time: {RP0DTUtils.GetColonFormattedTime(recTime)} with {maxEngs} engineers for {tmpRecover.cost:N0} funds\n" + 
-                $"Refurbishment time: {RP0DTUtils.GetColonFormattedTime(refTime)} with {maxEngs} engineers for {tmpRefurb.cost:N0} funds\n" + 
-                $"Total cost: {tmpRecover.cost + tmpRefurb.cost:N0} funds";
+            return $"Recovery time: {RP0DTUtils.GetColonFormattedTime(recTime)} for {tmpRecover.cost:N0} funds\n" + 
+                $"Refurbishment time: {RP0DTUtils.GetColonFormattedTime(refTime)} with {maxEngs} engineers for {tmpRefurb.cost:N0} additional funds\n" + 
+                $"Total cost: {tmpRecover.cost + tmpRefurb.cost:N0} funds (engineer salary not included)";
         }
 
         private string GetVabTechLimitText()

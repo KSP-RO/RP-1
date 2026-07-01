@@ -145,7 +145,8 @@ namespace RP0
                     break;
 
                 case RolloutReconType.Recovery:
-                    InitRecovery(vessel);
+                    BP = vessel.kscDistance;
+                    cost = Formula.GetRecoveryCost(vessel);
                     break;
 
                 case RolloutReconType.Refurbishment:
@@ -163,37 +164,6 @@ namespace RP0
                     progress = BP; // starts complete, runs in reverse
                     break;
             }
-        }
-
-        /// <summary>
-        /// Calculates recovery BP and cost.
-        /// Base BP comes from vessel type (SPH/VAB).
-        /// Transit time scales with distance from KSC.
-        /// Transport mode (Air > Truck > Barge) is selected by vessel mass via
-        /// RecoveryTechLevel.GetTransportLevel; its TransitRate divides the BP.
-        /// Runway landings reduce transit time by 25%.
-        /// Cost scales purely with distance — unaffected by transport mode or tech.
-        /// </summary>
-        private void InitRecovery(VesselProject vessel)
-        {
-            double baseBP = vessel.FacilityBuiltIn == EditorFacility.SPH
-                ? Formula.GetRecoveryBPSPH(vessel)
-                : Formula.GetRecoveryBPVAB(vessel);
-
-            double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
-            double distanceFraction = vessel.kscDistance / maxDist; // 0..1
-
-            // Transit time grows linearly with distance; doubles at maximum range
-            BP = baseBP * (1d + distanceFraction);
-
-            // Runway landings skip most of the transit overhead
-            if (vessel.LandedAt?.Contains("Runway") ?? false)
-                BP *= 0.75;
-
-            // Apply global tech-based recovery multipliers
-            BP /= Database.SettingsRecovery.ActiveRecoveryRateMult;
-
-            cost = Formula.GetRecoveryCost(vessel, distanceFraction) * Database.SettingsRecovery.ActiveRecoveryCostMult;
         }
 
         /// <summary>
@@ -219,15 +189,15 @@ namespace RP0
             MaintenanceHandler.Instance?.ScheduleMaintenanceUpdate();
         }
 
-        // Refurbishment, like reconditioning, does not hold up operations at the LC
+        // Recovery, like reconditioning, does not hold up operations at the LC
 
         public override bool IsCapped =>
             RRType != RolloutReconType.Reconditioning &&
-            RRType != RolloutReconType.Refurbishment;
+            RRType != RolloutReconType.Recovery;
 
         public override bool IsBlocking =>
             RRType != RolloutReconType.Reconditioning &&
-            RRType != RolloutReconType.Refurbishment;
+            RRType != RolloutReconType.Recovery;
 
         public override bool IsReversed =>
             RRType == RolloutReconType.Rollback ||
@@ -242,7 +212,7 @@ namespace RP0
 
         public override bool KeepsLCActive =>
             RRType != RolloutReconType.Reconditioning &&
-            RRType != RolloutReconType.Refurbishment;
+            RRType != RolloutReconType.Recovery;
 
         public override ProjectType GetProjectType()
         {
@@ -263,10 +233,14 @@ namespace RP0
 
         protected override double CalculateBuildRate(int delta)
         {
-            if (RRType == RolloutReconType.Reconditioning || RRType == RolloutReconType.Refurbishment)
+            if (RRType == RolloutReconType.Reconditioning)
             {
                 bool isHRCapped = IsCapped && !isHumanRated && LC.IsHumanRated;
                 return Formula.GetReconditioningBuildRate(LC, isHRCapped);
+            }
+            else if (RRType == RolloutReconType.Recovery)
+            {
+                return Database.SettingsRecovery.RecoveryRateMult;
             }
             else
             {

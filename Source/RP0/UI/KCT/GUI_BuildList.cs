@@ -170,6 +170,13 @@ namespace RP0
                                     locTxt = associated.LC.Name;
                                     break;
                                 }
+                                case ReconRolloutProject.RolloutReconType.Refurbishment:
+                                {
+                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                    txt = $"{associated.shipName} Refurbish";
+                                    locTxt = associated.LC.Name;
+                                    break;
+                                }
                                 default:
                                     locTxt = "Storage";
                                     break;

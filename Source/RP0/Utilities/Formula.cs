@@ -178,45 +178,8 @@ namespace RP0
             return GetRolloutBP(vessel) / 7.5;
         }
 
-        public static double GetRecoveryBPSPH(VesselProject vessel)
-        {
-            double costDeltaHighPow;
-            double costDelta = vessel.effectiveCost - vessel.cost;
-            if (costDelta < 0.001d)
-            {
-                costDelta = 0.001d;
-                costDeltaHighPow = 0.001d;
-            }
-            else
-            {
-                costDeltaHighPow = costDelta - 30000d;
-                if (costDeltaHighPow < 0.001d)
-                    costDeltaHighPow = 0.001d;
-            }
-            double bp = Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
-            return bp * 2.15d;
-        }
-
-        public static double GetRecoveryBPVAB(VesselProject vessel)
-        {
-            double costDeltaHighPow;
-            double costDelta = vessel.effectiveCost - vessel.cost;
-            if (costDelta < 0.001d)
-            {
-                costDelta = 0.001d;
-                costDeltaHighPow = 0.001d;
-            }
-            else
-            {
-                costDeltaHighPow = costDelta - 30000d;
-                if (costDeltaHighPow < 0.001d)
-                    costDeltaHighPow = 0.001d;
-            }
-            return Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
-        }
-
         /// <summary>
-        /// Refurbishment BP: lighter than a full rollout (~40%), heavier than reconditioning.
+        /// Refurbishment BP: corresponds to prior recovery BP.
         /// Penalises splashdown recoveries and human-rated craft.
         /// Tech progression reduces BP via Database.SettingsSC.RefurbishmentRateBase (higher = faster).
         ///
@@ -226,11 +189,8 @@ namespace RP0
         /// </summary>
         public static double GetRefurbishmentBP(VesselProject vessel)
         {
-            double costDelta = vessel.effectiveCost - vessel.cost;
-            if (costDelta < 0.001d) costDelta = 0.001d;
-            double costDeltaHighPow = Math.Max(0.001d, costDelta - 30000d);
-
-            double bp = (Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d) * 0.4d;
+            double bp = GetRolloutBP(vessel) * (vessel.Type == ProjectType.SPH ? 2.15 : 1); 
+            // Respect SPH being more expensive to recover for some reason?
 
             // Human-rated craft require far more rigorous inspection and certification
             if (vessel.humanRated)
@@ -241,10 +201,14 @@ namespace RP0
             // 1.0 = full 1.5x penalty; 0.5 = halved penalty; 0.0 = no penalty.
             bool splashedDown = vessel.LandedAt?.Contains("Splashdown") ?? false;
             if (splashedDown)
-                bp *= 1.5d * Database.SettingsSC.SplashdownPenaltyMult;
+                bp *= 1.5d * Database.SettingsRecovery.SplashdownPenaltyMult;
+
+            bool atKsc = (vessel.LandedAt?.Contains("Runway") ?? false) || (vessel.LandedAt?.Contains("Launchpad") ?? false);
+            if (atKsc)
+                bp *= 0.8d; // Discount for skipping "transit overhead"? 
 
             // Apply tech-driven rate base: higher value = less BP = faster refurbishment
-            bp /= Database.SettingsSC.RefurbishmentRateBase;
+            bp /= Database.SettingsRecovery.RefurbishmentRateMult;
 
             return bp;
         }
@@ -260,39 +224,23 @@ namespace RP0
                 return 0;
 
             double bp = GetRefurbishmentBP(vessel);
-            double result = GetRolloutCost(vessel) * 0.4d;
+            double result = GetRolloutCost(vessel) * Database.SettingsRecovery.RefurbishmentCostMult;
             result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion
                 - bp * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
-            return result * 0.5d * Database.SettingsSC.RefurbishmentCostMult;
+            return result * 0.5d;
         }
 
         /// <summary>
-        /// Recovery cost scales with distance from KSC.
-        /// At zero distance (runway landing), cost approaches zero.
-        /// At maximum distance (antipodal), cost approaches rollout cost.
-        /// Uses the same engineer-subsidy pattern as other ops costs.
-        /// Cost does not vary by transport mode or tech — purely distance-driven.
+        /// Recovery cost scales with distance from KSC, as well as mass of the vessel. 
+        /// (We cannot easily check for volume here, so mass acts as a proxy.)
+        /// Does not subsidise with engineers, since this is a non-engineer step.
         /// </summary>
-        public static double GetRecoveryCost(VesselProject vessel, double distanceFraction)
+        public static double GetRecoveryCost(VesselProject vessel)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            double rolloutCost = GetRolloutCost(vessel);
-
-            // Commented out for now. If added back in, multiply the below result variable with hrPenalty
-
-            // distanceFraction [0,1] makes cost either near 0 or all the way to equal to roll-out
-            double result = rolloutCost * distanceFraction;
-            
-            double recoveryBP = vessel.FacilityBuiltIn == EditorFacility.SPH
-                ? GetRecoveryBPSPH(vessel)
-                : GetRecoveryBPVAB(vessel);
-                
-            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion
-                - recoveryBP * distanceFraction * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
-                
-            return Math.Max(0d, result * 0.5d);
+            return vessel.mass * vessel.kscDistance * Database.SettingsRecovery.RecoveryCostMult;
         }
 
         public static double ResourceTankCost(string res, double amount, bool isModify, LaunchComplexType type)

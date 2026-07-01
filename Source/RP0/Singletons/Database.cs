@@ -63,9 +63,11 @@ namespace RP0
         public List<RefurbTechEntry> RefurbEntries { get; } = new List<RefurbTechEntry>();
         public List<RecoveryTechEntry> RecoveryEntries { get; } = new List<RecoveryTechEntry>();
 
-        // Expose the final calculated multipliers for Recovery
-        public double ActiveRecoveryRateMult { get; private set; } = 1.0d;
-        public double ActiveRecoveryCostMult { get; private set; } = 1.0d;
+        public double RecoveryRateMult { get; private set; } = 1.0d;
+        public double RecoveryCostMult { get; private set; } = 1.0d;
+        public double RefurbishmentRateMult { get; private set; } = 1.0d;
+        public double RefurbishmentCostMult { get; private set; } = 1.0d;
+        public double SplashdownPenaltyMult { get; private set; } = 1.0d;
 
         public void LoadRefurb(ConfigNode refurbNode)
         {
@@ -159,9 +161,9 @@ namespace RP0
                 }
             }
 
-            Database.SettingsSC.RefurbishmentRateBase  = refurbRate;
-            Database.SettingsSC.RefurbishmentCostMult  = refurbCost;
-            Database.SettingsSC.SplashdownPenaltyMult  = splashdown;
+            RefurbishmentRateMult  = refurbRate;
+            RefurbishmentCostMult  = refurbCost;
+            SplashdownPenaltyMult  = splashdown;
 
             // Recovery
             double recRate = RecoveryRateBase;
@@ -176,8 +178,8 @@ namespace RP0
                 }
             }
 
-            ActiveRecoveryRateMult = recRate;
-            ActiveRecoveryCostMult = recCost;
+            RecoveryRateMult = recRate;
+            RecoveryCostMult = recCost;
         }
     }
 

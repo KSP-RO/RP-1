@@ -74,7 +74,7 @@ namespace RP0
         public double ResearcherIdleSalaryMult = 0.5;
         [Persistent]
         public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, EngineerIdleSalaryMult = 0.25, MergingTimePenalty = 0.05d,
-            EffectiveCostPerLiterPerResourceMult = 0.1d;
+            EffectiveCostPerLiterPerResourceMult = 0.1d, MassToRecoveryCost = 1d, RecoveryRate = 1d;
         [Persistent]
         public HermiteCurve EngineerSkillupRate = new HermiteCurve();
         [Persistent]
@@ -102,32 +102,6 @@ namespace RP0
         public PersistentDictionaryValueTypes<string, double> Part_Variables = new PersistentDictionaryValueTypes<string, double>();
         [Persistent]
         public PersistentDictionaryValueTypes<string, double> Resource_Variables = new PersistentDictionaryValueTypes<string, double>();
-
-        // -----------------------------------------------------------------------
-        // Refurbishment tech progression
-        // -----------------------------------------------------------------------
-
-        /// <summary>
-        /// Effective refurbishment speed multiplier accumulated from researched techs.
-        /// Higher = faster (divides refurbishment BP in Formula.GetRefurbishmentBP).
-        /// Starts at the BASE.RateRefurbishment value in RefurbishmentLevels.cfg.
-        /// </summary>
-        public double RefurbishmentRateBase { get; set; } = 1.0d;
-
-        /// <summary>
-        /// Effective refurbishment cost multiplier accumulated from researched techs.
-        /// Applied as a final multiplier in Formula.GetRefurbishmentCost. Lower = cheaper.
-        /// </summary>
-        public double RefurbishmentCostMult { get; set; } = 1.0d;
-
-        /// <summary>
-        /// Splashdown BP penalty multiplier accumulated from researched techs.
-        /// Applied in Formula.GetRefurbishmentBP when vessel landed in water.
-        /// 1.0 = full 1.5x penalty; 0.5 = halved; 0.0 = no penalty.
-        /// </summary>
-        public double SplashdownPenaltyMult { get; set; } = 1.0d;
-
-        // -----------------------------------------------------------------------
 
         public double LCEfficiencyMin => LCEfficiencyUpgradesMin.GetSum();
         public double LCEfficiencyMax => LCEfficiencyUpgradesMax.GetSum();

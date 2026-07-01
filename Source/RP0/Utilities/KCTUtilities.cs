@@ -570,6 +570,9 @@ namespace RP0
             }
             else
             {
+                double totalEffectiveCost = ship.effectiveCost;
+                origTotalBP = ship.buildPoints;
+                oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
                 foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
                 {
                     totalEffectiveCost += v.effectiveCost;
@@ -580,9 +583,12 @@ namespace RP0
                             nodes = parts[name] = new HashSet<ConfigNode>();
                         nodes.Add(part);
                     }
+                    origTotalBP += v.buildPoints;
+                    oldProgressBP += v.IsFinished ? v.buildPoints : v.progress;
                 }
-                origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(origCost);
-                oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
+                double completion = oldProgressBP / origTotalBP;
+                origTotalBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
+                oldProgressBP = completion * origTotalBP;
             }
 
             List<Part> matchingParts = new List<Part>();

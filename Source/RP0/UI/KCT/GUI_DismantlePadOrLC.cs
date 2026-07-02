@@ -61,6 +61,20 @@ namespace RP0
                     return;
                 }
 
+                foreach (var cons in SpaceCenterManagement.Instance.ActiveSC.LCConstructions)
+                {
+                    if (cons.lcID == activeLC.ID)
+                    {
+                        ScreenMessages.PostScreenMessage("Dismantle failed: Launch Complex is currently under construction. Cancel construction first.", 5f, ScreenMessageStyle.UPPER_CENTER);
+                        return;
+                    }
+                }
+
+                if (activeLC.PadConstructions.Count > 0)
+                {
+                    ScreenMessages.PostScreenMessage("Dismantle failed: a pad is currently under construction. Cancel construction first.", 5f, ScreenMessageStyle.UPPER_CENTER);
+                }
+
                 for (int i = activeLC.LaunchPads.Count - 1; i >= 0; --i)
                 {
                     LCLaunchPad lpToDel = activeLC.LaunchPads[i];

@@ -73,6 +73,7 @@ namespace RP0
                 if (activeLC.PadConstructions.Count > 0)
                 {
                     ScreenMessages.PostScreenMessage("Dismantle failed: a pad is currently under construction. Cancel construction first.", 5f, ScreenMessageStyle.UPPER_CENTER);
+                    return;
                 }
 
                 for (int i = activeLC.LaunchPads.Count - 1; i >= 0; --i)

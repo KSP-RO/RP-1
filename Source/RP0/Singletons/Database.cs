@@ -36,6 +36,153 @@ namespace RP0
         public PersistentDictionaryValueTypes<string, ResourceTagType> ResourceTagTypes = new PersistentDictionaryValueTypes<string, ResourceTagType>();
     }
 
+    /// <summary>
+    /// Holds raw cfg data from SCMREFURBTECHS and SCMRECOVERYTECHS nodes.
+    /// </summary>
+    public class RecoveryTechSettings
+    {
+        public double RefurbishmentRateBase { get; set; } = 1.0d;
+        public double RecoveryRateBase { get; set; } = 1.0d;
+        public double RecoveryCostBase { get; set; } = 1.0d;
+
+        public struct RefurbTechEntry
+        {
+            public string techID { get; set; }
+            public double rateRefurbishment { get; set; }
+            public double costRefurbishment { get; set; }
+            public double splashdownPenaltyMult { get; set; }
+        }
+
+        public struct RecoveryTechEntry
+        {
+            public string techID { get; set; }
+            public double rateRecovery { get; set; }
+            public double costRecovery { get; set; }
+        }
+
+        public List<RefurbTechEntry> RefurbEntries { get; } = new List<RefurbTechEntry>();
+        public List<RecoveryTechEntry> RecoveryEntries { get; } = new List<RecoveryTechEntry>();
+
+        public double RecoveryRateMult { get; private set; } = 1.0d;
+        public double RecoveryCostMult { get; private set; } = 1.0d;
+        public double RefurbishmentRateMult { get; private set; } = 1.0d;
+        public double RefurbishmentCostMult { get; private set; } = 1.0d;
+        public double SplashdownPenaltyMult { get; private set; } = 1.0d;
+
+        public void LoadRefurb(ConfigNode refurbNode)
+        {
+            RefurbEntries.Clear();
+            if (refurbNode == null) return;
+
+            if (refurbNode.HasNode("BASE"))
+            {
+                var b = refurbNode.GetNode("BASE");
+                double tempBase = RefurbishmentRateBase;
+                if (b.TryGetValue("RateRefurbishment", ref tempBase))
+                    RefurbishmentRateBase = tempBase;
+            }
+
+            foreach (ConfigNode tech in refurbNode.GetNodes("TECH"))
+            {
+                var e = new RefurbTechEntry();
+                e.techID = tech.GetValue("id");
+                
+                double tRate = 1.0d;
+                double tCost = 1.0d;
+                double tSplash = 1.0d;
+
+                tech.TryGetValue("RateRefurbishment", ref tRate);
+                tech.TryGetValue("CostRefurbishment", ref tCost);
+                tech.TryGetValue("SplashdownPenaltyMult", ref tSplash);
+
+                e.rateRefurbishment = tRate;
+                e.costRefurbishment = tCost;
+                e.splashdownPenaltyMult = tSplash;
+
+                if (!string.IsNullOrEmpty(e.techID))
+                    RefurbEntries.Add(e);
+            }
+        }
+
+        public void LoadRecovery(ConfigNode recNode)
+        {
+            RecoveryEntries.Clear();
+            if (recNode == null) return;
+
+            if (recNode.HasNode("BASE"))
+            {
+                var b = recNode.GetNode("BASE");
+                double tRate = RecoveryRateBase;
+                double tCost = RecoveryCostBase;
+                
+                b.TryGetValue("RateRecovery", ref tRate);
+                b.TryGetValue("CostRecovery", ref tCost);
+                
+                RecoveryRateBase = tRate;
+                RecoveryCostBase = tCost;
+            }
+
+            foreach (ConfigNode tech in recNode.GetNodes("TECH"))
+            {
+                var e = new RecoveryTechEntry();
+                e.techID = tech.GetValue("id");
+                
+                double tRate = 1.0d;
+                double tCost = 1.0d;
+                
+                tech.TryGetValue("RateRecovery", ref tRate);
+                tech.TryGetValue("CostRecovery", ref tCost);
+                
+                e.rateRecovery = tRate;
+                e.costRecovery = tCost;
+
+                if (!string.IsNullOrEmpty(e.techID))
+                    RecoveryEntries.Add(e);
+            }
+        }
+
+        public void RecalculateAndApply()
+        {
+            if (HighLogic.CurrentGame == null) return;
+            if (HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX && ResearchAndDevelopment.Instance == null) return;
+
+            // Refurbishment
+            double refurbRate = RefurbishmentRateBase;
+            double refurbCost = 1.0d;
+            double splashdown = 1.0d;
+
+            foreach (var e in RefurbEntries)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(e.techID) == RDTech.State.Available)
+                {
+                    refurbRate *= e.rateRefurbishment;
+                    refurbCost *= e.costRefurbishment;
+                    splashdown *= e.splashdownPenaltyMult;
+                }
+            }
+
+            RefurbishmentRateMult  = refurbRate;
+            RefurbishmentCostMult  = refurbCost;
+            SplashdownPenaltyMult  = splashdown;
+
+            // Recovery
+            double recRate = RecoveryRateBase;
+            double recCost = RecoveryCostBase;
+
+            foreach (var e in RecoveryEntries)
+            {
+                if (ResearchAndDevelopment.GetTechnologyState(e.techID) == RDTech.State.Available)
+                {
+                    recRate *= e.rateRecovery;
+                    recCost *= e.costRecovery;
+                }
+            }
+
+            RecoveryRateMult = recRate;
+            RecoveryCostMult = recCost;
+        }
+    }
+
     [KSPAddon(KSPAddon.Startup.Instantly, true)]
     public class Database : MonoBehaviour
     {
@@ -56,6 +203,11 @@ namespace RP0
 
         public static readonly SpaceCenterSettings SettingsSC = new SpaceCenterSettings();
         public static readonly CrewSettings SettingsCrew = new CrewSettings();
+
+        /// <summary>
+        /// Holds raw cfg data and active multipliers for both Refurbishment and Recovery tech progression.
+        /// </summary>
+        public static readonly RecoveryTechSettings SettingsRecovery = new RecoveryTechSettings();
 
         private void Awake()
         {
@@ -118,7 +270,7 @@ namespace RP0
 
     public class KCTDataLoader : LoadingSystem
     {
-        private const int NumLoaders = 8;
+        private const int NumLoaders = 9;
 
         private IEnumerator LoadRoutine()
         {
@@ -138,7 +290,10 @@ namespace RP0
             
             yield return StartCoroutine(LoadSpaceCenterSettings());
             _progress = ++idx;
-            
+
+            yield return StartCoroutine(LoadRecRefurbTechSettings());
+            _progress = ++idx;
+
             yield return StartCoroutine(LoadCrewSettings());
             _progress = ++idx;
             
@@ -236,6 +391,20 @@ namespace RP0
                 Database.SettingsSC.Load(n);
                 yield return null;
             }
+        }
+
+        /// <summary>
+        /// Loads refurb and recovery cfgs
+        /// </summary>
+        private static IEnumerator LoadRecRefurbTechSettings()
+        {
+            ConfigNode refurbNode = GameDatabase.Instance.GetConfigNodes("SCMREFURBTECHS")?.FirstOrDefault();
+            Database.SettingsRecovery.LoadRefurb(refurbNode);
+
+            ConfigNode recNode = GameDatabase.Instance.GetConfigNodes("SCMRECOVERYTECHS")?.FirstOrDefault();
+            Database.SettingsRecovery.LoadRecovery(recNode);
+
+            yield return null;
         }
 
         private IEnumerator LoadCrewSettings()

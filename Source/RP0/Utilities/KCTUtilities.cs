@@ -527,6 +527,10 @@ namespace RP0
 
             Dictionary<string, double> resourceAmounts = new Dictionary<string, double>();
             VesselProject.GetPartCostsAndMass(pt, out float dryCostPt, out _, out float dryMassPt, out _, resourceAmounts);
+
+            dryMassPt -= pt.kerbalMass + pt.kerbalInventoryMass + pt.kerbalResourceMass; 
+            // ignore kerbal inventory mass, since it's factored in here but isn't in the other function
+
             ShipConstruction.GetPartCostsAndMass(cn, availablePart, out float dryCost, out _, out float dryMass, out _);
 
             if (Math.Abs(dryCost - dryCostPt) > 0.00001)

@@ -1,18 +1,19 @@
-﻿using System;
-using System.Reflection;
+﻿using KSP.Localization;
+using KSP.UI.Screens;
+using ROUtils;
+using ROUtils.DataTypes;
+using RP0.UI;
+using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using ToolbarControl_NS;
 using UniLinq;
 using UnityEngine;
-using ROUtils.DataTypes;
-using ToolbarControl_NS;
-using KSP.UI.Screens;
-using System.Collections;
-using System.IO;
 using UnityEngine.Profiling;
 using UnityEngine.UI;
-using RP0.UI;
-using KSP.Localization;
-using ROUtils;
+using static RP0.KCTUtilities;
 
 namespace RP0
 {
@@ -176,6 +177,8 @@ namespace RP0
         public double editProgressBP; // Mildly computationally heavy. Only valid when editing a craft.
         public double oldEditProgressPercentage;
         public double newEditProgressPercentage; 
+        public readonly List<Part> matchingParts = new List<Part>();
+        public readonly Dictionary<Part, PartCompareResult> nonmatchingParts = new Dictionary<Part, PartCompareResult>();
 
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
@@ -1443,7 +1446,7 @@ namespace RP0
             if (EditorShipEditingMode)
             {
                 EditorVessel.LCID = EditedVessel.LCID;
-                KCTUtilities.GetShipEditProgress(EditedVessel, out similarityProgressBP, out editProgressBP, out oldEditProgressPercentage, out newEditProgressPercentage);
+                KCTUtilities.GetShipEditProgress(EditedVessel, out editProgressBP, out oldEditProgressPercentage, out newEditProgressPercentage);
             }
             else
             {

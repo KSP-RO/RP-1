@@ -350,7 +350,6 @@ namespace RP0
             double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect;
             double effic = editedVessel.LC.Efficiency;
             GUILayout.Label($"Original: {Math.Max(0, SpaceCenterManagement.Instance.oldEditProgressPercentage):P2}");
-            GUILayout.Label(new GUIContent($"Similarity Contribution: {Math.Max(0, SpaceCenterManagement.Instance.similarityProgressBP / fullVesselBP):P2}", "Percentage of the new total progress before penalties for added parts."));
             GUILayout.Label($"Edited: {SpaceCenterManagement.Instance.newEditProgressPercentage:P2}");
             double newProgressBP = SpaceCenterManagement.Instance.editProgressBP;
             

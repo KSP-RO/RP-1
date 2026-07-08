@@ -22,7 +22,7 @@
     <DefineConstants>TRACE;DEBUG;ENABLE_PROFILER</DefineConstants>
     <DebugType>portable</DebugType>
     <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>12</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -31,7 +31,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <PlatformTarget>x64</PlatformTarget>
-    <LangVersion>preview</LangVersion>
+    <LangVersion>12</LangVersion>
     <ErrorReport>prompt</ErrorReport>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
@@ -40,6 +40,7 @@
       $(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))</KSPRoot>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="ScenarioModules\RnDUpgradeTips.cs" />
     <Compile Include="Avionics\ControlLockerUtils.cs" />
     <Compile Include="Avionics\EditorBinder.cs" />
     <Compile Include="ConfigurableStart\DateHandler.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="Singletons\LeaderNotifications.cs" />
     <Compile Include="SpaceCenter\Projects\HireStaffProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />
+    <Compile Include="UI\CostBreakdownGUI.cs" />
     <Compile Include="UI\ProceduralAvionicsWindow.cs" />
     <Compile Include="CareerLog\CareerEvent.cs" />
     <Compile Include="CareerLog\CareerEventScope.cs" />
@@ -87,6 +89,7 @@
     <Compile Include="UI\TrainingGUI.cs" />
     <Compile Include="Crew\TrainingExpiration.cs" />
     <Compile Include="DesignConcerns\UntooledParts.cs" />
+    <Compile Include="Utilities\AirlaunchUtils.cs" />
     <Compile Include="Utilities\RP0DTUtils.cs" />
     <Compile Include="Harmony\MainMenu.cs" />
     <Compile Include="Harmony\CrewListItem.cs" />
@@ -145,6 +148,7 @@
     <Compile Include="Harmony\Administration.cs" />
     <Compile Include="Harmony\RDController.cs" />
     <Compile Include="Harmony\PartListTooltip.cs" />
+    <Compile Include="Harmony\PartListTooltipUpgradeStats.cs" />
     <Compile Include="Harmony\RDPartList.cs" />
     <Compile Include="Harmony\ScienceWidget.cs" />
     <Compile Include="Harmony\FundsWidget.cs" />
@@ -232,6 +236,7 @@
     <Compile Include="UI\ContractGUI.cs" />
     <Compile Include="UI\Tooltip.cs" />
     <Compile Include="UI\ToolingGUI.cs" />
+    <Compile Include="UI\ToolingPartResizer.cs" />
     <Compile Include="UI\AvionicsGUI.cs" />
     <Compile Include="SpaceCenter\AirlaunchParams.cs" />
     <Compile Include="SpaceCenter\AirlaunchTechLevel.cs" />
@@ -334,6 +339,10 @@
     </Reference>
     <Reference Include="$(KSPRoot)/GameData/RealFuels/Plugins/RealFuels.dll">
       <HintPath>$(ReferencePath)/RealFuels.dll</HintPath>
+      <Private>False</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/GameData/ROLib/Plugins/ROLib.dll">
+      <HintPath>$(ReferencePath)/ROLib.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="$(KSPRoot)/GameData/ROUtils/Plugins/ROUtils.dll">

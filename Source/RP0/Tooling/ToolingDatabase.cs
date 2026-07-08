@@ -7,6 +7,11 @@ namespace RP0
         public float Value { get; set; }
         public List<ToolingEntry> Children { get; } = new List<ToolingEntry>();
 
+        // Set on merged-leaf entries to record which DB type(s) supplied this exact
+        // (mass, diameter, length) combination. Null on entries that live in the database
+        // proper, and on non-leaf merged entries.
+        public HashSet<string> Sources { get; set; }
+
         public ToolingEntry(float value)
         {
             Value = value;
@@ -14,18 +19,29 @@ namespace RP0
     }
     public class ToolingDatabase
     {
-        protected static float comparisonEpsilonHigh = 1.04f;
-        protected static float comparisonEpsilonLow = 0.96f;
+        public const float toolingMargin = .04f;
+        protected const float comparisonHigh = 1.00f + toolingMargin;
+        protected const float comparisonLow = 1.00f - toolingMargin;
+        protected const float epsilon = 1e-6f;
+
+        public static float GetLowComparison(float value) => value * (comparisonLow - epsilon);
+
+        public static float GetHighComparison(float value) => value * (comparisonHigh + epsilon);
 
         protected static int EpsilonCompare(float a, float b)
         {
-            if (a > b * comparisonEpsilonLow && a < b * comparisonEpsilonHigh)
+            if (a > GetLowComparison(b) && a < GetHighComparison(b))
                 return 0;
 
             return a.CompareTo(b);
         }
 
         public static Dictionary<string, List<ToolingEntry>> toolings = new Dictionary<string, List<ToolingEntry>>();
+
+        // Bumps on every mutation (UnlockTooling adding entries, Load wiping the table).
+        // Lets the UI cache derived views (e.g. merged grouped entries) and invalidate
+        // without scanning the whole tree each frame.
+        public static int Generation { get; private set; }
 
         protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min)
         {
@@ -91,6 +107,48 @@ namespace RP0
             return level;
         }
 
+        // Returns a freshly-merged tree combining the entries of every supplied type.
+        // Used by the tooling UI to collapse grouped types (e.g. all Avionics-N* tech levels
+        // under one Avionics-N entry) without mutating the underlying database.
+        public static List<ToolingEntry> GetMergedEntries(IEnumerable<string> types)
+        {
+            var merged = new List<ToolingEntry>();
+            foreach (var type in types)
+            {
+                if (toolings.TryGetValue(type, out var entries))
+                {
+                    foreach (var entry in entries)
+                        MergeEntryInto(merged, entry, type);
+                }
+            }
+            return merged;
+        }
+
+        private static void MergeEntryInto(List<ToolingEntry> target, ToolingEntry source, string sourceType)
+        {
+            int existing = GetEntryIndex(source.Value, target, out int insertionIndex);
+            ToolingEntry dest;
+            if (existing >= 0)
+            {
+                dest = target[existing];
+            }
+            else
+            {
+                dest = new ToolingEntry(source.Value);
+                target.Insert(insertionIndex, dest);
+            }
+            if (source.Children.Count == 0)
+            {
+                if (dest.Sources == null) dest.Sources = new HashSet<string>();
+                dest.Sources.Add(sourceType);
+            }
+            else
+            {
+                foreach (var child in source.Children)
+                    MergeEntryInto(dest.Children, child, sourceType);
+            }
+        }
+
         public static bool UnlockTooling(string type, params float[] parameters)
         {
             var toolingUnlocked = false;
@@ -112,6 +170,7 @@ namespace RP0
                 entries = entries[entryIndex].Children;
             }
 
+            if (toolingUnlocked) Generation++;
             return toolingUnlocked;
         }
 
@@ -124,6 +183,7 @@ namespace RP0
         private static void LoadDBFromNode(ConfigNode node)
         {
             toolings.Clear();
+            Generation++;
 
             if (node == null) return;
 

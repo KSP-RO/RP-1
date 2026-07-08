@@ -65,8 +65,7 @@ namespace RP0
         }
 
         /// <summary>
-        /// Only used for non-airlaunch cases
-        /// (either recovery or reconditioning)
+        /// Only used for reconditioning
         /// </summary>
         /// <param name="vessel"></param>
         /// <param name="type"></param>
@@ -95,18 +94,10 @@ namespace RP0
             {
                 RP0Debug.Log("Error while determining BP for recon_rollout");
             }
-            if (type == RolloutReconType.Rollback)
-                progress = BP;
-            else if (type == RolloutReconType.Recovery)
-            {
-                double KSCDistance = (float)SpaceCenter.Instance.GreatCircleDistance(SpaceCenter.Instance.cb.GetRelSurfaceNVector(vessel.latitude, vessel.longitude));
-                double maxDist = SpaceCenter.Instance.cb.Radius * Math.PI;
-                BP += BP * (KSCDistance / maxDist);
-            }
         }
 
         /// <summary>
-        /// Called for everything but reconditioning and recovery
+        /// Called for everything but reconditioning
         /// </summary>
         /// <param name="vessel"></param>
         /// <param name="type"></param>
@@ -126,6 +117,7 @@ namespace RP0
             switch (type)
             {
                 case RolloutReconType.Reconditioning:
+                    RP0Debug.LogWarning("Non-Reconditioning ReconRolloutProject called with Reconditioning");
                     BP = Formula.GetReconditioningBP(vessel);
                     cost = Formula.GetReconditioningCost(vessel);
                     break;

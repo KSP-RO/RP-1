@@ -58,7 +58,7 @@ namespace ContractConfigurator.RP0
                 wasPreviouslyMet = vessel.horizontalSrfSpeed > Math.Abs(vessel.verticalSpeed) * glideRatio;
                 if (maxSrfVel.HasValue)
                 {
-                    wasPreviouslyMet &= maxSrfVel < vessel.srfSpeed;
+                    wasPreviouslyMet &= vessel.srfSpeed < maxSrfVel;
                 }
             }
 

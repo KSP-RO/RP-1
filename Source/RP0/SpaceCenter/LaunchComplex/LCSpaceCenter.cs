@@ -206,6 +206,17 @@ namespace RP0
             return false;
         }
 
+        public void SwapLaunchComplexes(int indexA, int indexB)
+        {
+            if (indexA == indexB) return;
+            if (indexA == HangarIndex || indexB == HangarIndex) return;
+            var temp = LaunchComplexes[indexA];
+            LaunchComplexes[indexA] = LaunchComplexes[indexB];
+            LaunchComplexes[indexB] = temp;
+            if (LCIndex == indexA) LCIndex = indexB;
+            else if (LCIndex == indexB) LCIndex = indexA;
+        }
+
         public void Save(ConfigNode node)
         {
             RP0Debug.Log("Saving KSC " + KSCName);

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using ROUtils;
 
@@ -9,6 +10,8 @@ namespace RP0
         private static Rect _simulationWindowPosition = new Rect((Screen.width - 250) / 2, (Screen.height - 250) / 2, 250, 1);
         private static Rect _simulationConfigPosition = new Rect((Screen.width / 2) - 150, (Screen.height / 4), 300, 1);
         private static Vector2 _bodyChooserScrollPos;
+        private static CelestialBody _bodyChooserRoot;
+        private static Dictionary<CelestialBody, List<CelestialBody>> _bodyChooserChildren;
 
         private static string _sOrbitAlt = "", _sOrbitPe = "", _sOrbitAp = "", _sOrbitInc = "", _sOrbitLAN = "", _sOrbitMNA = "", _sOrbitArgPe = "", _UTString = "", _sDelay = "0";
         private static bool _fromCurrentUT = true;
@@ -174,21 +177,73 @@ namespace RP0
         {
             _bodyChooserScrollPos = GUILayout.BeginScrollView(_bodyChooserScrollPos, GUILayout.Height(500));
             GUILayout.BeginVertical();
-            foreach (CelestialBody body in FlightGlobals.Bodies)
+
+            if (_bodyChooserChildren == null)
+                BuildBodyChooserHierarchy();
+
+            if (_bodyChooserRoot != null)
             {
-                if (GUILayout.Button(body.bodyName))
+                if (GUILayout.Button(_bodyChooserRoot.bodyName))
+                    SelectSimBody(_bodyChooserRoot);
+
+                if (_bodyChooserChildren.TryGetValue(_bodyChooserRoot, out var planets))
                 {
-                    SpaceCenterManagement.Instance.SimulationParams.SimulationBody = body;
-                    GUIStates.ShowSimBodyChooser = false;
-                    GUIStates.ShowSimConfig = true;
-                    _centralWindowPosition.height = 1;
+                    foreach (CelestialBody planet in planets)
+                    {
+                        if (GUILayout.Button(planet.bodyName))
+                            SelectSimBody(planet);
+
+                        if (_bodyChooserChildren.TryGetValue(planet, out var moons))
+                        {
+                            foreach (CelestialBody moon in moons)
+                            {
+                                GUILayout.BeginHorizontal();
+                                GUILayout.Space(20f);
+                                if (GUILayout.Button(moon.bodyName))
+                                    SelectSimBody(moon);
+                                GUILayout.EndHorizontal();
+                            }
+                        }
+                    }
                 }
             }
+
             GUILayout.EndVertical();
             GUILayout.EndScrollView();
 
             CheckEditorLock();
             CenterWindow(ref _centralWindowPosition);
+        }
+
+        private static void BuildBodyChooserHierarchy()
+        {
+            _bodyChooserChildren = new Dictionary<CelestialBody, List<CelestialBody>>();
+            foreach (CelestialBody body in FlightGlobals.Bodies)
+            {
+                if (body.orbit == null)
+                {
+                    _bodyChooserRoot = body;
+                }
+                else
+                {
+                    var parent = body.referenceBody;
+                    if (!_bodyChooserChildren.TryGetValue(parent, out var list))
+                        _bodyChooserChildren[parent] = list = new List<CelestialBody>();
+                    list.Add(body);
+                }
+            }
+            foreach (List<CelestialBody> list in _bodyChooserChildren.Values)
+            {
+                list.Sort((a, b) => a.orbit.semiMajorAxis.CompareTo(b.orbit.semiMajorAxis));
+            }
+        }
+
+        private static void SelectSimBody(CelestialBody body)
+        {
+            SpaceCenterManagement.Instance.SimulationParams.SimulationBody = body;
+            GUIStates.ShowSimBodyChooser = false;
+            GUIStates.ShowSimConfig = true;
+            _centralWindowPosition.height = 1;
         }
 
         private static void StartSim(SimulationParams simParams)

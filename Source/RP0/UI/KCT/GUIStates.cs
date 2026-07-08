@@ -26,6 +26,7 @@
         public bool ShowBuildPlansWindow;
         public bool ShowAirlaunch;
         public bool ShowPresetSaver;
+        public bool ShowLCManagement;
 
         public bool IsMainGuiVisible => ShowBuildList || ShowEditorGUI;
 
@@ -36,11 +37,11 @@
 
         public void HideAllNonMainWindows()
         {
-            ShowSimConfig = ShowSimBodyChooser = ShowSimulationGUI = 
+            ShowSimConfig = ShowSimBodyChooser = ShowSimulationGUI =
             ShowClearLaunch = ShowShipRoster = ShowCrewSelect = ShowSettings = ShowDismantleLC =
             ShowUpgradeWindow = ShowPersonnelWindow = ShowBLPlus = ShowNewPad = ShowModifyLC =
-            ShowNewLC = ShowLCResources = ShowRename = ShowDismantlePad = ShowFirstRun = ShowLaunchSiteSelector = 
-            ShowBuildPlansWindow = ShowAirlaunch = ShowPresetSaver = false;
+            ShowNewLC = ShowLCResources = ShowRename = ShowDismantlePad = ShowFirstRun = ShowLaunchSiteSelector =
+            ShowBuildPlansWindow = ShowAirlaunch = ShowPresetSaver = ShowLCManagement = false;
         }
     }
 }

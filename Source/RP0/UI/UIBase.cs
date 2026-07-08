@@ -7,10 +7,11 @@ namespace RP0
         public enum UITab
         {
             Budget, Facilities, Integration, Construction, AstronautCosts, Tooling, ToolingType,
-            Astronauts, Training, NewCourse, Naut, Avionics, Contracts, CareerLog, Programs
+            Astronauts, Training, NewCourse, Naut, Avionics, Contracts, CareerLog, Programs,
+            CostBreakdown
         };
 
-        protected GUIStyle RightLabel, BoldLabel, BoldRightLabel, PressedButton, InfoButton;
+        protected GUIStyle RightLabel, BoldLabel, BoldRightLabel, PressedButton, InfoButton, HorizontalLineStyle;
 
         public UIBase()
         {
@@ -37,6 +38,12 @@ namespace RP0
                 fixedWidth = 19f,
                 contentOffset = new Vector2(1, -1),
                 margin = new RectOffset(4, 4, 6, 4)
+            };
+            HorizontalLineStyle = new GUIStyle()
+            {
+                normal = new GUIStyleState() { background = Texture2D.whiteTexture },
+                margin = new RectOffset(0, 0, 4, 4),
+                fixedHeight = 1
             };
         }
 
@@ -71,6 +78,8 @@ namespace RP0
                     return HighLogic.CurrentGame.Mode == Game.Modes.CAREER;
                 case UITab.Avionics:
                     return HighLogic.LoadedSceneIsEditor;
+                case UITab.CostBreakdown:
+                    return HighLogic.CurrentGame.Mode == Game.Modes.CAREER && HighLogic.LoadedSceneIsEditor;
                 case UITab.Astronauts:
                 case UITab.Training:
                 case UITab.NewCourse:
@@ -88,6 +97,14 @@ namespace RP0
         public bool RenderToggleButton(GUIContent c, bool selected, params GUILayoutOption[] options)
         {
             return GUILayout.Button(c, selected ? PressedButton : HighLogic.Skin.button, options);
+        }
+
+        protected void DrawHorizontalSeparator()
+        {
+            var c = GUI.color;
+            GUI.color = Color.white;
+            GUILayout.Box(GUIContent.none, HorizontalLineStyle);
+            GUI.color = c;
         }
     }
 }

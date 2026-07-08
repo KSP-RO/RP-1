@@ -695,7 +695,7 @@ namespace RP0
         public static void DisableModFunctionality()
         {
             DisableSimulationLocks();
-            InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTLaunchLock);
+            InputLockManager.RemoveControlLock(SpaceCenterManagement.SCMLaunchLock);
             KCT_GUI.HideAll();
         }
 
@@ -942,7 +942,7 @@ namespace RP0
             }
             else if (SpaceCenterManagement.Instance != null)
             {
-                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, SpaceCenterManagement.KCTLaunchLock);
+                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, SpaceCenterManagement.SCMLaunchLock);
                 if (!SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled)
                 {
                     SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled = true;

@@ -119,7 +119,7 @@ namespace RP0.Harmony
                     return false;
                 }
 
-                double excessCost = UnlockCreditHandler.Instance.SpendCredit(postCMQcost);
+                double excessCost = UnlockCreditHandler.Instance.SpendCredit(postCMQcost, TransactionReasonsRP0.PartOrUpgradeUnlock);
                 if (excessCost > 0d)
                 {
                     Funding.Instance.AddFunds(-excessCost * invertCMQop, TransactionReasonsRP0.PartOrUpgradeUnlock.Stock());

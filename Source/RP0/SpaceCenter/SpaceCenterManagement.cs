@@ -1397,7 +1397,7 @@ namespace RP0
                 // they pinned the plane manually (then inc/LAN aren't NaN and the fallback doesn't matter).
                 if (double.IsNaN(simParams.SimInclination) && double.IsNaN(simParams.SimLAN))
                     ScreenMessages.PostScreenMessage(new ScreenMessage(
-                        $"Couldn't derive the {originName}→{body.bodyName} approach plane (origin and target must share a parent, e.g. both orbit the Sun). Placed on an equatorial approach — set Inclination/LAN manually if needed.",
+                        $"Couldn't derive the {originName}→{body.bodyName} approach plane (origin and target must share a parent, e.g. both orbit the Sun, or the target must be a moon of such a body). Placed on an equatorial approach — set Inclination/LAN manually if needed.",
                         10f, ScreenMessageStyle.UPPER_CENTER));
             }
 
@@ -1462,15 +1462,85 @@ namespace RP0
         // Derive the arrival-hyperbola orientation (inclination, LAN, argument of periapsis, all in the
         // KSP global reference frame / degrees) from the real interplanetary transfer geometry.
         //
-        // We Lambert-solve the origin→target heliocentric transfer (alexmoon solver, see LambertSolver)
-        // to get the arrival v∞ vector, then build the minimum-inclination hyperbola that contains it at
-        // the given periapsis radius. That "coplanar" plane is the DLA case TWP reports as its insertion
-        // inclination; raising inclination above it (to match a moon's plane) is a future input.
+        // We Lambert-solve the origin->target heliocentric transfer (alexmoon solver, see LambertSolver) to
+        // get the arrival v∞ vector (for a moon target, the v∞ is first converted to be moon-relative), then
+        // build the minimum-inclination hyperbola that contains it at the given periapsis radius. That
+        // "coplanar" plane is the DLA case TWP reports as its insertion inclination; raising inclination
+        // above it is a future input.
         private struct ApproachOrientation { public double inc, lan, argPe; }
 
-        // Lambert-solve the origin→target heliocentric transfer and return the arrival v∞ vector (the
-        // spacecraft's velocity relative to the target at SOI entry), or null if it can't be solved.
+        // Return the arrival v∞ vector (the spacecraft's velocity relative to the target at SOI entry) for
+        // the origin->target transfer, or null if it can't be solved.
+        //
+        // Direct case (origin and target share a parent, e.g. Earth->Mars around the Sun): a single Lambert
+        // solve. Moon case (target orbits a planet that shares origin's parent, e.g. Earth->Titan): solve the
+        // interplanetary transfer to the PARENT planet, then convert that planet-arrival v∞ to a v∞ relative
+        // to the moon at its position on the arrival date (a patched-conic moon intercept).
         private static Vector3d? TrySolveArrivalVInf(CelestialBody target, CelestialBody origin, double arrivalUT, double transferTime)
+        {
+            if (origin == null || target == null || origin.orbit == null || target.orbit == null) return null;
+
+            if (origin.orbit.referenceBody == target.orbit.referenceBody)
+                return TryLambertVInf(target, origin, arrivalUT, transferTime);
+
+            // Target is a moon in another system: the "planet" is the top of its chain that orbits the star.
+            // It must share origin's parent (an interplanetary transfer) and not be the origin itself (an
+            // origin-body moon like Earth->Moon is not the case this handles).
+            CelestialBody planet = null;
+            foreach (CelestialBody anc in KCTUtilities.AncestorChainToPlanet(target)) planet = anc;
+            if (planet == origin || planet.orbit == null || planet.orbit.referenceBody != origin.orbit.referenceBody)
+                return null;
+
+            Vector3d? vInfPlanetOpt = TryLambertVInf(planet, origin, arrivalUT, transferTime);
+            if (!vInfPlanetOpt.HasValue) return null;
+            return MoonRelativeVInf(vInfPlanetOpt.Value, target, planet, arrivalUT);
+        }
+
+        // Convert an arrival v∞ relative to a planet into a v∞ relative to one of its moons, at the moon's
+        // position on arrivalUT. Patched-conic model: on the planet-centred arrival hyperbola the spacecraft
+        // reaches the moon's orbital radius at a planet-relative speed set by energy conservation (vis-viva),
+        // moving tangentially (perpendicular to the planet radius) in the direction of the incoming v∞'s
+        // tangential component. Subtracting the moon's orbital velocity gives the moon-relative v∞. This
+        // "adjusts" the interplanetary trajectory so it intercepts the moon rather than the bare planet.
+        private static Vector3d? MoonRelativeVInf(Vector3d vInfPlanet, CelestialBody moon, CelestialBody planet, double arrivalUT)
+        {
+            // The model uses the moon's state relative to planet and planet.gravParameter together, so it's
+            // only valid when the moon orbits the planet directly (rules out a moon-of-a-moon, where the walk
+            // would hand us a grandparent and mix reference frames).
+            if (moon.orbit == null || moon.orbit.referenceBody != planet) return null;
+            try
+            {
+                double tA = moon.orbit.TrueAnomalyAtUT(arrivalUT);
+                moon.orbit.GetOrbitalStateVectorsAtTrueAnomaly(tA, arrivalUT, false, out Vector3d rMoon, out Vector3d vMoon);
+                double r = rMoon.magnitude;
+                if (!(r > 0.0)) return null;
+
+                Vector3d rHat = rMoon / r;
+                Vector3d tang = vInfPlanet - Vector3d.Dot(vInfPlanet, rHat) * rHat;  // component perp to planet-radius
+                // Near-radial approach (moon near the incoming asymptote): tang collapses to state-vector noise
+                // that normalize() would amplify to a random direction. Threshold relative to v∞, not absolute.
+                if (tang.magnitude < 1e-3 * vInfPlanet.magnitude) return null;
+
+                double vScAtMoon = Math.Sqrt(vInfPlanet.sqrMagnitude + 2.0 * planet.gravParameter / r);
+                Vector3d vScVec = vScAtMoon * tang.normalized;  // planet-relative velocity at the moon
+                Vector3d vInfMoon = vScVec - vMoon;
+                if (!IsFinite(vInfMoon) || vInfMoon.magnitude < 1e-3) return null;
+
+                RP0Debug.Log($"[HypApproach] moon intercept {planet.bodyName}->{moon.bodyName}: |vInf_planet|={vInfPlanet.magnitude:F1} " +
+                    $"vSc@moon={vScAtMoon:F1} |vMoon|={vMoon.magnitude:F1} -> |vInf_moon|={vInfMoon.magnitude:F1}");
+                return vInfMoon;
+            }
+            catch (Exception e)
+            {
+                RP0Debug.LogWarning($"Moon-relative v∞ solve threw: {e.Message}");
+                return null;
+            }
+        }
+
+        // Lambert-solve the origin->target heliocentric transfer (origin and target must share a parent) and
+        // return the arrival v∞ vector (the spacecraft's velocity relative to the target at SOI entry), or
+        // null if it can't be solved.
+        private static Vector3d? TryLambertVInf(CelestialBody target, CelestialBody origin, double arrivalUT, double transferTime)
         {
             if (origin == null || target == null) return null;
             if (origin.orbit == null || target.orbit == null) return null;

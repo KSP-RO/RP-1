@@ -18,9 +18,10 @@ namespace RP0
         private static string _sHypInsertionDV = "", _sHypPeAlt = "", _sHypTimeToPe = "", _sHypTransferTime = "", _sAutostageTarget = "";
         private static bool _fromCurrentUT = true;
 
-        // Cached KAC transfer-window lookup for the current hyperbolic target (re-scanned when the
-        // target body changes or while none has been found yet), to offer a "load from KAC alarm" button.
-        private static string _kacLookupKey = null;
+        // Cached KAC transfer-window lookup for the current hyperbolic target (re-scanned when the target or
+        // origin body changes, or when invalidated), to offer a "load from KAC alarm" button. Keyed on the
+        // CelestialBody references so the common unchanged path (every OnGUI frame) allocates nothing.
+        private static CelestialBody _kacLookupTarget, _kacLookupOrigin;
         private static bool _kacHasWindow;
         private static string _kacDepartsLabel;            // cached "departs in …" text for the load button
         private static object _kacSubscribedInstance;      // the KACAPI instance we're subscribed to (re-init aware)
@@ -94,15 +95,22 @@ namespace RP0
             GUILayout.EndHorizontal();
 
             {
-                bool atHome = simParams.SimulationBody == Planetarium.fetch.Home;
-                // Non-Home or hyperbolic always implies "start in orbit"; let the user see the toggle but it's a no-op there.
-                bool forcedOn = !atHome || isHyperbolic;
-                if (forcedOn) simParams.SimulateInOrbit = true;
-                bool changed = simParams.SimulateInOrbit;
-                GUI.enabled = !forcedOn;
+                bool prev = simParams.SimulateInOrbit;
                 simParams.SimulateInOrbit = GUILayout.Toggle(simParams.SimulateInOrbit, " Start in orbit");
-                GUI.enabled = true;
-                if (simParams.SimulateInOrbit != changed)
+                if (prev && !simParams.SimulateInOrbit)
+                {
+                    // "Start in orbit" can only be turned off for a pad start at Home. A non-Home target or a
+                    // hyperbolic approach both require being in orbit, so reset those to a Home circular start.
+                    simParams.SimulationBody = Planetarium.fetch.Home;
+                    simParams.SimOrbitMode = SimOrbitMode.Circular;
+                    isHyperbolic = false;
+                }
+                else if (simParams.SimulationBody != Planetarium.fetch.Home)
+                {
+                    // A non-Home body always implies starting in orbit (there's no pad to launch from there).
+                    simParams.SimulateInOrbit = true;
+                }
+                if (simParams.SimulateInOrbit != prev)
                     _simulationConfigPosition.height = 1;
             }
             if (simParams.SimulationBody != Planetarium.fetch.Home || simParams.SimulateInOrbit || isHyperbolic)
@@ -298,15 +306,33 @@ namespace RP0
                 if (_kacSubscribedInstance is KACWrapper.KACAPI prev) prev.onAlarmStateChanged -= OnKacAlarmsChanged;
                 KACWrapper.KAC.onAlarmStateChanged += OnKacAlarmsChanged;
                 _kacSubscribedInstance = KACWrapper.KAC;
-                _kacLookupKey = null;
+                InvalidateKacCache();
             }
 
-            string targetName = target == null ? null : target.bodyName;
+            // Cheap reference guard so the common (unchanged) path does no work or allocation each frame.
+            if (ReferenceEquals(target, _kacLookupTarget) && ReferenceEquals(origin, _kacLookupOrigin)) return;
+            _kacLookupTarget = target;
+            _kacLookupOrigin = origin;
+
+            // Acceptable alarm targets: the selected body plus its parents up to the planet that orbits the
+            // star, so a moon target (Titan) matches the interplanetary alarm to its parent planet
+            // (Earth->Saturn). targetNames[0] stays the selected body so the helper can tell a parent match
+            // from a direct one. Home is excluded from the parents: a transfer "to Home" is never the window
+            // for a sim, and would otherwise let a moon-of-Home match Earth-return alarms.
+            List<string> targetNames = null;
+            if (target != null)
+            {
+                CelestialBody home = Planetarium.fetch.Home;
+                targetNames = new List<string>();
+                foreach (CelestialBody b in KCTUtilities.AncestorChainToPlanet(target))
+                {
+                    if (b != target && b == home) break;
+                    targetNames.Add(b.bodyName);
+                }
+            }
             string originName = origin == null ? null : origin.bodyName;
-            string key = targetName == null ? null : targetName + "|" + (originName ?? "");
-            if (key == _kacLookupKey) return;
-            _kacLookupKey = key;
-            _kacHasWindow = targetName != null && ModIntegrations.AlarmHelper.TryGetTransferWindowToTarget(targetName, originName, out _kacWindow);
+            _kacHasWindow = targetNames != null &&
+                ModIntegrations.AlarmHelper.TryGetTransferWindowToTarget(targetNames, originName, out _kacWindow);
             _kacDepartsLabel = _kacHasWindow && !double.IsNaN(_kacWindow.DepartureUT)
                 ? KSPUtil.PrintDateDeltaCompact(_kacWindow.DepartureUT - Planetarium.GetUniversalTime(), true, false)
                 : "?";
@@ -314,7 +340,7 @@ namespace RP0
 
         private static void OnKacAlarmsChanged(KACWrapper.KACAPI.AlarmStateChangedEventArgs e) => InvalidateKacCache();
 
-        private static void InvalidateKacCache() => _kacLookupKey = null;
+        private static void InvalidateKacCache() => _kacLookupTarget = _kacLookupOrigin = null;
 
         // Fill the hyperbolic-mode fields from the cached KAC alarm. Departure goes into the Time field
         // as an absolute UT (the hyperbolic Time field is the departure date).
@@ -325,8 +351,19 @@ namespace RP0
             if (origin != null) simParams.SimOriginBody = origin;
             if (!double.IsNaN(w.DepartureUT)) { _UTString = w.DepartureUT.ToString("F0"); _fromCurrentUT = false; }
             if (!double.IsNaN(w.TransferSeconds)) _sHypTransferTime = w.TransferSeconds.ToString("F0");
-            if (!double.IsNaN(w.InsertionDV)) _sHypInsertionDV = w.InsertionDV.ToString("F0");
-            if (!double.IsNaN(w.PeriapsisAltKm)) _sHypPeAlt = w.PeriapsisAltKm.ToString("F0");
+            if (w.IsParentMatch)
+            {
+                // A parent (planet) alarm matched a moon target: its insertion ΔV / periapsis are the planet's,
+                // not the moon's. Clear both (don't leave a stale value) so the moon sim derives v∞ from the
+                // transfer and defaults its periapsis.
+                _sHypInsertionDV = "";
+                _sHypPeAlt = "";
+            }
+            else
+            {
+                if (!double.IsNaN(w.InsertionDV)) _sHypInsertionDV = w.InsertionDV.ToString("F0");
+                if (!double.IsNaN(w.PeriapsisAltKm)) _sHypPeAlt = w.PeriapsisAltKm.ToString("F0");
+            }
             // Approach plane: clear both inclination and LAN so they're derived from the transfer. TWP
             // reports no insertion LAN, and the derived inclination already matches its insertion inc, so
             // filling one but not the other would just be inconsistent.

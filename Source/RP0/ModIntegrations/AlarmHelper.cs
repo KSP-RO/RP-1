@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Text.RegularExpressions;
 using UniLinq;
@@ -19,6 +20,9 @@ namespace RP0.ModIntegrations
         public double TransferSeconds { get; set; } // travel time
         public double InsertionDV { get; set; }     // m/s
         public double PeriapsisAltKm { get; set; }  // capture periapsis altitude at the target
+        // True when a parent (planet) alarm matched a moon target: InsertionDV/PeriapsisAltKm are then the
+        // planet's, not the moon's, so the caller should ignore them (the moon sim derives its own).
+        public bool IsParentMatch { get; set; }
     }
 
     /// <summary>
@@ -36,7 +40,12 @@ namespace RP0.ModIntegrations
         /// KAC isn't available or no matching transfer alarm exists. Stock alarms have no transfer type,
         /// so this only works with KAC installed.
         /// </summary>
-        public static bool TryGetTransferWindowToTarget(string targetBodyName, string originBodyName, out KacTransferWindow info)
+        // <paramref name="targetBodyNames"/> is the selected target followed by its parent chain up to (not
+        // including) the star. An alarm matches if it targets any of them, so a moon selection (e.g. Titan)
+        // matches the interplanetary transfer to its parent planet (Earth->Saturn). targetBodyNames[0] is the
+        // actual selected body; a direct match to it is preferred over a parent match, and info.IsParentMatch
+        // reports which occurred so the caller can decide whether the note's insertion/periapsis apply.
+        public static bool TryGetTransferWindowToTarget(IList<string> targetBodyNames, string originBodyName, out KacTransferWindow info)
         {
             info = new KacTransferWindow
             {
@@ -45,32 +54,47 @@ namespace RP0.ModIntegrations
                 InsertionDV = double.NaN,
                 PeriapsisAltKm = double.NaN,
             };
-            if (!UseKAC || string.IsNullOrEmpty(targetBodyName)) return false;
+            if (!UseKAC || targetBodyNames == null || targetBodyNames.Count == 0) return false;
 
             double now = Planetarium.GetUniversalTime();
             KACAlarm best = null;
+            bool bestExact = false;
             foreach (KACAlarm a in KACWrapper.KAC.Alarms)
             {
-                if (!IsTransferAlarmTo(a, targetBodyName, originBodyName)) continue;
-                if (best == null || IsBetterWindow(a, best, now)) best = a;
+                if (!IsTransferAlarmTo(a, targetBodyNames, originBodyName)) continue;
+                // Prefer a direct match to the selected body over a parent-planet match; break ties by window.
+                bool exact = string.Equals(a.XferTargetBodyName, targetBodyNames[0], StringComparison.OrdinalIgnoreCase);
+                if (best == null || (exact && !bestExact) || (exact == bestExact && IsBetterWindow(a, best, now)))
+                {
+                    best = a;
+                    bestExact = exact;
+                }
             }
             if (best == null) return false;
 
             info.AlarmName = best.Name;
             info.OriginBodyName = best.XferOriginBodyName;
+            info.IsParentMatch = !bestExact;
             ParseTransferNote(best.Notes, ref info);
             return true;
         }
 
-        private static bool IsTransferAlarmTo(KACAlarm a, string targetBodyName, string originBodyName)
+        private static bool IsTransferAlarmTo(KACAlarm a, IList<string> targetBodyNames, string originBodyName)
         {
             if (a.AlarmType != KACAPI.AlarmTypeEnum.Transfer && a.AlarmType != KACAPI.AlarmTypeEnum.TransferModelled)
                 return false;
-            if (!string.Equals(a.XferTargetBodyName, targetBodyName, StringComparison.OrdinalIgnoreCase))
+            if (!ContainsIgnoreCase(targetBodyNames, a.XferTargetBodyName))
                 return false;
             // If an origin body is selected, the alarm's origin must match it too.
             return string.IsNullOrEmpty(originBodyName)
                 || string.Equals(a.XferOriginBodyName, originBodyName, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool ContainsIgnoreCase(IList<string> names, string value)
+        {
+            for (int i = 0; i < names.Count; i++)
+                if (string.Equals(names[i], value, StringComparison.OrdinalIgnoreCase)) return true;
+            return false;
         }
 
         // Prefer the soonest still-upcoming window; otherwise the most recent past one.

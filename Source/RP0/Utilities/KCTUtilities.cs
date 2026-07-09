@@ -635,7 +635,7 @@ namespace RP0
 
             double newTotalBP = SCM.EditorVessel.buildPoints;
 
-            newProgressBP = oldProgressBP / origTotalBP * newTotalBP;
+            newProgressBP = oldProgressBP / origTotalBP * editProgressBP;
             newProgressBP = Math.Max(0, newProgressBP - (newTotalBP - editProgressBP) * Database.SettingsSC.PartAdditionTimePenalty);
             RP0Debug.Log($"BP after Additive Penalty: {newProgressBP}");
             originalCompletionPercent = oldProgressBP / origTotalBP;

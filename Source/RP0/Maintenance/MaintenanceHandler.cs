@@ -411,6 +411,11 @@ namespace RP0
             if (HighLogic.CurrentGame == null)
                 return;
 
+            // Skip maintenance/upkeep/reputation processing while simulating; an SCM sim can jump
+            // UT forward by years and this would churn funds/rep against time that isn't passing.
+            if (SpaceCenterManagement.Instance?.IsSimulatedFlight == true)
+                return;
+
             if (_frameCount++ < 2)
             {
                 return;
@@ -453,6 +458,10 @@ namespace RP0
 
         public void FixedUpdate()
         {
+            // See Update(): don't process crew/maintenance during a simulation time jump.
+            if (SpaceCenterManagement.Instance?.IsSimulatedFlight == true)
+                return;
+
             double UT = Planetarium.GetUniversalTime();
             if (_lastUpdateFixed == 0)
                 _lastUpdateFixed = UT;

@@ -427,6 +427,9 @@ namespace RP0
                                 }
                             }
                             RP0Debug.Log($"Setting simulation UT to {SimulationParams.SimulationUT}");
+                            // Silence KAC / stock alarms due within the jump window so they don't all
+                            // fire across the skipped time. Restored from the pre-sim backup on exit.
+                            ModIntegrations.AlarmHelper.SuppressAllAlarmActions(SimulationParams.SimulationUT);
                             if (!ModUtils.IsPrincipiaInstalled)
                                 Planetarium.SetUniversalTime(SimulationParams.SimulationUT);
                             else

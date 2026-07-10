@@ -542,7 +542,7 @@ namespace RP0
             }
 
             // Finally, update all builds
-            SpaceCenterManagement.Instance.ProgressBuildTime(UTDiff);
+            SpaceCenterManagement.Instance?.ProgressBuildTime(UTDiff);
         }
 
         public void OnDestroy()

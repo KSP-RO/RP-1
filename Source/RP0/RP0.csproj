@@ -236,6 +236,7 @@
     <Compile Include="UI\ContractGUI.cs" />
     <Compile Include="UI\Tooltip.cs" />
     <Compile Include="UI\ToolingGUI.cs" />
+    <Compile Include="UI\ToolingPartResizer.cs" />
     <Compile Include="UI\AvionicsGUI.cs" />
     <Compile Include="SpaceCenter\AirlaunchParams.cs" />
     <Compile Include="SpaceCenter\AirlaunchTechLevel.cs" />

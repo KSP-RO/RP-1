@@ -177,6 +177,12 @@ namespace RP0.Crew
             if (_isFirstLoad)
                 return;
 
+            // Don't advance crew state (retirements, inactivity, expirations) during a simulation.
+            // An SCM sim can jump UT forward by years; processing it here fires retirement popups
+            // for time that isn't really passing. Sim state is reverted on exit regardless.
+            if (SpaceCenterManagement.Instance?.IsSimulatedFlight == true)
+                return;
+
             Profiler.BeginSample("RP0ProcessCrew");
             double time = Planetarium.GetUniversalTime();
             ProcessRetirements(time);

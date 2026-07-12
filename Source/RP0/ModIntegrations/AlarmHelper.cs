@@ -77,6 +77,49 @@ namespace RP0.ModIntegrations
         }
 
         /// <summary>
+        /// Disarms every alarm that would fire at or before <paramref name="throughUT"/> so it can't
+        /// fire during an SCM simulation time jump: KAC / the stock alarm clock watch the real UT and
+        /// will trigger every alarm the jump passes over. The sim reverts to the pre-sim backup on
+        /// exit (see KCTUtilities.LoadSimulationSave), so alarm state is restored then; this just
+        /// silences them during the jump. Safe to call repeatedly.
+        /// </summary>
+        /// <param name="throughUT">The UT the jump lands on; only alarms due at or before this are touched.</param>
+        public static void SuppressAllAlarmActions(double throughUT)
+        {
+            // Only alarms due by throughUT can fire during the jump; leave the rest armed so a mishap
+            // that skips the sim revert (e.g. a manual save mid-sim) can't leave every alarm the
+            // player owns silently disabled.
+            //
+            // Gate on AssemblyExists (KAC installed), NOT UseKAC/APIReady: this runs during the sim's
+            // flight-scene load, and KAC clears APIReady across scene transitions, so UseKAC would be
+            // false here and we'd fall through to the (empty) stock branch. The KAC alarm list is
+            // static and stays mutable through the transition.
+            //
+            // We set Enabled=false rather than the AlarmAction: KAC's firing loop ignores the legacy
+            // AlarmAction field and gates triggering on Enabled (KerbalAlarmClock.cs), so disabling
+            // is what actually stops the warp kill / message / sound.
+            if (KACWrapper.AssemblyExists && KACWrapper.KAC != null)
+            {
+                foreach (KACAlarm alarm in KACWrapper.KAC.Alarms.ToList())
+                {
+                    if (alarm.AlarmTime <= throughUT)
+                        alarm.Enabled = false;
+                }
+            }
+            else
+            {
+                if (AlarmClockScenario.Instance == null) return;
+                foreach (AlarmTypeBase alarm in AlarmClockScenario.Instance.alarms.Values)
+                {
+                    if (alarm.ut > throughUT) continue;
+                    alarm.actions.warp = AlarmActions.WarpEnum.DoNothing;
+                    alarm.actions.message = AlarmActions.MessageEnum.No;
+                    alarm.actions.playSound = false;
+                }
+            }
+        }
+
+        /// <summary>
         /// Finds the alarm with a certain id and updates its properties.
         /// </summary>
         /// <returns>

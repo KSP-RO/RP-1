@@ -9,21 +9,25 @@ namespace ContractConfigurator.RP0
     /// continuously for holdSeconds:
     ///   * surface speed within [minSpeed, maxSpeed]
     ///   * vertical speed within [minVerticalSpeed, maxVerticalSpeed]
-    ///   * projected range >= requiredRange, where range = speed * (fuel / averageBurnRate)
+    ///   * projected range >= requiredRange
     ///
     /// Endurance is measured as RANGE rather than time, so flying faster and/or more efficiently (e.g.
     /// higher, where jets burn less for the same speed) is rewarded. Any violation resets the continuous
     /// hold timer, so the conditions can't be satisfied separately ("cheesed") -- they must all be true at
-    /// once for the whole period. Burn rate is averaged over a rolling rateWindowSeconds, and samples are
-    /// only taken while at cruise speed so the rate is representative.
+    /// once for the whole period.
     ///
-    /// Config: resource (req), requiredRange m (req), holdSeconds (def 300), minSpeed/maxSpeed m/s,
-    /// minVerticalSpeed/maxVerticalSpeed m/s, rateWindowSeconds (def 30), updateFrequency (def 0.5),
-    /// debug (def false; set true to log the per-tick speed/VS/range/held values).
+    /// Range is computed for EVERY mass-bearing propellant the vessel is actively burning (jets run on all
+    /// sorts of resources here -- kerosene, hydrogen, methane, nitrous, water injection, enriched uranium),
+    /// and the reported range is the MINIMUM across them, i.e. whichever fuel runs out first. Each fuel's
+    /// burn rate is averaged over a rolling rateWindowSeconds, and samples are only taken while at cruise
+    /// speed so the rate is representative. Massless resources (ElectricCharge, IntakeAir) are ignored.
+    ///
+    /// Config: requiredRange m (req), holdSeconds (def 300), minSpeed/maxSpeed m/s,
+    /// minVerticalSpeed/maxVerticalSpeed m/s, rateWindowSeconds (def 30), updateFrequency (def 0.5).
+    /// Enable CC verbose logging to see the per-tick speed/VS/range/held values.
     /// </summary>
     public class SustainedCruise : VesselParameter
     {
-        protected PartResourceDefinition resource { get; set; }
         protected double requiredRange { get; set; }
         protected double holdSeconds { get; set; }
         protected double minSpeed { get; set; }
@@ -32,31 +36,30 @@ namespace ContractConfigurator.RP0
         protected double maxVerticalSpeed { get; set; }
         protected double rateWindowSeconds { get; set; }
         protected float updateFrequency { get; set; }
-        protected bool debug { get; set; }
 
         internal const double DEFAULT_HOLD = 300.0;
         internal const double DEFAULT_RATE_WINDOW = 30.0;
         internal const float DEFAULT_UPDATE_FREQUENCY = 0.5f;
-        private const double MIN_RATE = 1e-4;   // below this the craft isn't really burning fuel
+        private const double MIN_RATE = 1e-4;   // below this the craft isn't really burning this resource
 
         private float lastUpdate = 0f;
         private double lastCheckTime = double.NegativeInfinity;
         private int lastPartCount = -1;
         private uint lastVesselPersistentId;
-        private float lastDebugLog = 0f;
         private double heldTime = 0.0;   // continuous time all conditions have held
-        // Rolling (time, amount) samples for the burn-rate average.
+        // Rolling per-tick samples for the burn-rate average: sampleTimes[k] holds the time of tick k, and
+        // sampleAmounts[k] maps resource id -> total amount on the vessel at that tick.
         private readonly List<double> sampleTimes = new List<double>();
-        private readonly List<double> sampleAmounts = new List<double>();
+        private readonly List<Dictionary<int, double>> sampleAmounts = new List<Dictionary<int, double>>();
+        private readonly HashSet<int> massBearingIds = new HashSet<int>();
 
         public SustainedCruise() : base(null) { }
 
-        public SustainedCruise(string title, PartResourceDefinition resource, double requiredRange, double holdSeconds,
+        public SustainedCruise(string title, double requiredRange, double holdSeconds,
                                double minSpeed, double maxSpeed, double minVerticalSpeed, double maxVerticalSpeed,
-                               double rateWindowSeconds, float updateFrequency, bool debug)
+                               double rateWindowSeconds, float updateFrequency)
             : base(title)
         {
-            this.resource = resource;
             this.requiredRange = requiredRange;
             this.holdSeconds = holdSeconds;
             this.minSpeed = minSpeed;
@@ -65,14 +68,12 @@ namespace ContractConfigurator.RP0
             this.maxVerticalSpeed = maxVerticalSpeed;
             this.rateWindowSeconds = rateWindowSeconds;
             this.updateFrequency = updateFrequency;
-            this.debug = debug;
             this.title = GetParameterTitle();
         }
 
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
-            node.AddValue("resource", resource.name);
             node.AddValue("requiredRange", requiredRange);
             node.AddValue("holdSeconds", holdSeconds);
             node.AddValue("minSpeed", minSpeed);
@@ -81,13 +82,11 @@ namespace ContractConfigurator.RP0
             node.AddValue("maxVerticalSpeed", maxVerticalSpeed);
             node.AddValue("rateWindowSeconds", rateWindowSeconds);
             node.AddValue("updateFrequency", updateFrequency);
-            node.AddValue("debug", debug);
         }
 
         protected override void OnParameterLoad(ConfigNode node)
         {
             base.OnParameterLoad(node);
-            resource = PartResourceLibrary.Instance.GetDefinition(ConfigNodeUtil.ParseValue<string>(node, "resource"));
             requiredRange = ConfigNodeUtil.ParseValue<double>(node, "requiredRange");
             holdSeconds = ConfigNodeUtil.ParseValue<double>(node, "holdSeconds", DEFAULT_HOLD);
             minSpeed = ConfigNodeUtil.ParseValue<double>(node, "minSpeed", 0.0);
@@ -96,9 +95,6 @@ namespace ContractConfigurator.RP0
             maxVerticalSpeed = ConfigNodeUtil.ParseValue<double>(node, "maxVerticalSpeed", double.MaxValue);
             rateWindowSeconds = ConfigNodeUtil.ParseValue<double>(node, "rateWindowSeconds", DEFAULT_RATE_WINDOW);
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
-            // bool collides with CC's (node, key, allowExpression) overload, so read it manually.
-            debug = false;
-            if (node.HasValue("debug") && bool.TryParse(node.GetValue("debug"), out bool db)) debug = db;
         }
 
         protected override string GetParameterTitle()
@@ -116,29 +112,51 @@ namespace ContractConfigurator.RP0
             heldTime = 0.0;
         }
 
-        // Average burn rate (units/s) and current fuel over the rolling window; false until the window is
-        // filled with a contiguous run and the craft is actually burning fuel.
-        private bool TryRate(out double rate, out double current)
+        // Smallest projected range (m) across every mass-bearing resource the craft is actively burning,
+        // i.e. whichever fuel is the endurance limiter. False until the window is filled with a contiguous
+        // run and at least one resource is actually being consumed. limitingResource names the limiter.
+        private bool TryMinRange(Vessel v, double speed, out double minRange, out PartResourceDefinition limitingResource)
         {
-            rate = 0.0; current = 0.0;
+            minRange = 0.0;
+            limitingResource = null;
             int n = sampleTimes.Count;
             if (n < 2) return false;
             double span = sampleTimes[n - 1] - sampleTimes[0];
-            current = sampleAmounts[n - 1];
             if (span < rateWindowSeconds * 0.9) return false;
-            rate = (sampleAmounts[0] - sampleAmounts[n - 1]) / span;
-            return rate >= MIN_RATE;
+
+            Dictionary<int, double> oldest = sampleAmounts[0];
+            Dictionary<int, double> newest = sampleAmounts[n - 1];
+            bool any = false;
+            double best = double.MaxValue;
+            foreach (KeyValuePair<int, double> kv in newest)
+            {
+                // Only rank resources present for the whole window, else a tank coming online mid-window
+                // reads as an impossibly high burn rate.
+                if (!oldest.TryGetValue(kv.Key, out double old)) continue;
+                double rate = (old - kv.Value) / span;
+                if (rate < MIN_RATE) continue;   // not really burning this one
+                PartResourceDefinition def = PartResourceLibrary.Instance.GetDefinition(kv.Key);
+                double range = ProjectedRange(v, speed, kv.Value, rate, def != null ? def.density : 0.0);
+                if (range < best)
+                {
+                    best = range;
+                    limitingResource = def;
+                }
+                any = true;
+            }
+            if (!any) return false;
+            minRange = best;
+            return true;
         }
 
-        // Still-air range the craft could cover from now. Uses the Breguet range equation, which accounts
-        // for the craft getting lighter as fuel burns (burn rate falls with weight in level cruise, so
-        // real range exceeds a naive fuel/rate*speed extrapolation):
+        // Still-air range the craft could cover from now on a single resource. Uses the Breguet range
+        // equation, which accounts for the craft getting lighter as fuel burns (burn rate falls with weight
+        // in level cruise, so real range exceeds a naive fuel/rate*speed extrapolation):
         //     range = speed * (M / massRate) * ln(M / Mempty)
         // with M = current total mass and Mempty = mass once this resource is exhausted. Reduces to the
         // linear form at small fuel fractions; falls back to it if mass/density data is unavailable.
-        private double ProjectedRange(Vessel v, double speed, double currentUnits, double rateUnits)
+        private double ProjectedRange(Vessel v, double speed, double currentUnits, double rateUnits, double dens)
         {
-            double dens = resource.density;                 // tonnes per unit
             double M = v.totalMass;                          // current total mass (t)
             double mFuel = currentUnits * dens;              // remaining mass of this resource (t)
             double mEmpty = M - mFuel;                       // mass when it runs out (t)
@@ -146,6 +164,30 @@ namespace ContractConfigurator.RP0
             if (dens > 0.0 && massRate > 0.0 && mFuel > 1e-6 && mEmpty > 1e-3)
                 return speed * (M / massRate) * System.Math.Log(M / mEmpty);
             return speed * (currentUnits / rateUnits);       // linear fallback
+        }
+
+        // Snapshot of every mass-bearing resource's vessel-wide total, keyed by resource id. Massless
+        // resources (ElectricCharge, IntakeAir) are skipped so they can't masquerade as a fuel.
+        private Dictionary<int, double> SampleResources(Vessel v)
+        {
+            massBearingIds.Clear();
+            for (int i = 0; i < v.parts.Count; i++)
+            {
+                PartResourceList prl = v.parts[i].Resources;
+                for (int j = 0; j < prl.Count; j++)
+                {
+                    PartResource pr = prl[j];
+                    if (pr.info.density > 0.0) massBearingIds.Add(pr.info.id);
+                }
+            }
+
+            var snapshot = new Dictionary<int, double>(massBearingIds.Count);
+            foreach (int id in massBearingIds)
+            {
+                v.GetConnectedResourceTotals(id, out double amount, out double _);
+                snapshot[id] = amount;
+            }
+            return snapshot;
         }
 
         protected override void OnUpdate()
@@ -176,47 +218,37 @@ namespace ContractConfigurator.RP0
             // window + timer so endurance can't be "proven" by slowing down.
             if (!speedOk)
             {
-                sampleTimes.Clear();
-                sampleAmounts.Clear();
-                heldTime = 0.0;
-                DebugLog(speed, vs, false, false, false, 0.0, 0.0, 0.0);
+                ResetAll();
+                LogState(speed, vs, false, false, false, 0.0, null);
                 CheckVessel(v);
                 return;
             }
 
-            double amount = 0.0;
-            for (int i = 0; i < v.parts.Count; i++)
-            {
-                PartResource pr = v.parts[i].Resources.Get(resource.id);
-                if (pr != null) amount += pr.amount;
-            }
             sampleTimes.Add(now);
-            sampleAmounts.Add(amount);
+            sampleAmounts.Add(SampleResources(v));
             while (sampleTimes.Count > 2 && now - sampleTimes[1] >= rateWindowSeconds)
             {
                 sampleTimes.RemoveAt(0);
                 sampleAmounts.RemoveAt(0);
             }
 
-            bool rateReady = TryRate(out double rate, out double current);
-            double range = rateReady ? ProjectedRange(v, speed, current, rate) : 0.0;
+            bool rateReady = TryMinRange(v, speed, out double range, out PartResourceDefinition limiter);
             bool vsOk = vs >= minVerticalSpeed && vs <= maxVerticalSpeed;
             bool rangeOk = rateReady && range >= requiredRange;
 
             if (vsOk && rangeOk) heldTime += dt;   // speedOk already true here
             else heldTime = 0.0;
 
-            DebugLog(speed, vs, speedOk, vsOk, rangeOk, range, rate, current);
+            LogState(speed, vs, speedOk, vsOk, rangeOk, range, limiter);
             CheckVessel(v);
         }
 
-        private void DebugLog(double speed, double vs, bool speedOk, bool vsOk, bool rangeOk, double range, double rate, double current)
+        private void LogState(double speed, double vs, bool speedOk, bool vsOk, bool rangeOk, double range, PartResourceDefinition limiter)
         {
-            if (!debug || Time.fixedTime - lastDebugLog < 2.0f) return;
-            lastDebugLog = Time.fixedTime;
-            UnityEngine.Debug.Log($"[SustainedCruise] spd={speed:0}({(speedOk ? "ok" : "X")}) vs={vs:0.0}({(vsOk ? "ok" : "X")}) " +
-                $"{resource.name}={current:0} rate={rate:0.###}/s range={range / 1000.0:0}/{requiredRange / 1000.0:0}km({(rangeOk ? "ok" : "X")}) " +
-                $"held={heldTime:0}/{holdSeconds:0}s");
+            LoggingUtil.LogVerbose(this, "SustainedCruise spd={0:0}({1}) vs={2:0.0}({3}) range={4:0}/{5:0}km({6}) limiter={7} held={8:0}/{9:0}s",
+                speed, speedOk ? "ok" : "X", vs, vsOk ? "ok" : "X",
+                range / 1000.0, requiredRange / 1000.0, rangeOk ? "ok" : "X",
+                limiter != null ? limiter.name : "-", heldTime, holdSeconds);
         }
 
         protected override bool VesselMeetsCondition(Vessel vessel)

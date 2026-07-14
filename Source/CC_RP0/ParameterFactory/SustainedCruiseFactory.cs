@@ -5,7 +5,6 @@ namespace ContractConfigurator.RP0
     public class SustainedCruiseFactory : ParameterFactory
     {
         protected double requiredRange;
-        protected double holdSeconds;
         protected double minSpeed;
         protected double maxSpeed;
         protected double minVerticalSpeed;
@@ -18,7 +17,6 @@ namespace ContractConfigurator.RP0
             bool valid = base.Load(configNode);
 
             valid &= ConfigNodeUtil.ParseValue<double>(configNode, "requiredRange", x => requiredRange = x, this, 0.0, x => Validation.GT(x, 0.0));
-            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "holdSeconds", x => holdSeconds = x, this, SustainedCruise.DEFAULT_HOLD, x => Validation.GT(x, 0.0));
             valid &= ConfigNodeUtil.ParseValue<double>(configNode, "minSpeed", x => minSpeed = x, this, 0.0, x => Validation.GE(x, 0.0));
             valid &= ConfigNodeUtil.ParseValue<double>(configNode, "maxSpeed", x => maxSpeed = x, this, double.MaxValue);
             valid &= ConfigNodeUtil.ParseValue<double>(configNode, "minVerticalSpeed", x => minVerticalSpeed = x, this, double.MinValue);
@@ -31,7 +29,7 @@ namespace ContractConfigurator.RP0
 
         public override ContractParameter Generate(Contract contract)
         {
-            return new SustainedCruise(title, requiredRange, holdSeconds, minSpeed, maxSpeed,
+            return new SustainedCruise(title, requiredRange, minSpeed, maxSpeed,
                                        minVerticalSpeed, maxVerticalSpeed, rateWindowSeconds, updateFrequency);
         }
     }

@@ -15,8 +15,10 @@ namespace ContractConfigurator.RP0
     /// propellant the vessel is actively burning (jets run on all sorts of resources here -- kerosene,
     /// hydrogen, methane, nitrous, water injection, enriched uranium), and the reported range is the MINIMUM
     /// across them, i.e. whichever fuel runs out first. Each fuel's burn rate is averaged over a rolling
-    /// rateWindowSeconds, and samples are only taken while at cruise speed so the rate is representative.
-    /// Massless resources (ElectricCharge, IntakeAir) are ignored.
+    /// rateWindowSeconds. Sampling runs continuously (even outside the speed band) so the projected range
+    /// can be shown while climbing to / accelerating into cruise; the rolling average simply converges to
+    /// the cruise burn rate within one window once speed settles. Massless resources (ElectricCharge,
+    /// IntakeAir) are ignored.
     ///
     /// This parameter is a plain instantaneous check. To require the condition be held for a time -- and to
     /// get a countdown display -- pair it with a stock Duration parameter placed as a LATER sibling, and set
@@ -208,21 +210,11 @@ namespace ContractConfigurator.RP0
 
             double speed = v.srfSpeed;
             double vs = v.verticalSpeed;
-            bool speedOk = speed >= minSpeed && speed <= maxSpeed;
 
-            // Out of the cruise speed band: rate isn't representative. Drop the window so the burn rate has
-            // to rebuild before range can be proven again, and mark the condition unmet.
-            if (!speedOk)
-            {
-                ResetAll();
-                met = false;
-                curRange = 0.0;
-                LogState(speed, vs, false, false, false, 0.0, null);
-                CheckVessel(v);
-                GetTitle();   // refresh the contracts app with the live range
-                return;
-            }
-
+            // Sample and project range every tick regardless of speed, so the estimate is shown even while
+            // outside the cruise band (climbing / accelerating in). The rolling rate converges to the cruise
+            // value within one window; met still requires speedOk each tick, so the Duration hold only
+            // accrues in-band and can't be "proven" out of band.
             sampleTimes.Add(now);
             sampleAmounts.Add(SampleResources(v));
             while (sampleTimes.Count > 2 && now - sampleTimes[1] >= rateWindowSeconds)
@@ -232,10 +224,12 @@ namespace ContractConfigurator.RP0
             }
 
             bool rateReady = TryMinRange(v, speed, out double range, out PartResourceDefinition limiter);
+            curRange = rateReady ? range : 0.0;
+
+            bool speedOk = speed >= minSpeed && speed <= maxSpeed;
             bool vsOk = vs >= minVerticalSpeed && vs <= maxVerticalSpeed;
             bool rangeOk = rateReady && range >= requiredRange;
-            met = vsOk && rangeOk;   // speedOk already true here
-            curRange = rateReady ? range : 0.0;
+            met = speedOk && vsOk && rangeOk;
 
             LogState(speed, vs, speedOk, vsOk, rangeOk, range, limiter);
             CheckVessel(v);

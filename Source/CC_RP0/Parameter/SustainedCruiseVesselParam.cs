@@ -46,6 +46,7 @@ namespace ContractConfigurator.RP0
         private int lastPartCount = -1;
         private uint lastVesselPersistentId;
         private bool met = false;   // whether all conditions were satisfied as of the last sample
+        private double curRange = 0.0;   // most recent projected range (m), shown live in the contract title
         // Rolling per-tick samples for the burn-rate average: sampleTimes[k] holds the time of tick k, and
         // sampleAmounts[k] maps resource id -> total amount on the vessel at that tick.
         private readonly List<double> sampleTimes = new List<double>();
@@ -66,7 +67,7 @@ namespace ContractConfigurator.RP0
             this.maxVerticalSpeed = maxVerticalSpeed;
             this.rateWindowSeconds = rateWindowSeconds;
             this.updateFrequency = updateFrequency;
-            this.title = GetParameterTitle();
+            // Leave title unset so GetTitle() falls back to GetParameterTitle() each redraw (live range).
         }
 
         protected override void OnParameterSave(ConfigNode node)
@@ -95,9 +96,11 @@ namespace ContractConfigurator.RP0
 
         protected override string GetParameterTitle()
         {
-            double km = requiredRange / 1000.0;
+            double reqKm = requiredRange / 1000.0;
             string band = maxSpeed >= double.MaxValue * 0.5 ? $">= {minSpeed:0} m/s" : $"{minSpeed:0}-{maxSpeed:0} m/s";
-            return $"Cruise: range >= {km:0} km, speed {band}";
+            if (FlightGlobals.ActiveVessel == null)
+                return $"Cruise: range >= {reqKm:0} km, speed {band}";
+            return $"Cruise: range {curRange / 1000.0:0} / {reqKm:0} km, speed {band}";
         }
 
         private void ResetAll()
@@ -213,8 +216,10 @@ namespace ContractConfigurator.RP0
             {
                 ResetAll();
                 met = false;
+                curRange = 0.0;
                 LogState(speed, vs, false, false, false, 0.0, null);
                 CheckVessel(v);
+                GetTitle();   // refresh the contracts app with the live range
                 return;
             }
 
@@ -230,9 +235,11 @@ namespace ContractConfigurator.RP0
             bool vsOk = vs >= minVerticalSpeed && vs <= maxVerticalSpeed;
             bool rangeOk = rateReady && range >= requiredRange;
             met = vsOk && rangeOk;   // speedOk already true here
+            curRange = rateReady ? range : 0.0;
 
             LogState(speed, vs, speedOk, vsOk, rangeOk, range, limiter);
             CheckVessel(v);
+            GetTitle();   // refresh the contracts app with the live range
         }
 
         private void LogState(double speed, double vs, bool speedOk, bool vsOk, bool rangeOk, double range, PartResourceDefinition limiter)

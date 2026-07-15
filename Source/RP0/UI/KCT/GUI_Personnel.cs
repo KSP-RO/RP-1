@@ -470,7 +470,7 @@ namespace RP0
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(dialogName, "", dialogTitle, HighLogic.UISkin,
                             isResearch ? new DialogGUISpace(0f) : new DialogGUILabel($"LC: {currentLC.Name}"),
-                            new DialogGUILabel($"Final count {(isResearch ? "" : $"(max: {currentLC.MaxEngineers:N0})")}"),
+                            new DialogGUILabel($"Final count (current: {curCount}{(isResearch ? ")" : $", max: {currentLC.MaxEngineers:N0})")}"),
                             new DialogGUITextInput(sNumStaff, false, 7, (string n) =>
                             {
                                 sNumStaff = n;
@@ -534,10 +534,12 @@ namespace RP0
         {
             sNumStaff = sNumStaff.Replace(",", "");
             sReserveFunds = sReserveFunds.Replace(",", "");
-            bool b1 = int.TryParse(sNumStaff, out int numCrew);
+            bool b1 = int.TryParse(sNumStaff, out int numStaff);
             bool b2 = double.TryParse(sReserveFunds, out double reserveFunds);
+            int startCount = lc == null ? SpaceCenterManagement.Instance.Researchers : lc.Engineers;
+            bool b3 = numStaff > startCount;
 
-            string errorMessage = (!b1 ? "Failed to parse staff count!\n" : "") + (!b2 ? "Failed to parse reserve funds!" : "");
+            string errorMessage = (!b1 ? "Failed to parse staff count!\n" : "") + (!b2 ? "Failed to parse reserve funds!\n" : "") + (b1 && !b3 ? "Staff count must be greater than the existing amount!" : "");
 
             if (!string.IsNullOrEmpty(errorMessage))
             {
@@ -551,16 +553,14 @@ namespace RP0
             }
             else
             {
-                int startCount, endCount;
+                int endCount;
                 if (lc == null)
                 {
-                    startCount = SpaceCenterManagement.Instance.Researchers;
-                    endCount = Math.Max(numCrew, startCount);
+                    endCount = Math.Max(numStaff, startCount);
                 }
                 else
                 {
-                    startCount = lc.Engineers;
-                    endCount = Math.Min(numCrew, lc.MaxEngineers);
+                    endCount = Math.Min(numStaff, lc.MaxEngineers);
                     endCount = Math.Max(endCount, startCount);
                 }
 

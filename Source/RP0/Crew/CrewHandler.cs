@@ -51,6 +51,21 @@ namespace RP0.Crew
         [KSPField(isPersistant = true)]
         public PersistentList<TrainingCourse> TrainingCourses = new PersistentList<TrainingCourse>();
 
+        // Display-only projects for astronauts on R&R, surfaced in the build list. Rebuilt lazily
+        // only when the set of inactive nauts changes (see OnKerbalInactiveChange) instead of being
+        // reallocated every GUI frame.
+        private bool _rnrProjectsDirty = true;
+        private readonly List<CrewRnRProject> _rnrProjects = new List<CrewRnRProject>();
+        public List<CrewRnRProject> RnRProjects
+        {
+            get
+            {
+                if (_rnrProjectsDirty)
+                    RebuildRnRProjects();
+                return _rnrProjects;
+            }
+        }
+
         
         public List<TrainingTemplate> TrainingTemplates = new List<TrainingTemplate>();
         
@@ -140,6 +155,7 @@ namespace RP0.Crew
 
             GameEvents.onVesselRecoveryProcessing.Add(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
+            GameEvents.onKerbalInactiveChange.Add(OnKerbalInactiveChange);
             GameEvents.OnPartPurchased.Add(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
@@ -177,6 +193,12 @@ namespace RP0.Crew
             if (_isFirstLoad)
                 return;
 
+            // Don't advance crew state (retirements, inactivity, expirations) during a simulation.
+            // An SCM sim can jump UT forward by years; processing it here fires retirement popups
+            // for time that isn't really passing. Sim state is reverted on exit regardless.
+            if (SpaceCenterManagement.Instance?.IsSimulatedFlight == true)
+                return;
+
             Profiler.BeginSample("RP0ProcessCrew");
             double time = Planetarium.GetUniversalTime();
             ProcessRetirements(time);
@@ -201,6 +223,7 @@ namespace RP0.Crew
         {
             GameEvents.onVesselRecoveryProcessing.Remove(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Remove(OnCrewHired);
+            GameEvents.onKerbalInactiveChange.Remove(OnKerbalInactiveChange);
             GameEvents.OnPartPurchased.Remove(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
             GameEvents.onGameStateLoad.Remove(LoadSettings);
@@ -683,6 +706,13 @@ namespace RP0.Crew
             }
         }
 
+        private void OnKerbalInactiveChange(ProtoCrewMember pcm, bool wasInactive, bool isInactive)
+        {
+            // The set of nauts on R&R has changed; flag the cached project list for a rebuild on next access.
+            // Can't rebuild inline because this event fires before pcm.inactive is updated.
+            _rnrProjectsDirty = true;
+        }
+
         private void ProcessFirstLoad()
         {
             var newHires = new List<string>();
@@ -1157,6 +1187,27 @@ namespace RP0.Crew
         {
             foreach (var c in TrainingCourses)
                 c.RecalculateBuildRate();
+        }
+
+        private void RebuildRnRProjects()
+        {
+            _rnrProjects.Clear();
+            _rnrProjectsDirty = false;
+
+            var roster = HighLogic.CurrentGame?.CrewRoster;
+            if (roster == null)
+                return;
+
+            for (int i = 0; i < roster.Count; i++)
+            {
+                ProtoCrewMember pcm = roster[i];
+                if (pcm.type == ProtoCrewMember.KerbalType.Crew &&
+                    pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available &&
+                    pcm.inactive)
+                {
+                    _rnrProjects.Add(new CrewRnRProject(pcm));
+                }
+            }
         }
     }
 }

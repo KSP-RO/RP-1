@@ -1,0 +1,23 @@
+[
+    {
+        "name": "Benjee10_EMU_headpiece",
+        "title": "EMU headpiece",
+        "description": "This helmet-mounted item can be equipped to provide the wearer with more light on EVA operations",
+        "mod": "Benjee10_Suits",
+        "cost": "10",
+        "entry_cost": "",
+        "category": "LS",
+        "info": "",
+        "year": "1965",
+        "technology": "earlyLifeSupport",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "",
+        "identical_part_name": "",
+        "module_tags": []
+    }
+]

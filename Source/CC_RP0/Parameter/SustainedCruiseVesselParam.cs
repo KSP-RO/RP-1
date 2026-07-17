@@ -114,10 +114,13 @@ namespace ContractConfigurator.RP0
         // Smallest projected range (m) across every mass-bearing resource the craft is actively burning,
         // i.e. whichever fuel is the endurance limiter. False until the window is filled with a contiguous
         // run and at least one resource is actually being consumed. limitingResource names the limiter.
-        private bool TryMinRange(Vessel v, double speed, out double minRange, out PartResourceDefinition limitingResource)
+        private bool TryMinRange(Vessel v, double speed, out double minRange, out PartResourceDefinition limitingResource,
+                                 out double limAmount, out double limRate)
         {
             minRange = 0.0;
             limitingResource = null;
+            limAmount = 0.0;
+            limRate = 0.0;
             int n = sampleTimes.Count;
             if (n < 2) return false;
             double span = sampleTimes[n - 1] - sampleTimes[0];
@@ -140,6 +143,8 @@ namespace ContractConfigurator.RP0
                 {
                     best = range;
                     limitingResource = def;
+                    limAmount = kv.Value;
+                    limRate = rate;
                 }
                 any = true;
             }
@@ -223,7 +228,8 @@ namespace ContractConfigurator.RP0
                 sampleAmounts.RemoveAt(0);
             }
 
-            bool rateReady = TryMinRange(v, speed, out double range, out PartResourceDefinition limiter);
+            bool rateReady = TryMinRange(v, speed, out double range, out PartResourceDefinition limiter,
+                                         out double limAmount, out double limRate);
             curRange = rateReady ? range : 0.0;
 
             bool speedOk = speed >= minSpeed && speed <= maxSpeed;
@@ -232,8 +238,27 @@ namespace ContractConfigurator.RP0
             met = speedOk && vsOk && rangeOk;
 
             LogState(speed, vs, speedOk, vsOk, rangeOk, range, limiter);
+            if (rateReady && limiter != null) LogRangeBreakdown(v, speed, limiter, limAmount, limRate, range);
             CheckVessel(v);
             GetTitle();   // refresh the contracts app with the live range
+        }
+
+        // Per-term dump of the Breguet inputs, to diff against FAR's PerformanceEnvelopeCalculator:
+        // FAR range reduces to V*(M/mdot)*ln(M/Mempty), the same formula, so any mismatch is in these
+        // inputs. Compare mdot against FAR's FuelFlowKgPerS / the engine PAW, and M/fuel against FAR's
+        // MassKg / UsableFuelKg. Both the Breguet and linear (fuel/rate) ranges are shown.
+        private void LogRangeBreakdown(Vessel v, double speed, PartResourceDefinition limiter, double amount, double rate, double range)
+        {
+            double dens = limiter.density;
+            double M = v.totalMass;
+            double mFuel = amount * dens;
+            double mEmpty = M - mFuel;
+            double mdotKgS = rate * dens * 1000.0;
+            double lnTerm = mEmpty > 1e-3 ? System.Math.Log(M / mEmpty) : 0.0;
+            double linear = speed * (amount / rate);
+            LoggingUtil.LogVerbose(this, "SustainedCruise[range] {0} V={1:0.0}m/s M={2:0.000}t fuel={3:0.000}t empty={4:0.000}t " +
+                "mdot={5:0.####}kg/s ln={6:0.####} breguet={7:0}m linear={8:0}m",
+                limiter.name, speed, M, mFuel, mEmpty, mdotKgS, lnTerm, range, linear);
         }
 
         private void LogState(double speed, double vs, bool speedOk, bool vsOk, bool rangeOk, double range, PartResourceDefinition limiter)

@@ -1203,7 +1203,8 @@ namespace RP0.Crew
                 ProtoCrewMember pcm = roster[i];
                 if (pcm.type == ProtoCrewMember.KerbalType.Crew &&
                     pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available &&
-                    pcm.inactive)
+                    pcm.inactive &&
+                    GetTrainingFinishTime(pcm) < 0d)
                 {
                     _rnrProjects.Add(new CrewRnRProject(pcm));
                 }

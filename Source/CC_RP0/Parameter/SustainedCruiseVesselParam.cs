@@ -26,8 +26,10 @@ namespace ContractConfigurator.RP0
     /// times only while its preceding siblings are Complete, and resets when one stops).
     ///
     /// Config: requiredRange m (req), minSpeed/maxSpeed m/s, minVerticalSpeed/maxVerticalSpeed m/s,
-    /// rateWindowSeconds (def 30), updateFrequency (def 0.5). Enable CC verbose logging to see the per-tick
-    /// speed/VS/range/met values.
+    /// rateWindowSeconds (def 30), updateFrequency (def 0.5). Set the CC log level for the SustainedCruise
+    /// type to DEBUG (or VERBOSE) via an ADD_LOGLEVEL_EXCEPTION to see the per-tick speed/VS/range/met and
+    /// Breguet-input breakdown lines. (LogDebug, not LogVerbose, so it survives the Release build --
+    /// LogVerbose is [Conditional("DEBUG")] and gets compiled out.)
     /// </summary>
     public class SustainedCruise : VesselParameter
     {
@@ -256,14 +258,14 @@ namespace ContractConfigurator.RP0
             double mdotKgS = rate * dens * 1000.0;
             double lnTerm = mEmpty > 1e-3 ? System.Math.Log(M / mEmpty) : 0.0;
             double linear = speed * (amount / rate);
-            LoggingUtil.LogVerbose(this, "SustainedCruise[range] {0} V={1:0.0}m/s M={2:0.000}t fuel={3:0.000}t empty={4:0.000}t " +
+            LoggingUtil.LogDebug(this, "SustainedCruise[range] {0} V={1:0.0}m/s M={2:0.000}t fuel={3:0.000}t empty={4:0.000}t " +
                 "mdot={5:0.####}kg/s ln={6:0.####} breguet={7:0}m linear={8:0}m",
                 limiter.name, speed, M, mFuel, mEmpty, mdotKgS, lnTerm, range, linear);
         }
 
         private void LogState(double speed, double vs, bool speedOk, bool vsOk, bool rangeOk, double range, PartResourceDefinition limiter)
         {
-            LoggingUtil.LogVerbose(this, "SustainedCruise spd={0:0}({1}) vs={2:0.0}({3}) range={4:0}/{5:0}km({6}) limiter={7} -> {8}",
+            LoggingUtil.LogDebug(this, "SustainedCruise spd={0:0}({1}) vs={2:0.0}({3}) range={4:0}/{5:0}km({6}) limiter={7} -> {8}",
                 speed, speedOk ? "ok" : "X", vs, vsOk ? "ok" : "X",
                 range / 1000.0, requiredRange / 1000.0, rangeOk ? "ok" : "X",
                 limiter != null ? limiter.name : "-", met ? "IN" : "out");

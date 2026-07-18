@@ -349,7 +349,10 @@ namespace RP0.Crew
                 GUILayout.BeginHorizontal();
                 try
                 {
-                    GUILayout.Label($"Training for {currentCourse.GetItemName()} until {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft(), false)}");
+                    if (!currentCourse.HasTemplate)
+                        GUILayout.Label("Training paused - purchase the required part to resume");
+                    else
+                        GUILayout.Label($"Training for {currentCourse.GetItemName()} until {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft(), false)}");
                     if (currentCourse.SeatMin > 1)
                     {
                         if (GUILayout.Button("Cancel", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))

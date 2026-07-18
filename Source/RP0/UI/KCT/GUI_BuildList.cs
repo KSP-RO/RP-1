@@ -771,6 +771,8 @@ namespace RP0
                 }
                 else if (t is VesselProject b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                else if (t is Crew.TrainingCourse tc && !tc.HasTemplate)
+                    GUILayout.Label("(part not purchased)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
                     GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();

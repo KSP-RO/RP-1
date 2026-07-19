@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using ROUtils;
@@ -20,6 +21,7 @@ namespace RP0
         private static readonly GUIContent _gcNewLC = new GUIContent("New LC", "Build a new launch complex to support this vessel, with a margin of 10% to vessel mass and size upgrades.");
         private static readonly GUIContent _gcNoHangar = new GUIContent("Hangar Unavailable", "The Hangar is currently being modified.");
         private static readonly GUIContent _gcSwitchToHangar = new GUIContent("Switch to Hangar", "A Launch Complex is currently selected; this will switch to the Hangar, needed for planes.");
+        private static List<string> vesselFailedChecks = new List<string>();
 
         public static void DrawEditorGUI(int windowID)
         {
@@ -58,6 +60,10 @@ namespace RP0
             double rateWithCurEngis = KCTUtilities.GetBuildRate(SpaceCenterManagement.Instance.ActiveSC.ActiveLC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic
                 * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
+            int engineersUsed = Math.Min(
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.MaxEngineersFor(SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated),
+                SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers
+            );
 
             RenderBuildRateInputRow(buildPoints, rateWithCurEngis);
 
@@ -96,7 +102,7 @@ namespace RP0
 
             if (bR > 0d && rateWithCurEngis > 0d)
             {
-                double effectiveEngCount = bR / rateWithCurEngis * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers;
+                double effectiveEngCount = bR / rateWithCurEngis * engineersUsed;
                 double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.EngineerIdleSalaryMult);
                 double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
@@ -113,7 +119,7 @@ namespace RP0
             if (SpaceCenterManagement.EditorUnlockCosts > 0)
             {
                 showCredit = true;
-                GUILayout.Label($"Unlock Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.PartOrUpgradeUnlock, -SpaceCenterManagement.EditorUnlockCosts):N1}");
+                GUILayout.Label($"Unlock Cost: √{SpaceCenterManagement.EditorUnlockCosts:N1}");
             }
 
             if (SpaceCenterManagement.EditorToolingCosts > 0)
@@ -140,10 +146,31 @@ namespace RP0
                 GUILayout.Label(techLabel);
             }
 
-            if (SpaceCenterManagement.Instance.EditorVessel.humanRated && !SpaceCenterManagement.Instance.ActiveSC.ActiveLC.IsHumanRated)
+            // Check that the vessel can be built at the current LC. If it can't
+            // show a warning with failure reasons.
+            vesselFailedChecks.Clear();
+            if (EditorLogic.fetch.ship.Parts.Count > 0)
             {
-                GUILayout.Label("WARNING: Cannot integrate vessel!");
-                GUILayout.Label("Select a human-rated Launch Complex.");
+                bool isHangar = EditorDriver.editorFacility == EditorFacility.SPH;
+                if (isHangar != (SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LCType == LaunchComplexType.Hangar))
+                {
+                    GUILayout.Label("Warning: wrong LC type, switch to " + (isHangar ? "hangar" : "a rocket LC"), _yellowText);
+                }
+                else if (!SpaceCenterManagement.Instance.EditorVessel.MeetsFacilityRequirements(SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Stats, vesselFailedChecks, true))
+                {
+                    int count = vesselFailedChecks.Count;
+                    if (count > 5)
+                    {
+                        vesselFailedChecks.RemoveRange(4, count - 4);
+                        vesselFailedChecks.Add($"... and {count - 4} more errors");
+                    }
+                    GUILayout.Label($"Warning: cannot integrate at "
+                        + (isHangar ? "Hangar" : "this LC")
+                        + ":\n- "
+                        + String.Join("\n- ", vesselFailedChecks)
+                        + (isHangar ? "\nModify Hangar" : "\nModify LC or select another LC"),
+                        _yellowText);
+                }
             }
 
             GUILayout.BeginHorizontal();

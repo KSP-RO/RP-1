@@ -19,6 +19,12 @@ namespace RP0
 
             if (pm is RealFuels.Tanks.ModuleFuelTanks)
                 return GetEcmNameFromModuleFuelTanks(pm);
+            
+            if (pm is RealAntennas.ModuleRealAntenna ra)
+                return GetEcmNameFromModuleRealAntenna(ra);
+
+            if (pm is ROLib.ModuleROSolar solar)
+                return GetEcmNameFromModuleROSolar(solar);
 
             return null;
         }
@@ -37,6 +43,16 @@ namespace RP0
         {
             PartUpgradeHandler.Upgrade upgrade = RealFuels.Tanks.ModuleFuelTanks.GetUpgradeForType((RealFuels.Tanks.ModuleFuelTanks)pm);
             return upgrade?.name;
+        }
+
+        internal static string GetEcmNameFromModuleRealAntenna(RealAntennas.ModuleRealAntenna pm)
+        {
+            return pm.RAAntenna.TechLevelInfo.name;
+        }
+
+        internal static string GetEcmNameFromModuleROSolar(ROLib.ModuleROSolar solar)
+        {
+            return $"solarTL{solar.TechLevel}";
         }
     }
 }

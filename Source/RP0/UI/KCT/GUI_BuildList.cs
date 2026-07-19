@@ -32,6 +32,8 @@ namespace RP0
         private const int _width1 = 120;
         private const int _width2 = 100;
         private const int _butW = 20;
+        private static ISpaceCenterProject _prevBuildItem;
+        private static string _prevItemText;
 
         public static void SelectList(string list)
         {
@@ -127,88 +129,99 @@ namespace RP0
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Next:", _windowSkin.label);
-            ISpaceCenterProject buildItem = KCTUtilities.GetNextThingToFinish();
-            if (buildItem != null)
+            ISpaceCenterProject nextThing = KCTUtilities.GetNextThingToFinish();
+            string txt = "";
+            double timeLeft = nextThing?.GetTimeLeft() ?? 0d;
+            if (nextThing != null)
             {
-                string txt = buildItem.GetItemName(), locTxt = "VAB";
-                if (buildItem.GetProjectType() == ProjectType.None)
+                txt = nextThing.GetItemName();
+                string locTxt = "VAB";
+                switch (nextThing.GetProjectType())
                 {
-                    locTxt = string.Empty;
-                }
-                else if (buildItem.GetProjectType() == ProjectType.Reconditioning)
-                {
-                    ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
-                    if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
-                    {
-                        txt = "Reconditioning";
-                        locTxt = reconRoll.launchPadID;
-                    }
-                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
-                    {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                        txt = $"{associated.shipName} Rollout";
-                        locTxt = reconRoll.launchPadID;
-                    }
-                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
-                    {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                        txt = $"{associated.shipName} Rollback";
-                        locTxt = reconRoll.launchPadID;
-                    }
-                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Recovery)
-                    {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                        txt = $"{associated.shipName} Recovery";
-                        locTxt = associated.LC.Name;
-                    }
-                    else
-                    {
-                        locTxt = "Storage";
-                    }
-                }
-                else if (buildItem.GetProjectType() == ProjectType.AirLaunch)
-                {
-                    ReconRolloutProject ar = buildItem as ReconRolloutProject;
-                    VesselProject associated = ar.AssociatedVP;
-                    if (associated != null)
-                    {
-                        if (ar.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
-                            txt = $"{associated.shipName} Mounting";
-                        else
-                            txt = $"{associated.shipName} Unmounting";
-                    }
-                    else
-                        txt = "Airlaunch Operations";
+                    case ProjectType.None:
+                        locTxt = string.Empty;
+                        break;
+                    case ProjectType.Reconditioning:
+                        if (nextThing is ReconRolloutProject reconRoll)
+                        {
+                            switch (reconRoll.RRType)
+                            {
+                                case ReconRolloutProject.RolloutReconType.Reconditioning:
+                                    locTxt = reconRoll.launchPadID;
+                                    break;
+                                case ReconRolloutProject.RolloutReconType.Rollout:
+                                {
+                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                    txt = $"{associated.shipName} Rollout at {reconRoll.launchPadID}";
+                                    locTxt = "";
+                                    break;
+                                }
+                                case ReconRolloutProject.RolloutReconType.Rollback:
+                                {
+                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                    txt = $"{associated.shipName} Rollback at {reconRoll.launchPadID}";
+                                    locTxt = "";
+                                    break;
+                                }
+                                case ReconRolloutProject.RolloutReconType.Recovery:
+                                {
+                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                    txt = $"{associated.shipName} Recovery";
+                                    locTxt = associated.LC.Name;
+                                    break;
+                                }
+                                default:
+                                    locTxt = "Storage";
+                                    break;
+                            }
+                        }
+                        break;
+                    case ProjectType.AirLaunch:
+                        if (nextThing is ReconRolloutProject ar)
+                        {
+                            VesselProject associated = ar.AssociatedVP;
+                            if (associated != null)
+                            {
+                                if (ar.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
+                                    txt = $"{associated.shipName} Mounting";
+                                else
+                                    txt = $"{associated.shipName} Unmounting";
+                            }
+                            else
+                                txt = "Airlaunch Operations";
 
-                    locTxt = ar.LC.Name;
-
-                }
-                else if (buildItem.GetProjectType() == ProjectType.VAB || buildItem.GetProjectType() == ProjectType.SPH)
-                {
-                    VesselProject vp = buildItem as VesselProject;
-                    locTxt = vp == null || vp.LC == null ? "Vessel" : vp.LC.Name;
-                }
-                else if (buildItem.GetProjectType() == ProjectType.TechNode)
-                {
-                    locTxt = "Tech";
-                }
-                else if (buildItem.GetProjectType() == ProjectType.KSC)
-                {
-                    locTxt = "KSC";
-                }
-                else if (buildItem.GetProjectType() == ProjectType.Crew)
-                {
-                    locTxt = txt;
-                    txt = "Training";
+                            locTxt = ar.LC.Name;
+                        }
+                        break;
+                    case ProjectType.VAB:
+                    case ProjectType.SPH:
+                        if (nextThing is VesselProject vp)
+                        {
+                            locTxt = vp.LC == null ? "Vessel" : vp.LC.Name;
+                        }
+                        break;
+                    case ProjectType.TechNode:
+                        locTxt = "Tech";
+                        break;
+                    case ProjectType.KSC:
+                        locTxt = "KSC";
+                        break;
+                    case ProjectType.Crew:
+                        locTxt = txt;
+                        txt = "Training";
+                        break;
+                    case ProjectType.CrewRnR:
+                        locTxt = string.Empty;
+                        break;
                 }
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
-                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(timeLeft, txt+locTxt+nextThing.GetItemName()));
 
                 if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0)
                 {
-                    string tooltip = buildItem.GetTimeLeft() > 86400d * 365.25 * 5 ? null : $"√ Gain/Loss:\n{(SpaceCenterManagement.Instance.GetBudgetDelta(buildItem.GetTimeLeft())):N0}";
+                    string tooltip = timeLeft > 86400d * 365.25 * 5 ? null : $"√ Gain/Loss:\n{(SpaceCenterManagement.Instance.GetBudgetDelta(timeLeft)):N0}";
                     if (GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", tooltip)))
                         KCTWarpController.Create(null); // warp to next item
                 }
@@ -217,61 +230,46 @@ namespace RP0
                     KCTWarpController.Instance?.StopWarp();
                     TimeWarp.SetRate(0, true);  // If the controller doesn't exist, stop warp anyway.
                 }
-
-                if (KCTSettings.Instance.AutoAlarms && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
-                {
-                    double UT = Planetarium.GetUniversalTime();
-                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft()))
-                    {
-                        // old alarm, need to delete to get the new alarm for the new buildItem
-                        SpaceCenterManagement.Instance.AlarmUT = buildItem.GetTimeLeft() + UT;
-                        txt = "RP-1: ";
-                        if (string.IsNullOrEmpty(SpaceCenterManagement.Instance.AlarmId) || (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(txt, true)))
-                        {
-                            RP0Debug.Log("No old alarm found, new alarm being created!");
-                        }
-                        else
-                        {
-                            RP0Debug.Log("Old alarm deleted, new alarm being created!");
-                        }
-
-                        if (buildItem.GetProjectType() == ProjectType.Reconditioning && buildItem is ReconRolloutProject reconRoll)
-                        {
-                            if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
-                            {
-                                txt += $"{reconRoll.launchPadID} Reconditioning";
-                            }
-                            else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
-                            {
-                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                                txt += $"{associated.shipName} rollout at {reconRoll.launchPadID}";
-                            }
-                            else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
-                            {
-                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                                txt += $"{associated.shipName} rollback at {reconRoll.launchPadID}";
-                            }
-                            else
-                            {
-                                txt += $"{buildItem.GetItemName()} Complete";
-                            }
-                        }
-                        else
-                        {
-                            txt += $"{buildItem.GetItemName()} Complete";
-                        }
-                        KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
-                        if (buildItem.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew; // TODO, get the specific crew member being trained?
-                        else if (buildItem.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
-                        SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm(txt, "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
-                    }
-                }
             }
             else
             {
                 GUILayout.Label("No Active Projects");
             }
             GUILayout.EndHorizontal();
+            double UT = Planetarium.GetUniversalTime();
+            bool staleAlarm = _prevBuildItem != nextThing || _prevItemText != txt || (timeLeft > 100 && !KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, timeLeft));
+            // if the timeLeft is less than 100, the difference might be less than a second due to frame times, so we don't care about it
+            if (KCTSettings.Instance.AutoAlarms && _prevBuildItem != null && (staleAlarm || !AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId)))
+            {
+                SpaceCenterManagement.Instance.AlarmUT = timeLeft + UT;
+                if (nextThing == null)
+                {
+                    if (string.IsNullOrEmpty(SpaceCenterManagement.Instance.AlarmId) || (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId)))
+                    {
+                        RP0Debug.Log("No old alarm found");
+                    }
+                    else
+                    {
+                        RP0Debug.Log("Old alarm deleted");
+                    }
+                    SpaceCenterManagement.Instance.AlarmId = "";
+                }
+                else if (!AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId))
+                {
+                    RP0Debug.Log($"Creating new alarm");
+                    KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
+                    if (nextThing.GetProjectType() == ProjectType.Crew || nextThing.GetProjectType() == ProjectType.CrewRnR) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew; // TODO, get the specific crew member(s) being trained?
+                    else if (nextThing.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
+                    SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm($"RP-1: {txt}", "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
+                }
+                else
+                {
+                    RP0Debug.Log($"Changing existing alarm");
+                    AlarmHelper.ChangeAlarm(SpaceCenterManagement.Instance.AlarmId, $"RP-1: {txt}", "", SpaceCenterManagement.Instance.AlarmUT);
+                }
+            }
+            _prevBuildItem = nextThing;
+            _prevItemText = txt;
 
             GUILayout.BeginHorizontal();
 
@@ -681,6 +679,12 @@ namespace RP0
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
                 _allItems.Add(SpaceCenterManagement.Instance.staffTarget);
 
+            // Astronauts on R&R aren't queued projects, but we surface them here so they slot in
+            // by return-to-duty time. _timeBeforeItem is left at 0 because R&R runs on wall-clock,
+            // independent of the build queue, so its finish time is purely GetTimeLeftEst.
+            // The list is cached in CrewHandler and only rebuilt when nauts change R&R state.
+            _allItems.AddRange(Crew.CrewHandler.Instance.RnRProjects);
+
             // Precalc times and then sort
             foreach (var b in _allItems)
                 _estTimeForItem[b] = b.GetTimeLeftEst(_timeBeforeItem.ValueOrDefault(b));
@@ -767,6 +771,8 @@ namespace RP0
                 }
                 else if (t is VesselProject b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                else if (t is Crew.TrainingCourse tc && !tc.HasTemplate)
+                    GUILayout.Label("(part not purchased)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
                     GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
@@ -866,6 +872,9 @@ namespace RP0
 
                 case ProjectType.VesselRepair:
                     return _repairTexture;
+
+                case ProjectType.CrewRnR:
+                    return _emptyTexture;   // TODO: add a custom texture
             }
 
             return _emptyTexture;

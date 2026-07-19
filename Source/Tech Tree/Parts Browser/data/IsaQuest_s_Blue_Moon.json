@@ -21,7 +21,8 @@
         "module_tags": [
             "Avionics",
             "Cockpit",
-            "HumanRated"
+            "HumanRated",
+            "NoResourceCostMult"
         ]
     },
     {

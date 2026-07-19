@@ -16,7 +16,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "sspx-habitation-125-1",
         "identical_part_name": "",
         "module_tags": [
             "Avionics",
@@ -42,7 +42,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "radiator-fixed-4",
         "identical_part_name": "",
         "module_tags": [
             "Instruments"
@@ -113,7 +113,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "ROE-BE4",
         "identical_part_name": "",
         "module_tags": [
             "Hydrolox"

@@ -74,6 +74,11 @@ namespace RP0.Crew
         public bool IsMissionTrainingEnabled;
         public double ProfTrainRate;
         public double MissionTrainRate;
+        // Permanent multiplier on training build rate, earned via contracts (see the BoostTrainingRate
+        // behaviour). 1.0 = no bonus. Persisted with the save, and contributed to the RateTraining currency
+        // query (OnCurrencyQuery) so it flows through CalculateBuildRate's existing rate line and composes
+        // with leader/strategy training modifiers.
+        public double TrainingRateBonus = 1d;
 
         private EventData<RDTech> onKctTechQueuedEvent;
         private HashSet<string> _toRemove = new HashSet<string>();
@@ -159,6 +164,7 @@ namespace RP0.Crew
             GameEvents.OnPartPurchased.Add(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
+            GameEvents.Modifiers.OnCurrencyModifierQuery.Add(OnCurrencyQuery);
 
             TrainingDatabase.EnsureInitialized();
         }
@@ -180,12 +186,44 @@ namespace RP0.Crew
 
             LoadedSaveVersion = VERSION;
 
+            TrainingRateBonus = 1d;
+            node.TryGetValue(nameof(TrainingRateBonus), ref TrainingRateBonus);
+
             KACWrapper.InitKACWrapper();
         }
 
         public override void OnSave(ConfigNode node)
         {
             base.OnSave(node);
+
+            node.AddValue(nameof(TrainingRateBonus), TrainingRateBonus);
+        }
+
+        /// <summary>
+        /// Permanently multiplies the astronaut training rate by <paramref name="multiplier"/> (stacks
+        /// multiplicatively). Applied to both proficiency and mission training via CalculateBuildRate.
+        /// </summary>
+        public void ApplyPermanentTrainingRateBonus(double multiplier)
+        {
+            if (multiplier <= 0d) return;
+            TrainingRateBonus *= multiplier;
+            RP0Debug.Log($"Applied permanent training rate bonus x{multiplier}; total is now x{TrainingRateBonus}");
+
+            foreach (var course in TrainingCourses)
+                course.RecalculateBuildRate();
+        }
+
+        // Contribute the earned training-rate bonus to any RateTraining currency query, the same way leader
+        // and strategy effects do (see Leaders/Effects/CurrencyModifier). CalculateBuildRate already folds in
+        // CurrencyUtils.Rate(RateTraining), so no direct multiply is needed there.
+        private void OnCurrencyQuery(CurrencyModifierQuery qry)
+        {
+            if (TrainingRateBonus == 1d) return;
+            if (qry is CurrencyModifierQueryRP0 qryRP0 &&
+                (qryRP0.reasonRP0 & TransactionReasonsRP0.RateTraining) != 0)
+            {
+                qryRP0.Multiply(CurrencyRP0.Rate, TrainingRateBonus);
+            }
         }
 
         public void Process(double UTDiff)
@@ -227,6 +265,7 @@ namespace RP0.Crew
             GameEvents.OnPartPurchased.Remove(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
             GameEvents.onGameStateLoad.Remove(LoadSettings);
+            GameEvents.Modifiers.OnCurrencyModifierQuery.Remove(OnCurrencyQuery);
 
             if (onKctTechQueuedEvent != null) onKctTechQueuedEvent.Remove(AddCoursesForQueuedTechNode);
         }

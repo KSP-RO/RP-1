@@ -89,9 +89,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
-        "engine_config": "",
+        "engine_config": "LPNTR",
         "upgrade": false,
-        "entry_cost_mods": "ROE-NERVAII",
+        "entry_cost_mods": "LPNTR-3200HP",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",

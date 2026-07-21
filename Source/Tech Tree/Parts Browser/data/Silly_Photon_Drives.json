@@ -16,7 +16,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "spd_Photon_625",
+        "entry_cost_mods": "photonDrives",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -37,7 +37,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "spd_Photon_125",
+        "entry_cost_mods": "photonDrives",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -58,7 +58,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ionXenon-0625",
+        "entry_cost_mods": "photonDrives",
         "identical_part_name": "",
         "module_tags": []
     }

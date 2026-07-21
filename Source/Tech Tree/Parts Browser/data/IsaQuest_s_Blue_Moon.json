@@ -109,9 +109,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "",
-        "engine_config": "",
+        "engine_config": "BE-7",
         "upgrade": false,
-        "entry_cost_mods": "2500,BE-3",
+        "entry_cost_mods": "",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",

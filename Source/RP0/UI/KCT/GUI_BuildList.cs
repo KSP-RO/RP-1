@@ -1697,7 +1697,7 @@ namespace RP0
                             }
                         }
 
-                        if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle this pad"), GUILayout.ExpandWidth(false)))
+                        if (lpCount > 1 && pad.isOperational && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle this pad"), GUILayout.ExpandWidth(false)))
                         {
                             ksc.SwitchLaunchComplex(i);
                             lc.SwitchLaunchPad(j);

@@ -1060,7 +1060,9 @@ namespace RP0
             {
                 if (rr.RRType == ReconRolloutProject.RolloutReconType.Rollout ||
                     rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning ||
-                    rr.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
+                    rr.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount ||
+                    rr.RRType == ReconRolloutProject.RolloutReconType.Recovery ||
+                    rr.RRType == ReconRolloutProject.RolloutReconType.Refurbishment)
                 {
                     double t = rr.GetTimeLeft();
                     double fac = 1d;
@@ -1993,6 +1995,14 @@ namespace RP0
                         vp.launchSiteIndex = -1;
                     }
                     Profiler.EndSample();
+
+                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Recovery && 
+                        rr.IsComplete() && 
+                        KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vpRec)
+                    {
+                        currentLC.Recon_Rollout.Add(rr.CreateFollowOnRefurbishment(vpRec));
+                        RP0Debug.Log($"Initiated follow-on refurbishment for {vpRec.shipName}");
+                    }
                 }
 
                 for (int i = currentLC.VesselRepairs.Count; i-- > 0;)
@@ -2008,12 +2018,21 @@ namespace RP0
             }
             else
             {
-                // Process reconditioning even for LCs that have no engineers or are inactive
+                // Process non-blocking ops
                 for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)
                 {
                     var rr = currentLC.Recon_Rollout[i];
-                    if (rr.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
+                    if (!rr.IsBlocking)
+                    {
                         rr.IncrementProgress(UTDiff);
+                        if (rr.RRType == ReconRolloutProject.RolloutReconType.Recovery && 
+                            rr.IsComplete() && 
+                            KCTUtilities.FindVPByID(rr.LC, rr.AssociatedIdAsGuid) is VesselProject vpRec)
+                        {
+                            currentLC.Recon_Rollout.Add(rr.CreateFollowOnRefurbishment(vpRec));
+                            RP0Debug.Log($"Initiated follow-on refurbishment for {vpRec.shipName}");
+                        }
+                    }
                 }
             }
 
@@ -2135,56 +2154,97 @@ namespace RP0
             }
 
             Vessel v = FlightGlobals.ActiveVessel;
-            bool isSPHAllowed = KCTUtilities.IsSphRecoveryAvailable(v);
-            bool isVABAllowed = KCTUtilities.IsVabRecoveryAvailable(v);
-            var options = new List<DialogGUIBase>();
-            if (!v.isEVA)
-            {
-                string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(Database.SettingsSC.VABRecoveryTech);
-                string techLimitText = string.IsNullOrEmpty(nodeTitle) ? string.Empty :
-                                       $"\nAdditionally requires {nodeTitle} tech node to be researched (unless the vessel is in Prelaunch state).";
-                string genericReuseText = "Allows the vessel to be launched again after a short recovery delay.";
-
-                options.Add(new DialogGUIButtonWithTooltip("Recover to SPH", RecoverToSPH)
-                {
-                    OptionInteractableCondition = () => isSPHAllowed,
-                    tooltipText = isSPHAllowed ? genericReuseText : "Can only be used when the vessel was built in SPH."
-                });
-
-                options.Add(new DialogGUIButtonWithTooltip("Recover to VAB", RecoverToVAB)
-                {
-                    OptionInteractableCondition = () => isVABAllowed,
-                    tooltipText = isVABAllowed ? genericReuseText : $"Can only be used when the vessel was built in VAB.{techLimitText}"
-                });
-
-                options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecovery)
-                {
-                    tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded."
-                });
-
-                if (TFInterop.HasSupportForReset && v.GetVesselBuiltAt() != EditorFacility.SPH &&
-                    TFInterop.VesselHasFailedParts(v) && FindRepairForVessel(v) == null)
-                {
-                    options.Add(new DialogGUIButtonWithTooltip("Repair failures", QueueRepairFailures)
-                    {
-                        tooltipText = "Repair all failures without leaving the flight scene.\nUse the \"Space Center Management\" window to track the time this process takes."
-                    });
-                }
-            }
-            else
-            {
-                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecovery));
-            }
+            List<DialogGUIBase> options = BuildRecoveryOptions(v);
 
             options.Add(new DialogGUIButton("Cancel", () => { }));
 
-            var diag = new MultiOptionDialog("RecoverVesselPopup",
-                string.Empty,
-                "Recover vessel",
-                null, options: options.ToArray());
+            var diag = new MultiOptionDialog("RecoverVesselPopup", string.Empty, "Recover vessel", null, options: options.ToArray());
             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
+        private List<DialogGUIBase> BuildRecoveryOptions(Vessel v)
+        {
+            var options = new List<DialogGUIBase>();
+
+            if (v.isEVA)
+            {
+                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecovery));
+                return options;
+            }
+
+            bool isSPHAllowed = KCTUtilities.IsSphRecoveryAvailable(v);
+            bool isVABAllowed = KCTUtilities.IsVabRecoveryAvailable(v);
+            string reuseTooltip = GenerateReuseTooltip(v, v.GetVesselBuiltAt() == EditorFacility.SPH);
+            string techLimitText = GetVabTechLimitText();
+
+            options.Add(new DialogGUIButtonWithTooltip("Recover to SPH", RecoverToSPH)
+            {
+                OptionInteractableCondition = () => isSPHAllowed,
+                tooltipText = isSPHAllowed ? reuseTooltip : "Can only be used when the vessel was built in SPH."
+            });
+
+            options.Add(new DialogGUIButtonWithTooltip("Recover to VAB", RecoverToVAB)
+            {
+                OptionInteractableCondition = () => isVABAllowed,
+                tooltipText = isVABAllowed ? reuseTooltip : $"Can only be used when the vessel was built in VAB.{techLimitText}"
+            });
+
+            options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecovery)
+            {
+                tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded."
+            });
+
+            if (CanRepairFailures(v))
+            {
+                options.Add(new DialogGUIButtonWithTooltip("Repair failures", QueueRepairFailures)
+                {
+                    tooltipText = "Repair all failures without leaving the flight scene.\nUse the \"Space Center Management\" window to track the time this process takes."
+                });
+            }
+
+            return options;
+        }
+
+        private string GenerateReuseTooltip(Vessel v, bool isSPH)
+        {
+            ProjectType projType = isSPH ? ProjectType.SPH : ProjectType.VAB;
+            VesselProject dummyVessel = new VesselProject(v, projType);
+
+            LaunchComplex activeLC = dummyVessel.LC ?? ActiveSC.ActiveLC;
+            dummyVessel.LC = activeLC;
+
+            ReconRolloutProject tmpRecover = new ReconRolloutProject(dummyVessel, ReconRolloutProject.RolloutReconType.Recovery, dummyVessel.shipID.ToString());
+            ReconRolloutProject tmpRefurb = new ReconRolloutProject(dummyVessel, ReconRolloutProject.RolloutReconType.Refurbishment, dummyVessel.shipID.ToString());
+
+            double recoverRate = tmpRecover.GetBuildRate(activeLC.MaxEngineers); // calculate with maximum possible engineers for the craft.
+            double refurbRate = tmpRefurb.GetBuildRate(activeLC.MaxEngineers);
+
+            int maxEngs = activeLC.MaxEngineersFor(dummyVessel);
+            
+            double recTime = tmpRecover.BP / recoverRate;
+            double refTime = tmpRefurb.BP / refurbRate;
+            
+            RP0Debug.Log($"Mass: {dummyVessel.mass}. Distance: {dummyVessel.kscDistance}");
+
+            return $"Recovery time: {RP0DTUtils.GetColonFormattedTime(recTime)} for {tmpRecover.cost:N0} funds\n" + 
+                $"Refurbishment time: {RP0DTUtils.GetColonFormattedTime(refTime)} with {maxEngs} engineers for {tmpRefurb.cost:N0} additional funds\n" + 
+                $"Total cost: {tmpRecover.cost + tmpRefurb.cost:N0} funds (engineer salary not included)";
+        }
+
+        private string GetVabTechLimitText()
+        {
+            string nodeTitle = ResearchAndDevelopment.GetTechnologyTitle(Database.SettingsSC.VABRecoveryTech);
+            return string.IsNullOrEmpty(nodeTitle) ? string.Empty :
+                   $"\nAdditionally requires {nodeTitle} tech node to be researched (unless the vessel is in Prelaunch state).";
+        }
+
+        private bool CanRepairFailures(Vessel v)
+        {
+            return TFInterop.HasSupportForReset &&
+                   v.GetVesselBuiltAt() != EditorFacility.SPH &&
+                   TFInterop.VesselHasFailedParts(v) &&
+                   FindRepairForVessel(v) == null;
+        }
         #endregion
     }
 }

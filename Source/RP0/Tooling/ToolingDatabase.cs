@@ -41,11 +41,16 @@ namespace RP0
             return a.CompareTo(b);
         }
 
-        // Matches two entries being merged for display. Deliberately NOT EpsilonCompare: that treats
-        // anything within the 4% tooling margin as equal, which is right for "does this tooling cover
-        // that part?" but wrong for building a list -- merging a 90t entry into a 93t one relabels it
-        // 93t and drops it as a row of its own. The band is relative to the larger operand so the
-        // result doesn't depend on which side is compared first.
+        /// <summary>
+        /// Matches two entries being merged for display. Deliberately NOT <see cref="EpsilonCompare"/>:
+        /// that treats anything within the 4% tooling margin as equal, which is right for "does this
+        /// tooling cover that part?" but wrong for building a list -- merging a 90t entry into a 93t
+        /// one relabels it 93t and drops it as a row of its own. The band is relative to the larger
+        /// operand so the result does not depend on which side is compared first.
+        /// </summary>
+        /// <param name="a">First value.</param>
+        /// <param name="b">Second value.</param>
+        /// <returns>0 when the two are the same to within <see cref="mergeEpsilon"/>, else their relative order.</returns>
         protected static int ExactCompare(float a, float b)
         {
             if (Math.Abs(a - b) <= mergeEpsilon * Math.Max(Math.Abs(a), Math.Abs(b)))
@@ -69,9 +74,16 @@ namespace RP0
         protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min)
             => GetEntryIndex(value, list, out min, _epsilonComparison);
 
-        // Binary search over the ascending entry list. The comparator decides what counts as the same
-        // entry: EpsilonCompare for coverage queries (a slightly smaller tooling still covers a part),
-        // ExactCompare when merging types together for display.
+        /// <summary>Binary search over the ascending entry list.</summary>
+        /// <param name="value">Value to look for.</param>
+        /// <param name="list">Entries to search, ascending.</param>
+        /// <param name="min">Receives the index the value would be inserted at when there's no match.</param>
+        /// <param name="compare">
+        /// Decides what counts as the same entry: <see cref="EpsilonCompare"/> for coverage queries
+        /// (a slightly smaller tooling still covers a part), <see cref="ExactCompare"/> when merging
+        /// types together for display.
+        /// </param>
+        /// <returns>Index of the matching entry, or -1 when there is none.</returns>
         protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min, Comparison<float> compare)
         {
             min = 0;
@@ -126,9 +138,12 @@ namespace RP0
             return level;
         }
 
-        // Returns a freshly-merged tree combining the entries of every supplied type.
-        // Used by the tooling UI to collapse grouped types (e.g. all Avionics-N* tech levels
-        // under one Avionics-N entry) without mutating the underlying database.
+        /// <summary>
+        /// Returns a freshly-merged tree combining the entries of every supplied type. Used by the
+        /// tooling UI to collapse grouped types (e.g. all Avionics-N* tech levels under one
+        /// Avionics-N entry) without mutating the underlying database.
+        /// </summary>
+        /// <param name="types">Database keys whose entries are combined.</param>
         public static List<ToolingEntry> GetMergedEntries(IEnumerable<string> types)
         {
             var merged = new List<ToolingEntry>();

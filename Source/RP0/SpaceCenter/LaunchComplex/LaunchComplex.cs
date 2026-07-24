@@ -374,6 +374,17 @@ namespace RP0
             else
                 LCEfficiency.ClearEmpty();
 
+            foreach (var cons in SpaceCenterManagement.Instance.ActiveSC.LCConstructions)
+            {
+                if (cons.lcID == ID)
+                    cons.Cancel();
+            }
+
+            foreach (var cons in PadConstructions)
+            {
+                cons.Cancel();
+            }
+
             foreach (var lp in LaunchPads)
                 SpaceCenterManagement.Instance.UnregsiterLP(lp);
 

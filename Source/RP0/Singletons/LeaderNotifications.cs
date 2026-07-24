@@ -62,7 +62,7 @@ namespace RP0.Singletons
         {
             if (data is ConfiguredContract cc)
             {
-                var leadersUnlockedByThis = LeaderUtils.GetLeadersUnlockedByContract(cc);
+                var leadersUnlockedByThis = LeaderUtils.GetLeadersUnlockedByContract(cc, false);
                 AddNewLeadersUnlockedMessage(leadersUnlockedByThis);
             }
         }

@@ -1291,25 +1291,350 @@ namespace RP0
             yield return new WaitForEndOfFrame();
 
             CelestialBody body = simParams.SimulationBody;
-            if (simParams.SimOrbitAp == 0 && simParams.SimOrbitPe == 0)
+            // SimInclination/SimLAN can be NaN (the "derive from transfer" signal in hyperbolic mode, which
+            // also persists); treat NaN as 0 for the circular/elliptical placements so it never reaches SetShipOrbit.
+            double lan = double.IsNaN(simParams.SimLAN) ? 0.0 : simParams.SimLAN;
+            double inc = double.IsNaN(simParams.SimInclination) ? 0.0 : simParams.SimInclination;
+
+            if (simParams.SimOrbitMode == SimOrbitMode.Hyperbolic)
+            {
+                SetHyperbolicSimOrbit(simParams, body);
+            }
+            else if (simParams.SimOrbitMode == SimOrbitMode.Circular)
             {
                 double sma = simParams.SimOrbitAltitude + body.Radius;
-                double ecc = 0.0000001;    // Just a really smol value to prevent Ap and Pe from flickering around
-                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitAltitude}:{simParams.SimInclination}");
-                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, simParams.SimMNA, simParams.SimArgPe, 0.0); // selBodyIndex, ecc, sma, inc, LAN, mna, argPe, ObT
-                FloatingOrigin.ResetTerrainShaderOffset();
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitAltitude}:{inc}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, 1e-7, sma, inc, lan, simParams.SimMNA, simParams.SimArgPe, 0.0);
             }
-            else
+            else // Elliptical
             {
                 double ra = simParams.SimOrbitAp + body.Radius;
                 double rp = simParams.SimOrbitPe + body.Radius;
                 double sma = (ra + rp) / 2;
                 double ecc = (ra - rp) / (ra + rp);
-                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{simParams.SimInclination}");
-                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, simParams.SimInclination, simParams.SimLAN, simParams.SimMNA, simParams.SimArgPe, 0.0); // selBodyIndex, ecc, sma, inc, LAN, mna, argPe, ObT
-                FloatingOrigin.ResetTerrainShaderOffset();
+                RP0Debug.Log($"Moving vessel to orbit. {body.bodyName}:{simParams.SimOrbitPe}/{simParams.SimOrbitAp}:{inc}");
+                FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, inc, lan, simParams.SimMNA, simParams.SimArgPe, 0.0);
+            }
+            FloatingOrigin.ResetTerrainShaderOffset();
+
+            if (simParams.SimAutostageTarget >= 0)
+            {
+                // Wait for the teleported vessel to come off rails before shedding stages.
+                Vessel active = FlightGlobals.ActiveVessel;
+                yield return new WaitUntil(() => active == null || !active.packed);
+                yield return TriggerSimStaging(simParams.SimAutostageTarget);
             }
         }
+
+        // Places the vessel on the arrival hyperbola for a Hyperbolic-mode sim. SimulationUT is the ARRIVAL
+        // epoch (StartSim shifts the entered departure date forward by the transfer time), so the Lambert
+        // solve samples origin@departure / target@arrival from it.
+        private static void SetHyperbolicSimOrbit(SimulationParams simParams, CelestialBody body)
+        {
+            double mu = body.gravParameter;
+            double rp = simParams.SimHyperbolicPeAlt + body.Radius;
+            double arrivalUT = simParams.SimulationUT > 0 ? simParams.SimulationUT : Planetarium.GetUniversalTime();
+            string originName = simParams.SimOriginBody == null ? "(no origin)" : simParams.SimOriginBody.bodyName;
+
+            // Solve the transfer once: its v∞ vector gives the approach direction (always) and the approach
+            // speed (when there's no insertion ΔV, e.g. a TWP flyby plan, which reports ΔV=0).
+            Vector3d? vInfVecOpt = TrySolveArrivalVInf(body, simParams.SimOriginBody, arrivalUT, simParams.SimHypTransferTime);
+
+            // v∞ magnitude: from the entered insertion ΔV when given, otherwise from the transfer solve.
+            double vInf;
+            if (simParams.SimHyperbolicInsertionDV > 0.0)
+            {
+                // TWP-style Insertion ΔV is the burn at periapsis from the approach speed down to circular:
+                //   v_peri_hyper = ΔV + √(μ/rp);  v∞² = v_peri_hyper² - 2μ/rp.  If ΔV is too small to need a
+                // hyperbolic at this rp, v∞² goes non-positive — clamp to a tiny positive value.
+                double vPeriHyper = simParams.SimHyperbolicInsertionDV + Math.Sqrt(mu / rp);
+                double vInfSq = vPeriHyper * vPeriHyper - 2.0 * mu / rp;
+                if (vInfSq <= 0)
+                {
+                    RP0Debug.LogWarning($"Insertion ΔV {simParams.SimHyperbolicInsertionDV:F1} m/s is below escape at rp={rp:F0}m around {body.bodyName}; clamping to marginal hyperbolic.");
+                    vInfSq = 1.0;
+                }
+                vInf = Math.Sqrt(vInfSq);
+
+                // Warn if the entered ΔV's v∞ disagrees with the transfer's — usually means the dates aren't a real window.
+                if (vInfVecOpt.HasValue && (vInfVecOpt.Value.magnitude > 1.25 * vInf || vInfVecOpt.Value.magnitude < 0.8 * vInf))
+                    ScreenMessages.PostScreenMessage(new ScreenMessage(
+                        $"Hyperbolic sim: transfer v∞ ({vInfVecOpt.Value.magnitude:F0} m/s) ≠ ΔV-implied v∞ ({vInf:F0} m/s). Departure date + transfer time may not be a real {originName}→{body.bodyName} window; approach plane is unreliable.",
+                        10f, ScreenMessageStyle.UPPER_CENTER));
+            }
+            else if (vInfVecOpt.HasValue)
+            {
+                vInf = vInfVecOpt.Value.magnitude;  // flyby: approach speed straight from the solver
+            }
+            else
+            {
+                RP0Debug.LogWarning($"Hyperbolic sim: no insertion ΔV and the {originName}→{body.bodyName} transfer couldn't be solved; using a marginal hyperbolic.");
+                vInf = 1.0;
+            }
+
+            double vSq = vInf * vInf;
+            double sma = -mu / vSq;
+            double ecc = 1.0 + rp * vSq / mu;
+            // Hyperbolic mean motion n = sqrt(μ/|a|³). Positive TimeToPe = before periapsis = negative time
+            // since periapsis, so MNA = -n*TimeToPe. NaN = auto: earliest point still inside the SOI.
+            double n = Math.Sqrt(mu / Math.Pow(-sma, 3));
+            double tToPe = double.IsNaN(simParams.SimHypTimeToPe)
+                ? MaxTToPeInSOI(sma, ecc, n, body.sphereOfInfluence)
+                : simParams.SimHypTimeToPe;
+            double mna = -n * tToPe;
+
+            ApproachOrientation? orient = vInfVecOpt.HasValue
+                ? BuildApproachOrientation(vInfVecOpt.Value, ecc, rp, vInf, body, arrivalUT)
+                : null;
+            double inc = 0.0, lan = 0.0, argPe = 0.0;
+            if (orient.HasValue)
+            {
+                inc = orient.Value.inc;
+                lan = orient.Value.lan;
+                argPe = orient.Value.argPe;
+            }
+            else
+            {
+                RP0Debug.LogWarning($"Hyperbolic approach: couldn't derive the {originName}→{body.bodyName} approach plane; falling back to inc=0/LAN=0.");
+                // Tell the player rather than silently placing an arbitrary equatorial approach — unless
+                // they pinned the plane manually (then inc/LAN aren't NaN and the fallback doesn't matter).
+                if (double.IsNaN(simParams.SimInclination) && double.IsNaN(simParams.SimLAN))
+                    ScreenMessages.PostScreenMessage(new ScreenMessage(
+                        $"Couldn't derive the {originName}→{body.bodyName} approach plane (origin and target must share a parent, e.g. both orbit the Sun, or the target must be a moon of such a body). Placed on an equatorial approach — set Inclination/LAN manually if needed.",
+                        10f, ScreenMessageStyle.UPPER_CENTER));
+            }
+
+            // A user-supplied inclination/LAN overrides that axis of the derived approach plane (NaN = derive).
+            if (!double.IsNaN(simParams.SimInclination)) inc = simParams.SimInclination;
+            if (!double.IsNaN(simParams.SimLAN)) lan = simParams.SimLAN;
+
+            RP0Debug.Log($"Hyperbolic insertion: target={body.bodyName} ΔV={simParams.SimHyperbolicInsertionDV:F1}m/s → v∞={vInf:F1}m/s rp={rp:F0}m sma={sma:F0} ecc={ecc:F4} inc={inc:F2}° LAN={lan:F1}° argPe={argPe:F1}° MNA={mna:F3} (tToPe={tToPe:F0}s)");
+            FlightGlobals.fetch.SetShipOrbit(body.flightGlobalsIndex, ecc, sma, inc, lan, mna, argPe, 0.0);
+        }
+
+        // Fire only the decouplers in stages above SimAutostageTarget, then delete the resulting
+        // debris vessels. Used instead of StageManager.ActivateNextStage() so engines / chutes
+        // in dropped stages don't fire (which would be wrong in a hyperbolic target-SOI sim and
+        // pointless in any sim that starts in orbit).
+        private static IEnumerator TriggerSimStaging(int autostageTarget)
+        {
+            Vessel active = FlightGlobals.ActiveVessel;
+            var preStaging = new HashSet<Guid>(FlightGlobals.Vessels.Select(v => v.id));
+            int triggered = 0;
+            foreach (Part p in active.parts.ToList())
+            {
+                if (p.inverseStage <= autostageTarget) continue;
+                foreach (PartModule m in p.Modules)
+                {
+                    // ModuleDecouple and ModuleAnchoredDecoupler both derive from ModuleDecouplerBase.
+                    if (m is ModuleDecouplerBase md && !md.isDecoupled) { md.Decouple(); triggered++; }
+                }
+            }
+            RP0Debug.Log($"Sim staging: triggered {triggered} decoupler(s) in parts with inverseStage > {autostageTarget}");
+            yield return new WaitForFixedUpdate();
+            yield return new WaitForFixedUpdate();
+
+            int deleted = 0;
+            foreach (Vessel v in FlightGlobals.Vessels.ToList())
+            {
+                if (v != FlightGlobals.ActiveVessel && !preStaging.Contains(v.id))
+                {
+                    v.Die();
+                    deleted++;
+                }
+            }
+            if (deleted > 0) RP0Debug.Log($"Sim staging: removed {deleted} shed debris vessel(s)");
+        }
+
+        // Earliest (most-negative-MNA) inbound point still inside the body's SOI for a hyperbolic
+        // orbit with the given sma (<0), ecc (>1), mean motion n. Returns seconds-before-periapsis.
+        private static double MaxTToPeInSOI(double sma, double ecc, double n, double soi)
+        {
+            double p = sma * (1.0 - ecc * ecc);  // semi-latus rectum, > 0 for hyperbola
+            double cosNu = (p / soi - 1.0) / ecc;
+            if (cosNu <= -1.0 || cosNu >= 1.0) return 3600.0;  // SOI doesn't intersect, fall back to 1h
+            // Inbound side: ν < 0, so sin ν < 0 and hyperbolic anomaly H < 0.
+            double sinNu = -Math.Sqrt(1.0 - cosNu * cosNu);
+            double sinhH = sinNu * Math.Sqrt(ecc * ecc - 1.0) / (1.0 + ecc * cosNu);
+            double H = Math.Log(sinhH + Math.Sqrt(sinhH * sinhH + 1.0));  // asinh
+            double M = ecc * sinhH - H;
+            double t = M / n;  // negative
+            return -t;
+        }
+
+        // Derive the arrival-hyperbola orientation (inclination, LAN, argument of periapsis, all in the
+        // KSP global reference frame / degrees) from the real interplanetary transfer geometry.
+        //
+        // We Lambert-solve the origin->target heliocentric transfer (alexmoon solver, see LambertSolver) to
+        // get the arrival v∞ vector (for a moon target, the v∞ is first converted to be moon-relative), then
+        // build the minimum-inclination hyperbola that contains it at the given periapsis radius. That
+        // "coplanar" plane is the DLA case TWP reports as its insertion inclination; raising inclination
+        // above it is a future input.
+        private struct ApproachOrientation { public double inc, lan, argPe; }
+
+        // Return the arrival v∞ vector (the spacecraft's velocity relative to the target at SOI entry) for
+        // the origin->target transfer, or null if it can't be solved.
+        //
+        // Direct case (origin and target share a parent, e.g. Earth->Mars around the Sun): a single Lambert
+        // solve. Moon case (target orbits a planet that shares origin's parent, e.g. Earth->Titan): solve the
+        // interplanetary transfer to the PARENT planet, then convert that planet-arrival v∞ to a v∞ relative
+        // to the moon at its position on the arrival date (a patched-conic moon intercept).
+        private static Vector3d? TrySolveArrivalVInf(CelestialBody target, CelestialBody origin, double arrivalUT, double transferTime)
+        {
+            if (origin == null || target == null || origin.orbit == null || target.orbit == null) return null;
+
+            if (origin.orbit.referenceBody == target.orbit.referenceBody)
+                return TryLambertVInf(target, origin, arrivalUT, transferTime);
+
+            // Target is a moon in another system: the "planet" is the top of its chain that orbits the star.
+            // It must share origin's parent (an interplanetary transfer) and not be the origin itself (an
+            // origin-body moon like Earth->Moon is not the case this handles).
+            CelestialBody planet = null;
+            foreach (CelestialBody anc in KCTUtilities.AncestorChainToPlanet(target)) planet = anc;
+            if (planet == origin || planet.orbit == null || planet.orbit.referenceBody != origin.orbit.referenceBody)
+                return null;
+
+            Vector3d? vInfPlanetOpt = TryLambertVInf(planet, origin, arrivalUT, transferTime);
+            if (!vInfPlanetOpt.HasValue) return null;
+            return MoonRelativeVInf(vInfPlanetOpt.Value, target, planet, arrivalUT);
+        }
+
+        // Convert an arrival v∞ relative to a planet into a v∞ relative to one of its moons, at the moon's
+        // position on arrivalUT. Patched-conic model: on the planet-centred arrival hyperbola the spacecraft
+        // reaches the moon's orbital radius at a planet-relative speed set by energy conservation (vis-viva),
+        // moving tangentially (perpendicular to the planet radius) in the direction of the incoming v∞'s
+        // tangential component. Subtracting the moon's orbital velocity gives the moon-relative v∞. This
+        // "adjusts" the interplanetary trajectory so it intercepts the moon rather than the bare planet.
+        private static Vector3d? MoonRelativeVInf(Vector3d vInfPlanet, CelestialBody moon, CelestialBody planet, double arrivalUT)
+        {
+            // The model uses the moon's state relative to planet and planet.gravParameter together, so it's
+            // only valid when the moon orbits the planet directly (rules out a moon-of-a-moon, where the walk
+            // would hand us a grandparent and mix reference frames).
+            if (moon.orbit == null || moon.orbit.referenceBody != planet) return null;
+            try
+            {
+                double tA = moon.orbit.TrueAnomalyAtUT(arrivalUT);
+                moon.orbit.GetOrbitalStateVectorsAtTrueAnomaly(tA, arrivalUT, false, out Vector3d rMoon, out Vector3d vMoon);
+                double r = rMoon.magnitude;
+                if (!(r > 0.0)) return null;
+
+                Vector3d rHat = rMoon / r;
+                Vector3d tang = vInfPlanet - Vector3d.Dot(vInfPlanet, rHat) * rHat;  // component perp to planet-radius
+                // Near-radial approach (moon near the incoming asymptote): tang collapses to state-vector noise
+                // that normalize() would amplify to a random direction. Threshold relative to v∞, not absolute.
+                if (tang.magnitude < 1e-3 * vInfPlanet.magnitude) return null;
+
+                double vScAtMoon = Math.Sqrt(vInfPlanet.sqrMagnitude + 2.0 * planet.gravParameter / r);
+                Vector3d vScVec = vScAtMoon * tang.normalized;  // planet-relative velocity at the moon
+                Vector3d vInfMoon = vScVec - vMoon;
+                if (!IsFinite(vInfMoon) || vInfMoon.magnitude < 1e-3) return null;
+
+                RP0Debug.Log($"[HypApproach] moon intercept {planet.bodyName}->{moon.bodyName}: |vInf_planet|={vInfPlanet.magnitude:F1} " +
+                    $"vSc@moon={vScAtMoon:F1} |vMoon|={vMoon.magnitude:F1} -> |vInf_moon|={vInfMoon.magnitude:F1}");
+                return vInfMoon;
+            }
+            catch (Exception e)
+            {
+                RP0Debug.LogWarning($"Moon-relative v∞ solve threw: {e.Message}");
+                return null;
+            }
+        }
+
+        // Lambert-solve the origin->target heliocentric transfer (origin and target must share a parent) and
+        // return the arrival v∞ vector (the spacecraft's velocity relative to the target at SOI entry), or
+        // null if it can't be solved.
+        private static Vector3d? TryLambertVInf(CelestialBody target, CelestialBody origin, double arrivalUT, double transferTime)
+        {
+            if (origin == null || target == null) return null;
+            if (origin.orbit == null || target.orbit == null) return null;
+            // The Lambert transfer is around the common parent (the Sun for interplanetary).
+            if (origin.orbit.referenceBody != target.orbit.referenceBody) return null;
+            if (!(transferTime > 0.0)) return null;
+
+            try
+            {
+                double departUT = arrivalUT - transferTime;
+                double sunMu = target.orbit.referenceBody.gravParameter;
+
+                double tA1 = origin.orbit.TrueAnomalyAtUT(departUT);
+                origin.orbit.GetOrbitalStateVectorsAtTrueAnomaly(tA1, departUT, false, out Vector3d r1, out Vector3d v1);
+                double tA2 = target.orbit.TrueAnomalyAtUT(arrivalUT);
+                target.orbit.GetOrbitalStateVectorsAtTrueAnomaly(tA2, arrivalUT, false, out Vector3d r2, out Vector3d v2);
+
+                // alexmoon/TWP Lambert solver (stock TransferMath gave a v∞ direction ~1.5° off). Pick the
+                // prograde transfer: the short way is prograde when its arc normal (r1×r2) aligns with the
+                // departure body's orbital angular momentum (r1×v1); otherwise take the long way.
+                bool longWay = Vector3d.Dot(Vector3d.Cross(r1, r2), Vector3d.Cross(r1, v1)) < 0.0;
+                LambertSolver.Solve(sunMu, r1, r2, transferTime, longWay, out Vector3d vf);
+                Vector3d vInfVec = vf - v2;
+                if (!IsFinite(vInfVec) || vInfVec.magnitude < 1e-3) return null;
+
+                // Within ~2° of a 180° transfer the orbital plane is the Lambert singularity: r1×r2 is
+                // ill-conditioned, so the out-of-plane part of v∞ (and thus inclination/LAN) is unreliable.
+                double xferAngle = Vector3d.Angle(r1, r2);
+                if (Math.Abs(180.0 - xferAngle) < 2.0)
+                    ScreenMessages.PostScreenMessage(new ScreenMessage(
+                        $"Hyperbolic sim: {origin.bodyName}→{target.bodyName} transfer angle is {xferAngle:F1}° (near 180°); the approach plane is ill-conditioned — nudge the departure date or transfer time.",
+                        8f, ScreenMessageStyle.UPPER_CENTER));
+
+                RP0Debug.Log($"[HypApproach] {origin.bodyName}->{target.bodyName} departUT={departUT:F0} arrivalUT={arrivalUT:F0} tof={transferTime / 86400.0:F1}d xferAngle={xferAngle:F1}° | " +
+                    $"|vInf|={vInfVec.magnitude:F1} vInfVec=({vInfVec.x:F1},{vInfVec.y:F1},{vInfVec.z:F1})");
+                return vInfVec;
+            }
+            catch (Exception e)
+            {
+                RP0Debug.LogWarning($"Hyperbolic approach Lambert solve threw: {e.Message}");
+                return null;
+            }
+        }
+
+        // Build the minimum-inclination arrival-hyperbola orientation (inc/LAN/argPe in the KSP global
+        // frame, degrees) from the arrival v∞ direction, eccentricity and periapsis radius. The coplanar
+        // (minimum-inclination) plane is the DLA case TWP reports as its insertion inclination.
+        private static ApproachOrientation? BuildApproachOrientation(Vector3d vInfVec, double ecc, double rp, double vInf, CelestialBody target, double arrivalUT)
+        {
+            try
+            {
+                Vector3d uHat = vInfVec.normalized;  // incoming velocity-at-infinity direction
+
+                // Minimum-inclination orbit normal: the unit vector ⊥ v∞ closest to the reference pole.
+                Vector3d zHat = new Vector3d(0.0, 0.0, 1.0);
+                Vector3d proj = zHat - Vector3d.Dot(zHat, uHat) * uHat;
+                Vector3d hHat = proj.magnitude < 1e-6
+                    ? Vector3d.Cross(uHat, new Vector3d(1.0, 0.0, 0.0)).normalized  // near-polar v∞: any ⊥ plane
+                    : proj.normalized;
+
+                // Periapsis direction: rotate the asymptote velocity direction by (ν∞ − π) about the orbit
+                // normal. ν∞ = acos(−1/e) is the true anomaly of the asymptote. (The incoming velocity
+                // direction equals the periapsis direction rotated by (π − ν∞).)
+                double nuInf = Math.Acos(-1.0 / ecc);
+                double theta = nuInf - Math.PI;
+                Vector3d pHat = uHat * Math.Cos(theta) + Vector3d.Cross(hHat, uHat) * Math.Sin(theta);
+
+                double vPe = Math.Sqrt(vInf * vInf + 2.0 * target.gravParameter / rp);
+                Vector3d rPe = rp * pHat;                                  // periapsis position, body-relative
+                Vector3d vPeVec = vPe * Vector3d.Cross(hHat, pHat);        // periapsis velocity (prograde about hHat)
+
+                // Let KSP extract the elements in its own convention. UpdateFromStateVectors LocalToWorld's
+                // its inputs, so feed the fixed-frame state through WorldToLocal first.
+                var o = new Orbit();
+                o.UpdateFromStateVectors(Planetarium.Zup.WorldToLocal(rPe), Planetarium.Zup.WorldToLocal(vPeVec), target, arrivalUT);
+                if (double.IsNaN(o.inclination) || double.IsNaN(o.LAN) || double.IsNaN(o.argumentOfPeriapsis)) return null;
+
+                double dla = Math.Asin(Math.Max(-1.0, Math.Min(1.0, uHat.z))) * UtilMath.Rad2Deg;
+                RP0Debug.Log($"[HypApproach] orient: DLA={dla:F2} inc={o.inclination:F2} LAN={o.LAN:F2} argPe={o.argumentOfPeriapsis:F2}");
+                return new ApproachOrientation { inc = o.inclination, lan = o.LAN, argPe = o.argumentOfPeriapsis };
+            }
+            catch (Exception e)
+            {
+                RP0Debug.LogWarning($"Hyperbolic approach orientation threw: {e.Message}");
+                return null;
+            }
+        }
+
+        private static bool IsFinite(Vector3d v) =>
+            !(double.IsNaN(v.x) || double.IsNaN(v.y) || double.IsNaN(v.z) ||
+              double.IsInfinity(v.x) || double.IsInfinity(v.y) || double.IsInfinity(v.z));
 
         private void AddSimulationWatermark()
         {

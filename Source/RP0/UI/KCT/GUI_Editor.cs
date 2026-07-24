@@ -21,7 +21,10 @@ namespace RP0
         private static readonly GUIContent _gcNewLC = new GUIContent("New LC", "Build a new launch complex to support this vessel, with a margin of 10% to vessel mass and size upgrades.");
         private static readonly GUIContent _gcNoHangar = new GUIContent("Hangar Unavailable", "The Hangar is currently being modified.");
         private static readonly GUIContent _gcSwitchToHangar = new GUIContent("Switch to Hangar", "A Launch Complex is currently selected; this will switch to the Hangar, needed for planes.");
+        private static readonly GUIContent _gcNonmatchingParts = new GUIContent("Toggle Non-Matching Part Highlights", "Red is differing cost. Yellow is differing mass. Blue is differing resources. Purple is no matching part name.");
         private static List<string> vesselFailedChecks = new List<string>();
+        private static bool _highlightNonmatchingParts = false;
+        private static readonly Dictionary<Part, KCTUtilities.PartCompareResult> _highlights = new Dictionary<Part, KCTUtilities.PartCompareResult>();
 
         public static void DrawEditorGUI(int windowID)
         {
@@ -346,9 +349,9 @@ namespace RP0
             double fullVesselBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect;
             double effic = editedVessel.LC.Efficiency;
-            KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
-            GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
-            GUILayout.Label($"Edited: {newCompletionPercent:P2}");
+            GUILayout.Label($"Original: {Math.Max(0, SpaceCenterManagement.Instance.oldEditProgressPercentage):P2}");
+            GUILayout.Label($"Edited: {SpaceCenterManagement.Instance.newEditProgressPercentage:P2}");
+            double newProgressBP = SpaceCenterManagement.Instance.editProgressBP;
             
             double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic * editedVessel.LC.StrategyRateMultiplier;
@@ -454,6 +457,42 @@ namespace RP0
                             }
                         }
                     }
+                }
+            }
+
+            if (SpaceCenterManagement.Instance.nonmatchingParts.Count() > 0
+                && GUILayout.Button(_gcNonmatchingParts))
+            {
+                _highlightNonmatchingParts = !_highlightNonmatchingParts;
+            }
+            foreach (var kvp in _highlights)
+            {
+                kvp.Key.SetHighlightDefault();
+            }
+            _highlights.Clear();
+            if (_highlightNonmatchingParts)
+            {
+                foreach (var kvp in SpaceCenterManagement.Instance.nonmatchingParts)
+                {
+                    Part p = kvp.Key;
+                    KCTUtilities.PartCompareResult result = kvp.Value;
+                    p.SetHighlightType(Part.HighlightType.AlwaysOn);
+                    switch (result)
+                    {
+                        case KCTUtilities.PartCompareResult.NAME_DIFF:
+                            p.SetHighlightColor(Color.magenta);
+                            break;
+                        case KCTUtilities.PartCompareResult.COST_DIFF:
+                            p.SetHighlightColor(Color.red);
+                            break;
+                        case KCTUtilities.PartCompareResult.MASS_DIFF:
+                            p.SetHighlightColor(Color.yellow);
+                            break;
+                        case KCTUtilities.PartCompareResult.RESOURCES_DIFF:
+                            p.SetHighlightColor(Color.blue);
+                            break;
+                    }
+                    _highlights[p] = result;
                 }
             }
 

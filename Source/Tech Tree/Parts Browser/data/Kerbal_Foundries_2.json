@@ -43,7 +43,9 @@
         "upgrade": false,
         "entry_cost_mods": "300,KF-ALG-Large",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "KF-ALG-Medium",
@@ -89,7 +91,9 @@
         "upgrade": false,
         "entry_cost_mods": "150,KF-ALG-Medium",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "KF-ALG-Small",
@@ -133,7 +137,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "KF-ALG-SmallSide",
@@ -179,7 +185,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "KF-ScrewDrive",

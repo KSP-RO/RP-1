@@ -383,6 +383,7 @@ namespace RP0
                     AlarmTimeProperty = KACAlarmType.GetProperty("AlarmTimeUT");
                     AlarmMarginField = KACAlarmType.GetField("AlarmMarginSecs");
                     AlarmActionField = KACAlarmType.GetField("AlarmAction");
+                    EnabledField = KACAlarmType.GetField("Enabled");
                     RemainingField = KACAlarmType.GetField("Remaining");
 
                     XferOriginBodyNameField = KACAlarmType.GetField("XferOriginBodyName");
@@ -492,12 +493,26 @@ namespace RP0
 
                 private FieldInfo AlarmActionField;
                 /// <summary>
-                /// What should the Alarm Clock do when the alarm fires
+                /// What should the Alarm Clock do when the alarm fires.
+                /// NOTE: KAC's firing loop does NOT read this; it acts on the alarm's Actions object.
+                /// This maps to KAC's legacy/vestigial "AlarmAction" field and is effectively inert.
+                /// Use <see cref="Enabled"/> to actually stop an alarm from firing.
                 /// </summary>
                 public AlarmActionEnum AlarmAction
                 {
                     get { return (AlarmActionEnum)AlarmActionField.GetValue(actualAlarm); }
                     set { AlarmActionField.SetValue(actualAlarm, (Int32)value); }
+                }
+
+                private FieldInfo EnabledField;
+                /// <summary>
+                /// Whether the alarm is armed. KAC gates triggering on this, so setting it false
+                /// stops the alarm from firing entirely (no warp kill, message, or sound).
+                /// </summary>
+                public Boolean Enabled
+                {
+                    get { return EnabledField == null || (Boolean)EnabledField.GetValue(actualAlarm); }
+                    set { if (EnabledField != null) EnabledField.SetValue(actualAlarm, value); }
                 }
 
                 private FieldInfo RemainingField;

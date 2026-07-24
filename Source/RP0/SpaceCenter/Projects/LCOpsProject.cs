@@ -337,9 +337,19 @@ namespace RP0
             if (KSPUtils.CurrentGameIsCareer() && HasCost && this.cost > 0)
             {
                 TransactionReasonsRP0 reason = TransactionReason;
-                if (!CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d).CanAfford()) //If they can't afford to continue the rollout, progress stops
+                CurrencyModifierQueryRP0 q = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
+                if (!q.CanAfford()) //If they can't afford to continue the rollout, only do as much as the available funds allow
                 {
-                    progress = progBefore;
+                    // Rather than reverting the whole step (which throws away up to a full day of
+                    // affordable progress at high warp and makes the ETA lurch), advance only as far
+                    // as the current funds allow and spend down to ~0. This keeps progress smooth and
+                    // independent of the timewarp rate while still never letting the player go into debt.
+                    double affordFraction = CurrencyUtils.GetAffordableFundsFraction(q);
+                    progress = progBefore + (progress - progBefore) * affordFraction;
+                    double toSpend = cost * affordFraction;
+                    if (toSpend > 0d)
+                        KCTUtilities.SpendFunds(toSpend, reason);
+
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                     {
                         ScreenMessages.PostScreenMessage($"Timewarp was stopped because there's insufficient funds to continue the {Name}");

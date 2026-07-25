@@ -1040,6 +1040,15 @@ namespace RP0.Crew
             if (ap.partPrefab.CrewCapacity > 0)
             {
                 AddPartCourses(ap);
+
+                // Purchasing a part regenerates its training templates. Relink any in-progress
+                // course that stalled because its template was missing, so it resumes right away
+                // instead of only when the next scene change rebuilds the template list.
+                foreach (var course in TrainingCourses)
+                {
+                    if (!course.HasTemplate)
+                        course.LinkTemplate();
+                }
             }
         }
 
@@ -1203,7 +1212,8 @@ namespace RP0.Crew
                 ProtoCrewMember pcm = roster[i];
                 if (pcm.type == ProtoCrewMember.KerbalType.Crew &&
                     pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available &&
-                    pcm.inactive)
+                    pcm.inactive &&
+                    GetTrainingFinishTime(pcm) < 0d)
                 {
                     _rnrProjects.Add(new CrewRnRProject(pcm));
                 }

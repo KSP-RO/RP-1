@@ -32,6 +32,14 @@ namespace RP0.Crew
         private TrainingTemplate _template;
         public bool FromTemplate(TrainingTemplate t) => t == _template;
 
+        /// <summary>
+        /// False when the course's template could not be relinked (e.g. the part was never
+        /// purchased and its experimental tech node's template wasn't regenerated). Such a
+        /// course is stalled: it makes no progress and cannot complete until the template
+        /// comes back, which happens once the player purchases the part.
+        /// </summary>
+        public bool HasTemplate => _template != null;
+
         public int SeatMin => _template?.seatMin ?? 1;
         public int SeatMax => _template?.seatMax ?? 0;
         public string Description => _template?.description;
@@ -303,6 +311,12 @@ namespace RP0.Crew
 
         public double GetBuildRate()
         {
+            // A stalled course (missing template) isn't progressing. Reporting a zero rate
+            // keeps it out of the warp-to-next-completion logic and sorts it to the bottom
+            // of the build list.
+            if (_template == null)
+                return 0d;
+
             if (_buildRate < 0d)
                 _buildRate = CalculateBuildRate();
 
@@ -316,6 +330,12 @@ namespace RP0.Crew
 
         public double IncrementProgress(double UTDiff)
         {
+            // Stall the course if its template is missing rather than completing it with no
+            // reward (CompleteCourse skips its reward logic when _template is null). Progress
+            // and BP are persisted, so the course resumes where it left off once relinked.
+            if (_template == null)
+                return 0d;
+
             double increment = UTDiff * GetBuildRate();
             progress += increment;
             if (progress < BP)

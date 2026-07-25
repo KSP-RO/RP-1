@@ -771,6 +771,8 @@ namespace RP0
                 }
                 else if (t is VesselProject b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                else if (t is Crew.TrainingCourse tc && !tc.HasTemplate)
+                    GUILayout.Label("(part not purchased)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
                     GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
@@ -1709,7 +1711,7 @@ namespace RP0
                             }
                         }
 
-                        if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle this pad"), GUILayout.ExpandWidth(false)))
+                        if (lpCount > 1 && pad.isOperational && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle this pad"), GUILayout.ExpandWidth(false)))
                         {
                             ksc.SwitchLaunchComplex(i);
                             lc.SwitchLaunchPad(j);

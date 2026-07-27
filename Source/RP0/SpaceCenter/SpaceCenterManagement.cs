@@ -1898,8 +1898,8 @@ namespace RP0
             
             RP0Debug.Log($"Mass: {dummyVessel.mass}. Distance: {dummyVessel.kscDistance}");
 
-            return $"Recovery time: {RP0DTUtils.GetColonFormattedTime(recTime)} for {tmpRecover.cost:N0} funds\n" + 
-                $"Refurbishment time: {RP0DTUtils.GetColonFormattedTime(refTime)} with {maxEngs} engineers for {tmpRefurb.cost:N0} additional funds\n" + 
+            return $"Recovery time: {DTUtils.GetColonFormattedTime(recTime, false, 0, false, true)} for {tmpRecover.cost:N0} funds\n" + 
+                $"Refurbishment time: {DTUtils.GetColonFormattedTime(refTime, false, 0, false, true)} with {maxEngs} engineers for {tmpRefurb.cost:N0} additional funds\n" + 
                 $"Total cost: {tmpRecover.cost + tmpRefurb.cost:N0} funds (engineer salary not included)";
         }
 

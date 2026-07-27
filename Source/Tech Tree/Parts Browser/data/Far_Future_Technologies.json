@@ -131,7 +131,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterBeamEngine",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -154,7 +154,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Hydrolox",
@@ -180,7 +180,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterPulseEngine",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -203,7 +203,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterEngine",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -295,7 +295,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -318,7 +318,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -341,7 +341,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -364,7 +364,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -387,7 +387,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -410,7 +410,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -433,7 +433,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "AntimatterMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -640,7 +640,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -663,7 +663,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -686,7 +686,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -709,7 +709,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -732,7 +732,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -755,7 +755,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionMaterials",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -893,7 +893,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionEngine",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -916,7 +916,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionEngine",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -939,7 +939,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionEngine",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -962,7 +962,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionEngine",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear"
@@ -985,7 +985,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionEngine",
         "identical_part_name": "",
         "module_tags": [
             "Hydrolox",
@@ -1009,7 +1009,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionReactors",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear",
@@ -1033,7 +1033,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "fusionReactors",
         "identical_part_name": "",
         "module_tags": [
             "Nuclear",
@@ -1080,7 +1080,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Utilities",
         "identical_part_name": "",
         "module_tags": [
             "Instruments",
@@ -1104,7 +1104,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Utilities",
         "identical_part_name": "",
         "module_tags": [
             "Instruments"
@@ -1127,7 +1127,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "Utilities",
         "identical_part_name": "",
         "module_tags": [
             "Instruments"

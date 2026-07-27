@@ -122,7 +122,7 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Assigned:");
-            
+
             string assignStr = GetAssignText(true, currentLC, out int assignAmt);
             string unassignStr = GetAssignText(false, currentLC, out int unassignAmt);
 
@@ -201,13 +201,7 @@ namespace RP0
                 if (engCap != currentLC.MaxEngineers)
                     GUILayout.Label($"(max of {engCap} eng.)");
 
-                int delta = assignDelta;
-                if (engCap < currentLC.Engineers + assignDelta)
-                    delta = engCap - currentLC.Engineers;
-                double buildRate = KCTUtilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, delta)
-                    * efficiency * stratMult;
-                double bpLeft = b.buildPoints - b.progress;
-                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(b.GetTimeLeft(), "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -216,7 +210,7 @@ namespace RP0
                 {
                     int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.mass, lcp.vesselBP, lcp.isHumanRated) : int.MaxValue;
                     GUILayout.Label($"Current Project: {lcp.Name} {(lcp.AssociatedVP == null ? string.Empty : lcp.AssociatedVP.shipName)}");
-                    
+
                     int delta = assignDelta;
                     if (engCap < currentLC.Engineers + assignDelta)
                         delta = engCap - currentLC.Engineers;
@@ -277,7 +271,7 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
-            
+
             GUILayout.BeginHorizontal();
             const string researcherEfficTooltip = "Researching new Electronics Research nodes and gathering more science will increase this";
             GUILayout.Label(new GUIContent("Efficiency:", researcherEfficTooltip));
@@ -289,9 +283,7 @@ namespace RP0
             {
                 ResearchProject t = SpaceCenterManagement.Instance.TechList[0];
                 GUILayout.Label($"Current Research: {t.techName}");
-                double techRate = Formula.GetResearchRate(t.scienceCost, 0, delta) * efficiency * t.YearBasedRateMult;
-                double timeLeft = (t.scienceCost - t.progress) / techRate;
-                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(timeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(t.TimeLeft, "PersonnelTech"), GetLabelRightAlignStyle());
             }
             else
             {

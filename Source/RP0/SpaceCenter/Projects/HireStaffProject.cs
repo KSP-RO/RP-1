@@ -9,10 +9,10 @@ namespace RP0
         private double reserveFunds = 0d;
 
         [Persistent]
-        private int startCrewCount = 0;
+        private int startCrewCount = 0; // TODO: this should be changed to startStaffCount on a save-breaking update
 
         [Persistent]
-        private int targetCrewCount = 0;
+        private int targetCrewCount = 0; // TODO: this should be changed to targetStaffCount on a save-breaking update
 
         [Persistent]
         private Guid _lcID = Guid.Empty;
@@ -57,11 +57,11 @@ namespace RP0
 
         public HireStaffProject() { }
 
-        public HireStaffProject(int startCrewCount, int targetCrewCount, double reserveFunds, LaunchComplex lc = null)
+        public HireStaffProject(int startStaffCount, int targetStaffCount, double reserveFunds, LaunchComplex lc = null)
         {
             LC = lc;
-            this.startCrewCount = startCrewCount;
-            this.targetCrewCount = targetCrewCount;
+            this.startCrewCount = startStaffCount;
+            this.targetCrewCount = targetStaffCount;
             this.reserveFunds = reserveFunds;
         }
 
@@ -87,7 +87,7 @@ namespace RP0
 
         public string GetItemName()
         {
-            return $"Reach {targetCrewCount} {(IsResearch ? "researchers" : "engineers")}";
+            return $"Reach {targetCrewCount} {(IsResearch ? "researchers" : "engineers")} ({NumLeftToHire} left)";
         }
 
         public ProjectType GetProjectType()

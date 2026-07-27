@@ -21,10 +21,27 @@ namespace RP0.Milestones
 
         private HashSet<string> _contractParamsCompletedThisFrame = new HashSet<string>();
         private int _tickCount = 0;
+
+        // Frames to wait for contract system startup
         private const int _TicksToStart = 3;
+        // Ambient light boost applied while capturing a milestone screenshot when the subject would
+        // otherwise be too dark to make out. Lerps RenderSettings.ambientLight this fraction towards white.
+        private const float _ScreenshotAmbientBoost = 0.5f;
+        // dot(sunDirection, cameraForward) below this is treated as backlit (camera sees the unlit side).
+        private const float _ScreenshotMinSunFacing = -0.25f;
 
         [KSPField(isPersistant = true)]
         private PersistentHashSetValueType<string> seenMilestones = new PersistentHashSetValueType<string>();
+
+        // Milestones whose screenshot has already been captured in the current timeline. This is
+        // persisted (and therefore rolled back along with the rest of the save state when the player
+        // reverts to launch or loads an earlier save) so that:
+        //  - a contract split across multiple play sessions keeps the screenshot taken when its
+        //    parameter completed, rather than recapturing on final completion in a later session
+        //  - after a revert, the milestone is treated as uncaptured and a fresh screenshot replaces
+        //    the now-stale .png left on disk
+        [KSPField(isPersistant = true)]
+        private PersistentHashSetValueType<string> capturedScreenshots = new PersistentHashSetValueType<string>();
 
         [KSPField(isPersistant = true)]
         private PersistentListValueType<string> queuedMilestones = new PersistentListValueType<string>();
@@ -217,7 +234,10 @@ namespace RP0.Milestones
         private IEnumerator CaptureScreenshot(Milestone milestone, bool overwrite)
         {
             string filePath = $"{KSPUtil.ApplicationRootPath}/saves/{HighLogic.SaveFolder}/{milestone.name}.png";
-            if (!overwrite && File.Exists(filePath))
+            // Don't recapture if a screenshot was already taken for this milestone in the current
+            // timeline (e.g. when the relevant contract parameter completed earlier, possibly in a
+            // previous play session).
+            if (!overwrite && capturedScreenshots.Contains(milestone.name))
                 yield break;
 
             bool wasShowing = KSP.UI.UIMasterController.Instance.mainCanvas.enabled;
@@ -231,6 +251,24 @@ namespace RP0.Milestones
             Vector3 size = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
             float newDist = KSPCameraUtil.GetDistanceToFit(size, FlightCamera.fetch.FieldOfView) * 1.1f + 1f;
             FlightCamera.fetch.SetDistanceImmediate(newDist);
+
+            // Temporarily boost ambient light if the subject would otherwise be too dark to make out:
+            // either the vessel is in a body's shadow / on the night side (no direct sunlight), or it's
+            // backlit so the camera only sees the unlit side. KSP's DynamicAmbientLight overwrites
+            // RenderSettings.ambientLight every Update() from AMBIENTLIGHT_BOOSTFACTOR, so we drive the
+            // boost through that setting and give it one frame to take effect before capturing.
+            float oldAmbientBoost = GameSettings.AMBIENTLIGHT_BOOSTFACTOR;
+            bool boostedAmbient = false;
+            bool inShadow = !FlightGlobals.ActiveVessel.directSunlight;
+            float sunFacing = Sun.Instance != null
+                ? Vector3.Dot(Sun.Instance.sunDirection, FlightCamera.fetch.mainCamera.transform.forward)
+                : 1f;
+            if (inShadow || sunFacing < _ScreenshotMinSunFacing)
+            {
+                GameSettings.AMBIENTLIGHT_BOOSTFACTOR = Mathf.Max(oldAmbientBoost, _ScreenshotAmbientBoost);
+                boostedAmbient = true;
+                yield return null;    // let DynamicAmbientLight apply the new boost before the captured frame renders
+            }
 
             yield return new WaitForEndOfFrame();
 
@@ -253,9 +291,13 @@ namespace RP0.Milestones
 
             var bytes = ImageConversion.EncodeToPNG(result);
             File.WriteAllBytes(filePath, bytes);
+            capturedScreenshots.Add(milestone.name);
 
             FlightCamera.fetch.minDistance = oldMin;
             FlightCamera.fetch.SetDistanceImmediate(oldDist);
+
+            if (boostedAmbient)
+                GameSettings.AMBIENTLIGHT_BOOSTFACTOR = oldAmbientBoost;
 
             if (wasShowing)
                 GameEvents.onShowUI.Fire();

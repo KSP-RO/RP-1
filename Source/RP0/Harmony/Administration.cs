@@ -53,6 +53,8 @@ namespace RP0.Harmony
             {
                 if (strat is ProgramStrategy ps)
                 {
+                    if (!ps.Program.IsActive && !ps.Program.IsComplete)
+                        ps.Program.ApplyProgramModifiers();
                     ps.Program.SetBestAllowableSpeed();
                 }
             }

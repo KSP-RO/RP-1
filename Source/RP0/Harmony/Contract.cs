@@ -68,9 +68,12 @@ namespace RP0.Harmony
                     value += $"\n{KSP.Localization.Localizer.Format("#rp0_ContractRewards_GainApplicants", applicants)}";
             }
 
-            var leaderTitles = LeaderUtils.GetLeadersUnlockedByContract(_contract)
+            var leaderTitles = LeaderUtils.GetLeadersUnlockedByContract(_contract, _contract.ContractState != Contract.State.Completed)
                 .Where(s => !_isReward || !s.IsUnlocked())
                 .Select(s => s.title);
+            // TODO: for contracts with multiple completions where only one triggers a strategy unlock, if the user looks in the archive window while on that completion count,
+            // all of the past contracts of that type will show the strategy unlocks. not sure of a great way around this.
+            // additionally, once the user has more completions than the contract requires to unlock the strategy, the strategy will no longer be shown in the archive window.
             string leaderString = string.Join("\n", leaderTitles);
             if (!string.IsNullOrEmpty(leaderString))
                 value += "\n" + KSP.Localization.Localizer.Format(_isReward ? "#rp0_Leaders_LeadersUnlocked" : "#rp0_Leaders_UnlocksLeader") + leaderString;

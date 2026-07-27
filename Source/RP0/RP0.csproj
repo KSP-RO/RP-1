@@ -52,6 +52,7 @@
     <Compile Include="Harmony\ModuleRCS.cs" />
     <Compile Include="Harmony\ScreenContractTools.cs" />
     <Compile Include="Harmony\Vessel.cs" />
+    <Compile Include="Harmony\ShipConstruction.cs" />
     <Compile Include="Harmony\RealAntennas.cs" />
     <Compile Include="Harmony\ROHeatshields.cs" />
     <Compile Include="ModIntegrations\AlarmHelper.cs" />
@@ -59,6 +60,7 @@
     <Compile Include="ModIntegrations\TFInterop.cs" />
     <Compile Include="Programs\ProgramModifier.cs" />
     <Compile Include="Singletons\LeaderNotifications.cs" />
+    <Compile Include="SpaceCenter\Projects\CrewRnRProject.cs" />
     <Compile Include="SpaceCenter\Projects\HireStaffProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />
     <Compile Include="UI\CostBreakdownGUI.cs" />
@@ -236,6 +238,7 @@
     <Compile Include="UI\ContractGUI.cs" />
     <Compile Include="UI\Tooltip.cs" />
     <Compile Include="UI\ToolingGUI.cs" />
+    <Compile Include="UI\ToolingPartResizer.cs" />
     <Compile Include="UI\AvionicsGUI.cs" />
     <Compile Include="SpaceCenter\AirlaunchParams.cs" />
     <Compile Include="SpaceCenter\AirlaunchTechLevel.cs" />
@@ -266,6 +269,7 @@
     <Compile Include="Persistence\KCTVesselData.cs" />
     <Compile Include="SpaceCenter\SimulationParams.cs" />
     <Compile Include="Utilities\ECMHelper.cs" />
+    <Compile Include="Utilities\LambertSolver.cs" />
     <Compile Include="SpaceCenter\Projects\ISpaceCenterProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselProject.cs" />
     <Compile Include="UI\KCT\GUI_BuildPlans.cs" />
@@ -283,6 +287,7 @@
     <Compile Include="Settings\KCTSettings.cs" />
     <Compile Include="SpaceCenter\Projects\ResearchProject.cs" />
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
+    <Compile Include="Utilities\CraftFileSanitizer.cs" />
     <Compile Include="Utilities\KCTUtilities.cs" />
     <Compile Include="SpaceCenter\SpaceCenterManagement.cs" />
     <Compile Include="Utilities\ScienceUtils.cs" />

@@ -212,5 +212,52 @@
             "NoResourceCostMult",
             "Reentry"
         ]
+    },
+    {
+        "name": "PROXI-MDRLV-nose",
+        "title": "MD RLV Nose",
+        "description": "",
+        "mod": "PLANA",
+        "cost": "7500",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "2000",
+        "technology": "advancedSpaceplanes",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "100000,DCY",
+        "identical_part_name": "",
+        "module_tags": [
+            "NoResourceCostMult",
+            "Reentry"
+        ]
+    },
+    {
+        "name": "PROXI-MDRLV-wing",
+        "title": "MD RLV Wing",
+        "description": "",
+        "mod": "PLANA",
+        "cost": "500",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "2000",
+        "technology": "advancedSpaceplanes",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "5000,DCY",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
     }
 ]

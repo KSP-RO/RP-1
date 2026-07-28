@@ -150,7 +150,7 @@ namespace RP0
 
         public bool DoingVesselRepair;
 
-        public bool MergingAvailable;
+        public bool MergingAvailable => EditorShipEditingMode && EditedVessel.IsFinished;
         public List<VesselProject> MergedVessels = new List<VesselProject>();
 
         private Button.ButtonClickedEvent _recoverCallback, _flyCallback;

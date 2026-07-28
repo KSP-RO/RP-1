@@ -1867,7 +1867,6 @@ namespace RP0
                 SpaceCenterManagement.Instance.EditedVessel = b;
                 GamePersistence.SaveGame("persistent", HighLogic.SaveFolder, SaveMode.OVERWRITE);
                 SpaceCenterManagement.EditorShipEditingMode = true;
-                SpaceCenterManagement.Instance.MergingAvailable = b.IsFinished;
 
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_EXIT, "KCTEditExit");
                 InputLockManager.SetControlLock(ControlTypes.EDITOR_NEW, "KCTEditNew");

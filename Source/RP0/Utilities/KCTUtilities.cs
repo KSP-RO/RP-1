@@ -518,12 +518,16 @@ namespace RP0
             // confignode from original craft, part from new craft
             string name = GetPartNameFromNode(cn);
             if (pt.partInfo.name != name) 
-            {
                 return PartCompareResult.NAME_DIFF;
-            }
+
+            var tags = ModuleTagList.GetTags(pt);
+            if (tags != null && tags.Contains("NoResourceCostMult"))
+                return PartCompareResult.EQUAL; // if we don't care about the contents, give it a free pass
+
             AvailablePart availablePart = GetAvailablePartByName(name);
             if (availablePart == null)
                 return PartCompareResult.EQUAL; // no part to compare against, be lenient I guess?
+
 
             Dictionary<string, double> resourceAmounts = new Dictionary<string, double>();
             VesselProject.GetPartCostsAndMass(pt, out float dryCostPt, out _, out float dryMassPt, out _, resourceAmounts);
@@ -533,10 +537,10 @@ namespace RP0
 
             ShipConstruction.GetPartCostsAndMass(cn, availablePart, out float dryCost, out _, out float dryMass, out _);
 
-            if (Math.Abs(dryCost - dryCostPt) > 0.00001)
+            if ((dryCost == 0 && dryCostPt != 0) || Math.Abs(dryCostPt / dryCost - 1) > 0.00001)
                 return PartCompareResult.COST_DIFF;
 
-            else if (Math.Abs(dryMass - dryMassPt) > 0.00001)
+            else if ((dryMass == 0 && dryMassPt != 0) || Math.Abs(dryMassPt / dryMass - 1) > 0.00001)
                 return PartCompareResult.MASS_DIFF;
 
             foreach (ConfigNode rNode in cn.nodes)
@@ -560,24 +564,20 @@ namespace RP0
             Dictionary<string, HashSet<ConfigNode>> parts = new Dictionary<string, HashSet<ConfigNode>>();
             SpaceCenterManagement SCM = SpaceCenterManagement.Instance;
 
-            // Is this even required? Merging doesn't work AFAIK - and it should not be possible at all with LCs anyway
-            if (SCM.MergedVessels.Count == 0)
+            origTotalBP = ship.buildPoints;
+            oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
+            foreach (ConfigNode part in ship.ExtractedPartNodes)
             {
-                origTotalBP = ship.buildPoints;
-                oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
-                foreach (ConfigNode part in ship.ExtractedPartNodes)
-                {
-                    string name = GetPartNameFromNode(part);
+                string name = GetPartNameFromNode(part);
                     if (!parts.TryGetValue(name, out HashSet<ConfigNode> nodes))
                         nodes = parts[name] = new HashSet<ConfigNode>();
-                    nodes.Add(part);
-                }
+                nodes.Add(part);
             }
-            else
+
+            // Merging is back, and in a small way.
+            if (SCM.MergedVessels.Count > 0)
             {
                 double totalEffectiveCost = ship.effectiveCost;
-                origTotalBP = ship.buildPoints;
-                oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
                 foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
                 {
                     totalEffectiveCost += v.effectiveCost;
@@ -591,9 +591,8 @@ namespace RP0
                     origTotalBP += v.buildPoints;
                     oldProgressBP += v.IsFinished ? v.buildPoints : v.progress;
                 }
-                double completion = oldProgressBP / origTotalBP;
                 origTotalBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
-                oldProgressBP = completion * origTotalBP;
+                // Intentionally penalise merging by not scaling up progress BP to correspond to the higher total EC.
             }
 
             SCM.matchingParts.Clear();

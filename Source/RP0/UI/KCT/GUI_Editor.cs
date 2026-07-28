@@ -461,7 +461,7 @@ namespace RP0
             }
 
             if (SpaceCenterManagement.Instance.nonmatchingParts.Count() > 0
-                && GUILayout.Button(_gcNonmatchingParts))
+                && GUILayout.Button(_gcNonmatchingParts, _highlightNonmatchingParts ? _greenButton : GUI.skin.button))
             {
                 _highlightNonmatchingParts = !_highlightNonmatchingParts;
             }
@@ -490,6 +490,9 @@ namespace RP0
                             break;
                         case KCTUtilities.PartCompareResult.RESOURCES_DIFF:
                             p.SetHighlightColor(Color.blue);
+                            break;
+                        case KCTUtilities.PartCompareResult.NOT_PRESENT:
+                            p.SetHighlightColor(Color.green);
                             break;
                     }
                     _highlights[p] = result;

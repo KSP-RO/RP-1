@@ -73,18 +73,22 @@ namespace RP0
                 GUILayout.Label($"EC: {SpaceCenterManagement.Instance.EditorVessel.effectiveCost:N0}");
             }
 
+            double mult = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier * bpLeaderEffect;
+            GUILayout.Label($"Leader Effect on Integration Rate: {LocalizationHandler.FormatRatioAsPercent(mult)}");
+
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
                 double buildTime = bR > 0d
                     ? (effic >= LCEfficiency.MaxEfficiency
                         ? buildPoints / (bR * bpLeaderEffect)
-                        : SpaceCenterManagement.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, effic, out _))
+                        : SpaceCenterManagement.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic * bpLeaderEffect, effic, out _))
                     : 0d;
                 GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")} at {effic:P0}");
 
                 if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / bR, true, false) : "infinity")} at {effic:P0}");
+                    double rolloutBR = bR / SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier * CurrencyUtils.Rate(TransactionReasonsRP0.RateRollout);
+                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / rolloutBR, true, false) : "infinity")} at {effic:P0}");
                 }
             }
             else
@@ -104,7 +108,7 @@ namespace RP0
             {
                 double effectiveEngCount = bR / rateWithCurEngis * engineersUsed;
                 double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.EngineerIdleSalaryMult);
-                double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
+                double cost = buildPoints / (bR * bpLeaderEffect) / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
             }
 
@@ -364,14 +368,14 @@ namespace RP0
                 {
                     double brTrue = bR / effic;
                     for (int i = 0; i < idx; ++i)
-                        editedVessel.LC.BuildList[i].CalculateTimeLeftForBuildRate(editedVessel.buildPoints - editedVessel.progress, brTrue, startingEff, out startingEff);
+                        editedVessel.LC.BuildList[i].CalculateTimeLeftForBuildRate(editedVessel.buildPoints - editedVessel.progress, brTrue * editedVessel.LC.BuildList[i].LeaderEffect, startingEff, out startingEff);
                 }
 
                 double buildPoints = Math.Abs(fullVesselBP - newProgressBP);
                 double buildTime = bR > 0d
                     ? (effic >= LCEfficiency.MaxEfficiency
                         ? buildPoints / (bR * bpLeaderEffect)
-                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, startingEff, out rolloutEff))
+                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic * bpLeaderEffect, startingEff, out rolloutEff))
                     : double.NaN;
                 GUILayout.Label(new GUIContent($"Remaining: {RP0DTUtils.GetFormattedTime(buildTime, 0, false)}", 
                     idx == -1 ? "Time left takes efficiency increase into account based on assuming vessel will be placed at head of integration list" :
@@ -379,7 +383,8 @@ namespace RP0
 
                 if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {RP0DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (bR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
+                    double rolloutBR = bR / editedVessel.LC.StrategyRateMultiplier * CurrencyUtils.Rate(TransactionReasonsRP0.RateRollout);
+                    GUILayout.Label($"Rollout Time: {RP0DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (rolloutBR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
                 }
             }
             else

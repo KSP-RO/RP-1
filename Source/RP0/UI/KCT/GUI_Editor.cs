@@ -92,17 +92,19 @@ namespace RP0
 
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
+                double postEffic = effic;
                 double buildTime = bR > 0d
                     ? (effic >= LCEfficiency.MaxEfficiency
                         ? buildPoints / (bR * bpLeaderEffect)
-                        : SpaceCenterManagement.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic * bpLeaderEffect, effic, out _))
+                        : SpaceCenterManagement.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic * bpLeaderEffect, effic, out postEffic))
                     : 0d;
                 GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")} at {effic:P0}");
 
                 if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    double rolloutBR = bR * CachedRolloutRateLeader;
-                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / rolloutBR, true, false) : "infinity")} at {effic:P0}");
+                    double rolloutBR = bR * CachedRolloutRateLeader / effic * postEffic;
+                    GUILayout.Label(new GUIContent($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / rolloutBR, true, false) : "infinity")} at {postEffic:P0}",
+                        "Uses the predicted efficiency after integration is complete."));
                 }
             }
             else

@@ -969,6 +969,29 @@
         ]
     },
     {
+        "name": "fft-fusion-magnetic-tokamak-aerospike-1",
+        "title": "magnetic tokamak-aerospike",
+        "description": "",
+        "mod": "Far Future Technologies",
+        "cost": "670000",
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "",
+        "year": "2051",
+        "technology": "colonization2051NuclearProp",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": true,
+        "entry_cost_mods": "fusionEngine",
+        "identical_part_name": "",
+        "module_tags": [
+            "Nuclear"
+        ]
+    },
+    {
         "name": "fft-fusion-reactor-25-1",
         "title": "FX-2 Fusion Reactor",
         "description": "",

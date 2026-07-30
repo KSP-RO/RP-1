@@ -24,9 +24,19 @@ namespace RP0
         private static List<string> vesselFailedChecks = new List<string>();
 
         // Rollout Rate effects should not change when this window is open.
-        private static double _cachedRolloutRateLeader = double.NegativeInfinity;
-        public static double cachedRolloutRateLeader => _cachedRolloutRateLeader.IsFinite() ? _cachedRolloutRateLeader : (_cachedRolloutRateLeader = CurrencyUtils.Rate(TransactionReasonsRP0.RateRollout));
-
+        private static double _cachedRolloutRateLeader = -1;
+        public static double CachedRolloutRateLeader 
+        { 
+            get 
+            {
+                if (_cachedRolloutRateLeader < 0 || _rolloutTimeNeedsUpdate)
+                {
+                    _cachedRolloutRateLeader = CurrencyUtils.Rate(TransactionReasonsRP0.RateRollout);
+                    _rolloutTimeNeedsUpdate = false;
+                }
+                return _cachedRolloutRateLeader;
+            }
+        }
         public static void DrawEditorGUI(int windowID)
         {
             if (EditorLogic.fetch == null)
@@ -76,7 +86,7 @@ namespace RP0
                 GUILayout.Label($"BP Cost: {buildPoints:N0}");
                 GUILayout.Label($"EC: {SpaceCenterManagement.Instance.EditorVessel.effectiveCost:N0}");
             }
-            
+
             if (Math.Abs(bpLeaderEffect - 1) > 0.001d)
                 GUILayout.Label($"Leader Effect on Integration Rate: {LocalizationHandler.FormatRatioAsPercent(bpLeaderEffect)}");
 
@@ -91,7 +101,7 @@ namespace RP0
 
                 if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    double rolloutBR = bR * cachedRolloutRateLeader;
+                    double rolloutBR = bR * CachedRolloutRateLeader;
                     GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / rolloutBR, true, false) : "infinity")} at {effic:P0}");
                 }
             }
@@ -370,7 +380,7 @@ namespace RP0
                 int idx = editedVessel.LC.BuildList.IndexOf(editedVessel);
                 if (idx != -1 && bR > 0d && effic < LCEfficiency.MaxEfficiency)
                 {
-                    double brTrue = bR / effic;
+                    double brTrue = bR / effic * editedVessel.LC.StrategyRateMultiplier;
                     for (int i = 0; i < idx; ++i)
                     {
                         VesselProject ship = editedVessel.LC.BuildList[i];
@@ -390,7 +400,7 @@ namespace RP0
 
                 if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    double rolloutBR = bR * cachedRolloutRateLeader;
+                    double rolloutBR = bR * CachedRolloutRateLeader;
                     GUILayout.Label($"Rollout Time: {RP0DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (rolloutBR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
                 }
             }
@@ -495,7 +505,7 @@ namespace RP0
                 var ship = SpaceCenterManagement.Instance.EditorVessel;
                 var deltaToMaxEngineers = int.MaxValue - SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers;
                 bR = KCTUtilities.GetBuildRate(SpaceCenterManagement.Instance.ActiveSC.ActiveLC, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
-                    * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Efficiency * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
+                    * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Efficiency;
                 BuildRateForDisplay = bR.ToString();
             }
 

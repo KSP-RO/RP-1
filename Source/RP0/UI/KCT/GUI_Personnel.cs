@@ -185,18 +185,19 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
-            double rateFull = KCTUtilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta);
-            double rate = rateFull * efficiency;
+            
             if (currentLC.CanIntegrate && currentLC.BuildList.Count > 0)
             {
                 VesselProject b = currentLC.BuildList[0];
+                double rateFull = KCTUtilities.GetBuildRate(0, type, currentLC, b.humanRated, assignDelta);
+                double rate = rateFull * efficiency;
                 double leaderMult = stratMult * b.LeaderEffect;
                     
                 GUILayout.BeginHorizontal();
                 if (Math.Abs(leaderMult - 1) > 0.001)
-                    GUILayout.Label($"Efficiency & Leader Effect: {rateFull:N3} => {rate:N3} => {rate * leaderMult:N3} BP/sec", GetLabelRightAlignStyle());
+                    GUILayout.Label($"Vessel Rate (with Leaders): {rateFull:N3} => {rate:N3} => {rate * leaderMult:N3} BP/sec", GetLabelRightAlignStyle());
                 else
-                    GUILayout.Label($"Efficiency Effect: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
+                    GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
@@ -215,8 +216,10 @@ namespace RP0
             }
             else
             {
+                double rateFull = KCTUtilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta);
+                double rate = rateFull * efficiency;
                 GUILayout.BeginHorizontal();
-                GUILayout.Label($"Efficiency Effect: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
+                GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();

@@ -25,7 +25,7 @@ namespace RP0
 
         // Rollout Rate effects should not change when this window is open.
         private static double _cachedRolloutRateLeader = -1;
-        public static double CachedRolloutRateLeader 
+        private static double CachedRolloutRateLeader 
         { 
             get 
             {

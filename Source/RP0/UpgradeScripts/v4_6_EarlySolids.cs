@@ -1,11 +1,12 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
+using UniLinq;
 using SaveUpgradePipeline;
 using UnityEngine;
 
 namespace RP0.UpgradeScripts
 {
-    [UpgradeModule(LoadContext.SFS, sfsNodeUrl = "GAME/SCENARIO/Tech")]
+    [UpgradeModule(LoadContext.SFS, sfsNodeUrl = "GAME/SCENARIO")]
     public class v4_6_EarlySolids : UpgradeScript
     {
         public override string Name { get => "RP-1 Early Solid Node Removal"; }
@@ -14,16 +15,16 @@ namespace RP0.UpgradeScripts
         protected static Version _targetVersion = new Version(4, 6, 0);
         public override Version TargetVersion => _targetVersion;
 
-        private static string[] nodes = { "earlySolids", "basicSolids", "solids1956" };
+        private static readonly Dictionary<string, string> nodes = new Dictionary<string, string> { {"earlySolids", "rocketryTesting"}, {"basicSolids", "basicRocketryRP0"}, {"solids1956", "orbitalRocketry1956"} };
 
         public override TestResult OnTest(ConfigNode node, LoadContext loadContext, ref string nodeName)
         {
-            return nodes.Contains(node.GetValue("id")) ? TestResult.Upgradeable : TestResult.Pass;
+            return node.GetValue("name") == "ResearchAndDevelopment" ? TestResult.Upgradeable : TestResult.Pass;
         }
 
         public override void OnUpgrade(ConfigNode node, LoadContext loadContext, ConfigNode parentNode)
         {
-            
+            node.GetNodes("Tech");
         }
     }
 }

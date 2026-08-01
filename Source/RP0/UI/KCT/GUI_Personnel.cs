@@ -189,7 +189,7 @@ namespace RP0
             VesselProject b = hasVessel ? currentLC.BuildList[0] : null;
             double rateFull = KCTUtilities.GetBuildRate(0, type, currentLC, hasVessel ? b.humanRated : currentLC.IsHumanRated, assignDelta);
             double rate = rateFull * efficiency;
-            double leaderMult = stratMult * b.LeaderEffect;
+            double leaderMult = b == null ? 1 : (stratMult * b.LeaderEffect);
 
             GUILayout.BeginHorizontal();
             if (hasVessel && Math.Abs(leaderMult - 1) > 0.001)

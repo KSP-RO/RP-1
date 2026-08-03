@@ -577,7 +577,6 @@ namespace RP0
                 {
                     if (LoadedSaveVersion < 10)
                     {
-                        CareerEventScope ignoreScope = new CareerEventScope(CareerEventType.Ignore);
                         string[] techsToRemove = { "earlySolids", "basicSolids", "solids1956" };
                         float refund = TechList.Sum(project => techsToRemove.Contains(project.techID) ? project.scienceCost : 0);
                         TechList.RemoveAll(project => techsToRemove.Contains(project.techID));
@@ -596,7 +595,8 @@ namespace RP0
                                 IsRefundingScience = true;
                                 try
                                 {
-                                    ResearchAndDevelopment.Instance.AddScience(refund, TransactionReasons.RnDTechResearch);
+                                    using (new CareerEventScope(CareerEventType.Ignore))
+                                        ResearchAndDevelopment.Instance.AddScience(refund, TransactionReasons.RnDTechResearch);
                                 }
                                 finally
                                 {
@@ -604,7 +604,6 @@ namespace RP0
                                 }
                             }
                         }
-                        ignoreScope.Dispose();
                     }
                     if (LoadedSaveVersion < 9)
                     {

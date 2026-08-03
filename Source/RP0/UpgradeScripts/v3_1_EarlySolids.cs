@@ -1,8 +1,6 @@
-﻿using System;
+﻿using SaveUpgradePipeline;
+using System;
 using System.Collections.Generic;
-using UniLinq;
-using SaveUpgradePipeline;
-using UnityEngine;
 
 namespace RP0.UpgradeScripts
 {
@@ -10,12 +8,17 @@ namespace RP0.UpgradeScripts
     public class v3_1_EarlySolids : UpgradeScript
     {
         public override string Name { get => "RP-1 Early Solid Node Removal"; }
-        public override string Description { get => "Removes the Early Solids, Basic Solids, and 1956 Solids nodes from acquired tech. "; }
+        public override string Description { get => "Removes the Early Solids, Basic Solids, and 1956 Solids nodes from acquired tech, and unlocks the corresponding replacement nodes. "; }
         public override Version EarliestCompatibleVersion { get => new Version(2, 0, 0); }
         protected static Version _targetVersion = new Version(3, 1, 0);
         public override Version TargetVersion => _targetVersion;
 
-        public static readonly Dictionary<string, string> NodeSwaps = new Dictionary<string, string> { {"earlySolids", "rocketryTesting"}, {"basicSolids", "basicRocketryRP0"}, {"solids1956", "orbitalRocketry1956"} };
+        public static readonly Dictionary<string, string[]> NodeSwaps = new Dictionary<string, string[]> 
+        { 
+            { "earlySolids", new string[] {"rocketryTesting"} }, 
+            { "basicSolids", new string[] {"basicRocketryRP0", "earlyRocketry"} }, 
+            { "solids1956", new string[] {"orbitalRocketry1956"} }
+        };
 
         public override TestResult OnTest(ConfigNode node, LoadContext loadContext, ref string nodeName)
         {
@@ -32,47 +35,28 @@ namespace RP0.UpgradeScripts
             foreach (var kvp in NodeSwaps)
             {
                 string source = kvp.Key;
-                string target = kvp.Value;
-                if (techs.TryGetValue(source, out var sourceNode))
+                string target = kvp.Value[0];
+                string[] allTargets = kvp.Value;
+                if (techs.TryGetValue(source, out ConfigNode sourceNode))
                 {
-                    if (techs.TryGetValue(target, out var targetNode))
+                    foreach (string tech in allTargets)
                     {
-                        // if relevant, move source Parts into target node
-                        foreach (var part in sourceNode.GetValues("Part"))
+                        if (!techs.ContainsKey(tech))
                         {
-                            targetNode.AddValue("Part", part);
+                            ConfigNode techNode = node.AddNode("Tech");
+                            techNode.AddValue("id", tech);
+                            techNode.AddValue("state", RDTech.State.Available);
+                            techNode.AddValue("cost", 0); // placeholder
+                            techs[tech] = techNode;
                         }
+                    }
+                    foreach (var part in sourceNode.GetValues("Part"))
+                    {
+                        techs[target].AddValue("Part", part);
                     }
                     // good-bye!!
                     node.RemoveNode(sourceNode);
-                }
-            }
-        }
-    }
-
-    [UpgradeModule(LoadContext.SFS, sfsNodeUrl = "GAME/SCENARIO/TechList")]
-    public class v3_1_RnD_EarlySolids : UpgradeScript
-    {
-        public override string Name => "RP-1 Early Solid Node Research Compensation";
-
-        public override string Description => "Removes the early solid nodes' corresponding research projects.";
-
-        public override Version EarliestCompatibleVersion { get => new Version(2, 0, 0); }
-        protected static Version _targetVersion = new Version(3, 1, 0);
-        public override Version TargetVersion => _targetVersion;
-
-        public override TestResult OnTest(ConfigNode node, LoadContext loadContext, ref string nodeName)
-        {
-            return TestResult.Upgradeable;
-        }
-
-        public override void OnUpgrade(ConfigNode node, LoadContext loadContext, ConfigNode parentNode)
-        {
-            foreach (var tech in node.GetNodes("ResearchProject"))
-            {
-                if (v3_1_EarlySolids.NodeSwaps.ContainsKey(tech.GetValue("techID")))
-                {
-                    node.RemoveNode(tech);
+                    RP0Debug.Log($"{Name} removed {source} node");
                 }
             }
         }

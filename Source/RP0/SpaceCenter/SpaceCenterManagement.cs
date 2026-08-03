@@ -97,7 +97,7 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
-        public const int VERSION = 9;
+        public const int VERSION = 10;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
@@ -575,6 +575,35 @@ namespace RP0
 
                 if (LoadedSaveVersion < VERSION)
                 {
+                    if (LoadedSaveVersion < 10)
+                    {
+                        string[] techsToRemove = { "earlySolids", "basicSolids", "solids1956" };
+                        float refund = TechList.Sum(project => techsToRemove.Contains(project.techID) ? project.scienceCost : 0);
+                        TechList.RemoveAll(project => techsToRemove.Contains(project.techID));
+                        if (refund > 0)
+                        {
+                            int index = TechList.FindIndex(project => project.techID == "solids1958");
+                            if (index != -1)
+                            {
+                                KCT_GUI.CancelTechNode(index);
+                            }
+                            if (KSPUtils.CurrentGameHasScience())
+                            {
+                                bool valBef = IsRefundingScience;
+                                IsRefundingScience = true;
+                                try
+                                {
+                                    ResearchAndDevelopment.Instance.AddScience(refund, TransactionReasons.RnDTechResearch);
+                                }
+                                finally
+                                {
+                                    IsRefundingScience = valBef;
+                                }
+                            }
+                        }
+                        
+                        
+                    }
                     if (LoadedSaveVersion < 9)
                     {
                         KCTUtilities.RefreshGroundStationActiveState();

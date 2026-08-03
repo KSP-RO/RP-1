@@ -5,19 +5,20 @@ using System.Collections.Generic;
 namespace RP0.UpgradeScripts
 {
     [UpgradeModule(LoadContext.SFS, sfsNodeUrl = "GAME/SCENARIO")]
-    public class v3_1_EarlySolids : UpgradeScript
+    public class v4_6_EarlySolids : UpgradeScript
     {
         public override string Name { get => "RP-1 Early Solid Node Removal"; }
         public override string Description { get => "Removes the Early Solids, Basic Solids, and 1956 Solids nodes from acquired tech, and unlocks the corresponding replacement nodes. "; }
         public override Version EarliestCompatibleVersion { get => new Version(2, 0, 0); }
-        protected static Version _targetVersion = new Version(3, 1, 0);
+        protected static Version _targetVersion = new Version(4, 6, 0);
         public override Version TargetVersion => _targetVersion;
 
+        // Unlock all dependencies as well. This is a lot of extra tech for free :/
         public static readonly Dictionary<string, string[]> NodeSwaps = new Dictionary<string, string[]> 
         { 
             { "earlySolids", new string[] {"rocketryTesting"} }, 
-            { "basicSolids", new string[] {"basicRocketryRP0", "earlyRocketry"} }, 
-            { "solids1956", new string[] {"orbitalRocketry1956"} }
+            { "basicSolids", new string[] {"basicRocketryRP0", "earlyMaterialsScience", "earlyRocketry"} }, 
+            { "solids1956", new string[] {"orbitalRocketry1956", "materialsScienceSatellite"} }
         };
 
         public override TestResult OnTest(ConfigNode node, LoadContext loadContext, ref string nodeName)

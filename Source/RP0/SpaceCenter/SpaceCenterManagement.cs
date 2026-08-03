@@ -580,6 +580,8 @@ namespace RP0
                         string[] techsToRemove = { "earlySolids", "basicSolids", "solids1956" };
                         float refund = TechList.Sum(project => techsToRemove.Contains(project.techID) ? project.scienceCost : 0);
                         TechList.RemoveAll(project => techsToRemove.Contains(project.techID));
+                        // If the patcher gave free techs, remove them from the queue
+                        TechList.RemoveAll(project => ResearchAndDevelopment.GetTechnologyState(project.techID) == RDTech.State.Available);
                         if (refund > 0)
                         {
                             int index = TechList.FindIndex(project => project.techID == "solids1958");

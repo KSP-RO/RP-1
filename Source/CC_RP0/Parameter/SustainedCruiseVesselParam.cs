@@ -5,37 +5,16 @@ using UnityEngine;
 namespace ContractConfigurator.RP0
 {
     /// <summary>
-    /// Instantaneous cruise-endurance test: met while the active vessel simultaneously satisfies ALL of:
-    ///   * surface speed within [minSpeed, maxSpeed]
-    ///   * vertical speed within [minVerticalSpeed, maxVerticalSpeed]
-    ///   * projected range >= requiredRange
+    /// Instantaneous cruise-endurance check: met while the active vessel is within the [minSpeed, maxSpeed]
+    /// and [minVerticalSpeed, maxVerticalSpeed] bands AND its projected still-air range >= requiredRange.
+    /// Endurance is measured as RANGE, not time, so faster / more efficient flight is rewarded. Range is
+    /// projected per fuel and the minimum reported; how fuels are tracked lives on GatherEnginePropellants,
+    /// the min-range logic on TryMinRange, and the Breguet math on ProjectedRange.
     ///
-    /// Endurance is measured as RANGE rather than time, so flying faster and/or more efficiently (e.g.
-    /// higher, where jets burn less for the same speed) is rewarded. The fuels to project are gathered from
-    /// the propellants of currently-working engines (jets run on all sorts here -- kerosene, hydrogen,
-    /// methane, nitrous, water injection, enriched uranium), and the set is ADDITIVE: once a mass-bearing
-    /// propellant has been burned by a running engine it stays tracked even after that engine is shut down or
-    /// staged away, so switching engines/fuels midflight (RAPIER mode, water injection) keeps a valid
-    /// projection on every fuel the craft has used. (Staging itself changes part count, which resets the
-    /// rolling rate window -- mass jumps discontinuously -- so the projection re-warms over one window; the
-    /// tracked fuel SET still persists across it.) The reported range is the MINIMUM across
-    /// the tracked fuels still being consumed -- a fuel whose burn rate falls below MIN_RATE (e.g. its engine
-    /// is now off) simply drops out of the ranking. Each fuel's burn rate is averaged over a rolling
-    /// rateWindowSeconds. Sampling runs continuously (even outside the speed band) so the projected range
-    /// can be shown while climbing to / accelerating into cruise; the rolling average simply converges to
-    /// the cruise burn rate within one window once speed settles. Massless propellants (ElectricCharge,
-    /// IntakeAir) are never tracked.
-    ///
-    /// This parameter is a plain instantaneous check. To require the condition be held for a time -- and to
-    /// get a countdown display -- pair it with a stock Duration parameter placed as a LATER sibling, and set
-    /// disableOnStateChange = false here so its state toggles as the vessel enters/leaves the band (Duration
-    /// times only while its preceding siblings are Complete, and resets when one stops).
-    ///
-    /// Config: requiredRange m (req), minSpeed/maxSpeed m/s, minVerticalSpeed/maxVerticalSpeed m/s,
-    /// rateWindowSeconds (def 30), updateFrequency (def 0.5). Set the CC log level for the SustainedCruise
-    /// type to DEBUG (or VERBOSE) via an ADD_LOGLEVEL_EXCEPTION to see the per-tick speed/VS/range/met and
-    /// Breguet-input breakdown lines. (LogDebug, not LogVerbose, so it survives the Release build --
-    /// LogVerbose is [Conditional("DEBUG")] and gets compiled out.)
+    /// Pair with a LATER stock Duration sibling (and set disableOnStateChange = false here) to require the
+    /// band be held for a time with a countdown. Config keys: requiredRange (req, m), minSpeed, maxSpeed,
+    /// minVerticalSpeed, maxVerticalSpeed (m/s; all but requiredRange/minSpeed optional), rateWindowSeconds
+    /// (def 30), updateFrequency (def 0.5).
     /// </summary>
     public class SustainedCruise : VesselParameter
     {
@@ -107,9 +86,9 @@ namespace ContractConfigurator.RP0
             base.OnParameterLoad(node);
             requiredRange = ConfigNodeUtil.ParseValue<double>(node, "requiredRange");
             minSpeed = ConfigNodeUtil.ParseValue<double>(node, "minSpeed", 0.0);
-            maxSpeed = node.HasValue("maxSpeed") ? ConfigNodeUtil.ParseValue<double>(node, "maxSpeed") : (double?)null;
-            minVerticalSpeed = node.HasValue("minVerticalSpeed") ? ConfigNodeUtil.ParseValue<double>(node, "minVerticalSpeed") : (double?)null;
-            maxVerticalSpeed = node.HasValue("maxVerticalSpeed") ? ConfigNodeUtil.ParseValue<double>(node, "maxVerticalSpeed") : (double?)null;
+            maxSpeed = ConfigNodeUtil.ParseValue(node, "maxSpeed", (double?)null);
+            minVerticalSpeed = ConfigNodeUtil.ParseValue(node, "minVerticalSpeed", (double?)null);
+            maxVerticalSpeed = ConfigNodeUtil.ParseValue(node, "maxVerticalSpeed", (double?)null);
             rateWindowSeconds = ConfigNodeUtil.ParseValue<double>(node, "rateWindowSeconds", DEFAULT_RATE_WINDOW);
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
         }
@@ -304,8 +283,14 @@ namespace ContractConfigurator.RP0
             bool rangeOk = rateReady && range >= requiredRange;
             met = speedOk && vsOk && rangeOk;
 
-            LogState(speed, vs, speedOk, vsOk, rangeOk, range, limiter);
-            if (rateReady && limiter != null) LogRangeBreakdown(v, speed, limiter, limAmount, limRate, range);
+            // Gate the debug dumps on the log level so the params arrays / double boxing don't run every tick
+            // in the normal Release case. Set the CC log level for this type to DEBUG via an
+            // ADD_LOGLEVEL_EXCEPTION to see them (LogDebug, not LogVerbose, so they survive Release).
+            if (LoggingUtil.GetLogLevel(GetType()) <= LoggingUtil.LogLevel.DEBUG)
+            {
+                LogState(speed, vs, speedOk, vsOk, rangeOk, range, limiter);
+                if (rateReady && limiter != null) LogRangeBreakdown(v, speed, limiter, limAmount, limRate, range);
+            }
             CheckVessel(v);
             GetTitle();   // refresh the contracts app with the live range
         }

@@ -11,14 +11,20 @@ namespace ContractConfigurator.RP0
     ///   * projected range >= requiredRange
     ///
     /// Endurance is measured as RANGE rather than time, so flying faster and/or more efficiently (e.g.
-    /// higher, where jets burn less for the same speed) is rewarded. Range is computed for EVERY mass-bearing
-    /// propellant the vessel is actively burning (jets run on all sorts of resources here -- kerosene,
-    /// hydrogen, methane, nitrous, water injection, enriched uranium), and the reported range is the MINIMUM
-    /// across them, i.e. whichever fuel runs out first. Each fuel's burn rate is averaged over a rolling
+    /// higher, where jets burn less for the same speed) is rewarded. The fuels to project are gathered from
+    /// the propellants of currently-working engines (jets run on all sorts here -- kerosene, hydrogen,
+    /// methane, nitrous, water injection, enriched uranium), and the set is ADDITIVE: once a mass-bearing
+    /// propellant has been burned by a running engine it stays tracked even after that engine is shut down or
+    /// staged away, so switching engines/fuels midflight (RAPIER mode, water injection) keeps a valid
+    /// projection on every fuel the craft has used. (Staging itself changes part count, which resets the
+    /// rolling rate window -- mass jumps discontinuously -- so the projection re-warms over one window; the
+    /// tracked fuel SET still persists across it.) The reported range is the MINIMUM across
+    /// the tracked fuels still being consumed -- a fuel whose burn rate falls below MIN_RATE (e.g. its engine
+    /// is now off) simply drops out of the ranking. Each fuel's burn rate is averaged over a rolling
     /// rateWindowSeconds. Sampling runs continuously (even outside the speed band) so the projected range
     /// can be shown while climbing to / accelerating into cruise; the rolling average simply converges to
-    /// the cruise burn rate within one window once speed settles. Massless resources (ElectricCharge,
-    /// IntakeAir) are ignored.
+    /// the cruise burn rate within one window once speed settles. Massless propellants (ElectricCharge,
+    /// IntakeAir) are never tracked.
     ///
     /// This parameter is a plain instantaneous check. To require the condition be held for a time -- and to
     /// get a countdown display -- pair it with a stock Duration parameter placed as a LATER sibling, and set
@@ -35,15 +41,16 @@ namespace ContractConfigurator.RP0
     {
         protected double requiredRange { get; set; }
         protected double minSpeed { get; set; }
-        protected double maxSpeed { get; set; }
-        protected double minVerticalSpeed { get; set; }
-        protected double maxVerticalSpeed { get; set; }
+        protected double? maxSpeed { get; set; }            // null = no upper speed bound
+        protected double? minVerticalSpeed { get; set; }    // null = no lower VS bound
+        protected double? maxVerticalSpeed { get; set; }    // null = no upper VS bound
         protected double rateWindowSeconds { get; set; }
         protected float updateFrequency { get; set; }
 
         internal const double DEFAULT_RATE_WINDOW = 30.0;
         internal const float DEFAULT_UPDATE_FREQUENCY = 0.5f;
         private const double MIN_RATE = 1e-4;   // below this the craft isn't really burning this resource
+        private const double EMPTY_UNITS = 1e-6;   // at/below this a resource is spent, not a live limiter
 
         private float lastUpdate = 0f;
         private double lastCheckTime = double.NegativeInfinity;
@@ -55,12 +62,21 @@ namespace ContractConfigurator.RP0
         // sampleAmounts[k] maps resource id -> total amount on the vessel at that tick.
         private readonly List<double> sampleTimes = new List<double>();
         private readonly List<Dictionary<int, double>> sampleAmounts = new List<Dictionary<int, double>>();
-        private readonly HashSet<int> massBearingIds = new HashSet<int>();
+        // Mass-bearing propellants ever burned by a working engine. Additive: only cleared when the active
+        // vessel changes, never on engine shutdown/staging, so old fuels keep projecting (see class summary).
+        private readonly HashSet<int> trackedPropellantIds = new HashSet<int>();
+        // Engines on the vessel, cached and only rebuilt on part-count / vessel change so the per-tick
+        // propellant gather doesn't walk every part's module list. Entries can go null if a part is destroyed
+        // between rebuilds, so the gather null-checks them.
+        private readonly List<ModuleEngines> engineCache = new List<ModuleEngines>();
+        // Snapshot dictionaries are pooled and reused across the rolling window so steady-state sampling
+        // doesn't allocate a fresh Dictionary every tick.
+        private readonly Stack<Dictionary<int, double>> dictPool = new Stack<Dictionary<int, double>>();
 
         public SustainedCruise() : base(null) { }
 
         public SustainedCruise(string title, double requiredRange,
-                               double minSpeed, double maxSpeed, double minVerticalSpeed, double maxVerticalSpeed,
+                               double minSpeed, double? maxSpeed, double? minVerticalSpeed, double? maxVerticalSpeed,
                                double rateWindowSeconds, float updateFrequency)
             : base(title)
         {
@@ -79,9 +95,9 @@ namespace ContractConfigurator.RP0
             base.OnParameterSave(node);
             node.AddValue("requiredRange", requiredRange);
             node.AddValue("minSpeed", minSpeed);
-            node.AddValue("maxSpeed", maxSpeed);
-            node.AddValue("minVerticalSpeed", minVerticalSpeed);
-            node.AddValue("maxVerticalSpeed", maxVerticalSpeed);
+            if (maxSpeed.HasValue) node.AddValue("maxSpeed", maxSpeed.Value);
+            if (minVerticalSpeed.HasValue) node.AddValue("minVerticalSpeed", minVerticalSpeed.Value);
+            if (maxVerticalSpeed.HasValue) node.AddValue("maxVerticalSpeed", maxVerticalSpeed.Value);
             node.AddValue("rateWindowSeconds", rateWindowSeconds);
             node.AddValue("updateFrequency", updateFrequency);
         }
@@ -91,9 +107,9 @@ namespace ContractConfigurator.RP0
             base.OnParameterLoad(node);
             requiredRange = ConfigNodeUtil.ParseValue<double>(node, "requiredRange");
             minSpeed = ConfigNodeUtil.ParseValue<double>(node, "minSpeed", 0.0);
-            maxSpeed = ConfigNodeUtil.ParseValue<double>(node, "maxSpeed", double.MaxValue);
-            minVerticalSpeed = ConfigNodeUtil.ParseValue<double>(node, "minVerticalSpeed", double.MinValue);
-            maxVerticalSpeed = ConfigNodeUtil.ParseValue<double>(node, "maxVerticalSpeed", double.MaxValue);
+            maxSpeed = node.HasValue("maxSpeed") ? ConfigNodeUtil.ParseValue<double>(node, "maxSpeed") : (double?)null;
+            minVerticalSpeed = node.HasValue("minVerticalSpeed") ? ConfigNodeUtil.ParseValue<double>(node, "minVerticalSpeed") : (double?)null;
+            maxVerticalSpeed = node.HasValue("maxVerticalSpeed") ? ConfigNodeUtil.ParseValue<double>(node, "maxVerticalSpeed") : (double?)null;
             rateWindowSeconds = ConfigNodeUtil.ParseValue<double>(node, "rateWindowSeconds", DEFAULT_RATE_WINDOW);
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
         }
@@ -101,21 +117,35 @@ namespace ContractConfigurator.RP0
         protected override string GetParameterTitle()
         {
             double reqKm = requiredRange / 1000.0;
-            string band = maxSpeed >= double.MaxValue * 0.5 ? $">= {minSpeed:0} m/s" : $"{minSpeed:0}-{maxSpeed:0} m/s";
-            if (FlightGlobals.ActiveVessel == null)
-                return $"Cruise: range >= {reqKm:0} km, speed {band}";
-            return $"Cruise: range {curRange / 1000.0:0} / {reqKm:0} km, speed {band}";
+            string speedBand = maxSpeed.HasValue ? $"{minSpeed:N0}-{maxSpeed.Value:N0} m/s" : $">= {minSpeed:N0} m/s";
+            string rangePart = FlightGlobals.ActiveVessel == null
+                ? $"range >= {reqKm:N0} km"
+                : $"range {curRange / 1000.0:N0} / {reqKm:N0} km";
+            return $"Cruise: {rangePart}, speed {speedBand}{VerticalSpeedBand()}";
+        }
+
+        // "" when unconstrained, else e.g. ", VS 0-5 m/s" / ", VS >= -2 m/s" / ", VS <= 5 m/s". Included in the
+        // title so a player failing purely on vertical speed gets feedback rather than a silently-incomplete param.
+        private string VerticalSpeedBand()
+        {
+            if (!minVerticalSpeed.HasValue && !maxVerticalSpeed.HasValue) return "";
+            if (minVerticalSpeed.HasValue && maxVerticalSpeed.HasValue)
+                return $", VS {minVerticalSpeed.Value:N0}-{maxVerticalSpeed.Value:N0} m/s";
+            if (maxVerticalSpeed.HasValue)
+                return $", VS <= {maxVerticalSpeed.Value:N0} m/s";
+            return $", VS >= {minVerticalSpeed.Value:N0} m/s";
         }
 
         private void ResetAll()
         {
+            for (int i = 0; i < sampleAmounts.Count; i++) dictPool.Push(sampleAmounts[i]);
             sampleTimes.Clear();
             sampleAmounts.Clear();
         }
 
-        // Smallest projected range (m) across every mass-bearing resource the craft is actively burning,
-        // i.e. whichever fuel is the endurance limiter. False until the window is filled with a contiguous
-        // run and at least one resource is actually being consumed. limitingResource names the limiter.
+        // Smallest projected range (m) across the tracked propellants still being consumed, i.e. whichever
+        // fuel is the endurance limiter. False until the window is filled with a contiguous run and at least
+        // one tracked propellant is actually being consumed. limitingResource names the limiter.
         private bool TryMinRange(Vessel v, double speed, out double minRange, out PartResourceDefinition limitingResource,
                                  out double limAmount, out double limRate)
         {
@@ -137,6 +167,9 @@ namespace ContractConfigurator.RP0
                 // Only rank resources present for the whole window, else a tank coming online mid-window
                 // reads as an impossibly high burn rate.
                 if (!oldest.TryGetValue(kv.Key, out double old)) continue;
+                // A fuel that has drained to empty is spent, not a live limiter: skip it so it can't drag the
+                // min range to 0 for a window after it runs dry while the craft flies on another fuel.
+                if (kv.Value <= EMPTY_UNITS) continue;
                 double rate = (old - kv.Value) / span;
                 if (rate < MIN_RATE) continue;   // not really burning this one
                 PartResourceDefinition def = PartResourceLibrary.Instance.GetDefinition(kv.Key);
@@ -172,23 +205,47 @@ namespace ContractConfigurator.RP0
             return speed * (currentUnits / rateUnits);       // linear fallback
         }
 
-        // Snapshot of every mass-bearing resource's vessel-wide total, keyed by resource id. Massless
-        // resources (ElectricCharge, IntakeAir) are skipped so they can't masquerade as a fuel.
-        private Dictionary<int, double> SampleResources(Vessel v)
+        // Rebuild the engine cache. Called only on part-count / vessel change, so the per-tick gather below
+        // iterates a short cached list instead of every part's module list.
+        private void RebuildEngineCache(Vessel v)
         {
-            massBearingIds.Clear();
+            engineCache.Clear();
             for (int i = 0; i < v.parts.Count; i++)
             {
-                PartResourceList prl = v.parts[i].Resources;
-                for (int j = 0; j < prl.Count; j++)
+                PartModuleList modules = v.parts[i].Modules;
+                for (int m = 0; m < modules.Count; m++)
+                    if (modules[m] is ModuleEngines me) engineCache.Add(me);
+            }
+        }
+
+        // Add every mass-bearing propellant burned by a currently-working cached engine to the tracked set.
+        // Additive: a fuel is never removed once seen, so shutting an engine down or staging it away leaves its
+        // fuel tracked (its burn rate just falls to ~0 and it drops out of the range ranking). Massless
+        // propellants (IntakeAir, ElectricCharge) are skipped so they can't masquerade as the endurance limiter.
+        private void GatherEnginePropellants()
+        {
+            for (int i = 0; i < engineCache.Count; i++)
+            {
+                ModuleEngines me = engineCache[i];
+                if (me == null || !me.isOperational || me.currentThrottle <= 0f) continue;
+                List<Propellant> props = me.propellants;
+                for (int k = 0; k < props.Count; k++)
                 {
-                    PartResource pr = prl[j];
-                    if (pr.info.density > 0.0) massBearingIds.Add(pr.info.id);
+                    int id = props[k].id;
+                    if (trackedPropellantIds.Contains(id)) continue;   // already tracked -- skip the lookup
+                    PartResourceDefinition def = PartResourceLibrary.Instance.GetDefinition(id);
+                    if (def != null && def.density > 0.0) trackedPropellantIds.Add(id);
                 }
             }
+        }
 
-            var snapshot = new Dictionary<int, double>(massBearingIds.Count);
-            foreach (int id in massBearingIds)
+        // Vessel-wide total of each tracked propellant, keyed by resource id. Uses a pooled dictionary so
+        // steady-state sampling doesn't allocate; callers return the dict to dictPool once it ages out.
+        private Dictionary<int, double> SnapshotTracked(Vessel v)
+        {
+            Dictionary<int, double> snapshot = dictPool.Count > 0 ? dictPool.Pop() : new Dictionary<int, double>();
+            snapshot.Clear();
+            foreach (int id in trackedPropellantIds)
             {
                 v.GetConnectedResourceTotals(id, out double amount, out double _);
                 snapshot[id] = amount;
@@ -207,10 +264,15 @@ namespace ContractConfigurator.RP0
             double now = Time.fixedTime;
             double dt = now - lastCheckTime;
             bool gap = dt > updateFrequency * 4.0 || dt < 0;   // pause / warp / first tick
-            if (v.persistentId != lastVesselPersistentId || v.parts.Count != lastPartCount || gap)
+            bool vesselChanged = v.persistentId != lastVesselPersistentId;
+            if (vesselChanged || v.parts.Count != lastPartCount || gap)
             {
                 lastVesselPersistentId = v.persistentId;
                 lastPartCount = v.parts.Count;
+                // The tracked-fuel set is per-vessel and additive, so only a different vessel clears it; a
+                // part-count change (staging) or a warp/pause gap only invalidates the rolling rate window.
+                if (vesselChanged) trackedPropellantIds.Clear();
+                RebuildEngineCache(v);
                 ResetAll();
             }
             lastCheckTime = now;
@@ -222,10 +284,12 @@ namespace ContractConfigurator.RP0
             // outside the cruise band (climbing / accelerating in). The rolling rate converges to the cruise
             // value within one window; met still requires speedOk each tick, so the Duration hold only
             // accrues in-band and can't be "proven" out of band.
+            GatherEnginePropellants();
             sampleTimes.Add(now);
-            sampleAmounts.Add(SampleResources(v));
+            sampleAmounts.Add(SnapshotTracked(v));
             while (sampleTimes.Count > 2 && now - sampleTimes[1] >= rateWindowSeconds)
             {
+                dictPool.Push(sampleAmounts[0]);
                 sampleTimes.RemoveAt(0);
                 sampleAmounts.RemoveAt(0);
             }
@@ -234,8 +298,9 @@ namespace ContractConfigurator.RP0
                                          out double limAmount, out double limRate);
             curRange = rateReady ? range : 0.0;
 
-            bool speedOk = speed >= minSpeed && speed <= maxSpeed;
-            bool vsOk = vs >= minVerticalSpeed && vs <= maxVerticalSpeed;
+            bool speedOk = speed >= minSpeed && (!maxSpeed.HasValue || speed <= maxSpeed.Value);
+            bool vsOk = (!minVerticalSpeed.HasValue || vs >= minVerticalSpeed.Value)
+                     && (!maxVerticalSpeed.HasValue || vs <= maxVerticalSpeed.Value);
             bool rangeOk = rateReady && range >= requiredRange;
             met = speedOk && vsOk && rangeOk;
 

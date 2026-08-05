@@ -352,6 +352,7 @@ namespace RP0
         {
             // Run this after all scenariomodules have loaded (i.e. both us *and* RnD)
             KCTUtilities.AddResearchedPartsToExperimental();
+            Database.SettingsRecovery.RecalculateAndApply();
         }
 
         public void OnPartPurchased(AvailablePart ap)

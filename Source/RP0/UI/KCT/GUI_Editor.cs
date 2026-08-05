@@ -480,8 +480,8 @@ namespace RP0
                     }
                 }
             }
-
-            //RenderMergeSection(ship);
+            
+            RenderMergeSection(editedVessel);
         }
 
         private static void RenderBuildRateInputRow(double buildPoints, double rateWithCurEngis)

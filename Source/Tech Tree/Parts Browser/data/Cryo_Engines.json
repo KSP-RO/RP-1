@@ -73,6 +73,7 @@
         "entry_cost_mods": "LE-7",
         "identical_part_name": "LE-7",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -151,6 +152,7 @@
         "entry_cost_mods": "RD-0120",
         "identical_part_name": "RD-0120",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -224,6 +226,7 @@
         "entry_cost_mods": "Raptor",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -248,6 +251,7 @@
         "entry_cost_mods": "Raptor?Vacuum",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -272,6 +276,7 @@
         "entry_cost_mods": "RD-0120",
         "identical_part_name": "RD-0120",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -380,8 +385,8 @@
         "title": "BE-4",
         "description": "",
         "mod": "Cryo Engines",
-        "cost": 1332,
-        "entry_cost": 0,
+        "cost": "1332",
+        "entry_cost": "0",
         "category": "STAGED",
         "info": "Engine",
         "year": "2022",
@@ -396,6 +401,7 @@
         "entry_cost_mods": "BE-4",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -495,6 +501,7 @@
         "entry_cost_mods": "Raptor",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

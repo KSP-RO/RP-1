@@ -20,6 +20,7 @@
         "entry_cost_mods": "RD-0208",
         "identical_part_name": "RD-0210",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -28,8 +29,8 @@
         "title": "RD-0212",
         "description": "",
         "mod": "Tantares LV",
-        "cost": 526,
-        "entry_cost": 0,
+        "cost": "526",
+        "entry_cost": "0",
         "category": "STAGED",
         "info": "",
         "year": "1964",
@@ -44,6 +45,7 @@
         "entry_cost_mods": "RD-0205",
         "identical_part_name": "RD-0212",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -68,6 +70,7 @@
         "entry_cost_mods": "S1-5400",
         "identical_part_name": "RD58",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -212,6 +215,7 @@
         "entry_cost_mods": "S5-98M",
         "identical_part_name": "S5.98M",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -236,6 +240,7 @@
         "entry_cost_mods": "NK-15",
         "identical_part_name": "NK-15",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -260,6 +265,7 @@
         "entry_cost_mods": "NK-15V",
         "identical_part_name": "NK-15V",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -284,6 +290,7 @@
         "entry_cost_mods": "NK-9V",
         "identical_part_name": "NK-9V",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -333,6 +340,7 @@
         "entry_cost_mods": "RD-120",
         "identical_part_name": "RD-120",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -357,6 +365,7 @@
         "entry_cost_mods": "RD-170",
         "identical_part_name": "RD-170",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -477,6 +486,7 @@
         "entry_cost_mods": "RD-8",
         "identical_part_name": "RD-8",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

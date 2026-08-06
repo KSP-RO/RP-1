@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RP0
 {
@@ -24,6 +25,10 @@ namespace RP0
         protected const float comparisonLow = 1.00f - toolingMargin;
         protected const float epsilon = 1e-6f;
 
+        // Band within which two entries being merged for display count as the same value. This is
+        // float round-trip noise only -- unlike toolingMargin it carries no physical meaning.
+        protected const float mergeEpsilon = 1e-5f;
+
         public static float GetLowComparison(float value) => value * (comparisonLow - epsilon);
 
         public static float GetHighComparison(float value) => value * (comparisonHigh + epsilon);
@@ -36,6 +41,29 @@ namespace RP0
             return a.CompareTo(b);
         }
 
+        /// <summary>
+        /// Matches two entries being merged for display. Deliberately NOT <see cref="EpsilonCompare"/>:
+        /// that treats anything within the 4% tooling margin as equal, which is right for "does this
+        /// tooling cover that part?" but wrong for building a list -- merging a 90t entry into a 93t
+        /// one relabels it 93t and drops it as a row of its own. The band is relative to the larger
+        /// operand so the result does not depend on which side is compared first.
+        /// </summary>
+        /// <param name="a">First value.</param>
+        /// <param name="b">Second value.</param>
+        /// <returns>0 when the two are the same to within <see cref="mergeEpsilon"/>, else their relative order.</returns>
+        protected static int ExactCompare(float a, float b)
+        {
+            if (Math.Abs(a - b) <= mergeEpsilon * Math.Max(Math.Abs(a), Math.Abs(b)))
+                return 0;
+
+            return a.CompareTo(b);
+        }
+
+        // Cached so passing a comparator to GetEntryIndex doesn't allocate a delegate per call --
+        // it runs per-part in the editor via GetToolingLevel.
+        private static readonly Comparison<float> _epsilonComparison = EpsilonCompare;
+        private static readonly Comparison<float> _exactComparison = ExactCompare;
+
         public static Dictionary<string, List<ToolingEntry>> toolings = new Dictionary<string, List<ToolingEntry>>();
 
         // Bumps on every mutation (UnlockTooling adding entries, Load wiping the table).
@@ -44,26 +72,29 @@ namespace RP0
         public static int Generation { get; private set; }
 
         protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min)
+            => GetEntryIndex(value, list, out min, _epsilonComparison);
+
+        /// <summary>Binary search over the ascending entry list.</summary>
+        /// <param name="value">Value to look for.</param>
+        /// <param name="list">Entries to search, ascending.</param>
+        /// <param name="min">Receives the index the value would be inserted at when there's no match.</param>
+        /// <param name="compare">
+        /// Decides what counts as the same entry: <see cref="EpsilonCompare"/> for coverage queries
+        /// (a slightly smaller tooling still covers a part), <see cref="ExactCompare"/> when merging
+        /// types together for display.
+        /// </param>
+        /// <returns>Index of the matching entry, or -1 when there is none.</returns>
+        protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min, Comparison<float> compare)
         {
             min = 0;
             int max = list.Count - 1;
             while (min <= max)
             {
                 int mid = (min + max) / 2;
-                switch (EpsilonCompare(value, list[mid].Value))
-                {
-                    case 0:
-                        return mid;
-
-                    case 1:
-                        min = mid + 1;
-                        break;
-
-                    default:
-                    case -1:
-                        max = mid - 1;
-                        break;
-                }
+                int cmp = compare(value, list[mid].Value);
+                if (cmp == 0) return mid;
+                if (cmp > 0) min = mid + 1;
+                else max = mid - 1;
             }
             return -1;
         }
@@ -107,9 +138,12 @@ namespace RP0
             return level;
         }
 
-        // Returns a freshly-merged tree combining the entries of every supplied type.
-        // Used by the tooling UI to collapse grouped types (e.g. all Avionics-N* tech levels
-        // under one Avionics-N entry) without mutating the underlying database.
+        /// <summary>
+        /// Returns a freshly-merged tree combining the entries of every supplied type. Used by the
+        /// tooling UI to collapse grouped types (e.g. all Avionics-N* tech levels under one
+        /// Avionics-N entry) without mutating the underlying database.
+        /// </summary>
+        /// <param name="types">Database keys whose entries are combined.</param>
         public static List<ToolingEntry> GetMergedEntries(IEnumerable<string> types)
         {
             var merged = new List<ToolingEntry>();
@@ -126,7 +160,9 @@ namespace RP0
 
         private static void MergeEntryInto(List<ToolingEntry> target, ToolingEntry source, string sourceType)
         {
-            int existing = GetEntryIndex(source.Value, target, out int insertionIndex);
+            // Exact match, not the tooling margin: target accumulates entries from several types, and
+            // two of them landing within 4% of each other are still two distinct toolings.
+            int existing = GetEntryIndex(source.Value, target, out int insertionIndex, _exactComparison);
             ToolingEntry dest;
             if (existing >= 0)
             {

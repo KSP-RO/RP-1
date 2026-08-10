@@ -12,6 +12,7 @@ namespace RP0.Crew
         private ProtoCrewMember _selectedNaut = null;
         private Vector2 _nautListScroll = new Vector2();
         private readonly Dictionary<ProtoCrewMember, TrainingCourse> _activeMap = new Dictionary<ProtoCrewMember, TrainingCourse>();
+        private readonly Dictionary<ProtoCrewMember, TrainingCourse> _pendingMap = new Dictionary<ProtoCrewMember, TrainingCourse>();
         private Vector2 _courseSelectorScroll = new Vector2();
         private GUIStyle _courseBtnStyle = null;
         private GUIStyle _courseBtnUnavailStyle = null;
@@ -61,12 +62,15 @@ namespace RP0.Crew
             TrainingCourse currentCourse = null;
             if (_activeMap.ContainsKey(student))
                 currentCourse = _activeMap[student];
+            TrainingCourse pendingCourse = null;
+            if (_pendingMap.ContainsKey(student))
+                pendingCourse = _pendingMap[student];
             bool selectedForCourse = _selectedCourse != null && _selectedCourse.Students.Contains(student);
             GUILayout.BeginHorizontal();
             try
             {
                 GUILayout.Label($"{student.trait.Substring(0, 1)} {student.experienceLevel}", GUILayout.Width(24));
-                if (currentCourse == null && _selectedCourse != null && (selectedForCourse || _selectedCourse.MeetsStudentReqs(student)))
+                if (currentCourse == null && pendingCourse == null && _selectedCourse != null && (selectedForCourse || _selectedCourse.MeetsStudentReqs(student, allowInactive: true)))
                 {
                     var c = new GUIContent(student.name, "Select for training");
                     if (RenderToggleButton(c, selectedForCourse, GUILayout.Width(144)))
@@ -93,7 +97,12 @@ namespace RP0.Crew
                 bool isInactive = false;
                 if (currentCourse == null)
                 {
-                    if (student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
+                    if (pendingCourse != null)
+                    {
+                        course = "(queued)";
+                        complete = KSPUtil.PrintDate(pendingCourse.GetProjectedStartUT(), false);
+                    }
+                    else if (student.rosterStatus == ProtoCrewMember.RosterStatus.Assigned)
                     {
                         course = "(in-flight)";
                         complete = "(n/a)";
@@ -146,6 +155,11 @@ namespace RP0.Crew
                     {
                         CreateCourseFinishAlarm(student, currentCourse);
                     }
+                }
+                else if (pendingCourse != null)
+                {
+                    if (GUILayout.Button(new GUIContent("X", "Cancel queued training"), HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                        CancelPendingCourse(pendingCourse);
                 }
                 else if (isInactive && GUILayout.Button(_nautRowAlarmBtnContent, HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
                 {
@@ -287,21 +301,50 @@ namespace RP0.Crew
                 GUILayout.Label($"{_selectedCourse.SeatMin - _selectedCourse.Students.Count} more naut(s) required.");
             const string tooltipProf = "Time for Proficiency training varies\nbased on nauts' prior proficiencies";
             const string tooltipMission = "Time for Mission training varies\nbased on nauts' stupidity";
+            string typeTooltip = _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission;
+
+            // If any selected naut is on R&R the course can't start now; it will be queued and start
+            // once all have returned. In that case the finish date is measured from the projected
+            // start (end of R&R), not from now, so we don't show a date that assumes an instant start.
+            bool anyOnLeave = false;
+            foreach (ProtoCrewMember student in _selectedCourse.Students)
+            {
+                if (student.inactive)
+                {
+                    anyOnLeave = true;
+                    break;
+                }
+            }
+
             double timeLeft = _selectedCourse.GetTimeLeft();
-            GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(timeLeft, true, false)}", _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission));
-            GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + timeLeft, false)}", _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission));
+            double startUT = anyOnLeave ? _selectedCourse.GetProjectedStartUT() : Planetarium.GetUniversalTime();
+            GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(timeLeft, true, false)}", typeTooltip));
+            if (anyOnLeave)
+                GUILayout.Label($"Some crew are on leave. Training will start when all have returned, around {KSPUtil.PrintDate(startUT, false)}.");
+            GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(startUT + timeLeft, false)}", typeTooltip));
             if (CrewHandler.Instance.RetirementEnabled && _selectedCourse.Students.Count > 0)
             {
                 GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.AverageRetireExtension(), true, false)}");
             }
 
-            if (!isLocked && !underMin && GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+            if (!isLocked && !underMin)
             {
-                if (_selectedCourse.StartCourse())
+                if (anyOnLeave)
                 {
-                    CrewHandler.Instance.TrainingCourses.Add(_selectedCourse);
-                    _selectedCourse = null;
-                    MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+                    if (GUILayout.Button("Queue Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                    {
+                        CrewHandler.Instance.PendingTrainingCourses.Add(_selectedCourse);
+                        _selectedCourse = null;
+                    }
+                }
+                else if (GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
+                {
+                    if (_selectedCourse.StartCourse())
+                    {
+                        CrewHandler.Instance.TrainingCourses.Add(_selectedCourse);
+                        _selectedCourse = null;
+                        MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+                    }
                 }
             }
             return _selectedCourse == null ? UITab.Astronauts : UITab.NewCourse;
@@ -422,6 +465,30 @@ namespace RP0.Crew
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
+        private void CancelPendingCourse(TrainingCourse course)
+        {
+            DialogGUIBase[] options = new DialogGUIBase[3];
+            options[0] = new DialogGUIFlexibleSpace();
+            options[1] = new DialogGUIButton("Yes", () =>
+            {
+                // The course never started, so there's nothing to unwind - just drop it.
+                CrewHandler.Instance.PendingTrainingCourses.Remove(course);
+            });
+            options[2] = new DialogGUIButton("No", () => { });
+            var sb = new StringBuilder("Are you sure you want to cancel this queued training? It will no longer start when the following crew return to duty:");
+            foreach (ProtoCrewMember stud in course.Students)
+            {
+                sb.AppendLine();
+                sb.Append(stud.name);
+            }
+            var diag = new MultiOptionDialog("ConfirmCancelPendingCourse", sb.ToStringAndRelease(), "Cancel Queued Training?",
+                HighLogic.UISkin,
+                new Rect(0.5f, 0.5f, 150f, 60f),
+                new DialogGUIFlexibleSpace(),
+                new DialogGUIHorizontalLayout(options));
+            PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
         private static void CreateCourseFinishAlarm(ProtoCrewMember student, TrainingCourse currentCourse)
         {
             double completeUT = Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft();
@@ -443,6 +510,15 @@ namespace RP0.Crew
                 foreach (ProtoCrewMember student in course.Students)
                 {
                     _activeMap[student] = course;
+                }
+            }
+
+            _pendingMap.Clear();
+            foreach (TrainingCourse course in CrewHandler.Instance.PendingTrainingCourses)
+            {
+                foreach (ProtoCrewMember student in course.Students)
+                {
+                    _pendingMap[student] = course;
                 }
             }
         }

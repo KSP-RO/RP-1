@@ -47,7 +47,7 @@ namespace RP0
             if (curPadCost > 0)
             {
                 double curPadBuildTime = ConstructionProject.CalculateBuildTime(curPadCost, 0d, SpaceCenterFacility.LaunchPad);
-                string sBuildTime = PrintBuildTime(curPadBuildTime);
+                string sBuildTime = RP0DTUtils.PrintDateDelta(curPadBuildTime, includeTime: false);
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Cost:", GUILayout.ExpandWidth(false));

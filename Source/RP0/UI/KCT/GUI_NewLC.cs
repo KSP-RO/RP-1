@@ -438,7 +438,7 @@ namespace RP0
 
                 double buildTime = ConstructionProject.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
                 double buildCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -totalCost);
-                string sBuildTime = PrintBuildTime(buildTime);
+                string sBuildTime = RP0DTUtils.PrintDateDelta(buildTime, includeTime: false);
                 string costString = isModify ? "Modify Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));

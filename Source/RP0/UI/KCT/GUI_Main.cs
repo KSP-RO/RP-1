@@ -390,20 +390,6 @@ namespace RP0
             return _styleTextFieldRightAlign;
         }
 
-        /// <summary>
-        /// The date formatter builds a DateTime out of the given timespan and thus throws when
-        /// given absurdly large values. Clamp those instead of taking the whole window down with us.
-        /// </summary>
-        private static string PrintBuildTime(double seconds)
-        {
-            const double maxYears = 1000d;
-            const double maxSeconds = maxYears * 365.25d * 86400d;
-            if (!(seconds < maxSeconds))    // written this way to also catch NaN
-                return $"> {maxYears:N0} years";
-
-            return KSPUtil.PrintDateDelta(seconds, includeTime: false);
-        }
-
         public static void EnterSCSubcene()
         {
             _inSCSubscene = true;

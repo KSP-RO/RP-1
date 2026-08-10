@@ -44,7 +44,6 @@ Discord Link: https://discord.gg/V73jjNd
 - Toolbar Controller
 - Kerbalism (RO Config)
 - KSP Community Fixes
-- Kerbal Changelog
 - Σκοπός (Skopos)
 
 **RO-Mods:**

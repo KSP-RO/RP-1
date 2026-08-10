@@ -30,6 +30,11 @@ namespace RP0
         private static GUIStyle _styleLabelCenterAlign;
         private static GUIStyle _styleTextFieldRightAlign;
 
+        /// <summary>
+        /// Max amount of characters that can be entered for the name of a launch complex, pad or vessel.
+        /// </summary>
+        private const int _MaxNameChars = 40;
+
         public static bool IsPrimarilyDisabled => PresetManager.PresetLoaded() && (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
                                                                                    !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes);
 
@@ -383,6 +388,20 @@ namespace RP0
                 _styleTextFieldRightAlign.alignment = TextAnchor.LowerRight;
             }
             return _styleTextFieldRightAlign;
+        }
+
+        /// <summary>
+        /// The date formatter builds a DateTime out of the given timespan and thus throws when
+        /// given absurdly large values. Clamp those instead of taking the whole window down with us.
+        /// </summary>
+        private static string PrintBuildTime(double seconds)
+        {
+            const double maxYears = 1000d;
+            const double maxSeconds = maxYears * 365.25d * 86400d;
+            if (!(seconds < maxSeconds))    // written this way to also catch NaN
+                return $"> {maxYears:N0} years";
+
+            return KSPUtil.PrintDateDelta(seconds, includeTime: false);
         }
 
         public static void EnterSCSubcene()

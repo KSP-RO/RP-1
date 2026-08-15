@@ -165,6 +165,29 @@
         ]
     },
     {
+        "name": "nflv-cargo-5-4",
+        "title": "5m Cargo Bay - Eighth",
+        "description": "",
+        "mod": "Near Future Launch Vehicles",
+        "cost": "300",
+        "entry_cost": "",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "2030",
+        "technology": "materialsScienceNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "CargoBays",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
         "name": "nflv-cargo-75-1",
         "title": "7.5m Cargo Bay",
         "description": "",
@@ -216,6 +239,29 @@
         "description": "",
         "mod": "Near Future Launch Vehicles",
         "cost": 600,
+        "entry_cost": "",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "2030",
+        "technology": "materialsScienceNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "CargoBays",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
+        "name": "nflv-cargo-75-4",
+        "title": "7.5m Cargo Bay - Eighth",
+        "description": "",
+        "mod": "Near Future Launch Vehicles",
+        "cost": "600",
         "entry_cost": "",
         "category": "MATERIALS",
         "info": "",

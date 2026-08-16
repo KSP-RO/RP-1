@@ -1,0 +1,43 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- net48 matches RP0.csproj, so compiling FormulaCore.cs here is also a check that the
+         extracted file is valid for the production build. net8.0 exists so CI can run the
+         suite natively on Linux without Mono. Both must produce byte-identical tables - the
+         golden files are shared, which makes them a floating-point parity check between the
+         .NET Framework and .NET 8 runtimes as a side effect. -->
+    <TargetFrameworks>net48;net8.0</TargetFrameworks>
+    <LangVersion>12</LangVersion>
+    <AssemblyName>RP0.Tests</AssemblyName>
+    <RootNamespace>RP0.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The only production source this project touches. It is deliberately free of
+         KSP/Unity references; if it ever stops compiling here without adding an assembly
+         reference, the extraction has regressed - fix FormulaCore.cs rather than adding
+         a reference to this project. -->
+    <Compile Include="..\RP0\Utilities\FormulaCore.cs" Link="FormulaCore.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Lets tests locate the repo's GameData cfgs and the Approved/ golden files without
+         copying them to the output directory, so a cfg edit is picked up immediately and
+         .received.md lands next to its golden file in the source tree. -->
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>ProjectDir</_Parameter1>
+      <_Parameter2>$(MSBuildProjectDirectory)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <!-- Lets the net48 target compile on Linux without Mono, so CI can verify the extracted
+         FormulaCore.cs still builds against the framework RP0.dll ships with. -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

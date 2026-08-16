@@ -26,6 +26,42 @@ jobs:
   validate-cfg-files:
     uses: KSP-RO/BuildTools/.github/workflows/validate-cfg-files.yml@master
 
+  test:
+    # Source/RP0.Tests references no KSP or Unity assemblies - it compiles the KSP-free
+    # Source/RP0/Utilities/FormulaCore.cs directly - so this job needs neither the assembly
+    # download nor KSP_ZIP_PASSWORD, and therefore runs on pull requests from forks, which
+    # the build job below cannot.
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      # Builds both target frameworks. The net48 target is what RP0.dll ships against, and
+      # Microsoft.NETFramework.ReferenceAssemblies lets it compile here without Mono.
+      - name: Build tests
+        run: dotnet build ${{ github.workspace }}/Source/RP0.Tests/RP0.Tests.csproj -c Release
+
+      # BalanceAnchor tests are excluded on purpose: they encode balance targets that are not
+      # met yet and are expected to fail. See Source/RP0.Tests/ReusabilityTests/README.md.
+      - name: Run tests
+        run: >
+          dotnet test ${{ github.workspace }}/Source/RP0.Tests/RP0.Tests.csproj
+          -c Release -f net8.0 --no-build
+          --filter "TestCategory!=BalanceAnchor"
+
+      - name: Upload generated tables on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: recovery-tables-received
+          path: ${{ github.workspace }}/Source/RP0.Tests/ReusabilityTests/Approved/*.received.md
+          if-no-files-found: ignore
+
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04

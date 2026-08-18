@@ -51,6 +51,21 @@ namespace RP0.Crew
         [KSPField(isPersistant = true)]
         public PersistentList<TrainingCourse> TrainingCourses = new PersistentList<TrainingCourse>();
 
+        // Display-only projects for astronauts on R&R, surfaced in the build list. Rebuilt lazily
+        // only when the set of inactive nauts changes (see OnKerbalInactiveChange) instead of being
+        // reallocated every GUI frame.
+        private bool _rnrProjectsDirty = true;
+        private readonly List<CrewRnRProject> _rnrProjects = new List<CrewRnRProject>();
+        public List<CrewRnRProject> RnRProjects
+        {
+            get
+            {
+                if (_rnrProjectsDirty)
+                    RebuildRnRProjects();
+                return _rnrProjects;
+            }
+        }
+
         
         public List<TrainingTemplate> TrainingTemplates = new List<TrainingTemplate>();
         
@@ -140,6 +155,7 @@ namespace RP0.Crew
 
             GameEvents.onVesselRecoveryProcessing.Add(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Add(OnCrewHired);
+            GameEvents.onKerbalInactiveChange.Add(OnKerbalInactiveChange);
             GameEvents.OnPartPurchased.Add(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Add(LoadSettings);
             GameEvents.onGameStateLoad.Add(LoadSettings);
@@ -177,6 +193,12 @@ namespace RP0.Crew
             if (_isFirstLoad)
                 return;
 
+            // Don't advance crew state (retirements, inactivity, expirations) during a simulation.
+            // An SCM sim can jump UT forward by years; processing it here fires retirement popups
+            // for time that isn't really passing. Sim state is reverted on exit regardless.
+            if (SpaceCenterManagement.Instance?.IsSimulatedFlight == true)
+                return;
+
             Profiler.BeginSample("RP0ProcessCrew");
             double time = Planetarium.GetUniversalTime();
             ProcessRetirements(time);
@@ -201,6 +223,7 @@ namespace RP0.Crew
         {
             GameEvents.onVesselRecoveryProcessing.Remove(VesselRecoveryProcessing);
             GameEvents.OnCrewmemberHired.Remove(OnCrewHired);
+            GameEvents.onKerbalInactiveChange.Remove(OnKerbalInactiveChange);
             GameEvents.OnPartPurchased.Remove(OnPartPurchased);
             GameEvents.OnGameSettingsApplied.Remove(LoadSettings);
             GameEvents.onGameStateLoad.Remove(LoadSettings);
@@ -398,7 +421,7 @@ namespace RP0.Crew
                         double exp = GetExpiration(pcm.name, ent);
                         if (exp > 0d)
                         {
-                            sb.Append($"\n  {pretty}{ent.target}. Expires {KSPUtil.PrintDate(exp, false)}");
+                            sb.Append($"\n  {pretty}{ent.target}. Expires {RP0DTUtils.PrintDate(exp, false)}");
                         }
                     }
                 }
@@ -469,7 +492,7 @@ namespace RP0.Crew
             }
             _retireIncreases[pcmName] = newTotal;
 
-            string sRetireOffset = KSPUtil.PrintDateDelta(retireOffset, false, false);
+            string sRetireOffset = RP0DTUtils.PrintDateDelta(retireOffset, false, false);
             RP0Debug.Log("retire date increased by: " + sRetireOffset);
 
             _retireTimes[pcmName] = GetRetireTime(pcmName) + retireOffset;
@@ -507,7 +530,7 @@ namespace RP0.Crew
             // when you're not actually controlling the vessel
             double elapsedTime = UT - v.launchTime;
 
-            RP0Debug.Log($"mission elapsedTime: {KSPUtil.PrintDateDeltaCompact(elapsedTime, true, true)}");
+            RP0Debug.Log($"mission elapsedTime: {RP0DTUtils.PrintDateDeltaCompact(elapsedTime, true, true)}");
 
             // When flight duration was too short, mission training should not be set as expired.
             // This can happen when an on-the-pad failure occurs and the vessel is recovered.
@@ -589,7 +612,7 @@ namespace RP0.Crew
                     double retireOffset = retirementMult * 86400 * Database.SettingsCrew.retireOffsetBaseMult / stupidityPenalty * retireCMQmult;
 
                     retireOffset = IncreaseRetireTime(pcm.name, retireOffset);
-                    retirementChanges.Add($"\n{pcm.name}, +{KSPUtil.PrintDateDelta(retireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(GetRetireTime(pcm.name), false)}");
+                    retirementChanges.Add($"\n{pcm.name}, +{RP0DTUtils.PrintDateDelta(retireOffset, false, false)}, no earlier than {RP0DTUtils.PrintDate(GetRetireTime(pcm.name), false)}");
                 }
 
                 inactivityMult = Math.Max(1, inactivityMult);
@@ -597,12 +620,12 @@ namespace RP0.Crew
                 double inactiveTimeDays = Math.Max(Database.SettingsCrew.inactivityMinFlightDurationDays, Math.Pow(elapsedTimeDays, Database.SettingsCrew.inactivityFlightDurationExponent)) *
                                           Math.Min(Database.SettingsCrew.inactivityMaxSituationMult, inactivityMult) * acMult;
                 double inactiveTime = inactiveTimeDays * 86400d * inactiveCMQmult;
-                RP0Debug.Log($"inactive for: {KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
+                RP0Debug.Log($"inactive for: {RP0DTUtils.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
 
                 if (CrewRnREnabled)
                 {
                     pcm.SetInactive(inactiveTime, false);
-                    inactivity.Add($"\n{pcm.name}, until {KSPUtil.PrintDate(inactiveTime + UT, true, false)}");
+                    inactivity.Add($"\n{pcm.name}, until {RP0DTUtils.PrintDate(inactiveTime + UT, true, false)}");
                 }
             }
 
@@ -676,11 +699,18 @@ namespace RP0.Crew
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Date",
-                                             $"{pcm.name} will retire no earlier than {KSPUtil.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
+                                             $"{pcm.name} will retire no earlier than {RP0DTUtils.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              false,
                                              HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
+        }
+
+        private void OnKerbalInactiveChange(ProtoCrewMember pcm, bool wasInactive, bool isInactive)
+        {
+            // The set of nauts on R&R has changed; flag the cached project list for a rebuild on next access.
+            // Can't rebuild inline because this event fires before pcm.inactive is updated.
+            _rnrProjectsDirty = true;
         }
 
         private void ProcessFirstLoad()
@@ -706,7 +736,7 @@ namespace RP0.Crew
                 StringBuilder sb = new StringBuilder();
                 sb.Append("Earliest crew retirement dates:");
                 foreach (string s in newHires)
-                    sb.Append($"\n{s}, {KSPUtil.PrintDate(GetRetireTime(s), false)}");
+                    sb.Append($"\n{s}, {RP0DTUtils.PrintDate(GetRetireTime(s), false)}");
 
                 sb.Append($"\n\nInteresting flights and training will delay retirement up to an additional {Math.Round(Database.SettingsCrew.retireIncreaseCap / (365.25d * 86400d))} years.");
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
@@ -1010,6 +1040,15 @@ namespace RP0.Crew
             if (ap.partPrefab.CrewCapacity > 0)
             {
                 AddPartCourses(ap);
+
+                // Purchasing a part regenerates its training templates. Relink any in-progress
+                // course that stalled because its template was missing, so it resumes right away
+                // instead of only when the next scene change rebuilds the template list.
+                foreach (var course in TrainingCourses)
+                {
+                    if (!course.HasTemplate)
+                        course.LinkTemplate();
+                }
             }
         }
 
@@ -1157,6 +1196,28 @@ namespace RP0.Crew
         {
             foreach (var c in TrainingCourses)
                 c.RecalculateBuildRate();
+        }
+
+        private void RebuildRnRProjects()
+        {
+            _rnrProjects.Clear();
+            _rnrProjectsDirty = false;
+
+            var roster = HighLogic.CurrentGame?.CrewRoster;
+            if (roster == null)
+                return;
+
+            for (int i = 0; i < roster.Count; i++)
+            {
+                ProtoCrewMember pcm = roster[i];
+                if (pcm.type == ProtoCrewMember.KerbalType.Crew &&
+                    pcm.rosterStatus == ProtoCrewMember.RosterStatus.Available &&
+                    pcm.inactive &&
+                    GetTrainingFinishTime(pcm) < 0d)
+                {
+                    _rnrProjects.Add(new CrewRnRProject(pcm));
+                }
+            }
         }
     }
 }

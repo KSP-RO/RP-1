@@ -10,13 +10,19 @@ namespace RP0
         private static bool? _isKSCSwitcherInstalled = null;
         private static FieldInfo _fiKSCSwLastSite;
         private static FieldInfo _fiKSCSwDefaultSite;
+        private static FieldInfo _fiKSCSwSitesList;
         private static MethodInfo _miKSCSwGetSiteByName;
+        private static MethodInfo _miKSCSwSetSiteAndResetCamera;
+        private static Type _tLastKSC;
+        private static FieldInfo _fiLastKSCLastSite;
         private static object _kscLoaderInstance;    // this is a static singleton
         private static object _sites;                // instance field in KSCLoader instance but in practice is never changed after parent object creation
         private static Dictionary<string, string> _groundStationNameDict = new Dictionary<string, string>();
 
         public const string LegacyDefaultKscId = "Stock";
         public const string DefaultKscId = "us_cape_canaveral";
+
+        public static Type LastKSCType => _tLastKSC;
 
         public static bool IsKSCSwitcherInstalled
         {
@@ -37,9 +43,16 @@ namespace RP0
                         t = a.GetType("regexKSP.KSCSiteManager");
                         _fiKSCSwLastSite = t?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
                         _fiKSCSwDefaultSite = t?.GetField("defaultSite", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
+                        _fiKSCSwSitesList = t?.GetField("Sites", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
                         _miKSCSwGetSiteByName = t?.GetMethod("GetSiteByName", BindingFlags.Public | BindingFlags.Instance | BindingFlags.FlattenHierarchy);
 
-                        if (_kscLoaderInstance == null || _sites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null || _miKSCSwGetSiteByName == null)
+                        Type tSwitcher = a.GetType("regexKSP.KSCSwitcher");
+                        _miKSCSwSetSiteAndResetCamera = tSwitcher?.GetMethod("SetSiteAndResetCamera", BindingFlags.Public | BindingFlags.Static);
+                        _tLastKSC = a.GetType("regexKSP.LastKSC");
+                        _fiLastKSCLastSite = _tLastKSC?.GetField("lastSite", BindingFlags.Public | BindingFlags.Instance);
+
+                        if (_kscLoaderInstance == null || _sites == null || _fiKSCSwLastSite == null || _fiKSCSwDefaultSite == null || _fiKSCSwSitesList == null ||
+                            _miKSCSwGetSiteByName == null || _miKSCSwSetSiteAndResetCamera == null || _tLastKSC == null || _fiLastKSCLastSite == null)
                         {
                             RP0Debug.LogError("Failed to bind to KSCSwitcher");
                             _isKSCSwitcherInstalled = false;
@@ -74,6 +87,49 @@ namespace RP0
             }
 
             return groundStationName;
+        }
+
+        public static List<(string id, string displayName)> GetAvailableSites()
+        {
+            if (!IsKSCSwitcherInstalled) return null;
+
+            var rawList = _fiKSCSwSitesList.GetValue(_sites) as List<ConfigNode>;
+            if (rawList == null) return null;
+
+            var result = new List<(string id, string displayName)>(rawList.Count);
+            foreach (ConfigNode site in rawList)
+            {
+                string id = site.GetValue("name");
+                if (string.IsNullOrEmpty(id)) continue;
+                string displayName = site.GetValue("displayName");
+                if (string.IsNullOrEmpty(displayName)) displayName = id;
+                result.Add((id, displayName));
+            }
+            result.Sort((a, b) => string.Compare(a.displayName, b.displayName, StringComparison.OrdinalIgnoreCase));
+            return result;
+        }
+
+        public static void SetLastKSCSite(string siteName)
+        {
+            if (!IsKSCSwitcherInstalled || string.IsNullOrEmpty(siteName)) return;
+            _fiKSCSwLastSite.SetValue(_sites, siteName);
+        }
+
+        public static void AddLastKSCToProto(ProtoScenarioModule proto, string siteName)
+        {
+            if (!IsKSCSwitcherInstalled || string.IsNullOrEmpty(siteName) || proto == null) return;
+            proto.moduleValues?.SetValue("LastLaunchSite", siteName, true);
+            ScenarioModule moduleRef = proto.moduleRef;
+            if (moduleRef != null && _fiLastKSCLastSite != null)
+                _fiLastKSCLastSite.SetValue(moduleRef, siteName);
+        }
+
+        public static void ApplySite(string siteName)
+        {
+            if (!IsKSCSwitcherInstalled || string.IsNullOrEmpty(siteName) || _miKSCSwSetSiteAndResetCamera == null) return;
+            var cn = _miKSCSwGetSiteByName.Invoke(_sites, new object[] { siteName }) as ConfigNode;
+            if (cn == null) return;
+            _miKSCSwSetSiteAndResetCamera.Invoke(null, new object[] { cn, false });
         }
     }
 }

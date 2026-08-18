@@ -3,7 +3,12 @@ This is a browser/editor application for the RP-1 parts list (converted to json 
 
 To get it working:
    1. Download and unzip the ZIP file of the source code
-   2. Open RP-1/Source/Tech Tree/Parts Browser/app.exe
+   2. Run the application
+      1. Windows: Run `RP-1/Source/Tech Tree/Parts Browser/app.exe`
+      2. Linux/Mac:
+         1. Open `RP-1/Source/Tech Tree/Parts Browser/`
+         2. Run `pip install -r requirements.txt` (only the first time)
+         3. Run `./app.py`
    3. Ignore any errors and wait a minute for the web server to start
    4. Open http://localhost:5000/dashboard
 

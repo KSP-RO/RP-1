@@ -27,6 +27,21 @@ namespace RP0
         internal const string _icon_rocket = _iconPath + "KCT_rocket";
         internal const string _icon_settings = _iconPath + "KCT_setting";
 
+        // Yields a body's ancestor chain: the body itself, then each parent up to and including the top body
+        // that orbits the star, stopping at the star. Guards the KSP root star's self-referential
+        // referenceBody (Sun.referenceBody == Sun) and its null orbit, so it always terminates. Callers that
+        // want the "planet" (the top interplanetary body) take the last element.
+        public static IEnumerable<CelestialBody> AncestorChainToPlanet(CelestialBody body)
+        {
+            for (CelestialBody b = body; b != null; )
+            {
+                yield return b;
+                CelestialBody parent = b.referenceBody;
+                if (parent == null || parent == b || parent.orbit == null) yield break;  // reached the star
+                b = parent;
+            }
+        }
+
         public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
 
         public static string GetPartNameFromNode(ConfigNode part)
@@ -684,6 +699,8 @@ namespace RP0
             }
             foreach (ISpaceCenterProject course in Crew.CrewHandler.Instance.TrainingCourses)
                 _checkTime(course, ref shortestTime, ref thing);
+            foreach (ISpaceCenterProject rnr in Crew.CrewHandler.Instance.RnRProjects)
+                _checkTime(rnr, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.fundTarget.IsValid)
                 _checkTime(SpaceCenterManagement.Instance.fundTarget, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
@@ -695,7 +712,7 @@ namespace RP0
         public static void DisableModFunctionality()
         {
             DisableSimulationLocks();
-            InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTLaunchLock);
+            InputLockManager.RemoveControlLock(SpaceCenterManagement.SCMLaunchLock);
             KCT_GUI.HideAll();
         }
 
@@ -942,7 +959,7 @@ namespace RP0
             }
             else if (SpaceCenterManagement.Instance != null)
             {
-                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, SpaceCenterManagement.KCTLaunchLock);
+                InputLockManager.SetControlLock(ControlTypes.EDITOR_LAUNCH, SpaceCenterManagement.SCMLaunchLock);
                 if (!SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled)
                 {
                     SpaceCenterManagement.Instance.IsLaunchSiteControllerDisabled = true;

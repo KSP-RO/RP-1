@@ -102,7 +102,7 @@ namespace RP0
                             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
                         }
 
-                        if (GUILayout.Button(new GUIContent(b.shipName, $"Cost: √{b.cost:N0}")))
+                        if (GUILayout.Button(new GUIContent(b.shipName, $"Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -b.cost):N0}")))
                         {
                             if (lcMode)
                             {

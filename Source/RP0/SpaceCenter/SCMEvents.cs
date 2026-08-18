@@ -258,7 +258,7 @@ namespace RP0
             {
                 SpaceCenterManagement.Reset();
                 KCTUtilities.DisableSimulationLocks();
-                InputLockManager.RemoveControlLock(SpaceCenterManagement.KCTLaunchLock);
+                InputLockManager.RemoveControlLock(SpaceCenterManagement.SCMLaunchLock);
 
                 if (PresetManager.Instance != null)
                 {

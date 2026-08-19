@@ -23,11 +23,10 @@ namespace RP0
         public const float toolingMargin = .04f;
         protected const float comparisonHigh = 1.00f + toolingMargin;
         protected const float comparisonLow = 1.00f - toolingMargin;
+        // Relative float slop, carrying no physical meaning -- unlike toolingMargin. Pads the margin
+        // comparison so a value sitting exactly on the 4% boundary still counts as covered, and is
+        // the entire tolerance of the exact comparison.
         protected const float epsilon = 1e-6f;
-
-        // Band within which two entries being merged for display count as the same value. This is
-        // float round-trip noise only -- unlike toolingMargin it carries no physical meaning.
-        protected const float mergeEpsilon = 1e-5f;
 
         public static float GetLowComparison(float value) => value * (comparisonLow - epsilon);
 
@@ -50,10 +49,10 @@ namespace RP0
         /// </summary>
         /// <param name="a">First value.</param>
         /// <param name="b">Second value.</param>
-        /// <returns>0 when the two are the same to within <see cref="mergeEpsilon"/>, else their relative order.</returns>
+        /// <returns>0 when the two are the same to within <see cref="epsilon"/>, else their relative order.</returns>
         protected static int ExactCompare(float a, float b)
         {
-            if (Math.Abs(a - b) <= mergeEpsilon * Math.Max(Math.Abs(a), Math.Abs(b)))
+            if (Math.Abs(a - b) <= epsilon * Math.Max(Math.Abs(a), Math.Abs(b)))
                 return 0;
 
             return a.CompareTo(b);

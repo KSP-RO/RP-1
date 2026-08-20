@@ -1336,7 +1336,7 @@
         "spacecraft": "Block D-1 Space Tug",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "10000, RD-58",
+        "entry_cost_mods": "10000, RD-58M",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1360,7 +1360,7 @@
         "spacecraft": "Block D-2 Space Tug",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "10000, RD-58",
+        "entry_cost_mods": "10000, RD58-FamSyntin",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -1384,7 +1384,7 @@
         "spacecraft": "Block DM Space Tug",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "10000, RD-58",
+        "entry_cost_mods": "10000, RD-58M",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"
@@ -3445,7 +3445,7 @@
         "spacecraft": "Block DM-SL Space Tug",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "10000, RD-58",
+        "entry_cost_mods": "10000, RD-58M",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

@@ -1360,7 +1360,7 @@
         "spacecraft": "Block D-2 Space Tug",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "15000, RD58-FamSyntin, rn_proton_blockd_2",
+        "entry_cost_mods": "15000, RD-58S, rn_proton_blockd_2",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo"

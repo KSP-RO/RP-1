@@ -71,7 +71,9 @@ namespace RP0
             if (_isUnDockingInProgress)
             {
                 var vm1 = (KCTVesselTracker)oldVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
-                if (!vm1?.DockedVesselData?.Any() ?? false) return;
+                // No docking history to split up. Happens e.g. when releasing an asteroid that was captured
+                // with a grapple node - ModuleGrappleNode never fires onVesselDocking so OnPartCouple never ran.
+                if (vm1?.DockedVesselData == null || vm1.DockedVesselData.Count == 0) return;
 
                 var vm2 = (KCTVesselTracker)newVessel.vesselModules.Find(vm => vm is KCTVesselTracker);
                 var dict1 = vm1.DockedVesselData;

@@ -201,30 +201,5 @@
             "EngineLiquidTurbo",
             "Nuclear"
         ]
-    },
-    {
-        "name": "ntr-sc-375-1",
-        "title": "Solid Core Aerospike - Scylla",
-        "description": "Designed for launch stages, this meticulously engineered six\ncore nuclear rocket is a marvel of midrange nuclear design. Ir\ndeal operation, liquid oxygen is injected into the engine for\nlaunch, providing a tremendous boost in thrust. Once the\noxidizer runs out, the vehicle should be at a point where\nthrust doesn't matter as much, and simply hydrogen-based\npropulsion can take over. Once in orbit, low power operation\nof the reactor can provide up to 10 kW of electrical power. The\naerospike nozzle allows operation at many different altitudes",
-        "mod": "Kerbal Atomics",
-        "cost": 3200,
-        "entry_cost": "0",
-        "category": "NTR",
-        "info": "",
-        "year": "2015",
-        "technology": "efficientNuclearPropulsion",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "ROE-J2T",
-        "identical_part_name": "",
-        "module_tags": [
-            "EngineLiquidTurbo",
-            "Hydrolox",
-            "Nuclear"
-        ]
     }
 ]

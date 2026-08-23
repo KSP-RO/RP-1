@@ -101,7 +101,7 @@ namespace RP0.Crew
                     else if (student.inactive)
                     {
                         course = "(inactive)";
-                        complete = KSPUtil.PrintDate(student.inactiveTimeEnd, false);
+                        complete = RP0DTUtils.PrintDate(student.inactiveTimeEnd, false);
                         isInactive = true;
                     }
                     else
@@ -113,7 +113,7 @@ namespace RP0.Crew
                 else
                 {
                     course = currentCourse.GetItemName();
-                    complete = KSPUtil.PrintDate(Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft(), false);
+                    complete = RP0DTUtils.PrintDate(Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft(), false);
                 }
                 GUILayout.Label(course, GUILayout.Width(96));
                 GUILayout.Label(complete, GUILayout.Width(80));
@@ -121,7 +121,7 @@ namespace RP0.Crew
                 double retireTime = CrewHandler.Instance.GetRetireTime(student.name);
                 if (retireTime > 0d)
                 {
-                    retires = CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(retireTime, false) : "(n/a)";
+                    retires = CrewHandler.Instance.RetirementEnabled ? RP0DTUtils.PrintDate(retireTime, false) : "(n/a)";
                 }
                 else
                 {
@@ -288,11 +288,11 @@ namespace RP0.Crew
             const string tooltipProf = "Time for Proficiency training varies\nbased on nauts' prior proficiencies";
             const string tooltipMission = "Time for Mission training varies\nbased on nauts' stupidity";
             double timeLeft = _selectedCourse.GetTimeLeft();
-            GUILayout.Label(new GUIContent($"Will take {KSPUtil.PrintDateDeltaCompact(timeLeft, true, false)}", _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission));
-            GUILayout.Label(new GUIContent($"and finish on {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + timeLeft, false)}", _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission));
+            GUILayout.Label(new GUIContent($"Will take {RP0DTUtils.PrintDateDeltaCompact(timeLeft, true, false)}", _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission));
+            GUILayout.Label(new GUIContent($"and finish on {RP0DTUtils.PrintDate(Planetarium.GetUniversalTime() + timeLeft, false)}", _selectedCourse.Type == TrainingTemplate.TrainingType.Proficiency ? tooltipProf : tooltipMission));
             if (CrewHandler.Instance.RetirementEnabled && _selectedCourse.Students.Count > 0)
             {
-                GUILayout.Label($"Retirement increase (avg): {KSPUtil.PrintDateDeltaCompact(_selectedCourse.AverageRetireExtension(), true, false)}");
+                GUILayout.Label($"Retirement increase (avg): {RP0DTUtils.PrintDateDeltaCompact(_selectedCourse.AverageRetireExtension(), true, false)}");
             }
 
             if (!isLocked && !underMin && GUILayout.Button("Start Training", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))
@@ -325,7 +325,7 @@ namespace RP0.Crew
                 if (CrewHandler.Instance.RetirementEnabled && retireTime > 0d)
                 {
                     GUILayout.Space(8);
-                    GUILayout.Label($"Retires NET {KSPUtil.PrintDate(retireTime, false)}", RightLabel);
+                    GUILayout.Label($"Retires NET {RP0DTUtils.PrintDate(retireTime, false)}", RightLabel);
                 }
             }
             catch(Exception ex)
@@ -339,7 +339,7 @@ namespace RP0.Crew
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(string.Empty, GUILayout.ExpandWidth(true));
-                GUILayout.Label($"Retires NLT {KSPUtil.PrintDate(nlt, false)}", RightLabel);
+                GUILayout.Label($"Retires NLT {RP0DTUtils.PrintDate(nlt, false)}", RightLabel);
                 GUILayout.EndHorizontal();
             }
 
@@ -352,7 +352,7 @@ namespace RP0.Crew
                     if (!currentCourse.HasTemplate)
                         GUILayout.Label("Training paused - purchase the required part to resume");
                     else
-                        GUILayout.Label($"Training for {currentCourse.GetItemName()} until {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft(), false)}");
+                        GUILayout.Label($"Training for {currentCourse.GetItemName()} until {RP0DTUtils.PrintDate(Planetarium.GetUniversalTime() + currentCourse.GetTimeLeft(), false)}");
                     if (currentCourse.SeatMin > 1)
                     {
                         if (GUILayout.Button("Cancel", HighLogic.Skin.button, GUILayout.ExpandWidth(false)))

@@ -405,7 +405,7 @@ namespace RP0.Programs
             {
                 Reputation.Instance.AddReputation(repDelta, TransactionReasonsRP0.ProgramCompletion.Stock());
             }
-            RP0Debug.Log($"Completed program {name} at time {completedUT} ({KSPUtil.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT) / secsPerYear}. Adding {repDelta} rep.");
+            RP0Debug.Log($"Completed program {name} at time {completedUT} ({RP0DTUtils.PrintDateCompact(completedUT, false)}), duration {(completedUT - acceptedUT) / secsPerYear}. Adding {repDelta} rep.");
 
             Milestones.MilestoneHandler.Instance.OnProgramComplete(name);
         }
@@ -455,28 +455,28 @@ namespace RP0.Programs
             {
                 text += $"Funds Paid Out: <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1>{fundsPaidOut:N0}\nAccepted: ";
                 if (extendedInfo)
-                    text += KSPUtil.dateTimeFormatter.PrintDate(acceptedUT, false, false);
+                    text += RP0DTUtils.PrintDate(acceptedUT, false, false);
                 else
-                    text += KSPUtil.dateTimeFormatter.PrintDateCompact(acceptedUT, false, false);
+                    text += RP0DTUtils.PrintDateCompact(acceptedUT, false, false);
                 text += "\n";
                 if (IsComplete)
                 {
                     if (extendedInfo)
-                        text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDate(completedUT, false, false)}";
+                        text += $"Completed: {RP0DTUtils.PrintDate(completedUT, false, false)}";
                     else
-                        text += $"Completed: {KSPUtil.dateTimeFormatter.PrintDateCompact(completedUT, false, false)}";
+                        text += $"Completed: {RP0DTUtils.PrintDateCompact(completedUT, false, false)}";
                 }
                 else
                 {
                     if (extendedInfo)
-                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDate(deadlineUT, false, false)}";
+                        text += $"Deadline: {RP0DTUtils.PrintDate(deadlineUT, false, false)}";
                     else
-                        text += $"Deadline: {KSPUtil.dateTimeFormatter.PrintDateCompact(deadlineUT, false, false)}";
+                        text += $"Deadline: {RP0DTUtils.PrintDateCompact(deadlineUT, false, false)}";
                 }
             }
             else
             {
-                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years\nDeadline if accepted now: {KSPUtil.dateTimeFormatter.PrintDate(Planetarium.GetUniversalTime() + duration * 365.25d * 86400d, false, false)}";
+                text = $"{requirements}\n\n{text}Nominal Duration: {duration:0.##} years\nDeadline if accepted now: {RP0DTUtils.PrintDate(Planetarium.GetUniversalTime() + duration * 365.25d * 86400d, false, false)}";
             }
 
             if (extendedInfo)

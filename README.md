@@ -32,7 +32,8 @@ Discord Link: https://discord.gg/V73jjNd
 **Requirements:**
 
 *These mods are required for RP-1 to function properly.*
-- Realism Overhaul and all of its required mods (including Real Solar System)
+- Realism Overhaul and all of its required mods
+- Real Solar System
 - Module Manager
 - SXT Continued (Needed for engines)
 - Contract Configurator (Needed to make more complex RP-1 contracts function)
@@ -43,6 +44,7 @@ Discord Link: https://discord.gg/V73jjNd
 - Toolbar Controller
 - Kerbalism (RO Config)
 - KSP Community Fixes
+- Σκοπός (Skopos)
 
 **RO-Mods:**
 

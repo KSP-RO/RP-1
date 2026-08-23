@@ -30,6 +30,11 @@ namespace RP0
         private static GUIStyle _styleLabelCenterAlign;
         private static GUIStyle _styleTextFieldRightAlign;
 
+        /// <summary>
+        /// Max amount of characters that can be entered for the name of a launch complex, pad or vessel.
+        /// </summary>
+        private const int _MaxNameChars = 40;
+
         public static bool IsPrimarilyDisabled => PresetManager.PresetLoaded() && (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
                                                                                    !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes);
 

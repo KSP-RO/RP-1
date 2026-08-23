@@ -334,7 +334,7 @@ namespace RP0
             _kacHasWindow = targetNames != null &&
                 ModIntegrations.AlarmHelper.TryGetTransferWindowToTarget(targetNames, originName, out _kacWindow);
             _kacDepartsLabel = _kacHasWindow && !double.IsNaN(_kacWindow.DepartureUT)
-                ? KSPUtil.PrintDateDeltaCompact(_kacWindow.DepartureUT - Planetarium.GetUniversalTime(), true, false)
+                ? RP0DTUtils.PrintDateDeltaCompact(_kacWindow.DepartureUT - Planetarium.GetUniversalTime(), true, false)
                 : "?";
         }
 

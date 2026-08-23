@@ -219,7 +219,7 @@ namespace RP0.Crew
 
                     double actualRetireOffset = CrewHandler.Instance.IncreaseRetireTime(student.name, retireTimeOffset);
                     if (actualRetireOffset > 0d)
-                        retirementChanges.Add($"\n{student.name}, +{KSPUtil.PrintDateDelta(actualRetireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(CrewHandler.Instance.GetRetireTime(student.name), false)}");
+                        retirementChanges.Add($"\n{student.name}, +{RP0DTUtils.PrintDateDelta(actualRetireOffset, false, false)}, no earlier than {RP0DTUtils.PrintDate(CrewHandler.Instance.GetRetireTime(student.name), false)}");
                 }
 
                 if (CrewHandler.Instance.RetirementEnabled && retirementChanges.Count > 0)

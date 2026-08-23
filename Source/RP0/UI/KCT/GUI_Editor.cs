@@ -23,6 +23,20 @@ namespace RP0
         private static readonly GUIContent _gcSwitchToHangar = new GUIContent("Switch to Hangar", "A Launch Complex is currently selected; this will switch to the Hangar, needed for planes.");
         private static List<string> vesselFailedChecks = new List<string>();
 
+        // Rollout Rate effects should not change when this window is open.
+        private static double _cachedRolloutRateLeader = -1;
+        private static double CachedRolloutRateLeader 
+        { 
+            get 
+            {
+                if (_cachedRolloutRateLeader < 0 || _rolloutTimeNeedsUpdate)
+                {
+                    _cachedRolloutRateLeader = CurrencyUtils.Rate(TransactionReasonsRP0.RateRollout);
+                    _rolloutTimeNeedsUpdate = false;
+                }
+                return _cachedRolloutRateLeader;
+            }
+        }
         public static void DrawEditorGUI(int windowID)
         {
             if (EditorLogic.fetch == null)
@@ -55,11 +69,11 @@ namespace RP0
         private static void RenderBuildMode()
         {
             double buildPoints = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
-            double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect;
+            double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect
+                * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
             double effic = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Efficiency;
             double rateWithCurEngis = KCTUtilities.GetBuildRate(SpaceCenterManagement.Instance.ActiveSC.ActiveLC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
-                * effic
-                * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
+                * effic;
             int engineersUsed = Math.Min(
                 SpaceCenterManagement.Instance.ActiveSC.ActiveLC.MaxEngineersFor(SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated),
                 SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers
@@ -73,18 +87,24 @@ namespace RP0
                 GUILayout.Label($"EC: {SpaceCenterManagement.Instance.EditorVessel.effectiveCost:N0}");
             }
 
+            if (Math.Abs(bpLeaderEffect - 1) > 0.001d)
+                GUILayout.Label($"Leader Effect on Integration Rate: {LocalizationHandler.FormatRatioAsPercent(bpLeaderEffect)}");
+
             if (double.TryParse(BuildRateForDisplay, out double bR))
             {
+                double postEffic = effic;
                 double buildTime = bR > 0d
                     ? (effic >= LCEfficiency.MaxEfficiency
                         ? buildPoints / (bR * bpLeaderEffect)
-                        : SpaceCenterManagement.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, effic, out _))
+                        : SpaceCenterManagement.Instance.EditorVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic * bpLeaderEffect, effic, out postEffic))
                     : 0d;
-                GUILayout.Label($"Integration Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(buildTime, true, false) : "infinity")} at {effic:P0}");
+                GUILayout.Label($"Integration Time: {(bR > 0 ? RP0DTUtils.PrintDateDeltaCompact(buildTime, true, false) : "infinity")} at {effic:P0}");
 
                 if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {(bR > 0 ? KSPUtil.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / bR, true, false) : "infinity")} at {effic:P0}");
+                    double rolloutBR = bR * CachedRolloutRateLeader / effic * postEffic;
+                    GUILayout.Label(new GUIContent($"Rollout Time: {(bR > 0 ? RP0DTUtils.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / rolloutBR, true, false) : "infinity")} at {postEffic:P0}",
+                        "Uses the predicted efficiency after integration is complete."));
                 }
             }
             else
@@ -104,7 +124,7 @@ namespace RP0
             {
                 double effectiveEngCount = bR / rateWithCurEngis * engineersUsed;
                 double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.EngineerIdleSalaryMult);
-                double cost = buildPoints / bR / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
+                double cost = buildPoints / (bR * bpLeaderEffect) / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
                 GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
             }
 
@@ -344,14 +364,14 @@ namespace RP0
         {
             VesselProject editedVessel = SpaceCenterManagement.Instance.EditedVessel;
             double fullVesselBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
-            double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect;
+            double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect * editedVessel.LC.StrategyRateMultiplier;
             double effic = editedVessel.LC.Efficiency;
             KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
             
             double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
-                * effic * editedVessel.LC.StrategyRateMultiplier;
+                * effic;
 
             RenderBuildRateInputRow(fullVesselBP, rateWithCurEngis);
 
@@ -362,16 +382,19 @@ namespace RP0
                 int idx = editedVessel.LC.BuildList.IndexOf(editedVessel);
                 if (idx != -1 && bR > 0d && effic < LCEfficiency.MaxEfficiency)
                 {
-                    double brTrue = bR / effic;
+                    double brTrue = bR / effic * editedVessel.LC.StrategyRateMultiplier;
                     for (int i = 0; i < idx; ++i)
-                        editedVessel.LC.BuildList[i].CalculateTimeLeftForBuildRate(editedVessel.buildPoints - editedVessel.progress, brTrue, startingEff, out startingEff);
+                    {
+                        VesselProject ship = editedVessel.LC.BuildList[i];
+                        ship.CalculateTimeLeftForBuildRate(ship.buildPoints - ship.progress, brTrue * ship.LeaderEffect, startingEff, out startingEff);
+                    }
                 }
 
                 double buildPoints = Math.Abs(fullVesselBP - newProgressBP);
                 double buildTime = bR > 0d
                     ? (effic >= LCEfficiency.MaxEfficiency
                         ? buildPoints / (bR * bpLeaderEffect)
-                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic, startingEff, out rolloutEff))
+                        : editedVessel.CalculateTimeLeftForBuildRate(buildPoints, bR / effic * bpLeaderEffect, startingEff, out rolloutEff))
                     : double.NaN;
                 GUILayout.Label(new GUIContent($"Remaining: {RP0DTUtils.GetFormattedTime(buildTime, 0, false)}", 
                     idx == -1 ? "Time left takes efficiency increase into account based on assuming vessel will be placed at head of integration list" :
@@ -379,7 +402,8 @@ namespace RP0
 
                 if (SpaceCenterManagement.EditorRolloutBP > 0)
                 {
-                    GUILayout.Label($"Rollout Time: {RP0DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (bR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
+                    double rolloutBR = bR * CachedRolloutRateLeader;
+                    GUILayout.Label($"Rollout Time: {RP0DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (rolloutBR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
                 }
             }
             else
@@ -483,7 +507,7 @@ namespace RP0
                 var ship = SpaceCenterManagement.Instance.EditorVessel;
                 var deltaToMaxEngineers = int.MaxValue - SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Engineers;
                 bR = KCTUtilities.GetBuildRate(SpaceCenterManagement.Instance.ActiveSC.ActiveLC, ship.mass, buildPoints, ship.humanRated, deltaToMaxEngineers)
-                    * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Efficiency * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.StrategyRateMultiplier;
+                    * SpaceCenterManagement.Instance.ActiveSC.ActiveLC.Efficiency;
                 BuildRateForDisplay = bR.ToString();
             }
 

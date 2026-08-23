@@ -421,7 +421,7 @@ namespace RP0.Crew
                         double exp = GetExpiration(pcm.name, ent);
                         if (exp > 0d)
                         {
-                            sb.Append($"\n  {pretty}{ent.target}. Expires {KSPUtil.PrintDate(exp, false)}");
+                            sb.Append($"\n  {pretty}{ent.target}. Expires {RP0DTUtils.PrintDate(exp, false)}");
                         }
                     }
                 }
@@ -492,7 +492,7 @@ namespace RP0.Crew
             }
             _retireIncreases[pcmName] = newTotal;
 
-            string sRetireOffset = KSPUtil.PrintDateDelta(retireOffset, false, false);
+            string sRetireOffset = RP0DTUtils.PrintDateDelta(retireOffset, false, false);
             RP0Debug.Log("retire date increased by: " + sRetireOffset);
 
             _retireTimes[pcmName] = GetRetireTime(pcmName) + retireOffset;
@@ -530,7 +530,7 @@ namespace RP0.Crew
             // when you're not actually controlling the vessel
             double elapsedTime = UT - v.launchTime;
 
-            RP0Debug.Log($"mission elapsedTime: {KSPUtil.PrintDateDeltaCompact(elapsedTime, true, true)}");
+            RP0Debug.Log($"mission elapsedTime: {RP0DTUtils.PrintDateDeltaCompact(elapsedTime, true, true)}");
 
             // When flight duration was too short, mission training should not be set as expired.
             // This can happen when an on-the-pad failure occurs and the vessel is recovered.
@@ -612,7 +612,7 @@ namespace RP0.Crew
                     double retireOffset = retirementMult * 86400 * Database.SettingsCrew.retireOffsetBaseMult / stupidityPenalty * retireCMQmult;
 
                     retireOffset = IncreaseRetireTime(pcm.name, retireOffset);
-                    retirementChanges.Add($"\n{pcm.name}, +{KSPUtil.PrintDateDelta(retireOffset, false, false)}, no earlier than {KSPUtil.PrintDate(GetRetireTime(pcm.name), false)}");
+                    retirementChanges.Add($"\n{pcm.name}, +{RP0DTUtils.PrintDateDelta(retireOffset, false, false)}, no earlier than {RP0DTUtils.PrintDate(GetRetireTime(pcm.name), false)}");
                 }
 
                 inactivityMult = Math.Max(1, inactivityMult);
@@ -620,12 +620,12 @@ namespace RP0.Crew
                 double inactiveTimeDays = Math.Max(Database.SettingsCrew.inactivityMinFlightDurationDays, Math.Pow(elapsedTimeDays, Database.SettingsCrew.inactivityFlightDurationExponent)) *
                                           Math.Min(Database.SettingsCrew.inactivityMaxSituationMult, inactivityMult) * acMult;
                 double inactiveTime = inactiveTimeDays * 86400d * inactiveCMQmult;
-                RP0Debug.Log($"inactive for: {KSPUtil.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
+                RP0Debug.Log($"inactive for: {RP0DTUtils.PrintDateDeltaCompact(inactiveTime, true, false)} via AC mult {acMult}");
 
                 if (CrewRnREnabled)
                 {
                     pcm.SetInactive(inactiveTime, false);
-                    inactivity.Add($"\n{pcm.name}, until {KSPUtil.PrintDate(inactiveTime + UT, true, false)}");
+                    inactivity.Add($"\n{pcm.name}, until {RP0DTUtils.PrintDate(inactiveTime + UT, true, false)}");
                 }
             }
 
@@ -699,7 +699,7 @@ namespace RP0.Crew
                                              new Vector2(0.5f, 0.5f),
                                              "InitialRetirementDateNotification",
                                              "Initial Retirement Date",
-                                             $"{pcm.name} will retire no earlier than {KSPUtil.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
+                                             $"{pcm.name} will retire no earlier than {RP0DTUtils.PrintDate(retireTime, false)}\n(Retirement will be delayed the more interesting training they undergo and flights they fly.)",
                                              KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
                                              false,
                                              HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
@@ -736,7 +736,7 @@ namespace RP0.Crew
                 StringBuilder sb = new StringBuilder();
                 sb.Append("Earliest crew retirement dates:");
                 foreach (string s in newHires)
-                    sb.Append($"\n{s}, {KSPUtil.PrintDate(GetRetireTime(s), false)}");
+                    sb.Append($"\n{s}, {RP0DTUtils.PrintDate(GetRetireTime(s), false)}");
 
                 sb.Append($"\n\nInteresting flights and training will delay retirement up to an additional {Math.Round(Database.SettingsCrew.retireIncreaseCap / (365.25d * 86400d))} years.");
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),

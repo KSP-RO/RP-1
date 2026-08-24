@@ -27,6 +27,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = CurrentVersion;
 
+        [KSPField(isPersistant = true)]
+        public string Scenario;
+
         public bool IsEnabled = false;
 
         private const int CurrentVersion = 1;
@@ -264,6 +267,11 @@ namespace RP0
             });
         }
 
+        public void SetStartingScenario(string scenarioName)
+        {
+            Scenario = scenarioName;
+        }
+
         public void ExportToFile(string path)
         {
             var rows = _periodDict.Select(p => p.Value)
@@ -330,13 +338,16 @@ namespace RP0
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
 
-            const string jsonVer = "2.0";
+            const string jsonVer = "3.0";
             var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(GetType().Assembly.Location);
             string rp1Ver = fvi.FileVersion;
 
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
             var jsonToSend = "{ \"jsonVer\": \"" + jsonVer + "\", ";
             jsonToSend += "\"rp1Ver\": \"" + rp1Ver + "\", ";
+            if (string.IsNullOrWhiteSpace(Scenario))
+                jsonToSend += "\"scenario\": \"" + Scenario + "\", ";
+
             jsonToSend += "\"periods\": [";
 
             for (var i = 0; i < logPeriods.Length; i++)

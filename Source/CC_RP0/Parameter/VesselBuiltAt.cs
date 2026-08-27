@@ -38,6 +38,8 @@ namespace ContractConfigurator.RP0
 
         protected override bool VesselMeetsCondition(Vessel vessel)
         {
+            if (KCT_GUI.IsPrimarilyDisabled) return true;
+
             EditorFacility? curBuiltAt = vessel.GetVesselBuiltAt();
             return curBuiltAt.HasValue && curBuiltAt.Value == builtAt;
         }

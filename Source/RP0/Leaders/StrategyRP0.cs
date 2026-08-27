@@ -207,8 +207,6 @@ namespace RP0
 
             Unregister();
 
-            KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
-
             if (!(this is Programs.ProgramStrategy))
             {
                 SpaceCenterManagement.Instance.RecalculateBuildRates();
@@ -218,8 +216,13 @@ namespace RP0
                 if (ConfigRP0.ReactivateCooldown > 0)
                 {
                     AlarmHelper.DeleteAllAlarmsWithTitle(ConfigRP0.Title);
+                    RP0Settings _settings = HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>();
 
-                    AlarmHelper.CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown, alarmType);
+                    if (_settings.MakeAlarmHiringCooldownOver)
+                    {
+                        KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew;
+                        AlarmHelper.CreateAlarm($"Hiring Cooldown Over: {ConfigRP0.Title}", $"{ConfigRP0.Title} can be re-hired at this time.", dateDeactivated + ConfigRP0.ReactivateCooldown, alarmType);
+                    }
                 }
             }
 
@@ -273,7 +276,7 @@ namespace RP0
             if (extendedInfo && ConfigRP0.RemoveOnDeactivate)
             {
                 if (ConfigRP0.ReactivateCooldown > 0d)
-                    text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.Format("#rp0_Leaders_Deactivates_WithCooldown", KSPUtil.PrintDateDelta(ConfigRP0.ReactivateCooldown, false))}</color>\n\n";
+                    text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.Format("#rp0_Leaders_Deactivates_WithCooldown", RP0DTUtils.PrintDateDelta(ConfigRP0.ReactivateCooldown, false))}</color>\n\n";
                 else
                     text += $"<b><color=#{RUIutils.ColorToHex(XKCDColors.KSPNotSoGoodOrange)}>{Localizer.GetStringByTag("#rp0_Leaders_Deactivates")}</color>\n\n";
             }
@@ -302,22 +305,22 @@ namespace RP0
                     else
                     {
                         if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                            text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveOn"), KSPUtil.PrintDate(deactivateDate, false, false));
+                            text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveOn"), RP0DTUtils.PrintDate(deactivateDate, false, false));
                         else
                             text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveIn"),
-                                extendedInfo ? KSPUtil.PrintDateDelta(deactivateDate - Planetarium.GetUniversalTime(), false, false)
-                                : KSPUtil.PrintDateDeltaCompact(deactivateDate - Planetarium.GetUniversalTime(), false, false));
+                                extendedInfo ? RP0DTUtils.PrintDateDelta(deactivateDate - Planetarium.GetUniversalTime(), false, false)
+                                : RP0DTUtils.PrintDateDeltaCompact(deactivateDate - Planetarium.GetUniversalTime(), false, false));
                     }
                 }
                 if (LongestDuration > 0)
                 {
                     double retireDate = DateActivated + LongestDuration;
                     if (GameSettings.SHOW_DEADLINES_AS_DATES)
-                        text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresOn"), KSPUtil.PrintDate(retireDate, false, false));
+                        text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresOn"), RP0DTUtils.PrintDate(retireDate, false, false));
                     else
                         text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresIn"), 
-                            extendedInfo ? KSPUtil.PrintDateDelta(retireDate - Planetarium.GetUniversalTime(), false, false)
-                            : KSPUtil.PrintDateDeltaCompact(retireDate - Planetarium.GetUniversalTime(), false, false));
+                            extendedInfo ? RP0DTUtils.PrintDateDelta(retireDate - Planetarium.GetUniversalTime(), false, false)
+                            : RP0DTUtils.PrintDateDeltaCompact(retireDate - Planetarium.GetUniversalTime(), false, false));
                 }
             }
             else
@@ -325,14 +328,14 @@ namespace RP0
                 if (LeastDuration > 0)
                 {
                     text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_CanRemoveAfter"),
-                        extendedInfo ? KSPUtil.PrintDateDelta(LeastDuration, false, false)
-                            : KSPUtil.PrintDateDeltaCompact(LeastDuration, false, false));
+                        extendedInfo ? RP0DTUtils.PrintDateDelta(LeastDuration, false, false)
+                            : RP0DTUtils.PrintDateDeltaCompact(LeastDuration, false, false));
                 }
                 if (LongestDuration > 0)
                 {
                     text += RichTextUtil.TextParam(Localizer.Format("#rp0_Leaders_RetiresAfter"),
-                        extendedInfo ? KSPUtil.PrintDateDelta(LongestDuration, false, false)
-                            : KSPUtil.PrintDateDeltaCompact(LongestDuration, false, false));
+                        extendedInfo ? RP0DTUtils.PrintDateDelta(LongestDuration, false, false)
+                            : RP0DTUtils.PrintDateDeltaCompact(LongestDuration, false, false));
                 }
 
                 string costString = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StrategySetup, ConfigRP0.SetupCosts, true).GetCostLineOverride(true, true, true, false, false, "   ");

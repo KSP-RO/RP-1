@@ -80,8 +80,11 @@ namespace RP0
         [GameParameters.CustomParameterUI("Show tooling reminders", toolTip = "When enabled, a warning is shown on integration when the vessel has untooled parts.")]
         public bool ShowToolingReminders = true;
 
-        [GameParameters.CustomParameterUI("Make cooldown alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader can be removed with a penalty.")]
-        public bool MakeAlarmCooldownOver = false;
+        [GameParameters.CustomParameterUI("Make firing cooldown alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader can be removed with a penalty.")]
+        public bool MakeAlarmCooldownOver = false; // TODO this should be changed to MakeFiringCooldownOver on a save breaking update
+
+        [GameParameters.CustomParameterUI("Make hiring cooldown alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is removed that shows when the leader can be re-hired.")]
+        public bool MakeAlarmHiringCooldownOver = true;
 
         [GameParameters.CustomParameterUI("Make free to remove alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader can be removed without penalties.")]
         public bool MakeAlarmFreeRemove = true;

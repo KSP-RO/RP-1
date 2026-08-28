@@ -38,7 +38,7 @@ namespace ContractConfigurator.RP0
 
         protected override bool VesselMeetsCondition(Vessel vessel)
         {
-            if (KCT_GUI.IsPrimarilyDisabled) return true; // If build times are disabled, we cannot tell where the vessel was built, so we'll be nice.
+            if (PresetManager.Instance?.ActivePreset.GeneralSettings.Enabled == false) return true; // If build times are disabled, we cannot tell where the vessel was built, so we'll be nice.
 
             EditorFacility? curBuiltAt = vessel.GetVesselBuiltAt();
             return curBuiltAt.HasValue && curBuiltAt.Value == builtAt;

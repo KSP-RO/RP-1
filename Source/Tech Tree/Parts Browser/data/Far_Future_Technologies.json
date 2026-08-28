@@ -233,30 +233,6 @@
         ]
     },
     {
-        "name": "fft-ffre-solid-1",
-        "title": "Fission Fragment Rocket Engine",
-        "description": "",
-        "mod": "Far Future Technologies",
-        "cost": "19500",
-        "entry_cost": "0",
-        "category": "NTR",
-        "info": "",
-        "year": "2035",
-        "technology": "nuclearPropulsionNF2",
-        "ro": true,
-        "orphan": false,
-        "rp0_conf": true,
-        "spacecraft": "",
-        "engine_config": "",
-        "upgrade": false,
-        "entry_cost_mods": "RO-fftdustyplasmaffre",
-        "identical_part_name": "",
-        "module_tags": [
-            "Nuclear",
-            "NuclearRTG"
-        ]
-    },
-    {
         "name": "fft-fission-orion-5-1",
         "title": "10 Meter Orion Drive",
         "description": "",

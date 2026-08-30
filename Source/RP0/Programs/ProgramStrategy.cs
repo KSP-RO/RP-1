@@ -118,7 +118,7 @@ namespace RP0.Programs
             int freeSlots = ProgramHandler.Instance.MaxProgramSlots - ProgramHandler.Instance.ActiveProgramSlots;
             if (_program.slots > freeSlots)
             {
-                reason = (freeSlots == 1)
+                reason = (freeSlots != 1)
                     ? $"This program requires {_program.slots} free slots but only {freeSlots} slots are available.";
                     : $"This program requires {_program.slots} free slots but only 1 slot is available.";
                 return false;

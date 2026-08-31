@@ -75,6 +75,56 @@
         ]
     },
     {
+        "name": "ntr-gc-25-2",
+        "title": "NV-GX Emanticipator Atomic Rocket Motor",
+        "description": "For too long the nuclear motor industry has held that self-\nevidently, the contents of the reactor core should be confined\nInside reactor. No more, we sayl Equal opportunity for both\nhydrogen propellant and uranium! The high temperature of\nthe reactor has led to a open-cycle turbopump, which dumps\nsuperheated exhaust out the sides of the engine and can be\nused for roll control.",
+        "mod": "Kerbal Atomics",
+        "cost": 5680,
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "",
+        "year": "2023",
+        "technology": "nuclearPropulsionNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "LPNTR-3200HP",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox",
+            "Nuclear"
+        ]
+    },
+    {
+        "name": "ntr-gc-25-3",
+        "title": "Aerospike Gas Core-Deliverance",
+        "description": "One of a select few atomic engines designed by crazy, crazy R\npeople for operation inside an atmosphere. This advanced gas-\ncore rocket contains eight 'lightbulb' modules arranged\naround a plug-nozzle aerospike, which is of course effective at\nall altitudes. Improvements to turbopump flow rates allow\ngreat increases in thrust, but propellant heating suffers, with a\n30% loss of specific Impulse compared to other gas-core\nrockets.",
+        "mod": "Kerbal Atomics",
+        "cost": 3550,
+        "entry_cost": "0",
+        "category": "NTR",
+        "info": "",
+        "year": "2023",
+        "technology": "nuclearPropulsionNF",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "ROE-J2T",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidTurbo",
+            "Hydrolox",
+            "Nuclear"
+        ]
+    },
+    {
         "name": "ntr-sc-125-1",
         "title": "NERVA I",
         "description": "1970s low TWR vacuum engine. the NERVA (Nuclear Engine for Rocket Vehicle Applications) is designed for orbital tugs and large rocket upper stages. Diameter: [1.25 m]. Plume configured by RealPlume.",

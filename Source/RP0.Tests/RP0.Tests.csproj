@@ -5,7 +5,7 @@
          assemblies, so they run the real Formula / RecoveryTechSettings code rather than a
          mirror. That means KSP DLLs must be present (staged in ..\..\.refs), so this suite
          runs locally only - it is deliberately not wired into CI. -->
-    <TargetFramework>net48</TargetFramework>
+		<TargetFramework>net4.8</TargetFramework>
     <PlatformTarget>x64</PlatformTarget>
     <LangVersion>12</LangVersion>
     <AssemblyName>RP0.Tests</AssemblyName>
@@ -14,6 +14,9 @@
     <!-- Where the referenced RP0.dll + KSP DLLs live. Override with -p:ReferencePath=... to
          point at a KSP install's Managed folder instead of the repo's reference staging. -->
     <ReferencePath Condition=" '$(ReferencePath)' == '' ">$(MSBuildThisFileDirectory)..\..\.refs</ReferencePath>
+		<KSPRoot Condition=" '$(KSPRoot)' == '' ">
+			$(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))
+		</KSPRoot>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,28 +31,25 @@
     <!-- The code under test. RP0.dll must be built and staged in $(ReferencePath) first
          (the main mod build already produces it). Private=true copies these beside the test
          assembly so the runner can load them. -->
-    <Reference Include="RP0">
-      <HintPath>$(ReferencePath)\RP0.dll</HintPath>
+		<ProjectReference Include="../RP0/RP0.csproj" />
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>$(ReferencePath)\Assembly-CSharp.dll</HintPath>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp-firstpass.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp-firstpass.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>$(ReferencePath)\Assembly-CSharp-firstpass.dll</HintPath>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.CoreModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.CoreModule.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>$(ReferencePath)\UnityEngine.CoreModule.dll</HintPath>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.dll</HintPath>
       <Private>true</Private>
     </Reference>
-    <Reference Include="UnityEngine">
-      <HintPath>$(ReferencePath)\UnityEngine.dll</HintPath>
-      <Private>true</Private>
-    </Reference>
-    <Reference Include="ROUtils">
-      <HintPath>$(ReferencePath)\ROUtils.dll</HintPath>
+    <Reference Include="$(KSPRoot)/GameData/ROUtils/Plugins/ROUtils.dll">
+      <HintPath>$(ReferencePath)/ROUtils.dll</HintPath>
       <Private>true</Private>
     </Reference>
   </ItemGroup>

@@ -126,10 +126,19 @@ namespace RP0.Tests.ReusabilityTests.Fixtures
             Rocket(effectiveCost: 56375, cost: 30450f, mass: 154f, lcMassMax: 160f,
                    humanRated: true, splashed: true, atKSC: false, kscDistance: 1_000_000f));
 
-        /// <summary>Capsule alone: very high effective cost for very little mass, recovered far downrange.</summary>
+        /// <summary>
+        /// Capsule alone: very high effective cost for very little mass, recovered far downrange.
+        ///
+        /// lcMassMax is the LAUNCH VEHICLE's mass, not the capsule's. A vessel is recovered to
+        /// the complex it launched from, which must fit the whole stack - an Apollo CM flies
+        /// again on a Saturn V (~2900 t), not on a 6 t pad. Sizing the LC to the capsule alone
+        /// both under-staffs its refurbishment absurdly and, in game, produces an LC too small
+        /// to re-stack the vehicle (RP-1 disallows merging across LCs). See the launch mass of
+        /// the corresponding heavy stage: HeavyFirstStage below is the same Saturn V's S-IC.
+        /// </summary>
         public static readonly VesselArchetype ApolloCM = new VesselArchetype(
             "Apollo CM alone", "Splashdown",
-            Rocket(effectiveCost: 82031, cost: 35000f, mass: 5.6f, lcMassMax: 6f,
+            Rocket(effectiveCost: 82031, cost: 35000f, mass: 5.6f, lcMassMax: 2900f,
                    humanRated: true, splashed: true, atKSC: false, kscDistance: 3_000_000f));
 
         /// <summary>Mass-dominated case: an S-IC class first stage recovered downrange.

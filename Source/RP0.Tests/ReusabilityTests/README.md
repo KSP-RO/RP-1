@@ -32,7 +32,7 @@ than adding an assembly reference.
 | `RecoveryInvariantTests.cs` | Relationships the formulas do hold |
 | `Fixtures/DesignTargets.cs` | The PR's stated durations, reported in the tables rather than asserted |
 | `RecoveryTableTests.cs` | Golden-table regression |
-| `BalanceAnchorTests.cs` | Structural properties reuse needs. **Currently failing by design.** |
+| `BalanceAnchorTests.cs` | Design properties not yet met. **Fails by design** (one anchor). |
 
 ## Targets: reported, not asserted
 
@@ -43,10 +43,14 @@ progress, so a red test would read as "broken" when what is meant is "not tuned 
 generated table ends with a target-versus-actual section instead, and the ratio there moves
 visibly as the formulas are tuned.
 
-What `BalanceAnchorTests` still asserts are properties that compare two rows against each
-other, so they hold or fail regardless of the exact fixture numbers: refurbishing should cost
-less work than building new, splashdown should never beat recovering at KSC, and refurbishment
-duration should track the vessel rather than the size of its launch complex.
+`BalanceAnchorTests` now holds a single still-unmet property: splashdown should never be
+cheaper to refurbish than recovering at KSC (it is, once the `LandedAt` matching is fixed, so
+the inversion becomes reachable). Two properties that once failed here now pass and moved to
+`RecoveryInvariantTests` — refurbishing is cheaper than building new, and *net* refurbishment
+cost (the charge plus the engineer salary it offsets) falls with tech. A third, "duration
+tracks the vessel not the pad", was dropped: it was an artifact of a mis-sized fixture (an
+Apollo capsule recovered to a 6 t pad rather than to its Saturn V complex), and does not
+survive correct launch-complex sizing.
 
 The tech multipliers are parsed from `GameData/RP-1/SCMData/RecoveryLevels.cfg` and
 `RefurbishmentLevels.cfg` rather than mirrored, so editing those cfgs moves the tables.

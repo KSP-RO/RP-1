@@ -203,8 +203,60 @@ namespace RP0.Tests.ReusabilityTests
             });
         }
 
-        // Refurbishment COST is deliberately not asserted monotonic here - it is not, and that
-        // is a balance defect rather than a mechanical property. See
-        // BalanceAnchorTests.AdvancingTechNeverRaisesRefurbishmentCost.
+        /// <summary>
+        /// A vessel's NET refurbishment cost - the charge plus the engineer salary paid over
+        /// the refurbishment - should never rise with tech.
+        ///
+        /// The charged cost alone (Formula.RefurbishmentCost) is not monotonic: the formula
+        /// subtracts an engineer-salary subsidy that shrinks as refurbishment BP falls, so a
+        /// tier that cuts BP faster than it cuts RefurbishmentCostMult can leave the charge
+        /// higher. But that is exactly compensated by the smaller salary the player now pays,
+        /// because the subsidy term equals the salary cost of the refurbishment time
+        /// (bp / EngineerBPRate engineer-seconds x salary). Net = charge + that salary, and net
+        /// is what a player actually spends. Asserted here per PR review feedback.
+        /// </summary>
+        [TestCaseSource(nameof(Archetypes))]
+        public void AdvancingTechNeverRaisesNetRefurbishmentCost(VesselArchetype a)
+        {
+            double bas = NetRefurbishmentCost(a.At(TechTier.Base));
+            double mid = NetRefurbishmentCost(a.At(TechTier.Mid));
+            double mod = NetRefurbishmentCost(a.At(TechTier.Modern));
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(mid, Is.LessThanOrEqualTo(bas), "Base -> Mid");
+                Assert.That(mod, Is.LessThanOrEqualTo(mid), "Mid -> Modern");
+            });
+        }
+
+        /// <summary>
+        /// Reuse only makes sense if refurbishing is less work than building new: the PR frames
+        /// the whole feature as giving the player that choice, which needs refurbishment BP to
+        /// sit under the vessel's integration BP.
+        /// </summary>
+        [TestCaseSource(nameof(Cases))]
+        public void RefurbishingIsCheaperThanBuildingNew(VesselArchetype a, TechTier tier)
+        {
+            FormulaInputs v = a.At(tier);
+            double ratio = Formula.RefurbishmentBP(v) / v.BuildPoints;
+
+            Assert.That(ratio, Is.LessThan(1d),
+                        $"refurbishment BP is {ratio:N2}x integration BP - refurbishing should never " +
+                        "cost more work than building the vessel from scratch");
+        }
+
+        /// <summary>
+        /// The charge plus the engineer salary the subsidy is meant to offset. The salary term
+        /// is bp / EngineerBPRate engineer-seconds of work, priced at the annual salary; it
+        /// equals the subsidy Formula.RefurbishmentCost subtracts, and is independent of how
+        /// many engineers are assigned (more engineers finish proportionally sooner).
+        /// </summary>
+        private static double NetRefurbishmentCost(in FormulaInputs v)
+        {
+            const double secondsPerYear = 365.25d * Staffing.SecondsPerDay;
+            double salaryCost = Formula.RefurbishmentBP(v) * TechTier.SalaryEngineers
+                                / (secondsPerYear * Staffing.EngineerBPRate);
+            return Formula.RefurbishmentCost(v) + salaryCost;
+        }
     }
 }

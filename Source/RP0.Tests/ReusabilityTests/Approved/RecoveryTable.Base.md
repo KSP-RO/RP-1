@@ -81,7 +81,7 @@ display string, and correcting the `LaunchPad` casing.
 | Mercury-Redstone (crewed) | VAB | yes | 30.00 | 5,148 | 10,610 | 2.062 | 193 | 2.683e+6 | 64.36 | 184,200 | 1,467 |
 | Mercury-Atlas (crewed) | VAB | yes | 118.0 | 13,340 | 26,270 | 1.969 | 544 | 7.269e+6 | 61.86 | 483,000 | 3,472 |
 | Gemini-Titan II (crewed) | VAB | yes | 154.0 | 30,450 | 56,380 | 1.851 | 675 | 1.684e+7 | 115.5 | 1.053e+6 | 6,253 |
-| Apollo CM alone | VAB | yes | 5.600 | 35,000 | 82,030 | 2.344 | 58 | 2.543e+7 | 2,030 | 2.83e+6 | 7,618 |
+| Apollo CM alone | VAB | yes | 5.600 | 35,000 | 82,030 | 2.344 | 5928 | 2.543e+7 | 19.86 | 2.83e+6 | 14,090 |
 | Heavy first stage (S-IC class) | VAB | no | 2,290 | 39,150 | 74,980 | 1.915 | 3322 | 2.304e+7 | 32.11 | 1.669e+6 | 9,955 |
 | Reusable booster, RTLS | VAB | no | 433.0 | 14,520 | 26,250 | 1.808 | 961 | 7.262e+6 | 34.98 | 433,300 | 3,542 |
 | Reusable booster, droneship | VAB | no | 433.0 | 14,520 | 26,250 | 1.808 | 961 | 7.262e+6 | 34.98 | 433,300 | 3,542 |
@@ -99,7 +99,7 @@ display string, and correcting the `LaunchPad` casing.
 | Mercury-Redstone (crewed) | Splashdown | 480.0 | 0.5556 | 14.40 | 829,100 | 19.89 | 366.7 | 0.3090 | 0.07403 | 188,700 | 4.525 |
 | Mercury-Atlas (crewed) | Splashdown | 1,300 | 1.505 | 153.4 | 2.174e+6 | 18.50 | 868.1 | 0.2991 | 0.07655 | 514,400 | 4.378 |
 | Gemini-Titan II (crewed) | Splashdown | 1,000 | 1.157 | 154.0 | 4.74e+6 | 32.51 | 1,563 | 0.2815 | 0.05640 | 1.106e+6 | 7.585 |
-| Apollo CM alone | Splashdown | 3,000 | 3.472 | 16.80 | 1.274e+7 | 1,017 | 1,904 | 0.5008 | 0.05489 | 3.254e+6 | 259.8 |
+| Apollo CM alone | Splashdown | 3,000 | 3.472 | 16.80 | 1.274e+7 | 9.947 | 3,524 | 0.5008 | 0.1012 | 3.254e+6 | 2.542 |
 | Heavy first stage (S-IC class) | Splashdown | 660.0 | 0.7639 | 1,511 | 2.503e+6 | 3.488 | 2,489 | 0.1087 | 0.1022 | 1.724e+6 | 2.402 |
 | Reusable booster, RTLS | Launchpad | 0 | 0 | 0 | 346,600 | 1.670 | 885.5 | 0.04773 | 0.06099 | 433,300 | 2.087 |
 | Reusable booster, droneship | Splashdown | 630.0 | 0.7292 | 272.8 | 649,900 | 3.131 | 885.5 | 0.08949 | 0.07978 | 446,900 | 2.153 |

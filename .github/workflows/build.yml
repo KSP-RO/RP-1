@@ -26,6 +26,11 @@ jobs:
   validate-cfg-files:
     uses: KSP-RO/BuildTools/.github/workflows/validate-cfg-files.yml@master
 
+  # Source/RP0.Tests references RP0.dll and the KSP assemblies (it runs the real
+  # RecoveryTechSettings / Formula code, not a mirror), so it needs the KSP DLLs the build
+  # job downloads under KSP_ZIP_PASSWORD and cannot run on forks. It is run locally instead;
+  # see Source/RP0.Tests/ReusabilityTests/README.md.
+
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04

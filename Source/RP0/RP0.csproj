@@ -278,6 +278,7 @@
     <Compile Include="SpaceCenter\LaunchComplex\LCLaunchPad.cs" />
     <Compile Include="Utilities\KCTWarpController.cs" />
     <Compile Include="Utilities\Formula.cs" />
+    <Compile Include="Utilities\FormulaCore.cs" />
     <Compile Include="SpaceCenter\Presets\PresetManager.cs" />
     <Compile Include="SpaceCenter\Projects\ReconRolloutProject.cs" />
     <Compile Include="Settings\KCTSettings.cs" />

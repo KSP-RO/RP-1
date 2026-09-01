@@ -4,14 +4,17 @@ using ROUtils;
 
 namespace RP0
 {
-    public class Formula
+    /// <summary>
+    /// The KSP-facing half of Formula. The arithmetic lives in FormulaCore.cs, which is
+    /// free of KSP/Unity references so it can be compiled directly by Source/RP0.Tests;
+    /// the methods here flatten a VesselProject (and its LaunchComplex) into FormulaInputs
+    /// and delegate. Keep new math in FormulaCore.cs, not here.
+    /// </summary>
+    public partial class Formula
     {
         public const double ResourceValidationRatioOfVesselMassMin = 0.005d;
         public const double ResourceValidationAbsoluteMassMin = 0.0d;
         private static HashSet<string> _resourceKeys = new HashSet<string>();
-        private const double _EngineerBPRate = 0.0025d;
-        private const double _RolloutCostBasePortion = 0.5d;
-        private const double _RolloutCostSubsidyPortion = 1d - _RolloutCostBasePortion;
 
         private static RealFuels.Tanks.TankDefinition _tankDefSMIV = null;
         public static RealFuels.Tanks.TankDefinition TankDefSMIV
@@ -78,10 +81,61 @@ namespace RP0
             return Database.SettingsSC.ScienceResearchEfficiency.Evaluate(totalSci);
         }
 
+        /// <summary>
+        /// The live settings/tech multipliers the cost formulas read.
+        /// </summary>
+        public static RecoverySettings CurrentSettings()
+        {
+            var rec = Database.SettingsRecovery;
+            return new RecoverySettings(Database.SettingsSC.salaryEngineers,
+                                        rec.RecoveryRateMult,
+                                        rec.RecoveryCostMult,
+                                        rec.RefurbishmentRateMult,
+                                        rec.RefurbishmentCostMult,
+                                        rec.SplashdownPenaltyMult);
+        }
+
+        /// <summary>
+        /// Flattens the vessel-only inputs. Deliberately does NOT touch vessel.LC: the
+        /// formulas that use this (rollout/recovery/refurbishment BP, recovery cost) never
+        /// read a LaunchComplex, and resolving one would add a SpaceCenterManagement
+        /// dependency they did not previously have. LC fields are left at defaults.
+        /// </summary>
+        public static FormulaInputs VesselInputs(VesselProject vessel)
+        {
+            return new FormulaInputs(effectiveCost: vessel.effectiveCost,
+                                     cost: vessel.cost,
+                                     buildPoints: vessel.buildPoints,
+                                     mass: vessel.mass,
+                                     kscDistance: vessel.kscDistance,
+                                     humanRated: vessel.humanRated,
+                                     isSPH: vessel.Type == ProjectType.SPH,
+                                     splashed: vessel.LandedAt?.Contains("Splashdown") ?? false,
+                                     atKSC: (vessel.LandedAt?.Contains("Runway") ?? false) || (vessel.LandedAt?.Contains("Launchpad") ?? false),
+                                     lcIsHumanRated: false,
+                                     lcIsPad: false,
+                                     lcMassMax: 0f,
+                                     settings: CurrentSettings());
+        }
+
+        /// <summary>
+        /// Flattens vessel inputs plus the vessel's LaunchComplex, falling back to the
+        /// active LC exactly as GetRolloutCost did before the extraction.
+        /// </summary>
+        public static FormulaInputs VesselAndLCInputs(VesselProject vessel)
+        {
+            LaunchComplex vLC = vessel.LC;
+            if (vLC == null)
+                vLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
+
+            return VesselInputs(vessel).With(lcIsHumanRated: vLC.IsHumanRated,
+                                             lcIsPad: vLC.LCType == LaunchComplexType.Pad,
+                                             lcMassMax: vLC.MassMax);
+        }
+
         public static double GetVesselBuildPoints(double totalEffectiveCost)
         {
-            double bpScalar = UtilMath.Clamp((totalEffectiveCost - 200d) / 4000d, 0.5d, 1d);
-            double finalBP = 1000d + Math.Pow(totalEffectiveCost, 1.1d) * 100d * bpScalar;
+            double finalBP = VesselBuildPoints(totalEffectiveCost);
 
             RP0Debug.Log($"BP: {finalBP}");
             return finalBP;
@@ -92,21 +146,7 @@ namespace RP0
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            LaunchComplex vLC = vessel.LC;
-            if (vLC == null)
-                vLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
-
-            double multHR = 1d;
-            if (vLC.IsHumanRated)
-                multHR += 0.25d;
-            if (vessel.humanRated)
-                multHR += 0.75d;
-            double vesselPortion = (vessel.effectiveCost - (vessel.cost * 0.9d)) * 0.6;
-            double massToUse = vLC.LCType == LaunchComplexType.Pad ? vLC.MassMax : vessel.GetTotalMass();
-            double lcPortion = Math.Pow(massToUse, 0.75d) * 20d * multHR;
-            double result = vesselPortion + lcPortion;
-            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
-            return result * 0.5d;
+            return RolloutCost(VesselAndLCInputs(vessel));
         }
 
         public static double GetReconditioningCost(VesselProject vessel)
@@ -151,83 +191,38 @@ namespace RP0
 
         public static double GetRolloutBP(VesselProject vessel)
         {
-            double costDeltaHighPow;
-            double costDelta = vessel.effectiveCost - vessel.cost;
-            if (costDelta < 0.001d)
-            {
-                costDelta = 0.001d;
-                costDeltaHighPow = 0.001d;
-            }
-            else
-            {
-                costDeltaHighPow = costDelta - 30000d;
-                if (costDeltaHighPow < 0.001d)
-                    costDeltaHighPow = 0.001d;
-            }
-            return Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
-
+            return RolloutBP(VesselInputs(vessel));
         }
 
         public static double GetReconditioningBP(VesselProject vessel)
         {
-            return vessel.buildPoints * 0.01d + Math.Max(1, vessel.GetTotalMass() - 20d) * 2000d;
+            return ReconditioningBP(VesselInputs(vessel));
         }
 
         public static double GetVesselRepairBP(VesselProject vessel)
         {
-            return GetRolloutBP(vessel) / 7.5;
+            return VesselRepairBP(VesselInputs(vessel));
         }
 
         /// <summary>
-        /// Refurbishment BP: corresponds to prior recovery BP.
-        /// Penalises splashdown recoveries and human-rated craft.
-        /// Tech progression reduces BP via Database.SettingsSC.RefurbishmentRateBase (higher = faster).
-        ///
-        /// Design anchors:
-        ///   STS orbiter (human-rated, reentry, runway): ~6 months early, ~3 months mature.
-        ///   F9 booster (non-human, propulsive landing): ~3 months 2016, ~30 days 2020+.
+        /// Refurbishment BP: corresponds to prior recovery BP. See Formula.RefurbishmentBP
+        /// in FormulaCore.cs for the math and the design anchors it targets.
         /// </summary>
         public static double GetRefurbishmentBP(VesselProject vessel)
         {
-            double bp = GetRolloutBP(vessel) * (vessel.Type == ProjectType.SPH ? 2.15 : 1); 
-            // Respect SPH being more expensive to recover for some reason?
-
-            // Human-rated craft require far more rigorous inspection and certification
-            if (vessel.humanRated)
-                bp *= 3.0d;
-
-            // Splashdown: saltwater exposure, drying, decontamination.
-            // SplashdownPenaltyMult is reduced by materials science techs via SCMREFURBTECHS.
-            // 1.0 = full 1.5x penalty; 0.5 = halved penalty; 0.0 = no penalty.
-            bool splashedDown = vessel.LandedAt?.Contains("Splashdown") ?? false;
-            if (splashedDown)
-                bp *= 1.5d * Database.SettingsRecovery.SplashdownPenaltyMult;
-
-            bool atKsc = (vessel.LandedAt?.Contains("Runway") ?? false) || (vessel.LandedAt?.Contains("Launchpad") ?? false);
-            if (atKsc)
-                bp *= 0.8d; // Discount for skipping "transit overhead"? 
-
-            // Apply tech-driven rate base: higher value = less BP = faster refurbishment
-            bp /= Database.SettingsRecovery.RefurbishmentRateMult;
-
-            return bp;
+            return RefurbishmentBP(VesselInputs(vessel));
         }
 
         /// <summary>
         /// Refurbishment cost: between reconditioning (0.2x rollout) and a full rollout (~40%).
-        /// Uses the same engineer-subsidy pattern as other ops costs.
-        /// Reduced by tech via Database.SettingsSC.RefurbishmentCostMult.
+        /// See Formula.RefurbishmentCost in FormulaCore.cs.
         /// </summary>
         public static double GetRefurbishmentCost(VesselProject vessel)
         {
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            double bp = GetRefurbishmentBP(vessel);
-            double result = GetRolloutCost(vessel) * Database.SettingsRecovery.RefurbishmentCostMult;
-            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion
-                - bp * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
-            return result * 0.5d;
+            return RefurbishmentCost(VesselAndLCInputs(vessel));
         }
 
         /// <summary>
@@ -240,7 +235,7 @@ namespace RP0
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            return vessel.mass * vessel.kscDistance * Database.SettingsRecovery.RecoveryCostMult;
+            return RecoveryCost(VesselInputs(vessel));
         }
 
         public static double ResourceTankCost(string res, double amount, bool isModify, LaunchComplexType type)

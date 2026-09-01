@@ -1,9 +1,10 @@
 using System;
 
-// This file is deliberately free of KSP, Unity, ROUtils and RP-1 singleton references.
-// It is compiled into RP0.dll as part of the Formula partial class, and is also compiled
-// directly (as a linked source file) by Source/RP0.Tests, which has no KSP assemblies
-// available. Do not add a using directive or type reference that breaks that property.
+// The arithmetic half of Formula, kept free of KSP, Unity, ROUtils and RP-1 singleton
+// references so the recovery/refurbishment math can be exercised against the plain
+// FormulaInputs struct rather than a fully-constructed VesselProject. Compiled into RP0.dll
+// as part of the Formula partial class. Keep it dependency-free: the VesselProject-facing
+// wrappers in Formula.cs are where singleton and KSP-type access belongs.
 
 namespace RP0
 {

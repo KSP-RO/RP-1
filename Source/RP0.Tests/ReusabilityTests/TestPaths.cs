@@ -2,7 +2,6 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Versioning;
 
 namespace RP0.Tests.ReusabilityTests
 {
@@ -25,35 +24,6 @@ namespace RP0.Tests.ReusabilityTests
         public static string SCMDataDir => Path.Combine(ProjectDir, "..", "..", "GameData", "RP-1", "SCMData");
 
         public static string SCMData(string fileName) => Path.GetFullPath(Path.Combine(SCMDataDir, fileName));
-
-        /// <summary>
-        /// Short moniker for the framework this run is executing on ("net48" / "net8.0").
-        /// The project multi-targets, and both targets write received tables into the same
-        /// source folder, so generated file names are qualified to keep them from colliding.
-        /// Approved file names are NOT qualified: both runtimes must match the same golden.
-        /// </summary>
-        public static string Tfm { get; } = ResolveTfm();
-
-        private static string ResolveTfm()
-        {
-            string name = Assembly.GetExecutingAssembly()
-                                  .GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName
-                          ?? string.Empty;
-
-            // ".NETFramework,Version=v4.8" -> net48 ; ".NETCoreApp,Version=v8.0" -> net8.0
-            if (name.StartsWith(".NETFramework", StringComparison.Ordinal))
-                return "net" + VersionDigits(name).Replace(".", string.Empty);
-            if (name.StartsWith(".NETCoreApp", StringComparison.Ordinal))
-                return "net" + VersionDigits(name);
-
-            return "unknown";
-        }
-
-        private static string VersionDigits(string frameworkName)
-        {
-            int v = frameworkName.IndexOf("Version=v", StringComparison.Ordinal);
-            return v < 0 ? "?" : frameworkName.Substring(v + "Version=v".Length);
-        }
 
         private static string ResolveProjectDir()
         {

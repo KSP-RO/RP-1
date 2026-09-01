@@ -22,11 +22,8 @@ namespace RP0.Tests.ReusabilityTests
             string received = ReusabilityTable.Render(tier);
 
             Directory.CreateDirectory(TestPaths.ApprovedDir);
-            // Approved is shared across target frameworks on purpose: net48 and net8.0 must
-            // produce identical tables, which makes this a floating-point parity check too.
-            // Received is per-framework so a concurrent multi-target run cannot clobber it.
             string approvedPath = Path.Combine(TestPaths.ApprovedDir, $"RecoveryTable.{tier.Name}.md");
-            string receivedPath = Path.Combine(TestPaths.ApprovedDir, $"RecoveryTable.{tier.Name}.{TestPaths.Tfm}.received.md");
+            string receivedPath = Path.Combine(TestPaths.ApprovedDir, $"RecoveryTable.{tier.Name}.received.md");
 
             // Always visible with: dotnet test -l "console;verbosity=detailed"
             TestContext.Out.WriteLine(received);

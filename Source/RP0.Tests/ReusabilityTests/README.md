@@ -11,24 +11,24 @@ dotnet test Source/RP0.Tests --filter "TestCategory!=BalanceAnchor" # regression
 dotnet test Source/RP0.Tests -l "console;verbosity=detailed"        # print the tables
 ```
 
-No KSP install or assemblies are needed. The project compiles `FormulaCore.cs` directly as a
-linked source file; that file is deliberately free of KSP, Unity and RP-1 singleton references.
-If it ever fails to compile here, the extraction has regressed - fix `FormulaCore.cs` rather
-than adding an assembly reference.
+The project references `RP0.dll` and the KSP assemblies and exercises the real
+`RP0.RecoveryTechSettings` and `Formula` code - there is no mirror of either. So it needs those
+DLLs staged in `..\..\.refs` (the main mod build produces `RP0.dll`; override with
+`-p:ReferencePath=<KSP>/KSP_x64_Data/Managed` to point at an install). **Build `RP0` first.**
+Because it needs the KSP DLLs it runs locally only and is not wired into CI. It targets net48
+x64 to match `RP0.csproj`.
 
 ## What's here
 
 | File | Purpose |
 | --- | --- |
-| `Config/CfgNode.cs` | Minimal KSP-cfg parser (no `ConfigNode` available) |
-| `Config/RecoveryTechLevels.cs` | Mirror of `Database.RecoveryTechSettings`, tech set injected |
-| `Config/TechTier.cs` | The Base / Mid / Modern points on the tech progression |
+| `Config/TechTier.cs` | Base / Mid / Modern tiers, built from the real `RecoveryTechSettings` |
 | `Fixtures/Vessels.cs` | 13 vessel archetypes, with provenance for every number |
 | `Fixtures/LegacyFormula.cs` | Pre-#2825 recovery model, for before/after columns |
 | `Fixtures/Staffing.cs` | BP to days, mirroring `LaunchComplex` staffing rules |
 | `ReusabilityTable.cs` | Markdown table renderer and diff |
 | `FormulaEquivalenceTests.cs` | Guards the extraction against transcription slips |
-| `RecoveryTechLevelsTests.cs` | Cfg parsing and tech stacking fidelity |
+| `RecoveryTechSettingsTests.cs` | Exercises the real cfg loader and tech stacking |
 | `RecoveryInvariantTests.cs` | Relationships the formulas do hold |
 | `Fixtures/DesignTargets.cs` | The PR's stated durations, reported in the tables rather than asserted |
 | `RecoveryTableTests.cs` | Golden-table regression |

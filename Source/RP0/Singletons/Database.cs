@@ -146,6 +146,17 @@ namespace RP0
             if (HighLogic.CurrentGame == null) return;
             if (HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX && ResearchAndDevelopment.Instance == null) return;
 
+            RecalculateAndApply(techID => ResearchAndDevelopment.GetTechnologyState(techID) == RDTech.State.Available);
+        }
+
+        /// <summary>
+        /// Recomputes the recovery/refurbishment multipliers from the loaded entries, deciding
+        /// which techs count as researched via the supplied predicate. The parameterless
+        /// overload uses the live ResearchAndDevelopment state; this one takes the predicate so
+        /// the stacking can be exercised in tests without a running game.
+        /// </summary>
+        public void RecalculateAndApply(Func<string, bool> isResearched)
+        {
             // Refurbishment
             double refurbRate = RefurbishmentRateBase;
             double refurbCost = 1.0d;
@@ -153,7 +164,7 @@ namespace RP0
 
             foreach (var e in RefurbEntries)
             {
-                if (ResearchAndDevelopment.GetTechnologyState(e.techID) == RDTech.State.Available)
+                if (isResearched(e.techID))
                 {
                     refurbRate *= e.rateRefurbishment;
                     refurbCost *= e.costRefurbishment;
@@ -171,7 +182,7 @@ namespace RP0
 
             foreach (var e in RecoveryEntries)
             {
-                if (ResearchAndDevelopment.GetTechnologyState(e.techID) == RDTech.State.Available)
+                if (isResearched(e.techID))
                 {
                     recRate *= e.rateRecovery;
                     recCost *= e.costRecovery;

@@ -5,11 +5,12 @@ using RP0.Tests.ReusabilityTests.Config;
 namespace RP0.Tests.ReusabilityTests
 {
     /// <summary>
-    /// Pins down that the test-side loader reproduces Database.RecoveryTechSettings, and that
-    /// the shipped cfgs still contain the techs the tiers assume.
+    /// Exercises the real <see cref="RP0.RecoveryTechSettings"/> from RP0.dll - loaded from the
+    /// shipped cfgs via KSP's ConfigNode and stacked by RecalculateAndApply(predicate) - and
+    /// checks the cfgs still contain the techs the tiers assume.
     /// </summary>
     [TestFixture]
-    public class RecoveryTechLevelsTests
+    public class RecoveryTechSettingsTests
     {
         [Test]
         public void Cfgs_ParseIntoTheExpectedNumberOfTechs()
@@ -61,31 +62,31 @@ namespace RP0.Tests.ReusabilityTests
         }
 
         /// <summary>
-        /// Database.LoadRefurb reads only RateRefurbishment out of the BASE node, so
-        /// RefurbishmentLevels.cfg's BASE { CostRefurbishment = 1.0 } never reaches the
-        /// multiplier - RefurbishmentCostMult starts from a hardcoded 1.0 instead.
+        /// RecoveryTechSettings.LoadRefurb reads only RateRefurbishment out of the BASE node,
+        /// and RecalculateAndApply seeds the refurbishment cost multiplier from a hardcoded 1.0,
+        /// so RefurbishmentLevels.cfg's BASE { CostRefurbishment = 1.0 } never reaches anything.
         ///
-        /// This is asserted rather than fixed on purpose: the test-side loader mirrors the
-        /// game, and changing which value wins is a balance decision for the PR author.
-        /// Today the cfg happens to say 1.0 too, so nothing is observably wrong; if that
-        /// line is ever changed to something else, this test fails and says why.
+        /// Asserted against the real code rather than fixed: whether that value should be read
+        /// is a balance decision for the PR author. Today the cfg happens to say 1.0 too, so
+        /// nothing is observably wrong; if the cfg line is ever changed, this test fails and
+        /// says why the change had no effect.
         /// </summary>
         [Test]
         public void BaseCostRefurbishmentInCfgIsNotRead()
         {
-            var levels = new RecoveryTechLevels();
-            var node = CfgNode.Load(TestPaths.SCMData("RefurbishmentLevels.cfg")).GetNode("SCMREFURBTECHS");
-            levels.LoadRefurb(node);
+            var settings = new RecoveryTechSettings();
+            ConfigNode node = ConfigNode.Load(TestPaths.SCMData("RefurbishmentLevels.cfg")).GetNode("SCMREFURBTECHS");
+            settings.LoadRefurb(node);
+            settings.RecalculateAndApply(_ => false);   // nothing researched
 
             string cfgValue = node.GetNode("BASE")?.GetValue("CostRefurbishment");
-            RecoverySettings resolved = levels.Resolve(new string[0], TechTier.SalaryEngineers);
 
             Assert.Multiple(() =>
             {
                 Assert.That(cfgValue, Is.Not.Null,
                             "BASE { CostRefurbishment } is present in the cfg");
-                Assert.That(resolved.RefurbishmentCostMult, Is.EqualTo(1d),
-                            "but Database.LoadRefurb ignores it and the multiplier starts at a hardcoded 1.0");
+                Assert.That(settings.RefurbishmentCostMult, Is.EqualTo(1d),
+                            "but LoadRefurb ignores it and the multiplier starts at a hardcoded 1.0");
             });
         }
 
@@ -116,11 +117,11 @@ namespace RP0.Tests.ReusabilityTests
         }
 
         [Test]
-        public void InlineCommentsAndTrailingWhitespaceAreStripped()
+        public void CfgValuesParseWithCommentsAndWhitespaceStripped()
         {
             // RefurbishmentLevels.cfg has "SplashdownPenaltyMult   = 0.5 // Drone ships, etc"
-            // and "RateRefurbishment   = 1.0 " with trailing space; KSP's ConfigNode strips
-            // both, so the test parser must too.
+            // and "RateRefurbishment   = 1.0 " with a trailing space. This checks the shipped
+            // cfg content survives KSP's ConfigNode parse as the tiers expect.
             var nf = TechTier.Levels.RefurbEntries.First(e => e.techID == "materialsScienceNF");
 
             Assert.Multiple(() =>

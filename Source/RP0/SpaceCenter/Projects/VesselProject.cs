@@ -1,12 +1,12 @@
 ﻿using KSP.UI;
+using KSP.UI.Screens;
+using ROUtils;
+using ROUtils.DataTypes;
 using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using ROUtils.DataTypes;
 using UnityEngine.Profiling;
-using KSP.UI.Screens;
-using ROUtils;
 
 namespace RP0
 {
@@ -211,6 +211,29 @@ namespace RP0
                     _allPartsValid = AreAllPartsValid();
                 return (bool)_allPartsValid;
             }
+        }
+
+        private FormulaInputs _cachedInputs = new FormulaInputs().With(effectiveCost: -1);
+        public FormulaInputs inputs { // Used for calling Formula code.
+            get
+            {
+                if (_cachedInputs.EffectiveCost != -1)
+                    return _cachedInputs;
+                return _cachedInputs = new FormulaInputs(
+                    effectiveCost: effectiveCost,
+                    cost: cost,
+                    buildPoints: buildPoints,
+                    mass: mass,
+                    kscDistance: kscDistance,
+                    humanRated: humanRated,
+                    isSPH: Type == ProjectType.SPH,
+                    splashed: Splashed == true,
+                    atKSC: LandedAt?.Contains("Runway") == true || LandedAt?.Contains("Launchpad") == true,
+                    lcIsHumanRated: LC == null ? LC.IsHumanRated : false,
+                    lcIsPad: LC == null ? (LC.LCType == LaunchComplexType.Pad) : false,
+                    lcMassMax: LC == null ? LC.MassMax : 0,
+                    settings: Formula.CurrentSettings());
+                }
         }
 
         /// <summary>

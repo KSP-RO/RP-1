@@ -96,29 +96,6 @@ namespace RP0
         }
 
         /// <summary>
-        /// Flattens the vessel-only inputs. Deliberately does NOT touch vessel.LC: the
-        /// formulas that use this (rollout/recovery/refurbishment BP, recovery cost) never
-        /// read a LaunchComplex, and resolving one would add a SpaceCenterManagement
-        /// dependency they did not previously have. LC fields are left at defaults.
-        /// </summary>
-        public static FormulaInputs VesselInputs(VesselProject vessel)
-        {
-            return new FormulaInputs(effectiveCost: vessel.effectiveCost,
-                                     cost: vessel.cost,
-                                     buildPoints: vessel.buildPoints,
-                                     mass: vessel.mass,
-                                     kscDistance: vessel.kscDistance,
-                                     humanRated: vessel.humanRated,
-                                     isSPH: vessel.Type == ProjectType.SPH,
-                                     splashed: vessel.Splashed == true,
-                                     atKSC: (vessel.LandedAt?.Contains("Runway") == true) || (vessel.LandedAt?.Contains("Launchpad") == true),
-                                     lcIsHumanRated: false,
-                                     lcIsPad: false,
-                                     lcMassMax: 0f,
-                                     settings: CurrentSettings());
-        }
-
-        /// <summary>
         /// Flattens vessel inputs plus the vessel's LaunchComplex, falling back to the
         /// active LC exactly as GetRolloutCost did before the extraction.
         /// </summary>
@@ -128,7 +105,7 @@ namespace RP0
             if (vLC == null)
                 vLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
 
-            return VesselInputs(vessel).With(lcIsHumanRated: vLC.IsHumanRated,
+            return vessel.inputs.With(lcIsHumanRated: vLC.IsHumanRated,
                                              lcIsPad: vLC.LCType == LaunchComplexType.Pad,
                                              lcMassMax: vLC.MassMax);
         }
@@ -191,17 +168,17 @@ namespace RP0
 
         public static double GetRolloutBP(VesselProject vessel)
         {
-            return RolloutBP(VesselInputs(vessel));
+            return RolloutBP(vessel.inputs);
         }
 
         public static double GetReconditioningBP(VesselProject vessel)
         {
-            return ReconditioningBP(VesselInputs(vessel));
+            return ReconditioningBP(vessel.inputs);
         }
 
         public static double GetVesselRepairBP(VesselProject vessel)
         {
-            return VesselRepairBP(VesselInputs(vessel));
+            return VesselRepairBP(vessel.inputs);
         }
 
         /// <summary>
@@ -210,7 +187,7 @@ namespace RP0
         /// </summary>
         public static double GetRefurbishmentBP(VesselProject vessel)
         {
-            return RefurbishmentBP(VesselInputs(vessel));
+            return RefurbishmentBP(vessel.inputs);
         }
 
         /// <summary>
@@ -235,7 +212,7 @@ namespace RP0
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            return RecoveryCost(VesselInputs(vessel));
+            return RecoveryCost(vessel.inputs);
         }
 
         public static double ResourceTankCost(string res, double amount, bool isModify, LaunchComplexType type)

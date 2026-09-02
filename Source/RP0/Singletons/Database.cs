@@ -41,11 +41,11 @@ namespace RP0
     /// </summary>
     public class RecoveryTechSettings
     {
-        public double RefurbishmentRateBase = 1.0d;
-        public double RefurbishmentCostBase = 1.0d;
-        public double SplashdownPenaltyMultBase = 1.0d;
-        public double RecoveryRateBase = 1.0d;
-        public double RecoveryCostBase = 1.0d;
+        public double RefurbishmentRateBase { get; private set; } = 1.0d;
+        public double RefurbishmentCostBase { get; private set; } = 1.0d;
+        public double SplashdownPenaltyMultBase { get; private set; } = 1.0d;
+        public double RecoveryRateBase { get; private set; } = 1.0d;
+        public double RecoveryCostBase { get; private set; } = 1.0d;
 
         public struct RefurbTechEntry
         {

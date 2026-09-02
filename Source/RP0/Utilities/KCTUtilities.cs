@@ -508,33 +508,140 @@ namespace RP0
             HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
+        public enum PartCompareResult
+        {
+            EQUAL, NAME_DIFF, COST_DIFF, MASS_DIFF, RESOURCES_DIFF, NOT_PRESENT
+        }
+
+        public static PartCompareResult ComparePart(ConfigNode cn, Part pt)
+        {
+            // confignode from original craft, part from new craft
+            string name = GetPartNameFromNode(cn);
+            if (pt.partInfo.name != name) 
+                return PartCompareResult.NAME_DIFF;
+
+            var tags = ModuleTagList.GetTags(pt);
+            if (tags != null && tags.Contains("NoResourceCostMult"))
+                return PartCompareResult.EQUAL; // if we don't care about the contents, give it a free pass
+
+            AvailablePart availablePart = GetAvailablePartByName(name);
+            if (availablePart == null)
+                return PartCompareResult.EQUAL; // no part to compare against, be lenient I guess?
+
+
+            Dictionary<string, double> resourceAmounts = new Dictionary<string, double>();
+            VesselProject.GetPartCostsAndMass(pt, out float dryCostPt, out _, out float dryMassPt, out _, resourceAmounts);
+
+            dryMassPt -= pt.kerbalMass + pt.kerbalInventoryMass + pt.kerbalResourceMass; 
+            // ignore kerbal inventory mass, since it's factored in here but isn't in the other function
+
+            ShipConstruction.GetPartCostsAndMass(cn, availablePart, out float dryCost, out _, out float dryMass, out _);
+
+            if ((dryCost == 0 && dryCostPt != 0) || Math.Abs(dryCostPt / dryCost - 1) > 0.00001)
+                return PartCompareResult.COST_DIFF;
+
+            else if ((dryMass == 0 && dryMassPt != 0) || Math.Abs(dryMassPt / dryMass - 1) > 0.00001)
+                return PartCompareResult.MASS_DIFF;
+
+            foreach (ConfigNode rNode in cn.nodes)
+            {
+                if (rNode.name != "RESOURCE")
+                    continue;
+
+                string rName = rNode.GetValue("name");
+                double amt = double.Parse(rNode.GetValue("maxAmount"));
+                if (!resourceAmounts.TryGetValue(rName, out double amtPt) || Math.Abs(amtPt - amt) > 0.00001) 
+                    return PartCompareResult.RESOURCES_DIFF;
+            }
+            return PartCompareResult.EQUAL;
+        }
+
         public static void GetShipEditProgress(VesselProject ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
         {
+            Profiler.BeginSample("RP0GetShipEditProgress");
             double origTotalBP;
             double oldProgressBP;
+            Dictionary<string, HashSet<ConfigNode>> parts = new Dictionary<string, HashSet<ConfigNode>>();
+            SpaceCenterManagement SCM = SpaceCenterManagement.Instance;
 
-            if (SpaceCenterManagement.Instance.MergedVessels.Count == 0)
+            origTotalBP = ship.buildPoints;
+            oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
+            foreach (ConfigNode part in ship.ExtractedPartNodes)
             {
-                origTotalBP = ship.buildPoints;
-                oldProgressBP = ship.IsFinished ? origTotalBP : ship.progress;
+                string name = GetPartNameFromNode(part);
+                    if (!parts.TryGetValue(name, out HashSet<ConfigNode> nodes))
+                        nodes = parts[name] = new HashSet<ConfigNode>();
+                nodes.Add(part);
             }
-            else
+
+            // Merging is back, and in a small way.
+            if (SCM.MergedVessels.Count > 0)
             {
                 double totalEffectiveCost = ship.effectiveCost;
                 foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
                 {
                     totalEffectiveCost += v.effectiveCost;
+                    foreach (ConfigNode part in v.ExtractedPartNodes)
+                    {
+                        string name = GetPartNameFromNode(part);
+                        if (!parts.TryGetValue(name, out HashSet<ConfigNode> nodes))
+                            nodes = parts[name] = new HashSet<ConfigNode>();
+                        nodes.Add(part);
+                    }
+                    origTotalBP += v.buildPoints;
+                    oldProgressBP += v.IsFinished ? v.buildPoints : v.progress;
                 }
-
-                origTotalBP = oldProgressBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
-                oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
+                origTotalBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
+                // Intentionally penalise merging by not scaling up progress BP to correspond to the higher total EC.
+                // Do cap it, though.
+                oldProgressBP = Math.Max(origTotalBP, oldProgressBP);
             }
 
-            double newTotalBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
-            double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
-            newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
+            SCM.matchingParts.Clear();
+            SCM.nonmatchingParts.Clear();
+
+            foreach (Part p in EditorLogic.fetch.ship.parts)
+            {
+                ConfigNode match = null;
+                if (!parts.ContainsKey(p.partInfo.name))
+                {
+                    RP0Debug.Log($"Nonmatching part: {p.partInfo.name}, NOT_PRESENT");
+                    continue;
+                }
+                PartCompareResult bestResult = PartCompareResult.NOT_PRESENT;
+                foreach (ConfigNode cn in parts[p.partInfo.name])
+                {
+                    PartCompareResult res = ComparePart(cn, p);
+                    if (res == PartCompareResult.EQUAL)
+                    {
+                        match = cn;
+                        break;
+                    }
+                    bestResult = (res < bestResult) ? res : bestResult;
+                }
+                if (match != null)
+                {
+                    parts[p.partInfo.name].Remove(match);
+                    SCM.matchingParts.Add(p);
+                }
+                else
+                {
+                    SCM.nonmatchingParts.Add(p, bestResult);
+                    RP0Debug.Log($"Nonmatching part: {p.partInfo.name}, {bestResult}");
+                }
+            }
+
+            double editProgressBP = Formula.GetVesselBuildPoints(VesselProject.GetEffectiveCost(SCM.matchingParts));
+            RP0Debug.Log($"Matching BP: {editProgressBP}");
+
+            double newTotalBP = SCM.EditorVessel.buildPoints;
+
+            newProgressBP = oldProgressBP / origTotalBP * editProgressBP;
+            newProgressBP = Math.Max(0, newProgressBP - (newTotalBP - editProgressBP) * Database.SettingsSC.PartAdditionTimePenalty);
+            RP0Debug.Log($"BP after Additive Penalty: {newProgressBP}");
             originalCompletionPercent = oldProgressBP / origTotalBP;
             newCompletionPercent = newProgressBP / newTotalBP;
+            Profiler.EndSample();
         }
 
         public static void UnlockExperimentalParts(List<AvailablePart> availableParts)

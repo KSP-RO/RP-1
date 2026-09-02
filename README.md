@@ -4,7 +4,7 @@
 <p align="center">
  <a href="https://nightly.link/KSP-RO/RP-1/workflows/build/master/RP-1.zip" rel="nofollow"><img src="https://badgen.net/badge/Nightly%20build/download/blue"></a>
  <a href="https://discord.gg/V73jjNd" rel="nofollow"><img src="https://badgen.net/discord/online-members/V73jjNd?icon=discord"></a>
- <a href="https://github.com/KSP-RO/RP-1/compare/v4.5.0.0...master" rel="nofollow"><img src="https://img.shields.io/github/commits-since/KSP-RO/RP-1/latest"></a>
+ <a href="https://github.com/KSP-RO/RP-1/compare/v4.6.0.0...master" rel="nofollow"><img src="https://img.shields.io/github/commits-since/KSP-RO/RP-1/latest"></a>
 </p>
 
 Welcome to Realistic Progression One, the heavyweight career addon for Kerbal Space Program's Realism Overhaul.
@@ -32,7 +32,8 @@ Discord Link: https://discord.gg/V73jjNd
 **Requirements:**
 
 *These mods are required for RP-1 to function properly.*
-- Realism Overhaul and all of its required mods (including Real Solar System)
+- Realism Overhaul and all of its required mods
+- Real Solar System
 - Module Manager
 - SXT Continued (Needed for engines)
 - Contract Configurator (Needed to make more complex RP-1 contracts function)
@@ -43,6 +44,7 @@ Discord Link: https://discord.gg/V73jjNd
 - Toolbar Controller
 - Kerbalism (RO Config)
 - KSP Community Fixes
+- Σκοπός (Skopos)
 
 **RO-Mods:**
 

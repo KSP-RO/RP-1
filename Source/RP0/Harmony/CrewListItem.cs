@@ -22,7 +22,7 @@ namespace RP0.Harmony
             {
                 double retireUT = CrewHandler.Instance.GetRetireTime(crew.name);
                 if (retireUT > 0d)
-                    __instance.tooltipController.descriptionString += Localizer.Format("#rp0_AC_Crew_Tooltip_RetireDate", KSPUtil.PrintDate(retireUT, false));
+                    __instance.tooltipController.descriptionString += Localizer.Format("#rp0_AC_Crew_Tooltip_RetireDate", RP0DTUtils.PrintDate(retireUT, false));
             }
 
             string trainingStr = CrewHandler.Instance.GetTrainingString(crew);

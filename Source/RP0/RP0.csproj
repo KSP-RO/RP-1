@@ -326,8 +326,8 @@
       <HintPath>$(ReferencePath)/Ionic.Zip.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="$(KSPRoot)/GameData/Kerbalism/Kerbalism112.kbin">
-      <HintPath>$(ReferencePath)/Kerbalism112.kbin</HintPath>
+    <Reference Include="$(KSPRoot)/GameData/Kerbalism/Kerbalism.dll">
+      <HintPath>$(ReferencePath)/Kerbalism.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="$(KSPRoot)/GameData/KSPCommunityFixes/Plugins/KSPCommunityFixes.dll">

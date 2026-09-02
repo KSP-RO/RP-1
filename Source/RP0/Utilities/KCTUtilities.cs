@@ -841,6 +841,7 @@ namespace RP0
                 SpaceCenterManagement.Instance.RecoveredVessel.FacilityBuiltIn = vData?.FacilityBuiltIn ?? EditorFacility.None;
                 SpaceCenterManagement.Instance.RecoveredVessel.LCID = vData?.LCID ?? Guid.Empty;
                 SpaceCenterManagement.Instance.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
+                SpaceCenterManagement.Instance.RecoveredVessel.Splashed = FlightGlobals.ActiveVessel.Splashed;
 
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == ProjectType.SPH)

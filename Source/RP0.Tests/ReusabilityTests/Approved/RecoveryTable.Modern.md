@@ -16,61 +16,22 @@ Parsed from `GameData/RP-1/SCMData/RecoveryLevels.cfg` and `RefurbishmentLevels.
 | RecoveryCostMult (funds/tonne-m) | 6.12e-7 |
 | RefurbishmentRateMult | 3.120 |
 | RefurbishmentCostMult | 0.6056 |
-| SplashdownPenaltyMult | 0.3500 |
+| SplashdownPenaltyMult | 1.080 |
 | salaryEngineers | 500.0 |
 
 ## Assumptions
 
 - Durations use `LaunchComplex.MaxEngineers` (a fully staffed complex), so every
   engineer-driven duration below is a best case.
-- Pad and hangar staffing scale differently, which is why the SPH rows all show the
-  same engineer count. `LaunchComplex.RawMaxEngineers` uses `massMax^0.75` for pads,
-  but a hangar's massMax is `float.MaxValue`, so it falls back to
-  `sizeMax.sqrMagnitude * 0.01`. `LCData.StartingHangar` is fixed at (40, 10, 40) and
-  nothing ever changes it, so every SPH vessel gets 495 engineers regardless of size,
-  while a pad built for the vessel scales with it (129 for a 30 t pad, 3322 for 2300 t).
   The per-project cap `MaxEngineersFor` blends mass and BP, but it can only lower that
   ceiling: it binds for small SPH craft (jet X-plane 134, X-15 243) and is inert for the
   orbiter, which is sized for 2681 but capped at the hangar's 495.
-- `RP0Settings.BuildRate` held at 1.000 (Normal difficulty).
+- `RP0Settings.BuildRate` held at 1.000 (Moderate difficulty).
 - Recovery is not engineer-driven: its BP is the distance from KSC in metres,
   consumed at `RecoveryRateMult` m/s.
 - `legacy recovery` reproduces the pre-#2825 model for comparison; it *was*
   engineer-driven, so its duration uses the same staffing as integration.
 - Vessel cost/effectiveCost provenance is documented in `Fixtures/Vessels.cs`.
-
-## Read this before the numbers: intent vs shipped behaviour
-
-These tables model the formulas as **intended**. Two branches they exercise never
-fire in the shipped game, because `Formula.VesselInputs` derives `splashed` and
-`atKSC` by substring-matching `VesselProject.LandedAt`, which is assigned from
-`Vessel.landedAt` (`KCTUtilities.RecoverActiveVesselToStorage`). That field holds
-launch-site and static names, not situation names.
-
-Measured across a real RP-1 career save (55,603 `landedAt` values):
-
-| observed value | count | matched by |
-| --- | ---: | --- |
-| *(empty)* | 55,210 | nothing |
-| `#autoLOC_*` localisation tokens | 290 | nothing |
-| `LaunchPad` | 51 | **nothing** - the test is `Contains("Launchpad")`, lowercase p |
-| `KSC_Runway_09` | 42 | `Contains("Runway")` |
-| `Moho` | 6 | nothing |
-| `KSC_LaunchPad_Platform` | 3 | **nothing** - same casing mismatch |
-| `Runway` | 1 | `Contains("Runway")` |
-
-- **Splashdown is dead.** `"Splashdown"` occurs in none of those values, while
-  `splashed = True` occurs 2,142 times in the same save. So the 1.5x penalty never
-  applies and the three `SplashdownPenaltyMult` TECH nodes in
-  `RefurbishmentLevels.cfg` tune a value that is never read. Every row marked
-  Splashdown below shows refurbishment BP 1.5x higher than a player would see.
-- **Pad landings miss the at-KSC discount.** The codebase uses `"LaunchPad"`
-  everywhere else (22 occurrences vs 2 of `"Launchpad"`, both introduced here), so
-  the `Reusable booster, RTLS` row is shown 0.8x lower than it would be in game.
-- **Runway works by luck**, because `KSC_Runway_09` happens to contain the substring.
-
-Fixing this means capturing `Vessel.Splashed` at recovery rather than parsing a
-display string, and correcting the `LaunchPad` casing.
 
 ## Build and rollout
 
@@ -94,15 +55,15 @@ display string, and correcting the `LaunchPad` casing.
 
 | Vessel | landed at | dist (km) | recov (d) | recov cost | refurb BP | refurb (d) | refurb cost | refurb/build BP | reuse cost/vessel cost | legacy recov BP | legacy recov (d) |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Sounding rocket (Aerobee 150) | Splashdown | 80.00 | 0.03149 | 0.03427 | 4,111 | 1.903 | 57.49 | 0.02012 | 0.05696 | 24,530 | 11.36 |
-| Redstone-class LV (uncrewed) | Splashdown | 320.0 | 0.1260 | 5.484 | 15,890 | 0.5703 | 194.6 | 0.01201 | 0.07786 | 95,950 | 3.444 |
-| Mercury-Redstone (crewed) | Splashdown | 480.0 | 0.1890 | 8.813 | 93,000 | 2.231 | 222.1 | 0.03466 | 0.04485 | 188,700 | 4.525 |
-| Mercury-Atlas (crewed) | Splashdown | 1,300 | 0.5118 | 93.88 | 243,800 | 2.075 | 525.7 | 0.03355 | 0.04643 | 514,400 | 4.378 |
-| Gemini-Titan II (crewed) | Splashdown | 1,000 | 0.3937 | 94.25 | 531,700 | 3.647 | 946.8 | 0.03158 | 0.03419 | 1.106e+6 | 7.585 |
-| Apollo CM alone | Splashdown | 3,000 | 1.181 | 10.28 | 1.429e+6 | 1.116 | 2,134 | 0.05618 | 0.06126 | 3.254e+6 | 2.542 |
-| Heavy first stage (S-IC class) | Splashdown | 660.0 | 0.2598 | 925.0 | 280,800 | 0.3913 | 2,125 | 0.01219 | 0.07790 | 1.724e+6 | 2.402 |
+| Sounding rocket (Aerobee 150) | Splashdown | 80.00 | 0.03149 | 0.03427 | 8,457 | 3.915 | 43.72 | 0.04140 | 0.04332 | 24,530 | 11.36 |
+| Redstone-class LV (uncrewed) | Splashdown | 320.0 | 0.1260 | 5.484 | 32,690 | 1.173 | 141.4 | 0.02471 | 0.05715 | 95,950 | 3.444 |
+| Mercury-Redstone (crewed) | Splashdown | 480.0 | 0.1890 | 8.813 | 191,300 | 4.589 | 222.1 | 0.07131 | 0.04485 | 188,700 | 4.525 |
+| Mercury-Atlas (crewed) | Splashdown | 1,300 | 0.5118 | 93.88 | 501,600 | 4.269 | 525.7 | 0.06901 | 0.04643 | 514,400 | 4.378 |
+| Gemini-Titan II (crewed) | Splashdown | 1,000 | 0.3937 | 94.25 | 1.094e+6 | 7.502 | 946.8 | 0.06497 | 0.03419 | 1.106e+6 | 7.585 |
+| Apollo CM alone | Splashdown | 3,000 | 1.181 | 10.28 | 2.939e+6 | 2.295 | 2,134 | 0.1156 | 0.06126 | 3.254e+6 | 2.542 |
+| Heavy first stage (S-IC class) | Splashdown | 660.0 | 0.2598 | 925.0 | 577,600 | 0.8050 | 1,507 | 0.02507 | 0.06213 | 1.724e+6 | 2.402 |
 | Reusable booster, RTLS | Launchpad | 0 | 0 | 0 | 111,100 | 0.5352 | 720.5 | 0.01530 | 0.04963 | 433,300 | 2.087 |
-| Reusable booster, droneship | Splashdown | 630.0 | 0.2480 | 166.9 | 72,910 | 0.3512 | 841.5 | 0.01004 | 0.06946 | 446,900 | 2.153 |
+| Reusable booster, droneship | Splashdown | 630.0 | 0.2480 | 166.9 | 150,000 | 0.7225 | 597.3 | 0.02065 | 0.05264 | 446,900 | 2.153 |
 | Early jet X-plane | Runway | 0 | 0 | 0 | 160,000 | 1.496 | 273.6 | 0.03988 | 0.03854 | 467,900 | 4.376 |
 | X-15 rocket plane | Lakebed (off-site) | 500.0 | 0.1968 | 4.590 | 4.017e+6 | 37.57 | 927.7 | 0.2490 | 0.06041 | 4.282e+6 | 40.05 |
 | Nuclear ramjet cruise vehicle | Runway | 0 | 0 | 0 | 6.134e+6 | 57.37 | 2,315 | 0.1578 | 0.1087 | 1.794e+7 | 167.8 |
@@ -115,5 +76,5 @@ and the doc comment on `Formula.GetRefurbishmentBP`.
 
 | Vessel | effCost | vessel cost | build BP | refurb BP | refurb cost | refurb/vessel cost | engineers | target (d) | actual (d) | actual/target | source |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| Reusable booster, droneship | 26,250 | 14,520 | 7.262e+6 | 72,910 | 841.5 | 0.05797 | 961 | 30.00 | 0.3512 | 0.01171x | F9S1 (2020+): ~30 day turnaround |
+| Reusable booster, droneship | 26,250 | 14,520 | 7.262e+6 | 150,000 | 597.3 | 0.04114 | 961 | 30.00 | 0.7225 | 0.02408x | F9S1 (2020+): ~30 day turnaround |
 | Shuttle orbiter | 432,800 | 146,500 | 1.585e+8 | 4.688e+7 | 7,297 | 0.04982 | 4570 | 90.00 | 47.49 | 0.5277x | STS mature program (OV-105, 1992): ~3 months |

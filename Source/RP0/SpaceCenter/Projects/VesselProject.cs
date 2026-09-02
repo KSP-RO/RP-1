@@ -113,6 +113,8 @@ namespace RP0
         private PersistentCompressedCraftNode ShipNodeCompressed = new PersistentCompressedCraftNode();
         [Persistent]
         public string LandedAt = "";
+        [Persistent]
+        public bool Splashed = false;
 
         private double _buildRate = -1d;
         private double _leaderEffect = -1d;

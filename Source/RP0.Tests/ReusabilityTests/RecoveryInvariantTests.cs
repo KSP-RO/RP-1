@@ -94,7 +94,7 @@ namespace RP0.Tests.ReusabilityTests
             FormulaInputs dry = a.At(tier).With(splashed: false, atKSC: false);
             FormulaInputs wet = dry.With(splashed: true);
 
-            double expected = Formula.RefurbishmentBP(dry) * 1.5d * tier.Settings.SplashdownPenaltyMult;
+            double expected = Formula.RefurbishmentBP(dry) * tier.Settings.SplashdownPenaltyMult;
 
             Assert.That(Formula.RefurbishmentBP(wet), Is.EqualTo(expected).Within(RelTolPercent).Percent);
         }

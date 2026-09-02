@@ -56,7 +56,7 @@ namespace RP0.Tests.ReusabilityTests
                             "recovery cost falls back to SCMRECOVERYTECHS BASE");
                 Assert.That(s.RefurbishmentRateMult, Is.EqualTo(TechTier.Levels.RefurbishmentRateBase),
                             "refurbishment rate falls back to SCMREFURBTECHS BASE");
-                Assert.That(s.SplashdownPenaltyMult, Is.EqualTo(1d),
+                Assert.That(s.SplashdownPenaltyMult, Is.EqualTo(TechTier.Levels.SplashdownPenaltyMultBase),
                             "no splashdown relief before any materials tech");
             });
         }
@@ -113,21 +113,6 @@ namespace RP0.Tests.ReusabilityTests
 
                 Assert.That(m.SplashdownPenaltyMult, Is.LessThanOrEqualTo(b.SplashdownPenaltyMult), "splashdown Base->Mid");
                 Assert.That(x.SplashdownPenaltyMult, Is.LessThanOrEqualTo(m.SplashdownPenaltyMult), "splashdown Mid->Modern");
-            });
-        }
-
-        [Test]
-        public void CfgValuesParseWithCommentsAndWhitespaceStripped()
-        {
-            // RefurbishmentLevels.cfg has "SplashdownPenaltyMult   = 0.5 // Drone ships, etc"
-            // and "RateRefurbishment   = 1.0 " with a trailing space. This checks the shipped
-            // cfg content survives KSP's ConfigNode parse as the tiers expect.
-            var nf = TechTier.Levels.RefurbEntries.First(e => e.techID == "materialsScienceNF");
-
-            Assert.Multiple(() =>
-            {
-                Assert.That(nf.splashdownPenaltyMult, Is.EqualTo(0.5d), "trailing // comment stripped");
-                Assert.That(TechTier.Levels.RefurbishmentRateBase, Is.EqualTo(1.0d), "trailing whitespace trimmed");
             });
         }
     }

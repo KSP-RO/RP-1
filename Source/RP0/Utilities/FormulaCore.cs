@@ -272,7 +272,7 @@ namespace RP0
             // SplashdownPenaltyMult is reduced by materials science techs via SCMREFURBTECHS.
             // 1.0 = full 1.5x penalty; 0.5 = halved penalty; 0.0 = no penalty.
             if (v.Splashed)
-                bp *= 1.5d * v.Settings.SplashdownPenaltyMult;
+                bp *= v.Settings.SplashdownPenaltyMult;
 
             if (v.AtKSC)
                 bp *= 0.8d; // Discount for skipping "transit overhead"?

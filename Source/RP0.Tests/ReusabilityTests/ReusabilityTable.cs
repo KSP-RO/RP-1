@@ -31,8 +31,6 @@ namespace RP0.Tests.ReusabilityTests
             sb.AppendLine();
             AppendAssumptions(sb);
             sb.AppendLine();
-            AppendIntentGaps(sb);
-            sb.AppendLine();
             AppendBuildTable(sb, tier);
             sb.AppendLine();
             AppendReuseTable(sb, tier);
@@ -104,63 +102,15 @@ namespace RP0.Tests.ReusabilityTests
             sb.AppendLine();
             sb.AppendLine("- Durations use `LaunchComplex.MaxEngineers` (a fully staffed complex), so every");
             sb.AppendLine("  engineer-driven duration below is a best case.");
-            sb.AppendLine("- Pad and hangar staffing scale differently, which is why the SPH rows all show the");
-            sb.AppendLine("  same engineer count. `LaunchComplex.RawMaxEngineers` uses `massMax^0.75` for pads,");
-            sb.AppendLine("  but a hangar's massMax is `float.MaxValue`, so it falls back to");
-            sb.AppendLine("  `sizeMax.sqrMagnitude * 0.01`. `LCData.StartingHangar` is fixed at (40, 10, 40) and");
-            sb.AppendLine("  nothing ever changes it, so every SPH vessel gets 495 engineers regardless of size,");
-            sb.AppendLine("  while a pad built for the vessel scales with it (129 for a 30 t pad, 3322 for 2300 t).");
             sb.AppendLine("  The per-project cap `MaxEngineersFor` blends mass and BP, but it can only lower that");
             sb.AppendLine("  ceiling: it binds for small SPH craft (jet X-plane 134, X-15 243) and is inert for the");
             sb.AppendLine("  orbiter, which is sized for 2681 but capped at the hangar's 495.");
-            sb.AppendLine($"- `RP0Settings.BuildRate` held at {Sig(Staffing.BuildRateSetting)} (Normal difficulty).");
+            sb.AppendLine($"- `RP0Settings.BuildRate` held at {Sig(Staffing.BuildRateSetting)} (Moderate difficulty).");
             sb.AppendLine("- Recovery is not engineer-driven: its BP is the distance from KSC in metres,");
             sb.AppendLine("  consumed at `RecoveryRateMult` m/s.");
             sb.AppendLine("- `legacy recovery` reproduces the pre-#2825 model for comparison; it *was*");
             sb.AppendLine("  engineer-driven, so its duration uses the same staffing as integration.");
             sb.AppendLine("- Vessel cost/effectiveCost provenance is documented in `Fixtures/Vessels.cs`.");
-        }
-
-        /// <summary>
-        /// These tables model the formulas as INTENDED. Two of the branches they exercise do
-        /// not fire in the shipped game because of how LandedAt is matched. Called out up
-        /// front so nobody reads a refurbishment figure below as what a player experiences
-        /// today.
-        /// </summary>
-        private static void AppendIntentGaps(StringBuilder sb)
-        {
-            sb.AppendLine("## Read this before the numbers: intent vs shipped behaviour");
-            sb.AppendLine();
-            sb.AppendLine("These tables model the formulas as **intended**. Two branches they exercise never");
-            sb.AppendLine("fire in the shipped game, because `Formula.VesselInputs` derives `splashed` and");
-            sb.AppendLine("`atKSC` by substring-matching `VesselProject.LandedAt`, which is assigned from");
-            sb.AppendLine("`Vessel.landedAt` (`KCTUtilities.RecoverActiveVesselToStorage`). That field holds");
-            sb.AppendLine("launch-site and static names, not situation names.");
-            sb.AppendLine();
-            sb.AppendLine("Measured across a real RP-1 career save (55,603 `landedAt` values):");
-            sb.AppendLine();
-            sb.AppendLine("| observed value | count | matched by |");
-            sb.AppendLine("| --- | ---: | --- |");
-            sb.AppendLine("| *(empty)* | 55,210 | nothing |");
-            sb.AppendLine("| `#autoLOC_*` localisation tokens | 290 | nothing |");
-            sb.AppendLine("| `LaunchPad` | 51 | **nothing** - the test is `Contains(\"Launchpad\")`, lowercase p |");
-            sb.AppendLine("| `KSC_Runway_09` | 42 | `Contains(\"Runway\")` |");
-            sb.AppendLine("| `Moho` | 6 | nothing |");
-            sb.AppendLine("| `KSC_LaunchPad_Platform` | 3 | **nothing** - same casing mismatch |");
-            sb.AppendLine("| `Runway` | 1 | `Contains(\"Runway\")` |");
-            sb.AppendLine();
-            sb.AppendLine("- **Splashdown is dead.** `\"Splashdown\"` occurs in none of those values, while");
-            sb.AppendLine("  `splashed = True` occurs 2,142 times in the same save. So the 1.5x penalty never");
-            sb.AppendLine("  applies and the three `SplashdownPenaltyMult` TECH nodes in");
-            sb.AppendLine("  `RefurbishmentLevels.cfg` tune a value that is never read. Every row marked");
-            sb.AppendLine("  Splashdown below shows refurbishment BP 1.5x higher than a player would see.");
-            sb.AppendLine("- **Pad landings miss the at-KSC discount.** The codebase uses `\"LaunchPad\"`");
-            sb.AppendLine("  everywhere else (22 occurrences vs 2 of `\"Launchpad\"`, both introduced here), so");
-            sb.AppendLine("  the `Reusable booster, RTLS` row is shown 0.8x lower than it would be in game.");
-            sb.AppendLine("- **Runway works by luck**, because `KSC_Runway_09` happens to contain the substring.");
-            sb.AppendLine();
-            sb.AppendLine("Fixing this means capturing `Vessel.Splashed` at recovery rather than parsing a");
-            sb.AppendLine("display string, and correcting the `LaunchPad` casing.");
         }
 
         private static void AppendBuildTable(StringBuilder sb, TechTier tier)

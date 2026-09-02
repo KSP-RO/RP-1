@@ -41,27 +41,29 @@ namespace RP0
     /// </summary>
     public class RecoveryTechSettings
     {
-        public double RefurbishmentRateBase { get; set; } = 1.0d;
-        public double RecoveryRateBase { get; set; } = 1.0d;
-        public double RecoveryCostBase { get; set; } = 1.0d;
+        public double RefurbishmentRateBase = 1.0d;
+        public double RefurbishmentCostBase = 1.0d;
+        public double SplashdownPenaltyMultBase = 1.0d;
+        public double RecoveryRateBase = 1.0d;
+        public double RecoveryCostBase = 1.0d;
 
         public struct RefurbTechEntry
         {
-            public string techID { get; set; }
-            public double rateRefurbishment { get; set; }
-            public double costRefurbishment { get; set; }
-            public double splashdownPenaltyMult { get; set; }
+            public string techID;
+            public double rateRefurbishment;
+            public double costRefurbishment;
+            public double splashdownPenaltyMult;
         }
 
         public struct RecoveryTechEntry
         {
-            public string techID { get; set; }
-            public double rateRecovery { get; set; }
-            public double costRecovery { get; set; }
+            public string techID;
+            public double rateRecovery;
+            public double costRecovery;
         }
 
-        public List<RefurbTechEntry> RefurbEntries { get; } = new List<RefurbTechEntry>();
-        public List<RecoveryTechEntry> RecoveryEntries { get; } = new List<RecoveryTechEntry>();
+        public readonly List<RefurbTechEntry> RefurbEntries = new List<RefurbTechEntry>();
+        public readonly List<RecoveryTechEntry> RecoveryEntries = new List<RecoveryTechEntry>();
 
         public double RecoveryRateMult { get; private set; } = 1.0d;
         public double RecoveryCostMult { get; private set; } = 1.0d;
@@ -80,6 +82,10 @@ namespace RP0
                 double tempBase = RefurbishmentRateBase;
                 if (b.TryGetValue("RateRefurbishment", ref tempBase))
                     RefurbishmentRateBase = tempBase;
+                if (b.TryGetValue("CostRefurbisment", ref tempBase))
+                    RefurbishmentCostBase = tempBase;
+                if (b.TryGetValue("SplashdownPenaltyMult", ref tempBase))
+                    SplashdownPenaltyMultBase = tempBase;
             }
 
             foreach (ConfigNode tech in refurbNode.GetNodes("TECH"))
@@ -159,8 +165,8 @@ namespace RP0
         {
             // Refurbishment
             double refurbRate = RefurbishmentRateBase;
-            double refurbCost = 1.0d;
-            double splashdown = 1.0d;
+            double refurbCost = RefurbishmentCostBase;
+            double splashdown = SplashdownPenaltyMultBase;
 
             foreach (var e in RefurbEntries)
             {

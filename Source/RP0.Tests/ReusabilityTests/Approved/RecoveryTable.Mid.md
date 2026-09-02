@@ -16,61 +16,22 @@ Parsed from `GameData/RP-1/SCMData/RecoveryLevels.cfg` and `RefurbishmentLevels.
 | RecoveryCostMult (funds/tonne-m) | 7.65e-7 |
 | RefurbishmentRateMult | 1.300 |
 | RefurbishmentCostMult | 0.9500 |
-| SplashdownPenaltyMult | 1.000 |
+| SplashdownPenaltyMult | 1.500 |
 | salaryEngineers | 500.0 |
 
 ## Assumptions
 
 - Durations use `LaunchComplex.MaxEngineers` (a fully staffed complex), so every
   engineer-driven duration below is a best case.
-- Pad and hangar staffing scale differently, which is why the SPH rows all show the
-  same engineer count. `LaunchComplex.RawMaxEngineers` uses `massMax^0.75` for pads,
-  but a hangar's massMax is `float.MaxValue`, so it falls back to
-  `sizeMax.sqrMagnitude * 0.01`. `LCData.StartingHangar` is fixed at (40, 10, 40) and
-  nothing ever changes it, so every SPH vessel gets 495 engineers regardless of size,
-  while a pad built for the vessel scales with it (129 for a 30 t pad, 3322 for 2300 t).
   The per-project cap `MaxEngineersFor` blends mass and BP, but it can only lower that
   ceiling: it binds for small SPH craft (jet X-plane 134, X-15 243) and is inert for the
   orbiter, which is sized for 2681 but capped at the hangar's 495.
-- `RP0Settings.BuildRate` held at 1.000 (Normal difficulty).
+- `RP0Settings.BuildRate` held at 1.000 (Moderate difficulty).
 - Recovery is not engineer-driven: its BP is the distance from KSC in metres,
   consumed at `RecoveryRateMult` m/s.
 - `legacy recovery` reproduces the pre-#2825 model for comparison; it *was*
   engineer-driven, so its duration uses the same staffing as integration.
 - Vessel cost/effectiveCost provenance is documented in `Fixtures/Vessels.cs`.
-
-## Read this before the numbers: intent vs shipped behaviour
-
-These tables model the formulas as **intended**. Two branches they exercise never
-fire in the shipped game, because `Formula.VesselInputs` derives `splashed` and
-`atKSC` by substring-matching `VesselProject.LandedAt`, which is assigned from
-`Vessel.landedAt` (`KCTUtilities.RecoverActiveVesselToStorage`). That field holds
-launch-site and static names, not situation names.
-
-Measured across a real RP-1 career save (55,603 `landedAt` values):
-
-| observed value | count | matched by |
-| --- | ---: | --- |
-| *(empty)* | 55,210 | nothing |
-| `#autoLOC_*` localisation tokens | 290 | nothing |
-| `LaunchPad` | 51 | **nothing** - the test is `Contains("Launchpad")`, lowercase p |
-| `KSC_Runway_09` | 42 | `Contains("Runway")` |
-| `Moho` | 6 | nothing |
-| `KSC_LaunchPad_Platform` | 3 | **nothing** - same casing mismatch |
-| `Runway` | 1 | `Contains("Runway")` |
-
-- **Splashdown is dead.** `"Splashdown"` occurs in none of those values, while
-  `splashed = True` occurs 2,142 times in the same save. So the 1.5x penalty never
-  applies and the three `SplashdownPenaltyMult` TECH nodes in
-  `RefurbishmentLevels.cfg` tune a value that is never read. Every row marked
-  Splashdown below shows refurbishment BP 1.5x higher than a player would see.
-- **Pad landings miss the at-KSC discount.** The codebase uses `"LaunchPad"`
-  everywhere else (22 occurrences vs 2 of `"Launchpad"`, both introduced here), so
-  the `Reusable booster, RTLS` row is shown 0.8x lower than it would be in game.
-- **Runway works by luck**, because `KSC_Runway_09` happens to contain the substring.
-
-Fixing this means capturing `Vessel.Splashed` at recovery rather than parsing a
-display string, and correcting the `LaunchPad` casing.
 
 ## Build and rollout
 

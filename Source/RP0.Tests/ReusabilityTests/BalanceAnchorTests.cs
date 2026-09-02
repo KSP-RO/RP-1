@@ -55,7 +55,7 @@ namespace RP0.Tests.ReusabilityTests
 
                 if (sea < home)
                     offenders.Add($"{tier.Name}: splashdown {sea:N0} BP < at-KSC {home:N0} BP " +
-                                  $"(1.5 * SplashdownPenaltyMult = {1.5d * tier.Settings.SplashdownPenaltyMult:N3} vs 0.8)");
+                                  $"({tier.Settings.SplashdownPenaltyMult:N3} vs 0.8)");
             }
 
             Assert.That(offenders, Is.Empty,

@@ -75,8 +75,10 @@ namespace RP0.UI
         }
         private static string GetTooltipTextConf()
         {
-            return Localizer.Format("#rp0_Widgets_Confidence_Tooltip", Confidence.AllConfidenceEarned.ToString("N0"),
-                CurrencyUtils.Conf(TransactionReasonsRP0.ScienceTransmission, Programs.ProgramHandler.Settings != null ? Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0d, SpaceCenterManagement.Instance.SciPointsTotal)) : 2d).ToString("N2"));
+            double scienceToConfidence = CurrencyUtils.Conf(TransactionReasonsRP0.ScienceTransmission, Programs.ProgramHandler.Settings != null ? 
+                Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0d, SpaceCenterManagement.Instance.SciPointsTotal)) : 2d);
+
+            return Localizer.Format("#rp0_Widgets_Confidence_Tooltip", Confidence.AllConfidenceEarned.ToString("N0"), scienceToConfidence.ToString("N2"));
         }
     }
 }

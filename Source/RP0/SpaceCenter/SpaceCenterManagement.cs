@@ -101,6 +101,7 @@ namespace RP0
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
+        [KSPField(isPersistant = true)] public bool RefundEarlySolids = false;
 
         [KSPField(isPersistant = true)] public SimulationParams SimulationParams = new SimulationParams();
 
@@ -247,6 +248,9 @@ namespace RP0
                     InputLockManager.RemoveControlLock(SCMKSCLock);
                 return;
             }
+
+            if (RefundEarlySolids)
+                RefundEarlySolidNodes(); // needs to be done in Start bc we need R&D to be loaded
 
             //Begin primary mod functions
 
@@ -577,33 +581,7 @@ namespace RP0
                 {
                     if (LoadedSaveVersion < 10)
                     {
-                        string[] techsToRemove = { "earlySolids", "basicSolids", "solids1956" };
-                        float refund = TechList.Sum(project => techsToRemove.Contains(project.techID) ? project.scienceCost : 0);
-                        TechList.RemoveAll(project => techsToRemove.Contains(project.techID));
-                        // If the patcher gave free techs, remove them from the queue
-                        TechList.RemoveAll(project => ResearchAndDevelopment.GetTechnologyState(project.techID) == RDTech.State.Available);
-                        if (refund > 0)
-                        {
-                            int index = TechList.FindIndex(project => project.techID == "solids1958");
-                            if (index != -1)
-                            {
-                                KCT_GUI.CancelTechNode(index);
-                            }
-                            if (KSPUtils.CurrentGameHasScience())
-                            {
-                                bool valBef = IsRefundingScience;
-                                IsRefundingScience = true;
-                                try
-                                {
-                                    using (new CareerEventScope(CareerEventType.Ignore))
-                                        ResearchAndDevelopment.Instance.AddScience(refund, TransactionReasons.RnDTechResearch);
-                                }
-                                finally
-                                {
-                                    IsRefundingScience = valBef;
-                                }
-                            }
-                        }
+                        RefundEarlySolids = true; // Will call RefundEarlySolidNodes in Start
                     }
                     if (LoadedSaveVersion < 9)
                     {
@@ -739,6 +717,86 @@ namespace RP0
                 // Need to switch back to the legacy "Stock" KSC if KSCSwitcher isn't installed
                 SetActiveKSC(stockKsc.KSCName);
             }
+        }
+
+        // Refunds the net research put into the removed solid nodes (and 1958SR if it was queued, since we need to drop it from the queue)
+        // If N science was researched, give N science worth of progress to the leading items in queue.
+        private void RefundEarlySolidNodes() 
+        {
+            if (ResearchAndDevelopment.Instance == null)
+            {
+                RP0Debug.LogError("Tried to migrate solid nodes, but R&D does not exist!");
+                return;
+            }
+
+            Dictionary<string, int> techsToRemove = new Dictionary<string, int> { {"earlySolids", 1}, {"basicSolids", 2}, {"solids1956", 4} };
+            double researchRefund = 0;
+            float scienceRefund = 0;
+            for (int i = TechList.Count - 1; i >= 0; --i)
+            {
+                if (techsToRemove.ContainsKey(TechList[i].techID))
+                {
+                    researchRefund += Math.Max(TechList[i].progress, TechList[i].scienceCost);
+                    scienceRefund += TechList[i].scienceCost;
+                    TechList.RemoveAt(i);
+                }
+            }
+
+            foreach (KeyValuePair<string, int> kvp in techsToRemove)
+                if (ResearchAndDevelopment.GetTechnologyState(kvp.Key) == RDTech.State.Available)
+                {
+                    researchRefund += kvp.Value; // fully refund the node
+                    scienceRefund += kvp.Value;
+                }
+
+            int index = TechListIndex("solids1958");
+            if (index != -1)
+            {
+                researchRefund += Math.Max(TechList[index].progress, TechList[index].scienceCost); // Covers the case where solids1958 was actively being researched
+                KCT_GUI.CancelTechNode(index);
+            }
+
+            if (scienceRefund > 0)
+            {
+                RP0Debug.Log($"Refunding {scienceRefund} science");
+                if (KSPUtils.CurrentGameHasScience())
+                {
+                    bool valBef = IsRefundingScience;
+                    IsRefundingScience = true;
+                    try
+                    {
+                        using (new CareerEventScope(CareerEventType.Ignore))
+                            ResearchAndDevelopment.Instance.AddScience(scienceRefund, TransactionReasons.RnDTechResearch);
+                    }
+                    finally
+                    {
+                        IsRefundingScience = valBef;
+                    }
+                }
+            }
+
+            RP0Debug.Log($"Refunding {researchRefund} science worth of research");
+
+
+            double netApplied = 0;
+            for (int i = 0; researchRefund > 0 && i < TechList.Count; ++i)
+            {
+                double amt = Math.Min(researchRefund, TechList[i].scienceCost - TechList[i].progress);
+                TechList[i].progress += amt;
+                researchRefund -= amt;
+                netApplied += amt;
+            }
+
+            if (netApplied > 0 || scienceRefund > 0)
+            {
+                MessageSystem.Instance.AddMessage(new MessageSystem.Message(
+                    Localizer.Format("#rp0_Persistence_RefundedResearch_Title"), 
+                    Localizer.Format("#rp0_Persistence_RefundedResearch_Text", netApplied, scienceRefund), 
+                    MessageSystemButton.MessageButtonColor.BLUE,
+                    MessageSystemButton.ButtonIcons.MESSAGE));
+            }
+
+            RefundEarlySolids = false;
         }
 
         private void CheckMissingParts()

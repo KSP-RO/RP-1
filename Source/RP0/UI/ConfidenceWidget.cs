@@ -3,7 +3,6 @@ using KSP.UI.TooltipTypes;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
-using static RealAntennas.MapUI.RACommNetUI;
 
 namespace RP0.UI
 {

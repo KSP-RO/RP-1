@@ -1,8 +1,9 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
-using TMPro;
+﻿using KSP.Localization;
 using KSP.UI.TooltipTypes;
-using KSP.Localization;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+using static RealAntennas.MapUI.RACommNetUI;
 
 namespace RP0.UI
 {
@@ -76,7 +77,7 @@ namespace RP0.UI
         private static string GetTooltipTextConf()
         {
             return Localizer.Format("#rp0_Widgets_Confidence_Tooltip", Confidence.AllConfidenceEarned.ToString("N0"),
-                Programs.ProgramHandler.Settings != null ? Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0d, SpaceCenterManagement.Instance.SciPointsTotal)).ToString("N0") : "2");
+                CurrencyUtils.Conf(TransactionReasonsRP0.ScienceTransmission, Programs.ProgramHandler.Settings != null ? Programs.ProgramHandler.Settings.scienceToConfidence.Evaluate(System.Math.Max(0d, SpaceCenterManagement.Instance.SciPointsTotal)) : 2d).ToString("N2"));
         }
     }
 }

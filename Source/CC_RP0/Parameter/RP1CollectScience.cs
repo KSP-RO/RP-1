@@ -1,8 +1,8 @@
 ﻿using ContractConfigurator.Parameters;
 using ContractConfigurator.Util;
 using Contracts;
+using KERBALISM;
 using KSP.Localization;
-using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using UniLinq;
@@ -24,6 +24,13 @@ namespace ContractConfigurator.RP0
         protected List<ScienceSubject> subjects;
         protected Dictionary<string, string> paramIdToTitleDict = new Dictionary<string, string>();
         protected Dictionary<string, float> paramIdProgressDict = new Dictionary<string, float>();
+
+        /// <summary>
+        /// Kerbalism's SubjectData per stock subject id, resolved lazily.
+        /// </summary>
+        protected Dictionary<string, SubjectData> subjectDataDict = new Dictionary<string, SubjectData>();
+
+        private bool _scienceDbLoaded = false;
 
         private float lastUpdate = 0.0f;
         internal const float DEFAULT_UPDATE_FREQUENCY = 2.5f;
@@ -194,7 +201,7 @@ namespace ContractConfigurator.RP0
                 float totalFrac = 0f;
                 foreach (ScienceSubject subj in subjects)
                 {
-                    float curFraction = subj.science / subj.scienceCap;
+                    float curFraction = GetCompletedFraction(subj);
                     totalFrac += curFraction;
                     if (curFraction >= (fractionCompleteBiome.HasValue ? fractionCompleteBiome.Value : fractionComplete))
                         ++completeSubjCount;
@@ -263,11 +270,48 @@ namespace ContractConfigurator.RP0
             return $"{title}: {curFraction:P1}";
         }
 
-        protected static float GetCompletedFraction(ScienceSubject subj)
+        protected float GetCompletedFraction(ScienceSubject subj)
         {
-            float curFraction = subj.science / subj.scienceCap;
+            float curFraction = GetRetrievedFraction(subj);
             curFraction += FractionErrorMargin;
             return curFraction;
+        }
+
+        /// <summary> Fraction of the subject that has been recovered or transmitted. Data still held in flight doesn't count. </summary>
+        protected float GetRetrievedFraction(ScienceSubject subj)
+        {
+            SubjectData subjData = GetSubjectData(subj);
+            if (subjData != null)
+            {
+                double maxValue = subjData.ScienceMaxValue;
+                if (maxValue > 0d)
+                    return (float)(subjData.ScienceRetrievedInKSC / maxValue);
+            }
+
+            return subj.science / subj.scienceCap;
+        }
+
+        private SubjectData GetSubjectData(ScienceSubject subj)
+        {
+            if (subjectDataDict.TryGetValue(subj.id, out SubjectData subjData))
+                return subjData;
+
+            subjData = ScienceDB.GetSubjectDataFromStockId(subj.id);
+
+            // Parsing the id isn't free, so cache the result.
+            // Need to wait until Kerbalism's ScienceDB is loaded.
+            // A single subject resolving proves that, since the DB is populated in one go.
+            if (subjData != null)
+            {
+                _scienceDbLoaded = true;
+                subjectDataDict[subj.id] = subjData;
+            }
+            else if (_scienceDbLoaded)
+            {
+                subjectDataDict[subj.id] = null;
+            }
+
+            return subjData;
         }
 
         protected void LoadScienceSubjects()

@@ -75,9 +75,13 @@ namespace RP0.Crew
                 RP0Debug.LogWarning($"Template not found for linking: {id}");
         }
 
-        public bool MeetsStudentReqs(ProtoCrewMember student)
+        /// <summary>
+        /// Whether a student may join this course. Pass allowInactive when assembling a course to
+        /// queue: crew currently on R&R can be selected and the course will wait for them to return.
+        /// </summary>
+        public bool MeetsStudentReqs(ProtoCrewMember student, bool allowInactive = false)
         {
-            if (!(student.type == ProtoCrewMember.KerbalType.Crew && (_template.seatMax <= 0 || Students.Count < _template.seatMax) && !student.inactive
+            if (!(student.type == ProtoCrewMember.KerbalType.Crew && (_template.seatMax <= 0 || Students.Count < _template.seatMax) && (allowInactive || !student.inactive)
                 && student.rosterStatus == ProtoCrewMember.RosterStatus.Available && !Students.Contains(student)))
                 return false;
 
@@ -95,6 +99,70 @@ namespace RP0.Crew
             }
 
             return !checkPrereq;
+        }
+
+        /// <summary>
+        /// True when every enrolled student is on active duty and can begin training right now
+        /// (not on R&R, not flying, not departed). Used to decide when a queued course starts.
+        /// </summary>
+        public bool AllStudentsReady()
+        {
+            if (Students.Count == 0)
+                return false;
+
+            foreach (ProtoCrewMember student in Students)
+            {
+                if (student == null || student.inactive ||
+                    student.rosterStatus != ProtoCrewMember.RosterStatus.Available)
+                    return false;
+            }
+            return true;
+        }
+
+        /// <summary>
+        /// Remove students who can never return to this queued course - dead, MIA, or retired
+        /// (retirement sets the kerbal to Dead). Crew who are merely flying (Assigned) or on R&R
+        /// (inactive) are kept, since wait-for-all waits for them. Returns the display names of
+        /// those dropped. Only meaningful before the course has started.
+        /// </summary>
+        public List<string> PruneDepartedStudents()
+        {
+            var dropped = new List<string>();
+            var toRemove = new List<ProtoCrewMember>();
+            foreach (ProtoCrewMember student in Students)
+            {
+                if (student == null ||
+                    student.rosterStatus == ProtoCrewMember.RosterStatus.Dead ||
+                    student.rosterStatus == ProtoCrewMember.RosterStatus.Missing)
+                {
+                    if (student != null)
+                        dropped.Add(student.displayName);
+                    toRemove.Add(student);
+                }
+            }
+
+            foreach (ProtoCrewMember student in toRemove)
+                Students.Remove(student);
+
+            if (toRemove.Count > 0)
+                RecalculateBP();
+
+            return dropped;
+        }
+
+        /// <summary>
+        /// Estimated UT this queued course will begin: when its last on-leave student returns to
+        /// duty. Returns now if no student is currently on R&R.
+        /// </summary>
+        public double GetProjectedStartUT()
+        {
+            double t = Planetarium.GetUniversalTime();
+            foreach (ProtoCrewMember student in Students)
+            {
+                if (student != null && student.inactive && student.inactiveTimeEnd > t)
+                    t = student.inactiveTimeEnd;
+            }
+            return t;
         }
 
         public void AddStudent(ProtoCrewMember student)

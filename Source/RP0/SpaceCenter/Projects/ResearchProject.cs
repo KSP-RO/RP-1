@@ -82,7 +82,7 @@ namespace RP0
         public double workRate = 1d;
         public ProtoTechNode ProtoNode;
 
-        protected NodeType nodeType
+        public NodeType nodeType
         {
             get
             {

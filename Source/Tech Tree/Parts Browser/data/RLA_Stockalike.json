@@ -438,6 +438,7 @@
         "entry_cost_mods": "RD-253",
         "identical_part_name": "RD253",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

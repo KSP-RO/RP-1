@@ -62,6 +62,7 @@
     <Compile Include="Singletons\LeaderNotifications.cs" />
     <Compile Include="SpaceCenter\Projects\CrewRnRProject.cs" />
     <Compile Include="SpaceCenter\Projects\HireStaffProject.cs" />
+    <Compile Include="SpaceCenter\Projects\TransferEngineerProject.cs" />
     <Compile Include="SpaceCenter\Projects\VesselRepairProject.cs" />
     <Compile Include="UI\CostBreakdownGUI.cs" />
     <Compile Include="UI\ProceduralAvionicsWindow.cs" />

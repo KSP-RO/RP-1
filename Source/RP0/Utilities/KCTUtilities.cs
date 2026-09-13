@@ -705,6 +705,8 @@ namespace RP0
                 _checkTime(SpaceCenterManagement.Instance.fundTarget, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
                 _checkTime(SpaceCenterManagement.Instance.staffTarget, ref shortestTime, ref thing);
+            if (SpaceCenterManagement.Instance.transferTarget.IsValid)
+                _checkTime(SpaceCenterManagement.Instance.transferTarget, ref shortestTime, ref thing);
 
             return thing;
         }

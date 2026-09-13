@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using UniLinq;
 using UnityEngine;
 
 namespace RP0.ConfigurableStart
@@ -125,7 +126,7 @@ namespace RP0.ConfigurableStart
 
         private void InitKSCs()
         {
-            List<(string id, string displayName)> sites = KSCSwitcherInterop.GetAvailableSites();
+            List<(string id, string displayName)> sites = KSCSwitcherInterop.AllSites.Select(s => (s.id, s.displayName)).ToList();
             if (sites != null && sites.Count > 0)
             {
                 _availableKscIds = new string[sites.Count];

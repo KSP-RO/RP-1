@@ -13,17 +13,22 @@ namespace ContractConfigurator.RP0
         protected double headingTolerance { get; set; }
         protected double rollTolerance { get; set; }
         protected float updateFrequency { get; set; }
+        protected bool ignorePitch { get; set; }
+        protected bool ignoreHeading { get; set; }
+        protected bool ignoreRoll { get; set; }
 
         private float lastUpdate = 0f;
         private bool met = false;
 
         internal const float DEFAULT_UPDATE_FREQUENCY = 2.0f;
         internal const double DEFAULT_TOLERANCE = 5.0;
+        internal const bool DEFAULT_IGNORE = false;
 
         public HoldAttitude() : base(null) { }
 
         public HoldAttitude(string title, double targetPitch, double targetHeading, double targetRoll,
             double pitchTolerance, double headingTolerance, double rollTolerance,
+            bool ignorePitch, bool ignoreHeading, bool ignoreRoll,
             float updateFrequency)
             : base(title)
         {
@@ -33,6 +38,9 @@ namespace ContractConfigurator.RP0
             this.pitchTolerance = pitchTolerance;
             this.headingTolerance = headingTolerance;
             this.rollTolerance = rollTolerance;
+            this.ignorePitch = ignorePitch;
+            this.ignoreHeading = ignoreHeading;
+            this.ignoreRoll = ignoreRoll;
             this.updateFrequency = updateFrequency;
         }
 
@@ -45,6 +53,9 @@ namespace ContractConfigurator.RP0
             node.AddValue("pitchTolerance", pitchTolerance);
             node.AddValue("headingTolerance", headingTolerance);
             node.AddValue("rollTolerance", rollTolerance);
+            node.AddValue("ignorePitch", ignorePitch);
+            node.AddValue("ignoreHeading", ignoreHeading);
+            node.AddValue("ignoreRoll", ignoreRoll);
             node.AddValue("updateFrequency", updateFrequency);
         }
 
@@ -57,6 +68,9 @@ namespace ContractConfigurator.RP0
             pitchTolerance = ConfigNodeUtil.ParseValue<double>(node, "pitchTolerance", DEFAULT_TOLERANCE);
             headingTolerance = ConfigNodeUtil.ParseValue<double>(node, "headingTolerance", DEFAULT_TOLERANCE);
             rollTolerance = ConfigNodeUtil.ParseValue<double>(node, "rollTolerance", DEFAULT_TOLERANCE);
+            ignorePitch = ConfigNodeUtil.ParseValue<bool>(node, "ignorePitch", DEFAULT_IGNORE);
+            ignoreHeading = ConfigNodeUtil.ParseValue<bool>(node, "ignoreHeading", DEFAULT_IGNORE);
+            ignoreRoll = ConfigNodeUtil.ParseValue<bool>(node, "ignoreRoll", DEFAULT_IGNORE);
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
         }
 
@@ -86,9 +100,9 @@ namespace ContractConfigurator.RP0
             double pitch = rotEuler.x > 180.0 ? 360.0 - rotEuler.x : -rotEuler.x;
             double roll = rotEuler.z > 180.0 ? rotEuler.z - 360.0 : rotEuler.z;
 
-            bool pitchOk = AngleWithin(pitch, targetPitch, pitchTolerance);
-            bool headingOk = AngleWithin(heading, targetHeading, headingTolerance);
-            bool rollOk = AngleWithin(roll, targetRoll, rollTolerance);
+            bool pitchOk = ignorePitch || AngleWithin(pitch, targetPitch, pitchTolerance);
+            bool headingOk = ignoreHeading || AngleWithin(heading, targetHeading, headingTolerance);
+            bool rollOk = ignoreRoll || AngleWithin(roll, targetRoll, rollTolerance);
 
             return pitchOk && headingOk && rollOk;
         }

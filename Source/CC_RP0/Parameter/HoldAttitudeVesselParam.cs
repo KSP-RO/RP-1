@@ -18,11 +18,11 @@ namespace ContractConfigurator.RP0
         protected bool ignoreRoll { get; set; }
 
         private float lastUpdate = 0f;
-        private bool met = false;
 
         internal const float DEFAULT_UPDATE_FREQUENCY = 2.0f;
         internal const double DEFAULT_TOLERANCE = 5.0;
         internal const bool DEFAULT_IGNORE = false;
+        internal const double DEFAULT_ANGLE = 0.0;
 
         public HoldAttitude() : base(null) { }
 
@@ -62,9 +62,9 @@ namespace ContractConfigurator.RP0
         protected override void OnParameterLoad(ConfigNode node)
         {
             base.OnParameterLoad(node);
-            targetPitch = ConfigNodeUtil.ParseValue<double>(node, "targetPitch");
-            targetHeading = ConfigNodeUtil.ParseValue<double>(node, "targetHeading");
-            targetRoll = ConfigNodeUtil.ParseValue<double>(node, "targetRoll");
+            targetPitch = ConfigNodeUtil.ParseValue<double>(node, "targetPitch", DEFAULT_ANGLE);
+            targetHeading = ConfigNodeUtil.ParseValue<double>(node, "targetHeading", DEFAULT_ANGLE);
+            targetRoll = ConfigNodeUtil.ParseValue<double>(node, "targetRoll", DEFAULT_ANGLE);
             pitchTolerance = ConfigNodeUtil.ParseValue<double>(node, "pitchTolerance", DEFAULT_TOLERANCE);
             headingTolerance = ConfigNodeUtil.ParseValue<double>(node, "headingTolerance", DEFAULT_TOLERANCE);
             rollTolerance = ConfigNodeUtil.ParseValue<double>(node, "rollTolerance", DEFAULT_TOLERANCE);
@@ -76,7 +76,11 @@ namespace ContractConfigurator.RP0
 
         protected override string GetParameterTitle()
         {
-            string attitudePart = $"Pitch:{targetPitch:N0}° Heading:{targetHeading:N0}° Roll:{targetRoll:N0}°";
+            string pPart = ignorePitch ? "Pitch:ignored" : $"Pitch:{targetPitch:N0}°";
+            string hPart = ignoreHeading ? "Heading:ignored" : $"Heading:{targetHeading:N0}°";
+            string rPart = ignoreRoll ? "Roll:ignored" : $"Roll:{targetRoll:N0}°";
+            string attitudePart = $"{pPart} {hPart} {rPart}";
+
             if (!string.IsNullOrEmpty(title))
                 return title + $" ({attitudePart})";
             return $"Hold attitude {attitudePart}";
@@ -135,5 +139,7 @@ namespace ContractConfigurator.RP0
             double diff = Math.Abs(NormalizeAngle(value - target));
             return diff <= Math.Abs(tol);
         }
+
+
     }
 }

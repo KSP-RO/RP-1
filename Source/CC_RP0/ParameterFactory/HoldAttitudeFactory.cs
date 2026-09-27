@@ -19,12 +19,12 @@ namespace ContractConfigurator.RP0
         {
             bool valid = base.Load(configNode);
 
-            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "targetPitch", x => targetPitch = x, this);
-            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "targetHeading", x => targetHeading = x, this);
-            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "targetRoll", x => targetRoll = x, this);
-            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "pitchTolerance", x => pitchTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE);
-            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "headingTolerance", x => headingTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE);
-            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "rollTolerance", x => rollTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE);
+            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "targetPitch", x => targetPitch = x, this, HoldAttitude.DEFAULT_ANGLE, x => Validation.Between(x, -90.0, 90.0));
+            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "targetHeading", x => targetHeading = x, this, HoldAttitude.DEFAULT_ANGLE, x => Validation.Between(x, 0.0, 360.0));
+            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "targetRoll", x => targetRoll = x, this, HoldAttitude.DEFAULT_ANGLE, x => Validation.Between(x, -180.0, 180.0));
+            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "pitchTolerance", x => pitchTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE, x => Validation.GT(x, 0.0));
+            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "headingTolerance", x => headingTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE, x => Validation.GT(x, 0.0));
+            valid &= ConfigNodeUtil.ParseValue<double>(configNode, "rollTolerance", x => rollTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE, x => Validation.GT(x, 0.0));
             valid &= ConfigNodeUtil.ParseValue<bool>(configNode, "ignorePitch", x => ignorePitch = x, this, HoldAttitude.DEFAULT_IGNORE);
             valid &= ConfigNodeUtil.ParseValue<bool>(configNode, "ignoreHeading", x => ignoreHeading = x, this, HoldAttitude.DEFAULT_IGNORE);
             valid &= ConfigNodeUtil.ParseValue<bool>(configNode, "ignoreRoll", x => ignoreRoll = x, this, HoldAttitude.DEFAULT_IGNORE);

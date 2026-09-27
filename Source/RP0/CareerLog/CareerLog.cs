@@ -27,6 +27,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = CurrentVersion;
 
+        [KSPField(isPersistant = true)]
+        public string Scenario;
+
         public bool IsEnabled = false;
 
         private const int CurrentVersion = 1;
@@ -264,6 +267,11 @@ namespace RP0
             });
         }
 
+        public void SetStartingScenario(string scenarioName)
+        {
+            Scenario = scenarioName;
+        }
+
         public void ExportToFile(string path)
         {
             var rows = _periodDict.Select(p => p.Value)
@@ -330,13 +338,16 @@ namespace RP0
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
 
-            const string jsonVer = "2.0";
+            const string jsonVer = "3.0";
             var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(GetType().Assembly.Location);
             string rp1Ver = fvi.FileVersion;
 
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
             var jsonToSend = "{ \"jsonVer\": \"" + jsonVer + "\", ";
             jsonToSend += "\"rp1Ver\": \"" + rp1Ver + "\", ";
+            if (string.IsNullOrWhiteSpace(Scenario))
+                jsonToSend += "\"scenario\": \"" + Scenario + "\", ";
+
             jsonToSend += "\"periods\": [";
 
             for (var i = 0; i < logPeriods.Length; i++)
@@ -419,7 +430,7 @@ namespace RP0
 
             jsonToSend += "], \"programs\": [";
 
-            var allPrograms = ProgramHandler.Instance.CompletedPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+            var allPrograms = GetProgramsToSend();
             for (var i = 0; i < allPrograms.Length; i++)
             {
                 var dto = new ProgramDto(allPrograms[i]);
@@ -510,6 +521,23 @@ namespace RP0
                 confidence = logPeriod.Confidence,
                 reputation = logPeriod.Reputation
             };
+        }
+
+        private static Program[] GetProgramsToSend()
+        {
+            // leave out programs that were most likely autocompleted by configurable start scenarios
+            var filteredPrograms = ProgramHandler.Instance.CompletedPrograms.Where(p =>
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.acceptedUT)) ||
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.objectivesCompletedUT)) ||
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.completedUT)));
+
+            return filteredPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+        }
+
+        private static bool IsSuspiciouslyRoundDate(DateTime dt)
+        {
+            // Apparently some scenarios assign minutes and hours to dates.
+            return dt.Second == 0 && dt.Millisecond == 0;
         }
 
         private void SwitchToNextPeriod()

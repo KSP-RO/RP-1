@@ -189,6 +189,8 @@ namespace RP0.ConfigurableStart
                     SetDate(scn.StartingUT);
                 }
 
+                CareerLog.Instance?.SetStartingScenario(scn.ScenarioName);
+
                 var allProgramsToAccept = scn.AcceptedPrograms.Concat(scn.CompletedPrograms);
                 foreach (Program p in allProgramsToAccept)
                 {

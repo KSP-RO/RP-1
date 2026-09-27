@@ -133,7 +133,7 @@
                     {
                         killed = true;
                         ScreenMessages.PostScreenMessage($"{vessel.vesselName}: Crewmember {pcm.name} has died from exposure to near-vacuum.", 30.0f, ScreenMessageStyle.UPPER_CENTER, XKCDColors.Red);
-                        FlightLogger.fetch.LogEvent($"[{KSPUtil.PrintTime(vessel.missionTime, 3, false)}] {pcm.name} died from exposure to near-vacuum.");
+                        FlightLogger.fetch.LogEvent($"[{RP0DTUtils.PrintTime(vessel.missionTime, 3, false)}] {pcm.name} died from exposure to near-vacuum.");
                         part.RemoveCrewmember(pcm);
                         pcm.Die();
                     }

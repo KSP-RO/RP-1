@@ -94,8 +94,6 @@ namespace ContractConfigurator.RP0
             // our readouts match theirs. This builds a surface rotation and transforms
             // the vessel rotation into that surface frame.
             Vector3 North = vessel.north;
-            Vector3 East = vessel.east;
-            Vector3 Forward = vessel.GetTransform().up;
             Vector3 Up = vessel.up; // surface up vector
             Quaternion RotationSurface = Quaternion.LookRotation(North, Up);
             Quaternion RotationVesselSurface = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vessel.GetTransform().rotation) * RotationSurface);

@@ -139,7 +139,5 @@ namespace ContractConfigurator.RP0
             double diff = Math.Abs(NormalizeAngle(value - target));
             return diff <= Math.Abs(tol);
         }
-
-
     }
 }

@@ -111,7 +111,7 @@ namespace ContractConfigurator.RP0
             double mass = v.GetTotalMass(); // mass in tons
             if (mass <= 0.0)
             {
-                Debug.Log($"CC_RP0 dVExpended: mass unexpectedly zero");
+                Debug.Log($"CC_RP0 DeltaVExpended: Vessel mass unexpectedly zero");
                 return;
             }
 

@@ -73,11 +73,7 @@ namespace ContractConfigurator.RP0
             double dt = now - lastUpdate;
             lastUpdate = now;
 
-            if (dt <= 0.0)
-            {
-                Debug.Log("CC_RP0 dVExpended: zero or negative delta time");
-                return;
-            }
+            if (dt <= 0.0) return; // OnUpdate() runs on frame, but we only want to update every physics tick, so skip if no time has passed since last update.
 
             bool gap = dt > updateFrequency * 4.0 || dt < 0;   // pause / warp / first tick
             // Rebuild engine cache when vessel or part count changes
@@ -102,6 +98,14 @@ namespace ContractConfigurator.RP0
                 double thrustForEngine = e.finalThrust; // finalThrust is kN
 
                 totalThrust += thrustForEngine;
+            }            
+
+            // Start measuring when thrust is first being produced
+            if (!started && totalThrust > 1e-6)
+            {
+                started = true;
+                accumulatedDV = 0.0;
+                return;
             }
 
             double mass = v.GetTotalMass(); // mass in tons
@@ -113,14 +117,6 @@ namespace ContractConfigurator.RP0
 
             // acceleration (m/s^2) approximated as totalThrust(kN) / mass(t) -> m/s^2
             double accel = totalThrust / mass;
-
-            // Start measuring when thrust is being produced, reset when thrust is zero (e.g., coast phase)
-            if (!started && totalThrust > 1e-6)
-            {
-                started = true;
-                accumulatedDV = 0.0;
-                return;
-            }
 
             // Integrate acceleration over dt to get delta-v increment
             if (dt > 0.0 && accel > 0.0)

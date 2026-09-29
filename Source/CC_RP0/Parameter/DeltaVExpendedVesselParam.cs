@@ -73,7 +73,11 @@ namespace ContractConfigurator.RP0
             double dt = now - lastUpdate;
             lastUpdate = now;
 
-            if (dt <= 0.0) return;
+            if (dt <= 0.0)
+            {
+                Debug.Log("CC_RP0 dVExpended: zero or negative delta time");
+                return;
+            }
 
             bool gap = dt > updateFrequency * 4.0 || dt < 0;   // pause / warp / first tick
             // Rebuild engine cache when vessel or part count changes

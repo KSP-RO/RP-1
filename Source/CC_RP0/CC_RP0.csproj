@@ -75,7 +75,7 @@
     <Compile Include="Behaviour\AcceptContractBehaviour.cs" />
     <Compile Include="BehaviourFactory\AcceptContractBehaviourFactory.cs" />
     <Compile Include="ContractLimitOverrider.cs" />
-    <Compile Include="ParameterFactory\dVExpendedFactory.cs" />
+    <Compile Include="ParameterFactory\DeltaVExpendedFactory.cs" />
     <Compile Include="ParameterFactory\HoldAttitudeFactory.cs" />
     <Compile Include="ParameterFactory\RP1HasExperimentFactory.cs" />
     <Compile Include="ParameterFactory\RP1HasSamplesFactory.cs" />
@@ -84,7 +84,7 @@
     <Compile Include="ParameterFactory\AvionicsCheckFactory.cs" />
     <Compile Include="ContractClobberer.cs" />
     <Compile Include="CustomExpressionParserRegistrer.cs" />
-    <Compile Include="Parameter\dVExpendedVesselParam.cs" />
+    <Compile Include="Parameter\DeltaVExpendedVesselParam.cs" />
     <Compile Include="Parameter\HasCompleted.cs" />
     <Compile Include="ParameterFactory\HasCompletedFactory.cs" />
     <Compile Include="Parameter\HoldAttitudeVesselParam.cs" />

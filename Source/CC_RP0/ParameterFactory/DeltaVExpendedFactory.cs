@@ -2,7 +2,7 @@ using Contracts;
 
 namespace ContractConfigurator.RP0
 {
-    public class dVExpendedFactory : ParameterFactory
+    public class DeltaVExpendedFactory : ParameterFactory
     {
         protected double requiredDV;
         protected float updateFrequency;

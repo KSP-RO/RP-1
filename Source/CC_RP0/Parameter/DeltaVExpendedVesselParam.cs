@@ -4,13 +4,13 @@ using UnityEngine;
 
 namespace ContractConfigurator.RP0
 {
-    public class dVExpended : VesselParameter
+    public class DeltaVExpended : VesselParameter
     {
         protected double requiredDV { get; set; }
         protected float updateFrequency { get; set; }
 
         private double lastUpdate = 0f;
-        private double lastLog = 0f;
+        private double lastCheck = 0f;
         private double accumulatedDV = 0.0;
         private bool started = false;
         private bool met = false;
@@ -22,9 +22,9 @@ namespace ContractConfigurator.RP0
 
         internal const float DEFAULT_UPDATE_FREQUENCY = 1.0f;
 
-        public dVExpended() : base(null) { }
+        public DeltaVExpended() : base(null) { }
 
-        public dVExpended(string title, double requiredDV, float updateFrequency)
+        public DeltaVExpended(string title, double requiredDV, float updateFrequency)
             : base(title)
         {
             this.requiredDV = requiredDV;
@@ -53,7 +53,7 @@ namespace ContractConfigurator.RP0
 
         protected override string GetParameterTitle()
         {
-            return $"dV expended >= {requiredDV:N0} m/s ({accumulatedDV:N1}/{requiredDV:N0} m/s)";
+            return $"ΔV expended >= {requiredDV:N0} m/s ({accumulatedDV:N1}/{requiredDV:N0} m/s)";
         }
 
         protected override bool VesselMeetsCondition(Vessel vessel)
@@ -65,15 +65,16 @@ namespace ContractConfigurator.RP0
         {
             Vessel v = FlightGlobals.ActiveVessel;
             if (v == null) return;
-            if (!CanCheckVesselMeetsCondition(v)) return;
-            if (v.situation == Vessel.Situations.PRELAUNCH) return;
+            if (!CanCheckVesselMeetsCondition(v) || v.situation == Vessel.Situations.PRELAUNCH) return;
 
             base.OnUpdate();           
             
             double now = Time.fixedTime;
             double dt = now - lastUpdate;
             lastUpdate = now;
-            
+
+            if (dt <= 0.0) return;
+
             bool gap = dt > updateFrequency * 4.0 || dt < 0;   // pause / warp / first tick
             // Rebuild engine cache when vessel or part count changes
             bool vesselChanged = v.persistentId != lastVesselPersistentId;
@@ -123,11 +124,8 @@ namespace ContractConfigurator.RP0
                 accumulatedDV += accel * dt;
             }
 
-            if (Time.fixedTime - lastLog < updateFrequency) return;
-            lastLog = Time.fixedTime;
-
-            // Log thrust, mass, acceleration and accumulated dV for debugging
-            Debug.Log($"CC_RP0 dVExpended: thrust={totalThrust:N2} kN mass={mass:N3} t accel={accel:N4} m/s^2 accumulatedDV={accumulatedDV:N3} m/s dt={dt:N3} started={started}");
+            if (Time.fixedTime - lastCheck < updateFrequency) return;
+            lastCheck = Time.fixedTime;
 
             if (accumulatedDV >= requiredDV)
             {

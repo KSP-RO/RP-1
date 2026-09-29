@@ -19,7 +19,7 @@ namespace ContractConfigurator.RP0
 
         private float lastUpdate = 0f;
 
-        internal const float DEFAULT_UPDATE_FREQUENCY = 2.0f;
+        internal const float DEFAULT_UPDATE_FREQUENCY = 0.5f;
         internal const double DEFAULT_TOLERANCE = 5.0;
         internal const bool DEFAULT_IGNORE = false;
         internal const double DEFAULT_ANGLE = 0.0;

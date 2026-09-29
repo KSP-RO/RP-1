@@ -124,6 +124,7 @@ namespace ContractConfigurator.RP0
                 accumulatedDV += accel * dt;
             }
 
+            // We only need to occasionally update the parameter title and check if the condition is met, so we can skip some updates to save performance.
             if (Time.fixedTime - lastCheck < updateFrequency) return;
             lastCheck = Time.fixedTime;
 

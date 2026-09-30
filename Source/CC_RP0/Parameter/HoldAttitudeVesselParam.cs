@@ -101,6 +101,7 @@ namespace ContractConfigurator.RP0
             double heading = rotEuler.y;
             double pitch = rotEuler.x > 180.0 ? 360.0 - rotEuler.x : -rotEuler.x;
             double roll = rotEuler.z > 180.0 ? rotEuler.z - 360.0 : rotEuler.z;
+            roll = -roll; // Invert to follow the rule that a roll to the right is positive roll
 
             bool pitchOk = ignorePitch || AngleWithin(pitch, targetPitch, pitchTolerance);
             bool headingOk = ignoreHeading || AngleWithin(heading, targetHeading, headingTolerance);

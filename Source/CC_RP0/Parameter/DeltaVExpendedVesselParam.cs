@@ -36,9 +36,6 @@ namespace ContractConfigurator.RP0
             base.OnParameterSave(node);
             node.AddValue("requiredDV", requiredDV);
             node.AddValue("updateFrequency", updateFrequency);
-            node.AddValue("accumulatedDV", accumulatedDV);
-            node.AddValue("started", started);
-            node.AddValue("met", met);
         }
 
         protected override void OnParameterLoad(ConfigNode node)
@@ -46,9 +43,6 @@ namespace ContractConfigurator.RP0
             base.OnParameterLoad(node);
             requiredDV = ConfigNodeUtil.ParseValue<double>(node, "requiredDV");
             updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
-            accumulatedDV = ConfigNodeUtil.ParseValue<double>(node, "accumulatedDV", 0.0);
-            started = ConfigNodeUtil.ParseValue<bool>(node, "started", false);
-            met = ConfigNodeUtil.ParseValue<bool>(node, "met", false);
         }
 
         protected override string GetParameterTitle()

@@ -1,3 +1,4 @@
+using ContractConfigurator.Parameters;
 using Contracts;
 
 namespace ContractConfigurator.RP0
@@ -10,9 +11,6 @@ namespace ContractConfigurator.RP0
         protected double pitchTolerance;
         protected double headingTolerance;
         protected double rollTolerance;
-        protected bool ignorePitch;
-        protected bool ignoreHeading;
-        protected bool ignoreRoll;
         protected float updateFrequency;
 
         public override bool Load(ConfigNode configNode)
@@ -25,20 +23,20 @@ namespace ContractConfigurator.RP0
             valid &= ConfigNodeUtil.ParseValue<double>(configNode, "pitchTolerance", x => pitchTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE, x => Validation.GT(x, 0.0));
             valid &= ConfigNodeUtil.ParseValue<double>(configNode, "headingTolerance", x => headingTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE, x => Validation.GT(x, 0.0));
             valid &= ConfigNodeUtil.ParseValue<double>(configNode, "rollTolerance", x => rollTolerance = x, this, HoldAttitude.DEFAULT_TOLERANCE, x => Validation.GT(x, 0.0));
-            valid &= ConfigNodeUtil.ParseValue<bool>(configNode, "ignorePitch", x => ignorePitch = x, this, HoldAttitude.DEFAULT_IGNORE);
-            valid &= ConfigNodeUtil.ParseValue<bool>(configNode, "ignoreHeading", x => ignoreHeading = x, this, HoldAttitude.DEFAULT_IGNORE);
-            valid &= ConfigNodeUtil.ParseValue<bool>(configNode, "ignoreRoll", x => ignoreRoll = x, this, HoldAttitude.DEFAULT_IGNORE);
             valid &= ConfigNodeUtil.ParseValue<float>(configNode, "updateFrequency", x => updateFrequency = x, this, HoldAttitude.DEFAULT_UPDATE_FREQUENCY, x => Validation.GT(x, 0.0f));
+
+            // Validation minimum set
+            valid &= ConfigNodeUtil.AtLeastOne(configNode, new string[] { "targetPitch", "targetHeading", "targetRoll" }, this);
 
             return valid;
         }
 
         public override ContractParameter Generate(Contract contract)
         {
-            return new HoldAttitude(title, targetPitch, targetHeading, targetRoll,
+            HoldAttitude param = new HoldAttitude(title, targetPitch, targetHeading, targetRoll,
                 pitchTolerance, headingTolerance, rollTolerance,
-                ignorePitch, ignoreHeading, ignoreRoll,
                 updateFrequency);
+            return param;
         }
     }
 }

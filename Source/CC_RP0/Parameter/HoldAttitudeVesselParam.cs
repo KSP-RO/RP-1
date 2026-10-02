@@ -13,22 +13,21 @@ namespace ContractConfigurator.RP0
         protected double headingTolerance { get; set; }
         protected double rollTolerance { get; set; }
         protected float updateFrequency { get; set; }
-        protected bool ignorePitch { get; set; }
-        protected bool ignoreHeading { get; set; }
-        protected bool ignoreRoll { get; set; }
+
+        protected double pitch { get; set; }
+        protected double heading { get; set; }
+        protected double roll { get; set; }
 
         private float lastUpdate = 0f;
 
         internal const float DEFAULT_UPDATE_FREQUENCY = 0.5f;
         internal const double DEFAULT_TOLERANCE = 5.0;
-        internal const bool DEFAULT_IGNORE = false;
-        internal const double DEFAULT_ANGLE = 0.0;
+        internal const double DEFAULT_ANGLE = double.MaxValue;
 
         public HoldAttitude() : base(null) { }
 
         public HoldAttitude(string title, double targetPitch, double targetHeading, double targetRoll,
             double pitchTolerance, double headingTolerance, double rollTolerance,
-            bool ignorePitch, bool ignoreHeading, bool ignoreRoll,
             float updateFrequency)
             : base(title)
         {
@@ -38,76 +37,78 @@ namespace ContractConfigurator.RP0
             this.pitchTolerance = pitchTolerance;
             this.headingTolerance = headingTolerance;
             this.rollTolerance = rollTolerance;
-            this.ignorePitch = ignorePitch;
-            this.ignoreHeading = ignoreHeading;
-            this.ignoreRoll = ignoreRoll;
             this.updateFrequency = updateFrequency;
+        }
+
+        protected void CreateDelegates()
+        {
+            if (targetPitch != double.MaxValue)
+            {
+                AddParameter(new ParameterDelegate<Vessel>($"Pitch:{targetPitch:N0}°", v => AngleWithin(pitch, targetPitch, pitchTolerance)));
+            }
+            if (targetHeading != double.MaxValue)
+            {
+                AddParameter(new ParameterDelegate<Vessel>($"Heading:{targetHeading:N0}°", v => AngleWithin(heading, targetHeading, headingTolerance)));
+            }
+            if (targetRoll != double.MaxValue)
+            {
+                AddParameter(new ParameterDelegate<Vessel>($"Roll:{targetRoll:N0}°", v => AngleWithin(roll, targetRoll, rollTolerance)));
+            }
         }
 
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
-            node.AddValue("targetPitch", targetPitch);
-            node.AddValue("targetHeading", targetHeading);
-            node.AddValue("targetRoll", targetRoll);
+            if (targetPitch != double.MaxValue)
+            {
+                node.AddValue("targetPitch", targetPitch);
+            }
+            if (targetHeading != double.MaxValue)
+            {
+                node.AddValue("targetHeading", targetHeading);
+            }
+            if (targetRoll != double.MaxValue)
+            {
+                node.AddValue("targetRoll", targetRoll);
+            }
             node.AddValue("pitchTolerance", pitchTolerance);
             node.AddValue("headingTolerance", headingTolerance);
             node.AddValue("rollTolerance", rollTolerance);
-            node.AddValue("ignorePitch", ignorePitch);
-            node.AddValue("ignoreHeading", ignoreHeading);
-            node.AddValue("ignoreRoll", ignoreRoll);
             node.AddValue("updateFrequency", updateFrequency);
         }
 
         protected override void OnParameterLoad(ConfigNode node)
         {
-            base.OnParameterLoad(node);
-            targetPitch = ConfigNodeUtil.ParseValue<double>(node, "targetPitch", DEFAULT_ANGLE);
-            targetHeading = ConfigNodeUtil.ParseValue<double>(node, "targetHeading", DEFAULT_ANGLE);
-            targetRoll = ConfigNodeUtil.ParseValue<double>(node, "targetRoll", DEFAULT_ANGLE);
-            pitchTolerance = ConfigNodeUtil.ParseValue<double>(node, "pitchTolerance", DEFAULT_TOLERANCE);
-            headingTolerance = ConfigNodeUtil.ParseValue<double>(node, "headingTolerance", DEFAULT_TOLERANCE);
-            rollTolerance = ConfigNodeUtil.ParseValue<double>(node, "rollTolerance", DEFAULT_TOLERANCE);
-            ignorePitch = ConfigNodeUtil.ParseValue<bool>(node, "ignorePitch", DEFAULT_IGNORE);
-            ignoreHeading = ConfigNodeUtil.ParseValue<bool>(node, "ignoreHeading", DEFAULT_IGNORE);
-            ignoreRoll = ConfigNodeUtil.ParseValue<bool>(node, "ignoreRoll", DEFAULT_IGNORE);
-            updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
+            try
+            {
+                base.OnParameterLoad(node);
+                targetPitch = ConfigNodeUtil.ParseValue<double>(node, "targetPitch", DEFAULT_ANGLE);
+                targetHeading = ConfigNodeUtil.ParseValue<double>(node, "targetHeading", DEFAULT_ANGLE);
+                targetRoll = ConfigNodeUtil.ParseValue<double>(node, "targetRoll", DEFAULT_ANGLE);
+                pitchTolerance = ConfigNodeUtil.ParseValue<double>(node, "pitchTolerance", DEFAULT_TOLERANCE);
+                headingTolerance = ConfigNodeUtil.ParseValue<double>(node, "headingTolerance", DEFAULT_TOLERANCE);
+                rollTolerance = ConfigNodeUtil.ParseValue<double>(node, "rollTolerance", DEFAULT_TOLERANCE);
+                updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
+
+                CreateDelegates();
+            }
+            finally
+            {
+                ParameterDelegate<Vessel>.OnDelegateContainerLoad(node);
+            }
         }
 
         protected override string GetParameterTitle()
         {
-            string pPart = ignorePitch ? "Pitch:ignored" : $"Pitch:{targetPitch:N0}°";
-            string hPart = ignoreHeading ? "Heading:ignored" : $"Heading:{targetHeading:N0}°";
-            string rPart = ignoreRoll ? "Roll:ignored" : $"Roll:{targetRoll:N0}°";
-            string attitudePart = $"{pPart} {hPart} {rPart}";
-
             if (!string.IsNullOrEmpty(title))
-                return title + $" ({attitudePart})";
-            return $"Hold attitude {attitudePart}";
+                return title;
+            return $"Hold specified attitude";
         }
 
         protected override bool VesselMeetsCondition(Vessel vessel)
         {
-            if (vessel == null) return false;
-
-            // Compute pitch, heading and roll using the same approach MechJeb uses so
-            // our readouts match theirs. This builds a surface rotation and transforms
-            // the vessel rotation into that surface frame.
-            Vector3 North = vessel.north;
-            Vector3 Up = vessel.up; // surface up vector
-            Quaternion RotationSurface = Quaternion.LookRotation(North, Up);
-            Quaternion RotationVesselSurface = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(vessel.GetTransform().rotation) * RotationSurface);
-            Vector3 rotEuler = RotationVesselSurface.eulerAngles;
-            double heading = rotEuler.y;
-            double pitch = rotEuler.x > 180.0 ? 360.0 - rotEuler.x : -rotEuler.x;
-            double roll = rotEuler.z > 180.0 ? rotEuler.z - 360.0 : rotEuler.z;
-            roll = -roll; // Invert to follow the rule that a roll to the right is positive roll
-
-            bool pitchOk = ignorePitch || AngleWithin(pitch, targetPitch, pitchTolerance);
-            bool headingOk = ignoreHeading || AngleWithin(heading, targetHeading, headingTolerance);
-            bool rollOk = ignoreRoll || AngleWithin(roll, targetRoll, rollTolerance);
-
-            return pitchOk && headingOk && rollOk;
+            LoggingUtil.LogVerbose(this, "Checking VesselMeetsCondition: {0}", vessel.id);
+            return ParameterDelegate<Vessel>.CheckChildConditions(this, vessel);
         }
 
         protected override void OnUpdate()
@@ -120,6 +121,19 @@ namespace ContractConfigurator.RP0
             if (Time.fixedTime - lastUpdate > updateFrequency)
             {
                 lastUpdate = Time.fixedTime;
+
+                // Compute pitch, heading and roll using the same approach MechJeb uses so
+                // our readouts match theirs. This builds a surface rotation and transforms
+                // the vessel rotation into that surface frame.
+                Vector3 North = v.north;
+                Vector3 Up = v.up; // surface up vector
+                Quaternion RotationSurface = Quaternion.LookRotation(North, Up);
+                Quaternion RotationVesselSurface = Quaternion.Inverse(Quaternion.Euler(90, 0, 0) * Quaternion.Inverse(v.GetTransform().rotation) * RotationSurface);
+                Vector3 rotEuler = RotationVesselSurface.eulerAngles;
+                heading = rotEuler.y;
+                pitch = rotEuler.x > 180.0 ? 360.0 - rotEuler.x : -rotEuler.x;
+                roll = rotEuler.z > 180.0 ? rotEuler.z - 360.0 : rotEuler.z;
+                roll = -roll; // Invert to follow the rule that a roll to the right is positive roll
 
                 CheckVessel(v);
             }

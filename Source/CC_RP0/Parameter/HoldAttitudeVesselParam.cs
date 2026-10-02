@@ -38,6 +38,8 @@ namespace ContractConfigurator.RP0
             this.headingTolerance = headingTolerance;
             this.rollTolerance = rollTolerance;
             this.updateFrequency = updateFrequency;
+
+            CreateDelegates();
         }
 
         protected void CreateDelegates()

@@ -63,19 +63,19 @@ namespace ContractConfigurator.RP0
 
         protected override void OnUpdate()
         {
-            Vessel v = FlightGlobals.ActiveVessel;
-            if (v == null) return;
-            if (!CanCheckVesselMeetsCondition(v) || v.situation == Vessel.Situations.PRELAUNCH) return;
-
-            base.OnUpdate();           
-            
             double now = Time.fixedTime;
             double dt = now - lastUpdate;
             lastUpdate = now;
 
             if (dt <= 0.0) return; // OnUpdate() runs on frame, but we only want to update every physics tick, so skip if no time has passed since last update.
 
-            bool gap = dt > updateFrequency * 4.0 || dt < 0;   // pause / warp / first tick
+            Vessel v = FlightGlobals.ActiveVessel;
+            if (v == null) return;
+            if (!CanCheckVesselMeetsCondition(v) || v.situation == Vessel.Situations.PRELAUNCH) return;
+
+            base.OnUpdate();
+
+            bool gap = dt > updateFrequency * 4.0;   // Catch large time jumps
             // Rebuild engine cache when vessel or part count changes
             bool vesselChanged = v.persistentId != lastVesselPersistentId;
             if (vesselChanged || v.parts.Count != lastPartCount || gap)

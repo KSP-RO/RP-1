@@ -44,15 +44,15 @@ namespace ContractConfigurator.RP0
         {
             if (targetPitch != double.MaxValue)
             {
-                AddParameter(new ParameterDelegate<Vessel>($"Pitch:{targetPitch:N0}°", v => AngleWithin(pitch, targetPitch, pitchTolerance)));
+                AddParameter(new ParameterDelegate<Vessel>($"Pitch: {targetPitch:N0}°", v => AngleWithin(pitch, targetPitch, pitchTolerance)));
             }
             if (targetHeading != double.MaxValue)
             {
-                AddParameter(new ParameterDelegate<Vessel>($"Heading:{targetHeading:N0}°", v => AngleWithin(heading, targetHeading, headingTolerance)));
+                AddParameter(new ParameterDelegate<Vessel>($"Heading: {targetHeading:N0}°", v => AngleWithin(heading, targetHeading, headingTolerance)));
             }
             if (targetRoll != double.MaxValue)
             {
-                AddParameter(new ParameterDelegate<Vessel>($"Roll:{targetRoll:N0}°", v => AngleWithin(roll, targetRoll, rollTolerance)));
+                AddParameter(new ParameterDelegate<Vessel>($"Roll: {targetRoll:N0}°", v => AngleWithin(roll, targetRoll, rollTolerance)));
             }
         }
 

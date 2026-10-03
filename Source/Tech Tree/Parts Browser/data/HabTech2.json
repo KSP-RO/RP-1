@@ -16,7 +16,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -37,7 +37,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -58,7 +58,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -79,7 +79,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -100,7 +100,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-cargoBag",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -121,7 +121,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -142,7 +142,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ELC",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -163,7 +163,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -184,7 +184,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-S-freezer",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -205,7 +205,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-S-freezer",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -226,7 +226,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -247,7 +247,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -268,7 +268,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-U-SAS",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -289,7 +289,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-U-SAS",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -310,7 +310,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-U-SAS",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -331,7 +331,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-U-SAS",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -352,7 +352,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-U-SAS",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -373,7 +373,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-U-SAS",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -394,7 +394,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-ISPR-U-SAS",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -415,7 +415,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -436,7 +436,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "55000, ht2-ITS-S0",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -457,7 +457,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "15000, ht2-ITS-S0",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -478,7 +478,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "14000, ht2-ITS-S0",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -499,7 +499,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "24000, ht2-ITS-S0",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -520,7 +520,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "12000, ht2-ITS-S0",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -541,7 +541,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "8000, ht2-ITS-S0",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -562,7 +562,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "128000, ht2-moduleKibo",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -583,7 +583,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-JEM-Port",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-JEM-Port",
         "module_tags": []
     },
@@ -604,7 +604,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-JEM-Port",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-JEM-Port",
         "module_tags": []
     },
@@ -625,7 +625,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-JEM-Port",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-JEM-Port",
         "module_tags": []
     },
@@ -646,7 +646,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "commsTL3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -667,7 +667,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -688,7 +688,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -709,7 +709,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -730,7 +730,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -751,7 +751,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -772,7 +772,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-JEM-Port",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-JEM-Port",
         "module_tags": []
     },
@@ -793,7 +793,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "11000, ht2-MT",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -814,7 +814,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "118000, ht2-moduleUnity",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -835,7 +835,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "112000, ht2-MPLM",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -856,7 +856,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -877,8 +877,8 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "stationsTruss",
+        "identical_part_name": "ISS-MTS",
         "module_tags": []
     },
     {
@@ -898,7 +898,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-MTS",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-MTS",
         "module_tags": []
     },
@@ -919,8 +919,8 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "solarFolding",
+        "identical_part_name": "ISS-SAW-Wing",
         "module_tags": []
     },
     {
@@ -940,7 +940,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-SAW-Wing",
+        "entry_cost_mods": "solarFolding",
         "identical_part_name": "ISS-SAW-Wing",
         "module_tags": []
     },
@@ -961,7 +961,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -982,7 +982,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "120000, ht2-PMA",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1003,7 +1003,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "132000, ht2-PMA",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1024,7 +1024,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "commsTL3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1045,7 +1045,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-SAW-Wing",
+        "entry_cost_mods": "solarFolding",
         "identical_part_name": "ISS-SAW-Wing",
         "module_tags": []
     },
@@ -1066,7 +1066,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "18000, ht2-SAW-v2",
+        "entry_cost_mods": "solarFolding",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1087,7 +1087,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "21000, ht2-radiatorTriple-v2",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1108,7 +1108,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "21000, ht2-P3-SAW",
+        "entry_cost_mods": "solarFolding",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1129,7 +1129,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "capsulesStation",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1150,7 +1150,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "167000, ht2-SCRAM",
+        "entry_cost_mods": "capsulesStation",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1171,8 +1171,8 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "stationsTruss",
+        "identical_part_name": "ISS-SGANT-Boom",
         "module_tags": []
     },
     {
@@ -1192,7 +1192,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-SGANT-Boom",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-SGANT-Boom",
         "module_tags": []
     },
@@ -1213,7 +1213,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-S-band",
+        "entry_cost_mods": "commsTL3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1234,7 +1234,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1255,7 +1255,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-TTS",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-TTS",
         "module_tags": []
     },
@@ -1276,7 +1276,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-TTS",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-TTS",
         "module_tags": []
     },
@@ -1297,7 +1297,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-TTS",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-TTS",
         "module_tags": []
     },
@@ -1318,7 +1318,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-TTS",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-TTS",
         "module_tags": []
     },
@@ -1339,7 +1339,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-TTS",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-TTS",
         "module_tags": []
     },
@@ -1360,7 +1360,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-TTS",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-TTS",
         "module_tags": []
     },
@@ -1381,7 +1381,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-S-band",
+        "entry_cost_mods": "commsTL3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1402,7 +1402,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3000, ht2-S-band",
+        "entry_cost_mods": "commsTL3",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1423,7 +1423,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "126000, ht2-moduleQuest",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1444,7 +1444,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "168000, ht2-moduleQuest",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1465,7 +1465,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1486,7 +1486,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1507,7 +1507,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "67000, ht2-moduleQuest",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1528,7 +1528,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1549,7 +1549,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1570,8 +1570,8 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
-        "identical_part_name": "",
+        "entry_cost_mods": "stationsTruss",
+        "identical_part_name": "ISS-Truss-Prop",
         "module_tags": []
     },
     {
@@ -1591,7 +1591,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1612,7 +1612,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "solarFolding",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1633,7 +1633,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "216000, ht2-moduleUnity",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1654,7 +1654,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "727000, ht2-moduleColumbus",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1675,7 +1675,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "73000, ht2-moduleUnity",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1696,7 +1696,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "187000, ht2-moduleCupola",
+        "entry_cost_mods": "stations305m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1717,7 +1717,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "286000, ht2-moduleUnity",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1738,7 +1738,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "834000, ht2-moduleDestiny",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1759,7 +1759,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "612000, ht2-moduleDestiny",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1780,7 +1780,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "322000, ht2-moduleUnity",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1801,7 +1801,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "128000, ht2-MPLM",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1822,7 +1822,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "291000, ht2-moduleDestiny",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1843,7 +1843,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "734000, ht2-moduleDestiny",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1864,7 +1864,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "143000, ht2-moduleUnity",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1885,7 +1885,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1906,7 +1906,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "186000, ht2-moduleUnity",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1927,7 +1927,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-Truss-Prop",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-Truss-Prop",
         "module_tags": []
     },
@@ -1948,7 +1948,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1969,7 +1969,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -1990,7 +1990,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "21000, ht2-radiatorTriple-v2",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2011,7 +2011,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2032,7 +2032,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2053,7 +2053,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ht2-rcs-block-1",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "ht2-rcs-block-1",
         "module_tags": []
     },
@@ -2074,7 +2074,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2095,7 +2095,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ht2-rcs-block-2",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "ht2-rcs-block-2",
         "module_tags": []
     },
@@ -2116,7 +2116,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2137,7 +2137,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ht2-rcs-block-3",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "ht2-rcs-block-3",
         "module_tags": []
     },
@@ -2158,7 +2158,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ht2-rcs-block-3",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "ht2-rcs-block-3",
         "module_tags": []
     },
@@ -2179,7 +2179,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1000, rcsMult",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2200,7 +2200,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ht2-rcs-block-4",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "ht2-rcs-block-4",
         "module_tags": []
     },
@@ -2221,7 +2221,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ht2-rcs-block-4",
+        "entry_cost_mods": "rcsMult",
         "identical_part_name": "ht2-rcs-block-4",
         "module_tags": []
     },
@@ -2242,7 +2242,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2263,7 +2263,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "600, ht2-sample-bioLvl1",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2284,7 +2284,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "600, ht2-sample-bioLvl2",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2305,7 +2305,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2326,7 +2326,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "600, ht2-sample-chemLvl1",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2347,7 +2347,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "600, ht2-sample-chemLvl2",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2368,7 +2368,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2389,7 +2389,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2410,7 +2410,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "600, ht2-sample-physLvl1",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2431,7 +2431,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "600, ht2-sample-physLvl2",
+        "entry_cost_mods": "stationsExperiments",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2452,7 +2452,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "450000, ht2-moduleDestiny",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2473,7 +2473,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "312000, ht2-moduleUnity",
+        "entry_cost_mods": "stations415m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2494,7 +2494,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "518000, ht2-size2-hab",
+        "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2515,7 +2515,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "605000, ht2-size2-hab",
+        "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2536,7 +2536,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1368000, ht2-size3-hab",
+        "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2557,7 +2557,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "509000, ht2-size2-node",
+        "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2578,7 +2578,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "372000, ht2-size3-hab",
+        "entry_cost_mods": "stations6225m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2599,7 +2599,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "677000, ht2-size3-cone",
+        "entry_cost_mods": "stations9m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2620,7 +2620,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "706000, ht2-size3-hab",
+        "entry_cost_mods": "stations9m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2641,7 +2641,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "1530000, ht2-size4-hab",
+        "entry_cost_mods": "stations9m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2662,7 +2662,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "763000, ht2-size3-node",
+        "entry_cost_mods": "stations9m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2683,7 +2683,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "882000, ht2-size4-hab",
+        "entry_cost_mods": "stations9m",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2704,7 +2704,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2725,7 +2725,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "3500, ht2-toolBox1",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -2746,7 +2746,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "ISS-TTS",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "ISS-TTS",
         "module_tags": []
     },
@@ -2767,7 +2767,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "stationsTruss",
         "identical_part_name": "",
         "module_tags": []
     }

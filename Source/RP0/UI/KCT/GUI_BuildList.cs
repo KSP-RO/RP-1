@@ -679,6 +679,9 @@ namespace RP0
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
                 _allItems.Add(SpaceCenterManagement.Instance.staffTarget);
 
+            if (SpaceCenterManagement.Instance.transferTarget.IsValid)
+                _allItems.Add(SpaceCenterManagement.Instance.transferTarget);
+          
             // Astronauts on R&R aren't queued projects, but we surface them here so they slot in
             // by return-to-duty time. _timeBeforeItem is left at 0 because R&R runs on wall-clock,
             // independent of the build queue, so its finish time is purely GetTimeLeftEst.
@@ -705,11 +708,12 @@ namespace RP0
                     continue;
 
                 GUILayout.BeginHorizontal();
-                if ((t is HireStaffProject || t is FundTargetProject) &&
+                if ((t is HireStaffProject || t is FundTargetProject || t is TransferEngineerProject) &&
                     GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
                     (t as HireStaffProject)?.Clear();
                     (t as FundTargetProject)?.Clear();
+                    (t as TransferEngineerProject)?.Clear();
                 }
 
                 DrawTypeIcon(t);

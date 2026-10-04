@@ -43,6 +43,7 @@
         "entry_cost_mods": "HG-3",
         "identical_part_name": "HG3",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]

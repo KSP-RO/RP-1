@@ -83,6 +83,10 @@ namespace RP0
                 RP0Debug.LogError($"Can't find LC from LCC, LC ID {lcID}");
                 return;
             }
+
+            // Must be removed before LC.Delete() runs, since Delete() cancels all of the LC's constructions
+            KSC.LCConstructions.Remove(this);
+
             if (isModify)
             {
                 lc.IsOperational = true;
@@ -101,8 +105,6 @@ namespace RP0
             {
                 KSC.LaunchComplexes[index].Delete();
             }
-
-            KSC.LCConstructions.Remove(this);
 
             try
             {

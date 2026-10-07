@@ -16,7 +16,7 @@
         "spacecraft": "",
         "engine_config": "DCSeaLevel",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "DCYSeaLevel",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -40,7 +40,7 @@
         "spacecraft": "",
         "engine_config": "DCYAerospike",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "DCYSpike",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",
@@ -64,7 +64,7 @@
         "spacecraft": "",
         "engine_config": "DCYBimodal",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "DCYVacuum",
         "identical_part_name": "",
         "module_tags": [
             "EngineLiquidTurbo",

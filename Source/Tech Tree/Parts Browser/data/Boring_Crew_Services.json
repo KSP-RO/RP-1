@@ -62,7 +62,8 @@
         "identical_part_name": "",
         "module_tags": [
             "HumanRated",
-            "NoResourceCostMult"
+            "NoResourceCostMult",
+            "Reentry"
         ]
     },
     {
@@ -148,7 +149,7 @@
         "entry_cost_mods": "capsulesCST, NTOOxidizer",
         "identical_part_name": "",
         "module_tags": [
-            "Toxic"
+            "EngineLiquidPF"
         ]
     },
     {

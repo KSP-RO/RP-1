@@ -158,9 +158,9 @@ namespace RP0
         public static string FormatRatioAsPercent(double ratio)
         {
             if (ratio < 1d)
-                return Localizer.Format("#rp0_Generic_Percent_Negative", ((1d - ratio) * 100d).ToString("N0"));
+                return Localizer.Format("#rp0_Generic_Percent_Negative", ((1d - ratio) * 100d).ToString("0.##"));
 
-            return Localizer.Format("#rp0_Generic_Percent_Positive", ((ratio - 1d) * 100d).ToString("N0"));
+            return Localizer.Format("#rp0_Generic_Percent_Positive", ((ratio - 1d) * 100d).ToString("0.##"));
         }
 
         public static string FormatBytes(int amount)

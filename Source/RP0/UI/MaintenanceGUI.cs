@@ -255,18 +255,15 @@ namespace RP0
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
             {
                 string msg = "This functionality cannot be used while there's automatic staff hiring in progress.";
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                PopupDialog dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("warpToFunds", msg, "Warp To Funds", HighLogic.UISkin,
-                        new DialogGUIButton("Understood", () =>
-                        {
-                            UIHolder.Instance.ShowWindow();
-                            InputLockManager.RemoveControlLock("warptofunds");
-                        })
+                        new DialogGUIButton("Understood", CloseWarpToFundsDlg)
                     ), false, HighLogic.UISkin);
+                dlg.OnDismiss = CloseWarpToFundsDlg;
             }
             else
             {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                PopupDialog dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("warpToFunds", "Fund Target", "Warp To Funds", HighLogic.UISkin,
                         new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
                         {
@@ -274,44 +271,47 @@ namespace RP0
                             return warpToFundsString;
                         }, 24f),
                         new DialogGUIButton("Estimate Time", () => { ShowConfirmWarpDialog(); }),
-                        new DialogGUIButton("Cancel", () =>
-                        {
-                            UIHolder.Instance.ShowWindow();
-                            InputLockManager.RemoveControlLock("warptofunds");
-                        })
+                        new DialogGUIButton("Cancel", CloseWarpToFundsDlg)
                     ), false, HighLogic.UISkin);
+                dlg.OnDismiss = CloseWarpToFundsDlg;
             }
+        }
+
+        private void CloseWarpToFundsDlg()
+        {
+            UIHolder.Instance.ShowWindow();
+            InputLockManager.RemoveControlLock("warptofunds");
+        }
+
+        private void CancelWarpToFunds()
+        {
+            SpaceCenterManagement.Instance.fundTarget.Clear();
+            CloseWarpToFundsDlg();
         }
 
         private void ShowConfirmWarpDialog()
         {
             if (!double.TryParse(warpToFundsString, out double fundTarget))
             {
-                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
+                PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
                     "Failed to parse funds!",
                     "Error",
                     HighLogic.UISkin,
                     300,
-                    new DialogGUIButton("Understood", () => {
-                        UIHolder.Instance.ShowWindow();
-                        InputLockManager.RemoveControlLock("warptofunds");
-                    })), false, HighLogic.UISkin);
+                    new DialogGUIButton("Understood", CloseWarpToFundsDlg)), false, HighLogic.UISkin);
+                dlg.OnDismiss = CloseWarpToFundsDlg;
             }
             else
             {
                 if (fundTarget <= Funding.Instance.Funds)
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmAtFunds",
+                    PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmAtFunds",
                     "Already at this funding!",
                     "No Warp Needed",
                     HighLogic.UISkin,
                     300,
-                    new DialogGUIButton("Understood", () =>
-                    {
-                        UIHolder.Instance.ShowWindow();
-                        InputLockManager.RemoveControlLock("warptofunds");
-                        SpaceCenterManagement.Instance.fundTarget.Clear();
-                    })), false, HighLogic.UISkin);
+                    new DialogGUIButton("Understood", CancelWarpToFunds)), false, HighLogic.UISkin);
+                    dlg.OnDismiss = CancelWarpToFunds;
                     return;
                 }
 
@@ -319,16 +319,13 @@ namespace RP0
                 double time = target.GetTimeLeft();
                 if (time < 0d)
                 {
-                    PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
+                    PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
                         $"Failed to find a time to warp to, with a limit of {RP0DTUtils.PrintDateDeltaCompact(FundTargetProject.MaxTime, false, false)}",
                         "Error",
                         HighLogic.UISkin,
                         300,
-                        new DialogGUIButton("Understood", () => {
-                            UIHolder.Instance.ShowWindow();
-                            InputLockManager.RemoveControlLock("warptofunds");
-                            SpaceCenterManagement.Instance.fundTarget.Clear();
-                        })), false, HighLogic.UISkin);
+                        new DialogGUIButton("Understood", CancelWarpToFunds)), false, HighLogic.UISkin);
+                    dlg.OnDismiss = CancelWarpToFunds;
                 }
                 else
                 {
@@ -337,25 +334,19 @@ namespace RP0
                         {
                             SpaceCenterManagement.Instance.fundTarget.Clear();
                             KCTWarpController.Create(target);
-                            UIHolder.Instance.ShowWindow();
-                            InputLockManager.RemoveControlLock("warptofunds");
+                            CloseWarpToFundsDlg();
                         }),
                         new DialogGUIButton("Add Warp Target", () =>
                         {
                             SpaceCenterManagement.Instance.fundTarget = target;
                             target.SetAutoWarp(false);
-                            UIHolder.Instance.ShowWindow();
-                            InputLockManager.RemoveControlLock("warptofunds");
+                            CloseWarpToFundsDlg();
                         }),
-                        new DialogGUIButton("Cancel", () => 
-                        {
-                            SpaceCenterManagement.Instance.fundTarget.Clear();
-                            UIHolder.Instance.ShowWindow();
-                            InputLockManager.RemoveControlLock("warptofunds");
-                        })
+                        new DialogGUIButton("Cancel", CancelWarpToFunds)
                     };
                     var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Estimated to take {RP0DTUtils.PrintDateDelta(time, false, false)} and finish on {RP0DTUtils.PrintDate(Planetarium.GetUniversalTime() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
-                    PopupDialog.SpawnPopupDialog(dialog, false, HighLogic.UISkin);
+                    PopupDialog dlg = PopupDialog.SpawnPopupDialog(dialog, false, HighLogic.UISkin);
+                    dlg.OnDismiss = CancelWarpToFunds;
                 }
             }
         }

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Linq;
+using UnityEngine;
 
 namespace RP0
 {
@@ -30,7 +31,7 @@ namespace RP0
                 bool flagRecompute = false;
                 foreach (VesselProject vessel in lc.Warehouse)
                 {
-                    if (vessel.shipID != ship.shipID && vessel.IsFinished)
+                    if (vessel.shipID != ship.shipID && vessel.IsFinished && !lc.Recon_Rollout.Any(rr => rr.AssociatedIdAsGuid == vessel.shipID && rr.RRType != ReconRolloutProject.RolloutReconType.Reconditioning))
                     {
                         int index = SpaceCenterManagement.Instance.MergedVessels.FindIndex(x => x.shipID == vessel.shipID);
                         if (index == -1 && GUILayout.Button(vessel.shipName))

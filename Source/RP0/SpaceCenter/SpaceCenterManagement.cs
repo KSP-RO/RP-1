@@ -1564,6 +1564,7 @@ namespace RP0
         public void RecalculateBuildRates()
         {
             LCEfficiency.RecalculateConstants();
+            Database.SettingsRecovery.RecalculateAndApply();
 
             foreach (var ksc in KSCs)
                 ksc.RecalculateBuildRates(true);
@@ -1889,8 +1890,11 @@ namespace RP0
             ProjectType projType = isSPH ? ProjectType.SPH : ProjectType.VAB;
             VesselProject dummyVessel = new VesselProject(v, projType);
 
-            LaunchComplex activeLC = dummyVessel.LC ?? ActiveSC.ActiveLC;
+            LaunchComplex activeLC = dummyVessel.LC != null ? dummyVessel.LC : ActiveSC.ActiveLC;
             dummyVessel.LC = activeLC;
+            // consider landing loc
+            dummyVessel.Splashed = v.Splashed;
+            dummyVessel.LandedAt = v.landedAt;
 
             ReconRolloutProject tmpRecover = new ReconRolloutProject(dummyVessel, ReconRolloutProject.RolloutReconType.Recovery, dummyVessel.shipID.ToString());
             ReconRolloutProject tmpRefurb = new ReconRolloutProject(dummyVessel, ReconRolloutProject.RolloutReconType.Refurbishment, dummyVessel.shipID.ToString());

@@ -82,7 +82,7 @@ namespace RP0
                 double tempBase = RefurbishmentRateBase;
                 if (b.TryGetValue("RateRefurbishment", ref tempBase))
                     RefurbishmentRateBase = tempBase;
-                if (b.TryGetValue("CostRefurbisment", ref tempBase))
+                if (b.TryGetValue("CostRefurbishment", ref tempBase))
                     RefurbishmentCostBase = tempBase;
                 if (b.TryGetValue("SplashdownPenaltyMult", ref tempBase))
                     SplashdownPenaltyMultBase = tempBase;

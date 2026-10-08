@@ -240,7 +240,7 @@ namespace RP0
             }
             else if (RRType == RolloutReconType.Recovery)
             {
-                return Database.SettingsRecovery.RecoveryRateMult;
+                return Database.SettingsRecovery.RecoveryRateMult * CurrencyUtils.Rate(transactionReasonTime);
             }
             else
             {

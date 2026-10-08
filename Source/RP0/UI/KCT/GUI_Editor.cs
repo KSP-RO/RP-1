@@ -467,7 +467,7 @@ namespace RP0
             }
             foreach (var kvp in _highlights)
             {
-                kvp.Key.SetHighlightDefault();
+                kvp.Key?.SetHighlightDefault();
             }
             _highlights.Clear();
             if (_highlightNonmatchingParts)

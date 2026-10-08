@@ -729,6 +729,10 @@ namespace RP0
                 return;
             }
 
+            // tech list needs cleanup
+            TechListIgnoreUpdates = true;
+            KCTUtilities.RemoveResearchedPartsFromExperimental();
+
             Dictionary<string, int> techsToRemove = new Dictionary<string, int> { {"earlySolids", 1}, {"basicSolids", 2}, {"solids1956", 4} };
             double researchRefund = 0;
             float scienceRefund = 0;
@@ -736,7 +740,7 @@ namespace RP0
             {
                 if (techsToRemove.ContainsKey(TechList[i].techID))
                 {
-                    researchRefund += Math.Max(TechList[i].progress, TechList[i].scienceCost);
+                    researchRefund += Math.Min(TechList[i].progress, TechList[i].scienceCost);
                     scienceRefund += TechList[i].scienceCost;
                     TechList.RemoveAt(i);
                 }
@@ -752,7 +756,7 @@ namespace RP0
             int index = TechListIndex("solids1958");
             if (index != -1)
             {
-                researchRefund += Math.Max(TechList[index].progress, TechList[index].scienceCost); // Covers the case where solids1958 was actively being researched
+                researchRefund += Math.Min(TechList[index].progress, TechList[index].scienceCost); // Covers the case where solids1958 was actively being researched
                 KCT_GUI.CancelTechNode(index);
             }
 
@@ -786,17 +790,22 @@ namespace RP0
                 researchRefund -= amt;
                 netApplied += amt;
             }
-
+            
             if (netApplied > 0 || scienceRefund > 0)
             {
                 MessageSystem.Instance.AddMessage(new MessageSystem.Message(
                     Localizer.Format("#rp0_Persistence_RefundedResearch_Title"), 
-                    Localizer.Format("#rp0_Persistence_RefundedResearch_Text", netApplied, scienceRefund), 
+                    Localizer.Format("#rp0_Persistence_RefundedResearch_Text", netApplied.ToString("N2"), scienceRefund.ToString("N0")), 
                     MessageSystemButton.MessageButtonColor.BLUE,
                     MessageSystemButton.ButtonIcons.MESSAGE));
             }
 
             RefundEarlySolids = false;
+            
+            // done with cleanup
+            Instance.TechListUpdated();
+            TechListIgnoreUpdates = false;
+            KCTUtilities.AddResearchedPartsToExperimental();
         }
 
         private void CheckMissingParts()

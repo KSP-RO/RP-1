@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GameData", "GameData.csproj
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CostExporter", "CostExporter\CostExporter.csproj", "{46642BB3-C918-4638-A6B3-64D0F57975A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RP0.Tests", "RP0.Tests\RP0.Tests.csproj", "{F8788B40-85A1-48E0-BA7C-33CD6322166D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,14 @@ Global
 		{46642BB3-C918-4638-A6B3-64D0F57975A4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{46642BB3-C918-4638-A6B3-64D0F57975A4}.Release|x64.ActiveCfg = Release|Any CPU
 		{46642BB3-C918-4638-A6B3-64D0F57975A4}.Release|x64.Build.0 = Release|Any CPU
+		{F8788B40-85A1-48E0-BA7C-33CD6322166D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8788B40-85A1-48E0-BA7C-33CD6322166D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8788B40-85A1-48E0-BA7C-33CD6322166D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F8788B40-85A1-48E0-BA7C-33CD6322166D}.Debug|x64.Build.0 = Debug|Any CPU
+		{F8788B40-85A1-48E0-BA7C-33CD6322166D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8788B40-85A1-48E0-BA7C-33CD6322166D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8788B40-85A1-48E0-BA7C-33CD6322166D}.Release|x64.ActiveCfg = Release|Any CPU
+		{F8788B40-85A1-48E0-BA7C-33CD6322166D}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

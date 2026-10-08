@@ -1,0 +1,91 @@
+# Reusability formula tests
+
+Covers the recovery and refurbishment formulas in `Source/RP0/Utilities/FormulaCore.cs`
+(PR #2825), and generates a balance table so the numbers can be judged rather than guessed at.
+
+## Running
+
+```
+dotnet test Source/RP0.Tests                                       # everything
+dotnet test Source/RP0.Tests --filter "TestCategory!=BalanceAnchor" # regression suite only
+dotnet test Source/RP0.Tests -l "console;verbosity=detailed"        # print the tables
+```
+
+The project references `RP0.dll` and the KSP assemblies and exercises the real
+`RP0.RecoveryTechSettings` and `Formula` code - there is no mirror of either. So it needs those
+DLLs staged in `..\..\.refs` (the main mod build produces `RP0.dll`; override with
+`-p:ReferencePath=<KSP>/KSP_x64_Data/Managed` to point at an install). **Build `RP0` first.**
+Because it needs the KSP DLLs it runs locally only and is not wired into CI. It targets net48
+x64 to match `RP0.csproj`.
+
+## What's here
+
+| File | Purpose |
+| --- | --- |
+| `Config/TechTier.cs` | Base / Mid / Modern tiers, built from the real `RecoveryTechSettings` |
+| `Fixtures/Vessels.cs` | 13 vessel archetypes, with provenance for every number |
+| `Fixtures/LegacyFormula.cs` | Pre-#2825 recovery model, for before/after columns |
+| `Fixtures/Staffing.cs` | BP to days, mirroring `LaunchComplex` staffing rules |
+| `ReusabilityTable.cs` | Markdown table renderer and diff |
+| `FormulaEquivalenceTests.cs` | Guards the extraction against transcription slips |
+| `RecoveryTechSettingsTests.cs` | Exercises the real cfg loader and tech stacking |
+| `RecoveryInvariantTests.cs` | Relationships the formulas do hold |
+| `Fixtures/DesignTargets.cs` | The PR's stated durations, reported in the tables rather than asserted |
+| `RecoveryTableTests.cs` | Golden-table regression |
+| `BalanceAnchorTests.cs` | Design properties not yet met. **Fails by design** (one anchor). |
+
+## Targets: reported, not asserted
+
+The PR's absolute duration goals — STS ~6 months early / ~3 months mature, F9 booster
+~3 months in 2016 / ~30 days from 2020 — are **not** tests. They depend on the fixture
+estimates and the staffing assumption, and they are aspirational numbers for a tuning pass in
+progress, so a red test would read as "broken" when what is meant is "not tuned yet". Each
+generated table ends with a target-versus-actual section instead, and the ratio there moves
+visibly as the formulas are tuned.
+
+`BalanceAnchorTests` now holds a single still-unmet property: splashdown should never be
+cheaper to refurbish than recovering at KSC (it is, once the `LandedAt` matching is fixed, so
+the inversion becomes reachable). Two properties that once failed here now pass and moved to
+`RecoveryInvariantTests` — refurbishing is cheaper than building new, and *net* refurbishment
+cost (the charge plus the engineer salary it offsets) falls with tech. A third, "duration
+tracks the vessel not the pad", was dropped: it was an artifact of a mis-sized fixture (an
+Apollo capsule recovered to a 6 t pad rather than to its Saturn V complex), and does not
+survive correct launch-complex sizing.
+
+The tech multipliers are parsed from `GameData/RP-1/SCMData/RecoveryLevels.cfg` and
+`RefurbishmentLevels.cfg` rather than mirrored, so editing those cfgs moves the tables.
+
+## Approving a table change
+
+When a formula, fixture or cfg changes, `RecoveryTableTests` fails with a line-by-line diff and
+writes `Approved/RecoveryTable.<tier>.received.md`. Read it, and if the change is intended:
+
+```
+cd Source/RP0.Tests/ReusabilityTests/Approved
+mv RecoveryTable.Base.received.md RecoveryTable.Base.md      # etc.
+```
+
+Commit the approved tables with the change that caused them. `.received.md` files are gitignored.
+
+## Intent vs shipped behaviour
+
+The tables model the formulas as **intended**, not as they currently behave. `Formula.VesselInputs`
+derives `splashed` and `atKSC` by substring-matching `VesselProject.LandedAt`, which comes from
+`Vessel.landedAt` — a field holding launch-site names, not situation names. Measured over a real
+career save (55,603 values): `"Splashdown"` never appears, and pad landings write `LaunchPad`
+where the code tests for `"Launchpad"`. So the 1.5x splashdown penalty, the whole
+`SplashdownPenaltyMult` tech knob, and the at-KSC discount for pad landings are all inert today.
+
+Each generated table leads with the evidence. Keeping the fixtures on intent is deliberate: it
+keeps the tables usable for balance discussion, and the gap is documented rather than silently
+baked into the numbers.
+
+## Caveats
+
+- Vessel `cost` / `effectiveCost` are composed from real RP-1 part costs and tag multipliers,
+  but resource effective cost and engine run-time refurbishment are not modelled, so both
+  understate the in-game figure. See the header comment in `Fixtures/Vessels.cs`.
+- Durations assume a fully staffed complex (`LaunchComplex.MaxEngineers`), so every
+  engineer-driven duration is a best case.
+- These are estimates, good to perhaps 10-20%. The tables show shape and order of magnitude;
+  they are not a substitute for exporting real values from a running game.

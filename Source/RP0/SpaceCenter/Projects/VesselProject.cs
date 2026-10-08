@@ -227,11 +227,11 @@ namespace RP0
                     kscDistance: kscDistance,
                     humanRated: humanRated,
                     isSPH: Type == ProjectType.SPH,
-                    splashed: Splashed == true,
-                    atKSC: LandedAt?.Contains("Runway") == true || LandedAt?.Contains("LaunchPad") == true,
-                    lcIsHumanRated: LC == null ? LC.IsHumanRated : false,
-                    lcIsPad: LC == null ? (LC.LCType == LaunchComplexType.Pad) : false,
-                    lcMassMax: LC == null ? LC.MassMax : 0,
+                    splashed: Splashed,
+                    atKSC: LandedAt != null && (LandedAt.Contains("Runway") || LandedAt.Contains("Launchpad")),
+                    lcIsHumanRated: LC != null ? LC.IsHumanRated : false,
+                    lcIsPad: LC != null ? (LC.LCType == LaunchComplexType.Pad) : false,
+                    lcMassMax: LC != null ? LC.MassMax : 0,
                     settings: Formula.CurrentSettings());
                 }
         }

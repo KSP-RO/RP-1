@@ -614,7 +614,7 @@ namespace RP0
                 origTotalBP = Formula.GetVesselBuildPoints(totalEffectiveCost);
                 // Intentionally penalise merging by not scaling up progress BP to correspond to the higher total EC.
                 // Do cap it, though.
-                oldProgressBP = Math.Max(origTotalBP, oldProgressBP);
+                oldProgressBP = Math.Min(origTotalBP, oldProgressBP);
             }
 
             SCM.matchingParts.Clear();

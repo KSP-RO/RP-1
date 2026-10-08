@@ -155,22 +155,22 @@ namespace RP0
             }
         }
 
-        public static string FormatRatioAsPercent(double ratio)
+        public static string FormatRatioAsPercent(double ratio, string format = "N0")
         {
             if (ratio < 1d)
-                return Localizer.Format("#rp0_Generic_Percent_Negative", ((1d - ratio) * 100d).ToString("0.##"));
+                return Localizer.Format("#rp0_Generic_Percent_Negative", ((1d - ratio) * 100d).ToString(format));
 
-            return Localizer.Format("#rp0_Generic_Percent_Positive", ((ratio - 1d) * 100d).ToString("0.##"));
+            return Localizer.Format("#rp0_Generic_Percent_Positive", ((ratio - 1d) * 100d).ToString(format));
         }
 
-        public static string FormatBytes(int amount)
+        public static string FormatBytes(int amount, string format = "0.#")
         {
             if (amount < 1024)
                 return Localizer.Format("#rp0_Generic_DiskSpace_B", amount);
             if(amount < 1024*1024)
-                return Localizer.Format("#rp0_Generic_DiskSpace_kB", (amount / 1024d).ToString("0.#"));
+                return Localizer.Format("#rp0_Generic_DiskSpace_kB", (amount / 1024d).ToString(format));
 
-            return Localizer.Format("#rp0_Generic_DiskSpace_MB", (amount / (1024d * 1024d)).ToString("0.#"));
+            return Localizer.Format("#rp0_Generic_DiskSpace_MB", (amount / (1024d * 1024d)).ToString(format));
         }
 
         public static string FormatValuePositiveNegative(double value, string format)

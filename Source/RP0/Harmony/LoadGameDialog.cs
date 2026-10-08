@@ -83,7 +83,7 @@ namespace RP0.Harmony
                     {
                         if (save.UT != -1.0)
                         {
-                            string text = KSPUtil.PrintDate(save.UT, includeTime: true);
+                            string text = RP0DTUtils.PrintDate(save.UT, includeTime: true);
                             switch (save.gameMode)
                             {
                                 case Game.Modes.CAREER:

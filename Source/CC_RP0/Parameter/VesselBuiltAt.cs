@@ -38,9 +38,10 @@ namespace ContractConfigurator.RP0
 
         protected override bool VesselMeetsCondition(Vessel vessel)
         {
+            if (PresetManager.Instance?.ActivePreset?.GeneralSettings.Enabled != true) return true; // If build times are disabled, we cannot tell where the vessel was built, so we'll be nice.
+
             EditorFacility? curBuiltAt = vessel.GetVesselBuiltAt();
-            return !curBuiltAt.HasValue || curBuiltAt.Value == builtAt ||
-                curBuiltAt.Value == EditorFacility.None;    // Build times disabled
+            return curBuiltAt.HasValue && curBuiltAt.Value == builtAt;
         }
     }
 }

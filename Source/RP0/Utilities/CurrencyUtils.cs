@@ -40,5 +40,23 @@ namespace RP0
                 }
             }
         }
+
+        /// <summary>
+        /// Returns the fraction (0..1) of an already-run fund cost query that the player can currently afford.
+        /// Uses the query's processed total including hidden post-multiplier deltas (the same basis CanAfford
+        /// uses), so leader/strategy modifiers are respected. Returns 1 when the cost is fully covered (or is a
+        /// gain) and 0 when no funds are available. Intended for advancing a project as far as funds allow,
+        /// spending down to ~0 without ever going negative.
+        /// </summary>
+        public static double GetAffordableFundsFraction(CurrencyModifierQuery query)
+        {
+            double effectiveCost = query is CurrencyModifierQueryRP0 cmq
+                ? -cmq.GetTotal(CurrencyRP0.Funds, includeHidden: true)
+                : -query.GetTotal(Currency.Funds);
+            if (effectiveCost <= 0d)
+                return 1d;
+            double fraction = Funding.Instance.Funds / effectiveCost;
+            return fraction < 0d ? 0d : (fraction > 1d ? 1d : fraction);
+        }
     }
 }

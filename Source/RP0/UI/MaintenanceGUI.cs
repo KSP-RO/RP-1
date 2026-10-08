@@ -320,7 +320,7 @@ namespace RP0
                 if (time < 0d)
                 {
                     PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
-                        $"Failed to find a time to warp to, with a limit of {KSPUtil.PrintDateDeltaCompact(FundTargetProject.MaxTime, false, false)}",
+                        $"Failed to find a time to warp to, with a limit of {RP0DTUtils.PrintDateDeltaCompact(FundTargetProject.MaxTime, false, false)}",
                         "Error",
                         HighLogic.UISkin,
                         300,
@@ -354,7 +354,7 @@ namespace RP0
                             InputLockManager.RemoveControlLock("warptofunds");
                         })
                     };
-                    var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Estimated to take {KSPUtil.PrintDateDelta(time, false, false)} and finish on {KSPUtil.PrintDate(Planetarium.GetUniversalTime() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
+                    var dialog = new MultiOptionDialog("warpToFundsConfirm", $"Warp? Estimated to take {RP0DTUtils.PrintDateDelta(time, false, false)} and finish on {RP0DTUtils.PrintDate(Planetarium.GetUniversalTime() + time, false)}", "Confirm Warp", HighLogic.UISkin, 300, options);
                     PopupDialog.SpawnPopupDialog(dialog, false, HighLogic.UISkin);
                 }
             }
@@ -565,7 +565,7 @@ namespace RP0
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(" Nominal Deadline:", HighLogic.Skin.label, GUILayout.Width(160));
-                GUILayout.Label(KSPUtil.PrintDate(p.deadlineUT, false), RightLabel, GUILayout.Width(160));
+                GUILayout.Label(RP0DTUtils.PrintDate(p.deadlineUT, false), RightLabel, GUILayout.Width(160));
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginHorizontal();
@@ -607,7 +607,7 @@ namespace RP0
                 {
                     GUILayout.Space(20);
                     GUILayout.Label(k.displayName, HighLogic.Skin.label, GUILayout.Width(144));
-                    GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? KSPUtil.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(120));
+                    GUILayout.Label(Crew.CrewHandler.Instance.RetirementEnabled ? RP0DTUtils.PrintDate(rt, false) : "(n/a)", HighLogic.Skin.label, GUILayout.Width(120));
                     double cost, flightCost;
                     MaintenanceHandler.Instance.GetNautCost(k, out cost, out flightCost);
                     cost += flightCost;

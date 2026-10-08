@@ -69,7 +69,7 @@ namespace ContractConfigurator.RP0
                 {
                     foreach (VesselParameterGroup vpg in activeContract.GetChildren().Where(x => x is VesselParameterGroup))
                     {
-                        if (vpg.TrackedVessel.GetKCTVesselId() == trackedVessel.GetKCTVesselId())
+                        if (vpg.TrackedVessel?.GetKCTVesselId() == trackedVessel.GetKCTVesselId())
                             CheckVPG(vpg);
                     }
                 }

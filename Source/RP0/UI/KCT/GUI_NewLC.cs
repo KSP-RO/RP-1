@@ -25,6 +25,12 @@ namespace RP0
 
         private const double _MinResourceVolume = 250d;
 
+        // Cap the amount of characters that can be entered into the fields below. Without a limit the
+        // resulting costs (and thus construction times) can grow large enough to break the date formatting.
+        private const int _MaxTonnageChars = 6;
+        private const int _MaxSizeChars = 4;
+        private const int _MaxResourceChars = 7;
+
         private static void SetStrings()
         {
             _tonnageLimit = _newLCData.massMax.ToString("F0");
@@ -239,7 +245,7 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Name:", GUILayout.ExpandWidth(false));
-                _newLCData.Name = GUILayout.TextField(_newLCData.Name);
+                _newLCData.Name = GUILayout.TextField(_newLCData.Name, _MaxNameChars);
                 GUILayout.EndHorizontal();
             }
 
@@ -262,7 +268,7 @@ namespace RP0
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
-                _tonnageLimit = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+                _tonnageLimit = GUILayout.TextField(_tonnageLimit, _MaxTonnageChars, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
                 if (float.TryParse(_tonnageLimit, out _newLCData.massMax))
                 {
                     parsedTonnage = true;
@@ -339,19 +345,19 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Length limit:", GUILayout.ExpandWidth(false));
-            _lengthLimit = GUILayout.TextField(_lengthLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+            _lengthLimit = GUILayout.TextField(_lengthLimit, _MaxSizeChars, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Width limit:", GUILayout.ExpandWidth(false));
-            _widthLimit = GUILayout.TextField(_widthLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+            _widthLimit = GUILayout.TextField(_widthLimit, _MaxSizeChars, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Height limit:", GUILayout.ExpandWidth(false));
-            _heightLimit = GUILayout.TextField(_heightLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+            _heightLimit = GUILayout.TextField(_heightLimit, _MaxSizeChars, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
@@ -432,7 +438,7 @@ namespace RP0
 
                 double buildTime = ConstructionProject.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
                 double buildCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -totalCost);
-                string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
+                string sBuildTime = RP0DTUtils.PrintDateDelta(buildTime, includeTime: false);
                 string costString = isModify ? "Modify Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
@@ -692,7 +698,7 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(_allResourceKeys[i]);
-                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
+                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], _MaxResourceChars, GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
 
                 bool remove = true;
                 if (!string.IsNullOrEmpty(_allResourceValues[i]))

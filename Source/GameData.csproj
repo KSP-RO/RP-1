@@ -170,6 +170,36 @@
     <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\TundraRepeatComSats.cfg">
       <Link>Contracts\Commercial Applications 2\TundraRepeatComSats.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew1Month.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew1Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew1Year.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew1Year.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew2Week.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew2Week.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew3Month.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew3Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew6Month.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew6Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonOrbitCrewedPolar.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonOrbitCrewedPolar.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonSpaceStation.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonSpaceStation.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonSpaceStation12Month.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonSpaceStation12Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonSpaceStation3Month.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonSpaceStation3Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonSpaceStation6Month.cfg">
+      <Link>Contracts\Early Lunar Habitation\MoonSpaceStation6Month.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Early Lunar Probes\LunarFlyby.cfg">
       <Link>Contracts\Early Lunar Probes\LunarFlyby.cfg</Link>
     </Content>
@@ -316,6 +346,66 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Observation 1\EOSMagScan1.cfg">
       <Link>Contracts\Earth Observation 1\EOSMagScan1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2ATS1.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2ATS1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2Hexagon.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2Hexagon.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2HexagonRep.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2HexagonRep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2Midas1.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2Midas1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2MidasRep.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2MidasRep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2Nimbus1.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2Nimbus1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2NimbusRep.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2NimbusRep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2OGO1.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2OGO1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2OGORep.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2OGORep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2Vela1.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2Vela1.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 2\EOS2VelaRep.cfg">
+      <Link>Contracts\Earth Observation 2\EOS2VelaRep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3ERTS.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3ERTS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3GEOS.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3GEOS.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3GEOSRep.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3GEOSRep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3GOES.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3GOES.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3GOESRep.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3GOESRep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3Kennen.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3Kennen.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3KennenRep.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3KennenRep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3Magsat.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3Magsat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Observation 3\EOS3Nimbus7.cfg">
+      <Link>Contracts\Earth Observation 3\EOS3Nimbus7.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Satellites\ComTestSat.cfg">
       <Link>Contracts\Earth Satellites\ComTestSat.cfg</Link>
@@ -472,6 +562,36 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Mars\Phobos Sample Return.cfg">
       <Link>Contracts\Mars\Phobos Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\CrewedMarsLandingRepeat.cfg">
+      <Link>Contracts\Mars Crewed\CrewedMarsLandingRepeat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\DeimosLandingCrew.cfg">
+      <Link>Contracts\Mars Crewed\DeimosLandingCrew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\FirstCrewedMarsLanding.cfg">
+      <Link>Contracts\Mars Crewed\FirstCrewedMarsLanding.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\FirstCrewedMarsOrbit.cfg">
+      <Link>Contracts\Mars Crewed\FirstCrewedMarsOrbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\Mars Crewed Surface Science.cfg">
+      <Link>Contracts\Mars Crewed\Mars Crewed Surface Science.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\Mars Robotic Sample Return.cfg">
+      <Link>Contracts\Mars Crewed\Mars Robotic Sample Return.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\MarsFlybyCrew.cfg">
+      <Link>Contracts\Mars Crewed\MarsFlybyCrew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\MarsVenusFlybyCrew.cfg">
+      <Link>Contracts\Mars Crewed\MarsVenusFlybyCrew.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\Phobos Crewed Landing Surface Science.cfg">
+      <Link>Contracts\Mars Crewed\Phobos Crewed Landing Surface Science.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Mars Crewed\PhobosLandingCrew.cfg">
+      <Link>Contracts\Mars Crewed\PhobosLandingCrew.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Mercury Exploration\Mercury Landing.cfg">
       <Link>Contracts\Mercury Exploration\Mercury Landing.cfg</Link>
@@ -947,6 +1067,9 @@
     <Content Include="..\GameData\RP-1\KCT_Presets\RP1_KCT_Presets.cfg">
       <Link>KCT_Presets\RP1_KCT_Presets.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Localization\de-de.cfg">
+      <Link>Localization\de-de.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Localization\en-us.cfg">
       <Link>Localization\en-us.cfg</Link>
     </Content>
@@ -964,6 +1087,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Parts\RFProcTanks.cfg">
       <Link>Parts\RFProcTanks.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Parts\ScienceBoxUpgrade.cfg">
+      <Link>Parts\ScienceBoxUpgrade.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Parts\ContractSat\CommunicationSat.cfg">
       <Link>Parts\ContractSat\CommunicationSat.cfg</Link>
@@ -1085,11 +1211,32 @@
     <Content Include="..\GameData\RP-1\Parts\Science\VI05-HIResImager.cfg">
       <Link>Parts\Science\VI05-HIResImager.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Parts\Science\Assets\Saturn\bluedog_Pegasus_ElectronSpectrometer.cfg">
+      <Link>Parts\Science\Assets\Saturn\bluedog_Pegasus_ElectronSpectrometer.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Programs\Programs.cfg">
       <Link>Programs\Programs.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Scenarios\1957Start.cfg">
       <Link>Scenarios\1957Start.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Scenarios\1960Start.cfg">
+      <Link>Scenarios\1960Start.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Scenarios\1964Start.cfg">
+      <Link>Scenarios\1964Start.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Scenarios\1969Start.cfg">
+      <Link>Scenarios\1969Start.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Scenarios\1978Start.cfg">
+      <Link>Scenarios\1978Start.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Scenarios\2000Start.cfg">
+      <Link>Scenarios\2000Start.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Scenarios\2015Start.cfg">
+      <Link>Scenarios\2015Start.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Science\BodyScienceParams.cfg">
       <Link>Science\BodyScienceParams.cfg</Link>
@@ -1196,6 +1343,12 @@
     <Content Include="..\GameData\RP-1\Science\Experiments\CrewScience\CockpitExperiments.cfg">
       <Link>Science\Experiments\CrewScience\CockpitExperiments.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Science\Experiments\CrewScience\LunarLanderCapsuleExperiments.cfg">
+      <Link>Science\Experiments\CrewScience\LunarLanderCapsuleExperiments.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Science\Experiments\CrewScience\LunarOrbiterCapsulesExperiments.cfg">
+      <Link>Science\Experiments\CrewScience\LunarOrbiterCapsulesExperiments.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Science\Experiments\CrewScience\MatureCapsuleExperiments.cfg">
       <Link>Science\Experiments\CrewScience\MatureCapsuleExperiments.cfg</Link>
     </Content>
@@ -1204,6 +1357,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Science\Experiments\CrewScience\StationExperiments.cfg">
       <Link>Science\Experiments\CrewScience\StationExperiments.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Science\Experiments\CrewScience\SurfaceExperiments.cfg">
+      <Link>Science\Experiments\CrewScience\SurfaceExperiments.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Science\Results\BioSample.cfg">
       <Link>Science\Results\BioSample.cfg</Link>
@@ -1231,6 +1387,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\SCMData\CostModifiers.cfg">
       <Link>SCMData\CostModifiers.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\SCMData\CraftFileModuleReset.cfg">
+      <Link>SCMData\CraftFileModuleReset.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\SCMData\FuelResources.cfg">
       <Link>SCMData\FuelResources.cfg</Link>
@@ -1303,6 +1462,9 @@
     </Content>
     <Content Include="..\GameData\RP-1\Tree\EntryCostModifiers.cfg">
       <Link>Tree\EntryCostModifiers.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Tree\HardDriveUpgrades.cfg">
+      <Link>Tree\HardDriveUpgrades.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Tree\identicalParts.cfg">
       <Link>Tree\identicalParts.cfg</Link>

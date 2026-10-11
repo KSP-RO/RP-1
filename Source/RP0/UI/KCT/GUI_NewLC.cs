@@ -10,6 +10,7 @@ namespace RP0
         private static readonly GUIContent _extraPadsContent = new GUIContent("Extra Pad Cost:", "Cost to build additional pads past the first once LC is constructed");
         private static readonly GUIContent _cleanButtonContent = new GUIContent("Clean", "Set the LC stats to support only the current vessel, removing support for other vessels to reduce maintenance costs in exchange for a longer renovation time");
         private static readonly GUIContent _existingButtonContent = new GUIContent("Existing", "Set the LC stats to match the currently existing LC");
+        private static readonly GUIContent _vesselsButtonContent = new GUIContent("Vessels", "Show/hide the Plans list. Clicking on a vessel there will merge the current LC stats with those needed to support that vessel, if possible.");
         private static string _tonnageLimit = "1";
         private static string _heightLimit = "10";
         private static string _widthLimit = "2";
@@ -525,13 +526,10 @@ namespace RP0
                     ProcessNewLC(isModify, curPadCost, totalCost, oldTotalCost);
                 }
             }
-            //if (HighLogic.LoadedSceneIsEditor)
-            //{
-            //    if (GUILayout.Button(new GUIContent("Vessels", "Show/hide the Plans list. Clicking on a vessel there will merge the current LC stats with those needed to support that vessel, if possible.")))
-            //    {
-            //        _overrideShowBuildPlans = !_overrideShowBuildPlans;
-            //    }
-            //}
+            if (!isModify && HighLogic.LoadedSceneIsEditor && GUILayout.Button(_vesselsButtonContent))
+            {
+                _overrideShowBuildPlans = !_overrideShowBuildPlans;
+            }
             if (isModify && !isHangar && GUILayout.Button(_cleanButtonContent))
             {
                 SetFieldsFromVessel(SpaceCenterManagement.Instance.EditorVessel, activeLC);

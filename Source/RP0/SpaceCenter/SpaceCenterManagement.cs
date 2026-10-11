@@ -2073,6 +2073,28 @@ namespace RP0
             _recoverCallback.Invoke();
         }
 
+        private const string RecoverVesselPopupName = "RecoverVesselPopup";
+
+        private void DoNormalRecoveryInFlight()
+        {
+            // The button's interactable state is refreshed once per frame and can be stale when the click arrives.
+            if (!WillNormalRecoveryInFlightHaveEffect())
+                return;
+
+            PopupDialog.DismissPopup(RecoverVesselPopupName);
+            DoNormalRecovery();
+        }
+
+        /// <summary>
+        /// Mirrors the conditions under which the stock recovery button handler in flight does anything.
+        /// </summary>
+        private static bool WillNormalRecoveryInFlightHaveEffect()
+        {
+            ClearToSaveStatus status = FlightGlobals.ClearToSave(logMsg: false);
+            return status == ClearToSaveStatus.NOT_WHILE_ON_A_LADDER ||
+                   (status == ClearToSaveStatus.CLEAR && HighLogic.CurrentGame.Parameters.Flight.CanLeaveToSpaceCenter);
+        }
+
         private void QueueRepairFailures()
         {
             KCT_Preset_General settings = PresetManager.Instance.ActivePreset.GeneralSettings;
@@ -2157,9 +2179,10 @@ namespace RP0
                     tooltipText = isVABAllowed ? genericReuseText : $"Can only be used when the vessel was built in VAB.{techLimitText}"
                 });
 
-                options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecovery)
+                options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecoveryInFlight, dismissOnSelect: false)
                 {
-                    tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded."
+                    OptionInteractableCondition = WillNormalRecoveryInFlightHaveEffect,
+                    tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded.\nCan only be used while the vessel is not moving."
                 });
 
                 if (TFInterop.HasSupportForReset && v.GetVesselBuiltAt() != EditorFacility.SPH &&
@@ -2173,12 +2196,15 @@ namespace RP0
             }
             else
             {
-                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecovery));
+                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecoveryInFlight, dismissOnSelect: false)
+                {
+                    OptionInteractableCondition = WillNormalRecoveryInFlightHaveEffect
+                });
             }
 
             options.Add(new DialogGUIButton("Cancel", () => { }));
 
-            var diag = new MultiOptionDialog("RecoverVesselPopup",
+            var diag = new MultiOptionDialog(RecoverVesselPopupName,
                 string.Empty,
                 "Recover vessel",
                 null, options: options.ToArray());

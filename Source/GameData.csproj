@@ -929,12 +929,6 @@
     <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\DistanceSoundingIntermediate.cfg">
       <Link>Contracts\Sounding Rockets\DistanceSoundingIntermediate.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\Downrange.cfg">
-      <Link>Contracts\Sounding Rockets\Downrange.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\DownrangeEarly.cfg">
-      <Link>Contracts\Sounding Rockets\DownrangeEarly.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\First Flight.cfg">
       <Link>Contracts\Sounding Rockets\First Flight.cfg</Link>
     </Content>
@@ -1520,7 +1514,6 @@
     <Content Include="..\GameData\RP-1\Tree\UpgradeCleanup.cfg">
       <Link>Tree\UpgradeCleanup.cfg</Link>
     </Content>
-
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

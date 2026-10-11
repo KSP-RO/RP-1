@@ -125,6 +125,7 @@ namespace RP0
                 if (GUILayout.Button("Close"))
                 {
                     GUIStates.ShowBuildPlansWindow = false;
+                    _overrideShowBuildPlans = false;
                 }
             }
 

@@ -965,6 +965,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(new GUIContent("New LC", "Design and build a new Launch Complex"), GUILayout.ExpandWidth(false)))
             {
+                if (HighLogic.LoadedSceneIsEditor)
+                    SpaceCenterManagement.Instance.EditorRecalculation();
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowLCManagement = false;

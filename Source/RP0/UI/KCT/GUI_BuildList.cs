@@ -968,6 +968,8 @@ namespace RP0
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowLCManagement = false;
+                if (HighLogic.LoadedSceneIsEditor && EditorLogic.fetch.ship.parts.Count > 0)
+                    SetFieldsFromVessel(SpaceCenterManagement.Instance.EditorVessel);
                 _centralWindowPosition.width = 300;
                 _centralWindowPosition.height = 1;
             }

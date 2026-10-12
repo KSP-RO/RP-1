@@ -10,6 +10,7 @@ namespace RP0
         private static readonly GUIContent _extraPadsContent = new GUIContent("Extra Pad Cost:", "Cost to build additional pads past the first once LC is constructed");
         private static readonly GUIContent _cleanButtonContent = new GUIContent("Clean", "Set the LC stats to support only the current vessel, removing support for other vessels to reduce maintenance costs in exchange for a longer renovation time");
         private static readonly GUIContent _existingButtonContent = new GUIContent("Existing", "Set the LC stats to match the currently existing LC");
+        private static readonly GUIContent _vesselsButtonContent = new GUIContent("Vessels", "Show/hide the Plans list. Clicking on a vessel there will add or remove support for that vessel in the current LC stats. Supported vessels are marked with an X.");
         private static string _tonnageLimit = "1";
         private static string _heightLimit = "10";
         private static string _widthLimit = "2";
@@ -22,6 +23,13 @@ namespace RP0
         private static bool _overrideShowBuildPlans = false;
         private static float _requiredTonnage = 0;
         private static bool _assignEngOnComplete = true;
+        // The vessels the new LC's stats are sized for, and their mass range.
+        private static readonly List<VesselProject> _newLCVessels = new List<VesselProject>();
+        private static bool _newLCUsesEditorVessel = false;
+        private static float _lightestVessel = float.MaxValue;
+        private static float _heaviestVessel = 0f;
+
+        private enum NewLCMergeResult { Success, TooLight, TooHeavy }
 
         private const double _MinResourceVolume = 250d;
 
@@ -77,6 +85,7 @@ namespace RP0
                 _newLCData.Name = _newName = $"Launch Complex {(SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count)}";
                 _newLCData.massOrig = _newLCData.massMax;
                 _newLCData.lcType = LaunchComplexType.Pad;
+                _lightestVessel = _heaviestVessel = vp.mass;
             }
             else
             {
@@ -137,13 +146,6 @@ namespace RP0
                 SetFieldsFromLC(lc);
             }
 
-            if(_newLCData.sizeMax.z < vp.ShipSize.z)
-                _newLCData.sizeMax.z = Mathf.Ceil(vp.ShipSize.z * 1.1f);
-            if (_newLCData.sizeMax.x < vp.ShipSize.x)
-                _newLCData.sizeMax.x = Mathf.Ceil(vp.ShipSize.x * 1.1f);
-            if (_newLCData.sizeMax.y < vp.ShipSize.y)
-                _newLCData.sizeMax.y = Mathf.Ceil(vp.ShipSize.y * 1.1f);
-
             if (_newLCData.massMax < vp.mass)
             {
                 float desiredMass = Mathf.Ceil(vp.mass * 1.1f);
@@ -168,6 +170,139 @@ namespace RP0
 
             if (lc != null)
                 _requiredTonnage = _newLCData.massMax;
+
+            GrowFieldsToFitVessel(vp);
+        }
+
+        private static void ResetNewLCVessels()
+        {
+            _newLCVessels.Clear();
+            _newLCUsesEditorVessel = false;
+            _lightestVessel = float.MaxValue;
+            _heaviestVessel = 0f;
+        }
+
+        /// <summary>
+        /// Widens the stats of the new LC so that it supports the given vessel in addition to
+        /// the vessels it was already sized for. Leaves the stats untouched on failure.
+        /// </summary>
+        private static NewLCMergeResult MergeVesselIntoNewLC(VesselProject vp)
+        {
+            float lightest = Math.Min(_lightestVessel, vp.mass);
+            float heaviest = Math.Max(_heaviestVessel, vp.mass);
+            float massMax = _newLCData.massMax;
+            if (massMax < heaviest || LCData.CalcMassMin(massMax) > lightest)
+            {
+                massMax = Math.Max(1f, Mathf.Ceil(heaviest * 1.1f));
+                if (LCData.CalcMassMin(massMax) > lightest)
+                {
+                    // Give up the margin above the heaviest vessel to keep the lightest one in range.
+                    massMax = LCData.CalcMassMaxFromMin(lightest);
+                    if (LCData.CalcMassMin(massMax) > lightest)
+                        massMax -= 1f;
+                    if (massMax < heaviest)
+                        return vp.mass > _heaviestVessel ? NewLCMergeResult.TooHeavy : NewLCMergeResult.TooLight;
+                }
+            }
+
+            _lightestVessel = lightest;
+            _heaviestVessel = heaviest;
+            _newLCData.massMax = massMax;
+            GrowFieldsToFitVessel(vp);
+            return NewLCMergeResult.Success;
+        }
+
+        private static bool IsVesselInNewLC(VesselProject vp)
+        {
+            return vp == SpaceCenterManagement.Instance.EditorVessel ? _newLCUsesEditorVessel : _newLCVessels.Contains(vp);
+        }
+
+        private static void SetVesselInNewLC(VesselProject vp, bool isIn)
+        {
+            if (vp == SpaceCenterManagement.Instance.EditorVessel)
+                _newLCUsesEditorVessel = isIn;
+            else if (!isIn)
+                _newLCVessels.Remove(vp);
+            else if (!_newLCVessels.Contains(vp))
+                _newLCVessels.Add(vp);
+        }
+
+        /// <summary>
+        /// Sizes the new LC for the given vessel alone, keeping the name that was entered.
+        /// </summary>
+        private static void SetNewLCFieldsFromVessel(VesselProject vp)
+        {
+            string name = _newLCData.Name;
+            SetFieldsFromVessel(vp);
+            _newLCData.Name = name;
+        }
+
+        private static void AddVesselToNewLC(VesselProject vp)
+        {
+            NewLCMergeResult result = NewLCMergeResult.Success;
+            if (!_newLCUsesEditorVessel && _newLCVessels.Count == 0)
+                SetNewLCFieldsFromVessel(vp);
+            else
+                result = MergeVesselIntoNewLC(vp);
+
+            string text;
+            switch (result)
+            {
+                case NewLCMergeResult.TooLight:
+                    text = $"{vp.shipName} is too light to share a launch complex with the other vessels.";
+                    break;
+                case NewLCMergeResult.TooHeavy:
+                    text = $"{vp.shipName} is too heavy to share a launch complex with the other vessels.";
+                    break;
+                default:
+                    SetVesselInNewLC(vp, true);
+                    text = $"Added support for {vp.shipName}.";
+                    break;
+            }
+            ScreenMessages.PostScreenMessage(text, 4f, ScreenMessageStyle.UPPER_CENTER);
+        }
+
+        /// <summary>
+        /// Removes a vessel and recalculates the stats from the vessels that remain.
+        /// The stats are left as they are when no vessels remain.
+        /// </summary>
+        private static void RemoveVesselFromNewLC(VesselProject vp)
+        {
+            SetVesselInNewLC(vp, false);
+
+            var remaining = new List<VesselProject>(_newLCVessels);
+            if (_newLCUsesEditorVessel)
+                remaining.Insert(0, SpaceCenterManagement.Instance.EditorVessel);
+
+            _lightestVessel = float.MaxValue;
+            _heaviestVessel = 0f;
+            for (int i = 0; i < remaining.Count; i++)
+            {
+                if (i == 0)
+                    SetNewLCFieldsFromVessel(remaining[i]);
+                else if (MergeVesselIntoNewLC(remaining[i]) != NewLCMergeResult.Success)
+                    SetVesselInNewLC(remaining[i], false);
+            }
+
+            ScreenMessages.PostScreenMessage($"Removed support for {vp.shipName}.", 4f, ScreenMessageStyle.UPPER_CENTER);
+        }
+
+        private static void ToggleVesselInNewLC(VesselProject vp)
+        {
+            if (IsVesselInNewLC(vp))
+                RemoveVesselFromNewLC(vp);
+            else
+                AddVesselToNewLC(vp);
+        }
+
+        private static void GrowFieldsToFitVessel(VesselProject vp)
+        {
+            if (_newLCData.sizeMax.z < vp.ShipSize.z)
+                _newLCData.sizeMax.z = Mathf.Ceil(vp.ShipSize.z * 1.1f);
+            if (_newLCData.sizeMax.x < vp.ShipSize.x)
+                _newLCData.sizeMax.x = Mathf.Ceil(vp.ShipSize.x * 1.1f);
+            if (_newLCData.sizeMax.y < vp.ShipSize.y)
+                _newLCData.sizeMax.y = Mathf.Ceil(vp.ShipSize.y * 1.1f);
 
             _newLCData.isHumanRated |= vp.humanRated;
             foreach (var kvp in vp.resourceAmounts)
@@ -525,13 +660,10 @@ namespace RP0
                     ProcessNewLC(isModify, curPadCost, totalCost, oldTotalCost);
                 }
             }
-            //if (HighLogic.LoadedSceneIsEditor)
-            //{
-            //    if (GUILayout.Button(new GUIContent("Vessels", "Show/hide the Plans list. Clicking on a vessel there will merge the current LC stats with those needed to support that vessel, if possible.")))
-            //    {
-            //        _overrideShowBuildPlans = !_overrideShowBuildPlans;
-            //    }
-            //}
+            if (!isModify && GUILayout.Button(_vesselsButtonContent))
+            {
+                _overrideShowBuildPlans = !_overrideShowBuildPlans;
+            }
             if (isModify && !isHangar && GUILayout.Button(_cleanButtonContent))
             {
                 SetFieldsFromVessel(SpaceCenterManagement.Instance.EditorVessel, activeLC);

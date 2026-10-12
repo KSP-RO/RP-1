@@ -297,7 +297,9 @@ namespace RP0
                 }
                 else
                 {
+                    ResetNewLCVessels();
                     SetFieldsFromVessel(SpaceCenterManagement.Instance.EditorVessel);
+                    _newLCUsesEditorVessel = true;
 
                     _wasShowBuildList = GUIStates.ShowBuildList;
                     GUIStates.ShowNewLC = true;

@@ -76,6 +76,11 @@ namespace RP0
                 GUILayout.EndHorizontal();
                 _buildPlansScrollPos = GUILayout.BeginScrollView(_buildPlansScrollPos, GUILayout.Height(250));
 
+                if (GUIStates.ShowNewLC && HighLogic.LoadedSceneIsEditor)
+                {
+                    VesselProject current = SpaceCenterManagement.Instance.EditorVessel;
+                    DrawNewLCVesselRow(current, new GUIContent($"{current.shipName} (current)", "The vessel in the editor"), butW);
+                }
                 if (SpaceCenterManagement.Instance.BuildPlans.Count == 0)
                 {
                     GUILayout.Label("No vessels in plans.");
@@ -85,6 +90,13 @@ namespace RP0
                     VesselProject b = SpaceCenterManagement.Instance.BuildPlans.Values[i];
                     if (!b.AllPartsValid)
                         continue;
+                    var planContent = new GUIContent(b.shipName, $"Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -b.cost):N0}");
+                    if (GUIStates.ShowNewLC)
+                    {
+                        DrawNewLCVesselRow(b, planContent, butW);
+                        continue;
+                    }
+                    bool fitsLC = lcMode && b.MeetsFacilityRequirements(_newLCData, null);
                     GUILayout.BeginHorizontal();
                     {
                         if (lcMode)
@@ -102,7 +114,7 @@ namespace RP0
                             PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
                         }
 
-                        if (GUILayout.Button(new GUIContent(b.shipName, $"Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -b.cost):N0}")))
+                        if (GUILayout.Button(planContent, fitsLC ? _greenButton : GUI.skin.button))
                         {
                             if (lcMode)
                             {
@@ -125,11 +137,30 @@ namespace RP0
                 if (GUILayout.Button("Close"))
                 {
                     GUIStates.ShowBuildPlansWindow = false;
+                    _overrideShowBuildPlans = false;
                 }
             }
 
             GUILayout.EndVertical();
             GUI.DragWindow();
+        }
+
+        /// <summary>
+        /// Draws a vessel in the list shown beside the New LC window. The X marks a vessel that the
+        /// LC stats are sized for, and a green name marks a vessel that the LC stats support.
+        /// </summary>
+        private static void DrawNewLCVesselRow(VesselProject vp, GUIContent content, int butW)
+        {
+            bool inNewLC = IsVesselInNewLC(vp);
+            GUILayout.BeginHorizontal();
+            if (!inNewLC)
+                GUILayout.Label("", GUILayout.Width(butW));
+            else if (GUILayout.Button("X", _redButton, GUILayout.Width(butW)))
+                RemoveVesselFromNewLC(vp);
+
+            if (GUILayout.Button(content, vp.MeetsFacilityRequirements(_newLCData, null) ? _greenButton : GUI.skin.button))
+                ToggleVesselInNewLC(vp);
+            GUILayout.EndHorizontal();
         }
 
         // Following is mostly duplicating the AddVesselToBuildList set of methods

@@ -274,7 +274,7 @@
         "engine_config": "RD0214",
         "upgrade": false,
         "entry_cost_mods": "RD-0207",
-        "identical_part_name": "",
+        "identical_part_name": "RD-0214",
         "module_tags": []
     },
     {

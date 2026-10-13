@@ -264,7 +264,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "25000, SoyuzSM",
-        "identical_part_name": "",
+        "identical_part_name": "7KOKFuelTank",
         "module_tags": []
     },
     {
@@ -784,7 +784,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "capsulesVA",
-        "identical_part_name": "",
+        "identical_part_name": "VA Decoupler",
         "module_tags": []
     },
     {
@@ -807,7 +807,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "VA LES",
         "module_tags": [
             "EngineSolid"
         ]
@@ -831,7 +831,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "capsulesVA",
-        "identical_part_name": "",
+        "identical_part_name": "VA Parachute",
         "module_tags": []
     },
     {
@@ -978,7 +978,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "capsulesVostok",
-        "identical_part_name": "",
+        "identical_part_name": "Vostok Decoupler",
         "module_tags": []
     },
     {

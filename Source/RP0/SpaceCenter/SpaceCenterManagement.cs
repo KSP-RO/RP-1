@@ -1682,6 +1682,12 @@ namespace RP0
 
             RP0Debug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
 
+            // AssembleForLaunch snapshots the vessel's protoVessel before it assigns flight IDs, and the initial
+            // save that would refresh it is pushed back below while the vessel is held packed. Principia adds a
+            // packed vessel from that snapshot, sees every part as flightID 0 and aborts on the duplicate.
+            yield return new WaitUntil(() => FlightGlobals.ActiveVessel != null);
+            FlightGlobals.ActiveVessel.BackupVessel();
+
             int currentFrame = Time.frameCount;
             double nextUT = startUT;
             while (targetUT - nextUT > dayInSeconds)

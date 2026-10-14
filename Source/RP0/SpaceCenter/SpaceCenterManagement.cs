@@ -173,6 +173,7 @@ namespace RP0
         public Guid PreEditorSwapLCID = Guid.Empty;
         public bool IsLaunchSiteControllerDisabled;
 
+        private bool _isFlightReady;
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
 
@@ -193,6 +194,9 @@ namespace RP0
             Instance = this;
 
             if (KSPUtils.CurrentGameIsMission()) return;
+
+            // Subscribed here rather than in Start so it can't miss PostInit's onFlightReady
+            GameEvents.onFlightReady.Add(OnFlightReady);
 
             KCTSettings.Instance.Load();
 
@@ -483,6 +487,7 @@ namespace RP0
 
         public void OnDestroy()
         {
+            GameEvents.onFlightReady.Remove(OnFlightReady);
             _simWatermark?.DestroyGameObject();
 
             if (ToolbarControl != null)
@@ -1247,6 +1252,11 @@ namespace RP0
             }
         }
 
+        private void OnFlightReady()
+        {
+            _isFlightReady = true;
+        }
+
         private void ProcessSimulation()
         {
             HighLogic.CurrentGame.Parameters.Flight.CanAutoSave = false;
@@ -1264,6 +1274,12 @@ namespace RP0
                     simParams.IsVesselMoved = true;
                     return;
                 }
+
+                // Wait for FlightDriver.PostInit to capture the initial flight state with the vessel on the pad.
+                // Its Game.Updated() call runs BackupVessel(), the first protoVessel refresh after AssembleForLaunch
+                // assigns part flight IDs. Principia adds a vessel packed in orbit from that snapshot and aborts on
+                // flightID 0. PostInit is pushed back further while EaseSimulationUT_Coroutine runs.
+                if (!_isFlightReady) return;
 
                 int secondsForMove = simParams.DelayMoveSeconds;
                 if (_simMoveDeferTime == DateTime.MaxValue)
@@ -1681,12 +1697,6 @@ namespace RP0
             if (targetUT <= Planetarium.GetUniversalTime()) yield break;
 
             RP0Debug.Log($"Easing jump to simulation UT in {dayInSeconds}s steps");
-
-            // AssembleForLaunch snapshots the vessel's protoVessel before it assigns flight IDs, and the initial
-            // save that would refresh it is pushed back below while the vessel is held packed. Principia adds a
-            // packed vessel from that snapshot, sees every part as flightID 0 and aborts on the duplicate.
-            yield return new WaitUntil(() => FlightGlobals.ActiveVessel != null);
-            FlightGlobals.ActiveVessel.BackupVessel();
 
             int currentFrame = Time.frameCount;
             double nextUT = startUT;

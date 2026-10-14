@@ -257,7 +257,7 @@ namespace RP0
             if (vessel != v) return;
 
             onRailsCached = onRails;
-                UpdateRate(onRails);
+            UpdateRate(onRails);
         }
 
         // Too many ways to exit a scene, so always write the Disabled power draw

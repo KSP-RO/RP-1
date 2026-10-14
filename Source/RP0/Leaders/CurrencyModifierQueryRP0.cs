@@ -238,7 +238,7 @@ namespace RP0
                         if (double.IsInfinity(amount) || double.IsNaN(amount) || amount > (100 * 365.25d * 86400d))
                             amountText = Localizer.GetStringByTag("#autoLOC_462439");
                         else
-                            amountText = KSPUtil.PrintDateDeltaCompact(amount, amount < 7d * 86400d, amount < 600);
+                            amountText = RP0DTUtils.PrintDateDeltaCompact(amount, amount < 7d * 86400d, amount < 600);
                     }
                     else
                     {

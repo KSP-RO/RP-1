@@ -160,8 +160,23 @@ namespace RP0
             {
                 double rushCostDelta = costDelta * RushMultiplier;
 
-                if (KSPUtils.CurrentGameIsCareer() && !CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -(float)rushCostDelta, 0f, 0f).CanAfford())
+                CurrencyModifierQuery q = CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -(float)rushCostDelta, 0f, 0f);
+                if (KSPUtils.CurrentGameIsCareer() && !q.CanAfford())
                 {
+                    // Rather than halting the whole step (which throws away up to a full day of
+                    // affordable progress at high warp and makes the ETA lurch), advance only as far
+                    // as the current funds allow and spend down to ~0. This keeps progress smooth and
+                    // independent of the timewarp rate while still never letting the player go into debt.
+                    double affordFraction = CurrencyUtils.GetAffordableFundsFraction(q);
+                    double rushSpend = rushCostDelta * affordFraction;
+                    if (rushSpend > 0d)
+                    {
+                        KCTUtilities.SpendFunds(rushSpend, TransactionReasons.StructureConstruction);
+                        spentCost += costDelta * affordFraction;
+                        spentRushCost += rushSpend;
+                    }
+                    progress += (newProgress - progress) * affordFraction;
+
                     if (TimeWarp.CurrentRate > 1f && KCTWarpController.Instance is KCTWarpController)
                     {
                         ScreenMessages.PostScreenMessage("Timewarp was stopped because there's insufficient funds to continue the construction");

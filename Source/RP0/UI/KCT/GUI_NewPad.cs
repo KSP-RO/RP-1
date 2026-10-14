@@ -16,7 +16,7 @@ namespace RP0
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:", GUILayout.ExpandWidth(false));
-            _newName = GUILayout.TextField(_newName);
+            _newName = GUILayout.TextField(_newName, _MaxNameChars);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
@@ -47,7 +47,7 @@ namespace RP0
             if (curPadCost > 0)
             {
                 double curPadBuildTime = ConstructionProject.CalculateBuildTime(curPadCost, 0d, SpaceCenterFacility.LaunchPad);
-                string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
+                string sBuildTime = RP0DTUtils.PrintDateDelta(curPadBuildTime, includeTime: false);
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Cost:", GUILayout.ExpandWidth(false));
@@ -123,7 +123,7 @@ namespace RP0
         {
             GUILayout.BeginVertical();
             GUILayout.Label("Name:");
-            _newName = GUILayout.TextField(_newName);
+            _newName = GUILayout.TextField(_newName, _MaxNameChars);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save"))
             {

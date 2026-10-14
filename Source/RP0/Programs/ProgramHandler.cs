@@ -514,7 +514,7 @@ namespace RP0.Programs
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Accepted: ", HighLogic.Skin.label);
-                    GUILayout.Label(KSPUtil.dateTimeFormatter.PrintDateCompact(p.acceptedUT, false, false), HighLogic.Skin.label);
+                    GUILayout.Label(RP0DTUtils.PrintDateCompact(p.acceptedUT, false, false), HighLogic.Skin.label);
                     GUILayout.EndHorizontal();
                 }
 
@@ -522,7 +522,7 @@ namespace RP0.Programs
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Completed: ", HighLogic.Skin.label);
-                    GUILayout.Label(KSPUtil.dateTimeFormatter.PrintDateCompact(p.completedUT, false, false), HighLogic.Skin.label);
+                    GUILayout.Label(RP0DTUtils.PrintDateCompact(p.completedUT, false, false), HighLogic.Skin.label);
                     GUILayout.EndHorizontal();
                 }
             }

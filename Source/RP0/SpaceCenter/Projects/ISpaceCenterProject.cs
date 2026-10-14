@@ -10,7 +10,8 @@
         KSC,
         AirLaunch,
         Crew,
-        VesselRepair
+        VesselRepair,
+        CrewRnR
     };
 
     public interface ISpaceCenterProject

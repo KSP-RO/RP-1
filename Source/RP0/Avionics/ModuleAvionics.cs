@@ -251,9 +251,10 @@ namespace RP0
 
         private void RailChange(Vessel v, bool onRails)
         {
+            if (vessel != v) return;
+
             onRailsCached = onRails;
-            if (vessel == v)
-                UpdateRate(onRails);
+            UpdateRate(onRails);
         }
 
         // Too many ways to exit a scene, so always write the Disabled power draw

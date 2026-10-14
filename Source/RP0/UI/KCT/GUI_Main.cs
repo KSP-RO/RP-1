@@ -21,6 +21,7 @@ namespace RP0
         private static bool _unlockEditor;
         private static bool _isKSCLocked = false;
         private static bool _inSCSubscene = false;
+        private static bool _rolloutTimeNeedsUpdate = true;
         public static bool InSCSubscene => _inSCSubscene;
         private static readonly List<GameScenes> _validScenes = new List<GameScenes> { GameScenes.FLIGHT, GameScenes.EDITOR, GameScenes.SPACECENTER, GameScenes.TRACKSTATION };
         private static GUIStyle _styleLabelRightAlign;
@@ -28,6 +29,11 @@ namespace RP0
         private static GUIStyle _styleLabelYellow;
         private static GUIStyle _styleLabelCenterAlign;
         private static GUIStyle _styleTextFieldRightAlign;
+
+        /// <summary>
+        /// Max amount of characters that can be entered for the name of a launch complex, pad or vessel.
+        /// </summary>
+        private const int _MaxNameChars = 40;
 
         public static bool IsPrimarilyDisabled => PresetManager.PresetLoaded() && (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled ||
                                                                                    !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes);
@@ -51,6 +57,8 @@ namespace RP0
 
                 if (GUIStates.ShowEditorGUI)
                     EditorWindowPosition = DrawWindowWithTooltipSupport(EditorWindowPosition, "DrawEditorGUI", "Integration Info", DrawEditorGUI);
+                else
+                    _rolloutTimeNeedsUpdate = true; // as a simpler workaround, assume that the rollout effect needs updating if Editor GUI isn't already open
                 if (GUIStates.ShowSimulationGUI)
                     _simulationWindowPosition = DrawWindowWithTooltipSupport(_simulationWindowPosition, "DrawSimGUI", "Simulation", DrawSimulationWindow);
                 if (GUIStates.ShowSimConfig)

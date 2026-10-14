@@ -179,6 +179,8 @@
     <Compile Include="Settings\SpaceCenterSettings.cs" />
     <Compile Include="Maintenance\MaintenanceHandler.cs" />
     <Compile Include="Crew\CrewHandler.cs" />
+    <Compile Include="Crew\BoostTrainingRate.cs" />
+    <Compile Include="Crew\BoostTrainingRateFactory.cs" />
     <Compile Include="Settings\GameParameters.cs" />
     <Compile Include="PartModules\ModuleNonRecharge.cs" />
     <Compile Include="PartModules\ModuleNonReentryRated.cs" />

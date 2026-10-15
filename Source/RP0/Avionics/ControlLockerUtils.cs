@@ -91,7 +91,7 @@ namespace RP0
                 if ((countClamps || !clamp) && cmd && !avionics)
                     forceUnlock = true;
                 if (avionics)
-                    maxMass = Math.Max(maxMass, partAvionicsMass);
+                    maxMass += partAvionicsMass;
             }
 
             if (!forceUnlock && vesselMass > maxMass)  // Lock if vessel mass is greater than controlled mass.

@@ -173,6 +173,7 @@ namespace RP0
         public Guid PreEditorSwapLCID = Guid.Empty;
         public bool IsLaunchSiteControllerDisabled;
 
+        private bool _isFlightReady;
         private DateTime _simMoveDeferTime = DateTime.MaxValue;
         private int _simMoveSecondsRemain = 0;
 
@@ -193,6 +194,9 @@ namespace RP0
             Instance = this;
 
             if (KSPUtils.CurrentGameIsMission()) return;
+
+            // Subscribed here rather than in Start so it can't miss PostInit's onFlightReady
+            GameEvents.onFlightReady.Add(OnFlightReady);
 
             KCTSettings.Instance.Load();
 
@@ -483,6 +487,7 @@ namespace RP0
 
         public void OnDestroy()
         {
+            GameEvents.onFlightReady.Remove(OnFlightReady);
             _simWatermark?.DestroyGameObject();
 
             if (ToolbarControl != null)
@@ -1247,6 +1252,11 @@ namespace RP0
             }
         }
 
+        private void OnFlightReady()
+        {
+            _isFlightReady = true;
+        }
+
         private void ProcessSimulation()
         {
             HighLogic.CurrentGame.Parameters.Flight.CanAutoSave = false;
@@ -1264,6 +1274,10 @@ namespace RP0
                     simParams.IsVesselMoved = true;
                     return;
                 }
+
+                // Wait for FlightDriver.PostInit to capture the initial flight state with the vessel on the pad.
+                // Fixes Principia crash caused by packed vessel parts not being initialized (flightID 0).
+                if (!_isFlightReady) return;
 
                 int secondsForMove = simParams.DelayMoveSeconds;
                 if (_simMoveDeferTime == DateTime.MaxValue)

@@ -1276,9 +1276,7 @@ namespace RP0
                 }
 
                 // Wait for FlightDriver.PostInit to capture the initial flight state with the vessel on the pad.
-                // Its Game.Updated() call runs BackupVessel(), the first protoVessel refresh after AssembleForLaunch
-                // assigns part flight IDs. Principia adds a vessel packed in orbit from that snapshot and aborts on
-                // flightID 0. PostInit is pushed back further while EaseSimulationUT_Coroutine runs.
+                // Fixes Principia crash caused by packed vessel parts not being initialized (flightID 0).
                 if (!_isFlightReady) return;
 
                 int secondsForMove = simParams.DelayMoveSeconds;

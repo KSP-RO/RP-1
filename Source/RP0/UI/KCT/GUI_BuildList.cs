@@ -972,6 +972,7 @@ namespace RP0
                 GUIStates.ShowLCManagement = false;
                 _centralWindowPosition.width = 300;
                 _centralWindowPosition.height = 1;
+                _newLCData.Name = $"Launch Complex {SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count}";
             }
             LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
             if (ksc.LaunchComplexes.Count > 1 &&

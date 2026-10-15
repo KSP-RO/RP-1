@@ -91,6 +91,8 @@ namespace RP0
             _blobText.fontSize = 30;
             _blobText.fixedHeight = 20;
             _blobText.alignment = TextAnchor.MiddleCenter;
+            // A bullet wider than the label would wrap onto a second line.
+            _blobText.wordWrap = false;
 
             _yellowButton = new GUIStyle(GUI.skin.button);
             _yellowButton.normal.textColor = XKCDColors.KSPMellowYellow;

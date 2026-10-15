@@ -160,9 +160,9 @@ namespace RP0
         {
             bool rename = true;
             yield return new WaitForSeconds(1f);
-            if (vessel != FlightGlobals.ActiveVessel)
+            if (part.vessel != FlightGlobals.ActiveVessel)
             {
-                foreach (Part p in vessel.Parts)
+                foreach (Part p in part.vessel.Parts)
                 {
                     ModuleAvionics avionics = p.FindModuleImplementing<ModuleAvionics>();
                     ModuleCommand command = p.FindModuleImplementing<ModuleCommand>();
@@ -175,7 +175,7 @@ namespace RP0
                 }
 
                 if (rename)
-                    vessel.vesselType = VesselType.Debris;
+                    part.vessel.vesselType = VesselType.Debris;
             }
         }
 
@@ -184,7 +184,7 @@ namespace RP0
         /// If all the antenna PMs are disabled then RA will make sure that the issue is fixed in a permanent way.
         /// Additionally, the vessel type needs to be set to Debris, or else contracts will still be completable.
         /// </summary>
-        protected void CheckIfLastAvionicsDead()
+        protected void OnAvionicsKilled()
         {
             bool anyAlive = false;
             List<ModuleAvionics> avionicsModules = part.vessel.FindPartModulesImplementing<ModuleAvionics>();
@@ -202,7 +202,7 @@ namespace RP0
                         mra.PermanentShutdownAction(null);
                 }
 
-                vessel.vesselType = VesselType.Debris;
+                part.vessel.vesselType = VesselType.Debris;
             }
         }
 
@@ -376,7 +376,7 @@ namespace RP0
         {
             dead = true;
             DisableModuleCommand();
-            CheckIfLastAvionicsDead();
+            OnAvionicsKilled();
             ToggleEvent();
         }
         #endregion

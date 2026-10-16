@@ -51,6 +51,13 @@ namespace RP0.Crew
         [KSPField(isPersistant = true)]
         public PersistentList<TrainingCourse> TrainingCourses = new PersistentList<TrainingCourse>();
 
+        // Courses the player has queued but not yet started because some of their students are
+        // still on R&R. Kept separate from TrainingCourses so every consumer of that list can keep
+        // assuming its entries are started and actively progressing. A pending course auto-starts
+        // (moving to TrainingCourses) once all its students are back on duty; see ProcessPendingCourses.
+        [KSPField(isPersistant = true)]
+        public PersistentList<TrainingCourse> PendingTrainingCourses = new PersistentList<TrainingCourse>();
+
         // Display-only projects for astronauts on R&R, surfaced in the build list. Rebuilt lazily
         // only when the set of inactive nauts changes (see OnKerbalInactiveChange) instead of being
         // reallocated every GUI frame.
@@ -711,6 +718,100 @@ namespace RP0.Crew
             // The set of nauts on R&R has changed; flag the cached project list for a rebuild on next access.
             // Can't rebuild inline because this event fires before pcm.inactive is updated.
             _rnrProjectsDirty = true;
+
+            // A naut returning to duty (isInactive == false) may complete the roster of a queued
+            // training course. Defer the check a frame, since pcm.inactive isn't updated yet here.
+            if (!isInactive && PendingTrainingCourses.Count > 0)
+                SchedulePendingCourseCheck();
+        }
+
+        private bool _pendingCourseCheckQueued = false;
+
+        // Runs a frame after a naut returns to duty (so pcm.inactive is current) to start any
+        // queued course whose whole roster is now back. Event-driven so nothing runs per-frame.
+        private void SchedulePendingCourseCheck()
+        {
+            if (_pendingCourseCheckQueued)
+                return;
+            _pendingCourseCheckQueued = true;
+            StartCoroutine(CheckPendingCoursesRoutine());
+        }
+
+        private IEnumerator CheckPendingCoursesRoutine()
+        {
+            yield return null;
+            _pendingCourseCheckQueued = false;
+            TryStartPendingCourses();
+        }
+
+        /// <summary>
+        /// Start every queued course whose students are all back on active duty (wait-for-all).
+        /// Prunes students who can never return and cancels a course that can no longer field its
+        /// minimum crew. Cheap to call; a no-op when there are no pending courses.
+        /// </summary>
+        public void TryStartPendingCourses()
+        {
+            if (PendingTrainingCourses.Count == 0)
+                return;
+
+            bool anyStarted = false;
+            for (int i = PendingTrainingCourses.Count; i-- > 0;)
+            {
+                TrainingCourse course = PendingTrainingCourses[i];
+
+                // A course whose template vanished can't be evaluated or started. Leave it queued;
+                // the relink-on-purchase and OnTechCanceled paths decide whether to cancel it.
+                if (!course.HasTemplate)
+                    continue;
+
+                List<string> departed = course.PruneDepartedStudents();
+
+                if (course.Students.Count < course.SeatMin)
+                {
+                    PendingTrainingCourses.RemoveAt(i);
+                    SpawnCrewNotification("QueuedTrainingCancelled", "Training Cancelled",
+                        $"Queued training \"{course.GetItemName()}\" was cancelled because too few of its crew remain available.");
+                    continue;
+                }
+
+                if (!course.AllStudentsReady())
+                    continue;   // still waiting on someone to return to duty
+
+                if (course.StartCourse())
+                {
+                    PendingTrainingCourses.RemoveAt(i);
+                    TrainingCourses.Add(course);
+                    anyStarted = true;
+
+                    var sb = StringBuilderCache.Acquire();
+                    sb.Append($"Queued training \"{course.GetItemName()}\" has started now that its crew are back on duty:");
+                    foreach (ProtoCrewMember student in course.Students)
+                        sb.Append("\n").Append(student.displayName);
+                    if (departed.Count > 0)
+                    {
+                        sb.Append("\n\nStarted without the following, who are no longer available:");
+                        foreach (string name in departed)
+                            sb.Append("\n").Append(name);
+                    }
+                    SpawnCrewNotification("QueuedTrainingStarted", "Training Started", sb.ToStringAndRelease());
+                }
+            }
+
+            if (anyStarted)
+                MaintenanceHandler.Instance.ScheduleMaintenanceUpdate();
+        }
+
+        private void SpawnCrewNotification(string dialogName, string title, string message)
+        {
+            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f),
+                                         new Vector2(0.5f, 0.5f),
+                                         dialogName,
+                                         title,
+                                         message,
+                                         KSP.Localization.Localizer.GetStringByTag("#autoLOC_190905"),
+                                         true,
+                                         HighLogic.UISkin,
+                                         !HighLogic.LoadedSceneIsFlight).HideGUIsWhilePopupNonFlight();
         }
 
         private void ProcessFirstLoad()
@@ -748,6 +849,10 @@ namespace RP0.Crew
                                              false,
                                              HighLogic.UISkin).PrePostActions(ControlTypes.KSC_ALL | ControlTypes.UI_MAIN, "crewUpdate", OnDialogSpawn, OnDialogDismiss);
             }
+
+            // Catch crew who returned to duty while the game was closed - onKerbalInactiveChange
+            // wouldn't have fired for them, so a queued course could otherwise sit forever.
+            TryStartPendingCourses();
         }
 
         private void ProcessRetirements(double time)
@@ -908,8 +1013,26 @@ namespace RP0.Crew
         {
             var sb = StringBuilderCache.Acquire();
             bool anyFound = false;
-            foreach(var course in TrainingCourses)
+
+            AppendCoursesForTech(sb, TrainingCourses, techID, ref anyFound);
+            AppendCoursesForTech(sb, PendingTrainingCourses, techID, ref anyFound);
+
+            if (!anyFound)
             {
+                sb.Release();
+                return string.Empty;
+            }
+
+            return "\nThis will cancel the following training courses:" + sb.ToStringAndRelease();
+        }
+
+        private static void AppendCoursesForTech(StringBuilder sb, PersistentList<TrainingCourse> courses, string techID, ref bool anyFound)
+        {
+            foreach (var course in courses)
+            {
+                if (course.PartsCovered == null)
+                    continue;
+
                 bool found = true;
                 foreach (var ap in course.PartsCovered)
                 {
@@ -919,24 +1042,14 @@ namespace RP0.Crew
                         break;
                     }
                 }
-                if (found)
+                if (found && course.Students.Count > 0)
                 {
-                    if (course.Students.Count > 0)
-                    {
-                        anyFound = true;
-                        sb.Append("\n\n").Append(course.GetItemName()).Append(": ").Append(course.Students[0].displayName);
-                        for (int i = 1; i < course.Students.Count; ++i)
-                            sb.Append(", ").Append(course.Students[i].displayName);
-                    }
+                    anyFound = true;
+                    sb.Append("\n\n").Append(course.GetItemName()).Append(": ").Append(course.Students[0].displayName);
+                    for (int i = 1; i < course.Students.Count; ++i)
+                        sb.Append(", ").Append(course.Students[i].displayName);
                 }
             }
-            if (!anyFound)
-            {
-                sb.Release();
-                return string.Empty;
-            }
-
-            return "\nThis will cancel the following training courses and return their astronauts to duty:" + sb.ToStringAndRelease();
         }
 
         public void OnTechCanceled(string techID)
@@ -972,6 +1085,15 @@ namespace RP0.Crew
                             TrainingCourses.RemoveAt(i);
                         }
                     }
+
+                    // Cancel any queued (not-yet-started) courses for this template too. They never
+                    // started, so there's nothing to unwind - just drop them. The player was already
+                    // warned via GetTrainingCoursesForTech before confirming the tech cancellation.
+                    for (int i = PendingTrainingCourses.Count; i-- > 0;)
+                    {
+                        if (PendingTrainingCourses[i].FromTemplate(t))
+                            PendingTrainingCourses.RemoveAt(i);
+                    }
                 }
             }
         }
@@ -989,6 +1111,11 @@ namespace RP0.Crew
             }
 
             foreach (var c in TrainingCourses)
+            {
+                c.LinkTemplate();
+            }
+
+            foreach (var c in PendingTrainingCourses)
             {
                 c.LinkTemplate();
             }
@@ -1041,10 +1168,16 @@ namespace RP0.Crew
             {
                 AddPartCourses(ap);
 
-                // Purchasing a part regenerates its training templates. Relink any in-progress
-                // course that stalled because its template was missing, so it resumes right away
-                // instead of only when the next scene change rebuilds the template list.
+                // Purchasing a part regenerates its training templates. Relink any in-progress or
+                // queued course that stalled because its template was missing, so it resumes right
+                // away instead of only when the next scene change rebuilds the template list.
                 foreach (var course in TrainingCourses)
+                {
+                    if (!course.HasTemplate)
+                        course.LinkTemplate();
+                }
+
+                foreach (var course in PendingTrainingCourses)
                 {
                     if (!course.HasTemplate)
                         course.LinkTemplate();

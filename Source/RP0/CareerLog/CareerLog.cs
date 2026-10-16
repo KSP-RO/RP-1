@@ -333,7 +333,12 @@ namespace RP0
             StartCoroutine(PostRequestCareerLog(url, onRequestSuccess, onRequestFail));
         }
 
-        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
+        public void ExportToJsonFile(string path)
+        {
+            File.WriteAllText(path, CreateJson());
+        }
+
+        private string CreateJson()
         {
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
@@ -430,7 +435,7 @@ namespace RP0
 
             jsonToSend += "], \"programs\": [";
 
-            var allPrograms = ProgramHandler.Instance.CompletedPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+            var allPrograms = GetProgramsToSend();
             for (var i = 0; i < allPrograms.Length; i++)
             {
                 var dto = new ProgramDto(allPrograms[i]);
@@ -448,6 +453,13 @@ namespace RP0
             }
 
             jsonToSend += "] }";
+
+            return jsonToSend;
+        }
+
+        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
+        {
+            string jsonToSend = CreateJson();
 
             RP0Debug.Log("Request payload: " + jsonToSend);
 
@@ -521,6 +533,23 @@ namespace RP0
                 confidence = logPeriod.Confidence,
                 reputation = logPeriod.Reputation
             };
+        }
+
+        private static Program[] GetProgramsToSend()
+        {
+            // leave out programs that were most likely autocompleted by configurable start scenarios
+            var filteredPrograms = ProgramHandler.Instance.CompletedPrograms.Where(p =>
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.acceptedUT)) ||
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.objectivesCompletedUT)) ||
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.completedUT)));
+
+            return filteredPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+        }
+
+        private static bool IsSuspiciouslyRoundDate(DateTime dt)
+        {
+            // Apparently some scenarios assign minutes and hours to dates.
+            return dt.Second == 0 && dt.Millisecond == 0;
         }
 
         private void SwitchToNextPeriod()

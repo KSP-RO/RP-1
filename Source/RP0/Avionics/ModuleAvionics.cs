@@ -98,7 +98,7 @@ namespace RP0
         /// The altitude threshold around home world above which interplanetary avionics is required.
         /// </summary>
         public static float InterplanetaryAltitudeThreshold => Planetarium.fetch.Home.scienceValues.spaceAltitudeThreshold * 2;  // *2, so resonant satellite orbits can still be used
-        
+
         #endregion
 
         protected void InitializeResourceRate()
@@ -160,9 +160,9 @@ namespace RP0
         {
             bool rename = true;
             yield return new WaitForSeconds(1f);
-            if (vessel != FlightGlobals.ActiveVessel)
+            if (part.vessel != FlightGlobals.ActiveVessel)
             {
-                foreach (Part p in vessel.Parts)
+                foreach (Part p in part.vessel.Parts)
                 {
                     ModuleAvionics avionics = p.FindModuleImplementing<ModuleAvionics>();
                     ModuleCommand command = p.FindModuleImplementing<ModuleCommand>();
@@ -175,15 +175,16 @@ namespace RP0
                 }
 
                 if (rename)
-                    vessel.vesselType = VesselType.Debris;
+                    part.vessel.vesselType = VesselType.Debris;
             }
         }
 
         /// <summary>
         /// Even after disabling ModuleCommand, the vessel will still have comms and be controllable through Kerbalism.
         /// If all the antenna PMs are disabled then RA will make sure that the issue is fixed in a permanent way.
+        /// Additionally, the vessel type needs to be set to Debris, or else contracts will still be completable.
         /// </summary>
-        protected void KillAntennasIfLastAvionicsDead()
+        protected void OnAvionicsKilled()
         {
             bool anyAlive = false;
             List<ModuleAvionics> avionicsModules = part.vessel.FindPartModulesImplementing<ModuleAvionics>();
@@ -200,6 +201,8 @@ namespace RP0
                     if (mra.Condition != AntennaCondition.Disabled)
                         mra.PermanentShutdownAction(null);
                 }
+
+                part.vessel.vesselType = VesselType.Debris;
             }
         }
 
@@ -285,7 +288,7 @@ namespace RP0
 
             if (GetToggleable() && GetDisabledkW() >= 0)
             {
-                retStr += "\nCan be disabled, to lower wattage from " 
+                retStr += "\nCan be disabled, to lower wattage from "
                     + $"{(GetEnabledkW() * 1000d):N1}\u2009W to {(GetDisabledkW() * 1000d):N1}\u2009W.";
             } else
             {
@@ -373,7 +376,7 @@ namespace RP0
         {
             dead = true;
             DisableModuleCommand();
-            KillAntennasIfLastAvionicsDead();
+            OnAvionicsKilled();
             ToggleEvent();
         }
         #endregion

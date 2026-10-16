@@ -435,7 +435,7 @@ namespace RP0
                             // fire across the skipped time. Restored from the pre-sim backup on exit.
                             ModIntegrations.AlarmHelper.SuppressAllAlarmActions(SimulationParams.SimulationUT);
                             if (!ModUtils.IsPrincipiaInstalled)
-                                Planetarium.SetUniversalTime(SimulationParams.SimulationUT);
+                                SetSimulationUT(SimulationParams.SimulationUT);
                             else
                                 StartCoroutine(EaseSimulationUT_Coroutine(Planetarium.GetUniversalTime(), SimulationParams.SimulationUT));
                         }
@@ -1705,13 +1705,29 @@ namespace RP0
                 FlightDriver.fetch.framesBeforeInitialSave += Time.frameCount - currentFrame;
                 currentFrame = Time.frameCount;
                 OrbitPhysicsManager.HoldVesselUnpack();
-                Planetarium.SetUniversalTime(nextUT);
+                SetSimulationUT(nextUT);
 
                 yield return new WaitForFixedUpdate();
             }
 
             OrbitPhysicsManager.HoldVesselUnpack();
-            Planetarium.SetUniversalTime(targetUT);
+            SetSimulationUT(targetUT);
+        }
+
+        /// <summary>
+        /// Jumps to the simulation UT without the loaded vessels living through the skipped time.
+        /// FlightIntegrator takes UT - Vessel.lastUT as elapsed time, so without the lastUT reset it runs
+        /// an analytic thermal update over the whole jump, and mods hooked into it (e.g. RealFuels boiloff)
+        /// apply that much time to the vessel.
+        /// </summary>
+        private static void SetSimulationUT(double ut)
+        {
+            Planetarium.SetUniversalTime(ut);
+            foreach (Vessel v in FlightGlobals.VesselsLoaded)
+            {
+                if (v.lastUT >= 0)
+                    v.lastUT = ut;
+            }
         }
 
         #endregion

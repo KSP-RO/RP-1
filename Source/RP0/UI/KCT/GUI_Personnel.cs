@@ -500,7 +500,7 @@ namespace RP0
 
         private static void RenderTransferButton(LCSpaceCenter originalSC, LCSpaceCenter targetSC)
         {
-            if (GUILayout.Button(new GUIContent($"Transfer here", "Schedules engineers to be transferred between sites over a period of time"), GUILayout.MinWidth(100)))
+            if (GUILayout.Button(new GUIContent($"Transfer here", "Schedules engineers to be transferred between sites over time"), GUILayout.MinWidth(100)))
             {
                 string dialogName = "warpToTransfer";
                 string dialogTitle = "Transfer engineers";

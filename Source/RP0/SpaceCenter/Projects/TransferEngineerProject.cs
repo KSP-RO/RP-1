@@ -1,5 +1,6 @@
 ﻿using ROUtils.DataTypes;
 using System;
+using UniLinq;
 
 namespace RP0
 {
@@ -16,10 +17,10 @@ namespace RP0
         private double reserveFunds = 0d;
 
         [Persistent]
-        private int targetAmount = 0;
+        public int TargetAmount = 0;
 
         [Persistent]
-        private int transferredAmount = 0;
+        public int TransferredAmount = 0;
 
         [Persistent]
         private string originalSCID;
@@ -29,6 +30,16 @@ namespace RP0
 
         [Persistent]
         private double transferCost; // per engineer
+
+        [Persistent]
+        private double transferTime;
+
+        [Persistent]
+        public PersistentListValueType<double> engineerTransferTimes = new PersistentListValueType<double>();
+
+        public int NumLeftToTransfer => TargetAmount - TransferredAmount;
+
+        public int NumLeftToLeave => Math.Max(NumLeftToTransfer - engineerTransferTimes.Count, 0);
 
         private LCSpaceCenter _originalSC = null;
         public LCSpaceCenter OriginalSC
@@ -66,13 +77,13 @@ namespace RP0
             }
         }
 
-        public bool IsValid => targetAmount > 0;
+        public bool IsValid => TargetAmount > 0;
 
         public TransferEngineerProject() { }
 
         public TransferEngineerProject(int targetAmount, double reserveFunds, LCSpaceCenter originalSC, LCSpaceCenter targetSC)
         {
-            this.targetAmount = targetAmount;
+            this.TargetAmount = targetAmount;
             this.reserveFunds = reserveFunds;
             OriginalSC = originalSC;
             TargetSC = targetSC;
@@ -80,12 +91,22 @@ namespace RP0
             targetSC.EngineerTransferType = EngineerTransferType.InTransfer;
             double distanceFraction = KSCSwitcherInterop.GreatCircleDistance(originalSCID, targetSCID) / (Math.PI * FlightGlobals.GetHomeBody().Radius); // divide by half-circumference
             transferCost = Math.Max(distanceFraction * Database.SettingsSC.HireCost / 10d, 5d); // max cost of 30 funds per engineer, min of 5
+            transferTime = Math.Max(distanceFraction * Database.SettingsSC.TransferTime, 86400d); // min time of 1 day
         }
 
         public void Clear()
         {
-            targetAmount = transferredAmount = 0;
-            if (OriginalSC != null) OriginalSC.EngineerTransferType = EngineerTransferType.None;
+            TargetAmount = TransferredAmount = 0;
+            if (OriginalSC != null)
+            {
+                OriginalSC.EngineerTransferType = EngineerTransferType.None;
+                if (engineerTransferTimes.Count > 0)
+                {
+                    KCTUtilities.ChangeEngineers(OriginalSC, engineerTransferTimes.Count);
+                    OriginalSC.RecalculateBuildRates(false);
+                    engineerTransferTimes.Clear();
+                }
+            }
             if (TargetSC != null) TargetSC.EngineerTransferType = EngineerTransferType.None;
         }
 
@@ -96,15 +117,15 @@ namespace RP0
 
         public double GetFractionComplete()
         {
-            double targetAmountD = targetAmount;
+            double targetAmountD = TargetAmount;
             if (targetAmountD <= 0d) return 0d;
 
-            return transferredAmount / targetAmountD;
+            return TransferredAmount / targetAmountD;
         }
 
         public string GetItemName()
         {
-            return $"Transfer {transferredAmount}/{targetAmount} engineers from {OriginalSC.DisplayName} to {TargetSC.DisplayName}";
+            return $"Transfer {TransferredAmount:N0}/{TargetAmount:N0} engineers from {OriginalSC.DisplayName} to {TargetSC.DisplayName} ({engineerTransferTimes.Count:N0} in transit)";
         }
 
         public ProjectType GetProjectType()
@@ -114,10 +135,21 @@ namespace RP0
 
         public double GetTimeLeft()
         {
-            double modifiedTransferCost = -CurrencyUtils.Funds(TransactionReasonsRP0.TransferringEngineers, -transferCost);
-            double curFunds = Funding.Instance.Funds;
-            double fundsNeeded = reserveFunds + NumLeftToTransfer * modifiedTransferCost;
-            return FundTargetProject.EstimateTimeToFunds(curFunds, fundsNeeded, 60);
+            double timeToFunds = 0d;
+            if (NumLeftToLeave > 0)
+            {
+                double modifiedTransferCost = -CurrencyUtils.Funds(TransactionReasonsRP0.TransferringEngineers, -transferCost);
+                double curFunds = Funding.Instance.Funds;
+                double fundsNeeded = reserveFunds + NumLeftToLeave * modifiedTransferCost;
+                timeToFunds = FundTargetProject.EstimateTimeToFunds(curFunds, fundsNeeded, 60);
+            }
+            
+            double timeToTransfer = CurrencyUtils.Time(TransactionReasonsRP0.TransferringEngineers, transferTime);
+            if (engineerTransferTimes.Count > 0)
+            {
+                timeToTransfer = Math.Min(timeToTransfer, engineerTransferTimes.Max() - Planetarium.GetUniversalTime());
+            }
+            return timeToFunds + timeToTransfer;
         }
 
         public double GetTimeLeftEst(double offset)
@@ -127,27 +159,55 @@ namespace RP0
 
         public double IncrementProgress(double UTDiff)
         {
-            double modifiedTransferCost = -CurrencyUtils.Funds(TransactionReasonsRP0.TransferringEngineers, -transferCost);
-            double nextTransferAt = reserveFunds + modifiedTransferCost;
-            if (Funding.Instance.Funds > nextTransferAt)
+            double currentUT = Planetarium.GetUniversalTime();
+
+            if (NumLeftToLeave > 0)
             {
-                int numCanTransfer = (int)((Funding.Instance.Funds - reserveFunds) / modifiedTransferCost);
-                numCanTransfer = Math.Max(0, numCanTransfer);
-                numCanTransfer = Math.Min(numCanTransfer, NumLeftToTransfer);
-                numCanTransfer = Math.Min(numCanTransfer, OriginalSC.UnassignedEngineers);
-                KCTUtilities.SpendFunds(modifiedTransferCost, TransactionReasonsRP0.TransferringEngineers);
-                KCTUtilities.ChangeEngineers(OriginalSC, -numCanTransfer);
-                KCTUtilities.ChangeEngineers(TargetSC, numCanTransfer);
-                OriginalSC.RecalculateBuildRates(false);
+                double modifiedTransferCost = -CurrencyUtils.Funds(TransactionReasonsRP0.TransferringEngineers, -transferCost);
+                double nextTransferFunds = reserveFunds + modifiedTransferCost;
+                if (Funding.Instance.Funds > nextTransferFunds)
+                {
+                    int numCanTransfer = (int)((Funding.Instance.Funds - reserveFunds) / modifiedTransferCost);
+                    numCanTransfer = Math.Max(0, numCanTransfer);
+                    numCanTransfer = Math.Min(numCanTransfer, NumLeftToLeave);
+                    numCanTransfer = Math.Min(numCanTransfer, OriginalSC.UnassignedEngineers);
+                    KCTUtilities.SpendFunds(modifiedTransferCost, TransactionReasonsRP0.TransferringEngineers);
+                    KCTUtilities.ChangeEngineers(OriginalSC, -numCanTransfer);
+                    OriginalSC.RecalculateBuildRates(false);
+                    RP0Debug.Log($"Transferring {numCanTransfer} engineers from {OriginalSC.KSCName} to {TargetSC.KSCName}. Cost per engineer: {modifiedTransferCost}", true);
+
+                    double modifiedTransferTime = CurrencyUtils.Time(TransactionReasonsRP0.TransferringEngineers, transferTime);
+                    double nextTransferTime = currentUT + modifiedTransferTime;
+                    RP0Debug.Log($"modifiedTransferTime: {modifiedTransferTime}, nextTransferTime: {nextTransferTime}", true);
+                    for (int i = 0; i < numCanTransfer; i++)
+                    {
+                        engineerTransferTimes.Add(nextTransferTime);
+                    }
+                }
+            }
+
+            int transferAmount = 0;
+            for (int i = 0; i < engineerTransferTimes.Count; i++)
+            {
+                RP0Debug.Log($"CurrentUT: {currentUT}, EngineerTransferTime: {engineerTransferTimes[i]}, count: {engineerTransferTimes.Count}", true);
+                if (currentUT >= engineerTransferTimes[i])
+                {
+                    transferAmount++;
+                    TransferredAmount++;
+                    engineerTransferTimes.RemoveAt(i);
+                    RP0Debug.Log($"transferred, transferAmount: {transferAmount}, transferredAmount: {TransferredAmount}, engineerTransferTimes.Count: {engineerTransferTimes.Count}", true);
+                }
+            }
+
+            if (transferAmount > 0)
+            {
+                KCTUtilities.ChangeEngineers(TargetSC, transferAmount);
                 TargetSC.RecalculateBuildRates(false);
-                transferredAmount += numCanTransfer;
             }
 
             return 0d;
         }
 
         public bool IsComplete() => NumLeftToTransfer <= 0 || OriginalSC.UnassignedEngineers <= 0;
-
-        public int NumLeftToTransfer => targetAmount - transferredAmount;
     }
 }

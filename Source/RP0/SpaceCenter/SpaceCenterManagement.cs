@@ -139,6 +139,9 @@ namespace RP0
         public AirlaunchParams AirlaunchParams = new AirlaunchParams();
 
         [KSPField(isPersistant = true)]
+        public bool WarpTargetActive;
+
+        [KSPField(isPersistant = true)]
         public FundTargetProject fundTarget = new FundTargetProject();
 
         [KSPField(isPersistant = true)]
@@ -1112,6 +1115,9 @@ namespace RP0
                 foreach (var ksc in KSCs)
                     eng += ksc.Engineers;
 
+                if (transferTarget.IsValid)
+                    eng += transferTarget.engineerTransferTimes.Count;
+
                 return eng;
             }
         }
@@ -1985,6 +1991,8 @@ namespace RP0
                 if (transferTarget.IsComplete())
                     transferTarget.Clear();
             }
+
+            WarpTargetActive = fundTarget.IsValid || staffTarget.IsValid || transferTarget.IsValid;
 
             Profiler.EndSample();
         }

@@ -253,8 +253,7 @@ namespace RP0
                 LCSpaceCenter KSC = sortedKSCs[i];
 
                 bool isActiveSC = KSC == SpaceCenterManagement.Instance.ActiveSC;
-                bool isEmpty = KSC.IsEmpty;
-                if (isEmpty && !isActiveSC)
+                if (KSC.IsEmpty && !isActiveSC)
                     continue;
 
                 string site = KSC.DisplayName;
@@ -277,7 +276,7 @@ namespace RP0
                 GUILayout.Label(site, GUILayout.MinWidth(300));
                 if (originalSC == null)
                 {
-                    if (!isEmpty)
+                    if (!KSC.IsEmpty)
                     {
                         GUILayout.Space(10);
                         bool canAfford = KSC.UnassignedEngineers >= 1;

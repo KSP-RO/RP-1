@@ -13,6 +13,7 @@ namespace RP0
         private System.Collections.Generic.Dictionary<string, string> siteLocalizer = new System.Collections.Generic.Dictionary<string, string>();
 
         private string warpToFundsString;
+        private bool includeCredit;
 
         private string LocalizeSiteName(string siteID)
         {
@@ -264,13 +265,14 @@ namespace RP0
             else
             {
                 PopupDialog dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                    new MultiOptionDialog("warpToFunds", "Fund Target", "Warp To Funds", HighLogic.UISkin,
+                    new MultiOptionDialog("warpToFunds", $"Current Funds: {Funding.Instance?.Funds ?? 0d:N0}\nCurrent Funds + Unlock Credit: {(Funding.Instance?.Funds ?? 0d) + (UnlockCreditHandler.Instance?.TotalCredit ?? 0d):N0}", "Warp To Funds", HighLogic.UISkin,
                         new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
                         {
                             warpToFundsString = n;
                             return warpToFundsString;
                         }, 24f),
-                        new DialogGUIButton("Estimate Time", () => { ShowConfirmWarpDialog(); }),
+                        new DialogGUIToggle(includeCredit, "Include Unlock Credit", (bool val) => { includeCredit = val; }),
+                        new DialogGUIButton("Estimate Time", () => { ShowConfirmWarpDialog(includeCredit); }),
                         new DialogGUIButton("Cancel", CloseWarpToFundsDlg)
                     ), false, HighLogic.UISkin);
                 dlg.OnDismiss = CloseWarpToFundsDlg;
@@ -289,9 +291,9 @@ namespace RP0
             CloseWarpToFundsDlg();
         }
 
-        private void ShowConfirmWarpDialog()
+        private void ShowConfirmWarpDialog(bool includeCredit)
         {
-            if (!double.TryParse(warpToFundsString, out double fundTarget))
+            if (!double.TryParse(warpToFundsString, out double moneyTarget))
             {
                 PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
                     "Failed to parse funds!",
@@ -303,7 +305,7 @@ namespace RP0
             }
             else
             {
-                if (fundTarget <= Funding.Instance.Funds)
+                if (moneyTarget <= Funding.Instance.Funds || (includeCredit && moneyTarget <= Funding.Instance.Funds + UnlockCreditHandler.Instance.TotalCredit))
                 {
                     PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmAtFunds",
                     "Already at this funding!",
@@ -315,7 +317,7 @@ namespace RP0
                     return;
                 }
 
-                FundTargetProject target = new FundTargetProject(fundTarget);
+                FundTargetProject target = new FundTargetProject(moneyTarget, includeCredit);
                 double time = target.GetTimeLeft();
                 if (time < 0d)
                 {

@@ -644,7 +644,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "R7 Fregat 1",
         "module_tags": []
     },
     {
@@ -1017,7 +1017,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "N1-Rocket",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Block A Tank",
         "module_tags": []
     },
     {
@@ -1038,7 +1038,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "N1-Rocket",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Interstage A/B",
         "module_tags": []
     },
     {
@@ -1059,7 +1059,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "N1-Rocket",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Block B Tank",
         "module_tags": []
     },
     {
@@ -1080,7 +1080,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "N1-Rocket",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Interstage B/V",
         "module_tags": []
     },
     {
@@ -1185,7 +1185,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "N1-Rocket",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Block V Tank",
         "module_tags": []
     },
     {
@@ -1625,7 +1625,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "RD-0213",
         "module_tags": [
             "EngineLiquidTurbo"
         ]
@@ -1674,7 +1674,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Proton Interstage 1-2",
         "module_tags": []
     },
     {
@@ -1696,7 +1696,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Proton Interstage 2-3",
         "module_tags": []
     },
     {
@@ -1741,7 +1741,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "RD-0214",
-        "identical_part_name": "",
+        "identical_part_name": "RD-0214",
         "module_tags": []
     },
     {
@@ -1764,7 +1764,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Proton K Stage 1 Tank",
         "module_tags": []
     },
     {
@@ -1787,7 +1787,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Proton K Stage 2 Tank",
         "module_tags": []
     },
     {
@@ -1810,7 +1810,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Proton K Stage 3 Tank",
         "module_tags": []
     },
     {
@@ -1968,7 +1968,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "R7 Soyuz Payload Adapter",
         "module_tags": []
     },
     {
@@ -2013,7 +2013,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "R7 Soyuz Block A",
         "module_tags": []
     },
     {
@@ -2348,7 +2348,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "R7 Soyuz Block BVGD",
         "module_tags": []
     },
     {
@@ -2679,7 +2679,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "R7 Soyuz Block I",
         "module_tags": []
     },
     {

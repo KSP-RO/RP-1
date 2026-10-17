@@ -18,7 +18,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Progress M",
         "module_tags": []
     },
     {
@@ -40,7 +40,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Soyuz Docking Antenna",
         "module_tags": []
     },
     {
@@ -62,7 +62,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Soyuz TM Service Module",
         "module_tags": [
             "NoResourceCostMult"
         ]
@@ -86,7 +86,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "heatshieldsLifting",
-        "identical_part_name": "",
+        "identical_part_name": "Soyuz Heatshield",
         "module_tags": []
     },
     {
@@ -133,7 +133,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Soyuz TM Parachute",
         "module_tags": []
     },
     {
@@ -200,7 +200,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Soyuz TM Descent Module",
         "module_tags": [
             "HumanRated",
             "NoResourceCostMult",
@@ -226,7 +226,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Soyuz TM Decoupler",
         "module_tags": []
     },
     {
@@ -270,7 +270,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Soyuz TM Orbital Module",
         "module_tags": [
             "HumanRated",
             "NoResourceCostMult"

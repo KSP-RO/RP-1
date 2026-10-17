@@ -159,7 +159,7 @@ namespace RP0
             double portion = LC.Engineers / (double)LC.MaxEngineers;
             for (int i = 0; i < 4; ++i)
             {
-                timeLeft =  bpDivRate / LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, portion, out newEff, LC.Efficiency);
+                timeLeft =  bpDivRate / LC.EfficiencySource.PredictWeightedEfficiency(LC.IsRushing, timeLeft, portion, out newEff, LC.Efficiency);
             }
             return timeLeft;
         }

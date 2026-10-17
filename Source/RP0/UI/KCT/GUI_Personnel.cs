@@ -185,29 +185,31 @@ namespace RP0
             }
             GUILayout.EndHorizontal();
 
-            double rateFull = KCTUtilities.GetBuildRate(0, type, currentLC, currentLC.IsHumanRated, assignDelta) * stratMult;
+            bool hasVessel = currentLC.CanIntegrate && currentLC.BuildList.Count > 0;
+            VesselProject b = hasVessel ? currentLC.BuildList[0] : null;
+            double rateFull = KCTUtilities.GetBuildRate(0, type, currentLC, hasVessel ? b.humanRated : currentLC.IsHumanRated, assignDelta);
             double rate = rateFull * efficiency;
+            double leaderMult = b == null ? 1 : (stratMult * b.LeaderEffect);
+
             GUILayout.BeginHorizontal();
-            GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
+            if (hasVessel && Math.Abs(leaderMult - 1) > 0.001)
+                GUILayout.Label($"Vessel Rate (with Leaders): {rateFull:N3} => {rate:N3} => {rate * leaderMult:N3} BP/sec", GetLabelRightAlignStyle());
+            else
+                GUILayout.Label($"Vessel Rate: {rateFull:N3} => {rate:N3} BP/sec", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
-            if (currentLC.CanIntegrate && currentLC.BuildList.Count > 0)
+            if (hasVessel)
             {
-                VesselProject b = currentLC.BuildList[0];
                 GUILayout.Label($"Current Vessel: {b.shipName}");
 
                 int engCap = currentLC.MaxEngineersFor(b);
                 if (engCap != currentLC.MaxEngineers)
                     GUILayout.Label($"(max of {engCap} eng.)");
 
-                int delta = assignDelta;
-                if (engCap < currentLC.Engineers + assignDelta)
-                    delta = engCap - currentLC.Engineers;
-                double buildRate = KCTUtilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, delta)
-                    * efficiency * stratMult;
+                double buildRate = KCTUtilities.GetBuildRate(0, b.Type, currentLC, b.humanRated, assignDelta) * leaderMult;
                 double bpLeft = b.buildPoints - b.progress;
-                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(b.CalculateTimeLeftForBuildRate(bpLeft, buildRate, efficiency, out _), "PersonnelVessel"), GetLabelRightAlignStyle());
             }
             else
             {
@@ -217,13 +219,10 @@ namespace RP0
                     int engCap = lcp.IsCapped ? currentLC.MaxEngineersFor(lcp.mass, lcp.vesselBP, lcp.isHumanRated) : int.MaxValue;
                     GUILayout.Label($"Current Project: {lcp.Name} {(lcp.AssociatedVP == null ? string.Empty : lcp.AssociatedVP.shipName)}");
                     
-                    int delta = assignDelta;
-                    if (engCap < currentLC.Engineers + assignDelta)
-                        delta = engCap - currentLC.Engineers;
                     if (engCap < int.MaxValue && engCap != currentLC.MaxEngineers)
                         GUILayout.Label($"(max of {engCap} eng.)");
 
-                    double buildRate = lcp.GetBuildRate(delta);
+                    double buildRate = lcp.GetBuildRate(assignDelta);
                     double bpLeft = (lcp.IsReversed ? 0 : lcp.BP) - lcp.progress;
                     GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(bpLeft / buildRate, "PersonnelVessel"), GetLabelRightAlignStyle());
                 }

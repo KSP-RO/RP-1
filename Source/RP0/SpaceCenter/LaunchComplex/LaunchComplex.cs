@@ -374,6 +374,19 @@ namespace RP0
             else
                 LCEfficiency.ClearEmpty();
 
+            // Cancel removes the project from the list, so iterate backwards
+            for (int i = KSC.LCConstructions.Count - 1; i >= 0; i--)
+            {
+                LCConstructionProject cons = KSC.LCConstructions[i];
+                if (cons.lcID == ID)
+                    cons.Cancel();
+            }
+
+            for (int i = PadConstructions.Count - 1; i >= 0; i--)
+            {
+                PadConstructions[i].Cancel();
+            }
+
             foreach (var lp in LaunchPads)
                 SpaceCenterManagement.Instance.UnregsiterLP(lp);
 

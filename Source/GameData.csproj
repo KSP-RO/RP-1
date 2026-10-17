@@ -968,27 +968,6 @@
     <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SuborbitalReturn.cfg">
       <Link>Contracts\Sounding Rockets\SuborbitalReturn.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\DockingPlane.cfg">
-      <Link>Contracts\Spaceplanes\DockingPlane.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\FirstPlaneOrbit.cfg">
-      <Link>Contracts\Spaceplanes\FirstPlaneOrbit.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\OrbitalPlane1.cfg">
-      <Link>Contracts\Spaceplanes\OrbitalPlane1.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\OrbitalPlane2.cfg">
-      <Link>Contracts\Spaceplanes\OrbitalPlane2.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\OrbitalPlane3.cfg">
-      <Link>Contracts\Spaceplanes\OrbitalPlane3.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\RendezvousPlane.cfg">
-      <Link>Contracts\Spaceplanes\RendezvousPlane.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\SuborbitalPlaneCrewed.cfg">
-      <Link>Contracts\Spaceplanes\SuborbitalPlaneCrewed.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Uranian Moon Landings\Ariel Landing.cfg">
       <Link>Contracts\Uranian Moon Landings\Ariel Landing.cfg</Link>
     </Content>

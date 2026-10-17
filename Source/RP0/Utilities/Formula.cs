@@ -4,14 +4,17 @@ using ROUtils;
 
 namespace RP0
 {
-    public class Formula
+    /// <summary>
+    /// The KSP-facing half of Formula. The arithmetic lives in FormulaCore.cs, which is
+    /// free of KSP/Unity references so it can be compiled directly by Source/RP0.Tests;
+    /// the methods here flatten a VesselProject (and its LaunchComplex) into FormulaInputs
+    /// and delegate. Keep new math in FormulaCore.cs, not here.
+    /// </summary>
+    public partial class Formula
     {
         public const double ResourceValidationRatioOfVesselMassMin = 0.005d;
         public const double ResourceValidationAbsoluteMassMin = 0.0d;
         private static HashSet<string> _resourceKeys = new HashSet<string>();
-        private const double _EngineerBPRate = 0.0025d;
-        private const double _RolloutCostBasePortion = 0.5d;
-        private const double _RolloutCostSubsidyPortion = 1d - _RolloutCostBasePortion;
 
         private static RealFuels.Tanks.TankDefinition _tankDefSMIV = null;
         public static RealFuels.Tanks.TankDefinition TankDefSMIV
@@ -78,10 +81,38 @@ namespace RP0
             return Database.SettingsSC.ScienceResearchEfficiency.Evaluate(totalSci);
         }
 
+        /// <summary>
+        /// The live settings/tech multipliers the cost formulas read.
+        /// </summary>
+        public static RecoverySettings CurrentSettings()
+        {
+            var rec = Database.SettingsRecovery;
+            return new RecoverySettings(Database.SettingsSC.salaryEngineers,
+                                        rec.RecoveryRateMult,
+                                        rec.RecoveryCostMult,
+                                        rec.RefurbishmentRateMult,
+                                        rec.RefurbishmentCostMult,
+                                        rec.SplashdownPenaltyMult);
+        }
+
+        /// <summary>
+        /// Flattens vessel inputs plus the vessel's LaunchComplex, falling back to the
+        /// active LC exactly as GetRolloutCost did before the extraction.
+        /// </summary>
+        public static FormulaInputs VesselAndLCInputs(VesselProject vessel)
+        {
+            LaunchComplex vLC = vessel.LC;
+            if (vLC == null)
+                vLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
+
+            return vessel.inputs.With(lcIsHumanRated: vLC.IsHumanRated,
+                                             lcIsPad: vLC.LCType == LaunchComplexType.Pad,
+                                             lcMassMax: vLC.MassMax);
+        }
+
         public static double GetVesselBuildPoints(double totalEffectiveCost)
         {
-            double bpScalar = UtilMath.Clamp((totalEffectiveCost - 200d) / 4000d, 0.5d, 1d);
-            double finalBP = 1000d + Math.Pow(totalEffectiveCost, 1.1d) * 100d * bpScalar;
+            double finalBP = VesselBuildPoints(totalEffectiveCost);
 
             RP0Debug.Log($"BP: {finalBP}");
             return finalBP;
@@ -92,21 +123,7 @@ namespace RP0
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            LaunchComplex vLC = vessel.LC;
-            if (vLC == null)
-                vLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
-
-            double multHR = 1d;
-            if (vLC.IsHumanRated)
-                multHR += 0.25d;
-            if (vessel.humanRated)
-                multHR += 0.75d;
-            double vesselPortion = (vessel.effectiveCost - (vessel.cost * 0.9d)) * 0.6;
-            double massToUse = vLC.LCType == LaunchComplexType.Pad ? vLC.MassMax : vessel.GetTotalMass();
-            double lcPortion = Math.Pow(massToUse, 0.75d) * 20d * multHR;
-            double result = vesselPortion + lcPortion;
-            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetRolloutBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
-            return result * 0.5d;
+            return RolloutCost(VesselAndLCInputs(vessel));
         }
 
         public static double GetReconditioningCost(VesselProject vessel)
@@ -151,68 +168,51 @@ namespace RP0
 
         public static double GetRolloutBP(VesselProject vessel)
         {
-            double costDeltaHighPow;
-            double costDelta = vessel.effectiveCost - vessel.cost;
-            if (costDelta < 0.001d)
-            {
-                costDelta = 0.001d;
-                costDeltaHighPow = 0.001d;
-            }
-            else
-            {
-                costDeltaHighPow = costDelta - 30000d;
-                if (costDeltaHighPow < 0.001d)
-                    costDeltaHighPow = 0.001d;
-            }
-            return Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
-
+            return RolloutBP(vessel.inputs);
         }
 
         public static double GetReconditioningBP(VesselProject vessel)
         {
-            return vessel.buildPoints * 0.01d + Math.Max(1, vessel.GetTotalMass() - 20d) * 2000d;
+            return ReconditioningBP(vessel.inputs);
         }
 
         public static double GetVesselRepairBP(VesselProject vessel)
         {
-            return GetRolloutBP(vessel) / 7.5;
+            return VesselRepairBP(vessel.inputs);
         }
 
-        public static double GetRecoveryBPSPH(VesselProject vessel)
+        /// <summary>
+        /// Refurbishment BP: corresponds to prior recovery BP. See Formula.RefurbishmentBP
+        /// in FormulaCore.cs for the math and the design anchors it targets.
+        /// </summary>
+        public static double GetRefurbishmentBP(VesselProject vessel)
         {
-            double costDeltaHighPow;
-            double costDelta = vessel.effectiveCost - vessel.cost;
-            if (costDelta < 0.001d)
-            {
-                costDelta = 0.001d;
-                costDeltaHighPow = 0.001d;
-            }
-            else
-            {
-                costDeltaHighPow = costDelta - 30000d;
-                if (costDeltaHighPow < 0.001d)
-                    costDeltaHighPow = 0.001d;
-            }
-            double bp = Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
-            return bp * 2.15d;
+            return RefurbishmentBP(vessel.inputs);
         }
 
-        public static double GetRecoveryBPVAB(VesselProject vessel)
+        /// <summary>
+        /// Refurbishment cost: between reconditioning (0.2x rollout) and a full rollout (~40%).
+        /// See Formula.RefurbishmentCost in FormulaCore.cs.
+        /// </summary>
+        public static double GetRefurbishmentCost(VesselProject vessel)
         {
-            double costDeltaHighPow;
-            double costDelta = vessel.effectiveCost - vessel.cost;
-            if (costDelta < 0.001d)
-            {
-                costDelta = 0.001d;
-                costDeltaHighPow = 0.001d;
-            }
-            else
-            {
-                costDeltaHighPow = costDelta - 30000d;
-                if (costDeltaHighPow < 0.001d)
-                    costDeltaHighPow = 0.001d;
-            }
-            return Math.Pow(costDelta, 1.12d) * 12d + Math.Pow(costDeltaHighPow, 1.5d) * 0.35d;
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+                return 0;
+
+            return RefurbishmentCost(VesselAndLCInputs(vessel));
+        }
+
+        /// <summary>
+        /// Recovery cost scales with distance from KSC, as well as mass of the vessel. 
+        /// (We cannot easily check for volume here, so mass acts as a proxy.)
+        /// Does not subsidise with engineers, since this is a non-engineer step.
+        /// </summary>
+        public static double GetRecoveryCost(VesselProject vessel)
+        {
+            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+                return 0;
+
+            return RecoveryCost(vessel.inputs);
         }
 
         public static double ResourceTankCost(string res, double amount, bool isModify, LaunchComplexType type)
@@ -254,7 +254,6 @@ namespace RP0
         /// i.e. if you are removing HR from an LC,
         /// make a new LCData with it off, and call
         /// GetCloseness(newLCData, orig)
-        /// </summary>
         /// </summary>
         /// <param name="ourStats"></param>
         /// <param name="otherStats"></param>

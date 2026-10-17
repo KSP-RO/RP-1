@@ -252,9 +252,9 @@ namespace RP0
         {
             InputLockManager.SetControlLock(ControlTypes.KSC_ALL, "warptofunds");
             UIHolder.Instance.HideWindow();
-            if (SpaceCenterManagement.Instance.staffTarget.IsValid)
+            if (SpaceCenterManagement.Instance.WarpTargetActive && !SpaceCenterManagement.Instance.fundTarget.IsValid)
             {
-                string msg = "This functionality cannot be used while there's automatic staff hiring in progress.";
+                string msg = "This functionality cannot be used while a different warp target is in progress.";
                 PopupDialog dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                     new MultiOptionDialog("warpToFunds", msg, "Warp To Funds", HighLogic.UISkin,
                         new DialogGUIButton("Understood", CloseWarpToFundsDlg)

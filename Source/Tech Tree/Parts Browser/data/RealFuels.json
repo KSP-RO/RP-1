@@ -821,7 +821,9 @@
         "upgrade": false,
         "entry_cost_mods": "1",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "TankSeparate"
+        ]
     },
     {
         "name": "engineLargeSkipper_125m",

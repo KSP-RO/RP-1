@@ -174,11 +174,9 @@ namespace RP0
                     KCTUtilities.SpendFunds(modifiedTransferCost, TransactionReasonsRP0.TransferringEngineers);
                     KCTUtilities.ChangeEngineers(OriginalSC, -numCanTransfer);
                     OriginalSC.RecalculateBuildRates(false);
-                    RP0Debug.Log($"Transferring {numCanTransfer} engineers from {OriginalSC.KSCName} to {TargetSC.KSCName}. Cost per engineer: {modifiedTransferCost}", true);
 
                     double modifiedTransferTime = CurrencyUtils.Time(TransactionReasonsRP0.TransferringEngineers, transferTime);
                     double nextTransferTime = currentUT + modifiedTransferTime;
-                    RP0Debug.Log($"modifiedTransferTime: {modifiedTransferTime}, nextTransferTime: {nextTransferTime}", true);
                     for (int i = 0; i < numCanTransfer; i++)
                     {
                         engineerTransferTimes.Add(nextTransferTime);
@@ -189,13 +187,11 @@ namespace RP0
             int transferAmount = 0;
             for (int i = 0; i < engineerTransferTimes.Count; i++)
             {
-                RP0Debug.Log($"CurrentUT: {currentUT}, EngineerTransferTime: {engineerTransferTimes[i]}, count: {engineerTransferTimes.Count}", true);
                 if (currentUT >= engineerTransferTimes[i])
                 {
                     transferAmount++;
                     TransferredAmount++;
                     engineerTransferTimes.RemoveAt(i);
-                    RP0Debug.Log($"transferred, transferAmount: {transferAmount}, transferredAmount: {TransferredAmount}, engineerTransferTimes.Count: {engineerTransferTimes.Count}", true);
                 }
             }
 

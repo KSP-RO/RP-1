@@ -5461,7 +5461,7 @@
         "title": "Mk2 Pod (4m)",
         "description": "A three-person pod. Comes with built-in RCS thrusters running off NTO/MMH and a small battery. Heat shield required for safe reentry. Center of mass can be offset to allow lifting reentry (toggle Descent Mode).",
         "mod": "Stock (RO Config)",
-        "cost": 9000,
+        "cost": "32000",
         "entry_cost": 0,
         "category": "COMMAND",
         "info": "Command Module",

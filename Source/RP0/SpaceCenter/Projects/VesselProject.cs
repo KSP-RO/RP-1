@@ -1423,7 +1423,7 @@ namespace RP0
             double portion = LC.Engineers / (double)LC.MaxEngineers;
             for (int i = 0; i < 4; ++i)
             {
-                timeLeft = bp / (rate * LC.EfficiencySource.PredictWeightedEfficiency(timeLeft, portion, out newEff, startingEff));
+                timeLeft = bp / (rate * LC.EfficiencySource.PredictWeightedEfficiency(LC.IsRushing, timeLeft, portion, out newEff, startingEff));
             }
             return timeLeft;
         }

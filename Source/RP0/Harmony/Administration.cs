@@ -524,7 +524,7 @@ namespace RP0.Harmony
                 string deactivateCostStr = leader.DeactivateCostString();
                 string reappointStr = cfg.RemoveOnDeactivate 
                     ? cfg.ReactivateCooldown > 0
-                        ? $"\n\n{Localizer.Format("#rp0_Leaders_Deactivates_WithCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"
+                        ? $"\n\n{Localizer.Format("#rp0_Leaders_Deactivates_WithCooldown", RP0DTUtils.PrintDateDelta(cfg.ReactivateCooldown, false))}"
                         : $"\n\n{Localizer.GetStringByTag("#rp0_Leaders_Deactivates")}"
                     : string.Empty;
                 string message = !string.IsNullOrEmpty(deactivateCostStr)

@@ -305,7 +305,7 @@ namespace RP0
             }
             else
             {
-                if (moneyTarget <= Funding.Instance.Funds || (includeCredit && moneyTarget <= Funding.Instance.Funds + UnlockCreditHandler.Instance.TotalCredit))
+                if (moneyTarget <= Funding.Instance.Funds + (includeCredit ? UnlockCreditHandler.Instance.TotalCredit : 0d))
                 {
                     PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmAtFunds",
                     "Already at this funding!",

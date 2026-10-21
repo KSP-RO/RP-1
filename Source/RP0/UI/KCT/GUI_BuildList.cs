@@ -974,6 +974,7 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(new GUIContent("New LC", "Design and build a new Launch Complex"), GUILayout.ExpandWidth(false)))
             {
+                ResetNewLCVessels();
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowLCManagement = false;

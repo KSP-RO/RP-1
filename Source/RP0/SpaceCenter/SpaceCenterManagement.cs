@@ -1734,7 +1734,11 @@ namespace RP0
 
         #region Editor
 
-        private void EditorRecalculation()
+        /// <summary>
+        /// Updates EditorVessel if the ship has changed since it was last calculated.
+        /// Runs once a second, and can be called to get current values without waiting for that.
+        /// </summary>
+        public void EditorRecalculation()
         {
             if (IsEditorRecalcuationRequired)
             {

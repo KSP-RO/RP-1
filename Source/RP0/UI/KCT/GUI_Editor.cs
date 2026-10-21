@@ -291,6 +291,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (EditorLogic.fetch.ship.shipFacility == EditorFacility.VAB && GUILayout.Button(_gcNewLC))
             {
+                // The window is filled from EditorVessel, which can lag behind a ship that was just loaded.
+                SpaceCenterManagement.Instance.EditorRecalculation();
                 if (EditorLogic.fetch.ship.parts.Count == 0)
                 {
                     ShowBuildVesselFirstDialog();
@@ -339,6 +341,7 @@ namespace RP0
                     $"Modify the {(activeLC.LCType == LaunchComplexType.Pad ? "launch complex" : "hangar")} to support the current vessel, keeping existing support where possible.{(canModify ? string.Empty : modifyFailTooltip)}"),
                     canModify ? GUI.skin.button : _yellowButton))
                 {
+                    SpaceCenterManagement.Instance.EditorRecalculation();
                     if (EditorLogic.fetch.ship.parts.Count == 0)
                     {
                         ShowBuildVesselFirstDialog();

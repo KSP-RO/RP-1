@@ -75,9 +75,13 @@ namespace RP0.Harmony
         internal static IEnumerable<MethodBase> TargetMethods()
         {
             foreach (System.Type t in typeof(DifficultyOptionsMenu).GetNestedTypes(AccessTools.all))
+            {
                 foreach (MethodInfo mi in AccessTools.GetDeclaredMethods(t))
+                {
                     if (PatchDifficultyOptionsMenu.IsMultiplierSliderLambda(mi))
                         yield return mi;
+                }
+            }
         }
 
         [HarmonyTranspiler]

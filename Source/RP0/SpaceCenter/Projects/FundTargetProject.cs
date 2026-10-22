@@ -76,7 +76,8 @@ namespace RP0
 
         public double GetTimeLeft()
         {
-            return EstimateTimeToCombinedFunds(GetCurrentMoney(includeCredit), targetFunds, epsilonTime);
+            if (includeCredit) return EstimateTimeToCombinedFunds(GetCurrentMoney(includeCredit), targetFunds, epsilonTime);
+            else return EstimateTimeToFunds(Funding.Instance.Funds, targetFunds, epsilonTime);
         }
 
         private static double GetTimeToMoney(double baseMoney, double targetFunds, double epsilonTime, Func<double, double> GetMoneyDelta)

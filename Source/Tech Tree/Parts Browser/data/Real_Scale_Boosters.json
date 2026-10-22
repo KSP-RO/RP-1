@@ -1469,9 +1469,9 @@
         "orphan": false,
         "rp0_conf": true,
         "spacecraft": "Ariane 5",
-        "engine_config": "EAP-241",
+        "engine_config": "MPS-241",
         "upgrade": false,
-        "entry_cost_mods": "EAP-241",
+        "entry_cost_mods": "MPS-241",
         "identical_part_name": "P241A",
         "module_tags": [
             "EngineSolid"

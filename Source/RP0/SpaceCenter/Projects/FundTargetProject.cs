@@ -9,10 +9,10 @@ namespace RP0
         public bool includeCredit;
 
         [Persistent]
-        private double targetMoney = 0d;
+        private double targetFunds = 0d;
 
         [Persistent]
-        private double origMoney = 0d;
+        private double origFunds = 0d;
 
         [Persistent]
         double epsilonTime = 0.25d;
@@ -23,22 +23,25 @@ namespace RP0
         public const double EpsilonTimeAutoWarp = 60d;
         public const double EpsilonTimeTarget = 0.25d;
 
-        public bool IsValid => targetMoney != origMoney && targetMoney > 0d;
+        public bool IsValid => targetFunds != origFunds && targetFunds > 0d;
+
+        public static double GetCurrentMoney(bool includeCredit) => GetCurrentMoney(includeCredit, Funding.Instance?.Funds ?? 0d);
+        public static double GetCurrentMoney(bool includeCredit, double funds) => includeCredit ? funds + (UnlockCreditHandler.Instance?.TotalCredit ?? 0d) : funds;
 
         public FundTargetProject() { }
 
         public FundTargetProject(double moneyTarget, bool includeCredit)
         {
-            targetMoney = moneyTarget;
-            origMoney = Funding.Instance?.Funds ?? 0d;
-            origMoney = includeCredit ? origMoney + UnlockCreditHandler.Instance?.TotalCredit ?? 0d : origMoney;
+            targetFunds = moneyTarget;
+            origFunds = Funding.Instance?.Funds ?? 0d;
+            origFunds = GetCurrentMoney(includeCredit, origFunds);
             this.includeCredit = includeCredit;
             SetAutoWarp(true);
         }
 
         public void Clear()
         {
-            origMoney = targetMoney = 0d;
+            origFunds = targetFunds = 0d;
             SetAutoWarp(true);
         }
 
@@ -54,15 +57,9 @@ namespace RP0
 
         public double GetFractionComplete()
         {
-            if (includeCredit)
+            if (targetFunds != origFunds)
             {
-                if (Funding.Instance != null && UnlockCreditHandler.Instance != null && targetMoney != origMoney)
-                    return (Funding.Instance.Funds + UnlockCreditHandler.Instance.TotalCredit - origMoney) / (targetMoney - origMoney);
-            }
-            else
-            {
-                if (Funding.Instance != null && targetMoney != origMoney)
-                    return (Funding.Instance.Funds - origMoney) / (targetMoney - origMoney);
+                return (GetCurrentMoney(includeCredit) - origFunds) / (targetFunds - origFunds);
             }
 
             return 0d;
@@ -70,8 +67,8 @@ namespace RP0
 
         public string GetItemName()
         {
-            if (includeCredit) return $"Fund + Credit Target: {targetMoney:N0}";
-            else return $"Fund Target: {targetMoney:N0}";
+            if (includeCredit) return $"Fund + Credit Target: {targetFunds:N0}";
+            else return $"Fund Target: {targetFunds:N0}";
         }
 
         public ProjectType GetProjectType()
@@ -81,13 +78,12 @@ namespace RP0
 
         public double GetTimeLeft()
         {
-            if (includeCredit) return EstimateTimeToCombinedFunds(Funding.Instance.Funds + UnlockCreditHandler.Instance.TotalCredit, targetMoney, epsilonTime);
-            else return EstimateTimeToFunds(Funding.Instance.Funds, targetMoney, epsilonTime);
+            return EstimateTimeToCombinedFunds(GetCurrentMoney(includeCredit), targetFunds, epsilonTime);
         }
 
-        private static double GetTimeToMoney(double baseMoney, double targetMoney, double epsilonTime, Func<double, double> GetMoneyDelta)
+        private static double GetTimeToMoney(double baseMoney, double targetFunds, double epsilonTime, Func<double, double> GetMoneyDelta)
         {
-            if (targetMoney - baseMoney <= 0.001d)
+            if (targetFunds - baseMoney <= 0.001d)
                 return 0d;
 
             double timeLower = MinTime;
@@ -99,11 +95,10 @@ namespace RP0
             for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > epsilonTime;)
             {
                 double time = (timeUpper + timeLower) * 0.5d;
-                // This is the post-CMQ delta.
                 double moneyDelta = GetMoneyDelta(time);
                 double totalMoney = baseMoney + moneyDelta;
 
-                if (totalMoney >= targetMoney)
+                if (totalMoney >= targetFunds)
                 {
                     timeUpper = time;
                     bestTime = time;
@@ -156,19 +151,19 @@ namespace RP0
             return double.PositiveInfinity;
         }
 
-        public static double EstimateTimeToFunds(double baseFunds, double targetMoney, double epsilonTime)
+        public static double EstimateTimeToFunds(double baseFunds, double targetFunds, double epsilonTime)
         {
-            return GetTimeToMoney(baseFunds, targetMoney, epsilonTime, SpaceCenterManagement.Instance.GetBudgetDelta);
+            return GetTimeToMoney(baseFunds, targetFunds, epsilonTime, SpaceCenterManagement.Instance.GetBudgetDelta);
         }
 
-        public static double EstimateTimeToCombinedFunds(double baseMoney, double targetMoney, double epsilonTime)
+        public static double EstimateTimeToCombinedFunds(double baseMoney, double targetFunds, double epsilonTime)
         {
-            return GetTimeToMoney(baseMoney, targetMoney, epsilonTime, GetCombinedFunds);
+            return GetTimeToMoney(baseMoney, targetFunds, epsilonTime, GetCombinedFunds);
         }
 
         private static double GetCombinedFunds(double time)
         {
-            return SpaceCenterManagement.Instance.GetBudgetDelta(time) + UnlockCreditHandler.Instance.CreditForTime(time);
+            return SpaceCenterManagement.Instance.GetBudgetDelta(time) + (CurrencyUtils.Rate(TransactionReasonsRP0.RateUnlockCreditIncrease) * UnlockCreditHandler.Instance.TotalCreditForTime(time));
         }
 
         public double GetTimeLeftEst(double offset)
@@ -183,8 +178,7 @@ namespace RP0
 
         public bool IsComplete()
         {
-            if (includeCredit) return Funding.Instance.Funds + UnlockCreditHandler.Instance.TotalCredit >= targetMoney;
-            else return Funding.Instance.Funds >= targetMoney;
+            return GetCurrentMoney(includeCredit) >= targetFunds;
         }
     }
 }

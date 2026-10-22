@@ -76,7 +76,7 @@ namespace RP0
 
         public double GetTimeLeft()
         {
-            if (includeCredit) return EstimateTimeToCombinedFunds(GetCurrentMoney(includeCredit), targetFunds, epsilonTime);
+            if (includeCredit) return EstimateTimeToCombinedFunds(GetCurrentMoney(true), targetFunds, epsilonTime);
             else return EstimateTimeToFunds(Funding.Instance.Funds, targetFunds, epsilonTime);
         }
 

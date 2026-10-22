@@ -25,16 +25,14 @@ namespace RP0
 
         public bool IsValid => targetFunds != origFunds && targetFunds > 0d;
 
-        public static double GetCurrentMoney(bool includeCredit) => GetCurrentMoney(includeCredit, Funding.Instance?.Funds ?? 0d);
-        public static double GetCurrentMoney(bool includeCredit, double funds) => includeCredit ? funds + (UnlockCreditHandler.Instance?.TotalCredit ?? 0d) : funds;
+        public static double GetCurrentMoney(bool includeCredit) => (Funding.Instance?.Funds ?? 0d) + (includeCredit ? (UnlockCreditHandler.Instance?.TotalCredit ?? 0d) : 0d);
 
         public FundTargetProject() { }
 
         public FundTargetProject(double moneyTarget, bool includeCredit)
         {
             targetFunds = moneyTarget;
-            origFunds = Funding.Instance?.Funds ?? 0d;
-            origFunds = GetCurrentMoney(includeCredit, origFunds);
+            origFunds = GetCurrentMoney(includeCredit);
             this.includeCredit = includeCredit;
             SetAutoWarp(true);
         }

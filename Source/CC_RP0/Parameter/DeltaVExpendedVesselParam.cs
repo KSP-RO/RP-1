@@ -57,6 +57,14 @@ namespace ContractConfigurator.RP0
             return met;
         }
 
+        protected override void OnReset()
+        {
+            base.OnReset();
+            accumulatedDV = 0.0;
+            started = false;
+            met = false;
+        }
+
         protected override void OnUpdate()
         {
             double now = Time.fixedTime;

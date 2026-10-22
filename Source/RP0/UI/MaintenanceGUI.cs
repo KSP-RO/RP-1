@@ -225,9 +225,7 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Unlock Credit", HighLogic.Skin.label, GUILayout.Width(160));
-
             double unlockCredit = UnlockCreditHandler.Instance.TotalCreditForTime(utDelta);
-
             GUILayout.Label(FormatCost(CurrencyUtils.Rate(TransactionReasonsRP0.RateUnlockCreditIncrease) * unlockCredit), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 

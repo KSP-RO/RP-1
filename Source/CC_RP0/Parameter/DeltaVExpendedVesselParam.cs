@@ -79,7 +79,7 @@ namespace ContractConfigurator.RP0
 
             base.OnUpdate();
 
-            bool gap = dt > updateFrequency * 4.0;   // Catch large time jumps
+            bool gap = dt > updateFrequency * 4.0;   // Rebuild engine cache on large time jumps
             // Rebuild engine cache when vessel or part count changes
             bool vesselChanged = v.persistentId != lastVesselPersistentId;
             if (vesselChanged || v.parts.Count != lastPartCount || gap)

@@ -443,9 +443,12 @@ namespace RP0
         //ContractPenalty = 1L << 3,
         Contracts = ContractReward | ContractDecline,
 
-        VesselPurchase = 1L << 4, // VesselRollout
-        VesselRecovery = 1L << 5,
-        //used by ModuleExperienceManagement only - Vessels = VesselRollout | VesselRecovery,
+        VesselPurchase     = 1L << 4, // VesselRollout
+        VesselRecovery     = 1L << 5,
+        VesselRefurbishment = 1L << 48, // post-recovery refurbishment phase; separate from VesselRecovery for independent financial tracking
+
+        //used by ModuleExperienceManagement only
+        //Vessels = VesselRollout | VesselRecovery,
 
         //StrategyInput = 1L << 7,
         //StrategyOutput = 1L << 8,
@@ -523,11 +526,12 @@ namespace RP0
         RateAirlaunch = 1L << 37,
         RateVesselPrep = RateRollout | RateAirlaunch,
         RateReconditioning = 1L << 38,
-        RateRecovery = 1L << 39,
+        RateRecovery       = 1L << 39,
+        RateRefurbishment  = 1L << 49, // independent rate channel for post-recovery refurbishment
 
         RateManufacturing = 1L << 40,
 
-        RateVessel = RateIntegration | RateVesselPrep | RateRecovery | RateManufacturing,
+        RateVessel = RateIntegration | RateVesselPrep | RateRecovery | RateRefurbishment | RateManufacturing,
 
         EfficiencyGainLC = 1L << 41,
 

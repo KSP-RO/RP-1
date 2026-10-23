@@ -252,7 +252,7 @@ namespace RP0
             else
             {
                 PopupDialog dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                    new MultiOptionDialog("warpToFunds", $"Current Funds: {Funding.Instance?.Funds ?? 0d:N0}\nCurrent Funds + Unlock Credit: {FundTargetProject.GetCurrentMoney(true):N0}\nEnter Target:", "Warp To Funds", HighLogic.UISkin,
+                    new MultiOptionDialog("warpToFunds", $"Current Funds: {Funding.Instance?.Funds ?? 0d:N0}\nCurrent Funds + Unlock Credit: {FundTargetProject.GetCurrentFunds(true):N0}\nEnter Target:", "Warp To Funds", HighLogic.UISkin,
                         new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
                         {
                             warpToFundsString = n;
@@ -280,7 +280,7 @@ namespace RP0
 
         private void ShowConfirmWarpDialog()
         {
-            if (!double.TryParse(warpToFundsString, out double moneyTarget))
+            if (!double.TryParse(warpToFundsString, out double fundTarget))
             {
                 PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmFail",
                     "Failed to parse funds!",
@@ -292,7 +292,7 @@ namespace RP0
             }
             else
             {
-                if (moneyTarget <= FundTargetProject.GetCurrentMoney(includeCredit))
+                if (fundTarget <= FundTargetProject.GetCurrentFunds(includeCredit))
                 {
                     PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmAtFunds",
                     "Already at this funding!",
@@ -304,7 +304,7 @@ namespace RP0
                     return;
                 }
 
-                FundTargetProject target = new FundTargetProject(moneyTarget, includeCredit);
+                FundTargetProject target = new FundTargetProject(fundTarget, includeCredit);
                 double time = target.GetTimeLeft();
                 if (time < 0d)
                 {

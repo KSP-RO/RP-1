@@ -25,14 +25,14 @@ namespace RP0
 
         public bool IsValid => targetFunds != origFunds && targetFunds > 0d;
 
-        public static double GetCurrentMoney(bool includeCredit) => (Funding.Instance?.Funds ?? 0d) + (includeCredit ? (UnlockCreditHandler.Instance?.TotalCredit ?? 0d) : 0d);
+        public static double GetCurrentFunds(bool includeCredit) => (Funding.Instance?.Funds ?? 0d) + (includeCredit ? (UnlockCreditHandler.Instance?.TotalCredit ?? 0d) : 0d);
 
         public FundTargetProject() { }
 
-        public FundTargetProject(double moneyTarget, bool includeCredit)
+        public FundTargetProject(double fundTarget, bool includeCredit)
         {
-            targetFunds = moneyTarget;
-            origFunds = GetCurrentMoney(includeCredit);
+            targetFunds = fundTarget;
+            origFunds = GetCurrentFunds(includeCredit);
             this.includeCredit = includeCredit;
             SetAutoWarp(true);
         }
@@ -57,7 +57,7 @@ namespace RP0
         {
             if (targetFunds != origFunds)
             {
-                return (GetCurrentMoney(includeCredit) - origFunds) / (targetFunds - origFunds);
+                return (GetCurrentFunds(includeCredit) - origFunds) / (targetFunds - origFunds);
             }
 
             return 0d;
@@ -76,28 +76,28 @@ namespace RP0
 
         public double GetTimeLeft()
         {
-            if (includeCredit) return EstimateTimeToCombinedFunds(GetCurrentMoney(true), targetFunds, epsilonTime);
+            if (includeCredit) return EstimateTimeToCombinedFunds(GetCurrentFunds(true), targetFunds, epsilonTime);
             else return EstimateTimeToFunds(Funding.Instance.Funds, targetFunds, epsilonTime);
         }
 
-        private static double GetTimeToMoney(double baseMoney, double targetFunds, double epsilonTime, Func<double, double> GetMoneyDelta)
+        private static double GetTimeToFunds(double baseFunds, double targetFunds, double epsilonTime, Func<double, double> GetFundsDelta)
         {
-            if (targetFunds - baseMoney <= 0.001d)
+            if (targetFunds - baseFunds <= 0.001d)
                 return 0d;
 
             double timeLower = MinTime;
             double timeUpper = MaxTime;
 
             double bestTime = -1d;
-            double lastMoney = 0d;
+            double lastFunds = 0d;
             bool lastDir = false;
             for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > epsilonTime;)
             {
                 double time = (timeUpper + timeLower) * 0.5d;
-                double moneyDelta = GetMoneyDelta(time);
-                double totalMoney = baseMoney + moneyDelta;
+                double fundsDelta = GetFundsDelta(time);
+                double totalFunds = baseFunds + fundsDelta;
 
-                if (totalMoney >= targetFunds)
+                if (totalFunds >= targetFunds)
                 {
                     timeUpper = time;
                     bestTime = time;
@@ -108,7 +108,7 @@ namespace RP0
                     // is negative and if so lower upper bound
                     if (i == (MaxIterations - 1))
                     {
-                        if (moneyDelta < 0d)
+                        if (fundsDelta < 0d)
                             timeUpper = time;
                         else
                             timeLower = time;
@@ -116,7 +116,7 @@ namespace RP0
                     else
                     {
                         // moving in right direction
-                        if (lastMoney < moneyDelta)
+                        if (lastFunds < fundsDelta)
                         {
                             if (lastDir)
                                 timeLower = time;
@@ -140,7 +140,7 @@ namespace RP0
                         }
                     }
                 }
-                lastMoney = moneyDelta;
+                lastFunds = fundsDelta;
                 lastDir = timeLower == time;
             }
 
@@ -152,12 +152,12 @@ namespace RP0
 
         public static double EstimateTimeToFunds(double baseFunds, double targetFunds, double epsilonTime)
         {
-            return GetTimeToMoney(baseFunds, targetFunds, epsilonTime, SpaceCenterManagement.Instance.GetBudgetDelta);
+            return GetTimeToFunds(baseFunds, targetFunds, epsilonTime, SpaceCenterManagement.Instance.GetBudgetDelta);
         }
 
-        public static double EstimateTimeToCombinedFunds(double baseMoney, double targetFunds, double epsilonTime)
+        public static double EstimateTimeToCombinedFunds(double baseFunds, double targetFunds, double epsilonTime)
         {
-            return GetTimeToMoney(baseMoney, targetFunds, epsilonTime, GetCombinedFunds);
+            return GetTimeToFunds(baseFunds, targetFunds, epsilonTime, GetCombinedFunds);
         }
 
         private static double GetCombinedFunds(double time)
@@ -177,7 +177,7 @@ namespace RP0
 
         public bool IsComplete()
         {
-            return GetCurrentMoney(includeCredit) >= targetFunds;
+            return GetCurrentFunds(includeCredit) >= targetFunds;
         }
     }
 }

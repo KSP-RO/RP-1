@@ -733,7 +733,7 @@ namespace RP0
             TechListIgnoreUpdates = true;
             KCTUtilities.RemoveResearchedPartsFromExperimental();
 
-            Dictionary<string, int> techsToRemove = new Dictionary<string, int> { {"earlySolids", 1}, {"basicSolids", 2}, {"solids1956", 4} };
+            Dictionary<string, int> techsToRemove = new Dictionary<string, int> { {"earlySolids", 1}, {"basicSolids", 2} };
             double researchRefund = 0;
             float scienceRefund = 0;
             for (int i = TechList.Count - 1; i >= 0; --i)
@@ -752,13 +752,6 @@ namespace RP0
                     researchRefund += kvp.Value; // fully refund the node
                     scienceRefund += kvp.Value;
                 }
-
-            int index = TechListIndex("solids1958");
-            if (index != -1)
-            {
-                researchRefund += Math.Min(TechList[index].progress, TechList[index].scienceCost); // Covers the case where solids1958 was actively being researched
-                KCT_GUI.CancelTechNode(index);
-            }
 
             if (scienceRefund > 0)
             {

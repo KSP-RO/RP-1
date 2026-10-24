@@ -16,8 +16,7 @@ namespace RP0.UpgradeScripts
         public static readonly Dictionary<string, string> NodeSwaps = new Dictionary<string, string> 
         { 
             { "earlySolids", "rocketryTesting" }, 
-            { "basicSolids", "basicRocketryRP0" }, 
-            { "solids1956", "orbitalRocketry1956" }
+            { "basicSolids", "basicRocketryRP0" }
         };
 
         public override TestResult OnTest(ConfigNode node, LoadContext loadContext, ref string nodeName)
@@ -42,9 +41,6 @@ namespace RP0.UpgradeScripts
                     {
                         targetNode.AddValue("Part", part);
                     }
-                    // good-bye!!
-                    node.RemoveNode(sourceNode);
-                    RP0Debug.Log($"{Name} removed {source} node");
                 }
             }
         }

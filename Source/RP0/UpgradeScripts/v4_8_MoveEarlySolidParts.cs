@@ -8,7 +8,7 @@ namespace RP0.UpgradeScripts
     public class v4_8_MoveEarlySolidParts : UpgradeScript
     {
         public override string Name { get => "RP-1 Early Solid Part Movement"; }
-        public override string Description { get => "Moves the parts in "; }
+        public override string Description { get => "Moves the parts in Early & Basic SRM nodes to their conventional counterparts."; }
         public override Version EarliestCompatibleVersion { get => new Version(2, 0, 0); }
         protected static Version _targetVersion = new Version(4, 8, 0);
         public override Version TargetVersion => _targetVersion;

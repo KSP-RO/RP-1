@@ -252,6 +252,9 @@ namespace RP0
             GUILayout.EndHorizontal();
             GUILayout.Space(4);
 
+            DrawGroundStationTechLevelRow(simParams);
+            GUILayout.Space(4);
+
             if (ModUtils.IsTestFlightInstalled || ModUtils.IsTestLiteInstalled)
             {
                 simParams.DisableFailures = !GUILayout.Toggle(!simParams.DisableFailures, " Enable Part Failures (TestFlight or TestLite)");
@@ -278,6 +281,27 @@ namespace RP0
             CheckEditorLock();
             GUI.DragWindow();  // movable instead of locked to screen centre
             ClampWindow(ref _simulationConfigPosition, strict: false);
+        }
+
+        private static void DrawGroundStationTechLevelRow(SimulationParams simParams)
+        {
+            int curLevel = KCTUtilities.GetRAGroundStationTechLevelFromFacility();
+            int maxLevel = RealAntennas.RACommNetScenario.MaxTL;
+            int simLevel = simParams.SimGroundStationTechLevel < 0 ? curLevel : simParams.SimGroundStationTechLevel;
+
+            GUILayout.BeginHorizontal();
+            GUILayout.Label(new GUIContent("Ground Station TechLevel: ", "RealAntennas ground station tech level used during the simulation. Determined by the Tracking Station level."));
+            if (GUILayout.Button("-", GUILayout.ExpandWidth(false)))
+                simLevel--;
+            GUILayout.Label($"{simLevel}", _styleLabelCenterAlign, GUILayout.Width(20));
+            if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
+                simLevel++;
+            GUILayout.EndHorizontal();
+
+            simLevel = Mathf.Clamp(simLevel, 0, maxLevel);
+            simParams.SimGroundStationTechLevel = simLevel == curLevel ? -1 : simLevel;
+
+            GUILayout.Label(simLevel == curLevel ? $"Current TechLevel: {curLevel}" : $"<color=yellow>Current TechLevel: {curLevel}</color>");
         }
 
         private static readonly string[] _orbitModeLabels = { "Circular", "Elliptical", "Hyperbolic" };

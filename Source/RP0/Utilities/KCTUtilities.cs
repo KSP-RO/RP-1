@@ -1582,6 +1582,46 @@ namespace RP0
             }
         }
 
+        /// <summary>
+        /// Ground station tech level that RealAntennas derives from the current Tracking Station level.
+        /// </summary>
+        public static int GetRAGroundStationTechLevelFromFacility()
+        {
+            float normLevel = HighLogic.CurrentGame.Mode == Game.Modes.CAREER ? ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) : 1f;
+            return Mathf.RoundToInt(RealAntennas.RACommNetScenario.MaxTL * normLevel);
+        }
+
+        /// <summary>
+        /// Rebuilds the RealAntennas ground stations with the given tech level.
+        /// RA recalculates the tech level from the actual facility level on the next scene load.
+        /// </summary>
+        public static void SetRAGroundStationTechLevel(int techLevel)
+        {
+            try
+            {
+                RP0Debug.Log($"Setting RA ground station TL to {techLevel}");
+                RealAntennas.RACommNetScenario.GroundStationTechLevel = techLevel;
+
+                var raHomes = UnityEngine.Object.FindObjectsOfType<RealAntennas.Network.RACommNetHome>();
+                foreach (RealAntennas.Network.RACommNetHome home in raHomes)
+                {
+                    // Disabled stations have no CommNode. They build their antennas once enabled.
+                    if (home.Comm != null)
+                        home.BuildAntennas();
+                }
+
+                // The link precompute caches the antennas, so it needs to pick up the rebuilt ones
+                if (CommNetNetwork.Instance is RealAntennas.Network.RACommNetNetwork raNetwork)
+                    raNetwork.InvalidateCache();
+                else
+                    RP0Debug.LogError("RA CommNetNetwork not found, ground station antennas will not be used for links");
+            }
+            catch (Exception ex)
+            {
+                RP0Debug.LogException(ex);
+            }
+        }
+
         private static void ClobberRACommnet()
         {
             var mInf = CommNetScenario.Instance?.GetType().GetMethod("ApplyTSLevelChange", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);

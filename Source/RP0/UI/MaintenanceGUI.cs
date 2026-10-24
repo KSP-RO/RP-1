@@ -13,6 +13,7 @@ namespace RP0
         private System.Collections.Generic.Dictionary<string, string> siteLocalizer = new System.Collections.Generic.Dictionary<string, string>();
 
         private string warpToFundsString;
+        private bool includeCredit;
 
         private string LocalizeSiteName(string siteID)
         {
@@ -224,20 +225,7 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Unlock Credit", HighLogic.Skin.label, GUILayout.Width(160));
-            double unlockCredit = 0d;
-            double accumTime = 0d;
-            for (int i = 0; i < SpaceCenterManagement.Instance.TechList.Count && accumTime < utDelta; ++i)
-            {
-                var tech = SpaceCenterManagement.Instance.TechList[i];
-                double buildTime = tech.BuildRate > 0d ? tech.TimeLeft : tech.GetTimeLeftEst(accumTime);
-                double timeLeft = utDelta - accumTime;
-                if (buildTime > timeLeft)
-                    buildTime = timeLeft;
-                if (buildTime <= 0d) // failsafe, but we might somehow have a 0 build time from a completed tech
-                    continue;
-                unlockCredit += UnlockCreditHandler.Instance.CreditForTime(buildTime);
-                accumTime += buildTime;
-            }
+            double unlockCredit = UnlockCreditHandler.Instance.TotalCreditForTime(utDelta);
             GUILayout.Label(FormatCost(CurrencyUtils.Rate(TransactionReasonsRP0.RateUnlockCreditIncrease) * unlockCredit), RightLabel, GUILayout.Width(160));
             GUILayout.EndHorizontal();
 
@@ -264,13 +252,14 @@ namespace RP0
             else
             {
                 PopupDialog dlg = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                    new MultiOptionDialog("warpToFunds", "Fund Target", "Warp To Funds", HighLogic.UISkin,
+                    new MultiOptionDialog("warpToFunds", $"Current Funds: {Funding.Instance?.Funds ?? 0d:N0}\nCurrent Funds + Unlock Credit: {FundTargetProject.GetCurrentFunds(true):N0}\nEnter Target:", "Warp To Funds", HighLogic.UISkin,
                         new DialogGUITextInput(warpToFundsString, false, 64, (string n) =>
                         {
                             warpToFundsString = n;
                             return warpToFundsString;
                         }, 24f),
-                        new DialogGUIButton("Estimate Time", () => { ShowConfirmWarpDialog(); }),
+                        new DialogGUIToggle(includeCredit, "Include Unlock Credit", (bool val) => { includeCredit = val; }),
+                        new DialogGUIButton("Estimate Time", ShowConfirmWarpDialog),
                         new DialogGUIButton("Cancel", CloseWarpToFundsDlg)
                     ), false, HighLogic.UISkin);
                 dlg.OnDismiss = CloseWarpToFundsDlg;
@@ -303,7 +292,7 @@ namespace RP0
             }
             else
             {
-                if (fundTarget <= Funding.Instance.Funds)
+                if (fundTarget <= FundTargetProject.GetCurrentFunds(includeCredit))
                 {
                     PopupDialog dlg = PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToFundsConfirmAtFunds",
                     "Already at this funding!",
@@ -315,7 +304,7 @@ namespace RP0
                     return;
                 }
 
-                FundTargetProject target = new FundTargetProject(fundTarget);
+                FundTargetProject target = new FundTargetProject(fundTarget, includeCredit);
                 double time = target.GetTimeLeft();
                 if (time < 0d)
                 {

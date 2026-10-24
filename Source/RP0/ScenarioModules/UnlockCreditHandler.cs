@@ -16,6 +16,9 @@ namespace RP0
 
         public double TotalCredit => _totalCredit;
 
+        /// <summary>
+        /// The amount of credit earned for a unit of time, assuming the tech does not change during that time.
+        /// </summary>
         public double CreditForTime(double UT)
         {
             if (SpaceCenterManagement.Instance.TechList.Count == 0)
@@ -45,6 +48,29 @@ namespace RP0
             }
 
             return sum * mult;
+        }
+
+        /// <summary>
+        /// The amount of credit earned for a unit of time, assuming the tech does change during that time.
+        /// </summary>
+        public double TotalCreditForTime(double utDelta)
+        {
+            double totalCredit = 0d;
+            double duration = 0d;
+            for (int i = 0; i < SpaceCenterManagement.Instance.TechList.Count && duration < utDelta; ++i)
+            {
+                var tech = SpaceCenterManagement.Instance.TechList[i];
+                double buildTime = tech.BuildRate > 0d ? tech.TimeLeft : tech.GetTimeLeftEst(duration);
+                double timeLeft = utDelta - duration;
+                if (buildTime > timeLeft)
+                    buildTime = timeLeft;
+                if (buildTime <= 0d) // failsafe, but we might somehow have a 0 build time from a completed tech
+                    continue;
+                totalCredit += CreditForTime(buildTime);
+                duration += buildTime;
+            }
+
+            return totalCredit;
         }
 
         /// <summary>

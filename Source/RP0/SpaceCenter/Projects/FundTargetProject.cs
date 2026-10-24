@@ -1,9 +1,13 @@
 ﻿using ROUtils.DataTypes;
+using System;
 
 namespace RP0
 {
     public class FundTargetProject : ConfigNodePersistenceBase, ISpaceCenterProject, IConfigNode
     {
+        [Persistent]
+        public bool includeCredit;
+
         [Persistent]
         private double targetFunds = 0d;
 
@@ -21,12 +25,15 @@ namespace RP0
 
         public bool IsValid => targetFunds != origFunds && targetFunds > 0d;
 
+        public static double GetCurrentFunds(bool includeCredit) => (Funding.Instance?.Funds ?? 0d) + (includeCredit ? (UnlockCreditHandler.Instance?.TotalCredit ?? 0d) : 0d);
+
         public FundTargetProject() { }
 
-        public FundTargetProject(double funds)
+        public FundTargetProject(double fundTarget, bool includeCredit)
         {
-            targetFunds = funds;
-            origFunds = Funding.Instance?.Funds ?? 0d;
+            targetFunds = fundTarget;
+            origFunds = GetCurrentFunds(includeCredit);
+            this.includeCredit = includeCredit;
             SetAutoWarp(true);
         }
 
@@ -48,15 +55,18 @@ namespace RP0
 
         public double GetFractionComplete()
         {
-            if (Funding.Instance != null && targetFunds != origFunds)
-                return (Funding.Instance.Funds - origFunds) / (targetFunds - origFunds);
+            if (targetFunds != origFunds)
+            {
+                return (GetCurrentFunds(includeCredit) - origFunds) / (targetFunds - origFunds);
+            }
 
             return 0d;
         }
 
         public string GetItemName()
         {
-            return $"Fund Target: {targetFunds:N0}";
+            if (includeCredit) return $"Fund + Credit Target: {targetFunds:N0}";
+            else return $"Fund Target: {targetFunds:N0}";
         }
 
         public ProjectType GetProjectType()
@@ -66,10 +76,11 @@ namespace RP0
 
         public double GetTimeLeft()
         {
-            return EstimateTimeToFunds(Funding.Instance.Funds, targetFunds, epsilonTime);
+            if (includeCredit) return EstimateTimeToCombinedFunds(GetCurrentFunds(true), targetFunds, epsilonTime);
+            else return EstimateTimeToFunds(Funding.Instance.Funds, targetFunds, epsilonTime);
         }
 
-        public static double EstimateTimeToFunds(double baseFunds, double targetFunds, double epsilonTime)
+        private static double GetTimeToFunds(double baseFunds, double targetFunds, double epsilonTime, Func<double, double> GetFundsDelta)
         {
             if (targetFunds - baseFunds <= 0.001d)
                 return 0d;
@@ -83,9 +94,8 @@ namespace RP0
             for (int i = MaxIterations; i-- > 0 && timeUpper - timeLower > epsilonTime;)
             {
                 double time = (timeUpper + timeLower) * 0.5d;
-                // This is the post-CMQ delta.
-                double fundDelta = SpaceCenterManagement.Instance.GetBudgetDelta(time);
-                double totalFunds = baseFunds + fundDelta;
+                double fundsDelta = GetFundsDelta(time);
+                double totalFunds = baseFunds + fundsDelta;
 
                 if (totalFunds >= targetFunds)
                 {
@@ -98,7 +108,7 @@ namespace RP0
                     // is negative and if so lower upper bound
                     if (i == (MaxIterations - 1))
                     {
-                        if (fundDelta < 0d)
+                        if (fundsDelta < 0d)
                             timeUpper = time;
                         else
                             timeLower = time;
@@ -106,7 +116,7 @@ namespace RP0
                     else
                     {
                         // moving in right direction
-                        if (lastFunds < fundDelta)
+                        if (lastFunds < fundsDelta)
                         {
                             if (lastDir)
                                 timeLower = time;
@@ -130,7 +140,7 @@ namespace RP0
                         }
                     }
                 }
-                lastFunds = fundDelta;
+                lastFunds = fundsDelta;
                 lastDir = timeLower == time;
             }
 
@@ -138,6 +148,21 @@ namespace RP0
                 return bestTime;
 
             return double.PositiveInfinity;
+        }
+
+        public static double EstimateTimeToFunds(double baseFunds, double targetFunds, double epsilonTime)
+        {
+            return GetTimeToFunds(baseFunds, targetFunds, epsilonTime, SpaceCenterManagement.Instance.GetBudgetDelta);
+        }
+
+        public static double EstimateTimeToCombinedFunds(double baseFunds, double targetFunds, double epsilonTime)
+        {
+            return GetTimeToFunds(baseFunds, targetFunds, epsilonTime, GetCombinedFunds);
+        }
+
+        private static double GetCombinedFunds(double time)
+        {
+            return SpaceCenterManagement.Instance.GetBudgetDelta(time) + (CurrencyUtils.Rate(TransactionReasonsRP0.RateUnlockCreditIncrease) * UnlockCreditHandler.Instance.TotalCreditForTime(time));
         }
 
         public double GetTimeLeftEst(double offset)
@@ -152,7 +177,7 @@ namespace RP0
 
         public bool IsComplete()
         {
-            return Funding.Instance.Funds >= targetFunds;
+            return GetCurrentFunds(includeCredit) >= targetFunds;
         }
     }
 }

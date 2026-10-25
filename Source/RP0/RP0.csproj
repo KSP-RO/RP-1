@@ -241,6 +241,8 @@
     <Compile Include="UI\ToolingGUI.cs" />
     <Compile Include="UI\ToolingPartResizer.cs" />
     <Compile Include="UI\AvionicsGUI.cs" />
+    <Compile Include="UI\Chart\LineChart.cs" />
+    <Compile Include="UI\Chart\LineChartGraphic.cs" />
     <Compile Include="SpaceCenter\AirlaunchParams.cs" />
     <Compile Include="SpaceCenter\AirlaunchTechLevel.cs" />
     <Compile Include="SpaceCenter\Projects\ConstructionProject.cs" />
@@ -316,10 +318,6 @@
     </Reference>
     <Reference Include="$(KSPRoot)/GameData/ContractConfigurator/ContractConfigurator.dll">
       <HintPath>$(ReferencePath)/ContractConfigurator.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(KSPRoot)/GameData/FerramAerospaceResearch/Plugins/ferramGraph.dll">
-      <HintPath>$(ReferencePath)/ferramGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Ionic.Zip.dll">

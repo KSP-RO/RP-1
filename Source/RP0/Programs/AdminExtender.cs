@@ -326,7 +326,7 @@ namespace RP0.Programs
         private void AddProgramFundingOverview()
         {
             var _fundingGraphPanel = new GameObject("ProgramFundingGraphArea", typeof(RectTransform));
-            _fundingGraphPanel.transform.SetParent(Administration.Instance.textPanel.transform);
+            _fundingGraphPanel.transform.SetParent(Administration.Instance.textPanel.transform, worldPositionStays: false);
             _fundingOverview = _fundingGraphPanel.gameObject.AddComponent<ProgramFundingOverview>();
 
             _fundingGraphPanel.gameObject.SetActive(true);

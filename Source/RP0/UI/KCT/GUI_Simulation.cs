@@ -301,7 +301,7 @@ namespace RP0
             simLevel = Mathf.Clamp(simLevel, 0, maxLevel);
             simParams.SimGroundStationTechLevel = simLevel == curLevel ? -1 : simLevel;
 
-            GUILayout.Label(simLevel == curLevel ? $"Ground Station TechLevel: {curLevel}" : $"<color=yellow>Current Ground Station TL: {curLevel}</color>");
+            GUILayout.Label(simLevel == curLevel ? $"Ground Station TechLevel: {curLevel}" : $"<color=yellow>Ground Station TechLevel: {curLevel}</color>");
         }
 
         private static readonly string[] _orbitModeLabels = { "Circular", "Elliptical", "Hyperbolic" };

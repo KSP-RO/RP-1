@@ -5,11 +5,10 @@ using RP0.Tests.ReusabilityTests.Config;
 namespace RP0.Tests.ReusabilityTests.Fixtures
 {
     /// <summary>
-    /// The refurbishment durations PR #2825 states it is aiming at, quoted from the PR's own
-    /// sources rather than invented here:
-    ///
-    ///   - the header comment of GameData/RP-1/SCMData/RefurbishmentLevels.cfg
-    ///   - the doc comment on Formula.GetRefurbishmentBP
+    /// The refurbishment durations PR #2825 originally stated it was aiming at, as calendar
+    /// days. The formula is now anchored on real refurbishment cost as a share of a new vessel
+    /// (see Formula.RefurbishmentBP): RP-1 prices integration but not manufacturing, so these
+    /// durations would make reuse cost more than integrating new. Kept so the gap stays visible.
     ///
     /// These are reported in the tables as a target-versus-actual comparison rather than
     /// asserted as tests. They are aspirational numbers for a balance pass in progress, so a

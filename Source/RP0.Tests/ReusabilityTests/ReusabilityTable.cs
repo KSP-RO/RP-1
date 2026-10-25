@@ -56,8 +56,10 @@ namespace RP0.Tests.ReusabilityTests
                 return;
             }
 
-            sb.AppendLine("Quoted from the header comment of `GameData/RP-1/SCMData/RefurbishmentLevels.cfg`");
-            sb.AppendLine("and the doc comment on `Formula.GetRefurbishmentBP`.");
+            sb.AppendLine("The PR's original calendar targets. RP-1 prices integration but not manufacturing, so");
+            sb.AppendLine("refurbishment at these durations would cost more engineer time than integrating a new");
+            sb.AppendLine("vessel. It is anchored on real cost as a share of a new vessel instead (see");
+            sb.AppendLine("`Formula.RefurbishmentBP`), so these are not expected to match.");
             sb.AppendLine();
             sb.AppendLine("| Vessel | effCost | vessel cost | build BP | refurb BP | refurb cost | refurb/vessel cost | engineers | target (d) | actual (d) | actual/target | source |");
             sb.AppendLine("| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |");

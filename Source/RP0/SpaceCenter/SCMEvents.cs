@@ -72,6 +72,7 @@ namespace RP0
             GameEvents.onGameSceneLoadRequested.Add(GameSceneEvent);
             GameEvents.onGameStateLoad.Add(OnGameStateLoad);
             GameEvents.OnPartPurchased.Add(OnPartPurchased);
+            GameEvents.OnPartUpgradePurchased.Add(OnPartUpgradePurchased);
             GameEvents.Modifiers.OnCurrencyModified.Add(OnCurrenciesModified);
             GameEvents.onFlightGlobalsRemoveVessel.Add(OnRemoveVessel);
 
@@ -358,6 +359,12 @@ namespace RP0
         public void OnPartPurchased(AvailablePart ap)
         {
             KCTUtilities.RemoveExperimentalPart(ap);
+        }
+
+        public void OnPartUpgradePurchased(PartUpgradeHandler.Upgrade up)
+        {
+            // Recovery/refurbishment tiers are gated on their upgrade being purchased
+            Database.SettingsRecovery.RecalculateAndApply();
         }
     }
 }

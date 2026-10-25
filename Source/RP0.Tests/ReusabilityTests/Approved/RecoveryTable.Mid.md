@@ -11,11 +11,11 @@ Parsed from `GameData/RP-1/SCMData/RecoveryLevels.cfg` and `RefurbishmentLevels.
 
 | Setting | Value |
 | --- | ---: |
-| Researched techs | basicRocketry, advancedJetEngines, materialsScienceAdvCapsules |
+| Researched techs | basicRocketryRP0, advancedJetEngines, materialsScienceAdvCapsules |
 | RecoveryRateMult (m/s) | 21.00 |
 | RecoveryCostMult (funds/tonne-m) | 7.65e-7 |
-| RefurbishmentRateMult | 1.300 |
-| RefurbishmentCostMult | 0.9500 |
+| RefurbishmentRateMult | 2.000 |
+| RefurbishmentCostMult | 0.6000 |
 | SplashdownPenaltyMult | 1.500 |
 | salaryEngineers | 500.0 |
 
@@ -55,25 +55,27 @@ Parsed from `GameData/RP-1/SCMData/RecoveryLevels.cfg` and `RefurbishmentLevels.
 
 | Vessel | landed at | dist (km) | recov (d) | recov cost | refurb BP | refurb (d) | refurb cost | refurb/build BP | reuse cost/vessel cost | legacy recov BP | legacy recov (d) |
 | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
-| Sounding rocket (Aerobee 150) | Splashdown | 80.00 | 0.04409 | 0.04284 | 28,190 | 13.05 | 55.31 | 0.1380 | 0.05480 | 24,530 | 11.36 |
-| Redstone-class LV (uncrewed) | Splashdown | 320.0 | 0.1764 | 6.854 | 109,000 | 3.911 | 192.1 | 0.08236 | 0.07743 | 95,950 | 3.444 |
-| Mercury-Redstone (crewed) | Splashdown | 480.0 | 0.2646 | 11.02 | 637,700 | 15.30 | 348.4 | 0.2377 | 0.06981 | 188,700 | 4.525 |
-| Mercury-Atlas (crewed) | Splashdown | 1,300 | 0.7165 | 117.4 | 1.672e+6 | 14.23 | 824.7 | 0.2300 | 0.07059 | 514,400 | 4.378 |
-| Gemini-Titan II (crewed) | Splashdown | 1,000 | 0.5511 | 117.8 | 3.646e+6 | 25.01 | 1,485 | 0.2166 | 0.05264 | 1.106e+6 | 7.585 |
-| Apollo CM alone | Splashdown | 3,000 | 1.653 | 12.85 | 9.797e+6 | 7.651 | 3,347 | 0.3852 | 0.09601 | 3.254e+6 | 2.542 |
-| Heavy first stage (S-IC class) | Splashdown | 660.0 | 0.3638 | 1,156 | 1.925e+6 | 2.683 | 2,364 | 0.08358 | 0.08993 | 1.724e+6 | 2.402 |
-| Reusable booster, RTLS | Launchpad | 0 | 0 | 0 | 266,600 | 1.284 | 841.2 | 0.03672 | 0.05794 | 433,300 | 2.087 |
-| Reusable booster, droneship | Splashdown | 630.0 | 0.3472 | 208.7 | 499,900 | 2.408 | 841.2 | 0.06884 | 0.07232 | 446,900 | 2.153 |
-| Early jet X-plane | Runway | 0 | 0 | 0 | 383,900 | 3.591 | 429.2 | 0.09571 | 0.06046 | 467,900 | 4.376 |
-| X-15 rocket plane | Lakebed (off-site) | 500.0 | 0.2756 | 5.738 | 9.64e+6 | 90.16 | 1,455 | 0.5976 | 0.09466 | 4.282e+6 | 40.05 |
-| Nuclear ramjet cruise vehicle | Runway | 0 | 0 | 0 | 1.472e+7 | 137.7 | 3,631 | 0.3788 | 0.1705 | 1.794e+7 | 167.8 |
-| Shuttle orbiter | Runway | 0 | 0 | 0 | 1.125e+8 | 114.0 | 11,450 | 0.7100 | 0.07815 | 4.571e+7 | 46.30 |
+| Sounding rocket (Aerobee 150) | Splashdown | 80.00 | 0.04409 | 0.04284 | 15,320 | 7.093 | 85.95 | 0.07500 | 0.08514 | 24,530 | 11.36 |
+| Redstone-class LV (uncrewed) | Splashdown | 320.0 | 0.1764 | 6.854 | 99,240 | 3.562 | 251.1 | 0.07500 | 0.1004 | 95,950 | 3.444 |
+| Mercury-Redstone (crewed) | Splashdown | 480.0 | 0.2646 | 11.02 | 301,800 | 7.241 | 477.6 | 0.1125 | 0.09492 | 188,700 | 4.525 |
+| Mercury-Atlas (crewed) | Splashdown | 1,300 | 0.7165 | 117.4 | 817,700 | 6.959 | 1,182 | 0.1125 | 0.09738 | 514,400 | 4.378 |
+| Gemini-Titan II (crewed) | Splashdown | 1,000 | 0.5511 | 117.8 | 1.894e+6 | 12.99 | 2,537 | 0.1125 | 0.08718 | 1.106e+6 | 7.585 |
+| Apollo CM alone | Splashdown | 3,000 | 1.653 | 12.85 | 2.861e+6 | 2.235 | 3,691 | 0.1125 | 0.1058 | 3.254e+6 | 2.542 |
+| Heavy first stage (S-IC class) | Splashdown | 660.0 | 0.3638 | 1,156 | 1.728e+6 | 2.408 | 3,374 | 0.07500 | 0.1157 | 1.724e+6 | 2.402 |
+| Reusable booster, RTLS | Launchpad | 0 | 0 | 0 | 290,500 | 1.399 | 1,181 | 0.04000 | 0.08136 | 433,300 | 2.087 |
+| Reusable booster, droneship | Splashdown | 630.0 | 0.3472 | 208.7 | 544,600 | 2.624 | 1,181 | 0.07500 | 0.09573 | 446,900 | 2.153 |
+| Early jet X-plane | Runway | 0 | 0 | 0 | 160,400 | 1.501 | 688.5 | 0.04000 | 0.09697 | 467,900 | 4.376 |
+| X-15 rocket plane | Lakebed (off-site) | 500.0 | 0.2756 | 5.738 | 1.21e+6 | 11.32 | 2,440 | 0.07500 | 0.1585 | 4.282e+6 | 40.05 |
+| Nuclear ramjet cruise vehicle | Runway | 0 | 0 | 0 | 1.555e+6 | 14.54 | 5,428 | 0.04000 | 0.2548 | 1.794e+7 | 167.8 |
+| Shuttle orbiter | Runway | 0 | 0 | 0 | 9.507e+6 | 9.631 | 19,480 | 0.06000 | 0.1330 | 4.571e+7 | 46.30 |
 
 ## Versus the PR's stated design targets
 
-Quoted from the header comment of `GameData/RP-1/SCMData/RefurbishmentLevels.cfg`
-and the doc comment on `Formula.GetRefurbishmentBP`.
+The PR's original calendar targets. RP-1 prices integration but not manufacturing, so
+refurbishment at these durations would cost more engineer time than integrating a new
+vessel. It is anchored on real cost as a share of a new vessel instead (see
+`Formula.RefurbishmentBP`), so these are not expected to match.
 
 | Vessel | effCost | vessel cost | build BP | refurb BP | refurb cost | refurb/vessel cost | engineers | target (d) | actual (d) | actual/target | source |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | --- |
-| Reusable booster, droneship | 26,250 | 14,520 | 7.262e+6 | 499,900 | 841.2 | 0.05794 | 961 | 90.00 | 2.408 | 0.02676x | F9S1 first reuse (2016): ~3 months turnaround |
+| Reusable booster, droneship | 26,250 | 14,520 | 7.262e+6 | 544,600 | 1,181 | 0.08136 | 961 | 90.00 | 2.624 | 0.02915x | F9S1 first reuse (2016): ~3 months turnaround |

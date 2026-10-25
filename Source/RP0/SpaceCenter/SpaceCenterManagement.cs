@@ -37,6 +37,10 @@ namespace RP0
         public static double EditorRolloutCost = 0;
         public static double EditorReconditionCost = 0;
         public static double EditorRolloutBP = 0;
+        public static double EditorRefurbishmentCost = 0;
+        public static double EditorRefurbishmentBP = 0;
+        /// <summary>Funds charged (negative: refunded) for parts when saving the current edit.</summary>
+        public static double EditorPartCostDelta = 0;
         public static double EditorUnlockCosts = 0;
         public static double EditorToolingCosts = 0;
         public static List<string> EditorRequiredTechs = new List<string>();
@@ -1776,6 +1780,12 @@ namespace RP0
             {
                 EditorVessel.LCID = EditedVessel.LCID;
                 KCTUtilities.GetShipEditProgress(EditedVessel, out editProgressBP, out oldEditProgressPercentage, out newEditProgressPercentage);
+
+                // Mirrors KCTUtilities.TrySaveShipEdits / SaveShipEdits
+                double usedShipsCost = EditedVessel.GetTotalCost();
+                foreach (VesselProject v in MergedVessels)
+                    usedShipsCost += v.GetTotalCost();
+                EditorPartCostDelta = EditorVessel.cost - usedShipsCost;
             }
             else
             {
@@ -1835,6 +1845,10 @@ namespace RP0
                 EditorRolloutCost = 0;
                 EditorRolloutBP = 0;
             }
+
+            // Both VAB and SPH vessels can be recovered and refurbished
+            EditorRefurbishmentCost = Formula.GetRefurbishmentCost(EditorVessel);
+            EditorRefurbishmentBP = Formula.GetRefurbishmentBP(EditorVessel);
 
             Tuple<float, List<string>> unlockInfo = KCTUtilities.GetVesselUnlockInfo(ship);
             EditorUnlockCosts = unlockInfo.Item1;

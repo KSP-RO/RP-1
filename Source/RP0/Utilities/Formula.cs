@@ -149,23 +149,6 @@ namespace RP0
             return (vessel.effectiveCost - (vessel.cost * 0.5d)) * 12d;
         }
 
-        public static double GetEngineRefurbBPMultiplier(double runTime, double ratedBurnTime)
-        {
-            double runFactor = 1d - runTime * 0.1d;
-            if (runFactor < 0d)
-                runFactor = 0d;
-            double retVal = 0.5d * (1d + runFactor);
-
-            if (ratedBurnTime > 0d && runFactor == 0d)
-            {
-                double ratio = runTime / ratedBurnTime;
-                if (ratio > 1d)
-                    ratio *= ratio;
-                retVal *= 1d - Math.Min(0.75d, ratio * 0.5d);
-            }
-            return retVal;
-        }
-
         public static double GetRolloutBP(VesselProject vessel)
         {
             return RolloutBP(vessel.inputs);
@@ -182,7 +165,7 @@ namespace RP0
         }
 
         /// <summary>
-        /// Refurbishment BP: corresponds to prior recovery BP. See Formula.RefurbishmentBP
+        /// Refurbishment BP: a fraction of the vessel's build BP. See Formula.RefurbishmentBP
         /// in FormulaCore.cs for the math and the design anchors it targets.
         /// </summary>
         public static double GetRefurbishmentBP(VesselProject vessel)
@@ -191,7 +174,7 @@ namespace RP0
         }
 
         /// <summary>
-        /// Refurbishment cost: between reconditioning (0.2x rollout) and a full rollout (~40%).
+        /// Refurbishment cost: a fraction of effective cost.
         /// See Formula.RefurbishmentCost in FormulaCore.cs.
         /// </summary>
         public static double GetRefurbishmentCost(VesselProject vessel)
@@ -199,7 +182,7 @@ namespace RP0
             if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
                 return 0;
 
-            return RefurbishmentCost(VesselAndLCInputs(vessel));
+            return RefurbishmentCost(vessel.inputs);
         }
 
         /// <summary>

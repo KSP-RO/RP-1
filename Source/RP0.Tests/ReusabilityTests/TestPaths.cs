@@ -25,6 +25,11 @@ namespace RP0.Tests.ReusabilityTests
 
         public static string SCMData(string fileName) => Path.GetFullPath(Path.Combine(SCMDataDir, fileName));
 
+        /// <summary>&lt;repo&gt;/GameData/RP-1/Tree</summary>
+        public static string TreeDir => Path.Combine(ProjectDir, "..", "..", "GameData", "RP-1", "Tree");
+
+        public static string Tree(string fileName) => Path.GetFullPath(Path.Combine(TreeDir, fileName));
+
         private static string ResolveProjectDir()
         {
             string dir = Assembly.GetExecutingAssembly()

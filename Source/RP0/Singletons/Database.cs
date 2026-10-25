@@ -50,6 +50,8 @@ namespace RP0
         public struct RefurbTechEntry
         {
             public string techID;
+            /// <summary>PARTUPGRADE that must be purchased for this tier to apply. Optional.</summary>
+            public string upgrade;
             public double rateRefurbishment;
             public double costRefurbishment;
             public double splashdownPenaltyMult;
@@ -58,6 +60,8 @@ namespace RP0
         public struct RecoveryTechEntry
         {
             public string techID;
+            /// <summary>PARTUPGRADE that must be purchased for this tier to apply. Optional.</summary>
+            public string upgrade;
             public double rateRecovery;
             public double costRecovery;
         }
@@ -92,7 +96,8 @@ namespace RP0
             {
                 var e = new RefurbTechEntry();
                 e.techID = tech.GetValue("id");
-                
+                e.upgrade = tech.GetValue("upgrade");
+
                 double tRate = 1.0d;
                 double tCost = 1.0d;
                 double tSplash = 1.0d;
@@ -132,7 +137,8 @@ namespace RP0
             {
                 var e = new RecoveryTechEntry();
                 e.techID = tech.GetValue("id");
-                
+                e.upgrade = tech.GetValue("upgrade");
+
                 double tRate = 1.0d;
                 double tCost = 1.0d;
                 
@@ -152,16 +158,28 @@ namespace RP0
             if (HighLogic.CurrentGame == null) return;
             if (HighLogic.CurrentGame.Mode != Game.Modes.SANDBOX && ResearchAndDevelopment.Instance == null) return;
 
-            RecalculateAndApply(techID => ResearchAndDevelopment.GetTechnologyState(techID) == RDTech.State.Available);
+            RecalculateAndApply(IsTierActive);
+        }
+
+        /// <summary>
+        /// A tier applies once its tech is researched and, if it names an upgrade, that
+        /// upgrade has been purchased in R&amp;D.
+        /// </summary>
+        private static bool IsTierActive(string techID, string upgrade)
+        {
+            if (ResearchAndDevelopment.GetTechnologyState(techID) != RDTech.State.Available)
+                return false;
+
+            return string.IsNullOrEmpty(upgrade) || PartUpgradeManager.Handler.IsUnlocked(upgrade);
         }
 
         /// <summary>
         /// Recomputes the recovery/refurbishment multipliers from the loaded entries, deciding
-        /// which techs count as researched via the supplied predicate. The parameterless
-        /// overload uses the live ResearchAndDevelopment state; this one takes the predicate so
+        /// which tiers apply via the supplied (techID, upgrade) predicate. The parameterless
+        /// overload uses the live R&amp;D and upgrade state; this one takes the predicate so
         /// the stacking can be exercised in tests without a running game.
         /// </summary>
-        public void RecalculateAndApply(Func<string, bool> isResearched)
+        public void RecalculateAndApply(Func<string, string, bool> isActive)
         {
             // Refurbishment
             double refurbRate = RefurbishmentRateBase;
@@ -170,7 +188,7 @@ namespace RP0
 
             foreach (var e in RefurbEntries)
             {
-                if (isResearched(e.techID))
+                if (isActive(e.techID, e.upgrade))
                 {
                     refurbRate *= e.rateRefurbishment;
                     refurbCost *= e.costRefurbishment;
@@ -188,7 +206,7 @@ namespace RP0
 
             foreach (var e in RecoveryEntries)
             {
-                if (isResearched(e.techID))
+                if (isActive(e.techID, e.upgrade))
                 {
                     recRate *= e.rateRecovery;
                     recCost *= e.costRecovery;

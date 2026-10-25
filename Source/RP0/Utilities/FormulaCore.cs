@@ -86,6 +86,12 @@ namespace RP0
         public readonly bool Splashed;
         /// <summary>LandedAt contains "Runway" or "Launchpad".</summary>
         public readonly bool AtKSC;
+        /// <summary>
+        /// Effective cost of wear on engines that have already fired, summed over engines as
+        /// Formula.EngineRefurbishmentWear times each engine's effective cost. Not part of
+        /// EffectiveCost: it only raises refurbishment.
+        /// </summary>
+        public readonly double EngineWearEC;
 
         // --- launch complex ---
         public readonly bool LCIsHumanRated;
@@ -108,7 +114,8 @@ namespace RP0
                              bool lcIsHumanRated,
                              bool lcIsPad,
                              float lcMassMax,
-                             RecoverySettings settings)
+                             RecoverySettings settings,
+                             double engineWearEC = 0d)
         {
             EffectiveCost = effectiveCost;
             Cost = cost;
@@ -123,6 +130,7 @@ namespace RP0
             LCIsPad = lcIsPad;
             LCMassMax = lcMassMax;
             Settings = settings;
+            EngineWearEC = engineWearEC;
         }
 
         /// <summary>
@@ -141,7 +149,8 @@ namespace RP0
                                   bool? lcIsHumanRated = null,
                                   bool? lcIsPad = null,
                                   float? lcMassMax = null,
-                                  RecoverySettings? settings = null)
+                                  RecoverySettings? settings = null,
+                                  double? engineWearEC = null)
         {
             return new FormulaInputs(
                 effectiveCost ?? EffectiveCost,
@@ -156,7 +165,8 @@ namespace RP0
                 lcIsHumanRated ?? LCIsHumanRated,
                 lcIsPad ?? LCIsPad,
                 lcMassMax ?? LCMassMax,
-                settings ?? Settings);
+                settings ?? Settings,
+                engineWearEC ?? EngineWearEC);
         }
     }
 
@@ -250,8 +260,12 @@ namespace RP0
             return v.Mass * v.KscDistance * v.Settings.RecoveryCostMult;
         }
 
+        internal const double _RefurbishmentBuildFraction = 0.10d;
+        internal const double _RefurbishmentHumanRatedMult = 1.5d;
+        internal const double _RefurbishmentEffectiveCostFraction = 0.075d;
+
         /// <summary>
-        /// Refurbishment BP: corresponds to prior recovery BP.
+        /// Refurbishment BP: a fraction of the vessel's own build (integration) BP.
         /// Penalises splashdown recoveries and human-rated craft.
         /// Tech progression reduces BP via RefurbishmentRateMult (higher = faster).
         ///
@@ -261,16 +275,16 @@ namespace RP0
         /// </summary>
         public static double RefurbishmentBP(in FormulaInputs v)
         {
-            double bp = RolloutBP(v) * (v.IsSPH ? 2.15 : 1);
-            // Respect SPH being more expensive to recover for some reason?
+            double bp = v.BuildPoints * _RefurbishmentBuildFraction * EngineWearMult(v);
 
-            // Human-rated craft require far more rigorous inspection and certification
+            // Human-rated craft require more rigorous inspection and certification. Effective
+            // cost already carries the HumanRated tag premium, so this is kept modest.
             if (v.HumanRated)
-                bp *= 3.0d;
+                bp *= _RefurbishmentHumanRatedMult;
 
             // Splashdown: saltwater exposure, drying, decontamination.
-            // SplashdownPenaltyMult is reduced by materials science techs via SCMREFURBTECHS.
-            // 1.0 = full 1.5x penalty; 0.5 = halved penalty; 0.0 = no penalty.
+            // SplashdownPenaltyMult is the multiplier itself: 1.5 with no tech, reduced by
+            // materials science techs via SCMREFURBTECHS.
             if (v.Splashed)
                 bp *= v.Settings.SplashdownPenaltyMult;
 
@@ -284,17 +298,35 @@ namespace RP0
         }
 
         /// <summary>
-        /// Refurbishment cost: between reconditioning (0.2x rollout) and a full rollout (~40%).
-        /// Uses the same engineer-subsidy pattern as other ops costs.
+        /// Refurbishment cost: replacement parts and consumables, as a fraction of effective
+        /// cost. Not subsidised: the engineer labour is paid through the refurbishment BP,
+        /// and makes up roughly three quarters of the total (see RefurbishmentBP).
         /// Reduced by tech via RefurbishmentCostMult.
         /// </summary>
         public static double RefurbishmentCost(in FormulaInputs v)
         {
-            double bp = RefurbishmentBP(v);
-            double result = RolloutCost(v) * v.Settings.RefurbishmentCostMult;
-            result = result * _RolloutCostBasePortion
-                   + Math.Max(0d, result * _RolloutCostSubsidyPortion - bp * v.Settings.SalaryEngineers / _SalaryBPDivisor);
-            return result * 0.5d;
+            return (v.EffectiveCost + v.EngineWearEC) * _RefurbishmentEffectiveCostFraction * v.Settings.RefurbishmentCostMult;
+        }
+
+        /// <summary>
+        /// How much of an engine's effective cost its wear adds to refurbishment, from its
+        /// accumulated run time against its rated burn time. Never decreases with run time and
+        /// has no cap: 0.5 at exactly the rated burn time, climbing twice as steeply beyond it.
+        /// An engine with no rated burn time counts as one full rated burn once it has fired.
+        /// </summary>
+        public static double EngineRefurbishmentWear(double runTime, double ratedBurnTime)
+        {
+            if (runTime <= 0d)
+                return 0d;
+
+            double ratio = ratedBurnTime > 0d ? runTime / ratedBurnTime : 1d;
+            return 0.5d * ratio + Math.Max(0d, ratio - 1d);
+        }
+
+        /// <summary>Scales refurbishment work by the share of effective cost added by engine wear.</summary>
+        private static double EngineWearMult(in FormulaInputs v)
+        {
+            return v.EffectiveCost > 0d ? 1d + v.EngineWearEC / v.EffectiveCost : 1d;
         }
     }
 }

@@ -63,21 +63,26 @@ namespace RP0.Tests.ReusabilityTests
         // ---- structural multipliers ----------------------------------------------------
 
         /// <summary>
-        /// An SPH vessel refurbishes at a fixed multiple of the same vessel treated as VAB,
-        /// independent of every other input. Currently 2.15x.
+        /// Which editor a vessel was built in does not affect refurbishment: the work is a
+        /// share of the vessel's own build BP, which already reflects its complexity.
         /// </summary>
         [TestCaseSource(nameof(Cases))]
-        public void SPHRefurbishmentIsAFixedMultipleOfVAB(VesselArchetype a, TechTier tier)
+        public void SPHDoesNotChangeRefurbishment(VesselArchetype a, TechTier tier)
         {
             FormulaInputs v = a.At(tier);
 
-            Assert.That(Formula.RefurbishmentBP(v.With(isSPH: true)),
-                        Is.EqualTo(Formula.RefurbishmentBP(v.With(isSPH: false)) * 2.15d).Within(RelTolPercent).Percent);
+            Assert.Multiple(() =>
+            {
+                Assert.That(Formula.RefurbishmentBP(v.With(isSPH: true)),
+                            Is.EqualTo(Formula.RefurbishmentBP(v.With(isSPH: false))).Within(RelTolPercent).Percent, "BP");
+                Assert.That(Formula.RefurbishmentCost(v.With(isSPH: true)),
+                            Is.EqualTo(Formula.RefurbishmentCost(v.With(isSPH: false))).Within(RelTolPercent).Percent, "cost");
+            });
         }
 
         /// <summary>
         /// Human rating applies a fixed multiplier to refurbishment BP, independent of every
-        /// other input. Currently 3x.
+        /// other input. Currently 1.5x.
         /// </summary>
         [TestCaseSource(nameof(Cases))]
         public void HumanRatingAppliesAFixedRefurbishmentMultiplier(VesselArchetype a, TechTier tier)
@@ -85,7 +90,20 @@ namespace RP0.Tests.ReusabilityTests
             FormulaInputs v = a.At(tier);
 
             Assert.That(Formula.RefurbishmentBP(v.With(humanRated: true)),
-                        Is.EqualTo(Formula.RefurbishmentBP(v.With(humanRated: false)) * 3d).Within(RelTolPercent).Percent);
+                        Is.EqualTo(Formula.RefurbishmentBP(v.With(humanRated: false)) * 1.5d).Within(RelTolPercent).Percent);
+        }
+
+        /// <summary>
+        /// Refurbishment work is a fixed share of build work for a vessel landed away from KSC,
+        /// neither splashed nor human-rated, before any tech. Currently 10%.
+        /// </summary>
+        [TestCaseSource(nameof(Archetypes))]
+        public void BaseRefurbishmentIsAFixedShareOfBuildBP(VesselArchetype a)
+        {
+            FormulaInputs v = a.At(TechTier.Base).With(humanRated: false, splashed: false, atKSC: false);
+
+            Assert.That(Formula.RefurbishmentBP(v),
+                        Is.EqualTo(v.BuildPoints * 0.10d).Within(RelTolPercent).Percent);
         }
 
         [TestCaseSource(nameof(Cases))]
@@ -136,14 +154,57 @@ namespace RP0.Tests.ReusabilityTests
         public void RefurbishmentRisesWithEffectiveCost(VesselArchetype a, TechTier tier)
         {
             FormulaInputs cheap = a.At(tier);
-            FormulaInputs dear = cheap.With(effectiveCost: cheap.EffectiveCost * 1.1d);
+            double dearEC = cheap.EffectiveCost * 1.1d;
+            // Build BP derives from effective cost in game, so move them together.
+            FormulaInputs dear = cheap.With(effectiveCost: dearEC, buildPoints: Formula.VesselBuildPoints(dearEC));
 
             Assert.Multiple(() =>
             {
                 Assert.That(Formula.RefurbishmentBP(dear),
                             Is.GreaterThan(Formula.RefurbishmentBP(cheap)), "refurbishment BP");
+                Assert.That(Formula.RefurbishmentCost(dear),
+                            Is.GreaterThan(Formula.RefurbishmentCost(cheap)), "refurbishment cost");
                 Assert.That(Formula.RolloutBP(dear),
                             Is.GreaterThan(Formula.RolloutBP(cheap)), "rollout BP");
+            });
+        }
+
+        /// <summary>
+        /// Running an engine longer must never make it cheaper to refurbish, and there is no
+        /// point past which extra run time is free (the old run-time discount bottomed out at
+        /// sqrt(1.5) x rated burn time).
+        /// </summary>
+        [Test]
+        public void EngineWearNeverFallsWithRunTimeAndHasNoCap()
+        {
+            const double rated = 500d;
+            double previous = Formula.EngineRefurbishmentWear(0d, rated);
+            Assert.That(previous, Is.EqualTo(0d), "an unfired engine has no wear");
+
+            for (double runTime = 1d; runTime <= 3d * rated; runTime += 1d)
+            {
+                double wear = Formula.EngineRefurbishmentWear(runTime, rated);
+                Assert.That(wear, Is.GreaterThan(previous), $"wear at {runTime} s");
+                previous = wear;
+            }
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(Formula.EngineRefurbishmentWear(rated, rated), Is.EqualTo(0.5d).Within(AbsTol), "one rated burn");
+                Assert.That(Formula.EngineRefurbishmentWear(10d, 0d), Is.EqualTo(0.5d).Within(AbsTol), "no rated burn time: one rated burn");
+            });
+        }
+
+        [TestCaseSource(nameof(Cases))]
+        public void RefurbishmentRisesWithEngineWear(VesselArchetype a, TechTier tier)
+        {
+            FormulaInputs fresh = a.At(tier).With(engineWearEC: 0d);
+            FormulaInputs worn = fresh.With(engineWearEC: fresh.EffectiveCost * 0.2d);
+
+            Assert.Multiple(() =>
+            {
+                Assert.That(Formula.RefurbishmentBP(worn), Is.GreaterThan(Formula.RefurbishmentBP(fresh)), "refurbishment BP");
+                Assert.That(Formula.RefurbishmentCost(worn), Is.GreaterThan(Formula.RefurbishmentCost(fresh)), "refurbishment cost");
             });
         }
 
@@ -205,15 +266,8 @@ namespace RP0.Tests.ReusabilityTests
 
         /// <summary>
         /// A vessel's NET refurbishment cost - the charge plus the engineer salary paid over
-        /// the refurbishment - should never rise with tech.
-        ///
-        /// The charged cost alone (Formula.RefurbishmentCost) is not monotonic: the formula
-        /// subtracts an engineer-salary subsidy that shrinks as refurbishment BP falls, so a
-        /// tier that cuts BP faster than it cuts RefurbishmentCostMult can leave the charge
-        /// higher. But that is exactly compensated by the smaller salary the player now pays,
-        /// because the subsidy term equals the salary cost of the refurbishment time
-        /// (bp / EngineerBPRate engineer-seconds x salary). Net = charge + that salary, and net
-        /// is what a player actually spends. Asserted here per PR review feedback.
+        /// the refurbishment - should never rise with tech. Net is what a player actually
+        /// spends, so this holds even if a future change trades charge against time.
         /// </summary>
         [TestCaseSource(nameof(Archetypes))]
         public void AdvancingTechNeverRaisesNetRefurbishmentCost(VesselArchetype a)
@@ -246,10 +300,10 @@ namespace RP0.Tests.ReusabilityTests
         }
 
         /// <summary>
-        /// The charge plus the engineer salary the subsidy is meant to offset. The salary term
-        /// is bp / EngineerBPRate engineer-seconds of work, priced at the annual salary; it
-        /// equals the subsidy Formula.RefurbishmentCost subtracts, and is independent of how
-        /// many engineers are assigned (more engineers finish proportionally sooner).
+        /// The charge plus the engineer salary paid over the refurbishment. The salary term
+        /// is bp / EngineerBPRate engineer-seconds of work, priced at the annual salary, and is
+        /// independent of how many engineers are assigned (more engineers finish proportionally
+        /// sooner).
         /// </summary>
         private static double NetRefurbishmentCost(in FormulaInputs v)
         {

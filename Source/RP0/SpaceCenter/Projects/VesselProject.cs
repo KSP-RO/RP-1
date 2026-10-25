@@ -51,6 +51,7 @@ namespace RP0
             public HashSet<string> GlobalTags = new HashSet<string>();
             public List<TagsToEC> TagEffectiveCosts = new List<TagsToEC>();
             public bool HumanRated;
+            public double EngineWearEC;
         }
 
         [Persistent]
@@ -59,6 +60,9 @@ namespace RP0
         public double effectiveCost;
         [Persistent]
         public double buildPoints;
+        /// <summary>Wear on already-fired engines, as effective cost. Raises refurbishment only.</summary>
+        [Persistent]
+        public double engineWearEC;
         [Persistent]
         public string launchSite;
         [Persistent]
@@ -232,7 +236,8 @@ namespace RP0
                     lcIsHumanRated: LC != null ? LC.IsHumanRated : false,
                     lcIsPad: LC != null ? (LC.LCType == LaunchComplexType.Pad) : false,
                     lcMassMax: LC != null ? LC.MassMax : 0,
-                    settings: Formula.CurrentSettings());
+                    settings: Formula.CurrentSettings(),
+                    engineWearEC: engineWearEC);
                 }
         }
 
@@ -539,6 +544,7 @@ namespace RP0
             ret.ShipSize = ShipSize;
             ret.tanksFull = tanksFull;
             ret.isCrewable = isCrewable;
+            ret.engineWearEC = engineWearEC;
 
             ret.ShipNodeCompressed.CompressAndRelease();
 
@@ -1073,6 +1079,7 @@ namespace RP0
 
             double globalMultiplier = ApplyGlobalCostModifiers(state);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
+            state.EngineWearEC *= globalMultiplier;
             RP0Debug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
             return multipliedCost;
@@ -1106,6 +1113,7 @@ namespace RP0
             tagEffectiveCosts.AddRange(state.TagEffectiveCosts);
 
             humanRated = state.HumanRated;
+            engineWearEC = state.EngineWearEC;
         }
         
         // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
@@ -1255,8 +1263,9 @@ namespace RP0
                             break;
                     }
                 }
-                if (runTime > 0)
-                    effectiveCost = Formula.GetEngineRefurbBPMultiplier(runTime, ratedBurnTime) * effectiveCost;
+                // Used engines keep their full effective cost for integration and edits;
+                // their wear only raises refurbishment.
+                state.EngineWearEC += Formula.EngineRefurbishmentWear(runTime, ratedBurnTime) * effectiveCost;
             }
 
             if (effectiveCost < 0)

@@ -54,7 +54,8 @@ namespace RP0.Tests.ReusabilityTests.Config
         private static RecoverySettings Resolve(params string[] techs)
         {
             var researched = new HashSet<string>(techs);
-            _levels.RecalculateAndApply(researched.Contains);
+            // Tiers model the upgrades as purchased: a tier is active when its tech is researched.
+            _levels.RecalculateAndApply((techID, _) => researched.Contains(techID));
 
             return new RecoverySettings(
                 salaryEngineers: SalaryEngineers,
@@ -73,11 +74,11 @@ namespace RP0.Tests.ReusabilityTests.Config
 
         /// <summary>Gemini/Apollo era: barges, heavy airlift, advanced capsule materials.</summary>
         public static readonly TechTier Mid = Make("Mid", "Gemini/Apollo",
-            "basicRocketry", "advancedJetEngines", "materialsScienceAdvCapsules");
+            "basicRocketryRP0", "advancedJetEngines", "materialsScienceAdvCapsules");
 
         /// <summary>Everything researched: modern transport and Falcon 9 Block 5 materials.</summary>
         public static readonly TechTier Modern = Make("Modern", "F9 Block 5",
-            "basicRocketry", "advancedJetEngines", "refinedTurbofans",
+            "basicRocketryRP0", "advancedJetEngines", "refinedTurbofans",
             "materialsScienceAdvCapsules", "materialsScienceCommercial", "materialsScienceNF");
 
         public static readonly TechTier[] All = { Base, Mid, Modern };

@@ -625,6 +625,7 @@ namespace RP0
                 ConfigNode match = null;
                 if (!parts.ContainsKey(p.partInfo.name))
                 {
+                    SCM.nonmatchingParts.Add(p, PartCompareResult.NOT_PRESENT);
                     RP0Debug.Log($"Nonmatching part: {p.partInfo.name}, NOT_PRESENT");
                     continue;
                 }

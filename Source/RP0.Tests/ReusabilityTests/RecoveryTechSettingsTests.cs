@@ -43,6 +43,56 @@ namespace RP0.Tests.ReusabilityTests
                         "Modern tier does not research every tech defined in the SCMData cfgs");
         }
 
+        /// <summary>
+        /// Every tier is bought as a PARTUPGRADE, which must exist and sit on the same tech
+        /// node as the tier - otherwise the tier can never be purchased, or the icon shows up
+        /// somewhere the bonus doesn't.
+        /// </summary>
+        [Test]
+        public void EveryTierNamesAnUpgradeOnTheSameTech()
+        {
+            ConfigNode tree = ConfigNode.Load(TestPaths.Tree("ReusabilityTechlevels.cfg"));
+            var upgradeTech = tree.GetNodes("PARTUPGRADE")
+                                  .ToDictionary(n => n.GetValue("name"), n => n.GetValue("techRequired"));
+
+            var tiers = TechTier.Levels.RefurbEntries.Select(e => (e.techID, e.upgrade))
+                                .Concat(TechTier.Levels.RecoveryEntries.Select(e => (e.techID, e.upgrade)));
+
+            var problems = new System.Collections.Generic.List<string>();
+            foreach (var (techID, upgrade) in tiers)
+            {
+                if (string.IsNullOrEmpty(upgrade))
+                    problems.Add($"{techID}: no upgrade named");
+                else if (!upgradeTech.TryGetValue(upgrade, out string tech))
+                    problems.Add($"{techID}: upgrade '{upgrade}' is not defined");
+                else if (tech != techID)
+                    problems.Add($"{techID}: upgrade '{upgrade}' is on '{tech}'");
+            }
+
+            Assert.That(problems, Is.Empty);
+        }
+
+        [Test]
+        public void UnpurchasedUpgradesLeaveEveryTierInactive()
+        {
+            var settings = new RecoveryTechSettings();
+            settings.LoadRefurb(ConfigNode.Load(TestPaths.SCMData("RefurbishmentLevels.cfg")).GetNode("SCMREFURBTECHS"));
+            settings.LoadRecovery(ConfigNode.Load(TestPaths.SCMData("RecoveryLevels.cfg")).GetNode("SCMRECOVERYTECHS"));
+
+            // Every tech researched, no upgrade bought.
+            settings.RecalculateAndApply((techID, upgrade) => string.IsNullOrEmpty(upgrade));
+
+            RecoverySettings b = TechTier.Base.Settings;
+            Assert.Multiple(() =>
+            {
+                Assert.That(settings.RecoveryRateMult, Is.EqualTo(b.RecoveryRateMult), "recovery rate");
+                Assert.That(settings.RecoveryCostMult, Is.EqualTo(b.RecoveryCostMult), "recovery cost");
+                Assert.That(settings.RefurbishmentRateMult, Is.EqualTo(b.RefurbishmentRateMult), "refurb rate");
+                Assert.That(settings.RefurbishmentCostMult, Is.EqualTo(b.RefurbishmentCostMult), "refurb cost");
+                Assert.That(settings.SplashdownPenaltyMult, Is.EqualTo(b.SplashdownPenaltyMult), "splashdown");
+            });
+        }
+
         [Test]
         public void BaseTier_UsesTheCfgBaseValues()
         {
@@ -77,7 +127,7 @@ namespace RP0.Tests.ReusabilityTests
             var settings = new RecoveryTechSettings();
             ConfigNode node = ConfigNode.Load(TestPaths.SCMData("RefurbishmentLevels.cfg")).GetNode("SCMREFURBTECHS");
             settings.LoadRefurb(node);
-            settings.RecalculateAndApply(_ => false);   // nothing researched
+            settings.RecalculateAndApply((_, __) => false);   // nothing researched
 
             string cfgValue = node.GetNode("BASE")?.GetValue("CostRefurbishment");
 

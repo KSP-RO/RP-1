@@ -293,7 +293,7 @@ namespace RP0
             GUILayout.Label(new GUIContent("Ground Station TechLevel: ", "RealAntennas ground station tech level used during the simulation. Determined by the Tracking Station level."));
             if (GUILayout.Button("-", GUILayout.ExpandWidth(false)))
                 simLevel--;
-            GUILayout.Label($"{simLevel}", _styleLabelCenterAlign, GUILayout.Width(20));
+            GUILayout.Label($"{simLevel}", GetLabelCenterAlignStyle(), GUILayout.Width(20));
             if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
                 simLevel++;
             GUILayout.EndHorizontal();

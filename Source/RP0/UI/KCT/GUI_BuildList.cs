@@ -91,6 +91,8 @@ namespace RP0
             _blobText.fontSize = 30;
             _blobText.fixedHeight = 20;
             _blobText.alignment = TextAnchor.MiddleCenter;
+            // A bullet wider than the label would wrap onto a second line.
+            _blobText.wordWrap = false;
 
             _yellowButton = new GUIStyle(GUI.skin.button);
             _yellowButton.normal.textColor = XKCDColors.KSPMellowYellow;
@@ -970,6 +972,7 @@ namespace RP0
                 GUIStates.ShowLCManagement = false;
                 _centralWindowPosition.width = 300;
                 _centralWindowPosition.height = 1;
+                _newLCData.Name = $"Launch Complex {SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count}";
             }
             LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
             if (ksc.LaunchComplexes.Count > 1 &&

@@ -42,17 +42,9 @@ namespace RP0.Harmony
 
         [HarmonyPostfix]
         [HarmonyPatch("MissionControlTextRich")]
-        internal static void Postfix_MissionControlTextRich(Contract __instance, ref string __result)
+        internal static void Postfix_MissionControlTextRich(Contract __instance)
         {
             _contract = null;
-
-            // Stock shows an offer expiry line; in RP-1 an expired offer is simply re-offered, so the timer only misleads.
-            if (__instance.ContractState == Contract.State.Offered && __instance.DateExpire != 0d)
-            {
-                __result = __result.Replace(
-                    KSPRichTextUtil.TextDateCompact(KSP.Localization.Localizer.Format("#autoLOC_266526"), __instance.DateExpire),
-                    string.Empty);
-            }
         }
 
         [HarmonyPrefix]

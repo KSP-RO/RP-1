@@ -649,7 +649,8 @@ namespace RP0
             foreach (var name in partInfo.identicalParts.Split(','))
             {
                 if (PartLoader.getPartInfoByName(name.Replace('_', '.').Trim()) is AvailablePart info
-                    && info.TechRequired == partInfo.TechRequired)
+                    && info.TechRequired == partInfo.TechRequired
+                    && !techState.partsPurchased.Contains(info))
                 {
                     info.costsFunds = false;
                     techState.partsPurchased.Add(info);

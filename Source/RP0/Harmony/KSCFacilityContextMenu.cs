@@ -121,13 +121,9 @@ namespace RP0.Harmony
             __instance.UpgradeButton.onClick.AddListener(__instance.OnUpgradeButtonInput);
             if (upgradeable)
             {
-                // Hovering previews the next level's stats, which is empty at max level and would blank the stats box.
-                if (__instance.hasFacility && (float)__instance.host.Facility.FacilityLevel != __instance.host.Facility.MaxLevel)
-                {
-                    UIOnHover uIOnHover = __instance.UpgradeButton.gameObject.AddComponent<UIOnHover>();
-                    uIOnHover.onEnter.AddListener(__instance.OnUpgradeButtonHoverIn);
-                    uIOnHover.onExit.AddListener(__instance.OnUpgradeButtonHoverOut);
-                }
+                UIOnHover uIOnHover = __instance.UpgradeButton.gameObject.AddComponent<UIOnHover>();
+                uIOnHover.onEnter.AddListener(__instance.OnUpgradeButtonHoverIn);
+                uIOnHover.onExit.AddListener(__instance.OnUpgradeButtonHoverOut);
                 if (tooltipUp != null)
                 {
                     var tooltipController = __instance.UpgradeButton.gameObject.AddComponent<TooltipController_Text>();

@@ -149,11 +149,6 @@ namespace RP0
                 }
                 lvl.levelStats.textBase += "\n[#autoLOC_6002236] [CrewCount] [#autoLOC_6002237]";
             }
-            else if (facilityType == SpaceCenterFacility.Administration)
-            {
-                // Stock also appends a "Max Commitment" line, but RP-1 has no strategy commitment, so it would always read 0.0%.
-                lvl.levelStats.textBase = "[#autoLOC_6002231] [StrategyCount]";
-            }
             else if (facilityType == SpaceCenterFacility.TrackingStation)
             {
                 lvl.levelStats.textBase = $"[MapMode]\n[ManeuverTool]\n[#autoLOC_rp0_FacilityContextMenu_TS_lvl{lvlIdx}]\n[UnownedObjects]";

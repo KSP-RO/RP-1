@@ -1,0 +1,93 @@
+[
+    {
+        "name": "SDEngine1",
+        "title": "Sea Dragon main engine",
+        "description": "",
+        "mod": "ImprovedSeaDragon",
+        "cost": "3095000",
+        "entry_cost": "",
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1977",
+        "technology": "orbitalRocketry1976",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "SeaDragon",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF"
+        ]
+    },
+    {
+        "name": "SDEngine2",
+        "title": "Sea Dragon secondary stage engine",
+        "description": "",
+        "mod": "ImprovedSeaDragon",
+        "cost": "1095000",
+        "entry_cost": "",
+        "category": "HYDROLOX",
+        "info": "",
+        "year": "1977",
+        "technology": "hydrolox1976",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "SeaDragon",
+        "identical_part_name": "",
+        "module_tags": [
+            "EngineLiquidPF",
+            "Hydrolox"
+        ]
+    },
+    {
+        "name": "SDFirstTank",
+        "title": "Sea Dragon First Stage Tank",
+        "description": "",
+        "mod": "ImprovedSeaDragon",
+        "cost": 50000,
+        "entry_cost": "",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "1977",
+        "technology": "materialsScienceSpaceStation",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "SeaDragon",
+        "identical_part_name": "",
+        "module_tags": []
+    },
+    {
+        "name": "SDSecondTank",
+        "title": "Sea Dragon Second Stage Tank",
+        "description": "",
+        "mod": "ImprovedSeaDragon",
+        "cost": "68000",
+        "entry_cost": "",
+        "category": "MATERIALS",
+        "info": "",
+        "year": "1977",
+        "technology": "materialsScienceSpaceStation",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "SeaDragon",
+        "identical_part_name": "",
+        "module_tags": [
+            "Cryogenic"
+        ]
+    }
+]

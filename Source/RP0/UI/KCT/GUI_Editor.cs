@@ -21,22 +21,44 @@ namespace RP0
         private static readonly GUIContent _gcNewLC = new GUIContent("New LC", "Build a new launch complex to support this vessel, with a margin of 10% to vessel mass and size upgrades.");
         private static readonly GUIContent _gcNoHangar = new GUIContent("Hangar Unavailable", "The Hangar is currently being modified.");
         private static readonly GUIContent _gcSwitchToHangar = new GUIContent("Switch to Hangar", "A Launch Complex is currently selected; this will switch to the Hangar, needed for planes.");
+        private static readonly GUIContent _gcNonmatchingParts = new GUIContent("Toggle Non-Matching Part Highlights", "Red is differing cost. Yellow is differing mass. Blue is differing resources. Purple is no matching part name.");
         private static List<string> vesselFailedChecks = new List<string>();
+        private static bool _highlightNonmatchingParts = false;
+        private static readonly Dictionary<Part, KCTUtilities.PartCompareResult> _highlights = new Dictionary<Part, KCTUtilities.PartCompareResult>();
 
-        // Rollout Rate effects should not change when this window is open.
+        // Rollout and refurbishment rate effects should not change when this window is open.
         private static double _cachedRolloutRateLeader = -1;
-        private static double CachedRolloutRateLeader 
-        { 
-            get 
+        private static double _cachedRefurbishmentRateLeader = -1;
+        private static double CachedRolloutRateLeader
+        {
+            get
             {
-                if (_cachedRolloutRateLeader < 0 || _rolloutTimeNeedsUpdate)
-                {
-                    _cachedRolloutRateLeader = CurrencyUtils.Rate(TransactionReasonsRP0.RateRollout);
-                    _rolloutTimeNeedsUpdate = false;
-                }
+                RefreshCachedRateLeaders();
                 return _cachedRolloutRateLeader;
             }
         }
+        private static double CachedRefurbishmentRateLeader
+        {
+            get
+            {
+                RefreshCachedRateLeaders();
+                return _cachedRefurbishmentRateLeader;
+            }
+        }
+
+        private static void RefreshCachedRateLeaders()
+        {
+            if (_cachedRolloutRateLeader >= 0 && !_rolloutTimeNeedsUpdate)
+                return;
+
+            _cachedRolloutRateLeader = CurrencyUtils.Rate(TransactionReasonsRP0.RateRollout);
+            _cachedRefurbishmentRateLeader = CurrencyUtils.Rate(TransactionReasonsRP0.RateRefurbishment);
+            _rolloutTimeNeedsUpdate = false;
+        }
+
+        private static string RefurbishmentProjectionTooltip =>
+            "Projected cost for a dry landing with your purchased refurbishment upgrades. " +
+            $"Splashing down multiplies time by {Database.SettingsRecovery.SplashdownPenaltyMult:0.##}x and if you land at KSC by 0.8x.";
         public static void DrawEditorGUI(int windowID)
         {
             if (EditorLogic.fetch == null)
@@ -106,6 +128,13 @@ namespace RP0
                     GUILayout.Label(new GUIContent($"Rollout Time: {(bR > 0 ? RP0DTUtils.PrintDateDeltaCompact(SpaceCenterManagement.EditorRolloutBP / rolloutBR, true, false) : "infinity")} at {postEffic:P0}",
                         "Uses the predicted efficiency after integration is complete."));
                 }
+
+                if (SpaceCenterManagement.EditorRefurbishmentBP > 0)
+                {
+                    double refurbBR = bR * CachedRefurbishmentRateLeader / effic * postEffic;
+                    GUILayout.Label(new GUIContent($"Refurbishment Time: {(bR > 0 ? RP0DTUtils.PrintDateDeltaCompact(SpaceCenterManagement.EditorRefurbishmentBP / refurbBR, true, false) : "infinity")} at {postEffic:P0}",
+                        RefurbishmentProjectionTooltip));
+                }
             }
             else
             {
@@ -120,13 +149,7 @@ namespace RP0
                 GUILayout.EndHorizontal();
             }
 
-            if (bR > 0d && rateWithCurEngis > 0d)
-            {
-                double effectiveEngCount = bR / rateWithCurEngis * engineersUsed;
-                double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.EngineerIdleSalaryMult);
-                double cost = buildPoints / (bR * bpLeaderEffect) / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
-                GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
-            }
+            RenderNetSalary(buildPoints, bR, rateWithCurEngis, engineersUsed, bpLeaderEffect);
 
             if (SpaceCenterManagement.EditorRolloutCost > 0)
             {
@@ -135,21 +158,13 @@ namespace RP0
                 GUILayout.Label(new GUIContent($"Launch Cost: √{rolloutCost:N1} + √{recondCost:N1}", "Launch costs consist of rollout + pad reconditioning"));
             }
 
-            bool showCredit = false;
-            if (SpaceCenterManagement.EditorUnlockCosts > 0)
+            if (SpaceCenterManagement.EditorRefurbishmentCost > 0)
             {
-                showCredit = true;
-                GUILayout.Label($"Unlock Cost: √{SpaceCenterManagement.EditorUnlockCosts:N1}");
+                double refurbCost = -CurrencyUtils.Funds(TransactionReasonsRP0.VesselRefurbishment, -SpaceCenterManagement.EditorRefurbishmentCost);
+                GUILayout.Label(new GUIContent($"Refurbishment Cost: √{refurbCost:N1}", RefurbishmentProjectionTooltip));
             }
 
-            if (SpaceCenterManagement.EditorToolingCosts > 0)
-            {
-                showCredit = true;
-                GUILayout.Label($"Tooling Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -SpaceCenterManagement.EditorToolingCosts):N1}");
-            }
-
-            if (showCredit)
-                GUILayout.Label($"Unlock Credit: √{UnlockCreditHandler.Instance.TotalCredit:N1}");
+            RenderUnlockAndToolingCosts();
 
             if (SpaceCenterManagement.EditorRequiredTechs.Count > 0)
             {
@@ -363,15 +378,45 @@ namespace RP0
             GUILayout.EndHorizontal();
         }
 
+        private static void RenderNetSalary(double buildPoints, double bR, double rateWithCurEngis, int engineersUsed, double bpLeaderEffect)
+        {
+            if (bR <= 0d || rateWithCurEngis <= 0d)
+                return;
+
+            double effectiveEngCount = bR / rateWithCurEngis * engineersUsed;
+            double salaryPerDayAboveIdle = Database.SettingsSC.salaryEngineers * (1d / 365.25d) * (1d - Database.SettingsSC.EngineerIdleSalaryMult);
+            double cost = buildPoints / (bR * bpLeaderEffect) / 86400d * effectiveEngCount * salaryPerDayAboveIdle;
+            GUILayout.Label(new GUIContent($"Net Salary: √{-CurrencyUtils.Funds(TransactionReasonsRP0.SalaryEngineers, -cost):N1}", "The extra salary paid above the idle rate for these engineers"));
+        }
+
+        private static void RenderUnlockAndToolingCosts()
+        {
+            bool showCredit = false;
+            if (SpaceCenterManagement.EditorUnlockCosts > 0)
+            {
+                showCredit = true;
+                GUILayout.Label($"Unlock Cost: √{SpaceCenterManagement.EditorUnlockCosts:N1}");
+            }
+
+            if (SpaceCenterManagement.EditorToolingCosts > 0)
+            {
+                showCredit = true;
+                GUILayout.Label($"Tooling Cost: √{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -SpaceCenterManagement.EditorToolingCosts):N1}");
+            }
+
+            if (showCredit)
+                GUILayout.Label($"Unlock Credit: √{UnlockCreditHandler.Instance.TotalCredit:N1}");
+        }
+
         private static void RenderEditMode()
         {
             VesselProject editedVessel = SpaceCenterManagement.Instance.EditedVessel;
             double fullVesselBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect * editedVessel.LC.StrategyRateMultiplier;
             double effic = editedVessel.LC.Efficiency;
-            KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
-            GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
-            GUILayout.Label($"Edited: {newCompletionPercent:P2}");
+            GUILayout.Label($"Original: {Math.Max(0, SpaceCenterManagement.Instance.oldEditProgressPercentage):P2}");
+            GUILayout.Label($"Edited: {SpaceCenterManagement.Instance.newEditProgressPercentage:P2}");
+            double newProgressBP = SpaceCenterManagement.Instance.editProgressBP;
             
             double rateWithCurEngis = KCTUtilities.GetBuildRate(editedVessel.LC, SpaceCenterManagement.Instance.EditorVessel.mass, SpaceCenterManagement.Instance.EditorVessel.buildPoints, SpaceCenterManagement.Instance.EditorVessel.humanRated, 0)
                 * effic;
@@ -408,11 +453,26 @@ namespace RP0
                     double rolloutBR = bR * CachedRolloutRateLeader;
                     GUILayout.Label($"Rollout Time: {RP0DTUtils.GetFormattedTime(SpaceCenterManagement.EditorRolloutBP / (rolloutBR / effic * rolloutEff) , 0, false)} at {rolloutEff:P0}");
                 }
+
+                VesselProject editorVessel = SpaceCenterManagement.Instance.EditorVessel;
+                int engineersUsed = Math.Min(
+                    editedVessel.LC.MaxEngineersFor(editorVessel.mass, editorVessel.buildPoints, editorVessel.humanRated),
+                    editedVessel.LC.Engineers);
+                RenderNetSalary(buildPoints, bR, rateWithCurEngis, engineersUsed, bpLeaderEffect);
             }
             else
             {
                 GUILayout.Label("Invalid Integration Rate");
             }
+
+            double partCostDelta = SpaceCenterManagement.EditorPartCostDelta;
+            if (Math.Abs(partCostDelta) >= 0.05d)
+            {
+                GUILayout.Label(new GUIContent(partCostDelta > 0d ? $"Parts Cost: √{partCostDelta:N1}" : $"Parts Refund: √{-partCostDelta:N1}",
+                    "Charged when the edits are saved: the new vessel's part cost minus that of the vessel being edited and any merged vessels"));
+            }
+
+            RenderUnlockAndToolingCosts();
 
             GUILayout.BeginHorizontal();
             VesselProject curVessel = SpaceCenterManagement.Instance.EditorVessel;
@@ -484,7 +544,50 @@ namespace RP0
                 }
             }
 
-            //RenderMergeSection(ship);
+            if (SpaceCenterManagement.Instance.nonmatchingParts.Count() > 0
+                && GUILayout.Button(_gcNonmatchingParts, _highlightNonmatchingParts ? _greenButton : GUI.skin.button))
+            {
+                _highlightNonmatchingParts = !_highlightNonmatchingParts;
+            }
+            foreach (var kvp in _highlights)
+            {
+                // Unity's == null, not ?., so parts deleted since last frame are skipped
+                if (kvp.Key != null)
+                    kvp.Key.SetHighlightDefault();
+            }
+            _highlights.Clear();
+            if (_highlightNonmatchingParts)
+            {
+                foreach (var kvp in SpaceCenterManagement.Instance.nonmatchingParts)
+                {
+                    Part p = kvp.Key;
+                    if (p == null)
+                        continue;
+                    KCTUtilities.PartCompareResult result = kvp.Value;
+                    p.SetHighlightType(Part.HighlightType.AlwaysOn);
+                    switch (result)
+                    {
+                        case KCTUtilities.PartCompareResult.NAME_DIFF:
+                            p.SetHighlightColor(Color.magenta);
+                            break;
+                        case KCTUtilities.PartCompareResult.COST_DIFF:
+                            p.SetHighlightColor(Color.red);
+                            break;
+                        case KCTUtilities.PartCompareResult.MASS_DIFF:
+                            p.SetHighlightColor(Color.yellow);
+                            break;
+                        case KCTUtilities.PartCompareResult.RESOURCES_DIFF:
+                            p.SetHighlightColor(Color.blue);
+                            break;
+                        case KCTUtilities.PartCompareResult.NOT_PRESENT:
+                            p.SetHighlightColor(Color.magenta); // "Purple is no matching part name"
+                            break;
+                    }
+                    _highlights[p] = result;
+                }
+            }
+            
+            RenderMergeSection(editedVessel);
         }
 
         private static void RenderBuildRateInputRow(double buildPoints, double rateWithCurEngis)

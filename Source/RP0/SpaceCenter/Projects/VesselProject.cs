@@ -1,12 +1,12 @@
 ﻿using KSP.UI;
+using KSP.UI.Screens;
+using ROUtils;
+using ROUtils.DataTypes;
 using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using ROUtils.DataTypes;
 using UnityEngine.Profiling;
-using KSP.UI.Screens;
-using ROUtils;
 
 namespace RP0
 {
@@ -51,6 +51,7 @@ namespace RP0
             public HashSet<string> GlobalTags = new HashSet<string>();
             public List<TagsToEC> TagEffectiveCosts = new List<TagsToEC>();
             public bool HumanRated;
+            public double EngineWearEC;
         }
 
         [Persistent]
@@ -59,6 +60,9 @@ namespace RP0
         public double effectiveCost;
         [Persistent]
         public double buildPoints;
+        /// <summary>Wear on already-fired engines, as effective cost. Raises refurbishment only.</summary>
+        [Persistent]
+        public double engineWearEC;
         [Persistent]
         public string launchSite;
         [Persistent]
@@ -113,6 +117,8 @@ namespace RP0
         private PersistentCompressedCraftNode ShipNodeCompressed = new PersistentCompressedCraftNode();
         [Persistent]
         public string LandedAt = "";
+        [Persistent]
+        public bool Splashed = false;
 
         private double _buildRate = -1d;
         private double _leaderEffect = -1d;
@@ -138,7 +144,15 @@ namespace RP0
 
         public bool IsValid => Type != ProjectType.None;
 
-        private List<ConfigNode> ExtractedPartNodes => ShipNodeCompressed.Node.GetNodes("PART").ToList();
+        public List<ConfigNode> ExtractedPartNodes 
+        {
+            get 
+            {
+                if (ShipNodeCompressed.Node == null) 
+                    StoreShipConstruct(_ship);
+                return ShipNodeCompressed.Node?.GetNodes("PART").ToList();
+            }
+        }
 
         public bool IsFinished => progress >= buildPoints;
 
@@ -201,6 +215,30 @@ namespace RP0
                     _allPartsValid = AreAllPartsValid();
                 return (bool)_allPartsValid;
             }
+        }
+
+        private FormulaInputs _cachedInputs = new FormulaInputs().With(effectiveCost: -1);
+        public FormulaInputs inputs { // Used for calling Formula code.
+            get
+            {
+                if (_cachedInputs.EffectiveCost != -1)
+                    return _cachedInputs;
+                return _cachedInputs = new FormulaInputs(
+                    effectiveCost: effectiveCost,
+                    cost: cost,
+                    buildPoints: buildPoints,
+                    mass: mass,
+                    kscDistance: kscDistance,
+                    humanRated: humanRated,
+                    isSPH: Type == ProjectType.SPH,
+                    splashed: Splashed,
+                    atKSC: LandedAt != null && (LandedAt.Contains("Runway") || LandedAt.Contains("Launchpad")),
+                    lcIsHumanRated: LC != null ? LC.IsHumanRated : false,
+                    lcIsPad: LC != null ? (LC.LCType == LaunchComplexType.Pad) : false,
+                    lcMassMax: LC != null ? LC.MassMax : 0,
+                    settings: Formula.CurrentSettings(),
+                    engineWearEC: engineWearEC);
+                }
         }
 
         /// <summary>
@@ -413,6 +451,7 @@ namespace RP0
         {
             RecalculateEffectiveCost(ExtractedPartNodes);
             buildPoints = Formula.GetVesselBuildPoints(effectiveCost);
+            _cachedInputs = new FormulaInputs().With(effectiveCost: -1); // force refresh of formula inputs
         }
 
         private ConfigNode SanitizeShipNode(ConfigNode node)
@@ -505,6 +544,7 @@ namespace RP0
             ret.ShipSize = ShipSize;
             ret.tanksFull = tanksFull;
             ret.isCrewable = isCrewable;
+            ret.engineWearEC = engineWearEC;
 
             ret.ShipNodeCompressed.CompressAndRelease();
 
@@ -1039,6 +1079,7 @@ namespace RP0
 
             double globalMultiplier = ApplyGlobalCostModifiers(state);
             double multipliedCost = totalEffectiveCost * globalMultiplier;
+            state.EngineWearEC *= globalMultiplier;
             RP0Debug.Log($"Total eff cost: {totalEffectiveCost}; global mult: {globalMultiplier}; multiplied cost: {multipliedCost}");
 
             return multipliedCost;
@@ -1072,10 +1113,11 @@ namespace RP0
             tagEffectiveCosts.AddRange(state.TagEffectiveCosts);
 
             humanRated = state.HumanRated;
+            engineWearEC = state.EngineWearEC;
         }
         
         // A little silly, but made to mirror ShipConstruction.GetPartCostsAndMass
-        private static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass, Dictionary<string, double> resources)
+        public static void GetPartCostsAndMass(Part p, out float dryCost, out float fuelCost, out float dryMass, out float fuelMass, Dictionary<string, double> resources)
         {
             dryCost = (float)GetPartCosts(p, false);
             fuelCost = (float)GetPartCosts(p) - dryCost;
@@ -1221,8 +1263,9 @@ namespace RP0
                             break;
                     }
                 }
-                if (runTime > 0)
-                    effectiveCost = Formula.GetEngineRefurbBPMultiplier(runTime, ratedBurnTime) * effectiveCost;
+                // Used engines keep their full effective cost for integration and edits;
+                // their wear only raises refurbishment.
+                state.EngineWearEC += Formula.EngineRefurbishmentWear(runTime, ratedBurnTime) * effectiveCost;
             }
 
             if (effectiveCost < 0)

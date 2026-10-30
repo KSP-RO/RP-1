@@ -1058,9 +1058,6 @@
     <Content Include="..\GameData\RP-1\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\KCT_Presets\RP1_KCT_Presets.cfg">
-      <Link>KCT_Presets\RP1_KCT_Presets.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Localization\de-de.cfg">
       <Link>Localization\de-de.cfg</Link>
     </Content>

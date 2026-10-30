@@ -61,7 +61,7 @@ namespace RP0.Harmony
                 value += $"<color={CurrencyModifierQueryRP0.CurrencyColor(CurrencyRP0.Confidence)}>{CurrencyModifierQueryRP0.SpriteString(CurrencyRP0.Confidence)} {cmq.GetTotal(CurrencyRP0.Confidence):N0} {cmq.GetEffectDeltaText(CurrencyRP0.Confidence, "N0", CurrencyModifierQuery.TextStyling.OnGUI)}  </color>";
             }
 
-            if (PresetManager.Instance != null)
+            if (SCMSaveSettings.IsLoaded)
             {
                 int applicants = Database.SettingsSC.ContractApplicants.GetApplicantsFromContract(_contract.contractType.name);
                 if (applicants > 0)

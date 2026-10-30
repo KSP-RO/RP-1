@@ -54,7 +54,7 @@ namespace RP0.Harmony
         [HarmonyPatch("CreateWindowContent")]
         internal static bool Prefix_CreateWindowContent(KSCFacilityContextMenu __instance)
         {
-            bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes;
+            bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && SCMSaveSettings.Instance.KSCUpgradeTimes;
             bool upgradeable = !kctActive || IsUpgradeable(__instance.host.Facility);
             bool kctUpgradeBlocked = false;
             string tooltipUp = null;
@@ -156,7 +156,7 @@ namespace RP0.Harmony
         internal static bool Prefix_Dismiss(KSCFacilityContextMenu __instance, KSCFacilityContextMenu.DismissAction dma)
         {
             GameEvents.onFacilityContextMenuDespawn.Fire(__instance);
-            if (HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes
+            if (HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && SCMSaveSettings.Instance.KSCUpgradeTimes
                 && (dma == KSCFacilityContextMenu.DismissAction.Upgrade || dma == KSCFacilityContextMenu.DismissAction.Downgrade))
             {
                 ProcessUpgrade(__instance.host, dma == KSCFacilityContextMenu.DismissAction.Upgrade);
@@ -177,7 +177,7 @@ namespace RP0.Harmony
         [HarmonyPatch("OnFacilityValuesModified")]
         internal static bool Prefix_OnFacilityValuesModified(KSCFacilityContextMenu __instance)
         {
-            bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes;
+            bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && SCMSaveSettings.Instance.KSCUpgradeTimes;
             bool upgradeable = !kctActive || IsUpgradeable(__instance.host.Facility);
             bool kctUpgradeBlocked = false;
             // Rerun the logic in CreateWindowContent

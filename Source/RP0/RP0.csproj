@@ -280,14 +280,14 @@
     <Compile Include="Singletons\Database.cs" />
     <Compile Include="UI\KCT\GUI_Main.cs" />
     <Compile Include="UI\KCT\GUI_BuildList.cs" />
-    <Compile Include="UI\KCT\GUI_Presets.cs" />
+    <Compile Include="UI\KCT\GUI_Settings.cs" />
     <Compile Include="SpaceCenter\LaunchComplex\LCSpaceCenter.cs" />
     <Compile Include="SpaceCenter\LaunchComplex\LCLaunchPad.cs" />
     <Compile Include="Utilities\KCTWarpController.cs" />
     <Compile Include="Utilities\Formula.cs" />
-    <Compile Include="SpaceCenter\Presets\PresetManager.cs" />
     <Compile Include="SpaceCenter\Projects\ReconRolloutProject.cs" />
     <Compile Include="Settings\KCTSettings.cs" />
+    <Compile Include="Settings\SCMSaveSettings.cs" />
     <Compile Include="SpaceCenter\Projects\ResearchProject.cs" />
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
     <Compile Include="Utilities\CraftFileSanitizer.cs" />

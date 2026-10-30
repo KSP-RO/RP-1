@@ -25,10 +25,6 @@ namespace RP0
             GUILayout.Label("Follow the steps below to get set up.");
 
             int step = 1;
-            //if (PresetManager.Instance.Presets.Count > 1 && GUILayout.Button($"{step++}) Choose a Preset", HighLogic.Skin.button))
-            //{
-            //    ShowSettings();
-            //}
 
             GUILayout.Label($"{step++}) If you want to play from a different site than Cape Canaveral, switch to the Tracking Station and select a new site.");
             if (GUILayout.Button($"Go to Tracking Station", HighLogic.Skin.button))

@@ -89,7 +89,7 @@ namespace RP0
 
         public static double GetRolloutCost(VesselProject vessel)
         {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+            if (!SCMSaveSettings.Instance.Enabled)
                 return 0;
 
             LaunchComplex vLC = vessel.LC;
@@ -116,7 +116,7 @@ namespace RP0
 
         public static double GetAirlaunchCost(VesselProject vessel)
         {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+            if (!SCMSaveSettings.Instance.Enabled)
                 return 0;
 
             double result = vessel.effectiveCost * 0.25d;
@@ -126,7 +126,7 @@ namespace RP0
 
         public static double GetAirlaunchBP(VesselProject vessel)
         {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+            if (!SCMSaveSettings.Instance.Enabled)
                 return 0;
 
             return (vessel.effectiveCost - (vessel.cost * 0.5d)) * 12d;

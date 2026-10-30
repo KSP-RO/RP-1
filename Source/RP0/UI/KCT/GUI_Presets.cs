@@ -128,6 +128,7 @@ namespace RP0
                 KCTSettings.Instance.CleanUpKSCDebris = _cleanUpKSCDebris;
                 KCTSettings.Instance.UseDates = _useDates;
                 KCTSettings.Instance.InPlaceEdit = _inPlaceEdit;
+                KCTSettings.Instance.DebugLogging = _debug;
 
                 KCTSettings.Instance.Save();
                 GUIStates.ShowSettings = false;
@@ -307,6 +308,7 @@ namespace RP0
             _cleanUpKSCDebris = KCTSettings.Instance.CleanUpKSCDebris;
             _useDates = KCTSettings.Instance.UseDates;
             _inPlaceEdit = KCTSettings.Instance.InPlaceEdit;
+            _debug = KCTSettings.Instance.DebugLogging;
 
             GUIStates.ShowSettings = !GUIStates.ShowSettings;
         }

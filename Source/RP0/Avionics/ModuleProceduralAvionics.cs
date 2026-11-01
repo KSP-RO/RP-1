@@ -99,8 +99,11 @@ namespace RP0.ProceduralAvionics
             var maxControllableMass = GetMaximumControllableMass();
             if (controllableMass > maxControllableMass * FloatTolerance)
             {
-                Log($"Resetting procedural mass limit to {maxControllableMass}, was {controllableMass}");
-                controllableMass = maxControllableMass;
+                // Round down to the PAW slider precision. The slider rounds to nearest when the PAW gets rebuilt.
+                // A value that gets rounded above the limit would be clamped again, which rebuilds the PAW again, every frame.
+                float newMass = FloorToPrecision(maxControllableMass, GetSliderIncrement(GetControllableMassSliderMax()));
+                Log($"Resetting procedural mass limit to {newMass}, was {controllableMass}");
+                controllableMass = newMass;
                 UpdateControllableMassInWindow();
                 MonoUtilities.RefreshContextWindows(part);
                 return true;
@@ -320,6 +323,8 @@ namespace RP0.ProceduralAvionics
 
         private float FloorToPrecision(float value, float precision) => Mathf.Floor(value / precision) * precision;
 
+        private float GetControllableMassSliderMax() => Mathf.Max(GetMaximumControllableMass() * 1.25f, 0.01f);
+
         private float GetSliderIncrement(float value)
         {
             var smallIncrement = GetSmallIncrement(value);
@@ -346,7 +351,7 @@ namespace RP0.ProceduralAvionics
             if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)
             {
                 // Formula for controllable mass given avionics mass is Mathf.Pow(1000*avionicsMass / massFactor - massConstant, 1 / massExponent)
-                controllableMassEdit.maxValue = Mathf.Max(GetMaximumControllableMass() * 1.25f, 0.01f);
+                controllableMassEdit.maxValue = GetControllableMassSliderMax();
             }
             else
                 controllableMassEdit.maxValue = 0.001f;

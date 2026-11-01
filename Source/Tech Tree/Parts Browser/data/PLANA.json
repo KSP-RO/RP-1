@@ -948,6 +948,29 @@
         ]
     },
     {
+        "name": "PROXI-SC-AirEngine",
+        "title": "Starclipper JT8D Jet Engine",
+        "description": "",
+        "mod": "PLANA",
+        "cost": "350",
+        "entry_cost": "0",
+        "category": "FLIGHT",
+        "info": "",
+        "year": "1981",
+        "technology": "matureTurbofans",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "JT8D",
+        "upgrade": false,
+        "entry_cost_mods": "Starclipper",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
         "name": "PROXI-SC-ET",
         "title": "Starclipper External Tank",
         "description": "",
@@ -1057,6 +1080,98 @@
         ]
     },
     {
+        "name": "PROXI-SC-MainGear",
+        "title": "Starclipper Main Landing Gear",
+        "description": "",
+        "mod": "PLANA",
+        "cost": "250",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1981",
+        "technology": "spaceShuttles",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "Starclipper",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
+        "name": "PROXI-SC-NoseGear",
+        "title": "Starclipper Nose Landing Gear",
+        "description": "",
+        "mod": "PLANA",
+        "cost": "250",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1981",
+        "technology": "spaceShuttles",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "Starclipper",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
+        "name": "PROXI-SC-SwingWingL",
+        "title": "Starclipper Left Deployable Wing",
+        "description": "",
+        "mod": "PLANA",
+        "cost": "200",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1981",
+        "technology": "spaceShuttles",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "Starclipper",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
+        "name": "PROXI-SC-SwingWingR",
+        "title": "Starclipper Right Deployable Wing",
+        "description": "",
+        "mod": "PLANA",
+        "cost": "200",
+        "entry_cost": "0",
+        "category": "SPACEPLANES",
+        "info": "",
+        "year": "1981",
+        "technology": "spaceShuttles",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "Starclipper",
+        "identical_part_name": "",
+        "module_tags": [
+            "Reentry"
+        ]
+    },
+    {
         "name": "PROXI-SC-UF-L",
         "title": "Starclipper Left Upper Air Brake",
         "description": "",
@@ -1072,7 +1187,7 @@
         "rp0_conf": true,
         "spacecraft": "",
         "engine_config": "",
-        "upgrade": true,
+        "upgrade": false,
         "entry_cost_mods": "Starclipper",
         "identical_part_name": "",
         "module_tags": [

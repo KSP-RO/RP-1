@@ -1,0 +1,11 @@
+{
+  "solution": {
+    "path": "RP0.sln",
+    "projects": [
+      "RP0\\RP0.csproj",
+      "CC_RP0\\CC_RP0.csproj",
+      "ClearInputLocks\\ClearInputLocks.csproj",
+      "InstallChecker\\RP0InstallChecker.csproj"
+    ]
+  }
+}

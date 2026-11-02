@@ -54,7 +54,7 @@ namespace RP0.Harmony
         [HarmonyPatch("CreateWindowContent")]
         internal static bool Prefix_CreateWindowContent(KSCFacilityContextMenu __instance)
         {
-            bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes;
+            bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && SCMSaveSettings.Instance.KSCUpgradeTimes;
             bool upgradeable = !kctActive || IsUpgradeable(__instance.host.Facility);
             bool kctUpgradeBlocked = false;
             string tooltipUp = null;
@@ -93,9 +93,9 @@ namespace RP0.Harmony
                             var cmqUpgrade = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StructureConstruction, -cost / days, 0d, 0d);
                             string costLine = cmqUpgrade.GetCostLineOverride(true, false, false, true);
                             if (KCTSettings.Instance.UseDates)
-                                tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + Planetarium.GetUniversalTime(), false));
+                                tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, RP0DTUtils.PrintDate(time + Planetarium.GetUniversalTime(), false));
                             else
-                                tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, KSPUtil.PrintDateDelta(time, false));
+                                tooltipUp = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, RP0DTUtils.PrintDateDelta(time, false));
                         }
                     }
 
@@ -108,9 +108,9 @@ namespace RP0.Harmony
                         var cmqUpgrade = CurrencyModifierQueryRP0.RunQuery(TransactionReasonsRP0.StructureConstruction, -cost / days, 0d, 0d);
                         string costLine = cmqUpgrade.GetCostLineOverride(true, false, false, true);
                         if (KCTSettings.Instance.UseDates)
-                            tooltipDown = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, KSPUtil.PrintDate(time + Planetarium.GetUniversalTime(), false));
+                            tooltipDown = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostDate", costLine, RP0DTUtils.PrintDate(time + Planetarium.GetUniversalTime(), false));
                         else
-                            tooltipDown = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, KSPUtil.PrintDateDelta(time, false));
+                            tooltipDown = Localizer.Format("#rp0_FacilityContextMenu_UpgradeCostTime", costLine, RP0DTUtils.PrintDateDelta(time, false));
                     }
                 }
             }
@@ -156,7 +156,7 @@ namespace RP0.Harmony
         internal static bool Prefix_Dismiss(KSCFacilityContextMenu __instance, KSCFacilityContextMenu.DismissAction dma)
         {
             GameEvents.onFacilityContextMenuDespawn.Fire(__instance);
-            if (HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes
+            if (HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && SCMSaveSettings.Instance.KSCUpgradeTimes
                 && (dma == KSCFacilityContextMenu.DismissAction.Upgrade || dma == KSCFacilityContextMenu.DismissAction.Downgrade))
             {
                 ProcessUpgrade(__instance.host, dma == KSCFacilityContextMenu.DismissAction.Upgrade);
@@ -177,7 +177,7 @@ namespace RP0.Harmony
         [HarmonyPatch("OnFacilityValuesModified")]
         internal static bool Prefix_OnFacilityValuesModified(KSCFacilityContextMenu __instance)
         {
-            bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes;
+            bool kctActive = HighLogic.CurrentGame.Mode != Game.Modes.MISSION && !KCT_GUI.IsPrimarilyDisabled && SCMSaveSettings.Instance.KSCUpgradeTimes;
             bool upgradeable = !kctActive || IsUpgradeable(__instance.host.Facility);
             bool kctUpgradeBlocked = false;
             // Rerun the logic in CreateWindowContent

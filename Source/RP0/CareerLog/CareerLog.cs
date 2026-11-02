@@ -27,6 +27,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = CurrentVersion;
 
+        [KSPField(isPersistant = true)]
+        public string Scenario;
+
         public bool IsEnabled = false;
 
         private const int CurrentVersion = 1;
@@ -70,11 +73,6 @@ namespace RP0
         private LogPeriod _currentPeriod;
 
         public static CareerLog Instance { get; private set; }
-
-        /// <summary>
-        /// Default means to get hype for career not using Headlines
-        /// </summary>
-        public static Func<double> GetHeadlinesHype = () => { return 0; };
 
         public LogPeriod CurrentPeriod
         { 
@@ -222,105 +220,11 @@ namespace RP0
             {
                 if (LoadedSaveVersion < 1)
                 {
-                    foreach (ConfigNode n in node.GetNodes("LOGPERIODS"))
-                    {
-                        foreach (ConfigNode pn in n.GetNodes("LOGPERIOD"))
-                        {
-                            var lp = new LogPeriod(pn);
-                            double periodStart = lp.StartUT;
-                            try
-                            {
-                                _periodDict.Add(periodStart, lp);
-                            }
-                            catch
-                            {
-                                RP0Debug.LogError($"LOGPERIOD for {periodStart} already exists, skipping...");
-                            }
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("CONTRACTS"))
-                    {
-                        foreach (ConfigNode cn in n.GetNodes("CONTRACT"))
-                        {
-                            var c = new ContractEvent(cn);
-                            _contractDict.Add(c);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("LAUNCHEVENTS"))
-                    {
-                        foreach (ConfigNode ln in n.GetNodes("LAUNCHEVENT"))
-                        {
-                            var l = new LaunchEvent(ln);
-                            _launchedVessels.Add(l);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("FAILUREEVENTS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("FAILUREEVENT"))
-                        {
-                            var f = new FailureEvent(fn);
-                            _failures.Add(f);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("LCS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("LC"))
-                        {
-                            var lc = new LCLogItem(fn);
-                            _lcs.Add(lc);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("FACILITYCONSTRUCTIONS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTRUCTION"))
-                        {
-                            var fc = new FacilityConstruction(fn);
-                            _facilityConstructions.Add(fc);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("LPCONSTRUCTIONS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("LPCONSTRUCTION"))
-                        {
-                            var fc = new LPConstruction(fn);
-                            _lpConstructions.Add(fc);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("FACILITYCONSTREVENTS"))
-                    {
-                        foreach (ConfigNode fn in n.GetNodes("FACILITYCONSTREVENT"))
-                        {
-                            var fc = new FacilityConstructionEvent(fn);
-                            _facilityConstructionEvents.Add(fc);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("TECHS"))
-                    {
-                        foreach (ConfigNode tn in n.GetNodes("TECH"))
-                        {
-                            var te = new TechResearchEvent(tn);
-                            _techEvents.Add(te);
-                        }
-                    }
-
-                    foreach (ConfigNode n in node.GetNodes("LEADEREVENTS"))
-                    {
-                        foreach (ConfigNode ln in n.GetNodes("LEADEREVENT"))
-                        {
-                            var le = new LeaderEvent(ln);
-                            _leaderEvents.Add(le);
-                        }
-                    }
+                    RP0Debug.LogError($"CareerLog no longer supports loading saves from v2.4.0 or earlier");
+                    return;
                 }
 
+                // Add any migration logic here if needed
                 LoadedSaveVersion = CurrentVersion;
             }
         }
@@ -349,6 +253,7 @@ namespace RP0
             });
         }
 
+        // Called from TestFlight with Reflection
         public void AddFailureEvent(Vessel v, string part, string type)
         {
             if (!IsEnabled) return;
@@ -360,6 +265,11 @@ namespace RP0
                 Part = part,
                 Type = type
             });
+        }
+
+        public void SetStartingScenario(string scenarioName)
+        {
+            Scenario = scenarioName;
         }
 
         public void ExportToFile(string path)
@@ -390,7 +300,6 @@ namespace RP0
                     p.OtherFees.ToString("F0"),
                     p.Confidence.ToString("F1"),
                     p.Reputation.ToString("F1"),
-                    p.HeadlinesHype.ToString("F1"),
                     string.Join(", ", _launchedVessels.Where(l => l.IsInPeriod(p))
                                                       .Select(l => l.VesselName)
                                                       .ToArray()),
@@ -413,7 +322,7 @@ namespace RP0
                 };
             });
 
-            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract rep rewards", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Hiring researchers", "Hiring engineers", "Other Fees", "Confidence", "Reputation", "Headlines Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
+            var columnNames = new[] { "Month", "Engineers", "Researchers", "Current Funds", "Current Sci", "Total sci earned", "Contract rep rewards", "Other funds earned", "Launch fees", "Maintenance", "Tooling", "Entry Costs", "Facility construction costs", "Hiring researchers", "Hiring engineers", "Other Fees", "Confidence", "Reputation", "Launches", "Accepted contracts", "Completed contracts", "Tech", "Facilities", "Leaders" };
             var csv = CsvWriter.WriteToText(columnNames, rows, ',');
             File.WriteAllText(path, csv);
         }
@@ -424,18 +333,26 @@ namespace RP0
             StartCoroutine(PostRequestCareerLog(url, onRequestSuccess, onRequestFail));
         }
 
-        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
+        public void ExportToJsonFile(string path)
+        {
+            File.WriteAllText(path, CreateJson());
+        }
+
+        private string CreateJson()
         {
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
 
-            const string jsonVer = "2.0";
+            const string jsonVer = "3.0";
             var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(GetType().Assembly.Location);
             string rp1Ver = fvi.FileVersion;
 
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
             var jsonToSend = "{ \"jsonVer\": \"" + jsonVer + "\", ";
             jsonToSend += "\"rp1Ver\": \"" + rp1Ver + "\", ";
+            if (string.IsNullOrWhiteSpace(Scenario))
+                jsonToSend += "\"scenario\": \"" + Scenario + "\", ";
+
             jsonToSend += "\"periods\": [";
 
             for (var i = 0; i < logPeriods.Length; i++)
@@ -518,7 +435,7 @@ namespace RP0
 
             jsonToSend += "], \"programs\": [";
 
-            var allPrograms = ProgramHandler.Instance.CompletedPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+            var allPrograms = GetProgramsToSend();
             for (var i = 0; i < allPrograms.Length; i++)
             {
                 var dto = new ProgramDto(allPrograms[i]);
@@ -536,6 +453,13 @@ namespace RP0
             }
 
             jsonToSend += "] }";
+
+            return jsonToSend;
+        }
+
+        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
+        {
+            string jsonToSend = CreateJson();
 
             RP0Debug.Log("Request payload: " + jsonToSend);
 
@@ -607,9 +531,25 @@ namespace RP0
                 fundsGainMult = logPeriod.FundsGainMult,
                 numNautsKilled = logPeriod.NumNautsKilled,
                 confidence = logPeriod.Confidence,
-                reputation = logPeriod.Reputation,
-                headlinesHype = logPeriod.HeadlinesHype
+                reputation = logPeriod.Reputation
             };
+        }
+
+        private static Program[] GetProgramsToSend()
+        {
+            // leave out programs that were most likely autocompleted by configurable start scenarios
+            var filteredPrograms = ProgramHandler.Instance.CompletedPrograms.Where(p =>
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.acceptedUT)) ||
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.objectivesCompletedUT)) ||
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.completedUT)));
+
+            return filteredPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+        }
+
+        private static bool IsSuspiciouslyRoundDate(DateTime dt)
+        {
+            // Apparently some scenarios assign minutes and hours to dates.
+            return dt.Second == 0 && dt.Millisecond == 0;
         }
 
         private void SwitchToNextPeriod()
@@ -629,7 +569,6 @@ namespace RP0
                 _prevPeriod.SubsidySize = MaintenanceHandler.Instance.GetSubsidyAmount(_prevPeriod.StartUT, _prevPeriod.EndUT);
                 _prevPeriod.Confidence = Confidence.CurrentConfidence;
                 _prevPeriod.Reputation = Reputation.CurrentRep;
-                _prevPeriod.HeadlinesHype = GetHeadlinesHype();
             }
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);
@@ -771,6 +710,21 @@ namespace RP0
             }
         }
 
+        public void IncreaseSpentUnlockCredit(double spentCredit, TransactionReasonsRP0 reason) 
+        {
+            // this function signature is inconsistent with the other currency-change events
+            // but the whole point is that this can't operate off of CurrenciesModified, since unlock credit isn't tracked by that event
+            CurrentPeriod.SpentUnlockCredit += spentCredit;
+            if (reason == TransactionReasonsRP0.ToolingPurchase)
+            {
+                CurrentPeriod.ToolingFees += spentCredit;
+            }
+            else if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock)
+            {
+                CurrentPeriod.EntryCosts += spentCredit;
+            }
+        }
+
         private void ContractAccepted(Contract c)
         {
             if (CareerEventScope.ShouldIgnore || !IsEnabled || c.AutoAccept) return;   // Do not record the Accept event for record contracts
@@ -829,21 +783,6 @@ namespace RP0
                 DisplayName = c.Title,
                 InternalName = internalName
             });
-        }
-
-        public void ProgramAccepted(Program p)
-        {
-            // TODO
-        }
-
-        public void ProgramObjectivesMet(Program p)
-        {
-            // TODO
-        }
-
-        public void ProgramCompleted(Program p)
-        {
-            // TODO
         }
 
         private void VesselSituationChange(GameEvents.HostedFromToAction<Vessel, Vessel.Situations> ev)

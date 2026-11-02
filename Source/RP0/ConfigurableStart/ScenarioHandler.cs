@@ -16,7 +16,7 @@ namespace RP0.ConfigurableStart
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
     public class ScenarioHandler : MonoBehaviour
     {
-        public const string EmptyScenarioName = "None";
+        public const string EmptyScenarioName = "1951 Start (Default)";
 
         private string _curScenarioName;
         private readonly Dictionary<string, ConfigNode> _contractNodes = new Dictionary<string, ConfigNode>();    // to cache the contract nodes
@@ -188,6 +188,8 @@ namespace RP0.ConfigurableStart
                 {
                     SetDate(scn.StartingUT);
                 }
+
+                CareerLog.Instance?.SetStartingScenario(scn.ScenarioName);
 
                 var allProgramsToAccept = scn.AcceptedPrograms.Concat(scn.CompletedPrograms);
                 foreach (Program p in allProgramsToAccept)

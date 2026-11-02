@@ -109,7 +109,7 @@ namespace RP0.Milestones
                 programDate = Programs.ProgramHandler.Instance.CompletedPrograms.FirstOrDefault(p => p.name == m.programName)?.completedUT ?? programDate;
 
             double date = Math.Min(contractDate, programDate);
-            return KSPUtil.PrintDate(date, false);
+            return RP0DTUtils.PrintDate(date, false);
         }
 
         private static string FillText(string template, List<string> data)

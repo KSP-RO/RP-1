@@ -99,8 +99,11 @@ namespace RP0.ProceduralAvionics
             var maxControllableMass = GetMaximumControllableMass();
             if (controllableMass > maxControllableMass * FloatTolerance)
             {
-                Log($"Resetting procedural mass limit to {maxControllableMass}, was {controllableMass}");
-                controllableMass = maxControllableMass;
+                // Round down to the PAW slider precision. The slider rounds to nearest when the PAW gets rebuilt.
+                // A value that gets rounded above the limit would be clamped again, which rebuilds the PAW again, every frame.
+                float newMass = FloorToPrecision(maxControllableMass, GetSliderIncrement(GetControllableMassSliderMax()));
+                Log($"Resetting procedural mass limit to {newMass}, was {controllableMass}");
+                controllableMass = newMass;
                 UpdateControllableMassInWindow();
                 MonoUtilities.RefreshContextWindows(part);
                 return true;
@@ -320,6 +323,8 @@ namespace RP0.ProceduralAvionics
 
         private float FloorToPrecision(float value, float precision) => Mathf.Floor(value / precision) * precision;
 
+        private float GetControllableMassSliderMax() => Mathf.Max(GetMaximumControllableMass() * 1.25f, 0.01f);
+
         private float GetSliderIncrement(float value)
         {
             var smallIncrement = GetSmallIncrement(value);
@@ -346,7 +351,7 @@ namespace RP0.ProceduralAvionics
             if (CurrentProceduralAvionicsConfig != null && CurrentProceduralAvionicsTechNode != null)
             {
                 // Formula for controllable mass given avionics mass is Mathf.Pow(1000*avionicsMass / massFactor - massConstant, 1 / massExponent)
-                controllableMassEdit.maxValue = Mathf.Max(GetMaximumControllableMass() * 1.25f, 0.01f);
+                controllableMassEdit.maxValue = GetControllableMassSliderMax();
             }
             else
                 controllableMassEdit.maxValue = 0.001f;
@@ -383,18 +388,16 @@ namespace RP0.ProceduralAvionics
                 controllableMass = 0;
             }
 
-            float preClampedMass = controllableMass;
-            if (ClampControllableMass() && preClampedMass > massLimit && _procPartMinVolumeField != null)
+            UpdateTankWhilePreservingContents(() =>
             {
-                // Looks like it was already at the limit but player tried to increase it further
-                Log("At limit but should increase PP size");
-                controllableMass = preClampedMass;
-                SetProcPartVolumeLimit();
-            }
+                // Grows the part if the avionics and current tank contents no longer fit
+                SetProcPartVolumeLimit(keepTankContents: true);
+                ClampControllableMass();
+                SendRemainingVolume();
+            });
 
             massLimit = controllableMass;
             UpdateControllableMassInWindow();
-            SendRemainingVolume();
             RefreshDisplays();
             Profiler.EndSample();
         }
@@ -440,8 +443,13 @@ namespace RP0.ProceduralAvionics
             if (_started && HighLogic.LoadedSceneIsEditor)
             {
                 // Don't fire these if cachedVolume isn't known yet.
-                UpdateMassLimitsAndVolume();
-                SetProcPartVolumeLimit();
+                UpdateTankWhilePreservingContents(() =>
+                {
+                    // Resize first so that controllable mass only gets clamped if the part can't grow
+                    SetProcPartVolumeLimit(keepTankContents: true);
+                    UpdateMassLimitsAndVolume();
+                });
+                massLimit = controllableMass;
             }
             if (!GetToggleable())
                 systemEnabled = true;
@@ -527,13 +535,57 @@ namespace RP0.ProceduralAvionics
 
         internal float GetAvailableVolume() => Math.Max(_cachedVolume - GetAvionicsVolume(), 0);
 
-        internal bool SetProcPartVolumeLimit()
+        /// <summary>
+        /// Part volume in m³ that the current RF tank contents need, taking tank utilization into account.
+        /// </summary>
+        private float GetTankContentsVolume()
+        {
+            if (_rfPM == null || _rfPM.utilization <= 0) return 0;
+            double usedVolume = GetTanks(_rfPM).Values.Sum(t => t.Volume);
+            return (float)(usedVolume / (_rfPM.utilization / 100d) / _rfPM.tankVolumeConversion);
+        }
+
+        /// <summary>
+        /// Runs an action that changes the avionics volume and then restores the RF tank contents.
+        /// Otherwise RF would scale all resources by the ratio of new and old tank volume.
+        /// Contents are only scaled down if they no longer fit.
+        /// </summary>
+        internal void UpdateTankWhilePreservingContents(Action action)
+        {
+            if (_rfPM == null)
+            {
+                action();
+                return;
+            }
+
+            List<FuelTank> tanks = GetTanks(_rfPM).Values.Where(t => t.maxAmount > 0).ToList();
+            List<double> maxAmounts = tanks.Select(t => t.maxAmount).ToList();
+            double usedVolume = tanks.Sum(t => t.Volume);
+
+            action();
+
+            double scale = usedVolume > _rfPM.volume ? _rfPM.volume / usedVolume : 1;
+            for (int i = 0; i < tanks.Count; i++)
+            {
+                FuelTank tank = tanks[i];
+                bool propagate = tank.propagate;
+                tank.propagate = false;
+                tank.maxAmount = maxAmounts[i] * scale;
+                tank.propagate = propagate;
+            }
+            _rfPM.PartResourcesChanged();
+            _rfPM.CalculateMass();
+        }
+
+        /// <param name="keepTankContents">Also grow the part to fit the current RF tank contents</param>
+        internal bool SetProcPartVolumeLimit(bool keepTankContents = false)
         {
             if (_procPartPM != null && _procPartMinVolumeField != null && _procPartCurShapeProp != null)
             {
                 Profiler.BeginSample("RP0ProcAvi SetProcPartVolumeLimit");
-                float minVolume = GetAvionicsVolume();
-                minVolume += CurrentProceduralAvionicsTechNode.reservedRFTankVolume;
+                float avionicsVolume = GetAvionicsVolume();
+                float reservedVolume = CurrentProceduralAvionicsTechNode.reservedRFTankVolume;
+                float minVolume = avionicsVolume + reservedVolume;
                 Log($"Setting PP min volume to {minVolume}");
 
                 _procPartMinVolumeField.SetValue(_procPartPM, minVolume);
@@ -543,12 +595,14 @@ namespace RP0.ProceduralAvionics
                 MethodInfo mi = ppShape?.GetType().GetMethod("AdjustDimensionBounds", flags);
                 mi?.Invoke(ppShape, Array.Empty<object>());
 
+                float targetVolume = keepTankContents ? avionicsVolume + Math.Max(reservedVolume, GetTankContentsVolume()) : minVolume;
+
                 // Only resize if the difference is more than 0.1l
-                float diff = Math.Abs(minVolume - _cachedVolume);
-                if (diff > 0.0001 && minVolume > _cachedVolume)
+                float diff = targetVolume - _cachedVolume;
+                if (diff > 0.0001)
                 {
-                    Log($"{minVolume} > {_cachedVolume}, diff {diff}, calling SeekVolume");
-                    SeekVolume(minVolume);
+                    Log($"{targetVolume} > {_cachedVolume}, diff {diff}, calling SeekVolume");
+                    SeekVolume(targetVolume);
                 }
                 Profiler.EndSample();
 

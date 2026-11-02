@@ -10,7 +10,7 @@ namespace ContractConfigurator.RP0
     [KSPAddon(KSPAddon.Startup.AllGameScenes, false)]
     public class ContractLimitOverrider : MonoBehaviour
     {
-        internal void Start()
+        internal void UpdateContractLimits()
         {
             if (HighLogic.CurrentGame.Mode == Game.Modes.CAREER)
             {
@@ -22,6 +22,26 @@ namespace ContractConfigurator.RP0
                 HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().significantContractLimit = maxActive;
                 HighLogic.CurrentGame.Parameters.CustomParams<ContractConfiguratorParameters>().exceptionalContractLimit = maxActive;
             }
+        }
+
+        internal void OnKSCFacilityUpgraded(Upgradeables.UpgradeableFacility facility, int _)
+        {
+            if (facility.name == "MissionControl")
+            {
+                UpdateContractLimits();
+            }
+        }
+
+        internal void Start()
+        {
+            UpdateContractLimits();
+
+            GameEvents.OnKSCFacilityUpgraded.Add(OnKSCFacilityUpgraded);
+        }
+
+        internal void OnDestroy()
+        {
+            GameEvents.OnKSCFacilityUpgraded.Remove(OnKSCFacilityUpgraded);
         }
     }
 }

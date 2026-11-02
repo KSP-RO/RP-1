@@ -33,6 +33,8 @@ namespace RP0
         public bool UseDates;
         [Persistent]
         public bool InPlaceEdit;
+        [Persistent]
+        public bool DebugLogging;
 
         public KCTSettings(SingletonHost host) : base(host)
         {
@@ -44,6 +46,7 @@ namespace RP0
             CleanUpKSCDebris = true;
             UseDates = true;
             InPlaceEdit = false;
+            DebugLogging = false;
         }
 
         public override void Awake()

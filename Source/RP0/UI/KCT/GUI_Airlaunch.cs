@@ -153,7 +153,7 @@ namespace RP0
                     if (isSim)
                     {
                         var kct = SpaceCenterManagement.Instance;
-                        kct.StartCoroutine(kct.AirlaunchRoutine(_airlaunchParams, _airlaunchParams.KCTVesselId, skipCountdown: true));
+                        kct.StartCoroutine(AirlaunchUtils.DoAirlaunchRoutine(_airlaunchParams, _airlaunchParams.KCTVesselId, skipCountdown: true));
                         ToggleVisibility(false);
                         return;
                     }

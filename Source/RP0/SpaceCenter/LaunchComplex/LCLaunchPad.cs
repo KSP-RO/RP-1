@@ -160,6 +160,15 @@ namespace RP0
                         }
                     }
 
+                    foreach (var cons in currentLC.PadConstructions)
+                    {
+                        if (cons.id == id)
+                        {
+                            failReason = "pad is under construction";
+                            return false;
+                        }
+                    }
+
                     foreach (VesselProject vessel in currentLC.Warehouse)
                     {
                         if (vessel.launchSiteIndex >= idx) vessel.launchSiteIndex--;

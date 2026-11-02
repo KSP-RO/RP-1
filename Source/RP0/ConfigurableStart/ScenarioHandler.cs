@@ -16,7 +16,7 @@ namespace RP0.ConfigurableStart
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
     public class ScenarioHandler : MonoBehaviour
     {
-        public const string EmptyScenarioName = "None";
+        public const string EmptyScenarioName = "1951 Start (Default)";
 
         private string _curScenarioName;
         private readonly Dictionary<string, ConfigNode> _contractNodes = new Dictionary<string, ConfigNode>();    // to cache the contract nodes
@@ -42,6 +42,8 @@ namespace RP0.ConfigurableStart
                 Instance?.UpdateUI();
             }
         }
+
+        public string SelectedKSC { get; set; }
 
         public void SetCurrentScenarioFromName(string name)
         {
@@ -88,6 +90,20 @@ namespace RP0.ConfigurableStart
         {
             PresetPickerGUI.Instance?.SetVisible(false);
             if (CurrentScenario == null || CurrentScenario.ScenarioName == EmptyScenarioName) return;
+
+            // Add the LastKSC proto before scene transition so that KSCLoader.OnGameStateCreated
+            // reads the desired site and calls SetSiteAndResetCamera with it on first SpaceCenter load.
+            if (KSCSwitcherInterop.IsKSCSwitcherInstalled && !string.IsNullOrEmpty(SelectedKSC))
+            {
+                Game game = HighLogic.CurrentGame;
+                if (game != null)
+                {
+                    ProtoScenarioModule lastKscProto = game.scenarios.FirstOrDefault(s => s.moduleName == "LastKSC");
+                    if (lastKscProto == null && KSCSwitcherInterop.LastKSCType != null)
+                        lastKscProto = game.AddProtoScenarioModule(KSCSwitcherInterop.LastKSCType, GameScenes.TRACKSTATION);
+                    KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
+                }
+            }
 
             switch (HighLogic.CurrentGame.Mode)
             {
@@ -173,6 +189,8 @@ namespace RP0.ConfigurableStart
                     SetDate(scn.StartingUT);
                 }
 
+                CareerLog.Instance?.SetStartingScenario(scn.ScenarioName);
+
                 var allProgramsToAccept = scn.AcceptedPrograms.Concat(scn.CompletedPrograms);
                 foreach (Program p in allProgramsToAccept)
                 {
@@ -240,6 +258,15 @@ namespace RP0.ConfigurableStart
                 {
                     Dictionary<string, float> engines = Utilities.DictionaryFromCommaSeparatedString<float>(scn.TFStartingDU);
                     TFInterop.SetFlightDataForParts(engines);
+                }
+
+                if (KSCSwitcherInterop.IsKSCSwitcherInstalled && !string.IsNullOrEmpty(SelectedKSC))
+                {
+                    SpaceCenterManagement.Instance.SetActiveKSC(SelectedKSC);
+                    KSCSwitcherInterop.SetLastKSCSite(SelectedKSC);
+                    // CreateNewGame saves before onGameNewStart fires, so the sfs lacks the initial KSC state.
+                    ProtoScenarioModule lastKscProto = HighLogic.CurrentGame?.scenarios?.FirstOrDefault(s => s.moduleName == "LastKSC");
+                    KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
                 }
 
                 foreach (LCData lcData in scn.LCs)
@@ -591,7 +618,13 @@ namespace RP0.ConfigurableStart
                 {
                     if (contractName == subType.name)
                     {
-                        var contract = ForceGenerate(subType, 0, new System.Random().Next(), Contracts.Contract.State.Generated);
+                        Contracts.Contract.ContractPrestige prestige = Contracts.Contract.ContractPrestige.Trivial;
+                        if (subType.dataNode.IsDeterministic("prestige") && subType.prestige.Count == 1) // this is from ContractConfigurator.Util.MissionControlUI.GetPrestige()
+                        {
+                            prestige = subType.prestige.First();
+                        }
+                        
+                        var contract = ForceGenerate(subType, prestige, new System.Random().Next(), Contracts.Contract.State.Generated);
 
                         if (contract is null)
                         {
@@ -632,8 +665,6 @@ namespace RP0.ConfigurableStart
                 fi.SetValue(contract, state);
             if ((fi = baseT.GetField("seed", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
                 fi.SetValue(contract, seed);
-            if ((fi = baseT.GetField("agent", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
-                fi.SetValue(contract, Contracts.Agents.AgentList.Instance.GetSuitableAgentForContract(contract));
             contract.FundsFailure = Math.Max(contract.FundsFailure, contract.FundsAdvance);
             contract.GetType().GetMethod("SetupID", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(contract, null);
 
@@ -651,6 +682,8 @@ namespace RP0.ConfigurableStart
                 fi.SetValue(contract, contractType.completedMessage);
             if ((fi = t.GetField("notes", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
                 fi.SetValue(contract, contractType.notes);
+            if ((fi = t.GetField("agent", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
+                fi.SetValue(contract, contractType.agent);
 
             // set expiry and deadline type to none
             if ((fi = t.GetField("expiryType", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)

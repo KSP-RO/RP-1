@@ -421,12 +421,19 @@ namespace RP0
                     GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
 
-                if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d)
+                if (!HighLogic.LoadedSceneIsEditor)
                 {
-                    if (GUILayout.Button(new GUIContent("Warp", $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(constr.GetTimeLeft()):N0}"), GUILayout.Width(45)))
+                    // Always draw the button, disabled when there is no progress, so that
+                    // dragging the work rate slider to 0 does not change the control IDs
+                    // of the sliders below it.
+                    bool canWarp = buildRate > 0d;
+                    GUI.enabled = canWarp;
+                    string warpTooltip = canWarp ? $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(constr.GetTimeLeft()):N0}" : null;
+                    if (GUILayout.Button(new GUIContent("Warp", warpTooltip), GUILayout.Width(45)) && canWarp)
                     {
                         KCTWarpController.Create(constr);
                     }
+                    GUI.enabled = true;
                 }
                 else
                 {
@@ -967,6 +974,8 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(new GUIContent("New LC", "Design and build a new Launch Complex"), GUILayout.ExpandWidth(false)))
             {
+                if (HighLogic.LoadedSceneIsEditor)
+                    SpaceCenterManagement.Instance.EditorRecalculation();
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowLCManagement = false;

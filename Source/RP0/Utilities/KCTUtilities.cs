@@ -27,6 +27,21 @@ namespace RP0
         internal const string _icon_rocket = _iconPath + "KCT_rocket";
         internal const string _icon_settings = _iconPath + "KCT_setting";
 
+        // Yields a body's ancestor chain: the body itself, then each parent up to and including the top body
+        // that orbits the star, stopping at the star. Guards the KSP root star's self-referential
+        // referenceBody (Sun.referenceBody == Sun) and its null orbit, so it always terminates. Callers that
+        // want the "planet" (the top interplanetary body) take the last element.
+        public static IEnumerable<CelestialBody> AncestorChainToPlanet(CelestialBody body)
+        {
+            for (CelestialBody b = body; b != null; )
+            {
+                yield return b;
+                CelestialBody parent = b.referenceBody;
+                if (parent == null || parent == b || parent.orbit == null) yield break;  // reached the star
+                b = parent;
+            }
+        }
+
         public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
 
         public static string GetPartNameFromNode(ConfigNode part)
@@ -634,7 +649,8 @@ namespace RP0
             foreach (var name in partInfo.identicalParts.Split(','))
             {
                 if (PartLoader.getPartInfoByName(name.Replace('_', '.').Trim()) is AvailablePart info
-                    && info.TechRequired == partInfo.TechRequired)
+                    && info.TechRequired == partInfo.TechRequired
+                    && !techState.partsPurchased.Contains(info))
                 {
                     info.costsFunds = false;
                     techState.partsPurchased.Add(info);
@@ -684,6 +700,8 @@ namespace RP0
             }
             foreach (ISpaceCenterProject course in Crew.CrewHandler.Instance.TrainingCourses)
                 _checkTime(course, ref shortestTime, ref thing);
+            foreach (ISpaceCenterProject rnr in Crew.CrewHandler.Instance.RnRProjects)
+                _checkTime(rnr, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.fundTarget.IsValid)
                 _checkTime(SpaceCenterManagement.Instance.fundTarget, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
@@ -1454,7 +1472,7 @@ namespace RP0
             if (v == null)
                 return false;
 
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+            if (!SCMSaveSettings.Instance.Enabled)
                 return false;
 
             if (SpaceCenterManagement.Instance.IsSimulatedFlight)
@@ -1561,6 +1579,46 @@ namespace RP0
             else
             {
                 RP0Debug.LogError("Failed to update RA LaunchSite active state");
+            }
+        }
+
+        /// <summary>
+        /// Ground station tech level that RealAntennas derives from the current Tracking Station level.
+        /// </summary>
+        public static int GetRAGroundStationTechLevelFromFacility()
+        {
+            float normLevel = HighLogic.CurrentGame.Mode == Game.Modes.CAREER ? ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) : 1f;
+            return Mathf.RoundToInt(RealAntennas.RACommNetScenario.MaxTL * normLevel);
+        }
+
+        /// <summary>
+        /// Rebuilds the RealAntennas ground stations with the given tech level.
+        /// RA recalculates the tech level from the actual facility level on the next scene load.
+        /// </summary>
+        public static void SetRAGroundStationTechLevel(int techLevel)
+        {
+            try
+            {
+                RP0Debug.Log($"Setting RA ground station TL to {techLevel}");
+                RealAntennas.RACommNetScenario.GroundStationTechLevel = techLevel;
+
+                var raHomes = UnityEngine.Object.FindObjectsOfType<RealAntennas.Network.RACommNetHome>();
+                foreach (RealAntennas.Network.RACommNetHome home in raHomes)
+                {
+                    // Disabled stations have no CommNode. They build their antennas once enabled.
+                    if (home.Comm != null)
+                        home.BuildAntennas();
+                }
+
+                // The link precompute caches the antennas, so it needs to pick up the rebuilt ones
+                if (CommNetNetwork.Instance is RealAntennas.Network.RACommNetNetwork raNetwork)
+                    raNetwork.InvalidateCache();
+                else
+                    RP0Debug.LogError("RA CommNetNetwork not found, ground station antennas will not be used for links");
+            }
+            catch (Exception ex)
+            {
+                RP0Debug.LogException(ex);
             }
         }
 

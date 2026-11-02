@@ -150,6 +150,7 @@
     <Compile Include="Harmony\Administration.cs" />
     <Compile Include="Harmony\RDController.cs" />
     <Compile Include="Harmony\PartListTooltip.cs" />
+    <Compile Include="Harmony\PartListTooltipController.cs" />
     <Compile Include="Harmony\PartListTooltipUpgradeStats.cs" />
     <Compile Include="Harmony\RDPartList.cs" />
     <Compile Include="Harmony\ScienceWidget.cs" />
@@ -240,6 +241,8 @@
     <Compile Include="UI\ToolingGUI.cs" />
     <Compile Include="UI\ToolingPartResizer.cs" />
     <Compile Include="UI\AvionicsGUI.cs" />
+    <Compile Include="UI\Chart\LineChart.cs" />
+    <Compile Include="UI\Chart\LineChartGraphic.cs" />
     <Compile Include="SpaceCenter\AirlaunchParams.cs" />
     <Compile Include="SpaceCenter\AirlaunchTechLevel.cs" />
     <Compile Include="SpaceCenter\Projects\ConstructionProject.cs" />
@@ -277,14 +280,14 @@
     <Compile Include="Singletons\Database.cs" />
     <Compile Include="UI\KCT\GUI_Main.cs" />
     <Compile Include="UI\KCT\GUI_BuildList.cs" />
-    <Compile Include="UI\KCT\GUI_Presets.cs" />
+    <Compile Include="UI\KCT\GUI_Settings.cs" />
     <Compile Include="SpaceCenter\LaunchComplex\LCSpaceCenter.cs" />
     <Compile Include="SpaceCenter\LaunchComplex\LCLaunchPad.cs" />
     <Compile Include="Utilities\KCTWarpController.cs" />
     <Compile Include="Utilities\Formula.cs" />
-    <Compile Include="SpaceCenter\Presets\PresetManager.cs" />
     <Compile Include="SpaceCenter\Projects\ReconRolloutProject.cs" />
     <Compile Include="Settings\KCTSettings.cs" />
+    <Compile Include="Settings\SCMSaveSettings.cs" />
     <Compile Include="SpaceCenter\Projects\ResearchProject.cs" />
     <Compile Include="SpaceCenter\Projects\FacilityUpgradeProject.cs" />
     <Compile Include="Utilities\CraftFileSanitizer.cs" />
@@ -315,10 +318,6 @@
     </Reference>
     <Reference Include="$(KSPRoot)/GameData/ContractConfigurator/ContractConfigurator.dll">
       <HintPath>$(ReferencePath)/ContractConfigurator.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="$(KSPRoot)/GameData/FerramAerospaceResearch/Plugins/ferramGraph.dll">
-      <HintPath>$(ReferencePath)/ferramGraph.dll</HintPath>
       <Private>False</Private>
     </Reference>
     <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Ionic.Zip.dll">

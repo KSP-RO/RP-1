@@ -46,6 +46,7 @@ namespace RP0
         public static readonly List<SpaceCenterFacility> LockedFacilities = new List<SpaceCenterFacility>();
         public static readonly Dictionary<SpaceCenterFacility, List<int>> FacilityLevelCosts = new Dictionary<SpaceCenterFacility, List<int>>();
         public static int GetFacilityLevelCount(SpaceCenterFacility fac) { return FacilityLevelCosts.ValueOrDefault(fac)?.Count ?? 1; }
+        public static readonly Dictionary<SpaceCenterFacility, List<double>> FacilityYearlyMaintenance = new Dictionary<SpaceCenterFacility, List<double>>();
 
         public static readonly Dictionary<string, string> TechNameToTitle = new Dictionary<string, string>();
         public static readonly Dictionary<string, List<string>> TechNameToParents = new Dictionary<string, List<string>>();
@@ -193,6 +194,7 @@ namespace RP0
         private IEnumerator LoadFacilityData()
         {
             Database.LockedFacilities.Clear();
+            Database.FacilityYearlyMaintenance.Clear();
 
             var rootNode = GameDatabase.Instance.GetConfigNodes("CUSTOMBARNKIT")?.FirstOrDefault();
             if (rootNode == null)
@@ -226,6 +228,17 @@ namespace RP0
                 List<int> costList = new List<int>();
                 costList.FromCommaString(costs);
                 Database.FacilityLevelCosts[fac] = costList;
+
+                string maint = string.Empty;
+                if (node.TryGetValue("yearlyMaintenance", ref maint))
+                {
+                    List<double> maintList = new List<double>();
+                    maintList.FromCommaString(maint);
+                    if (maintList.Count == costList.Count)
+                        Database.FacilityYearlyMaintenance[fac] = maintList;
+                    else
+                        RP0Debug.LogError($"yearlyMaintenance for {fac} has {maintList.Count} entries but facility has {costList.Count} levels, falling back to cost-based maintenance");
+                }
             }
         }
 

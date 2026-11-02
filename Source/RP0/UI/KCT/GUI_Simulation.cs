@@ -290,10 +290,10 @@ namespace RP0
             int simLevel = simParams.SimGroundStationTechLevel < 0 ? curLevel : simParams.SimGroundStationTechLevel;
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label(new GUIContent("Ground Station TechLevel: ", "RealAntennas ground station tech level used during the simulation. Determined by the Tracking Station level."));
+            GUILayout.Label(new GUIContent("Ground Station (Planning) TechLevel: ", "RealAntennas ground station tech level used during the simulation. Determined by the Tracking Station level."));
             if (GUILayout.Button("-", GUILayout.ExpandWidth(false)))
                 simLevel--;
-            GUILayout.Label($"{simLevel}", _styleLabelCenterAlign, GUILayout.Width(20));
+            GUILayout.Label($"{simLevel}", GetLabelCenterAlignStyle(), GUILayout.Width(20));
             if (GUILayout.Button("+", GUILayout.ExpandWidth(false)))
                 simLevel++;
             GUILayout.EndHorizontal();
@@ -301,7 +301,7 @@ namespace RP0
             simLevel = Mathf.Clamp(simLevel, 0, maxLevel);
             simParams.SimGroundStationTechLevel = simLevel == curLevel ? -1 : simLevel;
 
-            GUILayout.Label(simLevel == curLevel ? $"Current TechLevel: {curLevel}" : $"<color=yellow>Current TechLevel: {curLevel}</color>");
+            GUILayout.Label(simLevel == curLevel ? $"Ground Station TechLevel: {curLevel}" : $"<color=yellow>Ground Station TechLevel: {curLevel}</color>");
         }
 
         private static readonly string[] _orbitModeLabels = { "Circular", "Elliptical", "Hyperbolic" };

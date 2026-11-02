@@ -1472,7 +1472,7 @@ namespace RP0
             if (v == null)
                 return false;
 
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+            if (!SCMSaveSettings.Instance.Enabled)
                 return false;
 
             if (SpaceCenterManagement.Instance.IsSimulatedFlight)

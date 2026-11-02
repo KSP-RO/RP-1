@@ -242,13 +242,13 @@ namespace RP0
         public double IncrementProgress(double UTDiff)
         {
             double bR = BuildRate;
-            if (bR == 0d && PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
+            if (bR == 0d && SCMSaveSettings.Instance.TechUnlockTimes)
                 return 0d;
 
             double toGo = scienceCost - progress;
             double increment = bR * UTDiff;
             progress += increment;
-            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
+            if (IsComplete() || !SCMSaveSettings.Instance.TechUnlockTimes)
             {
                 if (ProtoNode == null)
                     return 0d;

@@ -929,12 +929,6 @@
     <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\DistanceSoundingIntermediate.cfg">
       <Link>Contracts\Sounding Rockets\DistanceSoundingIntermediate.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\Downrange.cfg">
-      <Link>Contracts\Sounding Rockets\Downrange.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\DownrangeEarly.cfg">
-      <Link>Contracts\Sounding Rockets\DownrangeEarly.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\First Flight.cfg">
       <Link>Contracts\Sounding Rockets\First Flight.cfg</Link>
     </Content>
@@ -1063,9 +1057,6 @@
     </Content>
     <Content Include="..\GameData\RP-1\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\KCT_Presets\RP1_KCT_Presets.cfg">
-      <Link>KCT_Presets\RP1_KCT_Presets.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Localization\de-de.cfg">
       <Link>Localization\de-de.cfg</Link>
@@ -1520,7 +1511,6 @@
     <Content Include="..\GameData\RP-1\Tree\UpgradeCleanup.cfg">
       <Link>Tree\UpgradeCleanup.cfg</Link>
     </Content>
-
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSHARP.Targets" />
   <ProjectExtensions>

@@ -42,7 +42,7 @@ namespace RP0
                     continue;
                 }
 
-                if (PresetManager.Instance != null && PresetManager.Instance.ActivePreset != null)
+                if (SCMSaveSettings.IsLoaded)
                 {
                     if (up.name.StartsWith("rp0EngineerUpgrade"))
                     {
@@ -121,11 +121,6 @@ namespace RP0
             }
             else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
             {
-                /*if (PresetManager.Instance != null)
-                {
-                    int limit = PresetManager.Instance.ActivePreset.GetResearcherCap(lvlIdx);
-                    lvl.levelStats.textBase += $"\n{Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit", (limit == -1 ? Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited") : limit.ToString("N0")))}";
-                }*/
                 lvl.levelStats.textBase = $"{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_RnD")}\n{Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit", Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited"))}";
             }
             else if (facilityType == SpaceCenterFacility.AstronautComplex)
@@ -155,22 +150,22 @@ namespace RP0
             }
         }
 
-        public static string FormatRatioAsPercent(double ratio)
+        public static string FormatRatioAsPercent(double ratio, string format = "N0")
         {
             if (ratio < 1d)
-                return Localizer.Format("#rp0_Generic_Percent_Negative", ((1d - ratio) * 100d).ToString("N0"));
+                return Localizer.Format("#rp0_Generic_Percent_Negative", ((1d - ratio) * 100d).ToString(format));
 
-            return Localizer.Format("#rp0_Generic_Percent_Positive", ((ratio - 1d) * 100d).ToString("N0"));
+            return Localizer.Format("#rp0_Generic_Percent_Positive", ((ratio - 1d) * 100d).ToString(format));
         }
 
-        public static string FormatBytes(int amount)
+        public static string FormatBytes(int amount, string format = "0.#")
         {
             if (amount < 1024)
                 return Localizer.Format("#rp0_Generic_DiskSpace_B", amount);
             if(amount < 1024*1024)
-                return Localizer.Format("#rp0_Generic_DiskSpace_kB", (amount / 1024d).ToString("0.#"));
+                return Localizer.Format("#rp0_Generic_DiskSpace_kB", (amount / 1024d).ToString(format));
 
-            return Localizer.Format("#rp0_Generic_DiskSpace_MB", (amount / (1024d * 1024d)).ToString("0.#"));
+            return Localizer.Format("#rp0_Generic_DiskSpace_MB", (amount / (1024d * 1024d)).ToString(format));
         }
 
         public static string FormatValuePositiveNegative(double value, string format)

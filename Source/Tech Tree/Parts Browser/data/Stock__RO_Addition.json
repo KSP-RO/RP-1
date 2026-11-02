@@ -18,7 +18,9 @@
         "upgrade": false,
         "entry_cost_mods": "300,GearLarge",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "GearMediumSpaceplane",
@@ -39,7 +41,9 @@
         "upgrade": false,
         "entry_cost_mods": "200,GearMedium",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "GearSmallSpaceplane",
@@ -60,7 +64,9 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     },
     {
         "name": "RO-E1",
@@ -456,6 +462,8 @@
         "upgrade": false,
         "entry_cost_mods": "",
         "identical_part_name": "",
-        "module_tags": []
+        "module_tags": [
+            "Reentry"
+        ]
     }
 ]

@@ -176,14 +176,14 @@ namespace RP0
         /// <param name="newEff"></param>
         /// <param name="startingEfficiency"></param>
         /// <returns></returns>
-        public double PredictWeightedEfficiency(double tdelta, double portionEngineers, out double newEff, double startingEfficiency = -1d)
+        public double PredictWeightedEfficiency(bool isRushing, double tdelta, double portionEngineers, out double newEff, double startingEfficiency = -1d)
         {
             if (startingEfficiency < 0d)
                 startingEfficiency = _efficiency;
 
             newEff = startingEfficiency;
 
-            if (tdelta < 86400d || startingEfficiency >= _MaxEfficiency)
+            if (isRushing || tdelta < 86400d || startingEfficiency >= _MaxEfficiency)
                 return tdelta;
 
             int steps = defaultSteps;

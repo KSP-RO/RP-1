@@ -2,7 +2,11 @@ ship = Jet Trainer
 version = 1.12.5
 description = Basic subsonic jet aircraft. 2 seater, very forgiving flight characteristics, if a bit twitchy at low speeds. Rotate at 35 m/s, liftoff at 45 m/s. Stall speed 40 m/s, max speed 270 m/s. AG 1 extends flaps, AG2 retracts them.
 type = SPH
+<<<<<<< Updated upstream
 size = 9.6275959,4.30619431,10.5497398
+=======
+size = 9.62759686,4.30619431,10.5497417
+>>>>>>> Stashed changes
 steamPublishedFileId = 0
 persistentId = 2008053834
 rot = 0,0,0,0
@@ -12,7 +16,11 @@ OverrideDefault = False,False,False,False
 OverrideActionControl = 0,0,0,0
 OverrideAxisControl = 0,0,0,0
 OverrideGroupNames = ,,,
+<<<<<<< Updated upstream
 _modVersions = Scale_Redist=3.3.2|ModuleManager=4.2.3|ClickThroughBlocker=2.1.10|0Harmony=2.2.1|HarmonyInstallChecker=2.2.1|Unity.Burst.Unsafe=1.0.0|Unity.Mathematics=1.0.0|Microsoft.Extensions.FileSystemGlobbing=6.0.21|System.IO.Compression=4.6.57|System.Runtime.CompilerServices.Unsafe=4.700.20|System.Runtime=4.0.0|Unity.Burst=1.7.4|System.IO.Compression.FileSystem=4.6.57|Unity.Collections=0.8.0|Unity.Jobs=0.2.9|KSPBurst=1.7.4|SerializationFix=1.0.1|BlendshapeModelLoader=1.6.4|TexturesUnlimited=1.6.4|ToolbarControl=0.1.9|SolverEngines=3.15.0|AJE=2.20.0|AtmosphereAutopilot.UI=1.0.0|AtmosphereAutopilot=1.6.1|B9PartSwitch=2.21.0|B9-PWings-Fork=0.46.1|BDAnimationModules=0.6.7|RNModules=1.2.1|BetterTimeWarpCont=2.3.14|CCK=5.1.0|Shabby=0.4.2|ConformalDecals=0.4.2|Unity.TextMeshPro=2.1.6|ContractConfigurator=2.13.4|CustomBarnKit=1.1.22|DeployableEngines=2.2.0|DepthMask=1.1.3|EditorExtensionsRedux=3.4.7|EngineGroupController=1.0.0|UnityGUIFramework=1.0.0|FerramAerospaceResearch.Base=0.16.2|ModularFlightIntegrator=1.2.10|0_MultipleModuleInPartAPI=1.0.0|KSPCommunityFixes=1.41.1|FerramAerospaceResearch=0.16.2|ferramGraph=1.3.0|Firespitter=7.3.7660|HangerExtenderExtended=3.6.1|KerbalChangelog=1.4.2|Kerbalism=3.43.0|KerbalJointReinforcement=3.8.7|Renamer=1.7.0|Kopernicus.Parser=1.0.0|KSPTextureLoader.Burst=0.0.0|SharpDX=4.2.0|SharpDX.Direct3D11=4.2.0|SharpDX.DXGI=4.2.0|KSPTextureLoader=1.0.38|Kopernicus=1.12.251|KSCSwitcher=2.2.0|KSPWheel=0.0.0|alglib=1.0.0|MechJeb2=2.16.0|MechJeb2.UI=1.0.0|MechJebLib=1.0.0|MechJebLibBindings=1.0.0|PatchManager=0.0.17|ROUtils=1.2.0|ProceduralFairings=6.8.0|ProceduralParts=2.8.0|RCSBuildAid=1.0.6|RealAntennas=2.12.0|RealChute=1.4.9059|RealFuels=15.16.1|RealHeat=5.1.0|RealismOverhaul=18.0.0|ROInstallChecker=1.1.0|RealSolarSystem=20.1.3|Restock=1.0.0|RetractableLiftingSurface=0.2.1|ROLib=2.1.0|ROEngines=2.16.1|ROHeatshields=1.3.0|RP0=4.8.1|CC_RP0=1.11.0|ClearInputLocks=1.0.0|RP0InstallChecker=1.0.0|RSSTimeFormatter=1.12.0|Telecom=1.0.0|SmokeScreen=2.8.14|FARShuttleAerodynamicModel=1.0.0|OcclusionHeat=1.0.0|KSPSteamCtrlr=0.0.1|StagedAnimation=1.0.0|HabUtils=1.0.0|StockAlarmClockDisabler=1.0.0|SXTContinued=0.3.31|TestFlightAPI=2.2.0|TestFlight=2.2.0|TestFlightContracts=2.2.0|TestFlightCore=2.2.0|TextureReplacer=4.5.3|KerbalAlarmClock=3.14.2|TransferWindowPlanner=1.9.1|Waterfall=0.11.0
+=======
+_modVersions = Scale_Redist=3.3.2|ModuleManager=4.2.3|ClickThroughBlocker=2.1.10|0Harmony=2.2.1|HarmonyInstallChecker=2.2.1|Unity.Burst.Unsafe=1.0.0|Unity.Mathematics=1.0.0|Microsoft.Extensions.FileSystemGlobbing=6.0.21|System.IO.Compression=4.6.57|System.Runtime.CompilerServices.Unsafe=4.700.20|System.Runtime=4.0.0|Unity.Burst=1.7.4|System.IO.Compression.FileSystem=4.6.57|Unity.Collections=0.8.0|Unity.Jobs=0.2.9|KSPBurst=1.7.4|SerializationFix=1.0.1|BlendshapeModelLoader=1.6.4|TexturesUnlimited=1.6.4|ToolbarControl=0.1.9|SolverEngines=3.15.0|AJE=2.20.0|AtmosphereAutopilot.UI=1.0.0|AtmosphereAutopilot=1.6.1|B9PartSwitch=2.21.0|B9-PWings-Fork=0.46.1|BDAnimationModules=0.6.7|RNModules=1.2.1|BetterTimeWarpCont=2.3.14|CCK=5.1.0|Shabby=0.4.2|ConformalDecals=0.4.2|Unity.TextMeshPro=2.1.6|ContractConfigurator=2.13.4|CustomBarnKit=1.1.22|DeployableEngines=2.2.0|DepthMask=1.1.3|EditorExtensionsRedux=3.4.7|EngineGroupController=1.0.0|UnityGUIFramework=1.0.0|FerramAerospaceResearch.Base=0.16.2|ModularFlightIntegrator=1.2.10|0_MultipleModuleInPartAPI=1.0.0|KSPCommunityFixes=1.41.1|FerramAerospaceResearch=0.16.2|ferramGraph=1.3.0|Firespitter=7.3.7660|FMRSContinued=1.2.9|HangerExtenderExtended=3.6.1|KerbalChangelog=1.4.2|Kerbalism=3.43.0|KerbalJointReinforcement=3.8.7|Renamer=1.7.0|Kopernicus.Parser=1.0.0|KSPTextureLoader.Burst=0.0.0|SharpDX=4.2.0|SharpDX.Direct3D11=4.2.0|SharpDX.DXGI=4.2.0|KSPTextureLoader=1.0.38|Kopernicus=1.12.251|KSCSwitcher=2.2.0|KSPWheel=0.0.0|alglib=1.0.0|MechJeb2=2.16.0|MechJeb2.UI=1.0.0|MechJebLib=1.0.0|MechJebLibBindings=1.0.0|PatchManager=0.0.17|ROUtils=1.2.0|ProceduralFairings=6.8.0|ProceduralParts=2.8.0|RCSBuildAid=1.0.6|RealAntennas=2.12.0|RealChute=1.4.9059|RealFuels=15.16.1|RealHeat=5.1.0|RealismOverhaul=18.0.0|ROInstallChecker=1.1.0|RealSolarSystem=20.1.3|RecoveryController=0.0.4|Restock=1.0.0|RetractableLiftingSurface=0.2.1|ROLib=2.1.0|ROEngines=2.16.1|ROHeatshields=1.3.0|RP0=4.8.1|CC_RP0=1.11.0|ClearInputLocks=1.0.0|RP0InstallChecker=1.0.0|RSSTimeFormatter=1.12.0|Telecom=1.0.0|SmokeScreen=2.8.14|FARShuttleAerodynamicModel=1.0.0|OcclusionHeat=1.0.0|KSPSteamCtrlr=0.0.1|StagedAnimation=1.0.0|HabUtils=1.0.0|StockAlarmClockDisabler=1.0.0|SXTContinued=0.3.31|TestFlightAPI=2.2.0|TestFlight=2.2.0|TestFlightContracts=2.2.0|TestFlightCore=2.2.0|TextureReplacer=4.5.3|KerbalAlarmClock=3.14.2|TransferWindowPlanner=1.9.1|Waterfall=0.11.0
+>>>>>>> Stashed changes
 PART
 {
 	part = SXTBuzzard_4285391864
@@ -122,6 +130,23 @@ PART
 				active = False
 				wasActiveBeforePartWasAdjusted = False
 			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
 		}
 		UPGRADESAPPLIED
 		{
@@ -1316,7 +1341,11 @@ PART
 	part = RO-RFTank-Separate_4285178348
 	partName = Part
 	persistentId = 2164691614
+<<<<<<< Updated upstream
 	pos = 0,10,-2.02684855
+=======
+	pos = 0,10,-2.02684951
+>>>>>>> Stashed changes
 	attPos = 0,0,0
 	attPos0 = 0,-1.90180552,2.38418579E-07
 	rot = 0.707106829,0,0,0.707106829
@@ -1595,6 +1624,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = GeometryPartModule
 		isEnabled = True
 		stagingEnabled = True
@@ -1766,7 +1812,11 @@ PART
 	part = RO-DerwentV_4284977396
 	partName = Part
 	persistentId = 4108226054
+<<<<<<< Updated upstream
 	pos = 0,10,-3.92685151
+=======
+	pos = 0,10,-3.92685246
+>>>>>>> Stashed changes
 	attPos = 0,0.099998951,0
 	attPos0 = 0,-1.50000095,0
 	rot = 0.707106829,0,0,0.707106829
@@ -1946,6 +1996,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = EngineGroupModule
 		isEnabled = True
 		EngineGroupId = 
@@ -2095,7 +2162,11 @@ PART
 	part = RO-B9ProcWing-Early_4284896802
 	partName = Part
 	persistentId = 692474998
+<<<<<<< Updated upstream
 	pos = 5.34655555E-08,10.3564062,-2.74495769
+=======
+	pos = 5.34655555E-08,10.3564062,-2.74495864
+>>>>>>> Stashed changes
 	attPos = 6.17376728E-09,0.302760124,0.184548378
 	attPos0 = 4.72917883E-08,-1.02086926,-0.54095459
 	rot = 0.474662066,0.524114549,0.474661976,0.524114549
@@ -2245,6 +2316,23 @@ PART
 		massMultiplier = 0.5
 		massOverride = -3.40282347E+38
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
 		EVENTS
 		{
 		}
@@ -2431,7 +2519,11 @@ PART
 	part = RO-B9ProcWing-Early_4284893336
 	partName = Part
 	persistentId = 1668446048
+<<<<<<< Updated upstream
 	pos = 5.4185719E-08,10.8058338,-2.78147769
+=======
+	pos = 5.4185719E-08,10.8058338,-2.78147864
+>>>>>>> Stashed changes
 	attPos = -5.96046448E-08,0.256954998,0
 	attPos0 = 0.450837076,-0.248900071,0
 	rot = 0.474662006,0.524114609,0.474661827,0.524114668
@@ -2595,6 +2687,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -2710,7 +2819,7 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 2.2959999999999998
 		mass = 0
@@ -2769,7 +2878,11 @@ PART
 	part = RO-B9ProcAMWing-Early_4284891596
 	partName = Part
 	persistentId = 275539326
+<<<<<<< Updated upstream
 	pos = 0.037912678,11.6274109,-4.01765537
+=======
+	pos = 0.037912678,11.6274109,-4.01765633
+>>>>>>> Stashed changes
 	attPos = 0,0,0
 	attPos0 = 0.93967396,-1.14897156,0.0379125476
 	rot = 0.707106829,0,0,0.707106829
@@ -2958,6 +3071,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -3090,7 +3220,11 @@ PART
 	part = RO-B9ProcAMWing-Early_4284890824
 	partName = Part
 	persistentId = 3865467154
+<<<<<<< Updated upstream
 	pos = -0.0379125364,11.6274109,-4.01765633
+=======
+	pos = -0.0379125364,11.6274109,-4.01765728
+>>>>>>> Stashed changes
 	attPos = 0,0,0
 	attPos0 = 0.93967396,-1.14897156,-0.0379126593
 	rot = -6.3220277E-08,0.707106888,0.707106888,-6.3220277E-08
@@ -3279,6 +3413,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -3411,7 +3562,11 @@ PART
 	part = RO-B9ProcCS-Early_4284889162
 	partName = Part
 	persistentId = 334785975
+<<<<<<< Updated upstream
 	pos = -4.41782367E-06,11.6220112,-4.89100266
+=======
+	pos = -4.53703296E-06,11.6220112,-4.89100361
+>>>>>>> Stashed changes
 	attPos = 0.059410274,-0.029150486,-5.67052894E-09
 	attPos0 = 0.961161792,-1.98942924,-1.82337345E-08
 	rot = 0.343880653,-0.617856145,-0.343880713,0.617856145
@@ -3599,6 +3754,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -3714,7 +3886,11 @@ PART
 	part = RO-B9ProcWing-Early_4284930490
 	partName = Part
 	persistentId = 443390650
+<<<<<<< Updated upstream
 	pos = 0.6198138,10,-0.558182001
+=======
+	pos = 0.6198138,10,-0.558182478
+>>>>>>> Stashed changes
 	attPos = -0.00123500824,-0.151839733,0
 	attPos0 = 0.621048808,1.62048841,-2.38418579E-07
 	rot = -0.707101226,-0.00287563493,0.00287570013,-0.707100749
@@ -3878,6 +4054,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -4026,6 +4219,46 @@ PART
 		}
 		ACTIONS
 		{
+<<<<<<< Updated upstream
+=======
+			name = Kerosene
+			note = 
+			utilization = 1
+			mass = 3.9999999E-05
+			cost = 9.99999975E-05
+			loss_rate = 0
+			wallThickness = 0.10000000000000001
+			wallConduction = 205
+			insulationThickness = 0
+			insulationConduction = 1
+			isDewar = False
+			temperature = 300
+			fillable = True
+			techRequired = 
+			amount = 382.00979999999998
+			maxAmount = 382.00979999999998
+>>>>>>> Stashed changes
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
 		}
 		UPGRADESAPPLIED
 		{
@@ -4052,10 +4285,17 @@ PART
 	part = RO-B9ProcCS-Early_4284886384
 	partName = Part
 	persistentId = 2769860542
+<<<<<<< Updated upstream
 	pos = 1.7199111,10,-1.62403893
 	attPos = 0,0,0
 	attPos0 = 1.10872972,-1.05685461,1.40685898E-07
 	rot = 0.684486926,0.177421182,-0.177417487,0.684487045
+=======
+	pos = 1.7199111,10,-1.62403989
+	attPos = 0,0,0
+	attPos0 = 1.10872972,-1.05685461,1.40685898E-07
+	rot = 0.684486926,0.177421212,-0.177417517,0.684487045
+>>>>>>> Stashed changes
 	attRot = -0.707106709,0,0.707106709,0
 	attRot0 = -5.67735867E-07,2.5300094E-06,-0.246968821,0.969023466
 	mir = 1,1,1
@@ -4241,6 +4481,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -4356,7 +4613,11 @@ PART
 	part = RO-B9ProcWing-Early_4284881870
 	partName = Part
 	persistentId = 2087821645
+<<<<<<< Updated upstream
 	pos = -0.6198138,10,-0.558181286
+=======
+	pos = -0.6198138,10,-0.558181763
+>>>>>>> Stashed changes
 	attPos = 0.00123500824,-0.151839137,0
 	attPos0 = -0.621048808,1.62048852,-2.38418579E-07
 	rot = -0.00287573063,0.707100928,0.707101047,0.00287560583
@@ -4426,13 +4687,19 @@ PART
 		ResourcesEnableFlow
 		{
 			actionGroup = None
+<<<<<<< Updated upstream
 			active = False
+=======
+>>>>>>> Stashed changes
 			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
+<<<<<<< Updated upstream
 			active = False
+=======
+>>>>>>> Stashed changes
 			wasActiveBeforePartWasAdjusted = False
 		}
 	}
@@ -4508,6 +4775,23 @@ PART
 		massMultiplier = 0.699999988
 		massOverride = -3.40282347E+38
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
 		EVENTS
 		{
 		}
@@ -4640,13 +4924,57 @@ PART
 		volume = 382.00979999999998
 		mass = 0
 		_numberOfAddedMLILayers = 0
+<<<<<<< Updated upstream
 		totalTankArea = 4.0416041655079775
+=======
+		totalTankArea = 4.041604405678429
+>>>>>>> Stashed changes
 		stagingEnabled = True
 		EVENTS
 		{
 		}
 		ACTIONS
 		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+<<<<<<< Updated upstream
+=======
+			name = Kerosene
+			note = 
+			utilization = 1
+			mass = 3.9999999E-05
+			cost = 9.99999975E-05
+			loss_rate = 0
+			wallThickness = 0.10000000000000001
+			wallConduction = 205
+			insulationThickness = 0
+			insulationConduction = 1
+			isDewar = False
+			temperature = 300
+			fillable = True
+			techRequired = 
+			amount = 382.00979999999998
+			maxAmount = 382.00979999999998
+>>>>>>> Stashed changes
 		}
 		UPGRADESAPPLIED
 		{
@@ -4694,7 +5022,11 @@ PART
 	part = RO-B9ProcCS-Early_4284881728
 	partName = Part
 	persistentId = 1792013694
+<<<<<<< Updated upstream
 	pos = -1.71992433,10,-1.62403774
+=======
+	pos = -1.71992469,10,-1.6240387
+>>>>>>> Stashed changes
 	attPos = 0,0,0
 	attPos0 = 1.10872972,-1.05685461,1.40685898E-07
 	rot = 0.684486985,-0.177420303,0.177416727,0.684487462
@@ -4883,6 +5215,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -4998,7 +5347,11 @@ PART
 	part = RO-B9ProcCS-Early_4284880168
 	partName = Part
 	persistentId = 2862762582
+<<<<<<< Updated upstream
 	pos = 3.68903112,9.99999905,-2.7188251
+=======
+	pos = 3.68903112,9.99999905,-2.71882606
+>>>>>>> Stashed changes
 	attPos = -0.0150198936,0.00820469856,1.90770879E-06
 	attPos0 = 3.10170841,-2.14379191,-7.36166498E-07
 	rot = 0.684387982,0.177810341,-0.177726328,0.68440491
@@ -5187,6 +5540,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -5302,7 +5672,11 @@ PART
 	part = RO-B9ProcCS-Early_4284879440
 	partName = Part
 	persistentId = 729265534
+<<<<<<< Updated upstream
 	pos = -3.68906641,9.99999905,-2.71882463
+=======
+	pos = -3.68906736,9.99999905,-2.71882558
+>>>>>>> Stashed changes
 	attPos = -0.0150196552,0.00820374489,-1.90900641E-06
 	attPos0 = 3.10170746,-2.14379215,1.00405703E-06
 	rot = 0.684387863,-0.177810371,0.177726388,0.684405029
@@ -5491,6 +5865,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -5606,7 +5997,11 @@ PART
 	part = RO-B9ProcWing-Early_4284872344
 	partName = Part
 	persistentId = 3364333205
+<<<<<<< Updated upstream
 	pos = 4.55553293,10.000001,-2.45030046
+=======
+	pos = 4.55553293,10.000001,-2.45030141
+>>>>>>> Stashed changes
 	attPos = 2.38418579E-07,-0.0258442163,3.09029247E-09
 	attPos0 = 3.95097733,-1.83417952,-8.49101696E-07
 	rot = -0.707101226,-0.00287569896,0.00287572038,-0.707100749
@@ -5754,6 +6149,23 @@ PART
 		massMultiplier = 0.5
 		massOverride = -3.40282347E+38
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
 		EVENTS
 		{
 		}
@@ -5940,7 +6352,11 @@ PART
 	part = RO-B9ProcWing-Early_4284871428
 	partName = Part
 	persistentId = 3278516478
+<<<<<<< Updated upstream
 	pos = -4.55556822,10.000001,-2.45029902
+=======
+	pos = -4.55556917,10.000001,-2.45029998
+>>>>>>> Stashed changes
 	attPos = 2.38418579E-07,-0.0258454084,-3.09933057E-09
 	attPos0 = 3.95097589,-1.83417916,1.19065839E-06
 	rot = -0.00287575182,0.707100868,0.707101107,0.00287566986
@@ -6088,6 +6504,23 @@ PART
 		massMultiplier = 0.5
 		massOverride = -3.40282347E+38
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
 		EVENTS
 		{
 		}
@@ -6274,7 +6707,11 @@ PART
 	part = SmallGearBay_4284869142
 	partName = Part
 	persistentId = 538379538
+<<<<<<< Updated upstream
 	pos = 3.59375557E-10,9.73827934,2.65224528
+=======
+	pos = 3.59375557E-10,9.73827934,2.65224552
+>>>>>>> Stashed changes
 	attPos = 3.59375557E-10,-0.142576814,-0.362668097
 	attPos0 = 0,1.29482079,0.624388635
 	rot = 2.38418579E-07,-5.55111512E-17,-4.95461117E-10,1.00000012
@@ -6540,6 +6977,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = GeometryPartModule
 		isEnabled = True
 		stagingEnabled = True
@@ -6790,7 +7244,11 @@ PART
 	part = SmallGearBay_4284867358
 	partName = Part
 	persistentId = 1015259900
+<<<<<<< Updated upstream
 	pos = -1.23562551,9.89099503,-1.21305776
+=======
+	pos = -1.23562574,9.89099503,-1.21305823
+>>>>>>> Stashed changes
 	attPos = 0.414932966,-0.862997711,0.00734210759
 	attPos0 = 0.20618242,0.213151678,-0.116347142
 	rot = 3.63886356E-05,-0.00406664843,-0.00885728933,0.999952674
@@ -7057,6 +7515,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = GeometryPartModule
 		isEnabled = True
 		stagingEnabled = True
@@ -7307,7 +7782,11 @@ PART
 	part = SmallGearBay_4284866784
 	partName = Part
 	persistentId = 2602223270
+<<<<<<< Updated upstream
 	pos = 1.23562336,9.89099503,-1.21305823
+=======
+	pos = 1.23562336,9.89099503,-1.21305871
+>>>>>>> Stashed changes
 	attPos = 0.414933145,-0.862997413,-0.00734184682
 	attPos0 = 0.206182465,0.213151678,0.116347194
 	rot = 3.63886356E-05,0.00406664796,0.00885729305,0.999952674
@@ -7538,6 +8017,23 @@ PART
 		name = ModuleDragModifier
 		isEnabled = True
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
 		EVENTS
 		{
 		}
@@ -7800,7 +8296,11 @@ PART
 	part = conformaldecals-flag_4283437564
 	partName = Part
 	persistentId = 3535041873
+<<<<<<< Updated upstream
 	pos = -0.166302785,11.1032219,-3.97350669
+=======
+	pos = -0.166302785,11.1032219,-3.97350764
+>>>>>>> Stashed changes
 	attPos = 0.0337226391,-0.349534035,-4.81307507E-06
 	attPos0 = 0.379964709,-0.807287216,-0.166297927
 	rot = 0,0.707107067,-2.08616257E-07,0.707106769
@@ -7908,6 +8408,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = FARAeroPartModule
 		isEnabled = True
 		stagingEnabled = True
@@ -7957,7 +8474,11 @@ PART
 	part = conformaldecals-flag_4283436824
 	partName = Part
 	persistentId = 1291481655
+<<<<<<< Updated upstream
 	pos = 0.166302934,11.1032219,-3.97350574
+=======
+	pos = 0.166302934,11.1032219,-3.97350669
+>>>>>>> Stashed changes
 	attPos = 0.0337225199,-0.349533081,4.96208668E-06
 	attPos0 = 0.379964769,-0.807287216,0.166297987
 	rot = 0,-0.707106948,8.94069672E-08,0.707106769
@@ -8065,6 +8586,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = FARAeroPartModule
 		isEnabled = True
 		stagingEnabled = True
@@ -8114,7 +8652,11 @@ PART
 	part = RO-B9ProcCS-Early_4284301122
 	partName = Part
 	persistentId = 755993849
+<<<<<<< Updated upstream
 	pos = -0.0268109571,10.4329824,-4.26900005
+=======
+	pos = -0.026810972,10.4329824,-4.26900101
+>>>>>>> Stashed changes
 	attPos = 1.04308128E-07,-8.34465027E-07,-0.00549515337
 	attPos0 = 0.226752713,-1.50902271,-0.0213155299
 	rot = -0.459078491,0.539211214,0.469162285,-0.527622223
@@ -8303,6 +8845,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -8418,7 +8977,11 @@ PART
 	part = RO-B9ProcCS-Early_4291682018
 	partName = Part
 	persistentId = 655667659
+<<<<<<< Updated upstream
 	pos = 0.0268106628,10.4329824,-4.26900101
+=======
+	pos = 0.0268106479,10.4329824,-4.26900196
+>>>>>>> Stashed changes
 	attPos = 1.93715096E-07,-1.78813934E-06,0.00549516827
 	attPos0 = 0.226752713,-1.50902271,0.0213157684
 	rot = 0.45907861,0.539211273,0.469162345,0.527621984
@@ -8607,6 +9170,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = SSTURecolorGUI
 		isEnabled = True
 		stagingEnabled = True
@@ -8722,7 +9302,11 @@ PART
 	part = RO-RFTank-Separate_4284924482
 	partName = Part
 	persistentId = 974930403
+<<<<<<< Updated upstream
 	pos = 0,10,3.73466396
+=======
+	pos = 0,10,3.73466444
+>>>>>>> Stashed changes
 	attPos = 0,0,0
 	attPos0 = 0,2.23466063,-2.38418579E-07
 	rot = 0.707106829,0,0,0.707106829
@@ -8996,6 +9580,23 @@ PART
 	}
 	MODULE
 	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = GeometryPartModule
 		isEnabled = True
 		stagingEnabled = True
@@ -9227,7 +9828,11 @@ PART
 	part = miniIntake_4284926438
 	partName = Part
 	persistentId = 3625902299
+<<<<<<< Updated upstream
 	pos = 0,10,4.23466444
+=======
+	pos = 0,10,4.23466492
+>>>>>>> Stashed changes
 	attPos = 0,0,0
 	attPos0 = 0,0.500000358,0
 	rot = 0.707106829,0,0,0.707106829
@@ -9321,6 +9926,23 @@ PART
 				actionGroup = None
 				wasActiveBeforePartWasAdjusted = False
 			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = FMRS_PM
+		isEnabled = True
+		stagingEnabled = True
+		MM_DYNAMIC = true
+		parent_vessel = 0
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
 		}
 		UPGRADESAPPLIED
 		{

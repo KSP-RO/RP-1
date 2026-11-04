@@ -76,6 +76,10 @@ namespace RP0
         [Persistent]
         public int SimAutostageTarget = -1;
 
+        // RealAntennas ground station tech level. -1 uses the level from the current Tracking Station.
+        [Persistent]
+        public int SimGroundStationTechLevel = -1;
+
         public void Reset()
         {
             IsVesselMoved = false;

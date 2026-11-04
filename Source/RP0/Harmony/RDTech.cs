@@ -9,9 +9,9 @@ namespace RP0.Harmony
         [HarmonyPatch("UnlockTech")]
         internal static bool Prefix_UnlockTech(RDTech __instance, bool updateGameState)
         {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled 
-                || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes 
-                || !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
+            if (!SCMSaveSettings.Instance.Enabled 
+                || !SCMSaveSettings.Instance.TechUnlockTimes 
+                || !SCMSaveSettings.Instance.BuildTimes)
                 return true;
 
             if (SpaceCenterManagement.Instance.TechListHas(__instance.techID))

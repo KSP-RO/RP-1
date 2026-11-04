@@ -333,7 +333,12 @@ namespace RP0
             StartCoroutine(PostRequestCareerLog(url, onRequestSuccess, onRequestFail));
         }
 
-        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
+        public void ExportToJsonFile(string path)
+        {
+            File.WriteAllText(path, CreateJson());
+        }
+
+        private string CreateJson()
         {
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
@@ -448,6 +453,13 @@ namespace RP0
             }
 
             jsonToSend += "] }";
+
+            return jsonToSend;
+        }
+
+        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
+        {
+            string jsonToSend = CreateJson();
 
             RP0Debug.Log("Request payload: " + jsonToSend);
 

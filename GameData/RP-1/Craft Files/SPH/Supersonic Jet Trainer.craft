@@ -2,7 +2,7 @@ ship = Supersonic Jet Trainer
 version = 1.12.3
 description = Supersonic jet trainer based on a classic fighter jet. AG 1 to lower flaps, AG 2 to raise flaps. Rotate at 70 m/s, liftoff speed 90 m/s, landing speed 80 m/s, Max Speed Mach 1.6, G limit 8 Gs. Watch out for tailstrikes!
 type = SPH
-size = 7.25775957,4.26809883,14.1500263
+size = 7.25775957,4.26809883,14.150032
 steamPublishedFileId = 0
 persistentId = 3783602002
 rot = 0,0,0,0
@@ -12,7 +12,7 @@ OverrideDefault = False,False,False,False
 OverrideActionControl = 0,0,0,0
 OverrideAxisControl = 0,0,0,0
 OverrideGroupNames = ,,,
-_modVersions = Scale_Redist=2.4.7|ModuleManager=4.2.3|ClickThroughBlocker=2.1.10|0Harmony=2.2.1|HarmonyInstallChecker=2.2.1|KSPBurst=1.5.5|Microsoft.Extensions.FileSystemGlobbing=6.0.21|System.IO.Compression=4.6.57|System.IO.Compression.FileSystem=4.6.57|System.Runtime.CompilerServices.Unsafe=4.700.20|System.Runtime=4.0.0|Unity.Burst=0.0.0|Unity.Burst.Unsafe=1.0.0|Unity.Collections=0.0.0|Unity.Jobs=0.0.0|Unity.Mathematics=1.0.0|BlendshapeModelLoader=1.0.0|TexturesUnlimited=0.0.0|ToolbarControl=0.1.9|SolverEngines=3.13.1|AJE=2.20.0|AtmosphereAutopilot.UI=1.0.0|AtmosphereAutopilot=1.6.1|B9PartSwitch=2.20.0|B9-PWings-Fork=0.44.0|BDAnimationModules=0.6.7|RNModules=1.2.1|CCK=5.1.0|ConformalDecals=0.2.12|ContractConfigurator=2.6.1|CustomBarnKit=1.1.22|DebugStuff=1.6.0|DepthMask=1.1.3|EngineGroupController=1.0.0|UnityGUIFramework=1.0.0|FerramAerospaceResearch.Base=0.16.1|ModularFlightIntegrator=1.2.10|FerramAerospaceResearch=0.16.1|ferramGraph=1.3.0|Firespitter=7.3.7660|HangerExtenderExtended=3.6.0|KerbalChangelog=1.4.2|KerbalEngineer.Unity=1.0.0|KerbalEngineer=1.1.9|KerbalismBootstrap=3.17.0|KerbalJointReinforcement=3.7.1|Renamer=1.7.0|Kopernicus.Parser=1.0.0|Kopernicus=1.12.173|KSCSwitcher=2.0.0|0_MultipleModuleInPartAPI=1.0.0|KSPCommunityFixes=1.30.0|KSPWheel=0.0.0|MagiCore=1.3.2|MechJeb2=2.14.3|System.Buffers=4.6.28619|PatchManager=0.0.17|ProceduralFairings=6.3.0|ProceduralParts=2.5.4|RCSBuildAid=1.0.6|RealAntennas=2.1.1|RealChute=1.4.7845|RealFuels=15.6.0|RealHeat=5.1.0|RealismOverhaul=16.4.0|ROInstallChecker=1.0.0|RealSolarSystem=20.0.1|Restock=0.1.0|RetractableLiftingSurface=0.2.1|ROEngines=2.1.1|ROHeatshields=1.1.0|ROLib=1.6.2|RP0=2.6.0|CC_RP0=1.11.0|ClearInputLocks=1.0.0|RP0InstallChecker=1.0.0|RSSTimeFormatter=1.12.0|Shabby=0.3.0|ShipManifest=6.0.8|SMInterface=6.0.3|CLSInterfaces=2.0.1|SmokeScreen=2.8.14|KSPSteamCtrlr=0.0.1|StagedAnimation=1.0.0|SXTContinued=0.3.29|TestFlightAPI=2.2.0|TestFlight=2.2.0|TestFlightContracts=2.2.0|TestFlightCore=2.2.0|TextureReplacer=4.5.3|Waterfall=0.0.0|Kerbalism=3.17.0
+_modVersions = Scale_Redist=3.3.2|ModuleManager=4.2.3|ClickThroughBlocker=2.1.10|0Harmony=2.2.1|HarmonyInstallChecker=2.2.1|Unity.Burst.Unsafe=1.0.0|Unity.Mathematics=1.0.0|Microsoft.Extensions.FileSystemGlobbing=6.0.21|System.IO.Compression=4.6.57|System.Runtime.CompilerServices.Unsafe=4.700.20|System.Runtime=4.0.0|Unity.Burst=1.7.4|System.IO.Compression.FileSystem=4.6.57|Unity.Collections=0.8.0|Unity.Jobs=0.2.9|KSPBurst=1.7.4|SerializationFix=1.0.1|BlendshapeModelLoader=1.6.4|TexturesUnlimited=1.6.4|ToolbarControl=0.1.9|SolverEngines=3.15.0|AJE=2.20.0|AtmosphereAutopilot.UI=1.0.0|AtmosphereAutopilot=1.6.1|B9PartSwitch=2.21.0|B9-PWings-Fork=0.46.1|BDAnimationModules=0.6.7|RNModules=1.2.1|BetterTimeWarpCont=2.3.14|CCK=5.1.0|Shabby=0.4.2|ConformalDecals=0.4.2|Unity.TextMeshPro=2.1.6|ContractConfigurator=2.13.4|CustomBarnKit=1.1.22|DeployableEngines=2.2.0|DepthMask=1.1.3|EditorExtensionsRedux=3.4.7|EngineGroupController=1.0.0|UnityGUIFramework=1.0.0|FerramAerospaceResearch.Base=0.16.2|ModularFlightIntegrator=1.2.10|0_MultipleModuleInPartAPI=1.0.0|KSPCommunityFixes=1.41.1|FerramAerospaceResearch=0.16.2|ferramGraph=1.3.0|Firespitter=7.3.7660|HangerExtenderExtended=3.6.1|KerbalChangelog=1.4.2|Kerbalism=3.43.0|KerbalJointReinforcement=3.8.7|Renamer=1.7.0|Kopernicus.Parser=1.0.0|KSPTextureLoader.Burst=0.0.0|SharpDX=4.2.0|SharpDX.Direct3D11=4.2.0|SharpDX.DXGI=4.2.0|KSPTextureLoader=1.0.38|Kopernicus=1.12.251|KSCSwitcher=2.2.0|KSPWheel=0.0.0|alglib=1.0.0|MechJeb2=2.16.0|MechJeb2.UI=1.0.0|MechJebLib=1.0.0|MechJebLibBindings=1.0.0|PatchManager=0.0.17|ROUtils=1.2.0|ProceduralFairings=6.8.0|ProceduralParts=2.8.0|RCSBuildAid=1.0.6|RealAntennas=2.12.0|RealChute=1.4.9059|RealFuels=15.16.1|RealHeat=5.1.0|RealismOverhaul=18.0.0|ROInstallChecker=1.1.0|RealSolarSystem=20.1.3|Restock=1.0.0|RetractableLiftingSurface=0.2.1|ROLib=2.1.0|ROEngines=2.16.1|ROHeatshields=1.3.0|RP0=4.8.1|CC_RP0=1.11.0|ClearInputLocks=1.0.0|RP0InstallChecker=1.0.0|RSSTimeFormatter=1.12.0|Telecom=1.0.0|SmokeScreen=2.8.14|FARShuttleAerodynamicModel=1.0.0|OcclusionHeat=1.0.0|KSPSteamCtrlr=0.0.1|StagedAnimation=1.0.0|HabUtils=1.0.0|StockAlarmClockDisabler=1.0.0|SXTContinued=0.3.31|TestFlightAPI=2.2.0|TestFlight=2.2.0|TestFlightContracts=2.2.0|TestFlightCore=2.2.0|TextureReplacer=4.5.3|KerbalAlarmClock=3.14.2|TransferWindowPlanner=1.9.1|Waterfall=0.11.0
 PART
 {
 	part = RO-FighterInlineCockpit_4292881796
@@ -36,8 +36,8 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 126.400002
-	modMass = 0.260697722
+	modCost = 83
+	modMass = 0.255655944
 	modSize = 0,0,0
 	link = RO-RFTank-Separate_4293031808
 	link = RO-RFTank-Separate_4292620046
@@ -144,6 +144,7 @@ PART
 		volume = 500
 		mass = 0.92038399
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 4.8359757244201074
 		stagingEnabled = True
 		EVENTS
 		{
@@ -176,7 +177,7 @@ PART
 			note = 
 			utilization = 200
 			mass = 0.000280000007
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -195,7 +196,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0.000280000007
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -210,11 +211,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
@@ -353,6 +349,11 @@ PART
 		}
 		ACTIONS
 		{
+			Action
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
 		}
 		UPGRADESAPPLIED
 		{
@@ -411,6 +412,7 @@ PART
 		name = ProcessController
 		isEnabled = True
 		running = True
+		broken = False
 		stagingEnabled = True
 		persistentValveIndex = 0
 		EVENTS
@@ -532,32 +534,175 @@ PART
 		}
 		MechJebLocalSettings
 		{
+			VesselState
+			{
+				LaunchTime = -1
+				unlockParts = 
+				unlockTechs = 
+			}
 			MechJebModuleMenu
 			{
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleRoverWindow
+			MechJebModuleAscentClassicAutopilot
 			{
 				unlockParts = 
-				unlockTechs = start
+				unlockTechs = 
+			}
+			MechJebModuleAscentClassicPathMenu
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentMenu
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentPSGAutopilot
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentPSGSettingsMenu
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentSettings
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentSettingsMenu
+			{
+				unlockParts = 
+				unlockTechs = 
 			}
 			MechJebModuleAttitudeAdjustment
 			{
 				unlockParts = 
 				unlockTechs = start
 			}
-			MechJebModuleAscentNavBall
+			MechJebModuleCustomWindowEditor
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleDebugArrows
 			{
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleLogicalStageTracking
+			MechJebModuleDockingAutopilot
+			{
+				forceRol = False
+				overrideSafeDistance = False
+				overrideTargetSize = False
+				unlockParts = 
+				unlockTechs = 
+				rol
+				{
+					ValConfig = 0
+					TextConfig = 0
+				}
+			}
+			MechJebModuleDockingGuidance
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleGuidanceController
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleHoverslamAutopilot
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleHoverslamSimulation
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleInfoItems
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleLandingAutopilot
+			{
+				DeployGears = True
+				DeployChutes = True
+				RCSAdjustment = True
+				unlockParts = 
+				unlockTechs = 
+				TouchdownSpeed
+				{
+					ValConfig = 0.5
+					TextConfig = 0.5
+				}
+				LimitGearsStage
+				{
+					ValConfig = 0
+					TextConfig = 0
+				}
+				LimitChutesStage
+				{
+					ValConfig = 0
+					TextConfig = 0
+				}
+			}
+			MechJebModuleLandingGuidance
+			{
+				_landingSiteIdx = 0
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleLandingPredictions
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleManeuverPlanner
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleNodeEditor
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleNodeExecutor
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModulePSGSimulation
 			{
 				unlockParts = 
 				unlockTechs = 
 			}
 			MechJebModuleRCSBalancerWindow
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleRendezvousAutopilot
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleRendezvousAutopilotWindow
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleRendezvousGuidance
 			{
 				unlockParts = 
 				unlockTechs = start
@@ -575,179 +720,21 @@ PART
 				unlockTechs = 
 				heading
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				speed
 				{
-					_val = 10
-					_text = 10
+					ValConfig = 10
+					TextConfig = 10
 				}
 			}
-			MechJebModuleSpaceplaneGuidance
-			{
-				runwayIndex = 0
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleAscentPVG
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleInfoItems
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleSmartRcs
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleAscentClassic
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleSpaceplaneAutopilot
-			{
-				bBreakAsSoonAsLanded = False
-				unlockParts = 
-				unlockTechs = 
-				glideslope
-				{
-					_val = 2.5
-					_text = 2.5
-				}
-				approachSpeed
-				{
-					_val = 80
-					_text = 80
-				}
-				touchdownSpeed
-				{
-					_val = 60
-					_text = 60
-				}
-				maximumSafeBankAngle
-				{
-					_val = 25
-					_text = 25
-				}
-			}
-			MechJebModuleAirplaneAutopilot
-			{
-				HeadingHoldEnabled = False
-				AltitudeHoldEnabled = False
-				VertSpeedHoldEnabled = False
-				RollHoldEnabled = False
-				SpeedHoldEnabled = False
-				AltitudeTarget = 0
-				HeadingTarget = 90
-				RollTarget = 0
-				SpeedTarget = 0
-				VertSpeedTarget = 0
-				BankAngle = 30
-				unlockParts = 
-				unlockTechs = 
-				AccKp
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				AccKi
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				AccKd
-				{
-					_val = 0.0050000000000000001
-					_text = 0.005
-				}
-				PitKp
-				{
-					_val = 2
-					_text = 2
-				}
-				PitKi
-				{
-					_val = 1
-					_text = 1
-				}
-				PitKd
-				{
-					_val = 0.0050000000000000001
-					_text = 0.005
-				}
-				RolKp
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				RolKi
-				{
-					_val = 0.02
-					_text = 0.02
-				}
-				RolKd
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				YawKp
-				{
-					_val = 1
-					_text = 1
-				}
-				YawKi
-				{
-					_val = 0.25
-					_text = 0.25
-				}
-				YawKd
-				{
-					_val = 0.02
-					_text = 0.02
-				}
-				YawLimit
-				{
-					_val = 10
-					_text = 10
-				}
-				RollLimit
-				{
-					_val = 45
-					_text = 45
-				}
-				PitchDownLimit
-				{
-					_val = 15
-					_text = 15
-				}
-				PitchUpLimit
-				{
-					_val = 25
-					_text = 25
-				}
-			}
-			MechJebModuleDockingGuidance
+			MechJebModuleRoverWindow
 			{
 				unlockParts = 
 				unlockTechs = start
 			}
 			MechJebModuleSettings
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleAscentGT
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleDebugArrows
 			{
 				unlockParts = 
 				unlockTechs = 
@@ -761,58 +748,66 @@ PART
 				forceRol = False
 				forcePitch = True
 				forceYaw = True
+				smoothControl = False
 				unlockParts = 
 				unlockTechs = start
 				srfHdg
 				{
-					_val = 90
-					_text = 90
+					ValConfig = 90
+					TextConfig = 90
 				}
 				srfPit
 				{
-					_val = 90
-					_text = 90
+					ValConfig = 90
+					TextConfig = 90
 				}
 				srfRol
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				srfVelYaw
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				srfVelPit
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				srfVelRol
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				rol
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
+				}
+				degreesPerSecond
+				{
+					ValConfig = 10
+					TextConfig = 10
 				}
 			}
-			MechJebModuleDockingAutopilot
+			MechJebModuleSmartRcs
 			{
-				forceRol = False
-				overrideSafeDistance = False
-				overrideTargetSize = False
 				unlockParts = 
 				unlockTechs = 
-				rol
-				{
-					_val = 0
-					_text = 0
-				}
 			}
-			ModExtensionDemo
+			MechJebModuleSpinupController
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleStageStats
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleTargetController
 			{
 				unlockParts = 
 				unlockTechs = 
@@ -823,103 +818,25 @@ PART
 				unlockParts = 
 				unlockTechs = start
 			}
-			MechJebModuleWarpHelper
-			{
-				unlockParts = 
-				unlockTechs = start
-				phaseAngle
-				{
-					_val = 0
-					_text = 0
-				}
-			}
-			MechJebModuleCustomWindowEditor
-			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleAscentAutopilot
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleRendezvousAutopilotWindow
-			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleNodeExecutor
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleNodeEditor
-			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleLandingAutopilot
-			{
-				deployGears = True
-				deployChutes = True
-				rcsAdjustment = True
-				unlockParts = 
-				unlockTechs = 
-				touchdownSpeed
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				limitGearsStage
-				{
-					val = 0
-					_text = 0
-				}
-				limitChutesStage
-				{
-					val = 0
-					_text = 0
-				}
-			}
-			MechJebModuleScript
-			{
-				minifiedGUI = False
-				selectedSlot = 0
-				selectedMemorySlotType = 0
-				activeSavepoint = -1
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleLandingGuidance
-			{
-				landingSiteIdx = 0
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleLandingPredictions
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
 			MechJebModuleTranslatron
 			{
 				unlockParts = 
 				unlockTechs = start
 				trans_spd
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 			}
-			MechJebModuleAscentGuidance
+			MechJebModuleWarpHelper
 			{
 				unlockParts = 
 				unlockTechs = start
-			}
-			MechJebModuleRendezvousAutopilot
-			{
-				unlockParts = 
-				unlockTechs = 
+				phaseAngle
+				{
+					ValConfig = 0
+					TextConfig = 0
+				}
 			}
 			MechJebModuleWaypointWindow
 			{
@@ -931,41 +848,13 @@ PART
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleTargetController
+			ModExtensionDemo
 			{
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleManeuverPlanner
+			MechJebModuleCustomInfoWindow
 			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleStageStats
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleAirplaneGuidance
-			{
-				showpid = False
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleGuidanceController
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleRendezvousGuidance
-			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleAscentClassicMenu
-			{
-				unlockParts = 
-				unlockTechs = 
 			}
 			MechJebModuleCustomInfoWindow
 			{
@@ -1001,42 +890,42 @@ PART
 			}
 			MechJebModuleDeployableAntennaController
 			{
-				prev_shouldDeploy = False
+				PrevShouldDeploy = False
 				unlockParts = 
 				unlockTechs = 
 			}
 			MechJebModuleSolarPanelController
 			{
-				prev_shouldDeploy = False
+				PrevShouldDeploy = False
 				unlockParts = 
 				unlockTechs = 
 			}
 			MechJebModuleThrustController
 			{
-				limitThrottle = False
-				limiterMinThrottle = False
-				electricThrottle = False
+				LimitThrottle = False
+				LimiterMinThrottle = True
+				ElectricThrottle = False
 				unlockParts = 
 				unlockTechs = 
-				maxThrottle
+				MaxThrottle
 				{
-					_val = 1
-					_text = 100
+					ValConfig = 1
+					TextConfig = 100
 				}
-				minThrottle
+				MinThrottle
 				{
-					_val = 0.050000000000000003
-					_text = 5
+					ValConfig = 0.050000000000000003
+					TextConfig = 5
 				}
-				electricThrottleLo
+				ElectricThrottleLo
 				{
-					_val = 0.050000000000000003
-					_text = 5
+					ValConfig = 0.050000000000000003
+					TextConfig = 5
 				}
-				electricThrottleHi
+				ElectricThrottleHi
 				{
-					_val = 0.14999999999999999
-					_text = 15
+					ValConfig = 0.14999999999999999
+					TextConfig = 15
 				}
 			}
 			MechJebModuleRCSController
@@ -1045,23 +934,18 @@ PART
 				unlockTechs = 
 				Tf
 				{
-					_val = 1
-					_text = 1
+					ValConfig = 1
+					TextConfig = 1
 				}
 				Kp
 				{
-					_val = 0.125
-					_text = 0.125
+					ValConfig = 0.125
+					TextConfig = 0.125
 				}
 				Ki
 				{
-					_val = 0.070000000000000007
-					_text = 0.07
-				}
-				Kd
-				{
-					_val = 0.53000000000000003
-					_text = 0.53
+					ValConfig = 0.070000000000000007
+					TextConfig = 0.07
 				}
 			}
 			MechJebModuleRCSBalancer
@@ -1093,17 +977,17 @@ PART
 			}
 			MechJebModuleFlightRecorder
 			{
-				markUT = 0
-				deltaVExpended = 0
-				dragLosses = 0
-				gravityLosses = 0
-				steeringLosses = 0
-				markLAN = 0
-				markLatitude = 0
-				markLongitude = 0
-				markAltitude = 0
-				markBodyIndex = 1
-				maxDragGees = 0
+				MarkUT = 0
+				DeltaVExpended = 0
+				DragLosses = 0
+				GravityLosses = 0
+				SteeringLosses = 0
+				MarkLAN = 0
+				MarkLatitude = 0
+				MarkLongitude = 0
+				MarkAltitude = 0
+				MarkBodyIndex = 1
+				MaxDragGees = 0
 				unlockParts = 
 				unlockTechs = 
 			}
@@ -1119,32 +1003,22 @@ PART
 	}
 	MODULE
 	{
-		name = FlightEngineerModule
-		isEnabled = True
-		stagingEnabled = True
-		EVENTS
-		{
-		}
-		ACTIONS
-		{
-		}
-		UPGRADESAPPLIED
-		{
-		}
-	}
-	MODULE
-	{
 		name = HardDrive
 		isEnabled = True
 		hdId = 0
-		effectiveDataCapacity = -1
-		effectiveSampleCapacity = 1
+		effectiveDataCapacity = 1
+		effectiveSampleCapacity = 6
 		stagingEnabled = True
 		EVENTS
 		{
 		}
 		ACTIONS
 		{
+			TransferDataAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
 		}
 		UPGRADESAPPLIED
 		{
@@ -1382,6 +1256,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -1426,6 +1306,7 @@ PART
 	{
 		name = ModuleUnpressurizedCockpit
 		isEnabled = True
+		timeSinceHypoxiaStarted = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -1441,7 +1322,7 @@ PART
 	{
 		name = ModuleRealAntenna
 		isEnabled = True
-		_enabled = True
+		Condition = Enabled
 		TxPower = 30
 		TechLevel = 0
 		AMWTemp = 0
@@ -1456,6 +1337,11 @@ PART
 		}
 		ACTIONS
 		{
+			PermanentShutdownAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
 			StartTransmissionAction
 			{
 				actionGroup = None
@@ -1528,7 +1414,7 @@ PART
 		name = Atmosphere
 		amount = 2200
 		maxAmount = 2200
-		flowState = True
+		flowState = False
 		isTweakable = False
 		hideFlow = False
 		isVisible = False
@@ -1584,7 +1470,7 @@ PART
 	part = RO-RFTank-Separate_4293031808
 	partName = Part
 	persistentId = 1414155446
-	pos = -1.11022302E-15,10.0362635,4.22628593
+	pos = -1.11022302E-15,10.0362635,4.22628689
 	attPos = 0,0.596169233,0.0266550779
 	attPos0 = 0,2.97680044,-2.38418579E-07
 	rot = 0.707106948,0,0,0.707106709
@@ -1602,7 +1488,7 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 3.38488054
+	modCost = 264.840546
 	modMass = -0.618812203
 	modSize = 0,0,0
 	link = RO-RFTank-Separate_4292312776
@@ -1669,11 +1555,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Smooth Cone
-		moduleCost = 0.0214586314
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -1960,6 +1848,7 @@ PART
 		volume = 1681.7109
 		mass = 0.381187797
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 8.2847136627816589
 		stagingEnabled = True
 		EVENTS
 		{
@@ -1969,25 +1858,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 250.050049
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -2019,7 +1918,7 @@ PART
 	part = RO-RFTank-Separate_4292312776
 	partName = Part
 	persistentId = 2565084512
-	pos = -0.034752164,9.5792141,5.68997431
+	pos = -0.034752164,9.5792141,5.68997622
 	attPos = 0.00306910463,0.836155057,0.87571758
 	attPos0 = -0.0333773084,0.627473831,-0.480321288
 	rot = 0.697619379,-1.47012624E-08,1.50984807E-08,0.716468632
@@ -2037,7 +1936,7 @@ PART
 	sepI = -1
 	attm = 1
 	sameVesselCollision = False
-	modCost = 0.00655638147
+	modCost = 13.1848869
 	modMass = -0.999725103
 	modSize = 0,0,0
 	link = RO-RFTank-Separate_4292312682
@@ -2104,11 +2003,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Cylinder
-		moduleCost = 3.75813033E-05
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -2395,6 +2296,7 @@ PART
 		volume = 3.2593999999999999
 		mass = 0.000274889171
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12037152893476771
 		stagingEnabled = True
 		EVENTS
 		{
@@ -2404,25 +2306,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 12.8718748
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -2454,7 +2366,7 @@ PART
 	part = RO-RFTank-Separate_4292312682
 	partName = Part
 	persistentId = 3002452155
-	pos = -0.0347522087,9.60720062,6.73961592
+	pos = -0.0347522087,9.60720062,6.73961782
 	attPos = 0,0,0
 	attPos0 = 1.11708198E-09,1.37500107,3.83705043E-07
 	rot = -0.697619319,5.55652679E-09,-2.19237322E-08,-0.716468692
@@ -2472,7 +2384,7 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 0.000109226363
+	modCost = 10.0370932
 	modMass = -0.99999541
 	modSize = 0,0,0
 	attN = top,Null_0_0|0.0500000007|0_0|1|0_0|0.0500000007|0_0|1|0
@@ -2537,11 +2449,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Cone
-		moduleCost = 6.26355074E-07
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -2828,6 +2742,7 @@ PART
 		volume = 0.054300000000000001
 		mass = 4.57951819E-06
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.10000000000000001
 		stagingEnabled = True
 		EVENTS
 		{
@@ -2837,25 +2752,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 10.0218763
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -2887,7 +2812,7 @@ PART
 	part = RO-shockConeIntakeMig_4292942954
 	partName = Part
 	persistentId = 1619384803
-	pos = -1.11022302E-15,10.0362625,5.65754843
+	pos = -1.11022302E-15,10.0362625,5.65755033
 	attPos = 0,0,0
 	attPos0 = 0,1.43125081,-1.00582838E-07
 	rot = 0.707106948,0,0,0.707106709
@@ -3093,7 +3018,7 @@ PART
 	part = RO-RFTank-Separate_4292620046
 	partName = Part
 	persistentId = 42983564
-	pos = -1.11022302E-15,10.0362635,-0.977334738
+	pos = -1.11022302E-15,10.0362635,-0.977335691
 	attPos = 0,0,0
 	attPos0 = 0,-3.47680044,4.76837158E-07
 	rot = 0.707106829,0,0,0.707106829
@@ -3111,7 +3036,7 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 2.89112353
+	modCost = 252.440674
 	modMass = -0.910384536
 	modSize = 0,0,0
 	link = RO-RFTank-Separate_4292608538
@@ -3176,11 +3101,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Smooth Cone
-		moduleCost = 0.097185649
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -3467,6 +3394,7 @@ PART
 		volume = 620.87509999999997
 		mass = 0.0896154642
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 3.9850601105883245
 		stagingEnabled = True
 		EVENTS
 		{
@@ -3480,7 +3408,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 5.99999985E-05
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -3495,25 +3423,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 247.800049
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -3556,7 +3494,7 @@ PART
 	part = RO-RFTank-Separate_4292608538
 	partName = Part
 	persistentId = 1345523656
-	pos = -1.11022302E-15,10.0362635,-3.12735176
+	pos = -1.11022302E-15,10.0362635,-3.12735367
 	attPos = 0,0,0
 	attPos0 = 0,-1.8750006,2.3841848E-07
 	rot = 0.707106829,0,0,0.707106829
@@ -3574,7 +3512,7 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 3.59250689
+	modCost = 259.172455
 	modMass = -0.226817012
 	modSize = 0,0,0
 	link = RO-R11F_4292622446
@@ -3641,11 +3579,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Smooth Cone
-		moduleCost = 0.147632018
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -3932,6 +3872,7 @@ PART
 		volume = 765.52769999999998
 		mass = 0.773182988
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 11.833268890283595
 		stagingEnabled = True
 		EVENTS
 		{
@@ -3945,7 +3886,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0.000159999996
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -3960,25 +3901,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 240.796875
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -4021,7 +3972,7 @@ PART
 	part = RO-R11F_4292622446
 	partName = Part
 	persistentId = 4209798846
-	pos = -1.11022302E-15,10.0362635,-5.02740145
+	pos = -1.11022302E-15,10.0362635,-5.02740526
 	attPos = 0,0,0
 	attPos0 = 0,-1.50000262,4.76836988E-07
 	rot = 0.707106829,0,0,0.707106829
@@ -4189,7 +4140,7 @@ PART
 	{
 		name = ModuleAJEJetAnimateAfterburner
 		isEnabled = True
-		animationState = 3.57867265E-08
+		animationState = 2.31068692E-10
 		stagingEnabled = True
 		EVENTS
 		{
@@ -4331,6 +4282,42 @@ PART
 	}
 	MODULE
 	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleWaterfallFX
+		isEnabled = True
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
 		name = ModuleShowInfo
 		isEnabled = True
 		stagingEnabled = True
@@ -4350,7 +4337,7 @@ PART
 	part = RO-B9ProcAMWing-Supersonic_4292427788
 	partName = Part
 	persistentId = 3375268931
-	pos = -0.391585529,10.0362635,-4.75061846
+	pos = -0.391585529,10.0362635,-4.75062227
 	attPos = 0.0783463717,0.171620131,1.70530257E-13
 	attPos0 = -0.469931901,-1.79486299,4.76836988E-07
 	rot = 3.09086019E-08,0.70710665,0.707107008,-3.09085948E-08
@@ -4671,7 +4658,7 @@ PART
 	part = RO-B9ProcAMWing-Supersonic_4292426472
 	partName = Part
 	persistentId = 3180946900
-	pos = 0.391585529,10.0362635,-4.75061655
+	pos = 0.391585529,10.0362635,-4.75062037
 	attPos = -0.0783463717,0.171622038,1.70530257E-13
 	attPos0 = 0.469931901,-1.79486299,4.76836988E-07
 	rot = -0.707106948,-1.42108547E-14,-6.18172464E-08,-0.707106709
@@ -4992,7 +4979,7 @@ PART
 	part = RO-B9ProcWing-Supersonic_4290974366
 	partName = Part
 	persistentId = 4254482025
-	pos = 3.91664834E-09,9.70781994,-3.86815834
+	pos = 3.91664834E-09,9.70781994,-3.86816025
 	attPos = 3.80141119E-09,-0.0298295021,-0.212496638
 	attPos0 = 0,-0.710926771,0.531276941
 	rot = 0.53474766,-0.46265018,-0.534747541,0.462649882
@@ -5266,11 +5253,12 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.35039999999999999
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.51783748116036854
 		stagingEnabled = True
 		EVENTS
 		{
@@ -5280,11 +5268,27 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
 		}
 	}
 	MODULE
@@ -5308,7 +5312,7 @@ PART
 	part = RO-RFTank-Separate_4292517710
 	partName = Part
 	persistentId = 4127829340
-	pos = -1.48259343E-08,10.7119427,-0.929642439
+	pos = -1.48259343E-08,10.7119427,-0.929643393
 	attPos = 3.56750292E-08,-0.838273406,0.22372508
 	attPos0 = -5.3122676E-08,0.885969758,-0.899404287
 	rot = -0.702118456,6.02645933E-09,6.17073947E-09,-0.712060273
@@ -5326,7 +5330,7 @@ PART
 	sepI = -1
 	attm = 1
 	sameVesselCollision = False
-	modCost = 1.11915815
+	modCost = 110.428383
 	modMass = -0.943669677
 	modSize = 0,0,0
 	link = RO-RFTank-Separate_4292517610
@@ -5392,11 +5396,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Smooth Cone
-		moduleCost = 0.0404919311
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -5683,6 +5689,7 @@ PART
 		volume = 239.70359999999999
 		mass = 0.0563303456
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 3.4373768771584401
 		stagingEnabled = True
 		EVENTS
 		{
@@ -5696,7 +5703,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 5.99999985E-05
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -5711,25 +5718,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 105.037514
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -5772,7 +5789,7 @@ PART
 	part = RO-RFTank-Separate_4292517610
 	partName = Part
 	persistentId = 1075173681
-	pos = -1.44064973E-08,10.7300196,0.370269239
+	pos = -1.44064973E-08,10.7300196,0.370268762
 	attPos = 0,0,0
 	attPos0 = -1.07969189E-14,1.375,0.000300995889
 	rot = 0.702404082,-4.2738332E-08,-4.23942446E-08,0.711778581
@@ -5790,7 +5807,7 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 0.167252913
+	modCost = 104.019226
 	modMass = -0.992244363
 	modSize = 0,0,0
 	attN = top,Null_0_0|0.25|0_0|1|0_0|0.25|0_0|1|0
@@ -5855,11 +5872,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Smooth Cone
-		moduleCost = 0.00106030877
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6146,6 +6165,7 @@ PART
 		volume = 83.096299999999999
 		mass = 0.00775565486
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 1.1155722653463644
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6155,25 +6175,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 102.637505
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -6205,7 +6235,7 @@ PART
 	part = RO-RFTank-Separate_4292517510
 	partName = Part
 	persistentId = 921721008
-	pos = -1.55517466E-08,10.6313858,-3.47810936
+	pos = -1.55517466E-08,10.6313858,-3.47811127
 	attPos = 1.45388712E-09,-0.772230387,-0.000271019759
 	attPos0 = 1.6556323E-10,-4,0.00160551118
 	rot = 0.691425323,9.2389589E-11,-8.88662963E-11,0.72244823
@@ -6223,7 +6253,7 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 0.580950618
+	modCost = 79.3397293
 	modMass = -0.973060846
 	modSize = 0,0,0
 	link = RO-RFTank-Separate_4292513290
@@ -6290,11 +6320,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Cone
-		moduleCost = 0.00368296751
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6581,6 +6613,7 @@ PART
 		volume = 288.63380000000001
 		mass = 0.0269391555
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 2.5586333306260309
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6590,25 +6623,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 73.6875
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -6640,7 +6683,7 @@ PART
 	part = RO-RFTank-Separate_4292513290
 	partName = Part
 	persistentId = 3642104570
-	pos = -1.60400315E-08,10.5387936,-5.57608843
+	pos = -1.60400315E-08,10.5387936,-5.57609224
 	attPos = 0,0,0
 	attPos0 = 3.09962056E-11,-5.37500334,0.000300461892
 	rot = -0.691135466,-3.73378803E-08,-3.55859022E-08,-0.72272557
@@ -6658,7 +6701,7 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 0.0621274635
+	modCost = 43.3907242
 	modMass = -0.997119069
 	modSize = 0,0,0
 	attN = top,RO-RFTank-Separate_4292517510_0|0.599999905|0_0|1|0_0|0.599999905|0_0|1|0
@@ -6723,11 +6766,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Smooth Cone
-		moduleCost = 0.0003938601
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -7014,6 +7059,7 @@ PART
 		volume = 30.866800000000001
 		mass = 0.00288090133
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.57646239397578669
 		stagingEnabled = True
 		EVENTS
 		{
@@ -7023,25 +7069,35 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = RFTech-Tank-Sep-Al
-			upgrade = RFTech-Tank-Sep-Al2
-			upgrade = RFTech-Tank-Sep-AlCu
-			upgrade = RFTech-Tank-Sep-AlLi
-			upgrade = RFTech-Tank-Sep-Stir
-			upgrade = RFTech-Tank-Sep-Starship
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
 		}
 	}
 	MODULE
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 42.1875038
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -7073,7 +7129,7 @@ PART
 	part = RO-B9ProcWing-Supersonic_4292404824
 	partName = Part
 	persistentId = 1094696352
-	pos = -3.26188854E-08,10.6471233,-4.03628922
+	pos = -3.26188854E-08,10.6471233,-4.03629112
 	attPos = -3.95895761E-09,0.308945239,0.108097121
 	attPos0 = -1.29650832E-08,-0.865897477,-0.148302644
 	rot = 0.495638579,0.504324019,0.495638579,0.504324019
@@ -7348,11 +7404,12 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 1.6364000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 1.446806363960683
 		stagingEnabled = True
 		EVENTS
 		{
@@ -7362,11 +7419,27 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
 		}
 	}
 	MODULE
@@ -7390,7 +7463,7 @@ PART
 	part = RO-B9ProcWing-Supersonic_4292420052
 	partName = Part
 	persistentId = 3936274647
-	pos = -1.51946068E-07,10.989109,-4.49696159
+	pos = -1.51946068E-07,10.989109,-4.4969635
 	attPos = -0.101023287,0.236929655,0
 	attPos0 = 0.450958788,-0.691577017,-8.94069672E-08
 	rot = 0.495638579,0.504324019,0.495638579,0.504324019
@@ -7665,11 +7738,12 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 2.3774000000000002
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 1.8558901721909145
 		stagingEnabled = True
 		EVENTS
 		{
@@ -7679,11 +7753,27 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
 		}
 	}
 	MODULE
@@ -7707,7 +7797,7 @@ PART
 	part = RO-B9ProcCS-Supersonic_4292396156
 	partName = Part
 	persistentId = 1320352264
-	pos = -1.52326891E-07,11.7652149,-5.98429346
+	pos = -1.52326891E-07,11.7652149,-5.98429728
 	attPos = 0.0441426635,0.0619760752,1.56319402E-13
 	attPos0 = 0.757673323,-1.53558838,8.94068108E-08
 	rot = 0.291255593,-0.644337237,-0.291256189,0.644336998
@@ -8010,7 +8100,7 @@ PART
 	part = RO-B9ProcWing-Supersonic_4292589862
 	partName = Part
 	persistentId = 948475372
-	pos = 0.0262931287,10.0362635,-0.256877899
+	pos = 0.0262931287,10.0362635,-0.256878853
 	attPos = -0.668544531,-0.0214055777,1.1920929E-07
 	attPos0 = 0.69483763,-1.48493803,1.1920929E-07
 	rot = -0.702873647,-4.32698215E-08,1.2655569E-07,-0.711314857
@@ -8079,11 +8169,13 @@ PART
 		ResourcesEnableFlow
 		{
 			actionGroup = None
+			active = False
 			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
+			active = False
 			wasActiveBeforePartWasAdjusted = False
 		}
 	}
@@ -8286,11 +8378,12 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 70
 		volume = 611.91269999999997
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 4.4212497080264344
 		stagingEnabled = True
 		EVENTS
 		{
@@ -8303,8 +8396,8 @@ PART
 			name = Kerosene
 			note = 
 			utilization = 1
-			mass = 1.20000004E-05
-			cost = 0.00249999994
+			mass = 3.9999999E-05
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -8319,11 +8412,27 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
 		}
 	}
 	MODULE
@@ -8358,7 +8467,7 @@ PART
 	part = RO-B9ProcCS-Supersonic_4292279662
 	partName = Part
 	persistentId = 957473060
-	pos = 2.81198072,10.0043259,-2.9317131
+	pos = 2.81198072,10.0043259,-2.93171501
 	attPos = 0,0,0
 	attPos0 = 2.7856853,-2.67500281,-4.75974275E-07
 	rot = 0.702873051,5.45750822E-08,-1.15384594E-07,0.711315453
@@ -8662,7 +8771,7 @@ PART
 	part = RO-B9ProcCS-Supersonic_4292272290
 	partName = Part
 	persistentId = 1748071324
-	pos = 3.46843672,10.0043259,-2.93171597
+	pos = 3.46843672,10.0043259,-2.93171787
 	attPos = -0.035954237,-1.43051147E-06,1.14459908E-09
 	attPos0 = 3.47808933,-2.67500281,-4.97983365E-07
 	rot = 0.702873051,5.45750822E-08,-1.15384594E-07,0.711315453
@@ -8966,7 +9075,7 @@ PART
 	part = RO-B9ProcCS-Supersonic_4292271520
 	partName = Part
 	persistentId = 2506236398
-	pos = 1.43987751,10.0043259,-2.93171406
+	pos = 1.43987751,10.0043259,-2.93171597
 	attPos = -0.021871686,-2.33650208E-05,5.23868039E-06
 	attPos0 = 1.43545663,-2.67500234,-4.33055675E-07
 	rot = 0.702873051,5.45750432E-08,-1.15384537E-07,0.711315453
@@ -9270,7 +9379,7 @@ PART
 	part = RO-B9ProcWing-Supersonic_4292656450
 	partName = Part
 	persistentId = 3281695794
-	pos = -0.0262931287,10.0362635,-0.256877422
+	pos = -0.0262931287,10.0362635,-0.256878376
 	attPos = 0.668544531,-0.0214061737,1.1920929E-07
 	attPos0 = -0.69483763,-1.48493791,1.1920929E-07
 	rot = 1.57279231E-07,-0.711315036,-0.702873468,-1.21772885E-08
@@ -9546,11 +9655,12 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 70
 		volume = 611.91269999999997
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 4.4212497080264344
 		stagingEnabled = True
 		EVENTS
 		{
@@ -9563,8 +9673,8 @@ PART
 			name = Kerosene
 			note = 
 			utilization = 1
-			mass = 1.20000004E-05
-			cost = 0.00249999994
+			mass = 3.9999999E-05
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -9579,11 +9689,27 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = MLI.Upgrade1
-			upgrade = MLI.Upgrade2
-			upgrade = MLI.Upgrade3
-			upgrade = MLI.Upgrade4
-			upgrade = MLI.Upgrade5
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
 		}
 	}
 	MODULE
@@ -9618,10 +9744,10 @@ PART
 	part = RO-B9ProcCS-Supersonic_4292656316
 	partName = Part
 	persistentId = 3648665685
-	pos = -2.81198072,10.0043259,-2.93171215
+	pos = -2.81198072,10.0043259,-2.93171406
 	attPos = 3.09944153E-06,-2.0980835E-05,-2.35152106E-06
 	attPos0 = 2.7856853,-2.67500281,-4.75974275E-07
-	rot = -0.702872992,5.45750325E-08,-1.15384545E-07,-0.711315513
+	rot = -0.702872992,5.45750218E-08,-1.15384509E-07,-0.711315513
 	attRot = 0,0,0,1
 	attRot0 = 5.96046391E-07,-1.58932227E-08,6.21724809E-15,-1
 	mir = 1,1,1
@@ -9922,10 +10048,10 @@ PART
 	part = RO-B9ProcCS-Supersonic_4292656232
 	partName = Part
 	persistentId = 4187449771
-	pos = -3.46843672,10.0043259,-2.93171501
+	pos = -3.46843672,10.0043259,-2.93171692
 	attPos = -0.035954237,-1.43051147E-06,1.14459908E-09
 	attPos0 = 3.47808933,-2.67500281,-4.97983365E-07
-	rot = -0.702872992,5.45750325E-08,-1.15384545E-07,-0.711315513
+	rot = -0.702872992,5.45750218E-08,-1.15384509E-07,-0.711315513
 	attRot = 0,0,0,1
 	attRot0 = 5.96046391E-07,-1.58932227E-08,6.21724809E-15,-1
 	mir = 1,1,1
@@ -10226,10 +10352,10 @@ PART
 	part = RO-B9ProcCS-Supersonic_4292656148
 	partName = Part
 	persistentId = 3835593481
-	pos = -1.43987751,10.0043259,-2.9317131
+	pos = -1.43987751,10.0043259,-2.93171501
 	attPos = -0.021871686,-2.28881836E-05,-2.66266056E-06
 	attPos0 = 1.43545663,-2.67500234,-4.33055675E-07
-	rot = -0.702872992,5.45750325E-08,-1.15384545E-07,-0.711315513
+	rot = -0.702872992,5.45750218E-08,-1.15384509E-07,-0.711315513
 	attRot = 0,0,0,1
 	attRot0 = 5.96046391E-07,-1.58932227E-08,6.21724809E-15,-1
 	mir = 1,1,1
@@ -10530,7 +10656,7 @@ PART
 	part = SmallGearBay_4292224640
 	partName = Part
 	persistentId = 2413796435
-	pos = -1.11022302E-15,9.62075996,3.09203005
+	pos = -1.11022302E-15,9.62075996,3.092031
 	attPos = 0,1.90734863E-06,-0.279065132
 	attPos0 = 0,1.84254718,0.694568396
 	rot = -1.04308128E-06,2.66453526E-15,-2.40277775E-09,1.00000012
@@ -11046,7 +11172,7 @@ PART
 	part = SmallGearBay_4292218352
 	partName = Part
 	persistentId = 1226523720
-	pos = -0.601867259,9.95903301,-0.82446909
+	pos = -0.601867259,9.95903301,-0.824470043
 	attPos = 0.0736817718,-0.269978166,-0.103782654
 	attPos0 = -0.67554903,-1.80396378,0.181013346
 	rot = -0.00744509697,0.0106327534,-0.173633516,0.984724939
@@ -11563,7 +11689,7 @@ PART
 	part = SmallGearBay_4292613336
 	partName = Part
 	persistentId = 94553609
-	pos = 0.601867259,9.95903301,-0.824468613
+	pos = 0.601867259,9.95903301,-0.824469566
 	attPos = -0.0736817718,-0.26997757,-0.103782654
 	attPos0 = 0.67554903,-1.8039639,0.181013346
 	rot = -0.00744509697,-0.0106327459,0.173633516,0.984724939
@@ -12056,7 +12182,7 @@ PART
 	part = RO-B9ProcCS-Supersonic_4290725548
 	partName = Part
 	persistentId = 1187745830
-	pos = -0.35475415,9.46379948,2.17200398
+	pos = -0.35475415,9.46379948,2.17200446
 	attPos = -0.00622197986,4.76837158E-07,-0.031211853
 	attPos0 = -0.34853217,0.922528028,0.603675783
 	rot = 0.68301326,-0.183012873,0.183012515,-0.683012187
@@ -12360,7 +12486,7 @@ PART
 	part = RO-B9ProcCS-Supersonic_4290725438
 	partName = Part
 	persistentId = 3428722030
-	pos = 0.35475415,9.46379948,2.17200422
+	pos = 0.35475415,9.46379948,2.1720047
 	attPos = 0.00622197986,7.15255737E-07,-0.031211853
 	attPos0 = 0.34853217,0.922528028,0.603675783
 	rot = -0.683013439,-0.183012843,0.183012486,0.683012247
@@ -12664,7 +12790,7 @@ PART
 	part = RO-B9ProcCS-Supersonic_4290728016
 	partName = Part
 	persistentId = 247584956
-	pos = -0.351556003,9.46532917,2.16799808
+	pos = -0.351556003,9.46532917,2.16799855
 	attPos = -0.00432518125,0.00508928299,-0.0304870605
 	attPos0 = -0.347230822,0.913433313,0.601421297
 	rot = -0.683012247,0.18301256,0.183012858,-0.683013201
@@ -12968,7 +13094,7 @@ PART
 	part = RO-B9ProcCS-Supersonic_4290722326
 	partName = Part
 	persistentId = 2571109481
-	pos = 0.351556003,9.46532917,2.16799831
+	pos = 0.351556003,9.46532917,2.16799879
 	attPos = 0.00432518125,0.00508952141,-0.0304870605
 	attPos0 = 0.347230822,0.913433313,0.601421297
 	rot = 0.683012307,0.18301253,0.183012858,0.683013141

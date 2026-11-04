@@ -99,9 +99,12 @@ namespace RP0.ProceduralAvionics
             var maxControllableMass = GetMaximumControllableMass();
             if (controllableMass > maxControllableMass * FloatTolerance)
             {
-                // Round down to the PAW slider precision. The slider rounds to nearest when the PAW gets rebuilt.
+                // In the editor, round down to the PAW slider precision. The slider rounds to nearest when the PAW gets rebuilt.
                 // A value that gets rounded above the limit would be clamped again, which rebuilds the PAW again, every frame.
-                float newMass = FloorToPrecision(maxControllableMass, GetSliderIncrement(GetControllableMassSliderMax()));
+                // There is no slider outside the editor, so keep the exact limit there.
+                float newMass = HighLogic.LoadedSceneIsEditor
+                    ? FloorToPrecision(maxControllableMass, GetSliderIncrement(GetControllableMassSliderMax()))
+                    : maxControllableMass;
                 Log($"Resetting procedural mass limit to {newMass}, was {controllableMass}");
                 controllableMass = newMass;
                 UpdateControllableMassInWindow();
@@ -321,7 +324,12 @@ namespace RP0.ProceduralAvionics
             return Mathf.Ceil(value / smallIncrement) * smallIncrement;
         }
 
-        private float FloorToPrecision(float value, float precision) => Mathf.Floor(value / precision) * precision;
+        /// <summary>
+        /// Rounds value down to a whole multiple of precision.
+        /// The quotient is rounded to 3 decimals before flooring to remove float error, e.g. 16.3f / 0.1f gives 162.99998 instead of 163.
+        /// Controllable mass is kept to the nearest kg and precision is at least 0.001, so the exact quotient never has more than 3 decimals.
+        /// </summary>
+        private float FloorToPrecision(float value, float precision) => (float)(Math.Floor(Math.Round((double)value / precision, 3)) * precision);
 
         private float GetControllableMassSliderMax() => Mathf.Max(GetMaximumControllableMass() * 1.25f, 0.01f);
 

@@ -76,7 +76,7 @@ namespace RP0
                 excessTime = AddProgress(bR * UTDiff) / bR;
             }
 
-            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.KSCUpgradeTimes)
+            if (IsComplete() || !SCMSaveSettings.Instance.KSCUpgradeTimes)
             {
                 ProcessComplete();
             }

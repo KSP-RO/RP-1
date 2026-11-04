@@ -261,7 +261,7 @@ namespace RP0
                         continue;
                 }
 
-                Bounds[] bounds = GetPartRendererBounds(p);
+                Bounds[] bounds = PartGeometryUtil.GetPartRendererBounds(p);
                 Bounds b;
                 Bounds cb;
                 int jC = bounds.Length;
@@ -279,38 +279,6 @@ namespace RP0
 
             Profiler.EndSample();
             return craftBounds.size;
-        }
-
-        // Reimplemented from stock so we ignore disabled renderers.
-        public static Bounds[] GetPartRendererBounds(Part p)
-        {
-            List<MeshRenderer> mRenderers = p.FindModelComponents<MeshRenderer>();
-            List<SkinnedMeshRenderer> smRenderers = p.FindModelComponents<SkinnedMeshRenderer>();
-
-            for (int i = mRenderers.Count - 1; i >= 0; --i)
-            {
-                if (!mRenderers[i].enabled)
-                    mRenderers.RemoveAt(i);
-            }
-
-            for (int i = smRenderers.Count - 1; i >= 0; --i)
-            {
-                if (!smRenderers[i].enabled)
-                    smRenderers.RemoveAt(i);
-            }
-
-            Bounds[] bs = new Bounds[mRenderers.Count + smRenderers.Count];
-
-            int j = 0;
-            for (int i = 0; i < mRenderers.Count; ++i)
-            {
-                bs[j++] = mRenderers[i].bounds;
-            }
-            for (int i = 0; i < smRenderers.Count; ++i)
-            {
-                bs[j++] = smRenderers[i].bounds;
-            }
-            return bs;
         }
 
         public static double SpendFunds(double toSpend, TransactionReasons reason)

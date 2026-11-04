@@ -73,8 +73,7 @@ namespace RP0
         [Persistent]
         public double ResearcherIdleSalaryMult = 0.5;
         [Persistent]
-        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, EngineerIdleSalaryMult = 0.25, MergingTimePenalty = 0.05d,
-            EffectiveCostPerLiterPerResourceMult = 0.1d;
+        public double AdditionalPadCostMult = 0.5d, RushRateMult = 1.5d, RushSalaryMult = 2d, EngineerIdleSalaryMult = 0.25, MergingTimePenalty = 0.05d, PartAdditionTimePenalty = 1d, EffectiveCostPerLiterPerResourceMult = 0.1d;
         [Persistent]
         public HermiteCurve EngineerSkillupRate = new HermiteCurve();
         [Persistent]

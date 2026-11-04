@@ -3,7 +3,6 @@ using RealFuels.Tanks;
 using ROUtils;
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using UniLinq;
 using static RP0.ProceduralAvionics.ProceduralAvionicsUtils;
@@ -395,20 +394,31 @@ namespace RP0.ProceduralAvionics
 
                 if (shouldSeekVolume && pm.CanSeekVolume)
                 {
-                    pm.SetProcPartVolumeLimit();
-                    ApplyCorrectProcTankVolume(pm, rfPM, ecTank, 0, ecAmount);
+                    pm.UpdateTankWhilePreservingContents(() =>
+                    {
+                        pm.SetProcPartVolumeLimit();
+                        ApplyCorrectProcTankVolume(pm, rfPM, ecTank, 0, ecAmount);
+                        // The part won't fire a volume change event if its dimensions stayed the same
+                        pm.UpdateControllableMassSlider();
+                        pm.SendRemainingVolume();
+                    });
                 }
                 else
                 {
-                    bool isOverVolumeLimit = pm.ClampControllableMass();
-                    if (isOverVolumeLimit)
-                        pm.SetProcPartVolumeLimit();
+                    bool isOverVolumeLimit = false;
+                    pm.UpdateTankWhilePreservingContents(() =>
+                    {
+                        isOverVolumeLimit = pm.ClampControllableMass();
+                        if (isOverVolumeLimit)
+                            pm.SetProcPartVolumeLimit();
+
+                        pm.UpdateControllableMassSlider();
+                        pm.SendRemainingVolume();
+                    });
 
                     // ROTank probe cores do not support SeekVolume()
                     _showROTankSizeWarning = isOverVolumeLimit && shouldSeekVolume && !pm.CanSeekVolume;
                     _showSizeWarning = isOverVolumeLimit && !shouldSeekVolume;
-                    pm.UpdateControllableMassSlider();
-                    pm.SendRemainingVolume();
 
                     _shouldResetUIHeight = true;
 
@@ -420,15 +430,16 @@ namespace RP0.ProceduralAvionics
                     double m3MissingVol = m3MinVol - m3CurVol;
                     if (m3MissingVol > 1e-6)
                     {
-                        ecAmount = 1;    // Never remove the EC resource entirely
-                        double m3AvailVolForEC = m3AvailVol;
-                        if (m3AvailVolForEC > 0)
+                        float maxECAmount = 1;    // Never remove the EC resource entirely
+                        if (m3AvailVol > 0)
                         {
-                            ecAmount = GetECAmountForVolume(rfPM, ecTank, (float)m3AvailVolForEC);
+                            maxECAmount = Math.Max(GetECAmountForVolume(rfPM, ecTank, m3AvailVol), maxECAmount);
                         }
+                        ecAmount = Math.Min(ecAmount, maxECAmount);
                     }
                 }
 
+                pm.massLimit = pm.controllableMass;
                 Log($"Applying RF tank amount values to {ecAmount}, currently has {ecTank.amount}/{ecTank.maxAmount}, volume {rfPM.AvailableVolume}");
                 ecTank.maxAmount = ecAmount;
                 ecTank.amount = ecAmount;
@@ -463,7 +474,7 @@ namespace RP0.ProceduralAvionics
 
             float lVolStep3 = ecAmount / ecTank.utilization;
             float lVolStep2 = (lVolStep3 + extraVolumeLiters) / utilization;
-            lVolStep2 = Math.Max(lVolStep2, pm.CurrentProceduralAvionicsTechNode.reservedRFTankVolume);
+            lVolStep2 = Math.Max(lVolStep2, pm.CurrentProceduralAvionicsTechNode.reservedRFTankVolume * 1000);
             float m3VolStep2 = lVolStep2 / 1000;    // RF volumes are in liters but avionics uses m³
             float m3TotalVolume = Math.Max(avVolume + m3VolStep2, m3VolStep2);
             return m3TotalVolume;
@@ -529,9 +540,7 @@ namespace RP0.ProceduralAvionics
         private static void FetchRFModule(ModuleAvionics pm, out ModuleFuelTanks rfPM, out FuelTank ecTank)
         {
             rfPM = pm.part.FindModuleImplementing<ModuleFuelTanks>();
-            FieldInfo fiDict = typeof(ModuleFuelTanks).GetField("tanksDict", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
-            var tanksDict = (Dictionary<string, FuelTank>)fiDict.GetValue(rfPM);
-            ecTank = tanksDict["ElectricCharge"];
+            ecTank = GetTanks(rfPM)["ElectricCharge"];
         }
 
         private static string BoolToYesNoString(bool b) => b ? "Yes" : "No";

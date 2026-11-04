@@ -494,7 +494,9 @@ namespace RP0
         HiringResearchers = 1L << 3,
         Hiring = HiringEngineers | HiringResearchers,
 
-        Personnel = Salary | Crew | Hiring,
+        TransferringEngineers = 1L << 32,
+
+        Personnel = Salary | Crew | Hiring | TransferringEngineers,
 
         // unused bits: 0,1,7,8,12,19
 

@@ -99,9 +99,12 @@ namespace RP0.ProceduralAvionics
             var maxControllableMass = GetMaximumControllableMass();
             if (controllableMass > maxControllableMass * FloatTolerance)
             {
-                // Round down to the PAW slider precision. The slider rounds to nearest when the PAW gets rebuilt.
+                // In the editor, round down to the PAW slider precision. The slider rounds to nearest when the PAW gets rebuilt.
                 // A value that gets rounded above the limit would be clamped again, which rebuilds the PAW again, every frame.
-                float newMass = FloorToPrecision(maxControllableMass, GetSliderIncrement(GetControllableMassSliderMax()));
+                // There is no slider outside the editor, so keep the exact limit there.
+                float newMass = HighLogic.LoadedSceneIsEditor
+                    ? FloorToPrecision(maxControllableMass, GetSliderIncrement(GetControllableMassSliderMax()))
+                    : maxControllableMass;
                 Log($"Resetting procedural mass limit to {newMass}, was {controllableMass}");
                 controllableMass = newMass;
                 UpdateControllableMassInWindow();

@@ -1229,6 +1229,13 @@ namespace RP0
             {
                 foreach (PartModule pm in p.Modules)
                 {
+                    // Experiments installed through Kerbalism Configure setups can have entry costs
+                    if (pm is KERBALISM.Configure configure)
+                    {
+                        foreach (KERBALISM.ConfigureSetup setup in ECMHelper.GetSelectedSetups(configure))
+                            ecmPartsList.UnionWith(ECMHelper.GetEcmNamesFromConfigureSetup(configure, setup));
+                    }
+
                     var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType(), typeof(string).MakeByRefType() };
                     var mi = pm.GetType().GetMethod("Validate", BindingFlags.Instance | BindingFlags.Public, null, types, null);
                     if (mi != null)

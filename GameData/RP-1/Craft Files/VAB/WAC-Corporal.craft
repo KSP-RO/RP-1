@@ -1,5 +1,5 @@
 ship = WAC-Corporal
-version = 1.12.5
+version = 1.12.3
 description = American WAC-Corporal sounding rocket. Two-stage with booster and sustainer. Maximum altitude 80 km, no payload capacity.
 type = VAB
 size = 1.0714097,7.23516369,0.927868128

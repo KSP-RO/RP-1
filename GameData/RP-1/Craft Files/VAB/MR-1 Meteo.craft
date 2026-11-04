@@ -1,5 +1,5 @@
 ship = MR-1 Meteo
-version = 1.12.5
+version = 1.12.3
 description = Soviet MR-1 "Meteo" sounding rocket. Two-stage with booster and sustainer, with a unique hollow booster allowing the sustainer engine to fire through the center. Maximum altitude 95 km, with room for extra payload in the payload fairing.
 type = VAB
 size = 1.24396825,7.76987171,1.24396825

@@ -1,8 +1,8 @@
 ship = Jet Trainer
-version = 1.12.5
+version = 1.12.3
 description = Basic subsonic jet aircraft. 2 seater, very forgiving flight characteristics, if a bit twitchy at low speeds. Rotate at 35 m/s, liftoff at 45 m/s. Stall speed 40 m/s, max speed 270 m/s. AG 1 extends flaps, AG2 retracts them.
 type = SPH
-size = 9.62759495,4.30619431,10.5497379
+size = 9.6275959,4.30619431,10.5497398
 steamPublishedFileId = 0
 persistentId = 2008053834
 rot = 0,0,0,0
@@ -1316,7 +1316,7 @@ PART
 	part = RO-RFTank-Separate_4285178348
 	partName = Part
 	persistentId = 2164691614
-	pos = 0,10,-2.0268476
+	pos = 0,10,-2.02684855
 	attPos = 0,0,0
 	attPos0 = 0,-1.90180552,2.38418579E-07
 	rot = 0.707106829,0,0,0.707106829
@@ -1766,7 +1766,7 @@ PART
 	part = RO-DerwentV_4284977396
 	partName = Part
 	persistentId = 4108226054
-	pos = 0,10,-3.92685056
+	pos = 0,10,-3.92685151
 	attPos = 0,0.099998951,0
 	attPos0 = 0,-1.50000095,0
 	rot = 0.707106829,0,0,0.707106829
@@ -2095,7 +2095,7 @@ PART
 	part = RO-B9ProcWing-Early_4284896802
 	partName = Part
 	persistentId = 692474998
-	pos = 5.34655555E-08,10.3564062,-2.74495673
+	pos = 5.34655555E-08,10.3564062,-2.74495769
 	attPos = 6.17376728E-09,0.302760124,0.184548378
 	attPos0 = 4.72917883E-08,-1.02086926,-0.54095459
 	rot = 0.474662066,0.524114549,0.474661976,0.524114549
@@ -2372,7 +2372,7 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 1.1134999999999999
 		mass = 0
@@ -2431,7 +2431,7 @@ PART
 	part = RO-B9ProcWing-Early_4284893336
 	partName = Part
 	persistentId = 1668446048
-	pos = 5.4185719E-08,10.8058338,-2.78147674
+	pos = 5.4185719E-08,10.8058338,-2.78147769
 	attPos = -5.96046448E-08,0.256954998,0
 	attPos0 = 0.450837076,-0.248900071,0
 	rot = 0.474662006,0.524114609,0.474661827,0.524114668
@@ -2710,7 +2710,7 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 2.2959999999999998
 		mass = 0
@@ -2769,7 +2769,7 @@ PART
 	part = RO-B9ProcAMWing-Early_4284891596
 	partName = Part
 	persistentId = 275539326
-	pos = 0.037912678,11.6274109,-4.01765442
+	pos = 0.037912678,11.6274109,-4.01765537
 	attPos = 0,0,0
 	attPos0 = 0.93967396,-1.14897156,0.0379125476
 	rot = 0.707106829,0,0,0.707106829
@@ -3090,7 +3090,7 @@ PART
 	part = RO-B9ProcAMWing-Early_4284890824
 	partName = Part
 	persistentId = 3865467154
-	pos = -0.0379125364,11.6274109,-4.01765537
+	pos = -0.0379125364,11.6274109,-4.01765633
 	attPos = 0,0,0
 	attPos0 = 0.93967396,-1.14897156,-0.0379126593
 	rot = -6.3220277E-08,0.707106888,0.707106888,-6.3220277E-08
@@ -3411,7 +3411,7 @@ PART
 	part = RO-B9ProcCS-Early_4284889162
 	partName = Part
 	persistentId = 334785975
-	pos = -4.29861439E-06,11.6220112,-4.8910017
+	pos = -4.41782367E-06,11.6220112,-4.89100266
 	attPos = 0.059410274,-0.029150486,-5.67052894E-09
 	attPos0 = 0.961161792,-1.98942924,-1.82337345E-08
 	rot = 0.343880653,-0.617856145,-0.343880713,0.617856145
@@ -3714,7 +3714,7 @@ PART
 	part = RO-B9ProcWing-Early_4284930490
 	partName = Part
 	persistentId = 443390650
-	pos = 0.6198138,10,-0.558181524
+	pos = 0.6198138,10,-0.558182001
 	attPos = -0.00123500824,-0.151839733,0
 	attPos0 = 0.621048808,1.62048841,-2.38418579E-07
 	rot = -0.707101226,-0.00287563493,0.00287570013,-0.707100749
@@ -3991,12 +3991,12 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 50
 		volume = 382.00979999999998
 		mass = 0
 		_numberOfAddedMLILayers = 0
-		totalTankArea = 4.0416041655079775
+		totalTankArea = 4.041604405678429
 		stagingEnabled = True
 		EVENTS
 		{
@@ -4009,7 +4009,7 @@ PART
 			name = Kerosene
 			note = 
 			utilization = 1
-			mass = 1.20000004E-05
+			mass = 3.9999999E-05
 			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
@@ -4080,10 +4080,10 @@ PART
 	part = RO-B9ProcCS-Early_4284886384
 	partName = Part
 	persistentId = 2769860542
-	pos = 1.71991122,10,-1.62403798
+	pos = 1.7199111,10,-1.62403893
 	attPos = 0,0,0
 	attPos0 = 1.10872972,-1.05685461,1.40685898E-07
-	rot = 0.684486926,0.177421167,-0.177417472,0.684487045
+	rot = 0.684486926,0.177421182,-0.177417487,0.684487045
 	attRot = -0.707106709,0,0.707106709,0
 	attRot0 = -5.67735867E-07,2.5300094E-06,-0.246968821,0.969023466
 	mir = 1,1,1
@@ -4384,7 +4384,7 @@ PART
 	part = RO-B9ProcWing-Early_4284881870
 	partName = Part
 	persistentId = 2087821645
-	pos = -0.6198138,10,-0.558180809
+	pos = -0.6198138,10,-0.558181286
 	attPos = 0.00123500824,-0.151839137,0
 	attPos0 = -0.621048808,1.62048852,-2.38418579E-07
 	rot = -0.00287573063,0.707100928,0.707101047,0.00287560583
@@ -4454,11 +4454,13 @@ PART
 		ResourcesEnableFlow
 		{
 			actionGroup = None
+			active = False
 			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
+			active = False
 			wasActiveBeforePartWasAdjusted = False
 		}
 	}
@@ -4661,12 +4663,12 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 50
 		volume = 382.00979999999998
 		mass = 0
 		_numberOfAddedMLILayers = 0
-		totalTankArea = 4.0416041655079775
+		totalTankArea = 4.041604405678429
 		stagingEnabled = True
 		EVENTS
 		{
@@ -4679,7 +4681,7 @@ PART
 			name = Kerosene
 			note = 
 			utilization = 1
-			mass = 1.20000004E-05
+			mass = 3.9999999E-05
 			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
@@ -4750,7 +4752,7 @@ PART
 	part = RO-B9ProcCS-Early_4284881728
 	partName = Part
 	persistentId = 1792013694
-	pos = -1.71992409,10,-1.62403679
+	pos = -1.71992433,10,-1.62403774
 	attPos = 0,0,0
 	attPos0 = 1.10872972,-1.05685461,1.40685898E-07
 	rot = 0.684486985,-0.177420303,0.177416727,0.684487462
@@ -5054,7 +5056,7 @@ PART
 	part = RO-B9ProcCS-Early_4284880168
 	partName = Part
 	persistentId = 2862762582
-	pos = 3.68903112,9.99999905,-2.71882415
+	pos = 3.68903112,9.99999905,-2.7188251
 	attPos = -0.0150198936,0.00820469856,1.90770879E-06
 	attPos0 = 3.10170841,-2.14379191,-7.36166498E-07
 	rot = 0.684387982,0.177810341,-0.177726328,0.68440491
@@ -5358,7 +5360,7 @@ PART
 	part = RO-B9ProcCS-Early_4284879440
 	partName = Part
 	persistentId = 729265534
-	pos = -3.68906546,9.99999905,-2.71882367
+	pos = -3.68906641,9.99999905,-2.71882463
 	attPos = -0.0150196552,0.00820374489,-1.90900641E-06
 	attPos0 = 3.10170746,-2.14379215,1.00405703E-06
 	rot = 0.684387863,-0.177810371,0.177726388,0.684405029
@@ -5662,7 +5664,7 @@ PART
 	part = RO-B9ProcWing-Early_4284872344
 	partName = Part
 	persistentId = 3364333205
-	pos = 4.55553293,10.000001,-2.4502995
+	pos = 4.55553293,10.000001,-2.45030046
 	attPos = 2.38418579E-07,-0.0258442163,3.09029247E-09
 	attPos0 = 3.95097733,-1.83417952,-8.49101696E-07
 	rot = -0.707101226,-0.00287569896,0.00287572038,-0.707100749
@@ -5937,7 +5939,7 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.0848
 		mass = 0
@@ -5996,7 +5998,7 @@ PART
 	part = RO-B9ProcWing-Early_4284871428
 	partName = Part
 	persistentId = 3278516478
-	pos = -4.55556726,10.000001,-2.45029807
+	pos = -4.55556822,10.000001,-2.45029902
 	attPos = 2.38418579E-07,-0.0258454084,-3.09933057E-09
 	attPos0 = 3.95097589,-1.83417916,1.19065839E-06
 	rot = -0.00287575182,0.707100868,0.707101107,0.00287566986
@@ -6271,7 +6273,7 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.0848
 		mass = 0
@@ -6330,7 +6332,7 @@ PART
 	part = SmallGearBay_4284869142
 	partName = Part
 	persistentId = 538379538
-	pos = 3.59375557E-10,9.73827934,2.65224504
+	pos = 3.59375557E-10,9.73827934,2.65224528
 	attPos = 3.59375557E-10,-0.142576814,-0.362668097
 	attPos0 = 0,1.29482079,0.624388635
 	rot = 2.38418579E-07,-5.55111512E-17,-4.95461117E-10,1.00000012
@@ -6846,7 +6848,7 @@ PART
 	part = SmallGearBay_4284867358
 	partName = Part
 	persistentId = 1015259900
-	pos = -1.23562527,9.89099503,-1.21305728
+	pos = -1.23562551,9.89099503,-1.21305776
 	attPos = 0.414932966,-0.862997711,0.00734210759
 	attPos0 = 0.20618242,0.213151678,-0.116347142
 	rot = 3.63886356E-05,-0.00406664843,-0.00885728933,0.999952674
@@ -7363,7 +7365,7 @@ PART
 	part = SmallGearBay_4284866784
 	partName = Part
 	persistentId = 2602223270
-	pos = 1.23562336,9.89099503,-1.21305776
+	pos = 1.23562336,9.89099503,-1.21305823
 	attPos = 0.414933145,-0.862997413,-0.00734184682
 	attPos0 = 0.206182465,0.213151678,0.116347194
 	rot = 3.63886356E-05,0.00406664796,0.00885729305,0.999952674
@@ -7856,7 +7858,7 @@ PART
 	part = conformaldecals-flag_4283437564
 	partName = Part
 	persistentId = 3535041873
-	pos = -0.166302785,11.1032219,-3.97350574
+	pos = -0.166302785,11.1032219,-3.97350669
 	attPos = 0.0337226391,-0.349534035,-4.81307507E-06
 	attPos0 = 0.379964709,-0.807287216,-0.166297927
 	rot = 0,0.707107067,-2.08616257E-07,0.707106769
@@ -8013,7 +8015,7 @@ PART
 	part = conformaldecals-flag_4283436824
 	partName = Part
 	persistentId = 1291481655
-	pos = 0.166302934,11.1032219,-3.97350478
+	pos = 0.166302934,11.1032219,-3.97350574
 	attPos = 0.0337225199,-0.349533081,4.96208668E-06
 	attPos0 = 0.379964769,-0.807287216,0.166297987
 	rot = 0,-0.707106948,8.94069672E-08,0.707106769
@@ -8170,7 +8172,7 @@ PART
 	part = RO-B9ProcCS-Early_4284301122
 	partName = Part
 	persistentId = 755993849
-	pos = -0.0268109422,10.4329824,-4.2689991
+	pos = -0.0268109571,10.4329824,-4.26900005
 	attPos = 1.04308128E-07,-8.34465027E-07,-0.00549515337
 	attPos0 = 0.226752713,-1.50902271,-0.0213155299
 	rot = -0.459078491,0.539211214,0.469162285,-0.527622223
@@ -8474,7 +8476,7 @@ PART
 	part = RO-B9ProcCS-Early_4291682018
 	partName = Part
 	persistentId = 655667659
-	pos = 0.0268106777,10.4329824,-4.26900005
+	pos = 0.0268106628,10.4329824,-4.26900101
 	attPos = 1.93715096E-07,-1.78813934E-06,0.00549516827
 	attPos0 = 0.226752713,-1.50902271,0.0213157684
 	rot = 0.45907861,0.539211273,0.469162345,0.527621984
@@ -8778,7 +8780,7 @@ PART
 	part = RO-RFTank-Separate_4284924482
 	partName = Part
 	persistentId = 974930403
-	pos = 0,10,3.73466349
+	pos = 0,10,3.73466396
 	attPos = 0,0,0
 	attPos0 = 0,2.23466063,-2.38418579E-07
 	rot = 0.707106829,0,0,0.707106829
@@ -9283,7 +9285,7 @@ PART
 	part = miniIntake_4284926438
 	partName = Part
 	persistentId = 3625902299
-	pos = 0,10,4.23466396
+	pos = 0,10,4.23466444
 	attPos = 0,0,0
 	attPos0 = 0,0.500000358,0
 	rot = 0.707106829,0,0,0.707106829

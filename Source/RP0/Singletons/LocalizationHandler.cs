@@ -42,7 +42,7 @@ namespace RP0
                     continue;
                 }
 
-                if (PresetManager.Instance != null && PresetManager.Instance.ActivePreset != null)
+                if (SCMSaveSettings.IsLoaded)
                 {
                     if (up.name.StartsWith("rp0EngineerUpgrade"))
                     {
@@ -121,11 +121,6 @@ namespace RP0
             }
             else if (facilityType == SpaceCenterFacility.ResearchAndDevelopment)
             {
-                /*if (PresetManager.Instance != null)
-                {
-                    int limit = PresetManager.Instance.ActivePreset.GetResearcherCap(lvlIdx);
-                    lvl.levelStats.textBase += $"\n{Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit", (limit == -1 ? Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited") : limit.ToString("N0")))}";
-                }*/
                 lvl.levelStats.textBase = $"{Localizer.Format("#autoLOC_rp0_FacilityContextMenu_RnD")}\n{Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit", Localizer.Format("#rp0_FacilityContextMenu_RnD_ResearcherLimit_unlimited"))}";
             }
             else if (facilityType == SpaceCenterFacility.AstronautComplex)

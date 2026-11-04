@@ -321,7 +321,12 @@ namespace RP0.ProceduralAvionics
             return Mathf.Ceil(value / smallIncrement) * smallIncrement;
         }
 
-        private float FloorToPrecision(float value, float precision) => Mathf.Floor(value / precision) * precision;
+        /// <summary>
+        /// Rounds value down to a whole multiple of precision.
+        /// The quotient is rounded to 3 decimals before flooring to remove float error, e.g. 16.3f / 0.1f gives 162.99998 instead of 163.
+        /// Controllable mass is kept to the nearest kg and precision is at least 0.001, so the exact quotient never has more than 3 decimals.
+        /// </summary>
+        private float FloorToPrecision(float value, float precision) => (float)(Math.Floor(Math.Round((double)value / precision, 3)) * precision);
 
         private float GetControllableMassSliderMax() => Mathf.Max(GetMaximumControllableMass() * 1.25f, 0.01f);
 

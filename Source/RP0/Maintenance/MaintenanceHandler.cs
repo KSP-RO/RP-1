@@ -311,6 +311,24 @@ namespace RP0
             return LCUpkeep(lc, lc.LaunchPadCount);
         }
 
+        private bool TryGetFacilityDailyMaintenance(SpaceCenterFacility facility, int level, out double cost)
+        {
+            if (Database.FacilityYearlyMaintenance.TryGetValue(facility, out List<double> yearlyMaint))
+            {
+                cost = yearlyMaint[Math.Min(level, yearlyMaint.Count - 1)] / 365.25d;
+                return true;
+            }
+
+            if (Database.FacilityLevelCosts.TryGetValue(facility, out List<int> facCosts))
+            {
+                cost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, level));
+                return true;
+            }
+
+            cost = 0d;
+            return false;
+        }
+
         private double GetFacilityUpgradeRatio(SpaceCenterFacility facility)
         {
             foreach (var fac in SpaceCenterManagement.Instance.ActiveSC.FacilityUpgrades)
@@ -349,16 +367,14 @@ namespace RP0
                 if (Database.LockedFacilities.Contains(facility))
                     continue;
 
-                if (!Database.FacilityLevelCosts.TryGetValue(facility, out var facCosts))
+                int level = KCTUtilities.GetFacilityLevel(facility);
+                if (!TryGetFacilityDailyMaintenance(facility, level, out double cost))
                     continue;
 
-                double cost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, KCTUtilities.GetFacilityLevel(facility)));
                 double ratio = GetFacilityUpgradeRatio(facility);
-                if (ratio > 0d)
-                {
-                    double newCost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, 1 + KCTUtilities.GetFacilityLevel(facility)));
+                if (ratio > 0d && TryGetFacilityDailyMaintenance(facility, level + 1, out double newCost))
                     cost = UtilMath.LerpUnclamped(cost, newCost, ratio);
-                }
+
                 FacilityMaintenanceCosts[facility] = cost;
             }
 

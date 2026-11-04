@@ -1247,7 +1247,7 @@
         "engine_config": "N1_BlockA",
         "upgrade": false,
         "entry_cost_mods": "30x-NK-15",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Block A Engines",
         "module_tags": []
     },
     {
@@ -1270,7 +1270,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Interstage B/V",
         "module_tags": []
     },
     {
@@ -1293,7 +1293,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Interstage A/B",
         "module_tags": []
     },
     {
@@ -1340,7 +1340,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Block B Tank",
         "module_tags": []
     },
     {
@@ -1362,7 +1362,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Block V Tank",
         "module_tags": []
     },
     {
@@ -1384,7 +1384,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Block A Tank",
         "module_tags": []
     },
     {
@@ -2489,7 +2489,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "N1 Grid Fin",
         "module_tags": []
     },
     {

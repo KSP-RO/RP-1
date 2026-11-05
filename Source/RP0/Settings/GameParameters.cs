@@ -96,6 +96,9 @@ namespace RP0
         [GameParameters.CustomParameterUI("Make program complete alarm", toolTip = "When enabled, an alarm will be automatically created when a program is activated that shows when that program must be completed by to avoid penalties.")]
         public bool MakeAlarmProgramComplete = true;
 
+        [GameParameters.CustomIntParameterUI("Backup saves to keep", minValue = 0, maxValue = 20, gameMode = GameParameters.GameMode.CAREER, toolTip = "A backup save is made before each launch and before accepting a program. This is how many of each kind are kept. They are listed at the bottom of the Load Game dialog. Set to 0 to disable.")]
+        public int BackupSavesToKeep = 5;
+
         // The following values are persisted to the savegame but are not shown in the difficulty settings UI
         public int CommsPayload = ContractGUI.MinPayload;
         public int WeatherPayload = ContractGUI.MinPayload;

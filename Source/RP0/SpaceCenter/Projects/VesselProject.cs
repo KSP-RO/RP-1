@@ -555,6 +555,8 @@ namespace RP0
 
         public void Launch(bool fillFuel = false)
         {
+            BackupSaves.Create(BackupSaves.Kind.Launch, shipName);
+
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
             LaunchComplex lc = SpaceCenterManagement.Instance.FindLCFromID(_lcID);

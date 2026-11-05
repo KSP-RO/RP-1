@@ -24,7 +24,7 @@ namespace RP0.Harmony
             };
             __instance.SetHidden(hide: false);
             __instance.ClearListItems();
-            __instance.saves = __instance.saves.OrderByAlphaNumeric((LoadGameDialog.PlayerProfileInfo s) => s.name);
+            __instance.saves = SortSaves(__instance.saves, __instance.persistent);
             int count = __instance.saves.Count;
             for (int i = 0; i < count; i++)
             {
@@ -153,6 +153,21 @@ namespace RP0.Harmony
             __instance.StartCoroutine(__instance.LoadMenuNav());
 
             return false;
+        }
+
+        /// <summary>
+        /// Regular saves are sorted by name. RP-1 backup saves go to the bottom of the list, newest first.
+        /// </summary>
+        private static List<LoadGameDialog.PlayerProfileInfo> SortSaves(List<LoadGameDialog.PlayerProfileInfo> saves, bool isSaveFolderList)
+        {
+            if (isSaveFolderList)
+                return saves.OrderByAlphaNumeric(s => s.name);
+
+            var regular = saves.FindAll(s => !BackupSaves.IsBackupSave(s?.name)).OrderByAlphaNumeric(s => s.name);
+            var backups = saves.FindAll(s => BackupSaves.IsBackupSave(s?.name));
+            backups.Sort((a, b) => b.lastWriteTime.CompareTo(a.lastWriteTime));
+            regular.AddRange(backups);
+            return regular;
         }
     }
 }

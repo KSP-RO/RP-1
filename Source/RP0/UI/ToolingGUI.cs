@@ -318,7 +318,7 @@ namespace RP0
             => _groupTitles.TryGetValue(groupKey, out string t) ? t : ToolingManager.Instance.GetTitleForTooling(groupKey);
 
         private static bool IsServiceModuleTank(string t) => t == "ServiceModule" || t.StartsWith("SM-");
-        private static bool IsShieldedTank(string t)      => t == "TankShielded";
+        private static bool IsShieldedTank(string t)      => t.StartsWith("Tank-Shielded");
         private static bool IsCryoTank(string t)          => t == "Cryogenic" || t == "BalloonCryo";
         private static bool IsIsogridTank(string t)       => t.StartsWith("Tank-Iso-");
         private static bool IsBalloonTank(string t)       => t.StartsWith("Tank-Balloon-") || t == "Balloon";
@@ -368,7 +368,6 @@ namespace RP0
                 case "Balloon":
                 case "BalloonCryo":
                 case "ElectricPropulsion":
-                case "TankShielded":
                     return true;
                 default:
                     return false;

@@ -90,7 +90,20 @@ namespace RP0
                 return _efficiencySource;
             }
         }
-        public double Efficiency => EfficiencySource.Efficiency;
+        public double Efficiency
+        {
+            get
+            {
+                double efficiency = EfficiencySource.Efficiency;
+                if (LCType == LaunchComplexType.Hangar)
+                {
+                    double rocketPortion = Stats.GetHangarRocketPortion();
+                    efficiency = UtilMath.Lerp(LCEfficiency.MaxEfficiency, efficiency, rocketPortion);
+                }
+
+                return efficiency;
+            }
+        }
 
         public double RushRate => IsRushing ? Database.SettingsSC.RushRateMult : 1d;
         public double RushSalary => IsRushing ? Database.SettingsSC.RushSalaryMult : 1d;

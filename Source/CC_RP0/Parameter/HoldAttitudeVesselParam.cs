@@ -6,16 +6,16 @@ namespace ContractConfigurator.RP0
 {
     public class HoldAttitude : VesselParameter
     {
-        protected double targetPitch { get; set; }
         protected double targetHeading { get; set; }
+        protected double targetPitch { get; set; }
         protected double targetRoll { get; set; }
-        protected double pitchTolerance { get; set; }
         protected double headingTolerance { get; set; }
+        protected double pitchTolerance { get; set; }
         protected double rollTolerance { get; set; }
         protected float updateFrequency { get; set; }
 
-        protected double pitch { get; set; }
         protected double heading { get; set; }
+        protected double pitch { get; set; }
         protected double roll { get; set; }
 
         private float lastUpdate = 0f;
@@ -26,16 +26,16 @@ namespace ContractConfigurator.RP0
 
         public HoldAttitude() : base(null) { }
 
-        public HoldAttitude(string title, double targetPitch, double targetHeading, double targetRoll,
-            double pitchTolerance, double headingTolerance, double rollTolerance,
+        public HoldAttitude(string title, double targetHeading, double targetPitch, double targetRoll,
+            double headingTolerance, double pitchTolerance, double rollTolerance,
             float updateFrequency)
             : base(title)
         {
-            this.targetPitch = targetPitch;
             this.targetHeading = targetHeading;
+            this.targetPitch = targetPitch;
             this.targetRoll = targetRoll;
-            this.pitchTolerance = pitchTolerance;
             this.headingTolerance = headingTolerance;
+            this.pitchTolerance = pitchTolerance;
             this.rollTolerance = rollTolerance;
             this.updateFrequency = updateFrequency;
 
@@ -44,13 +44,13 @@ namespace ContractConfigurator.RP0
 
         protected void CreateDelegates()
         {
-            if (targetPitch != double.MaxValue)
-            {
-                AddParameter(new ParameterDelegate<Vessel>($"Pitch: {targetPitch:N0}°", v => AngleWithin(pitch, targetPitch, pitchTolerance)));
-            }
             if (targetHeading != double.MaxValue)
             {
                 AddParameter(new ParameterDelegate<Vessel>($"Heading: {targetHeading:N0}°", v => AngleWithin(heading, targetHeading, headingTolerance)));
+            }
+            if (targetPitch != double.MaxValue)
+            {
+                AddParameter(new ParameterDelegate<Vessel>($"Pitch: {targetPitch:N0}°", v => AngleWithin(pitch, targetPitch, pitchTolerance)));
             }
             if (targetRoll != double.MaxValue)
             {
@@ -61,20 +61,20 @@ namespace ContractConfigurator.RP0
         protected override void OnParameterSave(ConfigNode node)
         {
             base.OnParameterSave(node);
-            if (targetPitch != double.MaxValue)
-            {
-                node.AddValue("targetPitch", targetPitch);
-            }
             if (targetHeading != double.MaxValue)
             {
                 node.AddValue("targetHeading", targetHeading);
+            }
+            if (targetPitch != double.MaxValue)
+            {
+                node.AddValue("targetPitch", targetPitch);
             }
             if (targetRoll != double.MaxValue)
             {
                 node.AddValue("targetRoll", targetRoll);
             }
-            node.AddValue("pitchTolerance", pitchTolerance);
             node.AddValue("headingTolerance", headingTolerance);
+            node.AddValue("pitchTolerance", pitchTolerance);
             node.AddValue("rollTolerance", rollTolerance);
             node.AddValue("updateFrequency", updateFrequency);
         }
@@ -84,11 +84,11 @@ namespace ContractConfigurator.RP0
             try
             {
                 base.OnParameterLoad(node);
-                targetPitch = ConfigNodeUtil.ParseValue<double>(node, "targetPitch", DEFAULT_ANGLE);
                 targetHeading = ConfigNodeUtil.ParseValue<double>(node, "targetHeading", DEFAULT_ANGLE);
+                targetPitch = ConfigNodeUtil.ParseValue<double>(node, "targetPitch", DEFAULT_ANGLE);
                 targetRoll = ConfigNodeUtil.ParseValue<double>(node, "targetRoll", DEFAULT_ANGLE);
-                pitchTolerance = ConfigNodeUtil.ParseValue<double>(node, "pitchTolerance", DEFAULT_TOLERANCE);
                 headingTolerance = ConfigNodeUtil.ParseValue<double>(node, "headingTolerance", DEFAULT_TOLERANCE);
+                pitchTolerance = ConfigNodeUtil.ParseValue<double>(node, "pitchTolerance", DEFAULT_TOLERANCE);
                 rollTolerance = ConfigNodeUtil.ParseValue<double>(node, "rollTolerance", DEFAULT_TOLERANCE);
                 updateFrequency = ConfigNodeUtil.ParseValue<float>(node, "updateFrequency", DEFAULT_UPDATE_FREQUENCY);
 

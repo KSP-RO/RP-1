@@ -170,19 +170,10 @@ namespace RP0
 
             double efficiency = currentLC.Efficiency;
             double stratMult = currentLC.StrategyRateMultiplier;
-            const string HangarEfficTooltip = "The hangar has no specific efficiency, and instead uses the maximum possible efficiency at your current tech level.";
-            const string PadEfficTooltip = "LC efficiency increases as the LC is used, proportional to the number of engineers vs the max, and lowers only if the complex is modified. Efficiency will not increase if the LC is rushing.";
+            const string EfficTooltip = "LC efficiency increases as the LC is used, proportional to the number of engineers vs the max, and lowers only if the complex is modified. Efficiency will not increase if the LC is rushing.";
             GUILayout.BeginHorizontal();
-            if (currentLC.LCType == LaunchComplexType.Hangar)
-            {
-                GUILayout.Label(new GUIContent("Efficiency:", HangarEfficTooltip));
-                GUILayout.Label(new GUIContent(LCEfficiency.MaxEfficiency.ToString("P1"), HangarEfficTooltip), GetLabelRightAlignStyle());
-            }
-            else
-            {
-                GUILayout.Label(new GUIContent($"Efficiency: ({LCEfficiency.MinEfficiency:P0} - {LCEfficiency.MaxEfficiency:P0})", PadEfficTooltip));
-                GUILayout.Label(new GUIContent(efficiency.ToString("P1"), PadEfficTooltip), GetLabelRightAlignStyle());
-            }
+            GUILayout.Label(new GUIContent($"Efficiency: ({LCEfficiency.MinEfficiency:P0} - {LCEfficiency.MaxEfficiency:P0})", EfficTooltip));
+            GUILayout.Label(new GUIContent(efficiency.ToString("P1"), EfficTooltip), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             bool hasVessel = currentLC.CanIntegrate && currentLC.BuildList.Count > 0;

@@ -967,14 +967,7 @@ namespace RP0
 
                 if (lc.LCType == LaunchComplexType.Hangar)
                 {
-                    int maxCap = lc.BuildList.Count > 0 ? lc.MaxEngineersFor(lc.BuildList[0]) : 0;
-                    foreach (var rr in lc.Recon_Rollout)
-                    {
-                        if (rr.KeepsLCActive && !rr.IsComplete())
-                            maxCap = Math.Max(maxCap, lc.MaxEngineersFor(rr.mass, rr.vesselBP, rr.isHumanRated));
-                    }
-
-                    int working = Math.Min(lc.Engineers, maxCap);
+                    int working = GetHangarWorkingEngineers(lc);
                     return working * lc.RushSalary + (lc.Engineers - working) * Database.SettingsSC.EngineerIdleSalaryMult;
                 }
 
@@ -988,6 +981,21 @@ namespace RP0
             }
 
             return 0;
+        }
+
+        /// <summary>
+        /// SPH engineers are capped based on weight
+        /// </summary>
+        private static int GetHangarWorkingEngineers(LaunchComplex lc)
+        {
+            int maxCap = lc.BuildList.Count > 0 ? lc.MaxEngineersFor(lc.BuildList[0]) : 0;
+            foreach (var rr in lc.Recon_Rollout)
+            {
+                if (rr.KeepsLCActive && !rr.IsComplete())
+                    maxCap = Math.Max(maxCap, lc.MaxEngineersFor(rr.mass, rr.vesselBP, rr.isHumanRated));
+            }
+
+            return Math.Min(lc.Engineers, maxCap);
         }
 
         public double GetBudgetDelta(double deltaTime)
@@ -1999,7 +2007,8 @@ namespace RP0
         {
             if (currentLC.IsOperational && currentLC.Engineers > 0 && currentLC.IsActive)
             {
-                double portionEngineers = currentLC.Engineers / (double)currentLC.MaxEngineers;
+                int learningEngineers = currentLC.LCType == LaunchComplexType.Hangar ? GetHangarWorkingEngineers(currentLC) : currentLC.Engineers;
+                double portionEngineers = learningEngineers / (double)currentLC.MaxEngineers;
 
                 if (!currentLC.IsRushing)
                 {

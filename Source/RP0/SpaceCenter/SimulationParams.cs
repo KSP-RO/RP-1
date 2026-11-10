@@ -80,6 +80,11 @@ namespace RP0
         [Persistent]
         public int SimGroundStationTechLevel = -1;
 
+        [Persistent]
+        public double VesselMass; // tons
+        [Persistent]
+        public UnityEngine.Vector3 VesselSize; // size of sim vessel in editor
+
         public void Reset()
         {
             IsVesselMoved = false;

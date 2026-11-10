@@ -10,6 +10,8 @@ namespace RP0
         [Persistent]
         public Guid KSPVesselId = Guid.Empty;
         [Persistent]
+        public string CarrierName = string.Empty;
+        [Persistent]
         public double Altitude;
         [Persistent]
         public double KscAzimuth = 90d;
@@ -27,6 +29,7 @@ namespace RP0
             //KCTVesselId = src.KCTVesselId;
             //KSPVesselId = src.KSPVesselId;
 
+            CarrierName = src.CarrierName;
             Altitude = src.Altitude;
             KscAzimuth = src.KscAzimuth;
             LaunchAzimuth = src.LaunchAzimuth;
@@ -34,13 +37,17 @@ namespace RP0
             Velocity = src.Velocity;
         }
 
+        public AirlaunchTechLevel Carrier => AirlaunchTechLevel.GetByName(CarrierName);
+
+        /// <summary>
+        /// Validates the release parameters against the selected carrier's envelope - mass & size are checked earlier
+        /// </summary>
         public bool Validate(out string errorMsg)
         {
-            AirlaunchTechLevel lvl = SpaceCenterManagement.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
-                                                                    AirlaunchTechLevel.GetCurrentLevel();
+            AirlaunchTechLevel lvl = Carrier;
             if (lvl == null)
             {
-                errorMsg = "No valid airlaunch configuration found";
+                errorMsg = "No carrier aircraft selected";
                 return false;
             }
 

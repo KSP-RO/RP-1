@@ -210,6 +210,52 @@
         ]
     },
     {
+        "name": "fft-atmosphere-scoop-1",
+        "title": "PK-ATMO 'Hoover' Atmospheric Ramscoop",
+        "description": "",
+        "mod": "Far Future Technologies",
+        "cost": "27000",
+        "entry_cost": "0",
+        "category": "LS",
+        "info": "",
+        "year": "2051",
+        "technology": "colonization2051LifeSupport",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "Utilities",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    },
+    {
+        "name": "fft-exosphere-scoop-1",
+        "title": "PK-EXO 'Bussard' Particle Scoop",
+        "description": "",
+        "mod": "Far Future Technologies",
+        "cost": "34000",
+        "entry_cost": "0",
+        "category": "LS",
+        "info": "",
+        "year": "2051",
+        "technology": "colonization2051LifeSupport",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": true,
+        "spacecraft": "",
+        "engine_config": "",
+        "upgrade": false,
+        "entry_cost_mods": "Utilities",
+        "identical_part_name": "",
+        "module_tags": [
+            "Instruments"
+        ]
+    },
+    {
         "name": "fft-ffre-plasma-1",
         "title": "Dusty Plasma Afterburning Fission Fragment Rocket Engine",
         "description": "",

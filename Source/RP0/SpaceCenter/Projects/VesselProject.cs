@@ -8,8 +8,6 @@ using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
 using UnityEngine.Profiling;
-using static FinePrint.ContractDefs;
-using static UnityEngine.GraphicsBuffer;
 
 namespace RP0
 {

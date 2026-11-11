@@ -1,12 +1,15 @@
-﻿using KSP.UI;
+﻿using ContractConfigurator;
+using KSP.UI;
+using KSP.UI.Screens;
+using ROUtils;
+using ROUtils.DataTypes;
 using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
-using ROUtils.DataTypes;
 using UnityEngine.Profiling;
-using KSP.UI.Screens;
-using ROUtils;
+using static FinePrint.ContractDefs;
+using static UnityEngine.GraphicsBuffer;
 
 namespace RP0
 {
@@ -555,6 +558,16 @@ namespace RP0
 
         public void Launch(bool fillFuel = false)
         {
+            if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning && ConfiguredContract.ActiveContracts.Any(c => !c.AutoAccept))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog("NoActiveContractWarning", "", "No Active Contracts!", HighLogic.UISkin,
+                            new DialogGUILabel("You have no active contracts (excluding auto-accepted contracts). Are you sure you want to launch?"),
+                            new DialogGUIButton("Launch", () => { }),
+                            new DialogGUIButton("Cancel", () => { return; })
+                        ), false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
             LaunchComplex lc = SpaceCenterManagement.Instance.FindLCFromID(_lcID);

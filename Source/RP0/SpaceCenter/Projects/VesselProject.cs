@@ -554,18 +554,8 @@ namespace RP0
             return ShipNodeCompressed.GetAndUpgradeNode();
         }
 
-        public void Launch(bool fillFuel = false)
+        private void ConfirmLaunch(bool fillFuel)
         {
-            if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning && ConfiguredContract.ActiveContracts.Any(c => !c.AutoAccept))
-            {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                        new MultiOptionDialog("NoActiveContractWarning", "", "No Active Contracts!", HighLogic.UISkin,
-                            new DialogGUILabel("You have no active contracts (excluding auto-accepted contracts). Are you sure you want to launch?"),
-                            new DialogGUIButton("Launch", () => { }),
-                            new DialogGUIButton("Cancel", () => { return; })
-                        ), false, HighLogic.UISkin).HideGUIsWhilePopup();
-            }
-
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
             LaunchComplex lc = SpaceCenterManagement.Instance.FindLCFromID(_lcID);
@@ -586,7 +576,7 @@ namespace RP0
                     lc.SwitchLaunchPad(launchSiteIndex);
 
                 LCLaunchPad pad = lc.ActiveLPInstance;
-                
+
                 launchSiteName = pad.launchSiteName;
             }
 
@@ -596,6 +586,23 @@ namespace RP0
             {
                 FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
             }));
+        }
+
+        public void Launch(bool fillFuel = false)
+        {
+            if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning && !ConfiguredContract.ActiveContracts.Any(c => !c.AutoAccept))
+            {
+                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog("NoActiveContractWarning", "", "No Active Contracts!", HighLogic.UISkin,
+                            new DialogGUILabel("You have no active contracts (excluding auto-accepted contracts).\nAre you sure you want to launch?"),
+                            new DialogGUIButton("Launch", () => { ConfirmLaunch(fillFuel); }),
+                            new DialogGUIButton("Cancel", () => { return; })
+                        ), false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            else
+            {
+                ConfirmLaunch(fillFuel);
+            }
         }
 
         public bool ResourcesOK(LCData stats, List<string> failedReasons = null, bool shortReasons = false)

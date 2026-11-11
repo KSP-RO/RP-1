@@ -96,7 +96,7 @@ namespace RP0
         [GameParameters.CustomParameterUI("Make program complete alarm", toolTip = "When enabled, an alarm will be automatically created when a program is activated that shows when that program must be completed by to avoid penalties.")]
         public bool MakeAlarmProgramComplete = true;
 
-        [GameParameters.CustomParameterUI("Enable no active contract warning", toolTip = "When enabled, a warning will be shown when launching a craft when you have no active contracts (excluding auto-accepted contracts).")]
+        [GameParameters.CustomParameterUI("Enable no active contract warning", toolTip = "When enabled, a warning will be shown when launching a craft while you have no active contracts (excluding auto-accepted contracts).")]
         public bool NoActiveContractWarning = true;
 
         // The following values are persisted to the savegame but are not shown in the difficulty settings UI

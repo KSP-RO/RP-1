@@ -28,7 +28,7 @@ namespace RP0
         public int LoadedSaveVersion = CurrentVersion;
 
         [KSPField(isPersistant = true)]
-        public string Scenario;
+        public string Scenario = string.Empty;
 
         public bool IsEnabled = false;
 
@@ -350,7 +350,7 @@ namespace RP0
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
             var jsonToSend = "{ \"jsonVer\": \"" + jsonVer + "\", ";
             jsonToSend += "\"rp1Ver\": \"" + rp1Ver + "\", ";
-            if (string.IsNullOrWhiteSpace(Scenario))
+            if (!string.IsNullOrWhiteSpace(Scenario))
                 jsonToSend += "\"scenario\": \"" + Scenario + "\", ";
 
             jsonToSend += "\"periods\": [";

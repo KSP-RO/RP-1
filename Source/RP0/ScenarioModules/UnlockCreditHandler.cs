@@ -317,7 +317,8 @@ namespace RP0
 
         public static UnityEngine.UI.Button Button = null;
         public static string TooltipText = null;
-        private static System.Reflection.MethodInfo IsHighlightedMethod = typeof(UnityEngine.UI.Selectable).GetMethod("IsHighlighted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Reflection.MethodInfo IsHighlightedMethod = typeof(UnityEngine.UI.Selectable)
+            .GetMethod("IsHighlighted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
         public static int WindowID = "PartListTooltip".GetHashCode();
 
         public void Awake()

@@ -44,6 +44,7 @@
         "entry_cost_mods": "ALCE",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -93,6 +94,7 @@
         "entry_cost_mods": "AR-1",
         "identical_part_name": "AR1",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -141,6 +143,7 @@
         "entry_cost_mods": "AR-22",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -264,6 +267,7 @@
         "entry_cost_mods": "COBRA",
         "identical_part_name": "COBRA",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -289,6 +293,7 @@
         "entry_cost_mods": "COBRAH",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -360,6 +365,7 @@
         "entry_cost_mods": "Engine-2SL",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -503,6 +509,7 @@
         "entry_cost_mods": "XLR129-P-1",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -627,6 +634,7 @@
         "entry_cost_mods": "NK-15VM",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -677,6 +685,7 @@
         "entry_cost_mods": "RD-0162",
         "identical_part_name": "RD0162",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -701,6 +710,7 @@
         "entry_cost_mods": "RD-0164",
         "identical_part_name": "RD0164",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -725,6 +735,7 @@
         "entry_cost_mods": "RD-0169",
         "identical_part_name": "RD0169",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -749,6 +760,7 @@
         "entry_cost_mods": "RD-0216",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -773,6 +785,7 @@
         "entry_cost_mods": "RD-0229",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -797,6 +810,7 @@
         "entry_cost_mods": "RD-0230",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -821,6 +835,7 @@
         "entry_cost_mods": "RD-0233-15D95",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -845,6 +860,7 @@
         "entry_cost_mods": "RD-0236",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -869,6 +885,7 @@
         "entry_cost_mods": "RD-263-15D117",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -893,6 +910,7 @@
         "entry_cost_mods": "RD-701",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -992,6 +1010,7 @@
         "entry_cost_mods": "RLA-1200",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -1016,6 +1035,7 @@
         "entry_cost_mods": "RLA-300",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -1040,6 +1060,7 @@
         "entry_cost_mods": "RLA-600",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -1064,6 +1085,7 @@
         "entry_cost_mods": "RS-2100",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -1089,6 +1111,7 @@
         "entry_cost_mods": "RS-30",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -1114,6 +1137,7 @@
         "entry_cost_mods": "RS-76",
         "identical_part_name": "RS76",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -1138,6 +1162,7 @@
         "entry_cost_mods": "RS-83",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -1163,6 +1188,7 @@
         "entry_cost_mods": "RS-84",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -1491,6 +1517,7 @@
         "entry_cost_mods": "TR-107",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

@@ -116,6 +116,7 @@
         "entry_cost_mods": "AR-1",
         "identical_part_name": "AR-1",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -140,6 +141,7 @@
         "entry_cost_mods": "AR-1",
         "identical_part_name": "AR-1",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -212,6 +214,7 @@
         "entry_cost_mods": "RD-701",
         "identical_part_name": "RD-701",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -237,6 +240,7 @@
         "entry_cost_mods": "RD-704",
         "identical_part_name": "RD-704",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -262,6 +266,7 @@
         "entry_cost_mods": "RS-84",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -310,6 +315,7 @@
         "entry_cost_mods": "TR-107",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

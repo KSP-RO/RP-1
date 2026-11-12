@@ -81,6 +81,11 @@ namespace RP0
                 if (!IsEnabled) return null;
 
                 double time = Planetarium.GetUniversalTime();
+                if (NextPeriodStart == 0)
+                {
+                    StartFirstPeriod(time);
+                }
+
                 while (time > NextPeriodStart)
                 {
                     SwitchToNextPeriod();
@@ -270,6 +275,18 @@ namespace RP0
         public void SetStartingScenario(string scenarioName)
         {
             Scenario = scenarioName;
+        }
+
+        /// <summary>
+        /// Discards all log periods. The next access to CurrentPeriod starts a new period at the month of the current UT.
+        /// Call this after the career start date has been changed.
+        /// </summary>
+        public void ResetPeriods()
+        {
+            _periodDict.Clear();
+            _currentPeriod = null;
+            CurPeriodStart = 0;
+            NextPeriodStart = 0;
         }
 
         public void ExportToFile(string path)
@@ -573,6 +590,15 @@ namespace RP0
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);
             CurPeriodStart = NextPeriodStart;
+            NextPeriodStart = _currentPeriod.EndUT;
+        }
+
+        private void StartFirstPeriod(double ut)
+        {
+            DateTime dt = ROUtils.DTUtils.UTToDate(ut);
+            DateTime monthStart = new DateTime(dt.Year, dt.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            CurPeriodStart = (monthStart - ROUtils.DTUtils.Epoch).TotalSeconds;
+            _currentPeriod = GetOrCreatePeriod(CurPeriodStart);
             NextPeriodStart = _currentPeriod.EndUT;
         }
 

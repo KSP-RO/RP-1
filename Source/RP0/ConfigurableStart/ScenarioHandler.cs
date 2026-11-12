@@ -187,6 +187,7 @@ namespace RP0.ConfigurableStart
                 if (scn.StartingUT != 0)
                 {
                     SetDate(scn.StartingUT);
+                    CareerLog.Instance?.ResetPeriods();
                 }
 
                 CareerLog.Instance?.SetStartingScenario(scn.ScenarioName);

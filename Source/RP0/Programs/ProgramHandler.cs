@@ -55,6 +55,9 @@ namespace RP0.Programs
 
         public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
 
+        // ACTIVEPROGRAM and COMPLETEDPROGRAM nodes without a matching template, written back unchanged on save
+        private readonly List<ConfigNode> _unknownProgramNodes = new List<ConfigNode>();
+
         // Put here since we can't add to StrategySystem
         [KSPField(isPersistant = true)]
         public PersistentDictionaryValueTypes<string, double> ActivatedStrategies = new PersistentDictionaryValueTypes<string, double>();
@@ -157,23 +160,8 @@ namespace RP0.Programs
                     }
                 }
 
-                foreach (ConfigNode cn in node.GetNodes("ACTIVEPROGRAM"))
-                {
-                    string progName = cn.GetValue(nameof(Program.name));
-                    Program programTemplate = Programs.FirstOrDefault(p => p.name == progName) ?? throw new Exception("Failed to find ACTIVEPROGRAM " + progName);
-                    var program = new Program(programTemplate);
-                    program.Load(cn);
-                    ActivePrograms.Add(program);
-                }
-
-                foreach (ConfigNode cn in node.GetNodes("COMPLETEDPROGRAM"))
-                {
-                    string progName = cn.GetValue(nameof(Program.name));
-                    Program programTemplate = Programs.FirstOrDefault(p => p.name == progName) ?? throw new Exception("Failed to find COMPLETEDPROGRAM " + progName);
-                    var program = new Program(programTemplate);
-                    program.Load(cn);
-                    CompletedPrograms.Add(program);
-                }
+                LoadProgramNodes(node, "ACTIVEPROGRAM", ActivePrograms);
+                LoadProgramNodes(node, "COMPLETEDPROGRAM", CompletedPrograms);
 
                 _ready = true; // done BEFORE upgrading because we have to do hijinks there
 
@@ -225,6 +213,25 @@ namespace RP0.Programs
             }
         }
 
+        private void LoadProgramNodes(ConfigNode node, string nodeName, List<Program> target)
+        {
+            foreach (ConfigNode cn in node.GetNodes(nodeName))
+            {
+                string progName = cn.GetValue(nameof(Program.name));
+                if (progName == null || !ProgramDict.TryGetValue(progName, out Program programTemplate))
+                {
+                    // Keep the node as-is so the program comes back if its definition is restored later
+                    RP0Debug.LogWarning($"ProgramHandler: no RP0_PROGRAM found for {nodeName} {progName}, keeping it in the save but ignoring it");
+                    _unknownProgramNodes.Add(cn.CreateCopy());
+                    continue;
+                }
+
+                var program = new Program(programTemplate);
+                program.Load(cn);
+                target.Add(program);
+            }
+        }
+
         public void OnLoadStrategiesComplete()
         {
             if (_upgrade_v02)
@@ -260,6 +267,9 @@ namespace RP0.Programs
                 program.Save(cn);
                 node.AddNode(cn);
             }
+
+            foreach (ConfigNode cn in _unknownProgramNodes)
+                node.AddNode(cn);
 
             var disableds = new ConfigNode("DISABLEDPROGRAMS");
             foreach (var p in DisabledPrograms)

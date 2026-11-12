@@ -714,14 +714,19 @@ namespace RP0
         {
             // this function signature is inconsistent with the other currency-change events
             // but the whole point is that this can't operate off of CurrenciesModified, since unlock credit isn't tracked by that event
-            CurrentPeriod.SpentUnlockCredit += spentCredit;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
+
+            LogPeriod period = CurrentPeriod;
+            if (period == null) return;
+
+            period.SpentUnlockCredit += spentCredit;
             if (reason == TransactionReasonsRP0.ToolingPurchase)
             {
-                CurrentPeriod.ToolingFees += spentCredit;
+                period.ToolingFees += spentCredit;
             }
             else if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock)
             {
-                CurrentPeriod.EntryCosts += spentCredit;
+                period.EntryCosts += spentCredit;
             }
         }
 

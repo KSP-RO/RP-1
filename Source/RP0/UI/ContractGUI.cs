@@ -27,6 +27,7 @@ namespace RP0
             CommsPayload = _settings.CommsPayload;
             WeatherPayload = _settings.WeatherPayload;
             _newspaperTitle = _settings.NewspaperTitle;
+            _useLastScreenshot = _settings.UseLastScreenshot;
         }
 
         public void RenderContractsTab()

@@ -1835,10 +1835,11 @@ namespace RP0
             ReconRolloutProject rollback = rollout == null ? b.LC.GetReconRollout(ReconRolloutProject.RolloutReconType.Rollback, launchSite) : null;
             bool isRollingOut = rollout != null && rollout.associatedID == vpID;
             bool isRollingBack = rollback != null && rollback.associatedID == vpID;
+            bool hasReconRollout = b.LC.Recon_Rollout.Exists(a => a.associatedID == vpID);
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
-            if (b.Type == ProjectType.SPH && b.LC.Recon_Rollout.Find(a => a.associatedID == vpID) == null && GUILayout.Button("Select LaunchSite"))
+            if (b.Type == ProjectType.SPH && !hasReconRollout && GUILayout.Button("Select LaunchSite"))
             {
                 _launchSites = KCTUtilities.GetLaunchSites(b.Type == ProjectType.VAB);
                 if (_launchSites.Any())
@@ -1853,7 +1854,7 @@ namespace RP0
                 }
             }
 
-            if (!isRollingOut && !isRollingBack && GUILayout.Button("Scrap"))
+            if (!hasReconRollout && GUILayout.Button("Scrap"))
             {
                 GUIStates.ShowBLPlus = false;
                 DialogGUIBase[] options = new DialogGUIBase[2];
@@ -1866,7 +1867,7 @@ namespace RP0
                 ResetBLWindow(false);
             }
 
-            if (!isRollingOut && !isRollingBack && GUILayout.Button("Edit"))
+            if (!hasReconRollout && GUILayout.Button("Edit"))
             {
                 GUIStates.ShowBLPlus = false;
                 EditorWindowPosition.height = 1;

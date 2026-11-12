@@ -205,6 +205,8 @@ namespace RP0
 
             bool isModify = GUIStates.ShowModifyLC;
             bool isHangar = isModify && activeLC.LCType == LaunchComplexType.Hangar;
+            if (!isModify)
+                _newLCData.lcType = LaunchComplexType.Pad;
 
             GUILayout.BeginVertical();
             if (isModify)

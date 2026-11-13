@@ -139,10 +139,16 @@ namespace RP0
         public AirlaunchParams AirlaunchParams = new AirlaunchParams();
 
         [KSPField(isPersistant = true)]
+        public bool WarpTargetActive;
+
+        [KSPField(isPersistant = true)]
         public FundTargetProject fundTarget = new FundTargetProject();
 
         [KSPField(isPersistant = true)]
         public HireStaffProject staffTarget = new HireStaffProject();
+
+        [KSPField(isPersistant = true)]
+        public TransferEngineerProject transferTarget = new TransferEngineerProject();
 
         #endregion
 
@@ -562,6 +568,10 @@ namespace RP0
                         KSCs.RemoveAt(i);
                         any = true;
                     }
+                    else if (ksc.KSCName != null && ksc.DisplayName == null)
+                    {
+                        ksc.DisplayName = KSCSwitcherInterop.GetSiteDisplayName(ksc.KSCName);
+                    }
 
                     if (any) KCTUtilities.RefreshGroundStationActiveState();
                 }
@@ -944,6 +954,11 @@ namespace RP0
             }
         }
 
+        public LCSpaceCenter FindKSC(string KSCName)
+        {
+            return KSCs.Find(k => k.KSCName == KSCName);
+        }
+
         #endregion
 
         #region Budget
@@ -1096,6 +1111,9 @@ namespace RP0
                 int eng = 0;
                 foreach (var ksc in KSCs)
                     eng += ksc.Engineers;
+
+                if (transferTarget.IsValid)
+                    eng += transferTarget.engineerTransferTimes.Count;
 
                 return eng;
             }
@@ -1991,6 +2009,15 @@ namespace RP0
                 if (staffTarget.IsComplete())
                     staffTarget.Clear();
             }
+
+            if (transferTarget.IsValid)
+            {
+                transferTarget.IncrementProgress(UTDiff);
+                if (transferTarget.IsComplete())
+                    transferTarget.Clear();
+            }
+
+            WarpTargetActive = fundTarget.IsValid || staffTarget.IsValid || transferTarget.IsValid;
 
             Profiler.EndSample();
         }

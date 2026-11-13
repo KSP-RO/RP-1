@@ -9,10 +9,14 @@ namespace RP0
         [Persistent]
         public string KSCName;
         [Persistent]
+        public string DisplayName;
+        [Persistent]
         public int Engineers = 0;
         public int UnassignedEngineers => Engineers - LaunchComplexes.Sum(lc => lc.Engineers);
         [Persistent(name = "ActiveLaunchComplexIndex")]
         public int LCIndex = 0;
+        [Persistent]
+        public TransferEngineerProject.EngineerTransferType EngineerTransferType = TransferEngineerProject.EngineerTransferType.None;
 
         [Persistent]
         public PersistentList<LaunchComplex> LaunchComplexes = new PersistentList<LaunchComplex>();
@@ -56,6 +60,7 @@ namespace RP0
         public LCSpaceCenter(string name)
         {
             KSCName = name;
+            DisplayName = KSCSwitcherInterop.GetSiteDisplayName(name);
 
             AddListeners();
         }
@@ -100,7 +105,7 @@ namespace RP0
             }
         }
 
-        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 1 && Hangar.IsEmpty;
+        public bool IsEmpty => !FacilityUpgrades.Any() && !LCConstructions.Any() && LaunchComplexes.Count == 1 && Hangar.IsEmpty && Engineers == 0 && EngineerTransferType == TransferEngineerProject.EngineerTransferType.None;
 
         public override string ToString() => KSCName;
 

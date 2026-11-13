@@ -1538,27 +1538,44 @@ namespace RP0
             }
         }
 
+        private const float PrepAirlaunchButtonWidth = 125f;
+
         private static void RenderMountUnmountAirlaunch(VesselProject b, ReconRolloutProject airlaunchPrep, int listIdx)
         {
-            if (airlaunchPrep == null && AirlaunchTechLevel.AnyUnlocked())
+            if (airlaunchPrep == null && AirlaunchTechLevel.AnyTechResearched())
             {
                 string vpID = b.shipID.ToString();
-                var tmpPrep = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.AirlaunchMount, vpID);
-                if (tmpPrep.cost > 0d)
-                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}");
-                GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? RP0DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch" + vpID) : new GUIContent("Prep for airlaunch");
-                if (GUILayout.Button(airlaunchText, GUILayout.ExpandWidth(false)))
+                AirlaunchTechLevel cheapestFit = AirlaunchTechLevel.GetAvailable(false)
+                                                                   .Where(c => c.CanLaunchVessel(b, out _))
+                                                                   .OrderBy(c => c.CostMultiplier)
+                                                                   .FirstOrDefault();
+                if (cheapestFit == null && AirlaunchTechLevel.GetPurchasable().Any(c => c.CanLaunchVessel(b, out _)))
                 {
-                    AirlaunchTechLevel lvl = AirlaunchTechLevel.GetCurrentLevel();
-                    if (!lvl.CanLaunchVessel(b, out string failedReason))
-                    {
-                        ScreenMessages.PostScreenMessage($"Vessel failed validation: {failedReason}", 6f, ScreenMessageStyle.UPPER_CENTER);
-                    }
-                    else
-                    {
-                        LaunchComplex vesselLC = b.LC;
-                        vesselLC.Recon_Rollout.Add(tmpPrep);
-                    }
+                    // No owned carrier fits, but one can be bought from the prep window
+                    if (GUILayout.Button(new GUIContent("Prep for airlaunch", "No purchased carrier can lift this vessel."),
+                                         GUILayout.Width(PrepAirlaunchButtonWidth)))
+                        OpenAirlaunchPrepWindow(b);
+                    return;
+                }
+                if (cheapestFit == null)
+                {
+                    AirlaunchTechLevel needed = AirlaunchTechLevel.FirstFittingInConfig(b);
+                    string tooltip = needed != null ? $"No current carrier aircraft can lift this vessel. Needs {needed.UnlockHint}."
+                                                    : "No carrier aircraft can lift this vessel.";
+                    GUI.enabled = false;
+                    GUILayout.Button(new GUIContent("Prep for airlaunch", tooltip), GUILayout.Width(PrepAirlaunchButtonWidth));
+                    GUI.enabled = true;
+                    return;
+                }
+
+                // Show the cost and time of the cheapest carrier that fits; the prep window shows all of them.
+                var tmpPrep = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.AirlaunchMount, vpID, carrier: cheapestFit);
+                if (tmpPrep.cost > 0d)
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.AirLaunchRollout, -tmpPrep.cost):N0}", GUILayout.ExpandWidth(false));
+                GUIContent airlaunchText = listIdx == _mouseOnAirlaunchButton ? RP0DTUtils.GetColonFormattedTimeWithTooltip(tmpPrep.GetTimeLeft(), "airlaunch" + vpID) : new GUIContent("Prep for airlaunch");
+                if (GUILayout.Button(airlaunchText, GUILayout.Width(PrepAirlaunchButtonWidth)))
+                {
+                    OpenAirlaunchPrepWindow(b);
                 }
                 if (Event.current.type == EventType.Repaint)
                     if (GUILayoutUtility.GetLastRect().Contains(Event.current.mousePosition))

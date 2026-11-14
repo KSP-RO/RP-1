@@ -686,6 +686,8 @@ namespace RP0
             SpaceCenterManagement.Instance.LaunchedVessel = new VesselProject(EditorLogic.fetch.ship, EditorLogic.fetch.launchSiteName, EditorLogic.FlagURL, true);
             // Just in case, let's set the LCID
             SpaceCenterManagement.Instance.LaunchedVessel.LCID = SpaceCenterManagement.EditorShipEditingMode ? SpaceCenterManagement.Instance.EditedVessel.LCID : SpaceCenterManagement.Instance.ActiveSC.ActiveLC.ID;
+            simParams.VesselMass = SpaceCenterManagement.Instance.LaunchedVessel.GetTotalMass();
+            simParams.VesselSize = SpaceCenterManagement.Instance.LaunchedVessel.GetShipSize();
 
             VesselCrewManifest manifest = KSP.UI.CrewAssignmentDialog.Instance.GetManifest();
             if (manifest == null)

@@ -426,6 +426,8 @@ namespace RP0
                         activeCrew.Add(new CrewMemberAssignment());
                     activeCrew[_indexToCrew] = new CrewMemberAssignment(crew);
                     _rosterForCrewSelect.Remove(crew);
+                    // Keep the picked kerbal from being offered to other parts
+                    _availableCrew = GetAvailableCrew();
                     GUIStates.ShowCrewSelect = false;
                     GUIStates.ShowShipRoster = true;
                     _crewListWindowPosition.height = 1;

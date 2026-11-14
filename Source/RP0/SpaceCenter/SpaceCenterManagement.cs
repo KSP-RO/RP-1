@@ -1220,7 +1220,7 @@ namespace RP0
                     RP0Debug.Log($"cP.crewList.Count: {cp.CrewList.Count}");
                     foreach (CrewMemberAssignment assign in crewList)
                     {
-                        ProtoCrewMember crewMember = assign.PCM;
+                        ProtoCrewMember crewMember = assign?.PCM;
                         if (crewMember == null)
                             continue;
 

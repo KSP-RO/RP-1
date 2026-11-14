@@ -699,7 +699,7 @@ namespace RP0
                 return;
             }
 
-            if (reasonRP0 == TransactionReasonsRP0.StructureConstruction)
+            if ((reasonRP0 & TransactionReasonsRP0.StructureConstructionAll) != 0)
             {
                 CurrentPeriod.ConstructionFees -= changeDelta;
                 return;

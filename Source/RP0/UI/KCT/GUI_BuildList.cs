@@ -464,7 +464,7 @@ namespace RP0
                 double br = c.GetBuildRate();
                 if (br > 0d)
                 {
-                    costday += br * 86400d / c.BP * -CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction, -c.cost * c.RushMultiplier);
+                    costday += br * 86400d / c.BP * -CurrencyUtils.Funds(c.TransactionReason, -c.cost * c.RushMultiplier);
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());

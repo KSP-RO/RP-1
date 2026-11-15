@@ -369,7 +369,7 @@ namespace RP0.Programs
             lastPaymentUT = nowUT;
             fracElapsed = frac2;
 
-            RP0Debug.Log($"Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / DurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
+            //RP0Debug.Log($"Adding {fundsToAdd} funds for program {name} - amount at time {nowUT / DurationYears / (86400d * 365.25d)} should be {funds2} but is {fundsPaidOut}");
             fundsPaidOut += fundsToAdd;
             Funding.Instance.AddFunds(fundsToAdd, TransactionReasons.Mission);
         }

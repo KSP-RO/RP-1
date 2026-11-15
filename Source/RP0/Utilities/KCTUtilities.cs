@@ -506,7 +506,7 @@ namespace RP0
             }
             newShip.LC.RecalculateBuildRates();
 
-            GetShipEditProgress(editableShip, out double progressBP, out _, out _);
+            GetShipEditProgress(editableShip, newShip.buildPoints, out double progressBP, out _, out _);
             newShip.progress = progressBP;
             RP0Debug.Log($"Finished? {newShip.IsFinished}");
             if (newShip.IsFinished)
@@ -523,7 +523,12 @@ namespace RP0
             HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
-        public static void GetShipEditProgress(VesselProject ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
+        /// <summary>
+        /// Calculates how much build progress a vessel keeps after being edited.
+        /// </summary>
+        /// <param name="ship">The vessel as it was before the edits</param>
+        /// <param name="newTotalBP">Total build points of the vessel after the edits</param>
+        public static void GetShipEditProgress(VesselProject ship, double newTotalBP, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
         {
             double origTotalBP;
             double oldProgressBP;
@@ -545,7 +550,6 @@ namespace RP0
                 oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 
-            double newTotalBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
@@ -860,6 +864,19 @@ namespace RP0
                 SpaceCenterManagement.Instance.RecoveredVessel.LCID = vData?.LCID ?? Guid.Empty;
                 SpaceCenterManagement.Instance.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
 
+                // The original LC can be missing: it was dismantled or the vessel has no tracking data
+                if (SpaceCenterManagement.Instance.RecoveredVessel.LC == null)
+                {
+                    LaunchComplex fallbackLC = FindRecoveryLC(listType);
+                    if (fallbackLC == null)
+                    {
+                        RP0Debug.LogError("No operational LC of matching type found for the recovered vessel.");
+                        SpaceCenterManagement.Instance.RecoveredVessel = new VesselProject();
+                        return false;
+                    }
+                    SpaceCenterManagement.Instance.RecoveredVessel.LC = fallbackLC;
+                }
+
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == ProjectType.SPH)
                     SpaceCenterManagement.Instance.RecoveredVessel.launchSite = "Runway";
@@ -900,6 +917,23 @@ namespace RP0
                 ShipConstruction.ClearBackups();
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Finds an operational LC that can store a recovered vessel of the given type.
+        /// Prefers the active LC, then the first matching one in the active space center.
+        /// </summary>
+        /// <returns>The LC, or null if there is none</returns>
+        private static LaunchComplex FindRecoveryLC(ProjectType listType)
+        {
+            LCSpaceCenter sc = SpaceCenterManagement.Instance.ActiveSC;
+            LaunchComplexType lcType = listType == ProjectType.SPH ? LaunchComplexType.Hangar : LaunchComplexType.Pad;
+
+            LaunchComplex activeLC = sc.ActiveLC;
+            if (activeLC != null && activeLC.IsOperational && activeLC.LCType == lcType)
+                return activeLC;
+
+            return sc.LaunchComplexes.Find(lc => lc.IsOperational && lc.LCType == lcType);
         }
 
         /// <summary>

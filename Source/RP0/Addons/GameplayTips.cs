@@ -240,8 +240,8 @@ namespace RP0
             options[0] = new DialogGUIButton(KSP.Localization.Localizer.Format("#autoLOC_190905"), () => { });
             options[1] = new DialogGUIButton(KSP.Localization.Localizer.Format("#rp0_GameplayTip_DontShowAgain"), () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowHSFProgramReminders = true; });
             MultiOptionDialog diag = new MultiOptionDialog("ShowHSFProgramReminder",
-                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text"),
-                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 300, options);
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_CrewedProgram_Text"),
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_CrewedProgram_Title"), null, 300, options);
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 

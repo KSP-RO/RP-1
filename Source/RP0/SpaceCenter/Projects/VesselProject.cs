@@ -483,6 +483,9 @@ namespace RP0
         public VesselProject CreateCopy()
         {
             VesselProject ret = new VesselProject(shipName, launchSite, effectiveCost, buildPoints, flag, cost, FacilityBuiltIn, humanRated);
+            // The constructor derives Type from FacilityBuiltIn, which can be None for recovered vessels.
+            ret.Type = Type;
+            ret.clampState = clampState;
             ret._lc = _lc;
             ret._lcID = _lcID;
             ret.globalTags = globalTags.Clone() as PersistentHashSetValueType<string>;

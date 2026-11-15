@@ -677,15 +677,11 @@ namespace RP0
                 }
             }
 
-            GameplayTips.Instance.ShowNoActiveContractWarning(pass => {
-                if (!pass) return;
+            KCTSettings.Instance.RandomizeCrew = AssignRandomCrew;
+            SpaceCenterManagement.Instance.LaunchedVessel.Launch(fillTanks);
 
-                KCTSettings.Instance.RandomizeCrew = AssignRandomCrew;
-                SpaceCenterManagement.Instance.LaunchedVessel.Launch(fillTanks);
-
-                GUIStates.ShowShipRoster = false;
-                _crewListWindowPosition.height = 1;
-            });
+            GUIStates.ShowShipRoster = false;
+            _crewListWindowPosition.height = 1;
         }
 
         private static void AddPartToInventory(string partName, ModuleInventoryPart inv)

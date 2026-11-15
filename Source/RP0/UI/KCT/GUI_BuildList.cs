@@ -1797,6 +1797,8 @@ namespace RP0
 
                 if (initialCancel) // do this only once
                 {
+                    // Research rate depends on the queue position, so refresh it for the techs that moved up.
+                    SpaceCenterManagement.Instance.UpdateTechTimes();
                     SpaceCenterManagement.Instance.TechListUpdated();
                     SpaceCenterManagement.TechListIgnoreUpdates = false;
                     KCTUtilities.AddResearchedPartsToExperimental();

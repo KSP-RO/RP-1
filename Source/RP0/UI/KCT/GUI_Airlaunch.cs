@@ -147,32 +147,33 @@ namespace RP0
                 _airlaunchParams.KCTVesselId = isSim ? FlightGlobals.ActiveVessel.id : SpaceCenterManagement.Instance.LaunchedVessel.shipID;
                 
                 bool valid = _airlaunchParams.Validate(out _errorMsg);
-                if (!valid) return;
-
-                _errorMsg = null;
-                if (isSim)
+                if (valid)
                 {
-                    var kct = SpaceCenterManagement.Instance;
-                    kct.StartCoroutine(AirlaunchUtils.DoAirlaunchRoutine(_airlaunchParams, _airlaunchParams.KCTVesselId, skipCountdown: true));
-                    ToggleVisibility(false);
-                    return;
-                }
+                    _errorMsg = null;
+                    if (isSim)
+                    {
+                        var kct = SpaceCenterManagement.Instance;
+                        kct.StartCoroutine(AirlaunchUtils.DoAirlaunchRoutine(_airlaunchParams, _airlaunchParams.KCTVesselId, skipCountdown: true));
+                        ToggleVisibility(false);
+                        return;
+                    }
 
-                SpaceCenterManagement.Instance.AirlaunchParams = _airlaunchParams;
-                _airlaunchParams = null;
+                    SpaceCenterManagement.Instance.AirlaunchParams = _airlaunchParams;
+                    _airlaunchParams = null;
 
-                VesselProject b = SpaceCenterManagement.Instance.LaunchedVessel;
-                if (!b.IsCrewable())
-                {
-                    b.Launch();
-                }
-                else
-                {
-                    GUIStates.ShowAirlaunch = false;
-                    SpaceCenterManagement.ToolbarControl?.SetFalse();
-                    _centralWindowPosition.height = 1;
-                    AssignInitialCrew();
-                    GUIStates.ShowShipRoster = true;
+                    VesselProject b = SpaceCenterManagement.Instance.LaunchedVessel;
+                    if (!b.IsCrewable())
+                    {
+                        b.Launch();
+                    }
+                    else
+                    {
+                        GUIStates.ShowAirlaunch = false;
+                        SpaceCenterManagement.ToolbarControl?.SetFalse();
+                        _centralWindowPosition.height = 1;
+                        AssignInitialCrew();
+                        GUIStates.ShowShipRoster = true;
+                    }
                 }
             }
             catch (Exception ex)

@@ -242,11 +242,6 @@ namespace RP0.ConfigurableStart
                     SetFacilityLevels(facilities);
                 }
 
-                if (scn.Applicants != null)
-                {
-                    SpaceCenterManagement.Instance.Applicants = scn.Applicants.Value;
-                }
-
                 if (!string.IsNullOrEmpty(scn.RFUnlockedConfigs))
                 {
                     string[] configs = Utilities.ArrayFromCommaSeparatedList(scn.RFUnlockedConfigs);
@@ -307,7 +302,7 @@ namespace RP0.ConfigurableStart
                     Confidence.Instance.SetConfidence(scn.StartingConfidence.Value);
                 }
 
-                StartCoroutine(CompleteScenarioInitialization());
+                StartCoroutine(CompleteScenarioInitialization(scn));
             }
             catch (Exception ex)
             {
@@ -347,10 +342,21 @@ namespace RP0.ConfigurableStart
             KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
         }
 
-        private IEnumerator CompleteScenarioInitialization()
+        private IEnumerator CompleteScenarioInitialization(Scenario scn)
         {
             while (!ContractsInitialized)
                 yield return new WaitForFixedUpdate();
+
+            // ProgramHandler grants contract applicants 2 frames after a contract completes.
+            // Wait for that to finish so the scenario value is the final one.
+            for (int i = 0; i < 3; i++)
+                yield return null;
+
+            if (scn.Applicants != null)
+            {
+                SpaceCenterManagement.Instance.Applicants = scn.Applicants.Value;
+                RP0Debug.Log($"Set applicants: {scn.Applicants.Value}");
+            }
 
             RP0Debug.Log("Scenario applied");
             RP0Debug.Log("Destroying ScenarioLoader...");

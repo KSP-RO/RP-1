@@ -264,6 +264,10 @@ namespace RP0
         /// <returns></returns>
         protected virtual string ConstructText(bool extendedInfo, bool useDescriptionHeader = true, bool showDescriptionInNonExtended = false)
         {
+            // Placeholder (padlock) strategies can never be activated, so effects and duration lines would be empty or bogus.
+            if (ConfigRP0.CannotActivative && !showDescriptionInNonExtended)
+                return string.Empty;
+
             string text = "";
             if (useDescriptionHeader)
                 text += RichTextUtil.Title(Localizer.GetStringByTag("#autoLOC_304558"));

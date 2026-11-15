@@ -89,10 +89,10 @@ namespace RP0.ConfigurableStart
         public void OnGameNewStart()
         {
             PresetPickerGUI.Instance?.SetVisible(false);
-            if (CurrentScenario == null || CurrentScenario.ScenarioName == EmptyScenarioName) return;
 
             // Add the LastKSC proto before scene transition so that KSCLoader.OnGameStateCreated
             // reads the desired site and calls SetSiteAndResetCamera with it on first SpaceCenter load.
+            // The KSC choice applies to every scenario, including the default one.
             if (KSCSwitcherInterop.IsKSCSwitcherInstalled && !string.IsNullOrEmpty(SelectedKSC))
             {
                 Game game = HighLogic.CurrentGame;
@@ -103,6 +103,13 @@ namespace RP0.ConfigurableStart
                         lastKscProto = game.AddProtoScenarioModule(KSCSwitcherInterop.LastKSCType, GameScenes.TRACKSTATION);
                     KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
                 }
+            }
+
+            if (CurrentScenario == null || CurrentScenario.ScenarioName == EmptyScenarioName)
+            {
+                if (HighLogic.CurrentGame?.Mode == Game.Modes.CAREER)
+                    StartCoroutine(ApplySelectedKSCWhenReady());
+                return;
             }
 
             switch (HighLogic.CurrentGame.Mode)
@@ -261,14 +268,7 @@ namespace RP0.ConfigurableStart
                     TFInterop.SetFlightDataForParts(engines);
                 }
 
-                if (KSCSwitcherInterop.IsKSCSwitcherInstalled && !string.IsNullOrEmpty(SelectedKSC))
-                {
-                    SpaceCenterManagement.Instance.SetActiveKSC(SelectedKSC);
-                    KSCSwitcherInterop.SetLastKSCSite(SelectedKSC);
-                    // CreateNewGame saves before onGameNewStart fires, so the sfs lacks the initial KSC state.
-                    ProtoScenarioModule lastKscProto = HighLogic.CurrentGame?.scenarios?.FirstOrDefault(s => s.moduleName == "LastKSC");
-                    KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
-                }
+                ApplySelectedKSC();
 
                 foreach (LCData lcData in scn.LCs)
                 {
@@ -316,6 +316,35 @@ namespace RP0.ConfigurableStart
             }
             
             yield break;
+        }
+
+        /// <summary>
+        /// Applies the chosen KSC when no scenario parameters need to be applied.
+        /// </summary>
+        private IEnumerator ApplySelectedKSCWhenReady()
+        {
+            yield return WaitForInitialization(() => SpaceCenterManagement.Instance);
+            yield return new WaitForEndOfFrame();
+
+            try
+            {
+                ApplySelectedKSC();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        private void ApplySelectedKSC()
+        {
+            if (!KSCSwitcherInterop.IsKSCSwitcherInstalled || string.IsNullOrEmpty(SelectedKSC)) return;
+
+            SpaceCenterManagement.Instance.SetActiveKSC(SelectedKSC);
+            KSCSwitcherInterop.SetLastKSCSite(SelectedKSC);
+            // CreateNewGame saves before onGameNewStart fires, so the sfs lacks the initial KSC state.
+            ProtoScenarioModule lastKscProto = HighLogic.CurrentGame?.scenarios?.FirstOrDefault(s => s.moduleName == "LastKSC");
+            KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
         }
 
         private IEnumerator CompleteScenarioInitialization()

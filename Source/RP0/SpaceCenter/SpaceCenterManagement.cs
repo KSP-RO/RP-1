@@ -1814,7 +1814,7 @@ namespace RP0
                 {
                     if (oldFac == EditorFacility.VAB)
                     {
-                        if (oldLC.LCType == LaunchComplexType.Pad)
+                        if (oldLC != null && oldLC.LCType == LaunchComplexType.Pad)
                         {
                             // cache this off -- we swapped editors
                             PreEditorSwapLCID = oldLC.ID;

@@ -595,7 +595,11 @@ namespace RP0
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog("NoActiveContractWarning", "", "No Active Contracts!", HighLogic.UISkin,
                             new DialogGUILabel("You have no active contracts (excluding auto-accepted contracts).\nAre you sure you want to launch?"),
-                            new DialogGUIButton("Launch", () => { ConfirmLaunch(fillFuel); }),
+                            new DialogGUIButton("Launch Anyway", () => { ConfirmLaunch(fillFuel); }),
+                            new DialogGUIButton("Launch and Don't Show This Again", () => { 
+                                ConfirmLaunch(fillFuel);
+                                HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning = false;
+                            }),
                             new DialogGUIButton("Cancel", () => { return; })
                         ), false, HighLogic.UISkin).HideGUIsWhilePopup();
             }

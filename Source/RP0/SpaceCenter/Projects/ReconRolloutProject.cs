@@ -194,7 +194,7 @@ namespace RP0
         {
             if (RRType == RolloutReconType.Reconditioning)
             {
-                bool isHRCapped = IsCapped && !isHumanRated && LC.IsHumanRated;
+                bool isHRCapped = !isHumanRated && LC.IsHumanRated;
                 return Formula.GetReconditioningBuildRate(LC, isHRCapped);
             }
             else

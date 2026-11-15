@@ -1,5 +1,4 @@
-﻿using ContractConfigurator;
-using KSP.UI;
+﻿using KSP.UI;
 using KSP.UI.Screens;
 using ROUtils;
 using ROUtils.DataTypes;

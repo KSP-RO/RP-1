@@ -50,8 +50,8 @@ namespace RP0
 
         // Category keys for tank groupings. Prefix "Tank-" is reused so GetParametersForToolingType
         // routes them to the diameter/length parameter set the same way bare "Tank-*" DB keys would.
-        // Conventional / Isogrid / Fuselage each have a non-HP and an HP variant; Balloon, ServiceModule
-        // and Shielded have no HP. HP buttons only appear when at least one underlying type matched.
+        // Conventional / Isogrid / Fuselage / Shielded each have a non-HP and an HP variant; Balloon and
+        // ServiceModule have no HP. HP buttons only appear when at least one underlying type matched.
         private const string TankConventional   = "Tank-Conventional";
         private const string TankConventionalHP = "Tank-ConventionalHP";
         private const string TankIsogrid        = "Tank-Isogrid";
@@ -61,6 +61,7 @@ namespace RP0
         private const string TankFuselageHP     = "Tank-FuselageHP";
         private const string TankServiceModule  = "Tank-ServiceModule";
         private const string TankShieldedKey    = "Tank-Shielded";
+        private const string TankShieldedHP     = "Tank-ShieldedHP";
         private const string TankCryogenic      = "Tank-Cryogenic";
         private const string TankOther          = "Tank-Other";
 
@@ -77,7 +78,8 @@ namespace RP0
             { TankFuselage,       "Tank (Non-HP Fuselage)"     },
             { TankFuselageHP,     "Tank (HP Fuselage)"         },
             { TankServiceModule,  "Tank (Service Module)"      },
-            { TankShieldedKey,    "Tank (Shielded)"            },
+            { TankShieldedKey,    "Tank (Non-HP Shielded)"     },
+            { TankShieldedHP,     "Tank (HP Shielded)"         },
             { TankCryogenic,      "Tank (Cryogenic)"           },
             { TankOther,          "Tank (Other)"               },
         };
@@ -336,13 +338,13 @@ namespace RP0
 
             // Single-bucket categories (no HP variants in the data).
             if (IsServiceModuleTank(toolingType)) return TankServiceModule;
-            if (IsShieldedTank(toolingType))      return TankShieldedKey;
             if (IsCryoTank(toolingType))          return TankCryogenic;
             if (IsBalloonTank(toolingType))       return TankBalloon;
 
             bool hp = toolingType.EndsWith("-HP");
             if (IsIsogridTank(toolingType))      return hp ? TankIsogridHP      : TankIsogrid;
             if (IsFuselageTank(toolingType))     return hp ? TankFuselageHP     : TankFuselage;
+            if (IsShieldedTank(toolingType))     return hp ? TankShieldedHP     : TankShieldedKey;
             if (IsConventionalTank(toolingType)) return hp ? TankConventionalHP : TankConventional;
             return TankOther;  // legacy RF types we don't know how to place: Default, ElectricPropulsion, etc.
         }

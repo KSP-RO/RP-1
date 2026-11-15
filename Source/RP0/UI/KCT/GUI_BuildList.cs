@@ -1482,8 +1482,7 @@ namespace RP0
                     }
                     else
                     {
-                        GUIStates.ShowBuildList = false;
-                        GUIStates.ShowClearLaunch = true;
+                        ShowClearLaunchWindow(pad.launchSiteName);
                     }
                 }
             }
@@ -1530,8 +1529,7 @@ namespace RP0
                     }
                     else
                     {
-                        GUIStates.ShowBuildList = false;
-                        GUIStates.ShowClearLaunch = true;
+                        ShowClearLaunchWindow("Runway");
                         GUIStates.ShowAirlaunch = airlaunchPrep != null;
                     }
                 }

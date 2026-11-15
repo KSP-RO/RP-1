@@ -1394,7 +1394,7 @@ namespace RP0
 
             newEff = LC.Efficiency;
             double bp = buildPoints;
-            double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect;
+            double rate = KCTUtilities.GetBuildRate(LC, GetTotalMass(), bp, humanRated) * LC.StrategyRateMultiplier * LeaderEffect * LC.RushRate;
             if (rate == 0)
                 return double.PositiveInfinity;
 

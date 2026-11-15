@@ -369,7 +369,7 @@ namespace RP0
             double fullVesselBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect * editedVessel.LC.StrategyRateMultiplier;
             double effic = editedVessel.LC.Efficiency;
-            KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
+            KCTUtilities.GetShipEditProgress(editedVessel, fullVesselBP, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
             

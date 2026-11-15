@@ -1906,10 +1906,7 @@ namespace RP0
                 if (ActiveSC.ActiveLC.ActiveLPInstance is LCLaunchPad pad)
                 {
                     if (KCTUtilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) != pad.level)
-                    {
-                        ActiveSC.ActiveLC.SwitchLaunchPad(ActiveSC.ActiveLC.ActiveLaunchPadIndex, false);
-                        pad.UpdateLaunchpadDestructionState(false);
-                    }
+                        pad.SetActive();
                 }
                 yield return _wfsHalf;
             }

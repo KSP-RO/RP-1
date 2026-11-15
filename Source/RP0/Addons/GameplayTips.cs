@@ -1,6 +1,7 @@
 ﻿using ContractConfigurator;
 using RealFuels;
 using ROUtils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniLinq;
@@ -244,24 +245,23 @@ namespace RP0
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
         }
 
-        public bool ShowNoActiveContractWarning()
+        public void ShowNoActiveContractWarning(Action<bool> onComplete)
         {
-            bool pass = true;
             if (KSPUtils.CurrentGameIsCareer() && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning && !ConfiguredContract.ActiveContracts.Any(c => !c.AutoAccept))
             {
                 DialogGUIBase[] options = new DialogGUIBase[3];
-                options[0] = new DialogGUIButton("Launch Anyway", () => { });
+                options[0] = new DialogGUIButton("Launch Anyway", () => { onComplete(true); });
                 options[1] = new DialogGUIButton("Launch and Don't Show This Again", () => 
-                { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning = false; });
-                options[2] = new DialogGUIButton("Cancel", () => { pass = false; });
+                { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning = false; onComplete(true); });
+                options[2] = new DialogGUIButton("Cancel", () => { onComplete(false); });
 
                 MultiOptionDialog diag = new MultiOptionDialog("ShowNoActiveContractWarning",
-                "No Active Contracts!",
-                "You have no active contracts (excluding auto-accepted contracts).\nAre you sure you want to launch?", null, 300, options);
+                "You have no active contracts (excluding auto-accepted contracts).\nAre you sure you want to launch?",
+                "No Active Contracts!", null, 300, options);
 
                 PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
-            return pass;
+            else { onComplete(true); }
         }
     }
 }

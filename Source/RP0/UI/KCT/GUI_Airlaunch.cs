@@ -158,9 +158,6 @@ namespace RP0
                     return;
                 }
 
-                if (!GameplayTips.Instance.ShowNoActiveContractWarning())
-                    return;
-
                 SpaceCenterManagement.Instance.AirlaunchParams = _airlaunchParams;
                 _airlaunchParams = null;
 

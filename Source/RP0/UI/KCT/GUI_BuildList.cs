@@ -1461,31 +1461,32 @@ namespace RP0
                 ScreenMessages.PostScreenMessage(message);
                 return;
             }
-            if (!GameplayTips.Instance.ShowNoActiveContractWarning())
-                return;
+            GameplayTips.Instance.ShowNoActiveContractWarning(pass => { 
+                if (!pass) return;
 
-            SpaceCenterManagement.Instance.LaunchedVessel = b;
-            if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
-            {
-                GUIStates.ShowBLPlus = false;
-                if (!b.IsCrewable())
-                    b.Launch();
+                SpaceCenterManagement.Instance.LaunchedVessel = b;
+                if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
+                {
+                    GUIStates.ShowBLPlus = false;
+                    if (!b.IsCrewable())
+                        b.Launch();
+                    else
+                    {
+                        GUIStates.ShowBuildList = false;
+
+                        SpaceCenterManagement.ToolbarControl?.SetFalse();
+
+                        _centralWindowPosition.height = 1;
+                        AssignInitialCrew();
+                        GUIStates.ShowShipRoster = true;
+                    }
+                }
                 else
                 {
                     GUIStates.ShowBuildList = false;
-
-                    SpaceCenterManagement.ToolbarControl?.SetFalse();
-
-                    _centralWindowPosition.height = 1;
-                    AssignInitialCrew();
-                    GUIStates.ShowShipRoster = true;
+                    GUIStates.ShowClearLaunch = true;
                 }
-            }
-            else
-            {
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowClearLaunch = true;
-            }
+            });
         }
 
         private static void ProcessPlaneLaunch(VesselProject b, ReconRolloutProject airlaunchPrep)
@@ -1502,38 +1503,39 @@ namespace RP0
                 ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
-            if (!GameplayTips.Instance.ShowNoActiveContractWarning())
-                return;
+            GameplayTips.Instance.ShowNoActiveContractWarning(pass => { 
+                if (!pass) return;
 
-            GUIStates.ShowBLPlus = false;
-            SpaceCenterManagement.Instance.LaunchedVessel = b;
+                GUIStates.ShowBLPlus = false;
+                SpaceCenterManagement.Instance.LaunchedVessel = b;
 
-            if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
-            {
-                if (airlaunchPrep != null)
+                if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
                 {
-                    GUIStates.ShowBuildList = false;
-                    GUIStates.ShowAirlaunch = true;
-                }
-                else if (!b.IsCrewable())
-                {
-                    b.Launch();
+                    if (airlaunchPrep != null)
+                    {
+                        GUIStates.ShowBuildList = false;
+                        GUIStates.ShowAirlaunch = true;
+                    }
+                    else if (!b.IsCrewable())
+                    {
+                        b.Launch();
+                    }
+                    else
+                    {
+                        GUIStates.ShowBuildList = false;
+                        SpaceCenterManagement.ToolbarControl?.SetFalse();
+                        _centralWindowPosition.height = 1;
+                        AssignInitialCrew();
+                        GUIStates.ShowShipRoster = true;
+                    }
                 }
                 else
                 {
                     GUIStates.ShowBuildList = false;
-                    SpaceCenterManagement.ToolbarControl?.SetFalse();
-                    _centralWindowPosition.height = 1;
-                    AssignInitialCrew();
-                    GUIStates.ShowShipRoster = true;
+                    GUIStates.ShowClearLaunch = true;
+                    GUIStates.ShowAirlaunch = airlaunchPrep != null;
                 }
-            }
-            else
-            {
-                GUIStates.ShowBuildList = false;
-                GUIStates.ShowClearLaunch = true;
-                GUIStates.ShowAirlaunch = airlaunchPrep != null;
-            }
+            });
         }
 
         private static void RenderMountUnmountAirlaunch(VesselProject b, ReconRolloutProject airlaunchPrep, int listIdx)

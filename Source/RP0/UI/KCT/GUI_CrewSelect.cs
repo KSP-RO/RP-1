@@ -677,6 +677,9 @@ namespace RP0
                 }
             }
 
+            if (!GameplayTips.Instance.ShowNoActiveContractWarning())
+                return;
+
             KCTSettings.Instance.RandomizeCrew = AssignRandomCrew;
             SpaceCenterManagement.Instance.LaunchedVessel.Launch(fillTanks);
 

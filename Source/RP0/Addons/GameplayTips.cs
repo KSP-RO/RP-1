@@ -1,4 +1,6 @@
-﻿using RealFuels;
+﻿using ContractConfigurator;
+using RealFuels;
+using ROUtils;
 using System.Collections;
 using System.Collections.Generic;
 using UniLinq;
@@ -240,6 +242,26 @@ namespace RP0
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text"),
                 KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 300, options);
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
+        public bool ShowNoActiveContractWarning()
+        {
+            bool pass = true;
+            if (KSPUtils.CurrentGameIsCareer() && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning && !ConfiguredContract.ActiveContracts.Any(c => !c.AutoAccept))
+            {
+                DialogGUIBase[] options = new DialogGUIBase[3];
+                options[0] = new DialogGUIButton("Launch Anyway", () => { });
+                options[1] = new DialogGUIButton("Launch and Don't Show This Again", () => 
+                { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning = false; });
+                options[2] = new DialogGUIButton("Cancel", () => { pass = false; });
+
+                MultiOptionDialog diag = new MultiOptionDialog("ShowNoActiveContractWarning",
+                "No Active Contracts!",
+                "You have no active contracts (excluding auto-accepted contracts).\nAre you sure you want to launch?", null, 300, options);
+
+                PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            return pass;
         }
     }
 }

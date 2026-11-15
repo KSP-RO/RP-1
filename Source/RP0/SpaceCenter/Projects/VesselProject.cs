@@ -554,7 +554,7 @@ namespace RP0
             return ShipNodeCompressed.GetAndUpgradeNode();
         }
 
-        private void ConfirmLaunch(bool fillFuel)
+        public void Launch(bool fillFuel = false)
         {
             HighLogic.CurrentGame.editorFacility = GetEditorFacility() == EditorFacilities.VAB ? EditorFacility.VAB : EditorFacility.SPH;
 
@@ -586,27 +586,6 @@ namespace RP0
             {
                 FlightDriver.StartWithNewLaunch(tempFile, flag, launchSiteName, new VesselCrewManifest());
             }));
-        }
-
-        public void Launch(bool fillFuel = false)
-        {
-            if (HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning && !ConfiguredContract.ActiveContracts.Any(c => !c.AutoAccept))
-            {
-                PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
-                        new MultiOptionDialog("NoActiveContractWarning", "", "No Active Contracts!", HighLogic.UISkin,
-                            new DialogGUILabel("You have no active contracts (excluding auto-accepted contracts).\nAre you sure you want to launch?"),
-                            new DialogGUIButton("Launch Anyway", () => { ConfirmLaunch(fillFuel); }),
-                            new DialogGUIButton("Launch and Don't Show This Again", () => { 
-                                ConfirmLaunch(fillFuel);
-                                HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning = false;
-                            }),
-                            new DialogGUIButton("Cancel", () => { return; })
-                        ), false, HighLogic.UISkin).HideGUIsWhilePopup();
-            }
-            else
-            {
-                ConfirmLaunch(fillFuel);
-            }
         }
 
         public bool ResourcesOK(LCData stats, List<string> failedReasons = null, bool shortReasons = false)

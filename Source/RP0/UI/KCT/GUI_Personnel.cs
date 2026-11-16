@@ -1,6 +1,8 @@
-using System;
-using UnityEngine;
 using ROUtils;
+using System;
+using System.Collections.Generic;
+using UniLinq;
+using UnityEngine;
 
 namespace RP0
 {
@@ -16,10 +18,10 @@ namespace RP0
         private static readonly int[] _buyModifierMultsPersonnel = { 1, 10, 100, int.MaxValue };
         private enum PersonnelButtonHover { None, Hire, Fire, Assign, Unassign };
         private static PersonnelButtonHover _currentPersonnelHover = PersonnelButtonHover.None;
+        private static LCSpaceCenter originalSC = null;
 
         private static void DrawPersonnelWindow(int windowID)
         {
-            int oldByModifier = _buyModifier;
             if (Input.GetKey(KeyCode.LeftShift))
             {
                 _buyModifier = _buyModifierMultsPersonnel[1];
@@ -36,7 +38,6 @@ namespace RP0
             {
                 _buyModifier = _buyModifierMultsPersonnel[0];
             }
-            bool isCostCacheInvalid = _buyModifier != oldByModifier;
 
             GUILayout.BeginVertical();
 
@@ -69,14 +70,19 @@ namespace RP0
             if (KSPUtils.CurrentGameHasScience() && GUILayout.Button("Researchers")) { _personnelWindowHolder = 2; _personnelPosition.height = 1; }
             GUILayout.EndHorizontal();
 
-            if (_personnelWindowHolder == 0)    //VAB
+            if (_personnelWindowHolder == 0)
             {
-                RenderEngineersSection(isCostCacheInvalid);
+                RenderKSCEngineersSection();
             }
 
-            if (_personnelWindowHolder == 2)    //R&D
+            if (_personnelWindowHolder == 1)
             {
-                RenderResearchersSection(isCostCacheInvalid);
+                RenderAllEngineersSection();
+            }
+
+            if (_personnelWindowHolder == 2)
+            {
+                RenderResearchersSection();
             }
 
             GUILayout.Label($"Hold LeftShift for x10, LeftCtrl for x100, and {GameSettings.MODIFIER_KEY.primary} for Max Possible", GetLabelCenterAlignStyle());
@@ -91,19 +97,25 @@ namespace RP0
                 GUI.DragWindow();
         }
 
-        private static void RenderEngineersSection(bool isCostCacheInvalid)
+        private static void RenderKSCEngineersSection()
         {
             LCSpaceCenter KSC = SpaceCenterManagement.Instance.ActiveSC;
             LaunchComplex currentLC = KSC.LaunchComplexes[_LCIndex];
 
             GUILayout.BeginHorizontal();
-            GUILayout.Label("Engineers:", GUILayout.Width(100));
-            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(100));
-            GUILayout.Label($"Unassigned:", GetLabelRightAlignStyle(), GUILayout.Width(100));
-            GUILayout.Label($"{KSC.UnassignedEngineers}", GetLabelRightAlignStyle());
+            GUILayout.Label($"Current KSC: <color=lime>{KSC.DisplayName}</color>");
+            GUILayout.FlexibleSpace();
+            if (KSCSwitcherInterop.IsKSCSwitcherInstalled && GUILayout.Button("Relocate Engineers")) { _personnelWindowHolder = 1; _personnelPosition.height = 1; }
             GUILayout.EndHorizontal();
 
-            RenderHireFire(false, out int fireAmount, out int hireAmount);
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Engineers Here:", GUILayout.Width(100));
+            GUILayout.Label(KSC.Engineers.ToString("N0"), GetLabelRightAlignStyle(), GUILayout.Width(100));
+            GUILayout.Label("Unassigned:", GetLabelRightAlignStyle(), GUILayout.Width(100));
+            GUILayout.Label(KSC.UnassignedEngineers.ToString("N0"), GetLabelRightAlignStyle());
+            GUILayout.EndHorizontal();
+
+            RenderHireFire(false, out int _, out int _);
 
             GUILayout.BeginHorizontal();
             int lcCount = KSC.LaunchComplexCount;
@@ -159,14 +171,6 @@ namespace RP0
                 assignDelta = assignAmt;
             else if (_currentPersonnelHover == PersonnelButtonHover.Unassign)
                 assignDelta = -unassignAmt;
-            int freeDelta = 0;
-            switch (_currentPersonnelHover)
-            {
-                case PersonnelButtonHover.Assign: freeDelta = -assignAmt; break;
-                case PersonnelButtonHover.Unassign: freeDelta = unassignAmt; break;
-                case PersonnelButtonHover.Hire: freeDelta = hireAmount; break;
-                case PersonnelButtonHover.Fire: freeDelta = -fireAmount; break;
-            }
 
             double efficiency = currentLC.Efficiency;
             double stratMult = currentLC.StrategyRateMultiplier;
@@ -234,7 +238,73 @@ namespace RP0
             GUILayout.EndHorizontal();
         }
 
-        private static void RenderResearchersSection(bool isCostCacheInvalid)
+        private static void RenderAllEngineersSection()
+        {
+            GUILayout.BeginHorizontal();
+            GUILayout.Label("Active KSCs (Total Eng. : Unassigned Eng.)");
+            GUILayout.FlexibleSpace();
+            if (GUILayout.Button("Back", GUILayout.Width(100))) { _personnelWindowHolder = 0; _personnelPosition.height = 1; originalSC = null; }
+            GUILayout.EndHorizontal();
+
+            List<LCSpaceCenter> sortedKSCs = SpaceCenterManagement.Instance.KSCs.OrderBy(site => site != SpaceCenterManagement.Instance.ActiveSC).ThenByDescending(site => site.Engineers).ToList();
+
+            for (int i = 0; i < sortedKSCs.Count; ++i)
+            {
+                LCSpaceCenter KSC = sortedKSCs[i];
+
+                bool isActiveSC = KSC == SpaceCenterManagement.Instance.ActiveSC;
+                if (KSC.IsEmpty && !isActiveSC)
+                    continue;
+
+                string site = KSC.DisplayName;
+
+                GUILayout.BeginHorizontal();
+                if (isActiveSC)
+                {
+                    site = $"<color=lime>{site}</color>";
+                }
+                site = $"{site} ({KSC.Engineers:N0} : {KSC.UnassignedEngineers:N0})";
+                switch (KSC.EngineerTransferType)
+                {
+                    case TransferEngineerProject.EngineerTransferType.OutTransfer:
+                        site = $"{site} ({SpaceCenterManagement.Instance.transferTarget.NumLeftToLeave:N0} Transferring Out)";
+                        break;
+                    case TransferEngineerProject.EngineerTransferType.InTransfer:
+                        site = $"{site} ({SpaceCenterManagement.Instance.transferTarget.engineerTransferTimes.Count:N0} In Transit, {SpaceCenterManagement.Instance.transferTarget.TransferredAmount:N0} Transferred)";
+                        break;
+                }
+                GUILayout.Label(site, GUILayout.MinWidth(300));
+                if (originalSC == null)
+                {
+                    if (!KSC.IsEmpty)
+                    {
+                        GUILayout.Space(10);
+                        bool canAfford = KSC.UnassignedEngineers >= 1;
+                        GUIStyle style = canAfford ? GUI.skin.button : GetCannotAffordStyle();
+                        if (GUILayout.Button("Relocate", style, GUILayout.Width(100)) && canAfford)
+                        {
+                            originalSC = KSC;
+                        }
+                    }
+                }
+                else if (originalSC == KSC)
+                {
+                    GUILayout.Space(10);
+                    if (GUILayout.Button("Cancel", GUILayout.Width(100)))
+                    {
+                        originalSC = null;
+                    }
+                }
+                else
+                {
+                    GUILayout.Space(10);
+                    RenderTransferButton(originalSC, KSC);
+                }
+                GUILayout.EndHorizontal();
+            }
+        }
+
+        private static void RenderResearchersSection()
         {
             if (_currentPersonnelHover == PersonnelButtonHover.Assign
                 || _currentPersonnelHover == PersonnelButtonHover.Unassign)
@@ -392,9 +462,9 @@ namespace RP0
                 string dialogName = "warpToStaff";
                 string dialogTitle = $"Auto hire {(isResearch ? "researchers" : "engineers")}";
 
-                if (SpaceCenterManagement.Instance.fundTarget.IsValid)
+                if (SpaceCenterManagement.Instance.WarpTargetActive && !SpaceCenterManagement.Instance.staffTarget.IsValid)
                 {
-                    string msg = "This functionality cannot be used while there's Warp To Fund Target in progress.";
+                    string msg = "This functionality cannot be used while a different warp target is in progress.";
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
                         new MultiOptionDialog(dialogName, msg, dialogTitle, HighLogic.UISkin,
                             new DialogGUIButton("Understood", () => { })
@@ -427,6 +497,47 @@ namespace RP0
                 }
             }
         }
+
+        private static void RenderTransferButton(LCSpaceCenter originalSC, LCSpaceCenter targetSC)
+        {
+            if (GUILayout.Button(new GUIContent($"Transfer here", "Schedules engineers to be transferred between sites over time"), GUILayout.MinWidth(100)))
+            {
+                string dialogName = "warpToTransfer";
+                string dialogTitle = "Transfer engineers";
+
+                if (SpaceCenterManagement.Instance.WarpTargetActive && !SpaceCenterManagement.Instance.transferTarget.IsValid)
+                {
+                    string msg = "This functionality cannot be used while a different warp target is in progress.";
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog(dialogName, msg, dialogTitle, HighLogic.UISkin,
+                            new DialogGUIButton("Understood", () => { })
+                        ), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                }
+                else
+                {
+                    string sNumEngineers = originalSC.UnassignedEngineers.ToString("N0");
+                    string sReserveFunds = Funding.Instance.Funds.ToString("N0");
+                    PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f),
+                        new MultiOptionDialog(dialogName, "", dialogTitle, HighLogic.UISkin,
+                            new DialogGUILabel($"Unassigned engineers being transferred (max: {originalSC.UnassignedEngineers:N0})"),
+                            new DialogGUITextInput(sNumEngineers, false, 7, (string n) =>
+                            {
+                                sNumEngineers = n;
+                                return sNumEngineers;
+                            }, 24f),
+                            new DialogGUILabel("Reserve funds"),
+                            new DialogGUITextInput(sReserveFunds, false, 12, (string n) =>
+                            {
+                                sReserveFunds = n;
+                                return sReserveFunds;
+                            }, 24f),
+                            new DialogGUIButton("Add", () => { TryAddTransferEngineers(sNumEngineers, sReserveFunds, originalSC, targetSC); }),
+                            new DialogGUIButton("Cancel", () => { })
+                        ), false, HighLogic.UISkin).HideGUIsWhilePopup();
+                }
+            }
+        }
+
 
         private static void TryAddAutoHire(string sNumStaff, string sReserveFunds, LaunchComplex lc)
         {
@@ -464,6 +575,36 @@ namespace RP0
 
                 var target = new HireStaffProject(startCount, endCount, reserveFunds, lc);
                 SpaceCenterManagement.Instance.staffTarget = target;
+            }
+        }
+
+        private static void TryAddTransferEngineers(string sNumEngineers, string sReserveFunds, LCSpaceCenter originalSC, LCSpaceCenter targetSC)
+        {
+            sNumEngineers = sNumEngineers.Replace(",", "");
+            sReserveFunds = sReserveFunds.Replace(",", "");
+            bool b1 = int.TryParse(sNumEngineers, out int numEngineers);
+            bool b2 = double.TryParse(sReserveFunds, out double reserveFunds);
+            bool b3 = numEngineers > 0;
+            bool b4 = numEngineers <= originalSC.UnassignedEngineers;
+
+            string errorMessage = (!b1 ? "Failed to parse engineer count!\n" : "") + (!b2 ? "Failed to parse reserve funds!\n" : "") + (b1 && !b3 ? "Engineer count must be greater than 0!\n" : "") + (b1 && !b4 ? "Engineer count cannot exceed unassigned engineers!\n" : "");
+
+            if (!string.IsNullOrEmpty(errorMessage))
+            {
+                PopupDialog.SpawnPopupDialog(new MultiOptionDialog("warpToTransferConfirmFail",
+                    errorMessage.Trim(),
+                    "Error",
+                    HighLogic.UISkin,
+                    300,
+                    new DialogGUIButton("Understood", () => { })
+                    ), false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            else
+            {
+                SpaceCenterManagement.Instance.transferTarget?.Clear();
+                TransferEngineerProject target = new TransferEngineerProject(numEngineers, reserveFunds, originalSC, targetSC);
+                SpaceCenterManagement.Instance.transferTarget = target;
+                KCT_GUI.originalSC = null;
             }
         }
 

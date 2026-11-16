@@ -1220,7 +1220,7 @@ namespace RP0
                     RP0Debug.Log($"cP.crewList.Count: {cp.CrewList.Count}");
                     foreach (CrewMemberAssignment assign in crewList)
                     {
-                        ProtoCrewMember crewMember = assign.PCM;
+                        ProtoCrewMember crewMember = assign?.PCM;
                         if (crewMember == null)
                             continue;
 
@@ -1814,7 +1814,7 @@ namespace RP0
                 {
                     if (oldFac == EditorFacility.VAB)
                     {
-                        if (oldLC.LCType == LaunchComplexType.Pad)
+                        if (oldLC != null && oldLC.LCType == LaunchComplexType.Pad)
                         {
                             // cache this off -- we swapped editors
                             PreEditorSwapLCID = oldLC.ID;
@@ -1906,10 +1906,7 @@ namespace RP0
                 if (ActiveSC.ActiveLC.ActiveLPInstance is LCLaunchPad pad)
                 {
                     if (KCTUtilities.GetFacilityLevel(SpaceCenterFacility.LaunchPad) != pad.level)
-                    {
-                        ActiveSC.ActiveLC.SwitchLaunchPad(ActiveSC.ActiveLC.ActiveLaunchPadIndex, false);
-                        pad.UpdateLaunchpadDestructionState(false);
-                    }
+                        pad.SetActive();
                 }
                 yield return _wfsHalf;
             }

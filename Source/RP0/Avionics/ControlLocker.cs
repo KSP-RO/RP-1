@@ -30,7 +30,7 @@ namespace RP0
 
         private readonly ScreenMessage _message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
 
-        // For locking MJ.
+        // For loading items needed for locking MJ.
         private static bool _isFirstLoad = true;
         private static MethodInfo _getMasterMechJeb = null;
         private static PropertyInfo _mjDeactivateControl = null;
@@ -40,6 +40,11 @@ namespace RP0
 
         private void Awake()
         {
+            if (Instance != null)
+                Destroy(Instance);
+
+            Instance = this;
+
             if (!_isFirstLoad) return;
             _isFirstLoad = false;
 
@@ -55,11 +60,6 @@ namespace RP0
                 RP0Debug.Log($"{ModTag} MechJeb methods found", true);
             else
                 RP0Debug.Log($"{ModTag} MJ assembly or methods NOT found", true);
-
-            if (Instance != null)
-                Destroy(Instance);
-
-            Instance = this;
         }
 
         private void Start()

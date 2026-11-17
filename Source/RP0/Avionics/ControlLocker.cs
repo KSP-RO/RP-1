@@ -153,9 +153,12 @@ namespace RP0
             if (_isLimitedByNonInterplanetary)
                 GameplayTips.Instance.ShowInterplanetaryAvionicsReminder();
 
-            if (lockLevel != _oldLockLevel)
+            // Locked and Axial use the same input lock, so only a change to or from Unlocked touches it.
+            bool wasLocked = _oldLockLevel != ControlLockerUtils.LockLevel.Unlocked;
+            bool isLocked = lockLevel != ControlLockerUtils.LockLevel.Unlocked;
+            if (wasLocked != isLocked)
             {
-                if (_oldLockLevel != ControlLockerUtils.LockLevel.Unlocked)
+                if (!isLocked)
                 {
                     InputLockManager.RemoveControlLock(LockID);
                     _message.message = "Avionics: Unlocking Controls";
@@ -163,14 +166,14 @@ namespace RP0
                 else
                 {
                     InputLockManager.SetControlLock(Lockmask, LockID);
-                    if (!_onRails) 
+                    if (!_onRails)
                         DisableAutopilot();
                     _message.message = $"Insufficient Avionics, Locking Controls (supports {_maxMass:N3}t, vessel {_vesselMass:N3}t)";
                 }
                 ScreenMessages.PostScreenMessage(_message);
                 FlightLogger.fetch.LogEvent(_message.message);
-                _oldLockLevel = lockLevel;
             }
+            _oldLockLevel = lockLevel;
 
             if (_masterMechJeb == null && _getMasterMechJeb != null)
             {

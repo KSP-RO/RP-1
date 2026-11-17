@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- net48 x64 to match RP0.csproj. The tests reference the built RP0.dll and the KSP
+         assemblies, so they run the real Formula / RecoveryTechSettings code rather than a
+         mirror. That means KSP DLLs must be present (staged in ..\..\.refs), so this suite
+         runs locally only - it is deliberately not wired into CI. -->
+		<TargetFramework>net4.8</TargetFramework>
+    <PlatformTarget>x64</PlatformTarget>
+    <LangVersion>12</LangVersion>
+    <AssemblyName>RP0.Tests</AssemblyName>
+    <RootNamespace>RP0.Tests</RootNamespace>
+    <IsPackable>false</IsPackable>
+    <!-- Where the referenced RP0.dll + KSP DLLs live. Override with -p:ReferencePath=... to
+         point at a KSP install's Managed folder instead of the repo's reference staging. -->
+    <ReferencePath Condition=" '$(ReferencePath)' == '' ">$(MSBuildThisFileDirectory)..\..\.refs</ReferencePath>
+		<KSPRoot Condition=" '$(KSPRoot)' == '' ">
+			$(ReferencePath.TrimEnd([System.IO.Path]::DirectorySeparatorChar))
+		</KSPRoot>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Lets tests locate the repo's GameData cfgs and the Approved/ golden files. -->
+    <AssemblyAttribute Include="System.Reflection.AssemblyMetadataAttribute">
+      <_Parameter1>ProjectDir</_Parameter1>
+      <_Parameter2>$(MSBuildProjectDirectory)</_Parameter2>
+    </AssemblyAttribute>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- The code under test. RP0.dll must be built and staged in $(ReferencePath) first
+         (the main mod build already produces it). Private=true copies these beside the test
+         assembly so the runner can load them. -->
+		<ProjectReference Include="../RP0/RP0.csproj" />
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/Assembly-CSharp-firstpass.dll">
+      <HintPath>$(ReferencePath)/Assembly-CSharp-firstpass.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.CoreModule.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.CoreModule.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/KSP_x64_Data/Managed/UnityEngine.dll">
+      <HintPath>$(ReferencePath)/UnityEngine.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+    <Reference Include="$(KSPRoot)/GameData/ROUtils/Plugins/ROUtils.dll">
+      <HintPath>$(ReferencePath)/ROUtils.dll</HintPath>
+      <Private>true</Private>
+    </Reference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.11.1" />
+    <PackageReference Include="NUnit" Version="3.14.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.6.0" />
+    <!-- Resolves the net48 reference assemblies so the project builds without the .NET
+         Framework targeting pack installed. -->
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+</Project>

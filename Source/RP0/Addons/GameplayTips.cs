@@ -262,7 +262,8 @@ namespace RP0
                     KSP.Localization.Localizer.Format("#rp0_GameplayTip_NoActiveContractWarning_Title"), null, 300, options);
                 PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
-            else {
+            else
+            {
                 onComplete(true);
             }
         }

@@ -1,12 +1,12 @@
 ﻿using KSP.UI;
-using KSP.UI.Screens;
-using ROUtils;
-using ROUtils.DataTypes;
 using System;
 using System.Collections.Generic;
 using UniLinq;
 using UnityEngine;
+using ROUtils.DataTypes;
 using UnityEngine.Profiling;
+using KSP.UI.Screens;
+using ROUtils;
 
 namespace RP0
 {
@@ -578,7 +578,7 @@ namespace RP0
                     lc.SwitchLaunchPad(launchSiteIndex);
 
                 LCLaunchPad pad = lc.ActiveLPInstance;
-
+                
                 launchSiteName = pad.launchSiteName;
             }
 

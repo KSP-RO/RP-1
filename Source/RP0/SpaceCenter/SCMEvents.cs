@@ -326,7 +326,11 @@ namespace RP0
 
             LaunchComplex targetLC = SpaceCenterManagement.Instance.RecoveredVessel.LC;
             if (targetLC == null)
-                targetLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
+            {
+                RP0Debug.LogError($"No LC found for recovered vessel {v.vesselName}, it will not be stored.");
+                SpaceCenterManagement.Instance.RecoveredVessel = new VesselProject();
+                return;
+            }
 
             targetLC.Warehouse.Add(SpaceCenterManagement.Instance.RecoveredVessel);
             targetLC.Recon_Rollout.Add(new ReconRolloutProject(SpaceCenterManagement.Instance.RecoveredVessel, ReconRolloutProject.RolloutReconType.Recovery, SpaceCenterManagement.Instance.RecoveredVessel.shipID.ToString()));

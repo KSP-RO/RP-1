@@ -394,7 +394,6 @@ namespace RP0
             if (ksc.Constructions.Count == 0)
                 GUILayout.Label("No constructions under way at this space center.");
 
-            int cancelID = -1;
             double totalCost = 0d;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
@@ -405,9 +404,8 @@ namespace RP0
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
-                    cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
-                    options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
+                    options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(constr); });
                     options[1] = new DialogGUIButton("No", () => { });
                     MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.spentRushCost:N0} funds on this construction ({(constr.spentCost / constr.cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
@@ -471,7 +469,7 @@ namespace RP0
                 double br = c.GetBuildRate();
                 if (br > 0d)
                 {
-                    costday += br * 86400d / c.BP * -CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction, -c.cost * c.RushMultiplier);
+                    costday += br * 86400d / c.BP * -CurrencyUtils.Funds(c.TransactionReason, -c.cost * c.RushMultiplier);
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());
@@ -499,7 +497,6 @@ namespace RP0
             if (techList.Count == 0)
                 GUILayout.Label("No tech nodes are being researched!\nBegin research by unlocking tech in the R&D building.");
             bool forceRecheck = false;
-            int cancelID = -1;
             for (int i = 0; i < techList.Count; i++)
             {
                 ResearchProject t = techList[i];
@@ -508,9 +505,8 @@ namespace RP0
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
                     forceRecheck = true;
-                    cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
-                    options[0] = new DialogGUIButton("Yes", () => { CancelTechNode(cancelID); });
+                    options[0] = new DialogGUIButton("Yes", () => { CancelTechNode(t); });
                     options[1] = new DialogGUIButton("No", () => { });
                     MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.techName}?\n\nThis will also cancel any dependent techs."
                         + (Crew.CrewHandler.Instance?.GetTrainingCoursesForTech(t.techID) ?? string.Empty), "Cancel Node?", null, 300, options);
@@ -1500,8 +1496,7 @@ namespace RP0
                     }
                     else
                     {
-                        GUIStates.ShowBuildList = false;
-                        GUIStates.ShowClearLaunch = true;
+                        ShowClearLaunchWindow(pad.launchSiteName);
                     }
                 }
             }
@@ -1548,8 +1543,7 @@ namespace RP0
                     }
                     else
                     {
-                        GUIStates.ShowBuildList = false;
-                        GUIStates.ShowClearLaunch = true;
+                        ShowClearLaunchWindow("Runway");
                         GUIStates.ShowAirlaunch = airlaunchPrep != null;
                     }
                 }
@@ -1815,6 +1809,8 @@ namespace RP0
 
                 if (initialCancel) // do this only once
                 {
+                    // Research rate depends on the queue position, so refresh it for the techs that moved up.
+                    SpaceCenterManagement.Instance.UpdateTechTimes();
                     SpaceCenterManagement.Instance.TechListUpdated();
                     SpaceCenterManagement.TechListIgnoreUpdates = false;
                     KCTUtilities.AddResearchedPartsToExperimental();
@@ -1822,11 +1818,17 @@ namespace RP0
             }
         }
 
-        public static void CancelConstruction(int index)
+        public static void CancelTechNode(ResearchProject project)
         {
-            if (SpaceCenterManagement.Instance.ActiveSC.Constructions.Count > index)
+            int index = SpaceCenterManagement.Instance.TechList.FindIndex(t => t.techID == project.techID);
+            if (index >= 0)
+                CancelTechNode(index);
+        }
+
+        public static void CancelConstruction(ConstructionProject item)
+        {
+            if (SpaceCenterManagement.Instance.KSCs.Exists(ksc => ksc.Constructions.Contains(item)))
             {
-                ConstructionProject item = SpaceCenterManagement.Instance.ActiveSC.Constructions[index];
                 RP0Debug.Log($"Cancelling construction: {item.GetItemName()}");
                 item.Cancel();
             }
@@ -1853,10 +1855,11 @@ namespace RP0
             ReconRolloutProject rollback = rollout == null ? b.LC.GetReconRollout(ReconRolloutProject.RolloutReconType.Rollback, launchSite) : null;
             bool isRollingOut = rollout != null && rollout.associatedID == vpID;
             bool isRollingBack = rollback != null && rollback.associatedID == vpID;
+            bool hasReconRollout = b.LC.Recon_Rollout.Exists(a => a.associatedID == vpID);
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
-            if (b.Type == ProjectType.SPH && b.LC.Recon_Rollout.Find(a => a.associatedID == vpID) == null && GUILayout.Button("Select LaunchSite"))
+            if (b.Type == ProjectType.SPH && !hasReconRollout && GUILayout.Button("Select LaunchSite"))
             {
                 _launchSites = KCTUtilities.GetLaunchSites(b.Type == ProjectType.VAB);
                 if (_launchSites.Any())
@@ -1871,7 +1874,7 @@ namespace RP0
                 }
             }
 
-            if (!isRollingOut && !isRollingBack && GUILayout.Button("Scrap"))
+            if (!hasReconRollout && GUILayout.Button("Scrap"))
             {
                 GUIStates.ShowBLPlus = false;
                 DialogGUIBase[] options = new DialogGUIBase[2];
@@ -1884,7 +1887,7 @@ namespace RP0
                 ResetBLWindow(false);
             }
 
-            if (!isRollingOut && !isRollingBack && GUILayout.Button("Edit"))
+            if (!hasReconRollout && GUILayout.Button("Edit"))
             {
                 GUIStates.ShowBLPlus = false;
                 EditorWindowPosition.height = 1;

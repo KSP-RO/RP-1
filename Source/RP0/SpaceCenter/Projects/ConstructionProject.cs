@@ -26,9 +26,11 @@ namespace RP0
 
         public double RushMultiplier => workRate > 1d ? Database.SettingsSC.ConstructionRushCost.Evaluate(workRate) : 1d;
 
-        public double RemainingCost => -CurrencyUtils.Funds(
-            FacilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction,
-            -(cost - spentCost) * RushMultiplier);
+        public TransactionReasonsRP0 TransactionReason => FacilityType == SpaceCenterFacility.LaunchPad
+            ? TransactionReasonsRP0.StructureConstructionLC
+            : TransactionReasonsRP0.StructureConstruction;
+
+        public double RemainingCost => -CurrencyUtils.Funds(TransactionReason, -(cost - spentCost) * RushMultiplier);
 
         public virtual SpaceCenterFacility FacilityType
         {
@@ -160,7 +162,8 @@ namespace RP0
             {
                 double rushCostDelta = costDelta * RushMultiplier;
 
-                CurrencyModifierQuery q = CurrencyModifierQuery.RunQuery(TransactionReasons.StructureConstruction, -(float)rushCostDelta, 0f, 0f);
+                TransactionReasonsRP0 reason = TransactionReason;
+                CurrencyModifierQueryRP0 q = CurrencyModifierQueryRP0.RunQuery(reason, -rushCostDelta, 0d, 0d);
                 if (KSPUtils.CurrentGameIsCareer() && !q.CanAfford())
                 {
                     // Rather than halting the whole step (which throws away up to a full day of
@@ -171,7 +174,7 @@ namespace RP0
                     double rushSpend = rushCostDelta * affordFraction;
                     if (rushSpend > 0d)
                     {
-                        KCTUtilities.SpendFunds(rushSpend, TransactionReasons.StructureConstruction);
+                        KCTUtilities.SpendFunds(rushSpend, reason);
                         spentCost += costDelta * affordFraction;
                         spentRushCost += rushSpend;
                     }
@@ -185,7 +188,7 @@ namespace RP0
                     return 0d;
                 }
 
-                KCTUtilities.SpendFunds(rushCostDelta, TransactionReasons.StructureConstruction);
+                KCTUtilities.SpendFunds(rushCostDelta, reason);
                 spentCost += costDelta;
                 spentRushCost += rushCostDelta;
             }

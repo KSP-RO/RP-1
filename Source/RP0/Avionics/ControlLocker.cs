@@ -130,15 +130,22 @@ namespace RP0
 
         public void Update()
         {
-            if (!HighLogic.LoadedSceneIsFlight || !FlightGlobals.ready)
+            if (!HighLogic.LoadedSceneIsFlight)
             {
                 InputLockManager.RemoveControlLock(LockID);
                 return;
             }
+
+            // FlightGlobals.ready is false until the next FixedUpdate after every active vessel change.
+            // Leave the lock as it is until then, it gets re-evaluated for the new vessel below.
+            if (!FlightGlobals.ready)
+                return;
+
             if (Vessel != FlightGlobals.ActiveVessel)
             {
                 Vessel = FlightGlobals.ActiveVessel;
                 _masterMechJeb = null;
+                _requested = _isStartFinished;
             }
 
             ControlLockerUtils.LockLevel lockLevel = ShouldLock();

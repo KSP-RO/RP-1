@@ -287,11 +287,13 @@ namespace RP0
                 // because Tech Unlock Times are disabled takes no time and earns no credit.
                 double portion = isComplete && increment > 0d ? UtilMath.Clamp(toGo / increment, 0d, 1d) : 0d;
 
+                // Credit must be added while this tech is still first in the list because the credit rate depends on it
+                UnlockCreditHandler.Instance.IncrementCreditTime(portion * UTDiff);
+
                 SpaceCenterManagement.Instance.TechList.Remove(this);
 
                 SpaceCenterManagement.Instance.RecalculateBuildRates(); // this might change other rates
 
-                UnlockCreditHandler.Instance.IncrementCreditTime(portion * UTDiff);
                 return (1d - portion) * UTDiff;
             }
 

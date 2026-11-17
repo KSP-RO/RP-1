@@ -1975,7 +1975,7 @@ namespace RP0
                 double researchTime = UTDiff;
                 while (researchTime > 0d && TechList.Count > 0)
                 {
-                    researchTime = TechList[0].IncrementProgress(UTDiff);
+                    researchTime = TechList[0].IncrementProgress(researchTime);
                 }
 
                 if (fundTarget.IsValid && fundTarget.GetTimeLeft() < 0.5d)
@@ -2010,7 +2010,7 @@ namespace RP0
                 double timeForBuild = UTDiff;
                 while (timeForBuild > 0d && currentLC.BuildList.Count > 0)
                 {
-                    timeForBuild = currentLC.BuildList[0].IncrementProgress(UTDiff);
+                    timeForBuild = currentLC.BuildList[0].IncrementProgress(timeForBuild);
                 }
 
                 for (int i = currentLC.Recon_Rollout.Count; i-- > 0;)

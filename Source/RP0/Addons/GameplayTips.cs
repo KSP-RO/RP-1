@@ -251,8 +251,11 @@ namespace RP0
             {
                 DialogGUIBase[] options = new DialogGUIBase[3];
                 options[0] = new DialogGUIButton("Launch Anyway", () => { onComplete(true); });
-                options[1] = new DialogGUIButton("Launch and Don't Show This Again", () => 
-                { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning = false; onComplete(true); });
+                options[1] = new DialogGUIButton("Launch and Don't Show This Again", () =>
+                {
+                    HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning = false;
+                    onComplete(true);
+                });
                 options[2] = new DialogGUIButton("Cancel", () => { onComplete(false); });
 
                 MultiOptionDialog diag = new MultiOptionDialog("ShowNoActiveContractWarning",
@@ -261,7 +264,9 @@ namespace RP0
 
                 PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
             }
-            else { onComplete(true); }
+            else {
+                onComplete(true);
+            }
         }
     }
 }

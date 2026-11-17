@@ -1461,7 +1461,8 @@ namespace RP0
                 ScreenMessages.PostScreenMessage(message);
                 return;
             }
-            GameplayTips.Instance.ShowNoActiveContractWarning(pass => { 
+            GameplayTips.Instance.ShowNoActiveContractWarning(pass =>
+            {
                 if (!pass) return;
 
                 SpaceCenterManagement.Instance.LaunchedVessel = b;
@@ -1502,7 +1503,8 @@ namespace RP0
                 ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
                 return;
             }
-            GameplayTips.Instance.ShowNoActiveContractWarning(pass => { 
+            GameplayTips.Instance.ShowNoActiveContractWarning(pass =>
+            {
                 if (!pass) return;
 
                 GUIStates.ShowBLPlus = false;

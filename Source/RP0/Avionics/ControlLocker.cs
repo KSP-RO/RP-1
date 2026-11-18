@@ -34,7 +34,6 @@ namespace RP0
         private static bool _isFirstLoad = true;
         private static MethodInfo _getMasterMechJeb = null;
         private static PropertyInfo _mjDeactivateControl = null;
-        private object _masterMechJeb = null;
 
         public static ControlLocker Instance { get; private set; }
 
@@ -144,7 +143,6 @@ namespace RP0
             if (Vessel != FlightGlobals.ActiveVessel)
             {
                 Vessel = FlightGlobals.ActiveVessel;
-                _masterMechJeb = null;
                 _requested = _isStartFinished;
             }
 
@@ -175,14 +173,13 @@ namespace RP0
             }
             _oldLockLevel = lockLevel;
 
-            if (_masterMechJeb == null && _getMasterMechJeb != null)
+            if (_getMasterMechJeb != null && _mjDeactivateControl != null && Vessel != null)
             {
-                _masterMechJeb = _getMasterMechJeb.Invoke(null, new object[] { FlightGlobals.ActiveVessel });
-            }
-            if (_masterMechJeb != null && _mjDeactivateControl != null)
-            {
-                // Update MJ every tick, to make sure it gets correct state after separation / docking.
-                _mjDeactivateControl.SetValue(_masterMechJeb, lockLevel != ControlLockerUtils.LockLevel.Unlocked, index: null);
+                // Resolve the master core every tick. Separation, undocking or docking can change which core is
+                // the master while the active vessel stays the same. MJ caches the lookup per physics frame.
+                object masterMechJeb = _getMasterMechJeb.Invoke(null, new object[] { Vessel });
+                if (masterMechJeb != null)
+                    _mjDeactivateControl.SetValue(masterMechJeb, lockLevel != ControlLockerUtils.LockLevel.Unlocked, index: null);
             }
         }
 

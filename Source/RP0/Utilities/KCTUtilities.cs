@@ -471,7 +471,6 @@ namespace RP0
             foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
             {
                 usedShipsCost += v.GetTotalCost();
-                v.RemoveFromBuildList(out _);
             }
 
             var validator = new VesselBuildValidator();
@@ -488,6 +487,11 @@ namespace RP0
             if (KSPUtils.CurrentGameIsCareer() && (costDelta = oldCost - newShip.cost) != 0d)
             {
                 Funding.Instance.AddFunds((float)costDelta, TransactionReasonsRP0.VesselPurchase.Stock());
+            }
+
+            foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
+            {
+                v.RemoveFromBuildList(out _);
             }
 
             AddVesselToBuildList(newShip, false);

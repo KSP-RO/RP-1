@@ -1,6 +1,7 @@
 ﻿using KSP.Localization;
 using Strategies;
 using RP0.ModIntegrations;
+using System;
 
 namespace RP0
 {
@@ -247,7 +248,7 @@ namespace RP0
                 repMult *= 0.1d / (frac * 0.5d + 0.1d) - 0.15d * frac;
             }
 
-            return Reputation.Instance.reputation * repMult;
+            return Math.Max(0d, Reputation.Instance.reputation) * repMult;
         }
 
         public virtual string DeactivateCostString()

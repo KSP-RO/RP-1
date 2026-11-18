@@ -21,6 +21,7 @@
         "entry_cost_mods": "RD-0124",
         "identical_part_name": "RD-0124",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

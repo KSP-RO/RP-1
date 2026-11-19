@@ -44,6 +44,12 @@ namespace RP0
         public double MaxVelocity; // Maximum velocity (m/s)
 
         [Persistent]
+        public double MinDropAngle; // Minimum flight path angle at release (deg, negative = nose down)
+
+        [Persistent]
+        public double MaxDropAngle; // Maximum flight path angle at release (deg)
+
+        [Persistent]
         public double MaxMass; // Maximum mass (kg)
 
         [Persistent]
@@ -74,6 +80,8 @@ namespace RP0
         }
 
         public double MaxMassTonnes => MaxMass / 1000d;
+
+        public double ClampDropAngle(double angle) => System.Math.Max(MinDropAngle, System.Math.Min(MaxDropAngle, angle));
 
         public string TechTitle => ResearchAndDevelopment.GetTechnologyTitle(TechRequired);
 

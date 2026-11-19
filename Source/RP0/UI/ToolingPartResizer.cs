@@ -229,6 +229,8 @@ namespace RP0
 
             PartModule shape = ShapeForName(p, shapeName);
             if (shape == null) return false;
+            // a shape ShapeForName doesn't know (CustomProceduralParts' Spine, say) maps to the hidden Cylinder
+            if (shape.Fields["displayName"]?.GetValue(shape) as string != shapeName) { Msg($"Refit doesn't support {shapeName} shapes."); return false; }
 
             bool isCone = shapeName.Contains("Cone");
             bool isHollow = shapeName.Contains("Hollow");

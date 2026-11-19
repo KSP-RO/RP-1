@@ -25,6 +25,7 @@ namespace RP0
         private static string _sAltitude = "10000";
         private static string _sAzimuth = "270";
         private static string _sVelocity = "180";
+        private static string _sDropAngle = "0";
         private static string _errorMsg;
         private static AirlaunchParams _airlaunchParams;
         private static string _airlaunchParamsKey;
@@ -464,6 +465,8 @@ namespace RP0
                 if (SpaceCenterManagement.Instance.AirlaunchParams.KscDistance > 0)
                     _airlaunchParams.KscDistance = SpaceCenterManagement.Instance.AirlaunchParams.KscDistance;
             }
+            if (_airlaunchParams.Carrier != null)
+                _airlaunchParams.DropAngle = _airlaunchParams.Carrier.ClampDropAngle(_airlaunchParams.DropAngle);
 
             SetAirlaunchStrings(true);
         }
@@ -476,6 +479,7 @@ namespace RP0
             if (all)
             {
                 _sAzimuth = _airlaunchParams.LaunchAzimuth.ToString();
+                _sDropAngle = _airlaunchParams.DropAngle.ToString();
                 _sKscAzimuth = _airlaunchParams.KscAzimuth.ToString();
             }
         }
@@ -528,12 +532,15 @@ namespace RP0
                 DrawNumericField(carrier != null ? $"Release speed ({carrier.MinVelocity:0} - {carrier.MaxVelocity:0} m/s):" : "Release speed:", ref _sVelocity, "m/s");
                 DrawNumericField(carrier != null ? $"Release altitude ({carrier.MinAltitude:0} - {carrier.MaxAltitude:0} m):" : "Release altitude:", ref _sAltitude, "m");
             }
+            AirlaunchTechLevel angleCarrier = isSim ? _simGrid.Selected : _airlaunchParams.Carrier;
+            DrawNumericField(angleCarrier != null ? $"Release angle ({angleCarrier.MinDropAngle:0.#} to {angleCarrier.MaxDropAngle:0.#}°):" : "Release angle:", ref _sDropAngle, "°");
 
             try
             {
                 _airlaunchParams.LaunchAzimuth = double.Parse(_sAzimuth);
                 _airlaunchParams.KscDistance = double.Parse(_sKscDistance) * 1000;
                 _airlaunchParams.KscAzimuth = double.Parse(_sKscAzimuth);
+                _airlaunchParams.DropAngle = double.Parse(_sDropAngle);
                 if (isSim)
                 {
                     _airlaunchParams.CarrierName = _simGrid.SelectedCarrier;

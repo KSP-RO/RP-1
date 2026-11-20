@@ -100,20 +100,18 @@ namespace RP0
         /// <param name="dimensions">Vessel size in m (width, height, length)</param>
         public bool CanLaunchVessel(double mass, Vector3 dimensions, out string reason)
         {
-            // Vessel mass is in tonnes, MaxMass is in kg
-            if (mass > MaxMassTonnes)
+            switch (CheckFit(mass, dimensions))
             {
-                reason = $"mass {mass:0.#} t > {MaxMassTonnes:0.#} t max";
-                return false;
+                case FitResult.TooHeavy:
+                    reason = $"mass {mass:0.#} t > {MaxMassTonnes:0.#} t max";
+                    return false;
+                case FitResult.TooLarge:
+                    reason = $"size {dimensions.x:0.#} x {dimensions.y:0.#} x {dimensions.z:0.#} m > {MaxSize.x:0.#} x {MaxSize.y:0.#} x {MaxSize.z:0.#} m max";
+                    return false;
+                default:
+                    reason = null;
+                    return true;
             }
-            if (dimensions.x > MaxSize.x | dimensions.y > MaxSize.y | dimensions.z > MaxSize.z)
-            {
-                reason = $"size {dimensions.x:0.#} x {dimensions.y:0.#} x {dimensions.z:0.#} m > {MaxSize.x:0.#} x {MaxSize.y:0.#} x {MaxSize.z:0.#} m max";
-                return false;
-            }
-
-            reason = null;
-            return true;
         }
 
         public enum FitResult { Fits, TooHeavy, TooLarge }
@@ -216,6 +214,7 @@ namespace RP0
             Harmony.RFECMPatcher.techNode = null;
             if (success)
             {
+                InvalidateCache();
                 PartUpgradeManager.Handler.SetUnlocked(up.name, true);
                 GameEvents.OnPartUpgradePurchased.Fire(up);
             }
@@ -238,25 +237,58 @@ namespace RP0
         }
 
         /// <summary>
-        /// Available carriers in config order, without those superseded by another available carrier.
+        /// Available carriers in config order, without those superseded by another available carrier unless includeSuperseded is set.
         /// </summary>
-        public static List<AirlaunchTechLevel> GetAvailable(bool forSim)
+        public static IReadOnlyList<AirlaunchTechLevel> GetAvailable(bool forSim, bool includeSuperseded = false)
         {
             EnsureLoaded();
+            ValidateCache();
+            int idx = (forSim ? 1 : 0) | (includeSuperseded ? 2 : 0);
+            if (_availableCache[idx] != null)
+                return _availableCache[idx];
+
             var available = _carriers.Where(c => c.IsAvailable(forSim)).ToList();
-            var superseded = GetSuperseded(available);
-            available.RemoveAll(c => superseded.Contains(c.name));
-            return available;
+            if (!includeSuperseded)
+            {
+                var superseded = GetSuperseded(available);
+                available.RemoveAll(c => superseded.Contains(c.name));
+            }
+            return _availableCache[idx] = available;
+        }
+
+        // Carrier lists are queried for every hangar vessel on every OnGUI event, so they're computed once per frame.
+        // Callers must not modify the returned lists.
+        private static int _cacheFrame = -1;
+        private static readonly List<AirlaunchTechLevel>[] _availableCache = new List<AirlaunchTechLevel>[4];
+        private static List<AirlaunchTechLevel> _purchasableCache;
+
+        private static void ValidateCache()
+        {
+            if (_cacheFrame != Time.frameCount)
+            {
+                InvalidateCache();
+                _cacheFrame = Time.frameCount;
+            }
+        }
+
+        private static void InvalidateCache()
+        {
+            System.Array.Clear(_availableCache, 0, _availableCache.Length);
+            _purchasableCache = null;
         }
 
         /// <summary>
         /// Carriers whose tech is researched but whose upgrade isn't purchased yet, without those made redundant by an unlocked carrier.
         /// </summary>
-        public static List<AirlaunchTechLevel> GetPurchasable()
+        public static IReadOnlyList<AirlaunchTechLevel> GetPurchasable()
         {
             EnsureLoaded();
+            ValidateCache();
+            if (_purchasableCache != null)
+                return _purchasableCache;
+
             var superseded = GetSuperseded(_carriers.Where(c => c.IsUnlocked));
-            return _carriers.Where(c => c.IsTechResearched && !c.IsPurchased && !superseded.Contains(c.name)).ToList();
+            return _purchasableCache = _carriers.Where(c => c.IsTechResearched && !c.IsPurchased && !superseded.Contains(c.name)).ToList();
         }
 
         public static AirlaunchTechLevel GetByName(string carrierName)
@@ -273,7 +305,7 @@ namespace RP0
         public static AirlaunchTechLevel FirstFittingInConfig(VesselProject vessel)
         {
             EnsureLoaded();
-            return _carriers.FirstOrDefault(c => c.CanLaunchVessel(vessel, out _));
+            return _carriers.FirstOrDefault(c => c.CheckFit(vessel) == FitResult.Fits);
         }
 
         /// <summary>

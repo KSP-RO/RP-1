@@ -42,9 +42,6 @@ namespace RP0
             if (vessel == null || AirlaunchTechLevel.All.Count == 0)
                 return;
 
-            if (AirlaunchTechLevel.AnyTechResearched() && !AirlaunchTechLevel.GetAvailable(false).Any(c => c.CanLaunchVessel(vessel, out _)))
-                GUILayout.Label("Warning: no current carrier aircraft can airlaunch this vessel", _yellowText);
-
             if (GUILayout.Button("Airlaunch Capability"))
             {
                 _airlaunchCapabilityWindowPosition.height = 1;

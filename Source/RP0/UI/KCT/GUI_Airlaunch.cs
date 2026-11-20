@@ -39,6 +39,7 @@ namespace RP0
             public string VelocityText = string.Empty, AltitudeText = string.Empty;
             public double Velocity, Altitude;
             public bool ParseOk;
+            public bool SelectedInRange;
             public bool HasFitting;
             public string SpeedRange = string.Empty, AltitudeRange = string.Empty;
 
@@ -65,6 +66,24 @@ namespace RP0
             }
         }
 
+        private static bool _showSuperseded;
+
+        /// <summary>
+        /// Toggle to also list carriers superseded by a better one (e.g. launch on the cheaper B-50 once the NB-52 is bought).
+        /// Only shown when there is something to reveal. Returns true if it changed.
+        /// </summary>
+        private static bool DrawSupersededToggle(bool forSim)
+        {
+            if (AirlaunchTechLevel.GetAvailable(forSim, true).Count == AirlaunchTechLevel.GetAvailable(forSim).Count)
+                return false;
+            bool v = GUILayout.Toggle(_showSuperseded, "Show superseded carriers");
+            bool changed = v != _showSuperseded;
+            _showSuperseded = v;
+            if (changed)
+                _airlaunchPrepWindowPosition.height = _airlaunchWindowPosition.height = 1;
+            return changed;
+        }
+
         private static readonly CarrierGridState _prepGrid = new CarrierGridState();
         private static readonly CarrierGridState _simGrid = new CarrierGridState();
 
@@ -86,7 +105,7 @@ namespace RP0
         /// and the lists of carriers that can't.
         /// </summary>
         /// <param name="getPrep">Prep project per carrier for cost/time columns, or null to hide those columns (sims)</param>
-        private static void DrawCarrierGrid(CarrierGridState s, List<AirlaunchTechLevel> carriers, Func<AirlaunchTechLevel, FitResult> getFit,
+        private static void DrawCarrierGrid(CarrierGridState s, IReadOnlyList<AirlaunchTechLevel> carriers, Func<AirlaunchTechLevel, FitResult> getFit,
                                             Func<AirlaunchTechLevel, ReconRolloutProject> getPrep)
         {
             var fitting = carriers.Where(c => getFit(c) == FitResult.Fits).ToList();
@@ -101,6 +120,7 @@ namespace RP0
                 bool velocityOk = double.TryParse(s.VelocityText, out s.Velocity);
                 bool altitudeOk = double.TryParse(s.AltitudeText, out s.Altitude);
                 s.ParseOk = velocityOk && altitudeOk;
+                s.SelectedInRange = false;
 
                 // Each range only counts carriers that can also reach the other entered value
                 var forSpeed = altitudeOk ? fitting.Where(c => s.Altitude >= c.MinAltitude && s.Altitude <= c.MaxAltitude).ToList() : fitting;
@@ -123,11 +143,11 @@ namespace RP0
                 foreach (AirlaunchTechLevel c in fitting)
                 {
                     bool inRange = s.ParseOk && c.EnvelopeContains(s.Velocity, s.Altitude);
-                    if (!inRange && c.name == s.SelectedCarrier)
-                        s.SelectedCarrier = string.Empty;
-
                     string title = c.title + c.SimAvailabilityTag;
                     bool isSelected = c.name == s.SelectedCarrier;
+                    // Keep the selection while typing; only the action buttons are disabled for invalid values
+                    if (isSelected)
+                        s.SelectedInRange = inRange;
 
                     GUILayout.BeginHorizontal();
                     GUI.enabled = inRange;
@@ -190,10 +210,17 @@ namespace RP0
         public static void DrawAirlaunchCapabilityWindow(int windowID)
         {
             VesselProject vessel = SpaceCenterManagement.Instance.EditorVessel;
-            List<AirlaunchTechLevel> carriers = AirlaunchTechLevel.GetAvailable(false);
+            if (vessel == null || EditorDriver.editorFacility != EditorFacility.SPH)
+            {
+                GUIStates.ShowAirlaunchCapability = false;
+                return;
+            }
+            IReadOnlyList<AirlaunchTechLevel> carriers = AirlaunchTechLevel.GetAvailable(false, _showSuperseded);
             var fitting = carriers.Where(c => c.CheckFit(vessel) == FitResult.Fits).ToList();
 
             GUILayout.BeginVertical();
+            if (DrawSupersededToggle(false))
+                _airlaunchCapabilityWindowPosition.height = 1;
             Vector3 size = vessel.GetShipSize();
             GUILayout.Label($"Vessel: {vessel.GetTotalMass():0.#} t, {size.x:0.#} x {size.y:0.#} x {size.z:0.#} m");
             GUILayout.Space(5f);
@@ -287,7 +314,7 @@ namespace RP0
         {
             _airlaunchPrepProjects.Clear();
             string vpID = b.shipID.ToString();
-            var fitting = AirlaunchTechLevel.GetAvailable(false).Where(c => c.CheckFit(b) == FitResult.Fits).ToList();
+            var fitting = AirlaunchTechLevel.GetAvailable(false, _showSuperseded).Where(c => c.CheckFit(b) == FitResult.Fits).ToList();
             foreach (AirlaunchTechLevel c in fitting)
                 _airlaunchPrepProjects[c.name] = new ReconRolloutProject(b, ReconRolloutProject.RolloutReconType.AirlaunchMount, vpID, carrier: c);
 
@@ -301,7 +328,7 @@ namespace RP0
                 _airlaunchPrices[c.name] = new CarrierPrice { PreCreditCost = pre, PostCreditCost = post, Credit = credit, CanAfford = canAfford };
             }
 
-            if (resetInputs || string.IsNullOrEmpty(_prepGrid.SelectedCarrier))
+            if (resetInputs || !fitting.Exists(c => c.name == _prepGrid.SelectedCarrier))
                 _prepGrid.Init(fitting, _prepGrid.SelectedCarrier);
         }
 
@@ -373,7 +400,9 @@ namespace RP0
             GUILayout.BeginVertical();
             GUILayout.Label($"{b.shipName} ({b.GetTotalMass():0.#} t)");
 
-            DrawCarrierGrid(_prepGrid, AirlaunchTechLevel.GetAvailable(false), c => c.CheckFit(b),
+            if (DrawSupersededToggle(false))
+                RefreshAirlaunchPrepData(b, resetInputs: false);
+            DrawCarrierGrid(_prepGrid, AirlaunchTechLevel.GetAvailable(false, _showSuperseded), c => c.CheckFit(b),
                             c => _airlaunchPrepProjects.TryGetValue(c.name, out var p) ? p : null);
             DrawCarrierPurchaseSection(b);
 
@@ -382,7 +411,7 @@ namespace RP0
             GUILayout.Space(5f);
             GUILayout.BeginHorizontal();
             AirlaunchTechLevel carrier = _prepGrid.Selected;
-            GUI.enabled = carrier != null && _prepGrid.ParseOk && _airlaunchPrepProjects.ContainsKey(carrier.name);
+            GUI.enabled = carrier != null && _prepGrid.ParseOk && _prepGrid.SelectedInRange && _airlaunchPrepProjects.ContainsKey(carrier.name);
             if (GUILayout.Button(carrier != null ? $"Prep on {carrier.title}" : "Select a carrier"))
             {
                 string vpID = b.shipID.ToString();
@@ -449,7 +478,7 @@ namespace RP0
             {
                 VesselProject vessel = SpaceCenterManagement.Instance.LaunchedVessel;
                 string vpID = vessel.shipID.ToString();
-                ReconRolloutProject prep = vessel.LC?.Recon_Rollout.Find(r => r.associatedID == vpID);
+                ReconRolloutProject prep = vessel.LC?.Recon_Rollout.Find(r => r.associatedID == vpID && r.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount);
                 AirlaunchTechLevel carrier = AirlaunchTechLevel.Resolve(prep?.airlaunchCarrier, vessel);
                 if (prep != null && carrier != null && string.IsNullOrEmpty(prep.airlaunchCarrier))
                     prep.airlaunchCarrier = carrier.name;   // migrate pre-carrier saves
@@ -497,7 +526,7 @@ namespace RP0
         {
             bool isSim = SpaceCenterManagement.Instance.IsSimulatedFlight;
             // Re-initialize when switching between sim and real launches or between vessels, so a stale carrier isn't reused.
-            string paramsKey = isSim ? "sim" : SpaceCenterManagement.Instance.LaunchedVessel.shipID.ToString();
+            string paramsKey = isSim ? "sim" + FlightGlobals.ActiveVessel?.id : SpaceCenterManagement.Instance.LaunchedVessel.shipID.ToString();
             if (_airlaunchParams == null || _airlaunchParamsKey != paramsKey)
             {
                 _airlaunchParamsKey = paramsKey;
@@ -511,7 +540,8 @@ namespace RP0
             if (isSim)
             {
                 // Sims have no prep step: pick the carrier, release speed and altitude here
-                DrawCarrierGrid(_simGrid, AirlaunchTechLevel.GetAvailable(true), SimVesselFit, null);
+                DrawSupersededToggle(true);
+                DrawCarrierGrid(_simGrid, AirlaunchTechLevel.GetAvailable(true, _showSuperseded), SimVesselFit, null);
                 GUILayout.Space(5f);
             }
             else
@@ -582,6 +612,7 @@ namespace RP0
                 GUIStates.ShowAirlaunch = false;
                 GUIStates.ShowBuildList = true;
                 _errorMsg = null;
+                _airlaunchParams = null; // re-init on next open so a stale carrier isn't reused
             }
             GUILayout.EndHorizontal();
 

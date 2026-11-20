@@ -1545,11 +1545,11 @@ namespace RP0
             if (airlaunchPrep == null && AirlaunchTechLevel.AnyTechResearched())
             {
                 string vpID = b.shipID.ToString();
-                AirlaunchTechLevel cheapestFit = AirlaunchTechLevel.GetAvailable(false)
-                                                                   .Where(c => c.CanLaunchVessel(b, out _))
+                AirlaunchTechLevel cheapestFit = AirlaunchTechLevel.GetAvailable(false, includeSuperseded: true)
+                                                                   .Where(c => c.CheckFit(b) == AirlaunchTechLevel.FitResult.Fits)
                                                                    .OrderBy(c => c.CostMultiplier)
                                                                    .FirstOrDefault();
-                if (cheapestFit == null && AirlaunchTechLevel.GetPurchasable().Any(c => c.CanLaunchVessel(b, out _)))
+                if (cheapestFit == null && AirlaunchTechLevel.GetPurchasable().Any(c => c.CheckFit(b) == AirlaunchTechLevel.FitResult.Fits))
                 {
                     // No owned carrier fits, but one can be bought from the prep window
                     if (GUILayout.Button(new GUIContent("Prep for airlaunch", "No purchased carrier can lift this vessel."),

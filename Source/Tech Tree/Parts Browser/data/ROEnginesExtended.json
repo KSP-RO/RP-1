@@ -1230,7 +1230,7 @@
         "engine_config": "S5_4",
         "upgrade": false,
         "entry_cost_mods": "S5-4",
-        "identical_part_name": "",
+        "identical_part_name": "S5.4",
         "module_tags": [
             "EngineLiquidTurbo"
         ]

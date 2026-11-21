@@ -251,10 +251,10 @@ namespace RP0
             baseCostPerDay /= 365.25d;
         }
 
-        public double ComputeDailyMaintenanceCost(double cost, FacilityMaintenanceType facilityType = FacilityMaintenanceType.Building)
+        public double ComputeDailyMaintenanceCost(double cost, FacilityMaintenanceType facilityType = FacilityMaintenanceType.Building, double hangarRocketPortion = 1d)
         {
             if (facilityType == FacilityMaintenanceType.Hangar)
-                cost = Math.Max(Database.SettingsSC.hangarCostForMaintenanceMin, cost - Database.SettingsSC.hangarCostForMaintenanceOffset);
+                cost = LCData.GetHangarDiscountedCost(cost, hangarRocketPortion);
 
             double upkeep = Database.SettingsSC.facilityLevelCostMult * Math.Pow(cost, Database.SettingsSC.facilityLevelCostPow);
 
@@ -269,7 +269,7 @@ namespace RP0
             switch (lc.LCType)
             {
                 case LaunchComplexType.Hangar:
-                    return ComputeDailyMaintenanceCost(lc.Stats.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar);
+                    return ComputeDailyMaintenanceCost(lc.Stats.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar, lc.Stats.GetHangarRocketPortion());
 
                 case LaunchComplexType.Pad:
                     lc.Stats.GetCostStats(out double padCost, out double vabCost, out double resCost);
@@ -283,7 +283,7 @@ namespace RP0
             switch (lcData.lcType)
             {
                 case LaunchComplexType.Hangar:
-                    return ComputeDailyMaintenanceCost(lcData.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar);
+                    return ComputeDailyMaintenanceCost(lcData.GetCostStats(out _, out _, out _), FacilityMaintenanceType.Hangar, lcData.GetHangarRocketPortion());
 
                 case LaunchComplexType.Pad:
                     lcData.GetCostStats(out double padCost, out double vabCost, out double resCost);

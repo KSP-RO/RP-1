@@ -261,9 +261,6 @@ namespace RP0
         /// <returns></returns>
         public static double GetLCCloseness(LCData ourStats, LCData otherStats)
         {
-            if (ourStats.lcType == LaunchComplexType.Hangar)
-                return 1d;
-
             if (otherStats.lcType != ourStats.lcType)
                 return 0d;
 
@@ -348,10 +345,11 @@ namespace RP0
                 _resourceKeys.Add(r);
 
             var def = TankDefSMIV;
+            LCResourceType ignoredResType = ourStats.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore;
             foreach (string key in _resourceKeys)
             {
                 var rType = Database.ResourceInfo.LCResourceTypes.ValueOrDefault(key);
-                if ((rType & LCResourceType.PadIgnore) != 0 || (rType & LCResourceType.Fuel) == 0)
+                if ((rType & ignoredResType) != 0 || (rType & LCResourceType.Fuel) == 0)
                     continue;
 
                 ourStats.resourcesHandled.TryGetValue(key, out double ours);

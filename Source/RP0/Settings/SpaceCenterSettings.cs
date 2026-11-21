@@ -29,6 +29,12 @@ namespace RP0
         public double hangarCostForMaintenanceMin = 20000d;
 
         [Persistent]
+        public double hangarRocketPropellantFree = 5000d;
+
+        [Persistent]
+        public double hangarRocketPropellantFull = 17500d;
+
+        [Persistent]
         public double lcCostMultiplier = 2d;
 
         [Persistent]

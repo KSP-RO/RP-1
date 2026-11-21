@@ -37,6 +37,18 @@ namespace RP0
                 return _cachedRolloutRateLeader;
             }
         }
+        private static void DrawEditorAirlaunchInfo(VesselProject vessel)
+        {
+            if (vessel == null || AirlaunchTechLevel.All.Count == 0)
+                return;
+
+            if (GUILayout.Button("Airlaunch Capability"))
+            {
+                _airlaunchCapabilityWindowPosition.height = 1;
+                GUIStates.ShowAirlaunchCapability = !GUIStates.ShowAirlaunchCapability;
+            }
+        }
+
         public static void DrawEditorGUI(int windowID)
         {
             if (EditorLogic.fetch == null)
@@ -191,6 +203,9 @@ namespace RP0
                         + (isHangar ? "\nModify Hangar" : "\nModify LC or select another LC"),
                         _yellowText);
                 }
+
+                if (isHangar)
+                    DrawEditorAirlaunchInfo(SpaceCenterManagement.Instance.EditorVessel);
             }
 
             GUILayout.BeginHorizontal();

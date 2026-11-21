@@ -97,7 +97,8 @@ namespace RP0
         [KSPField(isPersistant = true)] public bool DontShowFirstRunAgain = false;
         #endregion
 
-        public const int VERSION = 9;
+        public const int VERSION = 10;
+        private bool _pendingAirlaunchUpgrade;
         [KSPField(isPersistant = true)] public int LoadedSaveVersion = VERSION;
 
         [KSPField(isPersistant = true)] public bool IsFirstStart = true;
@@ -344,6 +345,15 @@ namespace RP0
             if (KCT_GUI.IsPrimarilyDisabled && !IsSimulatedFlight) return;
 
             //The following should only be executed when fully enabled for the save
+
+            if (_pendingAirlaunchUpgrade)
+            {
+                _pendingAirlaunchUpgrade = false;
+                // Carriers used to unlock with the tech alone; grant the new upgrade to existing saves
+                foreach (AirlaunchTechLevel c in AirlaunchTechLevel.All)
+                    if (c.IsTechResearched && !c.IsPurchased)
+                        PartUpgradeManager.Handler.SetUnlocked(c.UpgradeName, true);
+            }
 
             if (ActiveSC == null)
             {
@@ -637,6 +647,10 @@ namespace RP0
                         }
                     }
                     
+                    // Runs in StartFinished: R&D and part upgrades may not be loaded yet here
+                    if (LoadedSaveVersion < 10)
+                        _pendingAirlaunchUpgrade = true;
+
                     LoadedSaveVersion = VERSION;
                 }
             }

@@ -111,6 +111,10 @@ namespace RP0
                 // both flags can be true when it's necessary to first show ClearLaunch and then Airlaunch right after that
                 if (GUIStates.ShowAirlaunch && !GUIStates.ShowClearLaunch)
                     _airlaunchWindowPosition = DrawWindowWithTooltipSupport(_airlaunchWindowPosition, "DrawAirlaunchWindow", "Airlaunch", DrawAirlaunchWindow);
+                if (GUIStates.ShowAirlaunchPrep)
+                    _airlaunchPrepWindowPosition = DrawWindowWithTooltipSupport(_airlaunchPrepWindowPosition, "DrawAirlaunchPrepWindow", "Prep for Airlaunch", DrawAirlaunchPrepWindow);
+                if (GUIStates.ShowAirlaunchCapability && HighLogic.LoadedSceneIsEditor)
+                    _airlaunchCapabilityWindowPosition = DrawWindowWithTooltipSupport(_airlaunchCapabilityWindowPosition, "DrawAirlaunchCapabilityWindow", "Airlaunch Capability", DrawAirlaunchCapabilityWindow);
 
                 if (_unlockEditor)
                 {
@@ -125,7 +129,7 @@ namespace RP0
             }
 
             //Disable KSC things when certain windows are shown.
-            if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowLCResources || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowLaunchSiteSelector)
+            if (GUIStates.ShowFirstRun || GUIStates.ShowRename || GUIStates.ShowNewPad || GUIStates.ShowNewLC || GUIStates.ShowModifyLC || GUIStates.ShowLCResources || GUIStates.ShowDismantleLC || GUIStates.ShowDismantlePad || GUIStates.ShowUpgradeWindow || GUIStates.ShowSettings || GUIStates.ShowCrewSelect || GUIStates.ShowShipRoster || GUIStates.ShowClearLaunch || GUIStates.ShowAirlaunch || GUIStates.ShowAirlaunchPrep || GUIStates.ShowLaunchSiteSelector)
             {
                 if (!_isKSCLocked)
                 {
@@ -162,7 +166,7 @@ namespace RP0
                     ResetBLWindow();
                 }
 
-                if (SpaceCenterManagement.Instance.IsSimulatedFlight && (AirlaunchTechLevel.AnyUnlocked() || AirlaunchTechLevel.AnyUnderResearch()))
+                if (SpaceCenterManagement.Instance.IsSimulatedFlight && (AirlaunchTechLevel.AnyTechResearched() || AirlaunchTechLevel.AnyUnderResearch()))
                 {
                     GUIStates.ShowAirlaunch = isVisible;
                 }
@@ -274,6 +278,8 @@ namespace RP0
             GUIStates.ShowFirstRun = false;
             GUIStates.ShowLaunchSiteSelector = false;
             GUIStates.ShowAirlaunch = false;
+            GUIStates.ShowAirlaunchPrep = false;
+            GUIStates.ShowAirlaunchCapability = false;
             GUIStates.ShowLCManagement = false;
             GUIStates.ShowSimulationGUI = false;
             GUIStates.ShowSimConfig = false;

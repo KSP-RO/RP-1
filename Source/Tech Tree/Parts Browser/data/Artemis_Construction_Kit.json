@@ -391,7 +391,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSBlock1B",
         "identical_part_name": "",
         "module_tags": [
             "Avionics"
@@ -414,7 +414,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSBlock1B",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -435,7 +435,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSCore",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -456,7 +456,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSBlock1B",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -477,7 +477,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSBlock1B",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -498,7 +498,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSBlock1B",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -519,7 +519,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSCore",
         "identical_part_name": "",
         "module_tags": [
             "Avionics"
@@ -542,7 +542,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSCore",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -563,7 +563,7 @@
         "spacecraft": "",
         "engine_config": "",
         "upgrade": false,
-        "entry_cost_mods": "",
+        "entry_cost_mods": "SLSBlock1B",
         "identical_part_name": "",
         "module_tags": []
     },

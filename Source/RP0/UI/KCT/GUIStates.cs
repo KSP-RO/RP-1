@@ -25,6 +25,8 @@
         public bool ShowLaunchSiteSelector;
         public bool ShowBuildPlansWindow;
         public bool ShowAirlaunch;
+        public bool ShowAirlaunchPrep;
+        public bool ShowAirlaunchCapability;
         public bool ShowLCManagement;
 
         public bool IsMainGuiVisible => ShowBuildList || ShowEditorGUI;
@@ -40,7 +42,7 @@
             ShowClearLaunch = ShowShipRoster = ShowCrewSelect = ShowSettings = ShowDismantleLC =
             ShowUpgradeWindow = ShowPersonnelWindow = ShowBLPlus = ShowNewPad = ShowModifyLC =
             ShowNewLC = ShowLCResources = ShowRename = ShowDismantlePad = ShowFirstRun = ShowLaunchSiteSelector =
-            ShowBuildPlansWindow = ShowAirlaunch = ShowLCManagement = false;
+            ShowBuildPlansWindow = ShowAirlaunch = ShowAirlaunchPrep = ShowAirlaunchCapability = ShowLCManagement = false;
         }
     }
 }

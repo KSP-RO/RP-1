@@ -10,6 +10,8 @@ namespace RP0
         [Persistent]
         public Guid KSPVesselId = Guid.Empty;
         [Persistent]
+        public string CarrierName = string.Empty;
+        [Persistent]
         public double Altitude;
         [Persistent]
         public double KscAzimuth = 90d;
@@ -19,6 +21,8 @@ namespace RP0
         public double LaunchAzimuth = 270d;
         [Persistent]
         public double Velocity;
+        [Persistent]
+        public double DropAngle; // Flight path angle at release (deg), negative = descending
 
         public AirlaunchParams() { }
         public AirlaunchParams(AirlaunchParams src)
@@ -27,20 +31,26 @@ namespace RP0
             //KCTVesselId = src.KCTVesselId;
             //KSPVesselId = src.KSPVesselId;
 
+            CarrierName = src.CarrierName;
             Altitude = src.Altitude;
             KscAzimuth = src.KscAzimuth;
             LaunchAzimuth = src.LaunchAzimuth;
             KscDistance = src.KscDistance;
             Velocity = src.Velocity;
+            DropAngle = src.DropAngle;
         }
 
+        public AirlaunchTechLevel Carrier => AirlaunchTechLevel.GetByName(CarrierName);
+
+        /// <summary>
+        /// Validates the release parameters against the selected carrier's envelope - mass & size are checked earlier
+        /// </summary>
         public bool Validate(out string errorMsg)
         {
-            AirlaunchTechLevel lvl = SpaceCenterManagement.Instance.IsSimulatedFlight ? AirlaunchTechLevel.GetHighestLevelIncludingUnderResearch() :
-                                                                    AirlaunchTechLevel.GetCurrentLevel();
+            AirlaunchTechLevel lvl = Carrier;
             if (lvl == null)
             {
-                errorMsg = "No valid airlaunch configuration found";
+                errorMsg = "No carrier aircraft selected";
                 return false;
             }
 
@@ -54,6 +64,8 @@ namespace RP0
                 errorMsg = $"Altitude needs to be between {lvl.MinAltitude} and {lvl.MaxAltitude} m";
             else if (Velocity > lvl.MaxVelocity || Velocity < lvl.MinVelocity)
                 errorMsg = $"Velocity needs to be between {lvl.MinVelocity} and {lvl.MaxVelocity} m/s";
+            else if (DropAngle > lvl.MaxDropAngle || DropAngle < lvl.MinDropAngle)
+                errorMsg = $"Release angle needs to be between {lvl.MinDropAngle} and {lvl.MaxDropAngle}°";
             else if (KscDistance > lvl.MaxKscDistance || KscDistance < minKscDist)
                 errorMsg = $"Distance from Space Center needs to be between {minKscDist / 1000:0.#} and {lvl.MaxKscDistance / 1000:0.#} km";
             else

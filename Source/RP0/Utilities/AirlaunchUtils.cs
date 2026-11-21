@@ -26,6 +26,7 @@ namespace RP0
                 FlightGlobals.ActiveVessel.situation = Vessel.Situations.LANDED;
 
             KCTUtilities.DoAirlaunch(launchParams);
+            ApplyDropAngle(FlightGlobals.ActiveVessel, launchParams);
 
             SpaceCenterManagement.Instance.StartCoroutine(ClobberToPrelaunch());
 
@@ -67,8 +68,8 @@ namespace RP0
             Vector3d planetRotVelocity = Vector3d.Cross(omega, holdStartRelPos);
             Vector3d east = planetRotVelocity.normalized;
             Vector3d north = Vector3d.Cross(east, up);
-            Vector3d holdStartSurfVel = (Math.Sin(Mathf.Deg2Rad * launchParams.LaunchAzimuth) * east +
-                                         Math.Cos(Mathf.Deg2Rad * launchParams.LaunchAzimuth) * north) * launchParams.Velocity;
+            // The carrier flies level at the horizontal part of the release velocity; the payload is released along the drop angle.
+            GetReleaseVelocity(launchParams, east, north, up, out Vector3d holdDriftVel, out Vector3d holdStartSurfVel);
 
             // Hold physics inactive for 10 seconds by continuously refreshing the physics hold
             // expiry override (prevents GoOffRails from unpacking) and patching the orbital state
@@ -93,7 +94,7 @@ namespace RP0
                     double deltaT = Planetarium.GetUniversalTime() - holdStartUT;
                     float rotAngleDeg = (float)(omega.magnitude * deltaT * Mathf.Rad2Deg);
                     Quaternion rot = Quaternion.AngleAxis(rotAngleDeg, (Vector3)omega.normalized);
-                    Vector3d velocityOffset = holdStartSurfVel - planetRotVelocity;
+                    Vector3d velocityOffset = holdDriftVel - planetRotVelocity;
                     Vector3d newRelPos = (Vector3d)(rot * (Vector3)(holdStartRelPos + velocityOffset * deltaT));
 
                     // Inertial velocity = frame velocity at new position + rotated surface launch velocity.
@@ -120,6 +121,41 @@ namespace RP0
 
             OrbitPhysicsManager.HoldVesselUnpack(1);
             FlightGlobals.ActiveVessel?.SetPhysicsHoldExpiryOverride(1);
+        }
+
+        /// <summary>
+        /// Surface-relative release velocity split into its horizontal part (along the launch azimuth) and the full vector including the drop angle.
+        /// </summary>
+        private static void GetReleaseVelocity(AirlaunchParams launchParams, Vector3d east, Vector3d north, Vector3d up, out Vector3d horizontal, out Vector3d full)
+        {
+            double az = Mathf.Deg2Rad * launchParams.LaunchAzimuth;
+            double pitch = Mathf.Deg2Rad * launchParams.DropAngle;
+            Vector3d heading = Math.Sin(az) * east + Math.Cos(az) * north;
+            horizontal = heading * (launchParams.Velocity * Math.Cos(pitch));
+            full = horizontal + up * (launchParams.Velocity * Math.Sin(pitch));
+        }
+
+        /// <summary>
+        /// DoAirlaunch releases the vessel level along the launch azimuth. Tilt its velocity and nose by the drop angle.
+        /// </summary>
+        private static void ApplyDropAngle(Vessel v, AirlaunchParams launchParams)
+        {
+            if (v == null || launchParams.DropAngle == 0d)
+                return;
+
+            double ut = Planetarium.GetUniversalTime();
+            // Orbit vectors are in Zup space, swizzle to Unity space. Same east/north convention as HyperEdit_Utilities.DoAirlaunch.
+            Vector3d relPos = v.orbit.getRelativePositionAtUT(ut).xzy;
+            Vector3d up = relPos.normalized;
+            Vector3d east = Vector3d.Cross(v.mainBody.angularVelocity, relPos).normalized;
+            Vector3d north = Vector3d.Cross(east, up);
+            GetReleaseVelocity(launchParams, east, north, up, out _, out Vector3d full);
+            double az = Mathf.Deg2Rad * launchParams.LaunchAzimuth;
+            Vector3d level = (Math.Sin(az) * east + Math.Cos(az) * north) * launchParams.Velocity;
+
+            Vector3d obtVel = v.orbit.getOrbitalVelocityAtUT(ut).xzy + (full - level);
+            v.orbit.UpdateFromStateVectors(relPos.xzy, obtVel.xzy, v.mainBody, ut);
+            v.SetRotation(Quaternion.FromToRotation((Vector3)level, (Vector3)full) * v.transform.rotation);
         }
 
         /// <summary>

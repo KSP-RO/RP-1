@@ -35,6 +35,14 @@ namespace RP0
         public override float GetToolingCost()
         {
             GetDimensions(out var d, out var l);
+            return GetToolingCost(d, l) * finalToolingCostMultiplier;
+        }
+
+        /// <summary>
+        /// The cost of tooling diameter d at length l, before finalToolingCostMultiplier.
+        /// </summary>
+        protected float GetToolingCost(float d, float l)
+        {
             float cost = GetLengthToolingCost(d, l);
             if (ToolingDatabase.GetToolingLevel(ToolingType, d, l) == 0)
             {
@@ -42,7 +50,7 @@ namespace RP0
                 cost += reductionFactor * GetDiameterToolingCost(d);
             }
 
-            return cost * finalToolingCostMultiplier;
+            return cost;
         }
 
         protected override void ApplyToolingDefinition(ToolingDefinition toolingDef)
@@ -79,6 +87,14 @@ namespace RP0
         public override bool IsUnlocked()
         {
             GetDimensions(out var d, out var l);
+            return IsUnlocked(d, l);
+        }
+
+        /// <summary>
+        /// Whether diameter d at length l is tooled (or needs no tooling, being under minDiameter).
+        /// </summary>
+        protected bool IsUnlocked(float d, float l)
+        {
             if (d < minDiameter)
                 return true;
 

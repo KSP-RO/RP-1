@@ -212,7 +212,9 @@ namespace RP0.Harmony
 
         public override void Awake()
         {
-            GameEvents.OnPartLoaderLoaded.Add(PatchPartListTooltipUpgradeStats.ResetCache);
+            GameEvents.OnPartLoaderLoaded.Add(OnPartLoaderLoaded);
         }
+
+        private void OnPartLoaderLoaded() => PatchPartListTooltipUpgradeStats.ResetCache();
     }
 }

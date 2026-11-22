@@ -11,7 +11,7 @@ namespace RP0
 #else
             bool isBetaVersion = always;
 #endif
-            if (isBetaVersion)
+            if (isBetaVersion || (KCTSettings.Instance?.DebugLogging ?? false))
             {
                 UnityEngine.Debug.Log("[RP-0] " + str);
             }

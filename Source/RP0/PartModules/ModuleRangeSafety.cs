@@ -86,6 +86,9 @@ namespace RP0
                 ExplodeLeafParts(vessel.rootPart);
                 yield return new WaitForFixedUpdate();
             }
+            // Trigger a potential mission end in the same way that stock does for a crash,
+            // collison, or explosion that destroys the root part.
+            FlightLogger.fetch.checkMissionEnd(vessel.rootPart, FlightEndModes.CATASTROPHIC_FAILURE);
             vessel.rootPart.explode();
         }
     }

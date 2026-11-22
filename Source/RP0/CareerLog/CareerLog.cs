@@ -27,6 +27,9 @@ namespace RP0
         [KSPField(isPersistant = true)]
         public int LoadedSaveVersion = CurrentVersion;
 
+        [KSPField(isPersistant = true)]
+        public string Scenario = string.Empty;
+
         public bool IsEnabled = false;
 
         private const int CurrentVersion = 1;
@@ -78,6 +81,11 @@ namespace RP0
                 if (!IsEnabled) return null;
 
                 double time = Planetarium.GetUniversalTime();
+                if (NextPeriodStart == 0)
+                {
+                    StartFirstPeriod(time);
+                }
+
                 while (time > NextPeriodStart)
                 {
                     SwitchToNextPeriod();
@@ -264,6 +272,23 @@ namespace RP0
             });
         }
 
+        public void SetStartingScenario(string scenarioName)
+        {
+            Scenario = scenarioName;
+        }
+
+        /// <summary>
+        /// Discards all log periods. The next access to CurrentPeriod starts a new period at the month of the current UT.
+        /// Call this after the career start date has been changed.
+        /// </summary>
+        public void ResetPeriods()
+        {
+            _periodDict.Clear();
+            _currentPeriod = null;
+            CurPeriodStart = 0;
+            NextPeriodStart = 0;
+        }
+
         public void ExportToFile(string path)
         {
             var rows = _periodDict.Select(p => p.Value)
@@ -325,18 +350,26 @@ namespace RP0
             StartCoroutine(PostRequestCareerLog(url, onRequestSuccess, onRequestFail));
         }
 
-        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
+        public void ExportToJsonFile(string path)
+        {
+            File.WriteAllText(path, CreateJson());
+        }
+
+        private string CreateJson()
         {
             var logPeriods = _periodDict.Select(p => p.Value)
                 .Select(CreateLogDto).ToArray();
 
-            const string jsonVer = "2.0";
+            const string jsonVer = "3.0";
             var fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(GetType().Assembly.Location);
             string rp1Ver = fvi.FileVersion;
 
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
             var jsonToSend = "{ \"jsonVer\": \"" + jsonVer + "\", ";
             jsonToSend += "\"rp1Ver\": \"" + rp1Ver + "\", ";
+            if (!string.IsNullOrWhiteSpace(Scenario))
+                jsonToSend += "\"scenario\": \"" + Scenario + "\", ";
+
             jsonToSend += "\"periods\": [";
 
             for (var i = 0; i < logPeriods.Length; i++)
@@ -419,7 +452,7 @@ namespace RP0
 
             jsonToSend += "], \"programs\": [";
 
-            var allPrograms = ProgramHandler.Instance.CompletedPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+            var allPrograms = GetProgramsToSend();
             for (var i = 0; i < allPrograms.Length; i++)
             {
                 var dto = new ProgramDto(allPrograms[i]);
@@ -437,6 +470,13 @@ namespace RP0
             }
 
             jsonToSend += "] }";
+
+            return jsonToSend;
+        }
+
+        private IEnumerator PostRequestCareerLog(string url, Action onRequestSuccess, Action<string> onRequestFail)
+        {
+            string jsonToSend = CreateJson();
 
             RP0Debug.Log("Request payload: " + jsonToSend);
 
@@ -512,6 +552,23 @@ namespace RP0
             };
         }
 
+        private static Program[] GetProgramsToSend()
+        {
+            // leave out programs that were most likely autocompleted by configurable start scenarios
+            var filteredPrograms = ProgramHandler.Instance.CompletedPrograms.Where(p =>
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.acceptedUT)) ||
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.objectivesCompletedUT)) ||
+                !IsSuspiciouslyRoundDate(ROUtils.DTUtils.UTToDate(p.completedUT)));
+
+            return filteredPrograms.Concat(ProgramHandler.Instance.ActivePrograms).ToArray();
+        }
+
+        private static bool IsSuspiciouslyRoundDate(DateTime dt)
+        {
+            // Apparently some scenarios assign minutes and hours to dates.
+            return dt.Second == 0 && dt.Millisecond == 0;
+        }
+
         private void SwitchToNextPeriod()
         {
             LogPeriod _prevPeriod = _currentPeriod ?? GetOrCreatePeriod(CurPeriodStart);
@@ -533,6 +590,15 @@ namespace RP0
 
             _currentPeriod = GetOrCreatePeriod(NextPeriodStart);
             CurPeriodStart = NextPeriodStart;
+            NextPeriodStart = _currentPeriod.EndUT;
+        }
+
+        private void StartFirstPeriod(double ut)
+        {
+            DateTime dt = ROUtils.DTUtils.UTToDate(ut);
+            DateTime monthStart = new DateTime(dt.Year, dt.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            CurPeriodStart = (monthStart - ROUtils.DTUtils.Epoch).TotalSeconds;
+            _currentPeriod = GetOrCreatePeriod(CurPeriodStart);
             NextPeriodStart = _currentPeriod.EndUT;
         }
 
@@ -633,7 +699,7 @@ namespace RP0
                 return;
             }
 
-            if (reasonRP0 == TransactionReasonsRP0.StructureConstruction)
+            if ((reasonRP0 & TransactionReasonsRP0.StructureConstructionAll) != 0)
             {
                 CurrentPeriod.ConstructionFees -= changeDelta;
                 return;
@@ -674,14 +740,19 @@ namespace RP0
         {
             // this function signature is inconsistent with the other currency-change events
             // but the whole point is that this can't operate off of CurrenciesModified, since unlock credit isn't tracked by that event
-            CurrentPeriod.SpentUnlockCredit += spentCredit;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
+
+            LogPeriod period = CurrentPeriod;
+            if (period == null) return;
+
+            period.SpentUnlockCredit += spentCredit;
             if (reason == TransactionReasonsRP0.ToolingPurchase)
             {
-                CurrentPeriod.ToolingFees += spentCredit;
+                period.ToolingFees += spentCredit;
             }
             else if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock)
             {
-                CurrentPeriod.EntryCosts += spentCredit;
+                period.EntryCosts += spentCredit;
             }
         }
 

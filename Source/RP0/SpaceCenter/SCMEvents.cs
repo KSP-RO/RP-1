@@ -260,16 +260,12 @@ namespace RP0
                 KCTUtilities.DisableSimulationLocks();
                 InputLockManager.RemoveControlLock(SpaceCenterManagement.SCMLaunchLock);
 
-                if (PresetManager.Instance != null)
-                {
-                    PresetManager.Instance.ClearPresets();
-                    PresetManager.Instance = null;
-                }
+                SCMSaveSettings.Clear();
 
                 return;
             }
 
-            if (PresetManager.PresetLoaded() && !PresetManager.Instance.ActivePreset.GeneralSettings.Enabled) return;
+            if (SCMSaveSettings.IsLoaded && !SCMSaveSettings.Instance.Enabled) return;
             var validScenes = new List<GameScenes> { GameScenes.SPACECENTER, GameScenes.TRACKSTATION, GameScenes.EDITOR };
             if (validScenes.Contains(scene))
             {
@@ -294,7 +290,7 @@ namespace RP0
         {
             if (ev.from == Vessel.Situations.PRELAUNCH && ev.host == FlightGlobals.ActiveVessel)
             {
-                KCT_Preset_General settings = PresetManager.Instance.ActivePreset.GeneralSettings;
+                SCMSaveSettings settings = SCMSaveSettings.Instance;
                 if (settings.Enabled && settings.BuildTimes)
                 {
                     var dataModule = FlightGlobals.ActiveVessel.vesselModules.Find(vm => vm is KCTVesselTracker) as KCTVesselTracker;
@@ -329,7 +325,11 @@ namespace RP0
 
             LaunchComplex targetLC = SpaceCenterManagement.Instance.RecoveredVessel.LC;
             if (targetLC == null)
-                targetLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
+            {
+                RP0Debug.LogError($"No LC found for recovered vessel {v.vesselName}, it will not be stored.");
+                SpaceCenterManagement.Instance.RecoveredVessel = new VesselProject();
+                return;
+            }
 
             targetLC.Warehouse.Add(SpaceCenterManagement.Instance.RecoveredVessel);
             targetLC.Recon_Rollout.Add(new ReconRolloutProject(SpaceCenterManagement.Instance.RecoveredVessel, ReconRolloutProject.RolloutReconType.Recovery, SpaceCenterManagement.Instance.RecoveredVessel.shipID.ToString()));

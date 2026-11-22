@@ -242,13 +242,14 @@ namespace RP0
         public double IncrementProgress(double UTDiff)
         {
             double bR = BuildRate;
-            if (bR == 0d && PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
+            if (bR == 0d && SCMSaveSettings.Instance.TechUnlockTimes)
                 return 0d;
 
             double toGo = scienceCost - progress;
             double increment = bR * UTDiff;
             progress += increment;
-            if (IsComplete() || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes)
+            bool isComplete = IsComplete();
+            if (isComplete || !SCMSaveSettings.Instance.TechUnlockTimes)
             {
                 if (ProtoNode == null)
                     return 0d;
@@ -282,12 +283,17 @@ namespace RP0
                 }
                 go.DestroyGameObject();
 
+                // Fraction of UTDiff that was spent on this tech. A tech that was completed instantly
+                // because Tech Unlock Times are disabled takes no time and earns no credit.
+                double portion = isComplete && increment > 0d ? UtilMath.Clamp(toGo / increment, 0d, 1d) : 0d;
+
+                // Credit must be added while this tech is still first in the list because the credit rate depends on it
+                UnlockCreditHandler.Instance.IncrementCreditTime(portion * UTDiff);
+
                 SpaceCenterManagement.Instance.TechList.Remove(this);
 
                 SpaceCenterManagement.Instance.RecalculateBuildRates(); // this might change other rates
 
-                double portion = toGo / increment;
-                UnlockCreditHandler.Instance.IncrementCreditTime(portion * UTDiff);
                 return (1d - portion) * UTDiff;
             }
 

@@ -373,58 +373,109 @@ namespace RP0
             {
                 foreach (PartModule pm in part.Modules)
                 {
-                    var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType(), typeof(string).MakeByRefType() };
-                    var mi = pm.GetType().GetMethod("Validate", BindingFlags.Instance | BindingFlags.Public, null, types, null);
-                    if (mi != null)
+                    foreach (PartConfigValidationError validationError in GetConfigErrors(part, pm))
                     {
-                        var parameters = new object[] { null, null, null, null };
-                        bool allSucceeded;
-                        try
+                        // Try to autoresolve issues that cost next to nothing
+                        if (validationError.CanBeResolved && validationError.CostToResolve <= 1.1 &&
+                            validationError.Resolve())
                         {
-                            allSucceeded = (bool)mi.Invoke(pm, parameters);
-                        }
-                        catch (Exception ex)
-                        {
-                            RP0Debug.LogError($"Config validation failed for {part.name}");
-                            Debug.LogException(ex);
-                            allSucceeded = false;
-                            parameters[0] = "error occurred, check the logs";
-                            parameters[1] = false;
-                            parameters[2] = 0f;
-                            parameters[3] = string.Empty;
+                            continue;
                         }
 
-                        if (!allSucceeded)
+                        if (!dict.TryGetValue(part, out List<PartConfigValidationError> list))
                         {
-                            var validationError = new PartConfigValidationError
-                            {
-                                PM = pm,
-                                Error = (string)parameters[0],
-                                CanBeResolved = (bool)parameters[1],
-                                CostToResolve = (float)parameters[2],
-                                TechToResolve = (string)parameters[3]
-                            };
-
-                            // Try to autoresolve issues that cost next to nothing
-                            if (validationError.CanBeResolved && validationError.CostToResolve <= 1.1 &&
-                                PurchaseConfig(pm, validationError.TechToResolve))
-                            {
-                                continue;
-                            }
-
-                            if (!dict.TryGetValue(part, out List<PartConfigValidationError> list))
-                            {
-                                list = new List<PartConfigValidationError>(2);
-                                dict[part] = list;
-                            }
-
-                            list.Add(validationError);
+                            list = new List<PartConfigValidationError>(2);
+                            dict[part] = list;
                         }
+
+                        list.Add(validationError);
                     }
                 }
             }
 
             return dict;
+        }
+
+        private List<PartConfigValidationError> GetConfigErrors(Part part, PartModule pm)
+        {
+            var errors = new List<PartConfigValidationError>();
+
+            PartConfigValidationError validateMethodError = GetValidateMethodError(part, pm);
+            if (validateMethodError != null)
+                errors.Add(validateMethodError);
+
+            if (pm is KERBALISM.Configure configure)
+                errors.AddRange(GetConfigureEntryCostErrors(configure));
+
+            return errors;
+        }
+
+        /// <summary>
+        /// Calls the Validate method that PartModules from other mods can implement.
+        /// Returns null if the PartModule has no such method or if the validation passed.
+        /// </summary>
+        private PartConfigValidationError GetValidateMethodError(Part part, PartModule pm)
+        {
+            var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType(), typeof(string).MakeByRefType() };
+            var mi = pm.GetType().GetMethod("Validate", BindingFlags.Instance | BindingFlags.Public, null, types, null);
+            if (mi == null)
+                return null;
+
+            var parameters = new object[] { null, null, null, null };
+            bool allSucceeded;
+            try
+            {
+                allSucceeded = (bool)mi.Invoke(pm, parameters);
+            }
+            catch (Exception ex)
+            {
+                RP0Debug.LogError($"Config validation failed for {part.name}");
+                Debug.LogException(ex);
+                allSucceeded = false;
+                parameters[0] = "error occurred, check the logs";
+                parameters[1] = false;
+                parameters[2] = 0f;
+                parameters[3] = string.Empty;
+            }
+
+            if (allSucceeded)
+                return null;
+
+            string techToResolve = (string)parameters[3];
+            return new PartConfigValidationError
+            {
+                Error = (string)parameters[0],
+                CanBeResolved = (bool)parameters[1],
+                CostToResolve = (float)parameters[2],
+                Resolve = () => PurchaseConfig(pm, techToResolve)
+            };
+        }
+
+        /// <summary>
+        /// Checks the entry costs of experiments that are installed through the setups of a Kerbalism Configure module.
+        /// Setups that need unresearched tech are skipped, because the Validate method of Configure already reports them.
+        /// </summary>
+        private static IEnumerable<PartConfigValidationError> GetConfigureEntryCostErrors(KERBALISM.Configure configure)
+        {
+            foreach (KERBALISM.ConfigureSetup setup in ECMHelper.GetSelectedSetups(configure))
+            {
+                if (!string.IsNullOrEmpty(setup.tech) && ResearchAndDevelopment.GetTechnologyState(setup.tech) != RDTech.State.Available)
+                    continue;
+
+                List<string> ecmNames = ECMHelper.GetEcmNamesFromConfigureSetup(configure, setup).ToList();
+                double cost = RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmNames);
+                if (cost <= 0)
+                    continue;
+
+                string tech = setup.tech;
+                yield return new PartConfigValidationError
+                {
+                    Error = $"pay entry cost for {KSP.Localization.Localizer.Format(setup.title)}",
+                    CanBeResolved = true,
+                    CostToResolve = (float)cost,
+                    Resolve = () => PurchaseEcmConfigs(ecmNames, tech)
+                };
+            }
         }
 
         private DialogGUIBase[] ConstructPartConfigErrorsUI(Dictionary<Part, List<PartConfigValidationError>> errorDict)
@@ -457,7 +508,7 @@ namespace RP0
                         var button = new DialogGUIButtonWithTooltip($"Unlock ({afterCreditLine})",
                                                          () =>
                                                          {
-                                                             PurchaseConfig(error.PM, error.TechToResolve);
+                                                             error.Resolve();
                                                              _validationResult = ValidationResult.Rerun;
                                                          },
                                                          () => cmq.CanAfford(),
@@ -501,13 +552,33 @@ namespace RP0
             return ret;
         }
 
+        private static bool PurchaseEcmConfigs(List<string> ecmNames, string tech)
+        {
+            bool success = true;
+            foreach (string ecmName in ecmNames)
+            {
+                // Already paid for, for example by buying a part that shares the same ECM entry
+                if (RealFuels.EntryCostManager.Instance.ConfigEntryCost(ecmName) <= 0)
+                    continue;
+
+                // RP-1 patches PurchaseConfig to spend unlock credit, but only while techNode is set.
+                // The patch clears techNode after each purchase.
+                Harmony.RFECMPatcher.techNode = tech;
+                success &= RealFuels.EntryCostManager.Instance.PurchaseConfig(ecmName, tech);
+                Harmony.RFECMPatcher.techNode = null;
+            }
+            return success;
+        }
+
         private class PartConfigValidationError
         {
-            public PartModule PM { get; set; }
             public string Error { get; set; }
             public bool CanBeResolved { get; set; }
             public float CostToResolve { get; set; }
-            public string TechToResolve { get; set; }
+            /// <summary>
+            /// Pays for whatever is needed to fix the error. Returns true on success.
+            /// </summary>
+            public Func<bool> Resolve { get; set; }
         }
     }
 }

@@ -13,41 +13,44 @@ namespace RP0
         {
             LaunchComplex curLC = SpaceCenterManagement.Instance.ActiveSC.ActiveLC;
 
+            // If the LC is being modified, the new pad will end up at the post-modify stats
+            LCData stats = curLC.KSC.LCConstructions.Find(c => c.isModify && c.lcID == curLC.ID)?.lcData ?? curLC.Stats;
+
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Name:", GUILayout.ExpandWidth(false));
-            _newName = GUILayout.TextField(_newName);
+            _newName = GUILayout.TextField(_newName, _MaxNameChars);
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
-            GUILayout.Label($"{curLC.MassMax:N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"{stats.massMax:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Minimum tonnage:", GUILayout.ExpandWidth(false));
-            GUILayout.Label($"{curLC.MassMin:N0}", GetLabelRightAlignStyle());
+            GUILayout.Label($"{stats.MassMin:N0}", GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Size Limits:", GUILayout.ExpandWidth(false));
-            GUILayout.Label(curLC.SupportedSizeAsPrettyText, GetLabelRightAlignStyle());
+            GUILayout.Label(LaunchComplex.SupportedSizeAsPrettyTextCalc(stats.sizeMax), GetLabelRightAlignStyle());
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Human Rated:");
-            GUILayout.Label(curLC.IsHumanRated ? "Yes" : "No", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
+            GUILayout.Label(stats.isHumanRated ? "Yes" : "No", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
             double curPadCost;
-            float fractionalPadLvl = curLC.Stats.GetPadFracLevel();
-            curLC.Stats.GetCostStats(out curPadCost, out _, out _);
+            float fractionalPadLvl = stats.GetPadFracLevel();
+            stats.GetCostStats(out curPadCost, out _, out _);
             curPadCost *= Database.SettingsSC.AdditionalPadCostMult;
 
             if (curPadCost > 0)
             {
                 double curPadBuildTime = ConstructionProject.CalculateBuildTime(curPadCost, 0d, SpaceCenterFacility.LaunchPad);
-                string sBuildTime = KSPUtil.PrintDateDelta(curPadBuildTime, includeTime: false);
+                string sBuildTime = RP0DTUtils.PrintDateDelta(curPadBuildTime, includeTime: false);
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Cost:", GUILayout.ExpandWidth(false));
@@ -123,7 +126,7 @@ namespace RP0
         {
             GUILayout.BeginVertical();
             GUILayout.Label("Name:");
-            _newName = GUILayout.TextField(_newName);
+            _newName = GUILayout.TextField(_newName, _MaxNameChars);
             GUILayout.BeginHorizontal();
             if (GUILayout.Button("Save"))
             {

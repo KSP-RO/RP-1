@@ -58,9 +58,9 @@ namespace RP0.Harmony
         [HarmonyPatch("UpdateGraphics")]
         internal static bool UpdateGraphics(RDNode __instance)
         {
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled
-                || !PresetManager.Instance.ActivePreset.GeneralSettings.TechUnlockTimes
-                || !PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes
+            if (!SCMSaveSettings.Instance.Enabled
+                || !SCMSaveSettings.Instance.TechUnlockTimes
+                || !SCMSaveSettings.Instance.BuildTimes
                 || SpaceCenterManagement.Instance == null)
                 return true;
 

@@ -149,6 +149,13 @@ namespace RP0
                 for (int i = 0; i < p.CrewCapacity; i++)
                 {
                     GUILayout.BeginHorizontal();
+                    // Clear the slot if the assigned crew member started training after being assigned
+                    if (i < launchedCrew.Count && launchedCrew[i].PCM != null && launchedCrew[i].PCM.inactive)
+                    {
+                        launchedCrew[i].PCM = null;
+                        _availableCrew = GetAvailableCrew();
+                    }
+
                     if (i < launchedCrew.Count && launchedCrew[i].PCM != null)
                     {
                         foundAssignableCrew = true;
@@ -414,22 +421,13 @@ namespace RP0
                 if (clickedNautButton)
                 {
                     List<CrewMemberAssignment> activeCrew = SpaceCenterManagement.Instance.LaunchedCrew[_partIndexToCrew].CrewList;
-                    if (activeCrew.Count > _indexToCrew)
-                    {
-                        activeCrew.Insert(_indexToCrew, new CrewMemberAssignment(crew));
-                        if (activeCrew[_indexToCrew + 1] == null)
-                            activeCrew.RemoveAt(_indexToCrew + 1);
-                    }
-                    else
-                    {
-                        for (int i = activeCrew.Count; i < _indexToCrew; i++)
-                        {
-                            activeCrew.Insert(i, null);
-                        }
-                        activeCrew.Insert(_indexToCrew, new CrewMemberAssignment(crew));
-                    }
+                    // Seats before the selected one must hold empty assignments, never null
+                    while (activeCrew.Count <= _indexToCrew)
+                        activeCrew.Add(new CrewMemberAssignment());
+                    activeCrew[_indexToCrew] = new CrewMemberAssignment(crew);
                     _rosterForCrewSelect.Remove(crew);
-                    SpaceCenterManagement.Instance.LaunchedCrew[_partIndexToCrew].CrewList = activeCrew;
+                    // Keep the picked kerbal from being offered to other parts
+                    _availableCrew = GetAvailableCrew();
                     GUIStates.ShowCrewSelect = false;
                     GUIStates.ShowShipRoster = true;
                     _crewListWindowPosition.height = 1;
@@ -649,6 +647,15 @@ namespace RP0
                 {
                     ProtoCrewMember pcm = assign?.PCM;
                     if (pcm == null) continue;
+
+                    if (pcm.inactive)
+                    {
+                        PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "crewInTrainingPopup", "Cannot Launch!",
+                            $"{pcm.name} is currently in training and cannot be launched. Please remove them from the crew manifest.",
+                            "OK", false, HighLogic.UISkin);
+                        return;
+                    }
+
                     ModuleInventoryPart inv = pcm.KerbalInventoryModule;
                     inv.storedParts.Clear();
 

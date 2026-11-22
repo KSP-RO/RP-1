@@ -6,6 +6,7 @@ namespace RP0.Harmony
     [HarmonyPatch(typeof(Vessel))]
     internal class PatchVessel
     {
+        [HarmonyPrefix]
         [HarmonyPatch("GetControlLevel")]
         internal static bool Prefix_GetControlLevel(Vessel __instance, ref Vessel.ControlLevel __result)
         {
@@ -20,6 +21,7 @@ namespace RP0.Harmony
                 return false;
             }
 
+            __result = Vessel.ControlLevel.FULL;
             if (__instance.connection != null && CommNetScenario.Instance != null && CommNetScenario.CommNetEnabled)
             {
                 __result = __instance.connection.GetControlLevel();

@@ -27,7 +27,7 @@
         "description": "The central landing airbag of the CST-100 Starliner command module.",
         "mod": "Boring Crew Services",
         "cost": 200,
-        "entry_cost": 0,
+        "entry_cost": 1000,
         "category": "EDL",
         "info": "Airbag",
         "year": "2019",

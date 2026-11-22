@@ -20832,7 +20832,7 @@
         "spacecraft": "Intelsat V",
         "engine_config": "TRWEHT",
         "upgrade": false,
-        "entry_cost_mods": "5000, ElectrothermalHydrazine",
+        "entry_cost_mods": "15000, Hydrazine-Electrothermal",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -20854,7 +20854,7 @@
         "spacecraft": "Satcom 1R",
         "engine_config": "MR501",
         "upgrade": false,
-        "entry_cost_mods": "10000, TRW-EHT",
+        "entry_cost_mods": "15000, TRW-EHT",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -20876,7 +20876,7 @@
         "spacecraft": "Astra 1B",
         "engine_config": "MR501",
         "upgrade": true,
-        "entry_cost_mods": "5000, MR-501",
+        "entry_cost_mods": "10000, MR-501",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -20898,7 +20898,7 @@
         "spacecraft": "ARGOS",
         "engine_config": "ESEX",
         "upgrade": false,
-        "entry_cost_mods": "20000, ArcjetHighPower",
+        "entry_cost_mods": "75000, Hydrazine-Arcjet",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -20920,7 +20920,7 @@
         "spacecraft": "LES-8, LES-9",
         "engine_config": "LES89PPT",
         "upgrade": false,
-        "entry_cost_mods": "5000, PulsedPlasma",
+        "entry_cost_mods": "15000, PulsedPlasma",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -20942,7 +20942,7 @@
         "spacecraft": "EO-1",
         "engine_config": "EO1PPT",
         "upgrade": false,
-        "entry_cost_mods": "10000, LES-8-9-PPT",
+        "entry_cost_mods": "15000, LES-8-9-PPT",
         "identical_part_name": "",
         "module_tags": []
     },
@@ -20964,7 +20964,7 @@
         "spacecraft": "",
         "engine_config": "CsFEEP",
         "upgrade": false,
-        "entry_cost_mods": "10000, FieldEmission",
+        "entry_cost_mods": "30000, FieldEmission",
         "identical_part_name": "",
         "module_tags": []
     }

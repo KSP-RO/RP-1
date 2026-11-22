@@ -19,14 +19,14 @@ namespace RP0
         }
 
         // Starts with "zz" so that the backups end up at the bottom of alphabetically sorted save lists.
-        public const string Prefix = "zz RP-1 Backup ";
+        public const string Prefix = "zz Backup ";
 
         // Windows MAX_PATH is 260 including the terminating null. Keep some margin.
         private const int MaxFullPathLength = 250;
         private const int MaxNameLength = 100;
         private const string LongestExtension = ".loadmeta";
 
-        private static readonly Regex _nameRegex = new Regex(@"^zz RP-1 Backup \d{4}-\d{2}-\d{2} - (?<kind>Launch of|Program)", RegexOptions.Compiled);
+        private static readonly Regex _nameRegex = new Regex(@"^zz Backup \d{4}-\d{2}-\d{2} (?<kind>Launch of|Program)", RegexOptions.Compiled);
 
         public static bool IsBackupSave(string saveName) => saveName != null && _nameRegex.IsMatch(saveName);
 
@@ -73,7 +73,7 @@ namespace RP0
         private static string BuildName(Kind kind, string subject)
         {
             string date = ROUtils.DTUtils.UTToDate(Planetarium.GetUniversalTime()).ToString("yyyy-MM-dd");
-            string baseName = $"{Prefix}{date} - {GetKindLabel(kind)}";
+            string baseName = $"{Prefix}{date} {GetKindLabel(kind)}";
 
             int dirLength = SaveDirectory.Length + 1;
             int maxLength = Math.Min(MaxNameLength, MaxFullPathLength - dirLength - LongestExtension.Length);

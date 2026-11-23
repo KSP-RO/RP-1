@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using KSP.UI.Screens;
+using System;
 
 namespace RP0.Harmony
 {
@@ -26,7 +27,8 @@ namespace RP0.Harmony
                     nonCrewMult = 0.3f;
                 float repFixed = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossNautDeathFixed ?? 0f;
                 float repPct = HighLogic.CurrentGame?.Parameters.CustomParams<RP0Settings>()?.RepLossNautDeathPercent ?? 0f;
-                __instance.AddReputation(-1f * nonCrewMult * (repFixed + repPct * __instance.reputation), TransactionReasonsRP0.LossOfCrew.Stock());
+                float repLossBasedOnCur = repPct * Math.Max(0f, __instance.reputation);
+                __instance.AddReputation(-1f * nonCrewMult * (repFixed + repLossBasedOnCur), TransactionReasonsRP0.LossOfCrew.Stock());
             }
             return false;
         }

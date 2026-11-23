@@ -1,4 +1,7 @@
-﻿using RealFuels;
+﻿using ContractConfigurator;
+using RealFuels;
+using ROUtils;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UniLinq;
@@ -237,9 +240,32 @@ namespace RP0
             options[0] = new DialogGUIButton(KSP.Localization.Localizer.Format("#autoLOC_190905"), () => { });
             options[1] = new DialogGUIButton(KSP.Localization.Localizer.Format("#rp0_GameplayTip_DontShowAgain"), () => { HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NeverShowHSFProgramReminders = true; });
             MultiOptionDialog diag = new MultiOptionDialog("ShowHSFProgramReminder",
-                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Text"),
-                KSP.Localization.Localizer.Format("#rp0_GameplayTip_LaunchUntrainedPart_Title"), null, 300, options);
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_CrewedProgram_Text"),
+                KSP.Localization.Localizer.Format("#rp0_GameplayTip_CrewedProgram_Title"), null, 300, options);
             PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+        }
+
+        public void ShowNoActiveContractWarning(Action<bool> onComplete)
+        {
+            if (KSPUtils.CurrentGameIsCareer() && HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning && !ConfiguredContract.ActiveContracts.Any(c => !c.AutoAccept))
+            {
+                DialogGUIBase[] options = new DialogGUIBase[3];
+                options[0] = new DialogGUIButton(KSP.Localization.Localizer.Format("#rp0_GameplayTip_NoActiveContractWarning_Button1"), () => { onComplete(true); });
+                options[1] = new DialogGUIButton(KSP.Localization.Localizer.Format("#rp0_GameplayTip_NoActiveContractWarning_Button2"), () =>
+                {
+                    HighLogic.CurrentGame.Parameters.CustomParams<RP0Settings>().NoActiveContractWarning = false;
+                    onComplete(true);
+                });
+                options[2] = new DialogGUIButton(KSP.Localization.Localizer.Format("#rp0_GameplayTip_NoActiveContractWarning_Button3"), () => { onComplete(false); });
+                MultiOptionDialog diag = new MultiOptionDialog("ShowNoActiveContractWarning",
+                    KSP.Localization.Localizer.Format("#rp0_GameplayTip_NoActiveContractWarning_Text"),
+                    KSP.Localization.Localizer.Format("#rp0_GameplayTip_NoActiveContractWarning_Title"), null, 300, options);
+                PopupDialog.SpawnPopupDialog(diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+            }
+            else
+            {
+                onComplete(true);
+            }
         }
     }
 }

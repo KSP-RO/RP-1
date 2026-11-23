@@ -421,22 +421,13 @@ namespace RP0
                 if (clickedNautButton)
                 {
                     List<CrewMemberAssignment> activeCrew = SpaceCenterManagement.Instance.LaunchedCrew[_partIndexToCrew].CrewList;
-                    if (activeCrew.Count > _indexToCrew)
-                    {
-                        activeCrew.Insert(_indexToCrew, new CrewMemberAssignment(crew));
-                        if (activeCrew[_indexToCrew + 1] == null)
-                            activeCrew.RemoveAt(_indexToCrew + 1);
-                    }
-                    else
-                    {
-                        for (int i = activeCrew.Count; i < _indexToCrew; i++)
-                        {
-                            activeCrew.Insert(i, null);
-                        }
-                        activeCrew.Insert(_indexToCrew, new CrewMemberAssignment(crew));
-                    }
+                    // Seats before the selected one must hold empty assignments, never null
+                    while (activeCrew.Count <= _indexToCrew)
+                        activeCrew.Add(new CrewMemberAssignment());
+                    activeCrew[_indexToCrew] = new CrewMemberAssignment(crew);
                     _rosterForCrewSelect.Remove(crew);
-                    SpaceCenterManagement.Instance.LaunchedCrew[_partIndexToCrew].CrewList = activeCrew;
+                    // Keep the picked kerbal from being offered to other parts
+                    _availableCrew = GetAvailableCrew();
                     GUIStates.ShowCrewSelect = false;
                     GUIStates.ShowShipRoster = true;
                     _crewListWindowPosition.height = 1;

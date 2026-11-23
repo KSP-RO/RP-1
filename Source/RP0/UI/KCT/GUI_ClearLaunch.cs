@@ -5,6 +5,16 @@ namespace RP0
 {
     public static partial class KCT_GUI
     {
+        // Launch site that was found occupied when the clear launch window was opened.
+        private static string _launchSiteToClear;
+
+        private static void ShowClearLaunchWindow(string occupiedSite)
+        {
+            _launchSiteToClear = occupiedSite;
+            GUIStates.ShowBuildList = false;
+            GUIStates.ShowClearLaunch = true;
+        }
+
         public static void DrawClearLaunch(int windowID)
         {
             GUILayout.BeginVertical();
@@ -12,7 +22,7 @@ namespace RP0
             {
                 GUIStates.ShowClearLaunch = false;
 
-                List<ProtoVessel> list = ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, SpaceCenterManagement.Instance.LaunchedVessel.launchSite);
+                List<ProtoVessel> list = ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, _launchSiteToClear);
                 foreach (ProtoVessel pv in list)
                     ShipConstruction.RecoverVesselFromFlight(pv, HighLogic.CurrentGame.flightState);
 

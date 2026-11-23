@@ -1,6 +1,7 @@
 ﻿using KSP.Localization;
 using Strategies;
 using RP0.ModIntegrations;
+using System;
 
 namespace RP0
 {
@@ -247,7 +248,7 @@ namespace RP0
                 repMult *= 0.1d / (frac * 0.5d + 0.1d) - 0.15d * frac;
             }
 
-            return Reputation.Instance.reputation * repMult;
+            return Math.Max(0d, Reputation.Instance.reputation) * repMult;
         }
 
         public virtual string DeactivateCostString()
@@ -264,6 +265,10 @@ namespace RP0
         /// <returns></returns>
         protected virtual string ConstructText(bool extendedInfo, bool useDescriptionHeader = true, bool showDescriptionInNonExtended = false)
         {
+            // Placeholder (padlock) strategies can never be activated, so effects and duration lines would be empty or bogus.
+            if (ConfigRP0.CannotActivative && !showDescriptionInNonExtended)
+                return string.Empty;
+
             string text = "";
             if (useDescriptionHeader)
                 text += RichTextUtil.Title(Localizer.GetStringByTag("#autoLOC_304558"));

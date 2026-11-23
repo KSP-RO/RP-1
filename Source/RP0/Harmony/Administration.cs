@@ -394,6 +394,10 @@ namespace RP0.Harmony
         internal static void OnActivateProgramConfirm()
         {
             OnPopupDismiss();
+            Strategy selectedStrat = Administration.Instance.SelectedWrapper.strategy;
+            if (selectedStrat is ProgramStrategy && selectedStrat.CanBeActivated(out _))
+                BackupSaves.Create(BackupSaves.Kind.Program, selectedStrat.Title);
+
             if (Administration.Instance.SelectedWrapper.strategy.Activate())
             {
                 var newActiveStrat = Administration.Instance.SelectedWrapper.strategy;

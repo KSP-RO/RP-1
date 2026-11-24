@@ -263,15 +263,13 @@ namespace RP0
 
                 Bounds[] bounds = GetPartRendererBounds(p);
                 Bounds b;
-                Bounds cb;
                 int jC = bounds.Length;
                 for (int j = 0; j < jC; ++j)
                 {
                     b = bounds[j];
-                    cb = b;
-                    cb.size *= p.boundsMultiplier;
-                    sz = cb.size;
-                    cb.Expand(p.GetModuleSize(sz));
+                    b.size *= p.boundsMultiplier;
+                    sz = b.size;
+                    b.Expand(p.GetModuleSize(sz));
                     pBounds.Add(b);
                 }
             }

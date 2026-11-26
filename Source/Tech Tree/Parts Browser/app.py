@@ -104,12 +104,12 @@ def create_app(test_config=None):
         return "true"
     @app.route('/api/generate_tree_engine_configs')
     def generate_tree_engine_configs():
-        generate_engine_tree(part_data.parts)
+        generate_engine_tree(part_data.parts, part_data.module_tags)
         return "true"
-    
+
     @app.route('/api/generate_tree_parts_configs')
     def generate_tree_parts_configs():
-        generate_parts_tree(part_data.parts)
+        generate_parts_tree(part_data.parts, part_data.module_tags)
         return "true"
     
     @app.route('/api/generate_ecm_engines_configs')

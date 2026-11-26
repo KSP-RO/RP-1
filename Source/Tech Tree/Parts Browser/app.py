@@ -168,6 +168,8 @@ def create_app(test_config=None):
                     part[field_name] = queued_changes['queued_changes'][row_id]['changes'][field_name]['new']
             if new_part:
                 part_data.add_new_part(part)
+        # reindex so that a mod which only exists through an edited part (e.g. moved to a new mod) gets exported too
+        part_data.index_columns()
         export_to_json()
         return "true"
     

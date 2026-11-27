@@ -100,16 +100,17 @@ def create_app(test_config=None):
                     part['module_tags'] = []
             text_file = open("data/" + make_safe_filename(mod)  + ".json", "w", newline='\n')
             text_file.write(json.dumps(parts_for_mod, indent=4, separators=(',', ': ')))
+            text_file.write('\n')
             text_file.close()
         return "true"
     @app.route('/api/generate_tree_engine_configs')
     def generate_tree_engine_configs():
-        generate_engine_tree(part_data.parts)
+        generate_engine_tree(part_data.parts, part_data.module_tags)
         return "true"
-    
+
     @app.route('/api/generate_tree_parts_configs')
     def generate_tree_parts_configs():
-        generate_parts_tree(part_data.parts)
+        generate_parts_tree(part_data.parts, part_data.module_tags)
         return "true"
     
     @app.route('/api/generate_ecm_engines_configs')
@@ -168,6 +169,8 @@ def create_app(test_config=None):
                     part[field_name] = queued_changes['queued_changes'][row_id]['changes'][field_name]['new']
             if new_part:
                 part_data.add_new_part(part)
+        # reindex so that a mod which only exists through an edited part (e.g. moved to a new mod) gets exported too
+        part_data.index_columns()
         export_to_json()
         return "true"
     

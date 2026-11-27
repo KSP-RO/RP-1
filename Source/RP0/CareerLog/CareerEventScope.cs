@@ -26,6 +26,15 @@ namespace RP0
             var scope = _scopes.Pop();
             if (scope.EventType == CareerEventType.Ignore) _ignoreScopeCount--;
         }
+
+        /// <summary>
+        /// Drops all open scopes. Use when scopes were leaked and can no longer be disposed normally.
+        /// </summary>
+        public static void Reset()
+        {
+            _scopes.Clear();
+            _ignoreScopeCount = 0;
+        }
     }
 
     public enum CareerEventType

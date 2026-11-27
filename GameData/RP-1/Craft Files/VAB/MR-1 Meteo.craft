@@ -2,7 +2,7 @@ ship = MR-1 Meteo
 version = 1.12.3
 description = Soviet MR-1 "Meteo" sounding rocket. Two-stage with booster and sustainer, with a unique hollow booster allowing the sustainer engine to fire through the center. Maximum altitude 95 km, with room for extra payload in the payload fairing.
 type = VAB
-size = 1.24396825,8.24987221,1.24396825
+size = 1.24396825,7.76987171,1.24396825
 steamPublishedFileId = 0
 persistentId = 678568107
 rot = 0,0,0,0
@@ -12,7 +12,7 @@ OverrideDefault = False,False,False,False
 OverrideActionControl = 0,0,0,0
 OverrideAxisControl = 0,0,0,0
 OverrideGroupNames = ,,,
-_modVersions = Scale_Redist=2.4.7|ModuleManager=4.2.2|ClickThroughBlocker=2.1.10|0Harmony=2.2.1|HarmonyInstallChecker=2.2.1|KSPBurst=1.5.5|Microsoft.Extensions.FileSystemGlobbing=6.0.21|System.IO.Compression=4.6.57|System.IO.Compression.FileSystem=4.6.57|System.Runtime.CompilerServices.Unsafe=4.700.20|System.Runtime=4.0.0|Unity.Burst=0.0.0|Unity.Burst.Unsafe=1.0.0|Unity.Collections=0.0.0|Unity.Jobs=0.0.0|Unity.Mathematics=1.0.0|BlendshapeModelLoader=1.0.0|TexturesUnlimited=0.0.0|ToolbarControl=0.1.9|SolverEngines=3.13.1|AJE=2.20.0|AtmosphereAutopilot=1.6.0|AtmosphereAutopilot.UI=1.0.0|B9PartSwitch=2.20.0|B9-PWings-Fork=0.44.0|BDAnimationModules=0.6.7|RNModules=1.2.1|CCK=5.1.0|ConformalDecals=0.2.12|ContractConfigurator=2.5.0|CustomBarnKit=1.1.22|DepthMask=1.1.3|EngineGroupController=1.0.0|UnityGUIFramework=1.0.0|FerramAerospaceResearch.Base=0.16.1|ModularFlightIntegrator=1.2.10|FerramAerospaceResearch=0.16.1|ferramGraph=1.3.0|Firespitter=7.3.7660|HangerExtenderExtended=3.6.0|KerbalChangelog=1.4.2|KerbalismBootstrap=3.17.0|KerbalJointReinforcement=3.7.1|Renamer=1.7.0|Kopernicus.Parser=1.0.0|Kopernicus=1.12.166|KSCSwitcher=2.0.0|0_MultipleModuleInPartAPI=1.0.0|KSPCommunityFixes=1.28.1|KSPWheel=0.0.0|MagiCore=1.3.2|MechJeb2=2.14.3|System.Buffers=4.6.28619|PatchManager=0.0.17|ProceduralFairings=6.3.0|ProceduralParts=2.5.1|RCSBuildAid=1.0.6|RealAntennas=2.1.1|RealChute=1.4.7845|RealFuels=15.3.1|RealHeat=5.1.0|RealismOverhaul=16.0.0|RealSolarSystem=20.0.0|Restock=0.1.0|RetractableLiftingSurface=0.2.1|ROEngines=2.0.0|ROHeatshields=1.0.1|ROLib=1.5.3|RP0=2.0.0|CC_RP0=1.11.0|ClearInputLocks=1.0.0|RP0InstallChecker=1.0.0|RSSTimeFormatter=1.12.0|Shabby=0.3.0|ShipManifest=6.0.8|SMInterface=6.0.3|CLSInterfaces=2.0.1|SmokeScreen=2.8.14|KSPSteamCtrlr=0.0.1|StagedAnimation=1.0.0|SXTContinued=0.3.29|TestFlightAPI=2.2.0|TestFlight=2.2.0|TestFlightContracts=2.2.0|TestFlightCore=2.2.0|TextureReplacer=4.5.3|Waterfall=0.0.0|Kerbalism=3.17.0
+_modVersions = Scale_Redist=3.3.2|ModuleManager=4.2.3|ClickThroughBlocker=2.1.10|0Harmony=2.2.1|HarmonyInstallChecker=2.2.1|Unity.Burst.Unsafe=1.0.0|Unity.Mathematics=1.0.0|Microsoft.Extensions.FileSystemGlobbing=6.0.21|System.IO.Compression=4.6.57|System.Runtime.CompilerServices.Unsafe=4.700.20|System.Runtime=4.0.0|Unity.Burst=1.7.4|System.IO.Compression.FileSystem=4.6.57|Unity.Collections=0.8.0|Unity.Jobs=0.2.9|KSPBurst=1.7.4|SerializationFix=1.0.1|BlendshapeModelLoader=1.6.4|TexturesUnlimited=1.6.4|ToolbarControl=0.1.9|SolverEngines=3.15.0|AJE=2.20.0|AtmosphereAutopilot.UI=1.0.0|AtmosphereAutopilot=1.6.1|B9PartSwitch=2.21.0|B9-PWings-Fork=0.46.1|BDAnimationModules=0.6.7|RNModules=1.2.1|BetterTimeWarpCont=2.3.14|CCK=5.1.0|Shabby=0.4.2|ConformalDecals=0.4.2|Unity.TextMeshPro=2.1.6|ContractConfigurator=2.13.4|CustomBarnKit=1.1.22|DeployableEngines=2.2.0|DepthMask=1.1.3|EditorExtensionsRedux=3.4.7|EngineGroupController=1.0.0|UnityGUIFramework=1.0.0|FerramAerospaceResearch.Base=0.16.2|ModularFlightIntegrator=1.2.10|0_MultipleModuleInPartAPI=1.0.0|KSPCommunityFixes=1.41.1|FerramAerospaceResearch=0.16.2|ferramGraph=1.3.0|Firespitter=7.3.7660|HangerExtenderExtended=3.6.1|KerbalChangelog=1.4.2|Kerbalism=3.43.0|KerbalJointReinforcement=3.8.7|Renamer=1.7.0|Kopernicus.Parser=1.0.0|KSPTextureLoader.Burst=0.0.0|SharpDX=4.2.0|SharpDX.Direct3D11=4.2.0|SharpDX.DXGI=4.2.0|KSPTextureLoader=1.0.38|Kopernicus=1.12.251|KSCSwitcher=2.2.0|KSPWheel=0.0.0|alglib=1.0.0|MechJeb2=2.16.0|MechJeb2.UI=1.0.0|MechJebLib=1.0.0|MechJebLibBindings=1.0.0|PatchManager=0.0.17|ROUtils=1.2.0|ProceduralFairings=6.8.0|ProceduralParts=2.8.0|RCSBuildAid=1.0.6|RealAntennas=2.12.0|RealChute=1.4.9059|RealFuels=15.16.1|RealHeat=5.1.0|RealismOverhaul=18.0.0|ROInstallChecker=1.1.0|RealSolarSystem=20.1.3|Restock=1.0.0|RetractableLiftingSurface=0.2.1|ROLib=2.1.0|ROEngines=2.16.1|ROHeatshields=1.3.0|RP0=4.8.1|CC_RP0=1.11.0|ClearInputLocks=1.0.0|RP0InstallChecker=1.0.0|RSSTimeFormatter=1.12.0|Telecom=1.0.0|SmokeScreen=2.8.14|FARShuttleAerodynamicModel=1.0.0|OcclusionHeat=1.0.0|KSPSteamCtrlr=0.0.1|StagedAnimation=1.0.0|HabUtils=1.0.0|StockAlarmClockDisabler=1.0.0|SXTContinued=0.3.31|TestFlightAPI=2.2.0|TestFlight=2.2.0|TestFlightContracts=2.2.0|TestFlightCore=2.2.0|TextureReplacer=4.5.3|KerbalAlarmClock=3.14.2|TransferWindowPlanner=1.9.1|Waterfall=0.11.0
 PART
 {
 	part = proceduralAvionics_4292239790
@@ -36,8 +36,8 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 8.31769276
-	modMass = -0.949747622
+	modCost = 61.6171837
+	modMass = -0.946743846
 	modSize = 0,0,0
 	link = SSTUHollowRing.Interstage_4290758970
 	link = proceduralStructural_4291596734
@@ -51,38 +51,47 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
-		}
-		ResourcesEnableFlow
-		{
-			actionGroup = None
-		}
-		ResourcesDisableFlow
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutOff
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutRoot
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutHeaviest
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutGrandparent
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesEnableFlow
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesDisableFlow
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -92,11 +101,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = GreySide
 		capTextureIndex = 1
 		shapeName = Cylinder
-		moduleCost = 0.0341819078
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -370,6 +381,7 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -392,11 +404,13 @@ PART
 			MakeReferenceToggle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			HibernateToggle
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -433,104 +447,265 @@ PART
 			OnOrbitProgradeAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnOrbitRetrogradeAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnOrbitNormalAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnOrbitAntinormalAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnOrbitRadialInAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnOrbitRadialOutAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnKillRotationAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnDeactivateSmartASSAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnLandsomewhereAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnLandTargetAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnPanicAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnTranslatronOffAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnTranslatronKeepVertAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnTranslatronZeroSpeedAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnTranslatronPlusOneSpeedAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnTranslatronMinusOneSpeedAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnTranslatronToggleHSAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			OnAscentAPToggleAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		MechJebLocalSettings
 		{
+			VesselState
+			{
+				LaunchTime = -1
+				unlockParts = 
+				unlockTechs = 
+			}
 			MechJebModuleMenu
 			{
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleRoverWindow
+			MechJebModuleAscentClassicAutopilot
 			{
 				unlockParts = 
-				unlockTechs = start
+				unlockTechs = 
+			}
+			MechJebModuleAscentClassicPathMenu
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentMenu
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentPSGAutopilot
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentPSGSettingsMenu
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentSettings
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleAscentSettingsMenu
+			{
+				unlockParts = 
+				unlockTechs = 
 			}
 			MechJebModuleAttitudeAdjustment
 			{
 				unlockParts = 
 				unlockTechs = start
 			}
-			MechJebModuleAscentNavBall
+			MechJebModuleCustomWindowEditor
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleDebugArrows
 			{
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleLogicalStageTracking
+			MechJebModuleDockingAutopilot
+			{
+				forceRol = False
+				overrideSafeDistance = False
+				overrideTargetSize = False
+				unlockParts = 
+				unlockTechs = 
+				rol
+				{
+					ValConfig = 0
+					TextConfig = 0
+				}
+			}
+			MechJebModuleDockingGuidance
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleGuidanceController
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleHoverslamAutopilot
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleHoverslamSimulation
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleInfoItems
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleLandingAutopilot
+			{
+				DeployGears = True
+				DeployChutes = True
+				RCSAdjustment = True
+				unlockParts = 
+				unlockTechs = 
+				TouchdownSpeed
+				{
+					ValConfig = 0.5
+					TextConfig = 0.5
+				}
+				LimitGearsStage
+				{
+					ValConfig = 0
+					TextConfig = 0
+				}
+				LimitChutesStage
+				{
+					ValConfig = 0
+					TextConfig = 0
+				}
+			}
+			MechJebModuleLandingGuidance
+			{
+				_landingSiteIdx = 0
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleLandingPredictions
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleManeuverPlanner
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleNodeEditor
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleNodeExecutor
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModulePSGSimulation
 			{
 				unlockParts = 
 				unlockTechs = 
 			}
 			MechJebModuleRCSBalancerWindow
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleRendezvousAutopilot
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleRendezvousAutopilotWindow
+			{
+				unlockParts = 
+				unlockTechs = start
+			}
+			MechJebModuleRendezvousGuidance
 			{
 				unlockParts = 
 				unlockTechs = start
@@ -548,164 +723,16 @@ PART
 				unlockTechs = 
 				heading
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				speed
 				{
-					_val = 10
-					_text = 10
+					ValConfig = 10
+					TextConfig = 10
 				}
 			}
-			MechJebModuleSpaceplaneGuidance
-			{
-				runwayIndex = 0
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleAscentPVG
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleInfoItems
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleSmartRcs
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleAscentClassic
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleSpaceplaneAutopilot
-			{
-				bBreakAsSoonAsLanded = False
-				unlockParts = 
-				unlockTechs = 
-				glideslope
-				{
-					_val = 2.5
-					_text = 2.5
-				}
-				approachSpeed
-				{
-					_val = 80
-					_text = 80
-				}
-				touchdownSpeed
-				{
-					_val = 60
-					_text = 60
-				}
-				maximumSafeBankAngle
-				{
-					_val = 25
-					_text = 25
-				}
-			}
-			MechJebModuleAirplaneAutopilot
-			{
-				HeadingHoldEnabled = False
-				AltitudeHoldEnabled = False
-				VertSpeedHoldEnabled = False
-				RollHoldEnabled = False
-				SpeedHoldEnabled = False
-				AltitudeTarget = 0
-				HeadingTarget = 90
-				RollTarget = 0
-				SpeedTarget = 0
-				VertSpeedTarget = 0
-				BankAngle = 30
-				unlockParts = 
-				unlockTechs = 
-				AccKp
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				AccKi
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				AccKd
-				{
-					_val = 0.0050000000000000001
-					_text = 0.005
-				}
-				PitKp
-				{
-					_val = 2
-					_text = 2
-				}
-				PitKi
-				{
-					_val = 1
-					_text = 1
-				}
-				PitKd
-				{
-					_val = 0.0050000000000000001
-					_text = 0.005
-				}
-				RolKp
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				RolKi
-				{
-					_val = 0.02
-					_text = 0.02
-				}
-				RolKd
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				YawKp
-				{
-					_val = 1
-					_text = 1
-				}
-				YawKi
-				{
-					_val = 0.25
-					_text = 0.25
-				}
-				YawKd
-				{
-					_val = 0.02
-					_text = 0.02
-				}
-				YawLimit
-				{
-					_val = 10
-					_text = 10
-				}
-				RollLimit
-				{
-					_val = 45
-					_text = 45
-				}
-				PitchDownLimit
-				{
-					_val = 15
-					_text = 15
-				}
-				PitchUpLimit
-				{
-					_val = 25
-					_text = 25
-				}
-			}
-			MechJebModuleDockingGuidance
+			MechJebModuleRoverWindow
 			{
 				unlockParts = 
 				unlockTechs = start
@@ -715,77 +742,75 @@ PART
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleAscentGT
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleDebugArrows
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
 			MechJebModuleSmartASS
 			{
 				mode = ORBITAL
 				target = OFF
-				advReference = INERTIAL
-				advDirection = FORWARD
+				advReference = SUN
+				advDirection = DOWN
 				forceRol = False
 				forcePitch = True
 				forceYaw = True
+				smoothControl = False
 				unlockParts = 
 				unlockTechs = start
 				srfHdg
 				{
-					_val = 90
-					_text = 90
+					ValConfig = 90
+					TextConfig = 90
 				}
 				srfPit
 				{
-					_val = 90
-					_text = 90
+					ValConfig = 90
+					TextConfig = 90
 				}
 				srfRol
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				srfVelYaw
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				srfVelPit
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				srfVelRol
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 				rol
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
+				}
+				degreesPerSecond
+				{
+					ValConfig = 10
+					TextConfig = 10
 				}
 			}
-			MechJebModuleDockingAutopilot
+			MechJebModuleSmartRcs
 			{
-				forceRol = False
-				overrideSafeDistance = False
-				overrideTargetSize = False
 				unlockParts = 
 				unlockTechs = 
-				rol
-				{
-					_val = 0
-					_text = 0
-				}
 			}
-			ModExtensionDemo
+			MechJebModuleSpinupController
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleStageStats
+			{
+				unlockParts = 
+				unlockTechs = 
+			}
+			MechJebModuleTargetController
 			{
 				unlockParts = 
 				unlockTechs = 
@@ -796,103 +821,25 @@ PART
 				unlockParts = 
 				unlockTechs = start
 			}
-			MechJebModuleWarpHelper
-			{
-				unlockParts = 
-				unlockTechs = start
-				phaseAngle
-				{
-					_val = 0
-					_text = 0
-				}
-			}
-			MechJebModuleCustomWindowEditor
-			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleAscentAutopilot
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleRendezvousAutopilotWindow
-			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleNodeExecutor
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleNodeEditor
-			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleLandingAutopilot
-			{
-				deployGears = True
-				deployChutes = True
-				rcsAdjustment = True
-				unlockParts = 
-				unlockTechs = 
-				touchdownSpeed
-				{
-					_val = 0.5
-					_text = 0.5
-				}
-				limitGearsStage
-				{
-					val = 0
-					_text = 0
-				}
-				limitChutesStage
-				{
-					val = 0
-					_text = 0
-				}
-			}
-			MechJebModuleScript
-			{
-				minifiedGUI = False
-				selectedSlot = 0
-				selectedMemorySlotType = 0
-				activeSavepoint = -1
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleLandingGuidance
-			{
-				landingSiteIdx = 9
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleLandingPredictions
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
 			MechJebModuleTranslatron
 			{
 				unlockParts = 
 				unlockTechs = start
 				trans_spd
 				{
-					_val = 0
-					_text = 0
+					ValConfig = 0
+					TextConfig = 0
 				}
 			}
-			MechJebModuleAscentGuidance
+			MechJebModuleWarpHelper
 			{
 				unlockParts = 
 				unlockTechs = start
-			}
-			MechJebModuleRendezvousAutopilot
-			{
-				unlockParts = 
-				unlockTechs = 
+				phaseAngle
+				{
+					ValConfig = 0
+					TextConfig = 0
+				}
 			}
 			MechJebModuleWaypointWindow
 			{
@@ -904,41 +851,13 @@ PART
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleTargetController
+			ModExtensionDemo
 			{
 				unlockParts = 
 				unlockTechs = 
 			}
-			MechJebModuleManeuverPlanner
+			MechJebModuleCustomInfoWindow
 			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleStageStats
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleAirplaneGuidance
-			{
-				showpid = False
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleGuidanceController
-			{
-				unlockParts = 
-				unlockTechs = 
-			}
-			MechJebModuleRendezvousGuidance
-			{
-				unlockParts = 
-				unlockTechs = start
-			}
-			MechJebModuleAscentClassicMenu
-			{
-				unlockParts = 
-				unlockTechs = 
 			}
 			MechJebModuleCustomInfoWindow
 			{
@@ -974,42 +893,42 @@ PART
 			}
 			MechJebModuleDeployableAntennaController
 			{
-				prev_shouldDeploy = False
+				PrevShouldDeploy = False
 				unlockParts = 
 				unlockTechs = 
 			}
 			MechJebModuleSolarPanelController
 			{
-				prev_shouldDeploy = False
+				PrevShouldDeploy = False
 				unlockParts = 
 				unlockTechs = 
 			}
 			MechJebModuleThrustController
 			{
-				limitThrottle = False
-				limiterMinThrottle = False
-				electricThrottle = False
+				LimitThrottle = False
+				LimiterMinThrottle = True
+				ElectricThrottle = False
 				unlockParts = 
 				unlockTechs = 
-				maxThrottle
+				MaxThrottle
 				{
-					_val = 1
-					_text = 100
+					ValConfig = 1
+					TextConfig = 100
 				}
-				minThrottle
+				MinThrottle
 				{
-					_val = 0.050000000000000003
-					_text = 5
+					ValConfig = 0.050000000000000003
+					TextConfig = 5
 				}
-				electricThrottleLo
+				ElectricThrottleLo
 				{
-					_val = 0.050000000000000003
-					_text = 5
+					ValConfig = 0.050000000000000003
+					TextConfig = 5
 				}
-				electricThrottleHi
+				ElectricThrottleHi
 				{
-					_val = 0.14999999999999999
-					_text = 15
+					ValConfig = 0.14999999999999999
+					TextConfig = 15
 				}
 			}
 			MechJebModuleRCSController
@@ -1018,23 +937,18 @@ PART
 				unlockTechs = 
 				Tf
 				{
-					_val = 1
-					_text = 1
+					ValConfig = 1
+					TextConfig = 1
 				}
 				Kp
 				{
-					_val = 0.125
-					_text = 0.125
+					ValConfig = 0.12492219800962338
+					TextConfig = 0.124922198009623
 				}
 				Ki
 				{
-					_val = 0.070000000000000007
-					_text = 0.07
-				}
-				Kd
-				{
-					_val = 0.53000000000000003
-					_text = 0.53
+					ValConfig = 0.0073611111111111091
+					TextConfig = 0.00736111111111111
 				}
 			}
 			MechJebModuleRCSBalancer
@@ -1066,17 +980,17 @@ PART
 			}
 			MechJebModuleFlightRecorder
 			{
-				markUT = 0
-				deltaVExpended = 0
-				dragLosses = 0
-				gravityLosses = 0
-				steeringLosses = 0
-				markLAN = 0
-				markLatitude = 0
-				markLongitude = 0
-				markAltitude = 0
-				markBodyIndex = 1
-				maxDragGees = 0
+				MarkUT = 0
+				DeltaVExpended = 0
+				DragLosses = 0
+				GravityLosses = 0
+				SteeringLosses = 0
+				MarkLAN = 0
+				MarkLatitude = 0
+				MarkLongitude = 0
+				MarkAltitude = 0
+				MarkBodyIndex = 1
+				MaxDragGees = 0
 				unlockParts = 
 				unlockTechs = 
 			}
@@ -1096,9 +1010,10 @@ PART
 		isEnabled = True
 		type = Battery-I
 		utilization = 50
-		volume = 4.1887999999999996
-		mass = 0.00103643071
+		volume = 9.9268000000000001
+		mass = 0.00245617796
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.35457675143184625
 		stagingEnabled = True
 		EVENTS
 		{
@@ -1122,8 +1037,8 @@ PART
 			temperature = 300
 			fillable = True
 			techRequired = 
-			amount = 100
-			maxAmount = 100
+			amount = 236.98433919022156
+			maxAmount = 236.98433919022156
 		}
 		UPGRADESAPPLIED
 		{
@@ -1134,7 +1049,7 @@ PART
 		name = HardDrive
 		isEnabled = True
 		hdId = 0
-		effectiveDataCapacity = -1
+		effectiveDataCapacity = 0
 		effectiveSampleCapacity = 1
 		stagingEnabled = True
 		EVENTS
@@ -1142,6 +1057,11 @@ PART
 		}
 		ACTIONS
 		{
+			TransferDataAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
 		}
 		UPGRADESAPPLIED
 		{
@@ -1156,6 +1076,7 @@ PART
 		avionicsTechLevel = start
 		currentWatts = 100
 		systemEnabled = True
+		dead = False
 		setToDebrisOnStage = False
 		stagingEnabled = True
 		EVENTS
@@ -1167,16 +1088,24 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
+			}
+			KillAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1212,6 +1141,7 @@ PART
 			BoomAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1257,10 +1187,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1290,10 +1222,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1339,10 +1273,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1388,10 +1324,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1421,10 +1359,47 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = Experiment
+		isEnabled = False
+		issue = 
+		situationId = 0
+		didPrepare = False
+		shrouded = False
+		remainingSampleMass = 0
+		privateHdId = 0
+		firstStart = True
+		prodFactor = 0
+		expState = Stopped
+		status = Stopped
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			StartAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+			StopAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1470,10 +1445,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1503,10 +1480,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1536,10 +1515,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1569,10 +1550,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1602,10 +1585,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1635,10 +1620,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1668,10 +1655,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1701,10 +1690,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1734,10 +1725,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1767,10 +1760,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1800,10 +1795,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1833,10 +1830,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1866,10 +1865,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1899,10 +1900,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1932,10 +1935,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1965,10 +1970,12 @@ PART
 			StartAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			StopAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -1997,6 +2004,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -2011,7 +2024,7 @@ PART
 	{
 		name = ModuleRealAntenna
 		isEnabled = True
-		_enabled = True
+		Condition = Enabled
 		TxPower = 30
 		TechLevel = 0
 		AMWTemp = 0
@@ -2026,10 +2039,16 @@ PART
 		}
 		ACTIONS
 		{
+			PermanentShutdownAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
 			StartTransmissionAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -2073,8 +2092,8 @@ PART
 	RESOURCE
 	{
 		name = ElectricCharge
-		amount = 100
-		maxAmount = 100
+		amount = 236.98433919022156
+		maxAmount = 236.98433919022156
 		flowState = True
 		isTweakable = True
 		hideFlow = False
@@ -2133,40 +2152,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -2187,6 +2215,7 @@ PART
 		manualMaxSize = 0.39200002
 		manualCylStart = 0
 		manualCylEnd = 0.5
+		maxFairingSize = 0.435000032
 		decouplerEnabled = True
 		autoDecoupleTopNode = False
 		showInterstageNodes = False
@@ -2233,6 +2262,7 @@ PART
 			DecoupleAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -2253,14 +2283,17 @@ PART
 			ToggleAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			EnableAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			DisableAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -2364,40 +2397,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -2429,19 +2471,23 @@ PART
 			ActionDeploy
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActionCut
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActionArm
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActionDisarm
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		PARACHUTE
@@ -2466,6 +2512,10 @@ PART
 			forcedOrientation = 20
 			maxRotation = 90
 			depState = STOWED
+			ignoreShielded = False
+			referenceDiameter = -1
+			maxDiameter = 70
+			canopyCount = 1
 		}
 		PARACHUTE
 		{
@@ -2489,6 +2539,10 @@ PART
 			forcedOrientation = 20
 			maxRotation = 90
 			depState = STOWED
+			ignoreShielded = False
+			referenceDiameter = -1
+			maxDiameter = 70
+			canopyCount = 1
 		}
 		UPGRADESAPPLIED
 		{
@@ -2529,7 +2583,7 @@ PART
 			modelID = 0
 			typeID = 0
 			lastTypeID = 0
-			position = -0.159779638,7.96016312,-0.410921752
+			position = -0.159778416,6.76150322,-0.410920918
 			isPressure = False
 			calcSelect = True
 			getMass = True
@@ -2553,7 +2607,7 @@ PART
 			modelID = 0
 			typeID = 0
 			lastTypeID = 0
-			position = -0.159779638,7.96016312,0.607078254
+			position = -0.159778416,6.76150322,0.607079089
 			isPressure = False
 			calcSelect = True
 			getMass = True
@@ -2659,7 +2713,7 @@ PART
 	sepI = 0
 	attm = 0
 	sameVesselCollision = False
-	modCost = 1.58915019
+	modCost = 69.3934174
 	modMass = -0.870010436
 	modSize = 0,0,0
 	link = RO-B9ProcWing-Early_4292116826
@@ -2681,38 +2735,47 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
-		}
-		ResourcesEnableFlow
-		{
-			actionGroup = None
-		}
-		ResourcesDisableFlow
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutOff
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutRoot
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutHeaviest
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutGrandparent
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesEnableFlow
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesDisableFlow
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -2722,11 +2785,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Cylinder
-		moduleCost = 0.0763406679
+		moduleCost = 0
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -3011,8 +3076,9 @@ PART
 		type = Tank-Sep-Steel-HP
 		utilization = 75
 		volume = 336.17989999999998
-		mass = 0.12998955
+		mass = 0.129989564
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 3.2611473798120145
 		stagingEnabled = True
 		EVENTS
 		{
@@ -3045,7 +3111,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0.000159999996
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -3064,7 +3130,7 @@ PART
 			note = 
 			utilization = 200
 			mass = 0.000159999996
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -3085,8 +3151,29 @@ PART
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 63.6711006
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -3184,40 +3271,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -3419,12 +3515,34 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.040800000000000003
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12353342271147383
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -3489,40 +3607,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -3724,12 +3851,34 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.040800000000000003
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12353342271147383
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -3794,40 +3943,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -4029,12 +4187,34 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.040800000000000003
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12353342271147383
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -4099,40 +4279,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -4334,12 +4523,34 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.040800000000000003
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12353342271147383
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -4413,40 +4624,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -4467,6 +4687,7 @@ PART
 		manualMaxSize = 0.39200002
 		manualCylStart = 0
 		manualCylEnd = 0.410000026
+		maxFairingSize = 0.435000032
 		decouplerEnabled = True
 		autoDecoupleTopNode = False
 		showInterstageNodes = False
@@ -4513,16 +4734,19 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			EnableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			DisableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -4609,7 +4833,7 @@ PART
 	resPri = 0
 	dstg = 2
 	sidx = 0
-	sqor = 2
+	sqor = 1
 	sepI = 0
 	attm = 0
 	sameVesselCollision = False
@@ -4627,38 +4851,47 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
-		}
-		ResourcesEnableFlow
-		{
-			actionGroup = None
-		}
-		ResourcesDisableFlow
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutOff
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutRoot
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutHeaviest
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutGrandparent
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesEnableFlow
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesDisableFlow
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -4692,18 +4925,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -4833,6 +5070,13 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+			item = Toxic
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -4881,7 +5125,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -4915,7 +5159,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -4935,7 +5178,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -4968,6 +5210,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -5079,7 +5322,7 @@ PART
 	sepI = 0
 	attm = 0
 	sameVesselCollision = False
-	modCost = -0.80232501
+	modCost = 14.845706
 	modMass = 0.00197674963
 	modSize = 0,0,0
 	attN = connect,SSTUHollowRing.Boattail_4291535312_0|0.5|0_0|-1|0_0|0.5|0_0|-1|0
@@ -5091,40 +5334,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -5145,6 +5397,7 @@ PART
 		sideThickness = 0.0217500012
 		meshPos = (-0.217500016, 0.488254994, 0)
 		meshRot = (0, 0, 0, 1)
+		hingeOffset = (-0.0217500012, 0.488254994, 0)
 		density = 0.180000007
 		usePreset = True
 		shapePreset = Egg
@@ -5160,6 +5413,7 @@ PART
 		noseConeSegments = 11
 		noseHeightRatio = 2
 		shapeLock = False
+		hingeEnabled = False
 		stagingEnabled = True
 		EVENTS
 		{
@@ -5169,12 +5423,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = PFTech-Fairing-I
-			upgrade = PFTech-Fairing-II
-			upgrade = PFTech-Fairing-III
-			upgrade = PFTech-Fairing-IV
-			upgrade = PFTech-Fairing-V
-			upgrade = PFTech-Fairing-VI
 		}
 	}
 	MODULE
@@ -5195,6 +5443,47 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAnimateGeneric
+		isEnabled = True
+		aniState = LOCKED
+		animSwitch = True
+		animTime = 0
+		animSpeed = 1
+		deployPercent = 50
+		animationIsDisabled = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		AXISGROUPS
+		{
+			deployPercent
+			{
+				axisGroup = None
+				axisIncremental = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				axisSpeedMultiplier = 0
+				axisInverted = None
+				overrideIncremental0 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental1 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental2 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental3 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
 			}
 		}
 		UPGRADESAPPLIED
@@ -5326,16 +5615,19 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			EnableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			DisableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -5346,7 +5638,7 @@ PART
 	{
 		name = ModuleToolingPFSide
 		isEnabled = True
-		addedCost = 0
+		addedCost = 15.6480312
 		stagingEnabled = True
 		EVENTS
 		{
@@ -5410,44 +5702,53 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
-		}
-		ResourcesEnableFlow
-		{
-			actionGroup = None
-			active = False
-		}
-		ResourcesDisableFlow
-		{
-			actionGroup = None
-			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutOff
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutRoot
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutHeaviest
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutGrandparent
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesEnableFlow
+		{
+			actionGroup = None
+			active = False
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesDisableFlow
+		{
+			actionGroup = None
+			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -5460,6 +5761,7 @@ PART
 		vertical = True
 		lineSpacing = -15.3845701
 		charSpacing = 0
+		fontName = Calibri SDF
 		fillEnabled = True
 		outlineEnabled = False
 		outlineWidth = 0.100000001
@@ -5471,7 +5773,6 @@ PART
 		projectMultiple = False
 		stagingEnabled = True
 		text = CCCP
-		fontName = Calibri SDF
 		style = 0
 		fillColor = #ff0000ff
 		outlineColor = #ffffffff
@@ -5567,44 +5868,53 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
-		}
-		ResourcesEnableFlow
-		{
-			actionGroup = None
-			active = False
-		}
-		ResourcesDisableFlow
-		{
-			actionGroup = None
-			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutOff
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutRoot
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutHeaviest
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutGrandparent
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesEnableFlow
+		{
+			actionGroup = None
+			active = False
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesDisableFlow
+		{
+			actionGroup = None
+			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -5617,6 +5927,7 @@ PART
 		vertical = True
 		lineSpacing = -15.3845701
 		charSpacing = 0
+		fontName = Calibri SDF
 		fillEnabled = True
 		outlineEnabled = False
 		outlineWidth = 0.100000001
@@ -5628,7 +5939,6 @@ PART
 		projectMultiple = False
 		stagingEnabled = True
 		text = CCCP
-		fontName = Calibri SDF
 		style = 0
 		fillColor = #ff0000ff
 		outlineColor = #ffffffff
@@ -5693,7 +6003,7 @@ PART
 	part = KzProcFairingSide1.TU_4289266512
 	partName = Part
 	persistentId = 3495419914
-	pos = 0.0577215999,7.32322502,0.0980790928
+	pos = 0.0577215999,7.3232255,0.0980790928
 	attPos = 0,0,0
 	attPos0 = 0.217500016,-0.488254547,0
 	rot = 1,0,0,0
@@ -5711,7 +6021,7 @@ PART
 	sepI = 0
 	attm = 0
 	sameVesselCollision = False
-	modCost = -0.517866015
+	modCost = 175.194107
 	modMass = 0.000702667516
 	modSize = 0,0,0
 	sym = KzProcFairingSide1.TU_4292993824
@@ -5726,40 +6036,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -5780,6 +6099,7 @@ PART
 		sideThickness = 0.0217500012
 		meshPos = (-0.217500016, 0.488254994, 0)
 		meshRot = (0, 0, 0, 1)
+		hingeOffset = (-0.0217500012, 0.488254994, 0)
 		density = 0.180000007
 		usePreset = True
 		shapePreset = Conic
@@ -5795,6 +6115,7 @@ PART
 		noseConeSegments = 11
 		noseHeightRatio = 2
 		shapeLock = False
+		hingeEnabled = False
 		stagingEnabled = True
 		EVENTS
 		{
@@ -5804,12 +6125,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = PFTech-Fairing-I
-			upgrade = PFTech-Fairing-II
-			upgrade = PFTech-Fairing-III
-			upgrade = PFTech-Fairing-IV
-			upgrade = PFTech-Fairing-V
-			upgrade = PFTech-Fairing-VI
 		}
 	}
 	MODULE
@@ -5829,6 +6144,47 @@ PART
 			ActionJettison
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAnimateGeneric
+		isEnabled = True
+		aniState = LOCKED
+		animSwitch = True
+		animTime = 0
+		animSpeed = 1
+		deployPercent = 50
+		animationIsDisabled = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		AXISGROUPS
+		{
+			deployPercent
+			{
+				axisGroup = None
+				axisIncremental = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				axisSpeedMultiplier = 0
+				axisInverted = None
+				overrideIncremental0 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental1 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental2 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental3 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
 			}
 		}
 		UPGRADESAPPLIED
@@ -5960,16 +6316,19 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			EnableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			DisableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -5980,7 +6339,7 @@ PART
 	{
 		name = ModuleToolingPFSide
 		isEnabled = True
-		addedCost = 0
+		addedCost = 175.651703
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6013,7 +6372,7 @@ PART
 	part = KzProcFairingSide1.TU_4292993824
 	partName = Part
 	persistentId = 183950438
-	pos = -0.159778416,7.32322502,0.315579116
+	pos = -0.159778416,7.3232255,0.315579116
 	attPos = 0,0,0
 	attPos0 = 0,-0.488255501,-0.217500031
 	rot = 0.707106829,0,0.707106829,0
@@ -6031,7 +6390,7 @@ PART
 	sepI = 0
 	attm = 0
 	sameVesselCollision = False
-	modCost = -0.517866015
+	modCost = 175.194107
 	modMass = 0.000702667516
 	modSize = 0,0,0
 	sym = KzProcFairingSide1.TU_4292993718
@@ -6046,40 +6405,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -6100,6 +6468,7 @@ PART
 		sideThickness = 0.0217500012
 		meshPos = (-0.217500031, 0.488254994, 0)
 		meshRot = (0, 0, 0, 1)
+		hingeOffset = (-0.0217500012, 0.488254994, 0)
 		density = 0.180000007
 		usePreset = True
 		shapePreset = Conic
@@ -6115,6 +6484,7 @@ PART
 		noseConeSegments = 11
 		noseHeightRatio = 2
 		shapeLock = False
+		hingeEnabled = False
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6124,12 +6494,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = PFTech-Fairing-I
-			upgrade = PFTech-Fairing-II
-			upgrade = PFTech-Fairing-III
-			upgrade = PFTech-Fairing-IV
-			upgrade = PFTech-Fairing-V
-			upgrade = PFTech-Fairing-VI
 		}
 	}
 	MODULE
@@ -6149,6 +6513,47 @@ PART
 			ActionJettison
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAnimateGeneric
+		isEnabled = True
+		aniState = LOCKED
+		animSwitch = True
+		animTime = 0
+		animSpeed = 1
+		deployPercent = 50
+		animationIsDisabled = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		AXISGROUPS
+		{
+			deployPercent
+			{
+				axisGroup = None
+				axisIncremental = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				axisSpeedMultiplier = 0
+				axisInverted = None
+				overrideIncremental0 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental1 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental2 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental3 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
 			}
 		}
 		UPGRADESAPPLIED
@@ -6280,16 +6685,19 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			EnableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			DisableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -6300,7 +6708,7 @@ PART
 	{
 		name = ModuleToolingPFSide
 		isEnabled = True
-		addedCost = 0
+		addedCost = 175.651703
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6333,10 +6741,10 @@ PART
 	part = KzProcFairingSide1.TU_4292993718
 	partName = Part
 	persistentId = 151615154
-	pos = -0.377278417,7.32322502,0.0980791152
+	pos = -0.377278447,7.3232255,0.0980791152
 	attPos = 0,0,0
 	attPos0 = -0.217500001,-0.488254547,-2.23517418E-08
-	rot = 5.13833136E-08,0,1,0
+	rot = 5.13833065E-08,0,1,0
 	attRot = -0.99999994,0,0,0
 	attRot0 = 0,1,0,-4.37113883E-08
 	mir = 1,1,1
@@ -6351,7 +6759,7 @@ PART
 	sepI = 0
 	attm = 0
 	sameVesselCollision = False
-	modCost = -0.517866015
+	modCost = 175.194107
 	modMass = 0.000702667516
 	modSize = 0,0,0
 	sym = KzProcFairingSide1.TU_4292993612
@@ -6366,40 +6774,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -6418,8 +6835,9 @@ PART
 		topRad = 0.195750013
 		inlineHeight = 0.5
 		sideThickness = 0.0217500012
-		meshPos = (-0.217500001, 0.488254994, 0)
+		meshPos = (-0.217500031, 0.488254994, 0)
 		meshRot = (0, 0, 0, 1)
+		hingeOffset = (-0.0217500012, 0.488254994, 0)
 		density = 0.180000007
 		usePreset = True
 		shapePreset = Conic
@@ -6435,6 +6853,7 @@ PART
 		noseConeSegments = 11
 		noseHeightRatio = 2
 		shapeLock = False
+		hingeEnabled = False
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6444,12 +6863,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = PFTech-Fairing-I
-			upgrade = PFTech-Fairing-II
-			upgrade = PFTech-Fairing-III
-			upgrade = PFTech-Fairing-IV
-			upgrade = PFTech-Fairing-V
-			upgrade = PFTech-Fairing-VI
 		}
 	}
 	MODULE
@@ -6469,6 +6882,47 @@ PART
 			ActionJettison
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAnimateGeneric
+		isEnabled = True
+		aniState = LOCKED
+		animSwitch = True
+		animTime = 0
+		animSpeed = 1
+		deployPercent = 50
+		animationIsDisabled = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		AXISGROUPS
+		{
+			deployPercent
+			{
+				axisGroup = None
+				axisIncremental = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				axisSpeedMultiplier = 0
+				axisInverted = None
+				overrideIncremental0 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental1 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental2 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental3 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
 			}
 		}
 		UPGRADESAPPLIED
@@ -6600,16 +7054,19 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			EnableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			DisableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -6620,7 +7077,7 @@ PART
 	{
 		name = ModuleToolingPFSide
 		isEnabled = True
-		addedCost = 0
+		addedCost = 175.651703
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6653,7 +7110,7 @@ PART
 	part = KzProcFairingSide1.TU_4292993612
 	partName = Part
 	persistentId = 537074463
-	pos = -0.159778431,7.32322502,-0.119420923
+	pos = -0.159778431,7.3232255,-0.119420923
 	attPos = 0,0,0
 	attPos0 = -1.49011612E-08,-0.488255501,0.217500016
 	rot = -0.707106829,0,0.707106829,0
@@ -6671,7 +7128,7 @@ PART
 	sepI = 0
 	attm = 0
 	sameVesselCollision = False
-	modCost = -0.517866015
+	modCost = 175.194107
 	modMass = 0.000702667516
 	modSize = 0,0,0
 	sym = KzProcFairingSide1.TU_4289266512
@@ -6686,40 +7143,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -6740,6 +7206,7 @@ PART
 		sideThickness = 0.0217500012
 		meshPos = (-0.217500016, 0.488254994, 0)
 		meshRot = (0, 0, 0, 1)
+		hingeOffset = (-0.0217500012, 0.488254994, 0)
 		density = 0.180000007
 		usePreset = True
 		shapePreset = Conic
@@ -6755,6 +7222,7 @@ PART
 		noseConeSegments = 11
 		noseHeightRatio = 2
 		shapeLock = False
+		hingeEnabled = False
 		stagingEnabled = True
 		EVENTS
 		{
@@ -6764,12 +7232,6 @@ PART
 		}
 		UPGRADESAPPLIED
 		{
-			upgrade = PFTech-Fairing-I
-			upgrade = PFTech-Fairing-II
-			upgrade = PFTech-Fairing-III
-			upgrade = PFTech-Fairing-IV
-			upgrade = PFTech-Fairing-V
-			upgrade = PFTech-Fairing-VI
 		}
 	}
 	MODULE
@@ -6789,6 +7251,47 @@ PART
 			ActionJettison
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleAnimateGeneric
+		isEnabled = True
+		aniState = LOCKED
+		animSwitch = True
+		animTime = 0
+		animSpeed = 1
+		deployPercent = 50
+		animationIsDisabled = False
+		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+			ToggleAction
+			{
+				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
+			}
+		}
+		AXISGROUPS
+		{
+			deployPercent
+			{
+				axisGroup = None
+				axisIncremental = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				axisSpeedMultiplier = 0
+				axisInverted = None
+				overrideIncremental0 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental1 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental2 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
+				overrideIncremental3 = Pitch, Yaw, Roll, TranslateX, TranslateY, TranslateZ, WheelSteer, WheelThrottle, Custom01, Custom02, Custom03, Custom04
 			}
 		}
 		UPGRADESAPPLIED
@@ -6920,16 +7423,19 @@ PART
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			EnableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 			DisableAction
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -6940,7 +7446,7 @@ PART
 	{
 		name = ModuleToolingPFSide
 		isEnabled = True
-		addedCost = 0
+		addedCost = 175.651703
 		stagingEnabled = True
 		EVENTS
 		{
@@ -7004,44 +7510,53 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
-		}
-		ResourcesEnableFlow
-		{
-			actionGroup = None
-			active = False
-		}
-		ResourcesDisableFlow
-		{
-			actionGroup = None
-			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutOff
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutRoot
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutHeaviest
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutGrandparent
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesEnableFlow
+		{
+			actionGroup = None
+			active = False
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesDisableFlow
+		{
+			actionGroup = None
+			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -7054,6 +7569,7 @@ PART
 		vertical = False
 		lineSpacing = -14.6154079
 		charSpacing = 0
+		fontName = Calibri SDF
 		fillEnabled = True
 		outlineEnabled = False
 		outlineWidth = 0.100000001
@@ -7065,7 +7581,6 @@ PART
 		projectMultiple = False
 		stagingEnabled = True
 		text = %D0%9C%D0%A0-1+%0A%D0%9C%D0%B5%D1%82%D0%B5%D0%BE
-		fontName = Calibri SDF
 		style = 0
 		fillColor = #000000ff
 		outlineColor = #ffffffff
@@ -7161,44 +7676,53 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
-		}
-		ResourcesEnableFlow
-		{
-			actionGroup = None
-			active = False
-		}
-		ResourcesDisableFlow
-		{
-			actionGroup = None
-			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutOff
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutRoot
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutHeaviest
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		AutostrutGrandparent
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesEnableFlow
+		{
+			actionGroup = None
+			active = False
+			wasActiveBeforePartWasAdjusted = False
+		}
+		ResourcesDisableFlow
+		{
+			actionGroup = None
+			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -7211,6 +7735,7 @@ PART
 		vertical = False
 		lineSpacing = -14.6154079
 		charSpacing = 0
+		fontName = Calibri SDF
 		fillEnabled = True
 		outlineEnabled = False
 		outlineWidth = 0.100000001
@@ -7222,7 +7747,6 @@ PART
 		projectMultiple = False
 		stagingEnabled = True
 		text = %D0%9C%D0%A0-1+%0A%D0%9C%D0%B5%D1%82%D0%B5%D0%BE
-		fontName = Calibri SDF
 		style = 0
 		fillColor = #000000ff
 		outlineColor = #ffffffff
@@ -7305,8 +7829,8 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 0.061270725
-	modMass = -0.991177022
+	modCost = 18.2083244
+	modMass = -0.992647529
 	modSize = 0,0,0
 	link = proceduralStructural_4291578894
 	attN = top,proceduralStructural_4291578894_0|0.700000048|0_0|1|0_0|0.700000048|0_0|1|0
@@ -7319,40 +7843,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -7362,11 +7895,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Smooth Cone
 		moduleCost = 0.061270725
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -7555,7 +8090,7 @@ PART
 		name = TankContentSwitcher
 		isEnabled = True
 		tankVolume = 0.12254145
-		mass = 0.00882298406
+		mass = 0.00735248672
 		tankType = Structural
 		stagingEnabled = True
 		EVENTS
@@ -7666,7 +8201,7 @@ PART
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 16.0155525
 		stagingEnabled = True
 		EVENTS
 		{
@@ -7717,8 +8252,8 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 7.85398297E-05
-	modMass = -0.999988675
+	modCost = 1.95421922
+	modMass = -0.999990582
 	modSize = 0,0,0
 	link = proceduralStructural_4291587028
 	attN = top,proceduralStructural_4291587028_0|0.24999997|0_0|1|0_0|0.24999997|0_0|1|0
@@ -7731,40 +8266,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -7774,11 +8318,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Cylinder
 		moduleCost = 7.85398297E-05
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -7967,7 +8513,7 @@ PART
 		name = TankContentSwitcher
 		isEnabled = True
 		tankVolume = 0.000157079659
-		mass = 1.13097349E-05
+		mass = 9.42477891E-06
 		tankType = Structural
 		stagingEnabled = True
 		EVENTS
@@ -8078,7 +8624,7 @@ PART
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 1.9191407
 		stagingEnabled = True
 		EVENTS
 		{
@@ -8129,8 +8675,8 @@ PART
 	sepI = -1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 5.23598874E-06
-	modMass = -0.999999225
+	modCost = 1.76989591
+	modMass = -0.999999344
 	modSize = 0,0,0
 	attN = top,Null_0_0|0.049999997|0_0|1|0_0|0.049999997|0_0|1|0
 	attN = bottom,proceduralStructural_4291578894_0|-0.049999997|0_0|-1|0_0|-0.049999997|0_0|-1|0
@@ -8142,40 +8688,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -8185,11 +8740,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Smooth Cone
 		moduleCost = 5.23598874E-06
+		moduleMass = 0
 		stagingEnabled = True
 		EVENTS
 		{
@@ -8378,7 +8935,7 @@ PART
 		name = TankContentSwitcher
 		isEnabled = True
 		tankVolume = 1.04719775E-05
-		mass = 7.53982363E-07
+		mass = 6.28318617E-07
 		tankType = Structural
 		stagingEnabled = True
 		EVENTS
@@ -8489,7 +9046,7 @@ PART
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 1.7628907
 		stagingEnabled = True
 		EVENTS
 		{
@@ -8540,8 +9097,8 @@ PART
 	sepI = 1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 2.787462
-	modMass = 0.00185830798
+	modCost = 1.64397156
+	modMass = 0.0135155274
 	modSize = 0,0,0
 	link = proceduralStructural_4292398972
 	attN = top,ROMeteoSustainer_4291517264_0|0.0207500011|0_0|1|0_0|0.0207500011|0_0|1|0
@@ -8554,40 +9111,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -8597,6 +9163,8 @@ PART
 	{
 		name = ModuleROTank
 		isEnabled = True
+		korolevCross = False
+		isFinished = False
 		currentDiameter = 0.415000021
 		currentLength = 1
 		currentVScale = 1
@@ -8616,6 +9184,7 @@ PART
 		noseModulePersistentData = 1,1,1,1,1,1;1,1,1,1,1,1;1,1,1,1,1,1
 		coreModulePersistentData = 0.5019608,0.5019608,0.5019608,0.6901961,1,1;0.7176471,0.7176471,0.7176471,0.6901961,1,1;0.5019608,0.5019608,0.5019608,0.6901961,1,1
 		mountModulePersistentData = 1,1,1,1,1,1;1,1,1,1,1,1;1,1,1,1,1,1
+		density = 0.180000007
 		stagingEnabled = True
 		EVENTS
 		{
@@ -8642,6 +9211,7 @@ PART
 			DecoupleAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -8663,6 +9233,7 @@ PART
 			DecoupleAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -8683,14 +9254,17 @@ PART
 			ToggleAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			EnableAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			DisableAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -8814,8 +9388,8 @@ PART
 	sepI = 1
 	attm = 0
 	sameVesselCollision = False
-	modCost = 0.0419765972
-	modMass = -0.993955374
+	modCost = 17.144022
+	modMass = -0.990368247
 	modSize = 0,0,0
 	link = ROE-R103_4292434202
 	link = ROE-R103_4292432122
@@ -8836,40 +9410,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -8879,11 +9462,13 @@ PART
 	{
 		name = ProceduralPart
 		isEnabled = True
+		density = 0.300000012
 		forceLegacyTextures = False
 		textureSet = Original
 		capTextureIndex = 0
 		shapeName = Hollow Cylinder
 		moduleCost = 0.0419765972
+		moduleMass = 0.0045945798
 		stagingEnabled = True
 		EVENTS
 		{
@@ -9072,7 +9657,7 @@ PART
 		name = TankContentSwitcher
 		isEnabled = True
 		tankVolume = 0.0839531943
-		mass = 0.00604462996
+		mass = 0.00503719132
 		tankType = Structural
 		stagingEnabled = True
 		EVENTS
@@ -9183,7 +9768,7 @@ PART
 	{
 		name = ModuleToolingPTank
 		isEnabled = True
-		addedCost = 0
+		addedCost = 15.2137947
 		stagingEnabled = True
 		EVENTS
 		{
@@ -9251,40 +9836,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -9318,18 +9912,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -9441,6 +10039,7 @@ PART
 		volume = 6.4100000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.1845258106980803
 		stagingEnabled = True
 		EVENTS
 		{
@@ -9454,7 +10053,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -9498,6 +10097,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -9546,7 +10151,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -9580,7 +10185,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -9600,7 +10204,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -9633,6 +10236,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -9729,40 +10333,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -9796,18 +10409,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -9919,6 +10536,7 @@ PART
 		volume = 6.4100000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.1845258106980803
 		stagingEnabled = True
 		EVENTS
 		{
@@ -9932,7 +10550,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -9976,6 +10594,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -10024,7 +10648,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -10058,7 +10682,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -10078,7 +10701,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -10111,6 +10733,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -10207,40 +10830,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -10274,18 +10906,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -10397,6 +11033,7 @@ PART
 		volume = 6.4100000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.1845258106980803
 		stagingEnabled = True
 		EVENTS
 		{
@@ -10410,7 +11047,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -10454,6 +11091,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -10502,7 +11145,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -10536,7 +11179,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -10556,7 +11198,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -10589,6 +11230,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -10685,40 +11327,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -10752,18 +11403,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -10875,6 +11530,7 @@ PART
 		volume = 6.4100000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.1845258106980803
 		stagingEnabled = True
 		EVENTS
 		{
@@ -10888,7 +11544,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -10932,6 +11588,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -10980,7 +11642,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -11014,7 +11676,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -11034,7 +11695,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -11067,6 +11727,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -11164,40 +11825,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -11231,18 +11901,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -11362,6 +12036,7 @@ PART
 		volume = 6.4100000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.1845258106980803
 		stagingEnabled = True
 		EVENTS
 		{
@@ -11375,7 +12050,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -11419,6 +12094,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -11467,7 +12148,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -11501,7 +12182,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -11521,7 +12201,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -11554,6 +12233,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -11648,40 +12328,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -11883,12 +12572,34 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.040800000000000003
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12353342271147383
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -11956,40 +12667,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -12023,18 +12743,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -12146,6 +12870,7 @@ PART
 		volume = 6.4100000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.1845258106980803
 		stagingEnabled = True
 		EVENTS
 		{
@@ -12159,7 +12884,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -12203,6 +12928,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -12251,7 +12982,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -12285,7 +13016,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -12305,7 +13035,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -12338,6 +13067,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -12432,40 +13162,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -12667,12 +13406,34 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.040800000000000003
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12353342271147383
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -12740,40 +13501,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -12807,18 +13577,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -12930,6 +13704,7 @@ PART
 		volume = 6.4100000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.1845258106980803
 		stagingEnabled = True
 		EVENTS
 		{
@@ -12943,7 +13718,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -12987,6 +13762,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -13035,7 +13816,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -13069,7 +13850,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -13089,7 +13869,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -13122,6 +13901,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -13216,40 +13996,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -13451,12 +14240,34 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.040800000000000003
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12353342271147383
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -13524,40 +14335,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -13591,18 +14411,22 @@ PART
 			OnAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ShutdownAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ActivateAction
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			ToggleThrottle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		AXISGROUPS
@@ -13714,6 +14538,7 @@ PART
 		volume = 6.4100000000000001
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.1845258106980803
 		stagingEnabled = True
 		EVENTS
 		{
@@ -13727,7 +14552,7 @@ PART
 			note = 
 			utilization = 1
 			mass = 0
-			cost = 0.00249999994
+			cost = 9.99999975E-05
 			loss_rate = 0
 			wallThickness = 0.10000000000000001
 			wallConduction = 205
@@ -13771,6 +14596,12 @@ PART
 		name = ModuleTagList
 		isEnabled = True
 		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -13819,7 +14650,7 @@ PART
 		lastMET = 0
 		currentFlightData = 0
 		initialFlightData = 0
-		missionStartTime = 45428.409686365587
+		missionStartTime = 282.16000000003334
 		activeConfig = 
 		stagingEnabled = True
 		EVENTS
@@ -13853,7 +14684,6 @@ PART
 		name = TestFlightReliability
 		isEnabled = True
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -13873,7 +14703,6 @@ PART
 		currentRunTime = 0
 		previousOperatingTime = 0
 		lastCheck = 0
-		lastReliability = 1
 		stagingEnabled = True
 		EVENTS
 		{
@@ -13906,6 +14735,7 @@ PART
 		name = TestFlightFailure_IgnitionFail
 		isEnabled = True
 		numIgnitions = 0
+		pendingIgnitionDU = 0
 		previousTime = 0
 		failed = False
 		stagingEnabled = True
@@ -14000,40 +14830,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -14235,12 +15074,34 @@ PART
 	{
 		name = ModuleFuelTanks
 		isEnabled = True
-		type = Structural
+		type = Tank-Wet-Wing
 		utilization = 1
 		volume = 0.040800000000000003
 		mass = 0
 		_numberOfAddedMLILayers = 0
+		totalTankArea = 0.12353342271147383
 		stagingEnabled = True
+		EVENTS
+		{
+		}
+		ACTIONS
+		{
+		}
+		UPGRADESAPPLIED
+		{
+		}
+	}
+	MODULE
+	{
+		name = ModuleTagList
+		isEnabled = True
+		stagingEnabled = True
+		engineTags
+		{
+		}
+		tankTags
+		{
+		}
 		EVENTS
 		{
 		}
@@ -14302,40 +15163,49 @@ PART
 		ToggleSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		SetSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		RemoveSameVesselInteraction
 		{
 			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutOff
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutRoot
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutHeaviest
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
+		}
+		AutostrutGrandparent
+		{
+			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesEnableFlow
 		{
 			actionGroup = None
 			active = False
+			wasActiveBeforePartWasAdjusted = False
 		}
 		ResourcesDisableFlow
 		{
 			actionGroup = None
 			active = False
-		}
-		AutostrutOff
-		{
-			actionGroup = None
-		}
-		AutostrutRoot
-		{
-			actionGroup = None
-		}
-		AutostrutHeaviest
-		{
-			actionGroup = None
-		}
-		AutostrutGrandparent
-		{
-			actionGroup = None
+			wasActiveBeforePartWasAdjusted = False
 		}
 	}
 	PARTDATA
@@ -14357,6 +15227,7 @@ PART
 			ReleaseClamp
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -14383,6 +15254,7 @@ PART
 		name = ProcessController
 		isEnabled = True
 		running = True
+		broken = False
 		stagingEnabled = True
 		persistentValveIndex = 0
 		EVENTS
@@ -14393,6 +15265,7 @@ PART
 			Action
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -14404,6 +15277,7 @@ PART
 		name = ProcessController
 		isEnabled = True
 		running = True
+		broken = False
 		stagingEnabled = True
 		persistentValveIndex = 0
 		EVENTS
@@ -14414,6 +15288,7 @@ PART
 			Action
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED
@@ -14451,11 +15326,13 @@ PART
 			MakeReferenceToggle
 			{
 				actionGroup = None
+				wasActiveBeforePartWasAdjusted = False
 			}
 			HibernateToggle
 			{
 				actionGroup = None
 				active = False
+				wasActiveBeforePartWasAdjusted = False
 			}
 		}
 		UPGRADESAPPLIED

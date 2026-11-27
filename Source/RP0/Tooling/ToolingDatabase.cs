@@ -118,23 +118,64 @@ namespace RP0
                 return parameters.Length;
             }
 
-            List<ToolingEntry> entries;
-            var level = 0;
-            if (toolings.TryGetValue(type, out entries))
+            if (toolings.TryGetValue(type, out List<ToolingEntry> entries))
             {
-                for (int i = 0; i < parameters.Length; ++i)
-                {
-                    var entryIndex = GetEntryIndex(parameters[i], entries, out _);
-                    if (entryIndex == -1)
-                    {
-                        break;
-                    }
-                    level++;
-                    entries = entries[entryIndex].Children;
-                }
+                return GetMatchDepth(parameters, 0, entries);
             }
 
-            return level;
+            return 0;
+        }
+
+        /// <summary>
+        /// Counts how many parameters in a row, starting from the given one, are covered by the
+        /// entries. Follows every matching entry and returns the deepest result.
+        /// </summary>
+        /// <param name="parameters">Tooling parameters, one per tree level.</param>
+        /// <param name="paramIndex">Index of the parameter that the entries are matched against.</param>
+        /// <param name="entries">Entries of the tree level that belongs to that parameter.</param>
+        /// <returns>Number of matched levels, 0 when the first one already misses.</returns>
+        protected static int GetMatchDepth(float[] parameters, int paramIndex, List<ToolingEntry> entries)
+        {
+            if (paramIndex >= parameters.Length)
+                return 0;
+
+            if (!GetEntryRange(parameters[paramIndex], entries, out int first, out int last, out _))
+                return 0;
+
+            int maxDepth = parameters.Length - paramIndex;
+            int best = 0;
+            for (int i = first; i <= last && best < maxDepth; ++i)
+            {
+                int depth = 1 + GetMatchDepth(parameters, paramIndex + 1, entries[i].Children);
+                if (depth > best)
+                    best = depth;
+            }
+
+            return best;
+        }
+
+        /// <summary>
+        /// Finds every entry within the tooling margin of the value. Stored entries can sit close
+        /// enough for their margins to overlap, so more than one can cover the same value. The
+        /// matches are always next to each other in the ascending list.
+        /// </summary>
+        /// <param name="value">Value to look for.</param>
+        /// <param name="list">Entries to search, ascending.</param>
+        /// <param name="first">Receives the index of the first matching entry.</param>
+        /// <param name="last">Receives the index of the last matching entry.</param>
+        /// <param name="insertionIndex">Receives the index the value would be inserted at when there's no match.</param>
+        /// <returns>True when at least one entry matches.</returns>
+        protected static bool GetEntryRange(float value, List<ToolingEntry> list, out int first, out int last, out int insertionIndex)
+        {
+            first = last = GetEntryIndex(value, list, out insertionIndex);
+            if (first == -1)
+                return false;
+
+            while (first > 0 && EpsilonCompare(value, list[first - 1].Value) == 0)
+                first--;
+            while (last < list.Count - 1 && EpsilonCompare(value, list[last + 1].Value) == 0)
+                last++;
+            return true;
         }
 
         /// <summary>
@@ -195,8 +236,24 @@ namespace RP0
 
             for (int i = 0; i < parameters.Length; ++i)
             {
-                var entryIndex = GetEntryIndex(parameters[i], entries, out var insertionIndex);
-                if (entryIndex == -1)
+                int entryIndex;
+                if (GetEntryRange(parameters[i], entries, out int first, out int last, out int insertionIndex))
+                {
+                    // Several entries can cover the value. Continue under the one that already
+                    // holds the most of the remaining parameters, so nothing gets added twice.
+                    entryIndex = first;
+                    int bestDepth = -1;
+                    for (int j = first; j <= last; ++j)
+                    {
+                        int depth = GetMatchDepth(parameters, i + 1, entries[j].Children);
+                        if (depth > bestDepth)
+                        {
+                            bestDepth = depth;
+                            entryIndex = j;
+                        }
+                    }
+                }
+                else
                 {
                     entries.Insert(insertionIndex, new ToolingEntry(parameters[i]));
                     entryIndex = insertionIndex;

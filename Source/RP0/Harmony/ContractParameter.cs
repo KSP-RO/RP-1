@@ -36,7 +36,7 @@ namespace RP0.Harmony
             {
                 float repToConf = Programs.ProgramHandler.Instance.RepToConfidenceForParam(__instance, true);
                 if (repToConf > 0f)
-                    _storedRep = __instance.ReputationCompletion / (float)CurrencyUtils.Rep(TransactionReasonsRP0.ContractReward, 1d);
+                    _storedRep = __instance.ReputationCompletion;
             }
         }
 

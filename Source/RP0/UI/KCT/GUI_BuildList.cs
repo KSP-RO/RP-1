@@ -1467,39 +1467,40 @@ namespace RP0
             if (!b.MeetsFacilityRequirements(facilityChecks))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                return;
             }
-            else
+            if (vesselLC.GetReconditioning(launchSite) is ReconRolloutProject recon)
             {
-                if (vesselLC.GetReconditioning(launchSite) is ReconRolloutProject recon)
+                ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {RP0DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+                return;
+            }
+            GameplayTips.Instance.ShowNoActiveContractWarning(pass =>
+            {
+                if (!pass) return;
+
+                SpaceCenterManagement.Instance.LaunchedVessel = b;
+                if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
                 {
-                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {RP0DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
-                    ScreenMessages.PostScreenMessage(message);
+                    GUIStates.ShowBLPlus = false;
+                    if (!b.IsCrewable())
+                        b.Launch();
+                    else
+                    {
+                        GUIStates.ShowBuildList = false;
+
+                        SpaceCenterManagement.ToolbarControl?.SetFalse();
+
+                        _centralWindowPosition.height = 1;
+                        AssignInitialCrew();
+                        GUIStates.ShowShipRoster = true;
+                    }
                 }
                 else
                 {
-                    SpaceCenterManagement.Instance.LaunchedVessel = b;
-                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
-                    {
-                        GUIStates.ShowBLPlus = false;
-                        if (!b.IsCrewable())
-                            b.Launch();
-                        else
-                        {
-                            GUIStates.ShowBuildList = false;
-
-                            SpaceCenterManagement.ToolbarControl?.SetFalse();
-
-                            _centralWindowPosition.height = 1;
-                            AssignInitialCrew();
-                            GUIStates.ShowShipRoster = true;
-                        }
-                    }
-                    else
-                    {
-                        ShowClearLaunchWindow(pad.launchSiteName);
-                    }
+                    ShowClearLaunchWindow(pad.launchSiteName);
                 }
-            }
+            });
         }
 
         private static void ProcessPlaneLaunch(VesselProject b, ReconRolloutProject airlaunchPrep)
@@ -1508,46 +1509,47 @@ namespace RP0
             if (!b.MeetsFacilityRequirements(facilityChecks))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex (the Hangar) it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                return;
             }
-            else
+            bool operational = KCTUtilities.IsLaunchFacilityIntact(ProjectType.SPH);
+            if (!operational)
             {
-                bool operational = KCTUtilities.IsLaunchFacilityIntact(ProjectType.SPH);
-                if (!operational)
-                {
-                    ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
-                }
-                else
-                {
-                    GUIStates.ShowBLPlus = false;
-                    SpaceCenterManagement.Instance.LaunchedVessel = b;
+                ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
+                return;
+            }
+            GameplayTips.Instance.ShowNoActiveContractWarning(pass =>
+            {
+                if (!pass) return;
 
-                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
+                GUIStates.ShowBLPlus = false;
+                SpaceCenterManagement.Instance.LaunchedVessel = b;
+
+                if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
+                {
+                    if (airlaunchPrep != null)
                     {
-                        if (airlaunchPrep != null)
-                        {
-                            GUIStates.ShowBuildList = false;
-                            GUIStates.ShowAirlaunch = true;
-                        }
-                        else if (!b.IsCrewable())
-                        {
-                            b.Launch();
-                        }
-                        else
-                        {
-                            GUIStates.ShowBuildList = false;
-                            SpaceCenterManagement.ToolbarControl?.SetFalse();
-                            _centralWindowPosition.height = 1;
-                            AssignInitialCrew();
-                            GUIStates.ShowShipRoster = true;
-                        }
+                        GUIStates.ShowBuildList = false;
+                        GUIStates.ShowAirlaunch = true;
+                    }
+                    else if (!b.IsCrewable())
+                    {
+                        b.Launch();
                     }
                     else
                     {
-                        ShowClearLaunchWindow("Runway");
-                        GUIStates.ShowAirlaunch = airlaunchPrep != null;
+                        GUIStates.ShowBuildList = false;
+                        SpaceCenterManagement.ToolbarControl?.SetFalse();
+                        _centralWindowPosition.height = 1;
+                        AssignInitialCrew();
+                        GUIStates.ShowShipRoster = true;
                     }
                 }
-            }
+                else
+                {
+                    ShowClearLaunchWindow("Runway");
+                    GUIStates.ShowAirlaunch = airlaunchPrep != null;
+                }
+            });
         }
 
         private static void RenderMountUnmountAirlaunch(VesselProject b, ReconRolloutProject airlaunchPrep, int listIdx)

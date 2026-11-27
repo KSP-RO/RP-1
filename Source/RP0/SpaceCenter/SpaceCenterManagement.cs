@@ -2150,6 +2150,24 @@ namespace RP0
             _recoverCallback.Invoke();
         }
 
+        /// <summary>
+        /// The stock recovery button unlocks based on horizontal speed only but the stock click handler
+        /// also rejects vertical movement, so a vessel bobbing in water often can't be recovered.
+        /// Request the recovery directly instead, the same way recovery to VAB/SPH does it.
+        /// </summary>
+        private void DoNormalRecoveryInFlight()
+        {
+            if (FlightGlobals.ClearToSave(logMsg: false) == ClearToSaveStatus.NOT_WHILE_ON_A_LADDER ||
+                !HighLogic.CurrentGame.Parameters.Flight.CanLeaveToSpaceCenter)
+            {
+                // Let stock show its own popup or refuse the recovery
+                DoNormalRecovery();
+                return;
+            }
+
+            GameEvents.OnVesselRecoveryRequested.Fire(FlightGlobals.ActiveVessel);
+        }
+
         private void QueueRepairFailures()
         {
             SCMSaveSettings settings = SCMSaveSettings.Instance;
@@ -2216,8 +2234,24 @@ namespace RP0
 
             options.Add(new DialogGUIButton("Cancel", () => { }));
 
+            // Pause so that the vessel state can't change between opening the dialog and choosing an option
+            bool pausedByDialog = !FlightDriver.Pause;
+            if (pausedByDialog)
+                FlightDriver.SetPause(true, postScreenMessage: false);
+
             var diag = new MultiOptionDialog("RecoverVesselPopup", string.Empty, "Recover vessel", null, options: options.ToArray());
-            PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+            PopupDialog popup = PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
+
+            if (pausedByDialog)
+            {
+                popup.onDestroy.AddListener(() =>
+                {
+                    // LoadedSceneIsFlight turns false as soon as a scene change is requested.
+                    // FlightDriver resets the pause itself when the flight scene is torn down.
+                    if (HighLogic.LoadedSceneIsFlight && FlightDriver.Pause)
+                        FlightDriver.SetPause(false, postScreenMessage: false);
+                });
+            }
         }
 
         private List<DialogGUIBase> BuildRecoveryOptions(Vessel v)
@@ -2226,7 +2260,7 @@ namespace RP0
 
             if (v.isEVA)
             {
-                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecovery));
+                options.Add(new DialogGUIButtonWithTooltip("Recover", DoNormalRecoveryInFlight));
                 return options;
             }
 
@@ -2247,7 +2281,7 @@ namespace RP0
                 tooltipText = isVABAllowed ? reuseTooltip : $"Can only be used when the vessel was built in VAB.{techLimitText}"
             });
 
-            options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecovery)
+            options.Add(new DialogGUIButtonWithTooltip("Normal recovery", DoNormalRecoveryInFlight)
             {
                 tooltipText = "Vessel will be scrapped and the total value of recovered parts will be refunded."
             });

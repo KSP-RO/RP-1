@@ -4,6 +4,18 @@
 * text=auto
 
 ###############################################################################
+# Files written by the Parts Browser / CostExporter always use LF. Pin them to
+# LF in the working tree too, so that regenerating them doesn't show every line
+# as changed on Windows (core.autocrlf=true would otherwise check them out as CRLF).
+###############################################################################
+Source/Tech[[:space:]]Tree/Parts[[:space:]]Browser/data/*.json text eol=lf
+GameData/RP-1/Tree/TREE-Parts.cfg   text eol=lf
+GameData/RP-1/Tree/TREE-Engines.cfg text eol=lf
+GameData/RP-1/Tree/ECM-Parts.cfg    text eol=lf
+GameData/RP-1/Tree/ECM-Engines.cfg  text eol=lf
+GameData/RP-1/Tree/identicalParts.cfg text eol=lf
+
+###############################################################################
 # Set default behavior for command prompt diff.
 #
 # This is need for earlier builds of msysgit that does not have it on by

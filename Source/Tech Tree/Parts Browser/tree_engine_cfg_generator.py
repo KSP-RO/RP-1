@@ -45,7 +45,7 @@ PARTUPGRADE
         basicInfo = Engine Performance Upgrade
         manufacturer = Engine Upgrade
         deleteme = 1
-        description = The ${engine_config} Engine now supports the ${name} configuration for increased performance. Unlock it in the VAB/SPH through the engine configs interface.\\n\\n${description}
+        description = The ${engine_config} Engine now supports the ${name} configuration for increased performance. Unlock it in the VAB/SPH through the engine configs interface.
 }
 
 PART
@@ -98,14 +98,11 @@ def generate_engine_config(part, module_tags_with_prefixes):
         if prefix == "Tag":
             optional_attributes += """
                 tag = """ + module_tag
-    if 'description' in part and len(part['description']) > 0:
-        optional_attributes += """
-                %description = """ + part['description']
     if 'upgrade' in part and part['upgrade'] is True:
         optional_attributes += """
                 *@PARTUPGRADE[RFUpgrade_""" + part['name'] + """]/deleteme -= 1"""
     return module_engine_config_template.substitute(name=part['name'], technology=part['technology'], cost=part['cost'], optional_attributes=optional_attributes)
 
 def generate_part_upgrade_config(part):
-    return part_upgrade_config_template.substitute(name=part['name'], technology=part['technology'], engine_config=part['engine_config'], description=part['description'])
+    return part_upgrade_config_template.substitute(name=part['name'], technology=part['technology'], engine_config=part['engine_config'])
     

@@ -131,7 +131,7 @@ namespace RP0
             if (SpaceCenterManagement.EditorRolloutCost > 0)
             {
                 double rolloutCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -SpaceCenterManagement.EditorRolloutCost);
-                double recondCost = -CurrencyUtils.Funds(TransactionReasonsRP0.RocketRollout, -SpaceCenterManagement.EditorReconditionCost);
+                double recondCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepair, -SpaceCenterManagement.EditorReconditionCost);
                 GUILayout.Label(new GUIContent($"Launch Cost: √{rolloutCost:N1} + √{recondCost:N1}", "Launch costs consist of rollout + pad reconditioning"));
             }
 
@@ -369,7 +369,7 @@ namespace RP0
             double fullVesselBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double bpLeaderEffect = SpaceCenterManagement.Instance.EditorVessel.LeaderEffect * editedVessel.LC.StrategyRateMultiplier;
             double effic = editedVessel.LC.Efficiency;
-            KCTUtilities.GetShipEditProgress(editedVessel, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
+            KCTUtilities.GetShipEditProgress(editedVessel, fullVesselBP, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent);
             GUILayout.Label($"Original: {Math.Max(0, originalCompletionPercent):P2}");
             GUILayout.Label($"Edited: {newCompletionPercent:P2}");
             

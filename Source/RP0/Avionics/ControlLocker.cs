@@ -30,16 +30,20 @@ namespace RP0
 
         private readonly ScreenMessage _message = new ScreenMessage("", 8f, ScreenMessageStyle.UPPER_CENTER);
 
-        // For locking MJ.
+        // For loading items needed for locking MJ.
         private static bool _isFirstLoad = true;
         private static MethodInfo _getMasterMechJeb = null;
         private static PropertyInfo _mjDeactivateControl = null;
-        private object _masterMechJeb = null;
 
         public static ControlLocker Instance { get; private set; }
 
         private void Awake()
         {
+            if (Instance != null)
+                Destroy(Instance);
+
+            Instance = this;
+
             if (!_isFirstLoad) return;
             _isFirstLoad = false;
 
@@ -55,11 +59,6 @@ namespace RP0
                 RP0Debug.Log($"{ModTag} MechJeb methods found", true);
             else
                 RP0Debug.Log($"{ModTag} MJ assembly or methods NOT found", true);
-
-            if (Instance != null)
-                Destroy(Instance);
-
-            Instance = this;
         }
 
         private void Start()
@@ -130,15 +129,21 @@ namespace RP0
 
         public void Update()
         {
-            if (!HighLogic.LoadedSceneIsFlight || !FlightGlobals.ready)
+            if (!HighLogic.LoadedSceneIsFlight)
             {
                 InputLockManager.RemoveControlLock(LockID);
                 return;
             }
+
+            // FlightGlobals.ready is false until the next FixedUpdate after every active vessel change.
+            // Leave the lock as it is until then, it gets re-evaluated for the new vessel below.
+            if (!FlightGlobals.ready)
+                return;
+
             if (Vessel != FlightGlobals.ActiveVessel)
             {
                 Vessel = FlightGlobals.ActiveVessel;
-                _masterMechJeb = null;
+                _requested = _isStartFinished;
             }
 
             ControlLockerUtils.LockLevel lockLevel = ShouldLock();
@@ -146,9 +151,12 @@ namespace RP0
             if (_isLimitedByNonInterplanetary)
                 GameplayTips.Instance.ShowInterplanetaryAvionicsReminder();
 
-            if (lockLevel != _oldLockLevel)
+            // Locked and Axial use the same input lock, so only a change to or from Unlocked touches it.
+            bool wasLocked = _oldLockLevel != ControlLockerUtils.LockLevel.Unlocked;
+            bool isLocked = lockLevel != ControlLockerUtils.LockLevel.Unlocked;
+            if (wasLocked != isLocked)
             {
-                if (_oldLockLevel != ControlLockerUtils.LockLevel.Unlocked)
+                if (!isLocked)
                 {
                     InputLockManager.RemoveControlLock(LockID);
                     _message.message = "Avionics: Unlocking Controls";
@@ -156,23 +164,22 @@ namespace RP0
                 else
                 {
                     InputLockManager.SetControlLock(Lockmask, LockID);
-                    if (!_onRails) 
+                    if (!_onRails)
                         DisableAutopilot();
                     _message.message = $"Insufficient Avionics, Locking Controls (supports {_maxMass:N3}t, vessel {_vesselMass:N3}t)";
                 }
                 ScreenMessages.PostScreenMessage(_message);
                 FlightLogger.fetch.LogEvent(_message.message);
-                _oldLockLevel = lockLevel;
             }
+            _oldLockLevel = lockLevel;
 
-            if (_masterMechJeb == null && _getMasterMechJeb != null)
+            if (_getMasterMechJeb != null && _mjDeactivateControl != null && Vessel != null)
             {
-                _masterMechJeb = _getMasterMechJeb.Invoke(null, new object[] { FlightGlobals.ActiveVessel });
-            }
-            if (_masterMechJeb != null && _mjDeactivateControl != null)
-            {
-                // Update MJ every tick, to make sure it gets correct state after separation / docking.
-                _mjDeactivateControl.SetValue(_masterMechJeb, lockLevel != ControlLockerUtils.LockLevel.Unlocked, index: null);
+                // Resolve the master core every tick. Separation, undocking or docking can change which core is
+                // the master while the active vessel stays the same. MJ caches the lookup per physics frame.
+                object masterMechJeb = _getMasterMechJeb.Invoke(null, new object[] { Vessel });
+                if (masterMechJeb != null)
+                    _mjDeactivateControl.SetValue(masterMechJeb, lockLevel != ControlLockerUtils.LockLevel.Unlocked, index: null);
             }
         }
 

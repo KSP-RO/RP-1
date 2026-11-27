@@ -289,12 +289,12 @@ namespace RP0.Programs
         public void ProcessFunding()
         {
             Profiler.BeginSample("RP0ProcessFunding");
-            double fundsOld = Funding.Instance.Funds;
+            //double fundsOld = Funding.Instance.Funds;
             foreach (Program p in ActivePrograms)
             {
                 p.ProcessFunding();
             }
-            RP0Debug.Log($"ProgramHandler added {Funding.Instance.Funds - fundsOld} funds.");
+            //RP0Debug.Log($"ProgramHandler added {Funding.Instance.Funds - fundsOld} funds.");
             Profiler.EndSample();
         }
 

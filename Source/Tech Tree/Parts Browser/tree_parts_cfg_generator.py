@@ -18,12 +18,14 @@ tree_parts_header = """
 module_part_config_template = Template("""
 @PART[${name}]:FOR[xxxRP0]
 {
-    %TechRequired = ${technology}
-    %cost = ${cost}
-    %entryCost = ${entry_cost}
+    %TechRequired = ${technology}${cost_lines}
     RP0conf = ${rp0_conf}
     @description ^=:$$: <b><color=green>From ${mod} mod</color></b>${module_tags}
 }""")
+cost_template = Template("""
+    %cost = ${cost}""")
+entry_cost_template = Template("""
+    %entryCost = ${entry_cost}""")
 module_template = Template("""
     MODULE
     { name = Module${module_tag} }""")
@@ -56,5 +58,14 @@ def generate_part_config(part, module_tags_with_prefixes):
             module_tags += module_template.substitute(module_tag=prefix + module_tag)
     if len(module_tags) > 0:
         module_tags = "\n" + module_tags + "\n"
-    return module_part_config_template.substitute(name=part['name'], mod=part['mod'], technology=part['technology'], cost=part['cost'], entry_cost=part['entry_cost'], rp0_conf=str(part['rp0_conf']).lower(), module_tags=module_tags)
+    # Only override cost/entryCost when a value is set; an empty '%cost = ' would wipe the mod-supplied value and make the part free.
+    cost_lines = ''
+    if not is_blank(part['cost']):
+        cost_lines += cost_template.substitute(cost=part['cost'])
+    if not is_blank(part['entry_cost']):
+        cost_lines += entry_cost_template.substitute(entry_cost=part['entry_cost'])
+    return module_part_config_template.substitute(name=part['name'], mod=part['mod'], technology=part['technology'], cost_lines=cost_lines, rp0_conf=str(part['rp0_conf']).lower(), module_tags=module_tags)
+
+def is_blank(value):
+    return value is None or str(value).strip() == ''
 

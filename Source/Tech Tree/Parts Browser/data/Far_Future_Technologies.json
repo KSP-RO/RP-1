@@ -1071,7 +1071,7 @@
         "category": "NUCLEAR",
         "info": "",
         "year": "2050",
-        "technology": "nuclearPowerNF",
+        "technology": "colonization2051NuclearPower",
         "ro": true,
         "orphan": false,
         "rp0_conf": true,

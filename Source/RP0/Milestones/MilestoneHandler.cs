@@ -246,61 +246,95 @@ namespace RP0.Milestones
 
             float oldDist = FlightCamera.fetch.distance;
             float oldMin = FlightCamera.fetch.minDistance;
-
-            FlightCamera.fetch.minDistance = 1f;
-            Vector3 size = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
-            float newDist = KSPCameraUtil.GetDistanceToFit(size, FlightCamera.fetch.FieldOfView) * 1.1f + 1f;
-            FlightCamera.fetch.SetDistanceImmediate(newDist);
-
-            // Temporarily boost ambient light if the subject would otherwise be too dark to make out:
-            // either the vessel is in a body's shadow / on the night side (no direct sunlight), or it's
-            // backlit so the camera only sees the unlit side. KSP's DynamicAmbientLight overwrites
-            // RenderSettings.ambientLight every Update() from AMBIENTLIGHT_BOOSTFACTOR, so we drive the
-            // boost through that setting and give it one frame to take effect before capturing.
             float oldAmbientBoost = GameSettings.AMBIENTLIGHT_BOOSTFACTOR;
             bool boostedAmbient = false;
-            bool inShadow = !FlightGlobals.ActiveVessel.directSunlight;
-            float sunFacing = Sun.Instance != null
-                ? Vector3.Dot(Sun.Instance.sunDirection, FlightCamera.fetch.mainCamera.transform.forward)
-                : 1f;
-            if (inShadow || sunFacing < _ScreenshotMinSunFacing)
+
+            try
             {
-                GameSettings.AMBIENTLIGHT_BOOSTFACTOR = Mathf.Max(oldAmbientBoost, _ScreenshotAmbientBoost);
-                boostedAmbient = true;
-                yield return null;    // let DynamicAmbientLight apply the new boost before the captured frame renders
+                FlightCamera.fetch.minDistance = 1f;
+                Vector3 size = ShipConstruction.CalculateCraftSize(FlightGlobals.ActiveVessel.parts, FlightGlobals.ActiveVessel.rootPart);
+                float newDist = KSPCameraUtil.GetDistanceToFit(size, FlightCamera.fetch.FieldOfView) * 1.1f + 1f;
+                FlightCamera.fetch.SetDistanceImmediate(newDist);
+
+                // Temporarily boost ambient light if the subject would otherwise be too dark to make out:
+                // either the vessel is in a body's shadow / on the night side (no direct sunlight), or it's
+                // backlit so the camera only sees the unlit side. KSP's DynamicAmbientLight overwrites
+                // RenderSettings.ambientLight every Update() from AMBIENTLIGHT_BOOSTFACTOR, so we drive the
+                // boost through that setting and give it one frame to take effect before capturing.
+                bool inShadow = !FlightGlobals.ActiveVessel.directSunlight;
+                float sunFacing = Sun.Instance != null
+                    ? Vector3.Dot(Sun.Instance.sunDirection, FlightCamera.fetch.mainCamera.transform.forward)
+                    : 1f;
+                if (inShadow || sunFacing < _ScreenshotMinSunFacing)
+                {
+                    GameSettings.AMBIENTLIGHT_BOOSTFACTOR = Mathf.Max(oldAmbientBoost, _ScreenshotAmbientBoost);
+                    boostedAmbient = true;
+                    yield return null;    // let DynamicAmbientLight apply the new boost before the captured frame renders
+                }
+
+                yield return new WaitForEndOfFrame();
+
+                WriteScreenshot(filePath);
+                capturedScreenshots.Add(milestone.name);
             }
+            finally
+            {
+                FlightCamera.fetch.minDistance = oldMin;
+                FlightCamera.fetch.SetDistanceImmediate(oldDist);
 
-            yield return new WaitForEndOfFrame();
+                if (boostedAmbient)
+                    GameSettings.AMBIENTLIGHT_BOOSTFACTOR = oldAmbientBoost;
 
+                if (wasShowing)
+                    GameEvents.onShowUI.Fire();
+            }
+        }
+
+        /// <summary>
+        /// Reads the current screen contents, scales them down to 512px wide and writes them as PNG.
+        /// Must be called after WaitForEndOfFrame.
+        /// </summary>
+        private static void WriteScreenshot(string filePath)
+        {
             int width = Screen.width;
             int height = Screen.height;
             int desiredHeight = Mathf.CeilToInt(height / (float)width * 512f);
 
-            // This works around a Unity 2019.3+ bug. See http://answers.unity.com/answers/1914706/view.html
-            // Normally we'd use ScreenCapture.CaptureScreenAsTexture
-            Texture2D tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
-            tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
-            tex.Apply();
+            RenderTexture oldActive = RenderTexture.active;
+            Texture2D tex = null;
+            RenderTexture rt = null;
+            Texture2D result = null;
+            try
+            {
+                // This works around a Unity 2019.3+ bug. See http://answers.unity.com/answers/1914706/view.html
+                // Normally we'd use ScreenCapture.CaptureScreenAsTexture
+                tex = new Texture2D(width, height, TextureFormat.ARGB32, false);
+                tex.ReadPixels(new Rect(0, 0, width, height), 0, 0);
+                tex.Apply();
 
-            RenderTexture rt = new RenderTexture(512, desiredHeight, 0);
-            RenderTexture.active = rt;
-            Graphics.Blit(tex, rt);
-            Texture2D result = new Texture2D(512, desiredHeight);
-            result.ReadPixels(new Rect(0, 0, 512, desiredHeight), 0, 0);
-            result.Apply();
+                rt = new RenderTexture(512, desiredHeight, 0);
+                RenderTexture.active = rt;
+                Graphics.Blit(tex, rt);
+                result = new Texture2D(512, desiredHeight);
+                result.ReadPixels(new Rect(0, 0, 512, desiredHeight), 0, 0);
+                result.Apply();
 
-            var bytes = ImageConversion.EncodeToPNG(result);
-            File.WriteAllBytes(filePath, bytes);
-            capturedScreenshots.Add(milestone.name);
-
-            FlightCamera.fetch.minDistance = oldMin;
-            FlightCamera.fetch.SetDistanceImmediate(oldDist);
-
-            if (boostedAmbient)
-                GameSettings.AMBIENTLIGHT_BOOSTFACTOR = oldAmbientBoost;
-
-            if (wasShowing)
-                GameEvents.onShowUI.Fire();
+                var bytes = ImageConversion.EncodeToPNG(result);
+                File.WriteAllBytes(filePath, bytes);
+            }
+            finally
+            {
+                RenderTexture.active = oldActive;
+                if (rt != null)
+                {
+                    rt.Release();
+                    Destroy(rt);
+                }
+                if (tex != null)
+                    Destroy(tex);
+                if (result != null)
+                    Destroy(result);
+            }
         }
 
         public void TryCreateNewspaper()

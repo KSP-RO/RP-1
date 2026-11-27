@@ -67,26 +67,30 @@ namespace RP0
         {
             _ignoreObserve = true;
             _lcs.Clear();
-            for (int i = _lcIDs.Count; i-- > 0;)
+            foreach (Guid id in _lcIDs)
             {
-                var id = _lcIDs[i];
                 if (id == Guid.Empty)
                 {
                     RP0Debug.LogError("Error: found empty guid relinking LCEfficiency");
-                    _lcIDs.RemoveAt(i);
                     continue;
                 }
 
                 var lc = SpaceCenterManagement.Instance.FindLCFromID(id);
                 if (lc == null)
                 {
-                    _lcIDs.RemoveAt(i);
                     RP0Debug.LogError($"Error: could not find LC for guid {id} relinking LCEfficiency");
                     continue;
                 }
 
                 _lcs.Add(lc);
             }
+
+            // The list observers remove IDs by index, so both lists must have the same order.
+            // Rebuilding also drops the invalid and duplicate IDs.
+            _lcIDs.Clear();
+            foreach (LaunchComplex lc in _lcs)
+                _lcIDs.Add(lc.ID);
+
             _ignoreObserve = false;
         }
 

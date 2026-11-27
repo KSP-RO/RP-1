@@ -205,7 +205,7 @@ namespace RP0
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -up.ToolingCost):N0}", RightLabel, GUILayout.Width(72));
                     float untooledExtraCost = GetUntooledExtraCost(up);
                     GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -up.TotalCost):N0}", RightLabel, GUILayout.Width(72));
-                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.ToolingPurchase, -(up.TotalCost - untooledExtraCost)):N0}", RightLabel, GUILayout.Width(72));
+                    GUILayout.Label($"√{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -(up.TotalCost - untooledExtraCost)):N0}", RightLabel, GUILayout.Width(72));
                     GUILayout.EndHorizontal();
                     if (Event.current.type == EventType.Repaint && up.Part != null)
                     {
@@ -218,7 +218,7 @@ namespace RP0
                 GUILayout.EndScrollView();
 
                 GUILayout.BeginHorizontal();
-                GUILayout.Label($"Total vessel cost if all parts are tooled: {_allTooledCost:N0}");
+                GUILayout.Label($"Total vessel cost if all parts are tooled: √{-CurrencyUtils.Funds(TransactionReasonsRP0.VesselPurchase, -_allTooledCost):N0}");
                 GUILayout.EndHorizontal();
 
                 GUILayout.BeginVertical();

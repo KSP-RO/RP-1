@@ -305,15 +305,23 @@ namespace RP0
             _lcData.Name = newName;
         }
 
+        /// <summary>
+        /// Makes the given pad active and applies its level and destruction state to the scene.
+        /// </summary>
+        /// <param name="LP_ID">Index of the pad to switch to. -1 re-activates the current pad.</param>
+        /// <param name="updateDestrNode">Save the scene's destruction state into the outgoing pad first.
+        /// Pass false when the scene doesn't hold this LC's active pad.</param>
         public void SwitchLaunchPad(int LP_ID = -1, bool updateDestrNode = true)
         {
-            if (LP_ID >= 0)
-            {
-                if (ActiveLaunchPadIndex == LP_ID && ActiveLPInstance != null && ActiveLPInstance.isOperational)
-                    return;
+            if (LP_ID >= 0 && ActiveLaunchPadIndex == LP_ID && ActiveLPInstance != null && ActiveLPInstance.isOperational)
+                return;
 
+            // The scene buildings still show the outgoing pad, so save them before the index changes
+            if (updateDestrNode)
+                ActiveLPInstance?.RefreshDestructionNode();
+
+            if (LP_ID >= 0)
                 ActiveLaunchPadIndex = LP_ID;
-            }
 
             if (ActiveLPInstance == null)
             {
@@ -331,12 +339,6 @@ namespace RP0
                     return;
                 }
             }
-
-            //set the active LP's new state
-            //activate new pad
-
-            if (updateDestrNode)
-                ActiveLPInstance?.RefreshDestructionNode();
 
             ActiveLPInstance?.SetActive();
         }

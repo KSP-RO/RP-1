@@ -95,6 +95,9 @@
     <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Ceres Orbit_Rep.cfg">
       <Link>Contracts\Asteroid Exploration\Ceres Orbit_Rep.cfg</Link>
     </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Ceres Robotic Sample Return.cfg">
+      <Link>Contracts\Asteroid Exploration\Ceres Robotic Sample Return.cfg</Link>
+    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Vesta Landing.cfg">
       <Link>Contracts\Asteroid Exploration\Vesta Landing.cfg</Link>
     </Content>
@@ -104,179 +107,74 @@
     <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg">
       <Link>Contracts\Asteroid Exploration\Vesta Orbit_Rep.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyComNetwork3-CA.cfg">
-      <Link>Contracts\Commercial Applications 1\EarlyComNetwork3-CA.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Asteroid Exploration\Vesta Robotic Sample Return.cfg">
+      <Link>Contracts\Asteroid Exploration\Vesta Robotic Sample Return.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyComNetwork4-CA.cfg">
-      <Link>Contracts\Commercial Applications 1\EarlyComNetwork4-CA.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\EarlyComNetwork3-CA.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\EarlyComNetwork3-CA.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyComSat-CA.cfg">
-      <Link>Contracts\Commercial Applications 1\EarlyComSat-CA.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\EarlyComNetwork4-CA.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\EarlyComNetwork4-CA.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyMolniyaSat.cfg">
-      <Link>Contracts\Commercial Applications 1\EarlyMolniyaSat.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\EarlyComSat-CA.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\EarlyComSat-CA.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyNavNetwork3.cfg">
-      <Link>Contracts\Commercial Applications 1\EarlyNavNetwork3.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\EarlyMolniyaSat.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\EarlyMolniyaSat.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyNavNetwork4.cfg">
-      <Link>Contracts\Commercial Applications 1\EarlyNavNetwork4.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\EarlyNavNetwork3.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\EarlyNavNetwork3.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\EarlyNavSat-CA.cfg">
-      <Link>Contracts\Commercial Applications 1\EarlyNavSat-CA.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\EarlyNavNetwork4.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\EarlyNavNetwork4.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\FirstComSat-CA.cfg">
-      <Link>Contracts\Commercial Applications 1\FirstComSat-CA.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\EarlyNavSat-CA.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\EarlyNavSat-CA.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\FirstMolniyaSat-CA.cfg">
-      <Link>Contracts\Commercial Applications 1\FirstMolniyaSat-CA.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\FirstComSat-CA.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\FirstComSat-CA.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 1\FirstNavSat-CA.cfg">
-      <Link>Contracts\Commercial Applications 1\FirstNavSat-CA.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\FirstMolniyaSat-CA.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\FirstMolniyaSat-CA.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\FirstGEOSat.cfg">
-      <Link>Contracts\Commercial Applications 2\FirstGEOSat.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 1\FirstNavSat-CA.cfg">
+      <Link>Contracts\Earth Commercial Applications 1\FirstNavSat-CA.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\FirstGeosync.cfg">
-      <Link>Contracts\Commercial Applications 2\FirstGeosync.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\FirstGEOSat.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\FirstGEOSat.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\FirstTargetedGeo.cfg">
-      <Link>Contracts\Commercial Applications 2\FirstTargetedGeo.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\FirstGeosync.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\FirstGeosync.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\FirstTargetedMolniya.cfg">
-      <Link>Contracts\Commercial Applications 2\FirstTargetedMolniya.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\FirstTargetedGeo.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\FirstTargetedGeo.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\FirstTargetedTundra.cfg">
-      <Link>Contracts\Commercial Applications 2\FirstTargetedTundra.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\FirstTargetedMolniya.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\FirstTargetedMolniya.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\FirstTundraSat.cfg">
-      <Link>Contracts\Commercial Applications 2\FirstTundraSat.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\FirstTargetedTundra.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\FirstTargetedTundra.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\GeoComSatNetwork3.cfg">
-      <Link>Contracts\Commercial Applications 2\GeoComSatNetwork3.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\FirstTundraSat.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\FirstTundraSat.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\GeoComSatNetwork4.cfg">
-      <Link>Contracts\Commercial Applications 2\GeoComSatNetwork4.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\GeoComSatNetwork3.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\GeoComSatNetwork3.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\GEORepeatComSats.cfg">
-      <Link>Contracts\Commercial Applications 2\GEORepeatComSats.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\GeoComSatNetwork4.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\GeoComSatNetwork4.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\MolniyaNetwork3.cfg">
-      <Link>Contracts\Commercial Applications 2\MolniyaNetwork3.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\GEORepeatComSats.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\GEORepeatComSats.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\MolniyaRepeatComSats.cfg">
-      <Link>Contracts\Commercial Applications 2\MolniyaRepeatComSats.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\MolniyaNetwork3.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\MolniyaNetwork3.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Commercial Applications 2\TundraRepeatComSats.cfg">
-      <Link>Contracts\Commercial Applications 2\TundraRepeatComSats.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\MolniyaRepeatComSats.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\MolniyaRepeatComSats.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew1Month.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew1Month.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew1Year.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew1Year.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew2Week.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew2Week.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew3Month.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew3Month.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonLandingCrew6Month.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonLandingCrew6Month.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonOrbitCrewedPolar.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonOrbitCrewedPolar.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonSpaceStation.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonSpaceStation.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonSpaceStation12Month.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonSpaceStation12Month.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonSpaceStation3Month.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonSpaceStation3Month.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Habitation\MoonSpaceStation6Month.cfg">
-      <Link>Contracts\Early Lunar Habitation\MoonSpaceStation6Month.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Probes\LunarFlyby.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarFlyby.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Probes\LunarImpactor.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarImpactor.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Probes\LunarImpactorOptional.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarImpactorOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Probes\LunarOrbiter.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarOrbiter.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Lunar Probes\LunarOrbiterOptional.cfg">
-      <Link>Contracts\Early Lunar Probes\LunarOrbiterOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\Downrange6000-Heavy.cfg">
-      <Link>Contracts\Early Satellites (Heavy)\Downrange6000-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\Downrange7500-Heavy.cfg">
-      <Link>Contracts\Early Satellites (Heavy)\Downrange7500-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\FirstBioSat-Heavy.cfg">
-      <Link>Contracts\Early Satellites (Heavy)\FirstBioSat-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\FirstPolarSat-Heavy.cfg">
-      <Link>Contracts\Early Satellites (Heavy)\FirstPolarSat-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\FirstSatellite-Heavy.cfg">
-      <Link>Contracts\Early Satellites (Heavy)\FirstSatellite-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Heavy)\FirstScienceSat-Heavy.cfg">
-      <Link>Contracts\Early Satellites (Heavy)\FirstScienceSat-Heavy.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\AtmosphereAnalysis.cfg">
-      <Link>Contracts\Early Satellites (Light)\AtmosphereAnalysis.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\Downrange6000.cfg">
-      <Link>Contracts\Early Satellites (Light)\Downrange6000.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\Downrange7500.cfg">
-      <Link>Contracts\Early Satellites (Light)\Downrange7500.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\FirstPolarSat.cfg">
-      <Link>Contracts\Early Satellites (Light)\FirstPolarSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\FirstSatellite.cfg">
-      <Link>Contracts\Early Satellites (Light)\FirstSatellite.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\FirstScienceSat.cfg">
-      <Link>Contracts\Early Satellites (Light)\FirstScienceSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\FirstSolarSat.cfg">
-      <Link>Contracts\Early Satellites (Light)\FirstSolarSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Satellites (Light)\FirstSunSyncSat.cfg">
-      <Link>Contracts\Early Satellites (Light)\FirstSunSyncSat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Space Stations\Early Station Science.cfg">
-      <Link>Contracts\Early Space Stations\Early Station Science.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Space Stations\Early Station Supply.cfg">
-      <Link>Contracts\Early Space Stations\Early Station Supply.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Space Stations\First Space Station.cfg">
-      <Link>Contracts\Early Space Stations\First Space Station.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Space Stations\Proto Station Science.cfg">
-      <Link>Contracts\Early Space Stations\Proto Station Science.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Space Stations\Proto Station Supply.cfg">
-      <Link>Contracts\Early Space Stations\Proto Station Supply.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Space Stations\Repeat Prototype Space Station.cfg">
-      <Link>Contracts\Early Space Stations\Repeat Prototype Space Station.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Early Space Stations\Second Generation Space Station.cfg">
-      <Link>Contracts\Early Space Stations\Second Generation Space Station.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Commercial Applications 2\TundraRepeatComSats.cfg">
+      <Link>Contracts\Earth Commercial Applications 2\TundraRepeatComSats.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Earth Crewed\CrewedScienceBasic.cfg">
       <Link>Contracts\Earth Crewed\CrewedScienceBasic.cfg</Link>
@@ -434,29 +332,356 @@
     <Content Include="..\GameData\RP-1\Contracts\Earth Satellites\FirstWeatherSat.cfg">
       <Link>Contracts\Earth Satellites\FirstWeatherSat.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Human Records\CrewedAltRecord.cfg">
-      <Link>Contracts\Human Records\CrewedAltRecord.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Heavy)\Downrange6000-Heavy.cfg">
+      <Link>Contracts\Earth Satellites Early (Heavy)\Downrange6000-Heavy.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Human Records\CrewedCountRecord.cfg">
-      <Link>Contracts\Human Records\CrewedCountRecord.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Heavy)\Downrange7500-Heavy.cfg">
+      <Link>Contracts\Earth Satellites Early (Heavy)\Downrange7500-Heavy.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Human Records\CrewedDurationRecord.cfg">
-      <Link>Contracts\Human Records\CrewedDurationRecord.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Heavy)\FirstBioSat-Heavy.cfg">
+      <Link>Contracts\Earth Satellites Early (Heavy)\FirstBioSat-Heavy.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Human Records\CrewedSpeedRecord.cfg">
-      <Link>Contracts\Human Records\CrewedSpeedRecord.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Heavy)\FirstPolarSat-Heavy.cfg">
+      <Link>Contracts\Earth Satellites Early (Heavy)\FirstPolarSat-Heavy.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Jovian Moon Landings\Callisto Landing.cfg">
-      <Link>Contracts\Jovian Moon Landings\Callisto Landing.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Heavy)\FirstSatellite-Heavy.cfg">
+      <Link>Contracts\Earth Satellites Early (Heavy)\FirstSatellite-Heavy.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Jovian Moon Landings\Europa Landing.cfg">
-      <Link>Contracts\Jovian Moon Landings\Europa Landing.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Heavy)\FirstScienceSat-Heavy.cfg">
+      <Link>Contracts\Earth Satellites Early (Heavy)\FirstScienceSat-Heavy.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Jovian Moon Landings\Ganymede Landing.cfg">
-      <Link>Contracts\Jovian Moon Landings\Ganymede Landing.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Light)\AtmosphereAnalysis.cfg">
+      <Link>Contracts\Earth Satellites Early (Light)\AtmosphereAnalysis.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Jovian Moon Landings\Io Landing.cfg">
-      <Link>Contracts\Jovian Moon Landings\Io Landing.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Light)\Downrange6000.cfg">
+      <Link>Contracts\Earth Satellites Early (Light)\Downrange6000.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Light)\Downrange7500.cfg">
+      <Link>Contracts\Earth Satellites Early (Light)\Downrange7500.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Light)\FirstPolarSat.cfg">
+      <Link>Contracts\Earth Satellites Early (Light)\FirstPolarSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Light)\FirstSatellite.cfg">
+      <Link>Contracts\Earth Satellites Early (Light)\FirstSatellite.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Light)\FirstScienceSat.cfg">
+      <Link>Contracts\Earth Satellites Early (Light)\FirstScienceSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Light)\FirstSolarSat.cfg">
+      <Link>Contracts\Earth Satellites Early (Light)\FirstSolarSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Satellites Early (Light)\FirstSunSyncSat.cfg">
+      <Link>Contracts\Earth Satellites Early (Light)\FirstSunSyncSat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\EarlyNavNetwork3-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\EarlyNavNetwork3-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\EarlyNavNetwork4-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\EarlyNavNetwork4-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\EarlyNavSat-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\EarlyNavSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\FirstComSat-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\FirstComSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\FirstGEOSat-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\FirstGEOSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\FirstGeosync-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\FirstGeosync-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\FirstMolniyaSat-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\FirstMolniyaSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\FirstNavSat-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\FirstNavSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\FirstTundraSat-SCA.cfg">
+      <Link>Contracts\Earth Skopos 0\FirstTundraSat-SCA.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\intermittent_paris_moscow_tv.cfg">
+      <Link>Contracts\Earth Skopos 0\intermittent_paris_moscow_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\intermittent_soviet_tv.cfg">
+      <Link>Contracts\Earth Skopos 0\intermittent_soviet_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\intermittent_transatlantic_tv.cfg">
+      <Link>Contracts\Earth Skopos 0\intermittent_transatlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\intermittent_transpacific_tv.cfg">
+      <Link>Contracts\Earth Skopos 0\intermittent_transpacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\syncom_ship_to_shore.cfg">
+      <Link>Contracts\Earth Skopos 0\syncom_ship_to_shore.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\syncom_transatlantic_tv.cfg">
+      <Link>Contracts\Earth Skopos 0\syncom_transatlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 0\syncom_transpacific_tv.cfg">
+      <Link>Contracts\Earth Skopos 0\syncom_transpacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_havana_tv.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_havana_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_indian_ocean_tv.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_indian_ocean_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_north_atlantic_tv.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_north_atlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_north_pacific_tv.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_north_pacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_orbita.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_orbita.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_paris_moscow_tv.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_paris_moscow_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_south_pacific_tv.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_south_pacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_soviet_tracking_ships.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_soviet_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_ulaanbaatar_tv.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_ulaanbaatar_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\l1_us_tracking_ships.cfg">
+      <Link>Contracts\Earth Skopos 1\l1_us_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 1\our_world_tv.cfg">
+      <Link>Contracts\Earth Skopos 1\our_world_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_atlantic_tv.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_atlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_havana_tv.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_havana_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_indian_ocean_tv.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_indian_ocean_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_intersputnik_europe.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_intersputnik_europe.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_moscow_dc.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_moscow_dc.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_orbita.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_orbita.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_pacific_tv.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_pacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_paris_moscow_tv.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_paris_moscow_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_soviet_tracking_ships.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_soviet_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 2\l2_us_tracking_ships.cfg">
+      <Link>Contracts\Earth Skopos 2\l2_us_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_atlantic_tv.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_atlantic_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_canunet.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_canunet.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_canunet_rtv_test.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_canunet_rtv_test.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_domestic_us.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_domestic_us.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_ekran_test.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_ekran_test.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_hbo_us_test.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_hbo_us_test.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_hermes_remote_tv.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_hermes_remote_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_indian_ocean_tv.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_indian_ocean_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_intersputnik_asia.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_intersputnik_asia.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_intersputnik_caribbean.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_intersputnik_caribbean.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_marisat.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_marisat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_moskva.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_moskva.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_pacific_tv.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_pacific_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_paris_moscow_tv.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_paris_moscow_tv.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_soviet_tracking_ships.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_soviet_tracking_ships.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_us_territories.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_us_territories.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Skopos 3\l3_volna.cfg">
+      <Link>Contracts\Earth Skopos 3\l3_volna.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\DistanceSoundingDifficult.cfg">
+      <Link>Contracts\Earth Sounding Rockets\DistanceSoundingDifficult.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\DistanceSoundingIntermediate.cfg">
+      <Link>Contracts\Earth Sounding Rockets\DistanceSoundingIntermediate.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\Downrange.cfg">
+      <Link>Contracts\Earth Sounding Rockets\Downrange.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\DownrangeEarly.cfg">
+      <Link>Contracts\Earth Sounding Rockets\DownrangeEarly.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\DownrangeInSpaceControl.cfg">
+      <Link>Contracts\Earth Sounding Rockets\DownrangeInSpaceControl.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\DownrangeInSpaceIgnition.cfg">
+      <Link>Contracts\Earth Sounding Rockets\DownrangeInSpaceIgnition.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\First Flight.cfg">
+      <Link>Contracts\Earth Sounding Rockets\First Flight.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\KarmanLine.cfg">
+      <Link>Contracts\Earth Sounding Rockets\KarmanLine.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SoundingDifficult.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SoundingDifficult.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SoundingIntermediate.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SoundingIntermediate.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SoundingRocketAdvancedBio.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SoundingRocketAdvancedBio.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SoundingRocketAdvancedBioOptional.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SoundingRocketAdvancedBioOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SoundingRocketBio.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SoundingRocketBio.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SoundingRocketBioOptional.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SoundingRocketBioOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SoundingRocketFilm.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SoundingRocketFilm.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SoundingRocketFilmOptional.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SoundingRocketFilmOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Sounding Rockets\SuborbitalReturn.cfg">
+      <Link>Contracts\Earth Sounding Rockets\SuborbitalReturn.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Spaceplanes\Spaceplane_1Crew_Rep.cfg">
+      <Link>Contracts\Earth Spaceplanes\Spaceplane_1Crew_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Spaceplanes\Spaceplane_2Crew_Rep.cfg">
+      <Link>Contracts\Earth Spaceplanes\Spaceplane_2Crew_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Spaceplanes\Spaceplane_3Crew_Rep.cfg">
+      <Link>Contracts\Earth Spaceplanes\Spaceplane_3Crew_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Spaceplanes\Spaceplane_Demo.cfg">
+      <Link>Contracts\Earth Spaceplanes\Spaceplane_Demo.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Spaceplanes\Spaceplane_Demo_Rep.cfg">
+      <Link>Contracts\Earth Spaceplanes\Spaceplane_Demo_Rep.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Spaceplanes\Spaceplane_Docking.cfg">
+      <Link>Contracts\Earth Spaceplanes\Spaceplane_Docking.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Spaceplanes\Spaceplane_Orbital.cfg">
+      <Link>Contracts\Earth Spaceplanes\Spaceplane_Orbital.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Spaceplanes\Spaceplane_RDV.cfg">
+      <Link>Contracts\Earth Spaceplanes\Spaceplane_RDV.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Stations Early\Early Station Science.cfg">
+      <Link>Contracts\Earth Stations Early\Early Station Science.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Stations Early\Early Station Supply.cfg">
+      <Link>Contracts\Earth Stations Early\Early Station Supply.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Stations Early\First Space Station.cfg">
+      <Link>Contracts\Earth Stations Early\First Space Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Stations Early\Proto Station Science.cfg">
+      <Link>Contracts\Earth Stations Early\Proto Station Science.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Stations Early\Proto Station Supply.cfg">
+      <Link>Contracts\Earth Stations Early\Proto Station Supply.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Stations Early\Repeat Prototype Space Station.cfg">
+      <Link>Contracts\Earth Stations Early\Repeat Prototype Space Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth Stations Early\Second Generation Space Station.cfg">
+      <Link>Contracts\Earth Stations Early\Second Generation Space Station.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\BreakSoundBarrier.cfg">
+      <Link>Contracts\Earth X-Plane Early\BreakSoundBarrier.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\RocketPlaneDevelopmentOptional.cfg">
+      <Link>Contracts\Earth X-Plane Early\RocketPlaneDevelopmentOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesHighAltitude.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesHighAltitude.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesHighAltitudeOptional.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesHighAltitudeOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesHypersonic.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesHypersonic.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesHypersonicOptional.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesHypersonicOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesKarman.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesKarman.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesStratosphericResearch.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesStratosphericResearch.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesStratosphericResearchOptional.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesStratosphericResearchOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesSuborbital.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesSuborbital.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesSupersonicMach2.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesSupersonicMach2.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesSupersonicOptionalHigh.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesSupersonicOptionalHigh.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Earth X-Plane Early\XPlanesSupersonicOptionalLow.cfg">
+      <Link>Contracts\Earth X-Plane Early\XPlanesSupersonicOptionalLow.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Jupiter Moon Landings\Callisto Landing.cfg">
+      <Link>Contracts\Jupiter Moon Landings\Callisto Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Jupiter Moon Landings\Europa Landing.cfg">
+      <Link>Contracts\Jupiter Moon Landings\Europa Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Jupiter Moon Landings\Ganymede Landing.cfg">
+      <Link>Contracts\Jupiter Moon Landings\Ganymede Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Jupiter Moon Landings\Io Landing.cfg">
+      <Link>Contracts\Jupiter Moon Landings\Io Landing.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Jupiter Observation\Callisto Flyby.cfg">
       <Link>Contracts\Jupiter Observation\Callisto Flyby.cfg</Link>
@@ -478,51 +703,6 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Jupiter Observation\Jupiter Probe.cfg">
       <Link>Contracts\Jupiter Observation\Jupiter Probe.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\CrewedLunarFlyby.cfg">
-      <Link>Contracts\Lunar Crewed\CrewedLunarFlyby.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\CrewedLunarOrbitRepeat.cfg">
-      <Link>Contracts\Lunar Crewed\CrewedLunarOrbitRepeat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\CrewedMoonLandingRover.cfg">
-      <Link>Contracts\Lunar Crewed\CrewedMoonLandingRover.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\CrewedMoonLandingTargeted.cfg">
-      <Link>Contracts\Lunar Crewed\CrewedMoonLandingTargeted.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\FirstCrewedLunarOrbit.cfg">
-      <Link>Contracts\Lunar Crewed\FirstCrewedLunarOrbit.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg">
-      <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewed.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Crewed\FirstMoonLandingCrewedDirect.cfg">
-      <Link>Contracts\Lunar Crewed\FirstMoonLandingCrewedDirect.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonLanding.cfg">
-      <Link>Contracts\Lunar Surface Probes\MoonLanding.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonLandingFarSide.cfg">
-      <Link>Contracts\Lunar Surface Probes\MoonLandingFarSide.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonLandingFarSideOptional.cfg">
-      <Link>Contracts\Lunar Surface Probes\MoonLandingFarSideOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonLandingOptional.cfg">
-      <Link>Contracts\Lunar Surface Probes\MoonLandingOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonLandingReturn.cfg">
-      <Link>Contracts\Lunar Surface Probes\MoonLandingReturn.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonOrbiter.cfg">
-      <Link>Contracts\Lunar Surface Probes\MoonOrbiter.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonOrbiterOptional.cfg">
-      <Link>Contracts\Lunar Surface Probes\MoonOrbiterOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Lunar Surface Probes\MoonRover.cfg">
-      <Link>Contracts\Lunar Surface Probes\MoonRover.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Mars\Deimos Flyby.cfg">
       <Link>Contracts\Mars\Deimos Flyby.cfg</Link>
@@ -608,8 +788,98 @@
     <Content Include="..\GameData\RP-1\Contracts\Mercury Exploration\Mercury Rover.cfg">
       <Link>Contracts\Mercury Exploration\Mercury Rover.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Neptunian Moon Landings\Triton Landing.cfg">
-      <Link>Contracts\Neptunian Moon Landings\Triton Landing.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Crewed\CrewedLunarFlyby.cfg">
+      <Link>Contracts\Moon Crewed\CrewedLunarFlyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Crewed\CrewedLunarOrbitRepeat.cfg">
+      <Link>Contracts\Moon Crewed\CrewedLunarOrbitRepeat.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Crewed\CrewedMoonLandingRover.cfg">
+      <Link>Contracts\Moon Crewed\CrewedMoonLandingRover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Crewed\CrewedMoonLandingTargeted.cfg">
+      <Link>Contracts\Moon Crewed\CrewedMoonLandingTargeted.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Crewed\FirstCrewedLunarOrbit.cfg">
+      <Link>Contracts\Moon Crewed\FirstCrewedLunarOrbit.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Crewed\FirstMoonLandingCrewed.cfg">
+      <Link>Contracts\Moon Crewed\FirstMoonLandingCrewed.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Crewed\FirstMoonLandingCrewedDirect.cfg">
+      <Link>Contracts\Moon Crewed\FirstMoonLandingCrewedDirect.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonLandingCrew1Month.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonLandingCrew1Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonLandingCrew1Year.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonLandingCrew1Year.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonLandingCrew2Week.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonLandingCrew2Week.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonLandingCrew3Month.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonLandingCrew3Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonLandingCrew6Month.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonLandingCrew6Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonOrbitCrewedPolar.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonOrbitCrewedPolar.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonSpaceStation.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonSpaceStation.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonSpaceStation12Month.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonSpaceStation12Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonSpaceStation3Month.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonSpaceStation3Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Habitation Early\MoonSpaceStation6Month.cfg">
+      <Link>Contracts\Moon Habitation Early\MoonSpaceStation6Month.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Early\LunarFlyby.cfg">
+      <Link>Contracts\Moon Probes Early\LunarFlyby.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Early\LunarImpactor.cfg">
+      <Link>Contracts\Moon Probes Early\LunarImpactor.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Early\LunarImpactorOptional.cfg">
+      <Link>Contracts\Moon Probes Early\LunarImpactorOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Early\LunarOrbiter.cfg">
+      <Link>Contracts\Moon Probes Early\LunarOrbiter.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Early\LunarOrbiterOptional.cfg">
+      <Link>Contracts\Moon Probes Early\LunarOrbiterOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Surface\MoonLanding.cfg">
+      <Link>Contracts\Moon Probes Surface\MoonLanding.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Surface\MoonLandingFarSide.cfg">
+      <Link>Contracts\Moon Probes Surface\MoonLandingFarSide.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Surface\MoonLandingFarSideOptional.cfg">
+      <Link>Contracts\Moon Probes Surface\MoonLandingFarSideOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Surface\MoonLandingOptional.cfg">
+      <Link>Contracts\Moon Probes Surface\MoonLandingOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Surface\MoonLandingReturn.cfg">
+      <Link>Contracts\Moon Probes Surface\MoonLandingReturn.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Surface\MoonOrbiter.cfg">
+      <Link>Contracts\Moon Probes Surface\MoonOrbiter.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Surface\MoonOrbiterOptional.cfg">
+      <Link>Contracts\Moon Probes Surface\MoonOrbiterOptional.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Moon Probes Surface\MoonRover.cfg">
+      <Link>Contracts\Moon Probes Surface\MoonRover.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Neptune Moon Landings\Triton Landing.cfg">
+      <Link>Contracts\Neptune Moon Landings\Triton Landing.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Outer Gas Giant Survey\Ariel Flyby.cfg">
       <Link>Contracts\Outer Gas Giant Survey\Ariel Flyby.cfg</Link>
@@ -668,32 +938,65 @@
     <Content Include="..\GameData\RP-1\Contracts\Outer Planet Flyby\Uranus Flyby.cfg">
       <Link>Contracts\Outer Planet Flyby\Uranus Flyby.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Plutonian Landings\Charon Landing.cfg">
-      <Link>Contracts\Plutonian Landings\Charon Landing.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Pluto Landings\Charon Landing.cfg">
+      <Link>Contracts\Pluto Landings\Charon Landing.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Plutonian Landings\Charon LandingRepeatable.cfg">
-      <Link>Contracts\Plutonian Landings\Charon LandingRepeatable.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Pluto Landings\Charon LandingRepeatable.cfg">
+      <Link>Contracts\Pluto Landings\Charon LandingRepeatable.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Plutonian Landings\Charon Rover.cfg">
-      <Link>Contracts\Plutonian Landings\Charon Rover.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Pluto Landings\Charon Rover.cfg">
+      <Link>Contracts\Pluto Landings\Charon Rover.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Plutonian Landings\Pluto Landing.cfg">
-      <Link>Contracts\Plutonian Landings\Pluto Landing.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Pluto Landings\Pluto Landing.cfg">
+      <Link>Contracts\Pluto Landings\Pluto Landing.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Plutonian Landings\Pluto LandingRepeatable.cfg">
-      <Link>Contracts\Plutonian Landings\Pluto LandingRepeatable.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Pluto Landings\Pluto LandingRepeatable.cfg">
+      <Link>Contracts\Pluto Landings\Pluto LandingRepeatable.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Plutonian Landings\Pluto Orbit.cfg">
-      <Link>Contracts\Plutonian Landings\Pluto Orbit.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Pluto Landings\Pluto Orbit.cfg">
+      <Link>Contracts\Pluto Landings\Pluto Orbit.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Plutonian Landings\Pluto Rover.cfg">
-      <Link>Contracts\Plutonian Landings\Pluto Rover.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Pluto Landings\Pluto Rover.cfg">
+      <Link>Contracts\Pluto Landings\Pluto Rover.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Records\AltRecord.cfg">
       <Link>Contracts\Records\AltRecord.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Records\SpeedRecord.cfg">
       <Link>Contracts\Records\SpeedRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Records Human\CrewedAltRecord.cfg">
+      <Link>Contracts\Records Human\CrewedAltRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Records Human\CrewedCountRecord.cfg">
+      <Link>Contracts\Records Human\CrewedCountRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Records Human\CrewedDurationRecord.cfg">
+      <Link>Contracts\Records Human\CrewedDurationRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Records Human\CrewedSpeedRecord.cfg">
+      <Link>Contracts\Records Human\CrewedSpeedRecord.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturn Moon Landings\Dione Landing.cfg">
+      <Link>Contracts\Saturn Moon Landings\Dione Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturn Moon Landings\Enceladus Landing.cfg">
+      <Link>Contracts\Saturn Moon Landings\Enceladus Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturn Moon Landings\Iapetus Landing.cfg">
+      <Link>Contracts\Saturn Moon Landings\Iapetus Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturn Moon Landings\Mimas Landing.cfg">
+      <Link>Contracts\Saturn Moon Landings\Mimas Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturn Moon Landings\Rhea Landing.cfg">
+      <Link>Contracts\Saturn Moon Landings\Rhea Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturn Moon Landings\Tethys Landing.cfg">
+      <Link>Contracts\Saturn Moon Landings\Tethys Landing.cfg</Link>
+    </Content>
+    <Content Include="..\GameData\RP-1\Contracts\Saturn Moon Landings\Titan Landing.cfg">
+      <Link>Contracts\Saturn Moon Landings\Titan Landing.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Saturn Observation\Dione Flyby.cfg">
       <Link>Contracts\Saturn Observation\Dione Flyby.cfg</Link>
@@ -731,189 +1034,6 @@
     <Content Include="..\GameData\RP-1\Contracts\Saturn Observation\Titan Rover.cfg">
       <Link>Contracts\Saturn Observation\Titan Rover.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Dione Landing.cfg">
-      <Link>Contracts\Saturnine Moon Landings\Dione Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Enceladus Landing.cfg">
-      <Link>Contracts\Saturnine Moon Landings\Enceladus Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Iapetus Landing.cfg">
-      <Link>Contracts\Saturnine Moon Landings\Iapetus Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Mimas Landing.cfg">
-      <Link>Contracts\Saturnine Moon Landings\Mimas Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Rhea Landing.cfg">
-      <Link>Contracts\Saturnine Moon Landings\Rhea Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Tethys Landing.cfg">
-      <Link>Contracts\Saturnine Moon Landings\Tethys Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Saturnine Moon Landings\Titan Landing.cfg">
-      <Link>Contracts\Saturnine Moon Landings\Titan Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\EarlyNavNetwork3-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\EarlyNavNetwork3-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\EarlyNavNetwork4-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\EarlyNavNetwork4-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\EarlyNavSat-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\EarlyNavSat-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstComSat-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\FirstComSat-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstGEOSat-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\FirstGEOSat-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstGeosync-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\FirstGeosync-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstMolniyaSat-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\FirstMolniyaSat-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstNavSat-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\FirstNavSat-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\FirstTundraSat-SCA.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\FirstTundraSat-SCA.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\intermittent_paris_moscow_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\intermittent_paris_moscow_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\intermittent_soviet_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\intermittent_soviet_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\intermittent_transatlantic_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\intermittent_transatlantic_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\intermittent_transpacific_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\intermittent_transpacific_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\syncom_ship_to_shore.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\syncom_ship_to_shore.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\syncom_transatlantic_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\syncom_transatlantic_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 0\syncom_transpacific_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 0\syncom_transpacific_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_havana_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_havana_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_indian_ocean_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_indian_ocean_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_north_atlantic_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_north_atlantic_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_north_pacific_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_north_pacific_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_orbita.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_orbita.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_paris_moscow_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_paris_moscow_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_south_pacific_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_south_pacific_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_soviet_tracking_ships.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_soviet_tracking_ships.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_ulaanbaatar_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_ulaanbaatar_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\l1_us_tracking_ships.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\l1_us_tracking_ships.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 1\our_world_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 1\our_world_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_atlantic_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_atlantic_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_havana_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_havana_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_indian_ocean_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_indian_ocean_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_intersputnik_europe.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_intersputnik_europe.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_moscow_dc.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_moscow_dc.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_orbita.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_orbita.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_pacific_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_pacific_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_paris_moscow_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_paris_moscow_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_soviet_tracking_ships.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_soviet_tracking_ships.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 2\l2_us_tracking_ships.cfg">
-      <Link>Contracts\Skopos Commercial Applications 2\l2_us_tracking_ships.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_atlantic_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_atlantic_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_canunet.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_canunet.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_canunet_rtv_test.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_canunet_rtv_test.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_domestic_us.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_domestic_us.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_ekran_test.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_ekran_test.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_hbo_us_test.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_hbo_us_test.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_hermes_remote_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_hermes_remote_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_indian_ocean_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_indian_ocean_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_intersputnik_asia.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_intersputnik_asia.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_intersputnik_caribbean.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_intersputnik_caribbean.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_marisat.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_marisat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_moskva.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_moskva.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_pacific_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_pacific_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_paris_moscow_tv.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_paris_moscow_tv.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_soviet_tracking_ships.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_soviet_tracking_ships.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_us_territories.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_us_territories.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Skopos Commercial Applications 3\l3_volna.cfg">
-      <Link>Contracts\Skopos Commercial Applications 3\l3_volna.cfg</Link>
-    </Content>
     <Content Include="..\GameData\RP-1\Contracts\Small Bodies Flyby\Ceres Flyby.cfg">
       <Link>Contracts\Small Bodies Flyby\Ceres Flyby.cfg</Link>
     </Content>
@@ -923,83 +1043,20 @@
     <Content Include="..\GameData\RP-1\Contracts\Small Bodies Flyby\Vesta Flyby.cfg">
       <Link>Contracts\Small Bodies Flyby\Vesta Flyby.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\DistanceSoundingDifficult.cfg">
-      <Link>Contracts\Sounding Rockets\DistanceSoundingDifficult.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Uranus Moon Landings\Ariel Landing.cfg">
+      <Link>Contracts\Uranus Moon Landings\Ariel Landing.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\DistanceSoundingIntermediate.cfg">
-      <Link>Contracts\Sounding Rockets\DistanceSoundingIntermediate.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Uranus Moon Landings\Miranda Landing.cfg">
+      <Link>Contracts\Uranus Moon Landings\Miranda Landing.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\First Flight.cfg">
-      <Link>Contracts\Sounding Rockets\First Flight.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Uranus Moon Landings\Oberon Landing.cfg">
+      <Link>Contracts\Uranus Moon Landings\Oberon Landing.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\KarmanLine.cfg">
-      <Link>Contracts\Sounding Rockets\KarmanLine.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Uranus Moon Landings\Titania Landing.cfg">
+      <Link>Contracts\Uranus Moon Landings\Titania Landing.cfg</Link>
     </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SoundingDifficult.cfg">
-      <Link>Contracts\Sounding Rockets\SoundingDifficult.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SoundingIntermediate.cfg">
-      <Link>Contracts\Sounding Rockets\SoundingIntermediate.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SoundingRocketAdvancedBio.cfg">
-      <Link>Contracts\Sounding Rockets\SoundingRocketAdvancedBio.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SoundingRocketAdvancedBioOptional.cfg">
-      <Link>Contracts\Sounding Rockets\SoundingRocketAdvancedBioOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SoundingRocketBio.cfg">
-      <Link>Contracts\Sounding Rockets\SoundingRocketBio.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SoundingRocketBioOptional.cfg">
-      <Link>Contracts\Sounding Rockets\SoundingRocketBioOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SoundingRocketFilm.cfg">
-      <Link>Contracts\Sounding Rockets\SoundingRocketFilm.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SoundingRocketFilmOptional.cfg">
-      <Link>Contracts\Sounding Rockets\SoundingRocketFilmOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Sounding Rockets\SuborbitalReturn.cfg">
-      <Link>Contracts\Sounding Rockets\SuborbitalReturn.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\Spaceplane_1Crew_Rep.cfg">
-      <Link>Contracts\Spaceplanes\Spaceplane_1Crew_Rep.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\Spaceplane_2Crew_Rep.cfg">
-      <Link>Contracts\Spaceplanes\Spaceplane_2Crew_Rep.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\Spaceplane_3Crew_Rep.cfg">
-      <Link>Contracts\Spaceplanes\Spaceplane_3Crew_Rep.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\Spaceplane_Demo.cfg">
-      <Link>Contracts\Spaceplanes\Spaceplane_Demo.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\Spaceplane_Demo_Rep.cfg">
-      <Link>Contracts\Spaceplanes\Spaceplane_Demo_Rep.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\Spaceplane_Docking.cfg">
-      <Link>Contracts\Spaceplanes\Spaceplane_Docking.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\Spaceplane_Orbital.cfg">
-      <Link>Contracts\Spaceplanes\Spaceplane_Orbital.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Spaceplanes\Spaceplane_RDV.cfg">
-      <Link>Contracts\Spaceplanes\Spaceplane_RDV.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Uranian Moon Landings\Ariel Landing.cfg">
-      <Link>Contracts\Uranian Moon Landings\Ariel Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Uranian Moon Landings\Miranda Landing.cfg">
-      <Link>Contracts\Uranian Moon Landings\Miranda Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Uranian Moon Landings\Oberon Landing.cfg">
-      <Link>Contracts\Uranian Moon Landings\Oberon Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Uranian Moon Landings\Titania Landing.cfg">
-      <Link>Contracts\Uranian Moon Landings\Titania Landing.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\Uranian Moon Landings\Umbriel Landing.cfg">
-      <Link>Contracts\Uranian Moon Landings\Umbriel Landing.cfg</Link>
+    <Content Include="..\GameData\RP-1\Contracts\Uranus Moon Landings\Umbriel Landing.cfg">
+      <Link>Contracts\Uranus Moon Landings\Umbriel Landing.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Venus\Venus Landing.cfg">
       <Link>Contracts\Venus\Venus Landing.cfg</Link>
@@ -1018,45 +1075,6 @@
     </Content>
     <Content Include="..\GameData\RP-1\Contracts\Venus\VenusOrbitRepeat.cfg">
       <Link>Contracts\Venus\VenusOrbitRepeat.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\BreakSoundBarrier.cfg">
-      <Link>Contracts\X-Plane Research\BreakSoundBarrier.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\RocketPlaneDevelopmentOptional.cfg">
-      <Link>Contracts\X-Plane Research\RocketPlaneDevelopmentOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHighAltitude.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesHighAltitude.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHighAltitudeOptional.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesHighAltitudeOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHypersonic.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesHypersonic.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesHypersonicOptional.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesHypersonicOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesKarman.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesKarman.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesStratosphericResearch.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesStratosphericResearch.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesStratosphericResearchOptional.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesStratosphericResearchOptional.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSuborbital.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSuborbital.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSupersonicMach2.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalHigh.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalHigh.cfg</Link>
-    </Content>
-    <Content Include="..\GameData\RP-1\Contracts\X-Plane Research\XPlanesSupersonicOptionalLow.cfg">
-      <Link>Contracts\X-Plane Research\XPlanesSupersonicOptionalLow.cfg</Link>
     </Content>
     <Content Include="..\GameData\RP-1\Filter_Extensions_Configs\non_wip_RP0.cfg">
       <Link>Filter_Extensions_Configs\non_wip_RP0.cfg</Link>

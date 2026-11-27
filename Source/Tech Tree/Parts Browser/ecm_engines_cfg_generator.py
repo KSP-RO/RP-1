@@ -18,7 +18,7 @@ tree_ecm_engines_header = """
 
 output_dir = os.getenv('PB_OUTPUT_DIR', "../../../GameData/RP-1/Tree/")
 module_part_config_template = Template("    ${name} = ${ecm}\n")
-tree_ecm_engines_footer = "}"
+tree_ecm_engines_footer = "}\n"
 
 def generate_ecm_engines(parts):
     ecm_configs = ""

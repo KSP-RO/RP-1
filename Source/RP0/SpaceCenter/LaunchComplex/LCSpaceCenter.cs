@@ -138,15 +138,19 @@ namespace RP0
 
         public void SwitchLaunchComplex(int LC_index, bool updateDestrNode = true)
         {
+            if (LC_index >= 0 && LC_index == LCIndex)
+                return;
+
+            // The scene buildings still show the outgoing LC's pad, so save them before the index changes
+            if (updateDestrNode)
+                ActiveLC?.ActiveLPInstance?.RefreshDestructionNode();
+
             if (LC_index < 0)
             {
                 LC_index = LCIndex;
             }
             else
             {
-                if (LC_index == LCIndex)
-                    return;
-
                 LCIndex = LC_index;
             }
 
@@ -157,7 +161,7 @@ namespace RP0
                 SpaceCenterManagement.Instance.StartCoroutine(CallbackUtil.DelayedCallback(0.02f, Harmony.PatchEngineersReport.UpdateCraftStats));
             }
 
-            LaunchComplexes[LC_index].SwitchLaunchPad();
+            LaunchComplexes[LC_index].SwitchLaunchPad(-1, false);
         }
 
         public int GetLaunchComplexIdxToSwitchTo(bool forwardDirection, bool padOnly, int startIndex = -1)

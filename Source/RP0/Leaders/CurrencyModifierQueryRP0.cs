@@ -77,6 +77,12 @@ namespace RP0
         CurrencyArray postMultiplierDeltas = new CurrencyArray(0d);
         CurrencyArray postMultiplierDeltasHidden = new CurrencyArray(0d);
 
+        /// <summary>
+        /// Queries reused by RunQueryForTotal, indexed by nesting depth.
+        /// </summary>
+        private static readonly List<CurrencyModifierQueryRP0> _reusableQueries = new List<CurrencyModifierQueryRP0>();
+        private static int _reusableQueriesInUse = 0;
+
         public CurrencyModifierQueryRP0(TransactionReasons reason, double f0, float s0, float r0)
             : base(reason, (float)f0, s0, r0)
         {
@@ -95,6 +101,35 @@ namespace RP0
             inputs[CurrencyRP0.Reputation] = r0;
             inputs[CurrencyRP0.Confidence] = c0;
             inputs[CurrencyRP0.Time] = t0;
+        }
+
+        /// <summary>
+        /// Puts the query back into the state that the constructor leaves it in.
+        /// </summary>
+        private void Reset(TransactionReasonsRP0 reason, double f0, double s0, double r0, double c0, double t0)
+        {
+            this.reason = reason.Stock();
+            reasonRP0 = reason;
+            inputFunds = (float)f0;
+            inputScience = (float)s0;
+            inputRep = (float)r0;
+            deltaFunds = 0f;
+            deltaScience = 0f;
+            deltaRep = 0f;
+
+            for (int i = inputs.Length; i-- > 0;)
+            {
+                multipliers[i] = 1d;
+                postMultiplierDeltas[i] = 0d;
+                postMultiplierDeltasHidden[i] = 0d;
+            }
+
+            inputs[CurrencyRP0.Funds] = f0;
+            inputs[CurrencyRP0.Science] = s0;
+            inputs[CurrencyRP0.Reputation] = r0;
+            inputs[CurrencyRP0.Confidence] = c0;
+            inputs[CurrencyRP0.Time] = t0;
+            inputs[CurrencyRP0.Rate] = 1d;
         }
 
         public double GetInput(CurrencyRP0 c) => inputs[c];
@@ -238,7 +273,7 @@ namespace RP0
                         if (double.IsInfinity(amount) || double.IsNaN(amount) || amount > (100 * 365.25d * 86400d))
                             amountText = Localizer.GetStringByTag("#autoLOC_462439");
                         else
-                            amountText = KSPUtil.PrintDateDeltaCompact(amount, amount < 7d * 86400d, amount < 600);
+                            amountText = RP0DTUtils.PrintDateDeltaCompact(amount, amount < 7d * 86400d, amount < 600);
                     }
                     else
                     {
@@ -420,6 +455,31 @@ namespace RP0
             CurrencyModifierQueryRP0 currencyModifierQuery = new CurrencyModifierQueryRP0(reason, f0, s0, r0, c0, t0);
             GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(currencyModifierQuery);
             return currencyModifierQuery;
+        }
+
+        /// <summary>
+        /// Runs a query and returns the total of a single currency.
+        /// Does not allocate, unlike RunQuery, because the query object is reused.
+        /// </summary>
+        public static double RunQueryForTotal(CurrencyRP0 c, bool includeHidden, TransactionReasonsRP0 reason, double f0, double s0, double r0, double c0, double t0)
+        {
+            // A listener may run another query while this one is still in use,
+            // so every nesting level needs its own instance.
+            if (_reusableQueriesInUse == _reusableQueries.Count)
+                _reusableQueries.Add(new CurrencyModifierQueryRP0(reason, f0, s0, r0, c0, t0));
+
+            CurrencyModifierQueryRP0 query = _reusableQueries[_reusableQueriesInUse];
+            _reusableQueriesInUse++;
+            try
+            {
+                query.Reset(reason, f0, s0, r0, c0, t0);
+                GameEvents.Modifiers.OnCurrencyModifierQuery.Fire(query);
+                return query.GetTotal(c, includeHidden);
+            }
+            finally
+            {
+                _reusableQueriesInUse--;
+            }
         }
 
         public static CurrencyModifierQueryRP0 RunQuery(TransactionReasonsRP0 reason, Dictionary<CurrencyRP0, double> dict, bool invert = false)

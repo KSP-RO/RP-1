@@ -27,6 +27,21 @@ namespace RP0
         internal const string _icon_rocket = _iconPath + "KCT_rocket";
         internal const string _icon_settings = _iconPath + "KCT_setting";
 
+        // Yields a body's ancestor chain: the body itself, then each parent up to and including the top body
+        // that orbits the star, stopping at the star. Guards the KSP root star's self-referential
+        // referenceBody (Sun.referenceBody == Sun) and its null orbit, so it always terminates. Callers that
+        // want the "planet" (the top interplanetary body) take the last element.
+        public static IEnumerable<CelestialBody> AncestorChainToPlanet(CelestialBody body)
+        {
+            for (CelestialBody b = body; b != null; )
+            {
+                yield return b;
+                CelestialBody parent = b.referenceBody;
+                if (parent == null || parent == b || parent.orbit == null) yield break;  // reached the star
+                b = parent;
+            }
+        }
+
         public static AvailablePart GetAvailablePartByName(string partName) => PartLoader.getPartInfoByName(partName);
 
         public static string GetPartNameFromNode(ConfigNode part)
@@ -456,7 +471,6 @@ namespace RP0
             foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
             {
                 usedShipsCost += v.GetTotalCost();
-                v.RemoveFromBuildList(out _);
             }
 
             var validator = new VesselBuildValidator();
@@ -475,6 +489,11 @@ namespace RP0
                 Funding.Instance.AddFunds((float)costDelta, TransactionReasonsRP0.VesselPurchase.Stock());
             }
 
+            foreach (VesselProject v in SpaceCenterManagement.Instance.MergedVessels)
+            {
+                v.RemoveFromBuildList(out _);
+            }
+
             AddVesselToBuildList(newShip, false);
 
             int oldIdx;
@@ -491,7 +510,7 @@ namespace RP0
             }
             newShip.LC.RecalculateBuildRates();
 
-            GetShipEditProgress(editableShip, out double progressBP, out _, out _);
+            GetShipEditProgress(editableShip, newShip.buildPoints, out double progressBP, out _, out _);
             newShip.progress = progressBP;
             RP0Debug.Log($"Finished? {newShip.IsFinished}");
             if (newShip.IsFinished)
@@ -508,7 +527,12 @@ namespace RP0
             HighLogic.LoadScene(GameScenes.SPACECENTER);
         }
 
-        public static void GetShipEditProgress(VesselProject ship, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
+        /// <summary>
+        /// Calculates how much build progress a vessel keeps after being edited.
+        /// </summary>
+        /// <param name="ship">The vessel as it was before the edits</param>
+        /// <param name="newTotalBP">Total build points of the vessel after the edits</param>
+        public static void GetShipEditProgress(VesselProject ship, double newTotalBP, out double newProgressBP, out double originalCompletionPercent, out double newCompletionPercent)
         {
             double origTotalBP;
             double oldProgressBP;
@@ -530,7 +554,6 @@ namespace RP0
                 oldProgressBP *= (1 - Database.SettingsSC.MergingTimePenalty);
             }
 
-            double newTotalBP = SpaceCenterManagement.Instance.EditorVessel.buildPoints;
             double totalBPDiff = Math.Abs(newTotalBP - origTotalBP);
             newProgressBP = Math.Max(0, oldProgressBP - (1.1 * totalBPDiff));
             originalCompletionPercent = oldProgressBP / origTotalBP;
@@ -634,7 +657,8 @@ namespace RP0
             foreach (var name in partInfo.identicalParts.Split(','))
             {
                 if (PartLoader.getPartInfoByName(name.Replace('_', '.').Trim()) is AvailablePart info
-                    && info.TechRequired == partInfo.TechRequired)
+                    && info.TechRequired == partInfo.TechRequired
+                    && !techState.partsPurchased.Contains(info))
                 {
                     info.costsFunds = false;
                     techState.partsPurchased.Add(info);
@@ -684,6 +708,8 @@ namespace RP0
             }
             foreach (ISpaceCenterProject course in Crew.CrewHandler.Instance.TrainingCourses)
                 _checkTime(course, ref shortestTime, ref thing);
+            foreach (ISpaceCenterProject rnr in Crew.CrewHandler.Instance.RnRProjects)
+                _checkTime(rnr, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.fundTarget.IsValid)
                 _checkTime(SpaceCenterManagement.Instance.fundTarget, ref shortestTime, ref thing);
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
@@ -842,6 +868,19 @@ namespace RP0
                 SpaceCenterManagement.Instance.RecoveredVessel.LCID = vData?.LCID ?? Guid.Empty;
                 SpaceCenterManagement.Instance.RecoveredVessel.LandedAt = FlightGlobals.ActiveVessel.landedAt;
 
+                // The original LC can be missing: it was dismantled or the vessel has no tracking data
+                if (SpaceCenterManagement.Instance.RecoveredVessel.LC == null)
+                {
+                    LaunchComplex fallbackLC = FindRecoveryLC(listType);
+                    if (fallbackLC == null)
+                    {
+                        RP0Debug.LogError("No operational LC of matching type found for the recovered vessel.");
+                        SpaceCenterManagement.Instance.RecoveredVessel = new VesselProject();
+                        return false;
+                    }
+                    SpaceCenterManagement.Instance.RecoveredVessel.LC = fallbackLC;
+                }
+
                 //KCT_GameStates.recoveredVessel.type = listType;
                 if (listType == ProjectType.SPH)
                     SpaceCenterManagement.Instance.RecoveredVessel.launchSite = "Runway";
@@ -882,6 +921,23 @@ namespace RP0
                 ShipConstruction.ClearBackups();
                 return false;
             }
+        }
+
+        /// <summary>
+        /// Finds an operational LC that can store a recovered vessel of the given type.
+        /// Prefers the active LC, then the first matching one in the active space center.
+        /// </summary>
+        /// <returns>The LC, or null if there is none</returns>
+        private static LaunchComplex FindRecoveryLC(ProjectType listType)
+        {
+            LCSpaceCenter sc = SpaceCenterManagement.Instance.ActiveSC;
+            LaunchComplexType lcType = listType == ProjectType.SPH ? LaunchComplexType.Hangar : LaunchComplexType.Pad;
+
+            LaunchComplex activeLC = sc.ActiveLC;
+            if (activeLC != null && activeLC.IsOperational && activeLC.LCType == lcType)
+                return activeLC;
+
+            return sc.LaunchComplexes.Find(lc => lc.IsOperational && lc.LCType == lcType);
         }
 
         /// <summary>
@@ -1211,6 +1267,13 @@ namespace RP0
             {
                 foreach (PartModule pm in p.Modules)
                 {
+                    // Experiments installed through Kerbalism Configure setups can have entry costs
+                    if (pm is KERBALISM.Configure configure)
+                    {
+                        foreach (KERBALISM.ConfigureSetup setup in ECMHelper.GetSelectedSetups(configure))
+                            ecmPartsList.UnionWith(ECMHelper.GetEcmNamesFromConfigureSetup(configure, setup));
+                    }
+
                     var types = new[] { typeof(string).MakeByRefType(), typeof(bool).MakeByRefType(), typeof(float).MakeByRefType(), typeof(string).MakeByRefType() };
                     var mi = pm.GetType().GetMethod("Validate", BindingFlags.Instance | BindingFlags.Public, null, types, null);
                     if (mi != null)
@@ -1454,7 +1517,7 @@ namespace RP0
             if (v == null)
                 return false;
 
-            if (!PresetManager.Instance.ActivePreset.GeneralSettings.Enabled)
+            if (!SCMSaveSettings.Instance.Enabled)
                 return false;
 
             if (SpaceCenterManagement.Instance.IsSimulatedFlight)
@@ -1561,6 +1624,46 @@ namespace RP0
             else
             {
                 RP0Debug.LogError("Failed to update RA LaunchSite active state");
+            }
+        }
+
+        /// <summary>
+        /// Ground station tech level that RealAntennas derives from the current Tracking Station level.
+        /// </summary>
+        public static int GetRAGroundStationTechLevelFromFacility()
+        {
+            float normLevel = HighLogic.CurrentGame.Mode == Game.Modes.CAREER ? ScenarioUpgradeableFacilities.GetFacilityLevel(SpaceCenterFacility.TrackingStation) : 1f;
+            return Mathf.RoundToInt(RealAntennas.RACommNetScenario.MaxTL * normLevel);
+        }
+
+        /// <summary>
+        /// Rebuilds the RealAntennas ground stations with the given tech level.
+        /// RA recalculates the tech level from the actual facility level on the next scene load.
+        /// </summary>
+        public static void SetRAGroundStationTechLevel(int techLevel)
+        {
+            try
+            {
+                RP0Debug.Log($"Setting RA ground station TL to {techLevel}");
+                RealAntennas.RACommNetScenario.GroundStationTechLevel = techLevel;
+
+                var raHomes = UnityEngine.Object.FindObjectsOfType<RealAntennas.Network.RACommNetHome>();
+                foreach (RealAntennas.Network.RACommNetHome home in raHomes)
+                {
+                    // Disabled stations have no CommNode. They build their antennas once enabled.
+                    if (home.Comm != null)
+                        home.BuildAntennas();
+                }
+
+                // The link precompute caches the antennas, so it needs to pick up the rebuilt ones
+                if (CommNetNetwork.Instance is RealAntennas.Network.RACommNetNetwork raNetwork)
+                    raNetwork.InvalidateCache();
+                else
+                    RP0Debug.LogError("RA CommNetNetwork not found, ground station antennas will not be used for links");
+            }
+            catch (Exception ex)
+            {
+                RP0Debug.LogException(ex);
             }
         }
 

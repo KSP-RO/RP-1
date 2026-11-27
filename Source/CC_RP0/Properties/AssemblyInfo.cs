@@ -36,4 +36,5 @@ using System.Runtime.InteropServices;
 
 [assembly: KSPAssembly("CC_RP0", 1, 0)]
 [assembly: KSPAssemblyDependency("ContractConfigurator", 1, 0)]
+[assembly: KSPAssemblyDependency("Kerbalism", 3, 40)]
 [assembly: KSPAssemblyDependency("RP-0", 1, 0)]

@@ -32,6 +32,8 @@ namespace RP0
         private const int _width1 = 120;
         private const int _width2 = 100;
         private const int _butW = 20;
+        private static ISpaceCenterProject _prevBuildItem;
+        private static string _prevItemText;
 
         public static void SelectList(string list)
         {
@@ -89,6 +91,8 @@ namespace RP0
             _blobText.fontSize = 30;
             _blobText.fixedHeight = 20;
             _blobText.alignment = TextAnchor.MiddleCenter;
+            // A bullet wider than the label would wrap onto a second line.
+            _blobText.wordWrap = false;
 
             _yellowButton = new GUIStyle(GUI.skin.button);
             _yellowButton.normal.textColor = XKCDColors.KSPMellowYellow;
@@ -127,88 +131,99 @@ namespace RP0
             GUILayout.BeginVertical();
             GUILayout.BeginHorizontal();
             GUILayout.Label("Next:", _windowSkin.label);
-            ISpaceCenterProject buildItem = KCTUtilities.GetNextThingToFinish();
-            if (buildItem != null)
+            ISpaceCenterProject nextThing = KCTUtilities.GetNextThingToFinish();
+            string txt = "";
+            double timeLeft = nextThing?.GetTimeLeft() ?? 0d;
+            if (nextThing != null)
             {
-                string txt = buildItem.GetItemName(), locTxt = "VAB";
-                if (buildItem.GetProjectType() == ProjectType.None)
+                txt = nextThing.GetItemName();
+                string locTxt = "VAB";
+                switch (nextThing.GetProjectType())
                 {
-                    locTxt = string.Empty;
-                }
-                else if (buildItem.GetProjectType() == ProjectType.Reconditioning)
-                {
-                    ReconRolloutProject reconRoll = buildItem as ReconRolloutProject;
-                    if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
-                    {
-                        txt = "Reconditioning";
-                        locTxt = reconRoll.launchPadID;
-                    }
-                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
-                    {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                        txt = $"{associated.shipName} Rollout";
-                        locTxt = reconRoll.launchPadID;
-                    }
-                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
-                    {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                        txt = $"{associated.shipName} Rollback";
-                        locTxt = reconRoll.launchPadID;
-                    }
-                    else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Recovery)
-                    {
-                        VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                        txt = $"{associated.shipName} Recovery";
-                        locTxt = associated.LC.Name;
-                    }
-                    else
-                    {
-                        locTxt = "Storage";
-                    }
-                }
-                else if (buildItem.GetProjectType() == ProjectType.AirLaunch)
-                {
-                    ReconRolloutProject ar = buildItem as ReconRolloutProject;
-                    VesselProject associated = ar.AssociatedVP;
-                    if (associated != null)
-                    {
-                        if (ar.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
-                            txt = $"{associated.shipName} Mounting";
-                        else
-                            txt = $"{associated.shipName} Unmounting";
-                    }
-                    else
-                        txt = "Airlaunch Operations";
+                    case ProjectType.None:
+                        locTxt = string.Empty;
+                        break;
+                    case ProjectType.Reconditioning:
+                        if (nextThing is ReconRolloutProject reconRoll)
+                        {
+                            switch (reconRoll.RRType)
+                            {
+                                case ReconRolloutProject.RolloutReconType.Reconditioning:
+                                    locTxt = reconRoll.launchPadID;
+                                    break;
+                                case ReconRolloutProject.RolloutReconType.Rollout:
+                                {
+                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                    txt = $"{associated.shipName} Rollout at {reconRoll.launchPadID}";
+                                    locTxt = "";
+                                    break;
+                                }
+                                case ReconRolloutProject.RolloutReconType.Rollback:
+                                {
+                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                    txt = $"{associated.shipName} Rollback at {reconRoll.launchPadID}";
+                                    locTxt = "";
+                                    break;
+                                }
+                                case ReconRolloutProject.RolloutReconType.Recovery:
+                                {
+                                    VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
+                                    txt = $"{associated.shipName} Recovery";
+                                    locTxt = associated.LC.Name;
+                                    break;
+                                }
+                                default:
+                                    locTxt = "Storage";
+                                    break;
+                            }
+                        }
+                        break;
+                    case ProjectType.AirLaunch:
+                        if (nextThing is ReconRolloutProject ar)
+                        {
+                            VesselProject associated = ar.AssociatedVP;
+                            if (associated != null)
+                            {
+                                if (ar.RRType == ReconRolloutProject.RolloutReconType.AirlaunchMount)
+                                    txt = $"{associated.shipName} Mounting";
+                                else
+                                    txt = $"{associated.shipName} Unmounting";
+                            }
+                            else
+                                txt = "Airlaunch Operations";
 
-                    locTxt = ar.LC.Name;
-
-                }
-                else if (buildItem.GetProjectType() == ProjectType.VAB || buildItem.GetProjectType() == ProjectType.SPH)
-                {
-                    VesselProject vp = buildItem as VesselProject;
-                    locTxt = vp == null || vp.LC == null ? "Vessel" : vp.LC.Name;
-                }
-                else if (buildItem.GetProjectType() == ProjectType.TechNode)
-                {
-                    locTxt = "Tech";
-                }
-                else if (buildItem.GetProjectType() == ProjectType.KSC)
-                {
-                    locTxt = "KSC";
-                }
-                else if (buildItem.GetProjectType() == ProjectType.Crew)
-                {
-                    locTxt = txt;
-                    txt = "Training";
+                            locTxt = ar.LC.Name;
+                        }
+                        break;
+                    case ProjectType.VAB:
+                    case ProjectType.SPH:
+                        if (nextThing is VesselProject vp)
+                        {
+                            locTxt = vp.LC == null ? "Vessel" : vp.LC.Name;
+                        }
+                        break;
+                    case ProjectType.TechNode:
+                        locTxt = "Tech";
+                        break;
+                    case ProjectType.KSC:
+                        locTxt = "KSC";
+                        break;
+                    case ProjectType.Crew:
+                        locTxt = txt;
+                        txt = "Training";
+                        break;
+                    case ProjectType.CrewRnR:
+                        locTxt = string.Empty;
+                        break;
                 }
 
                 GUILayout.Label(txt);
                 GUILayout.Label(locTxt, _windowSkin.label);
-                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(buildItem.GetTimeLeft(), txt+locTxt+buildItem.GetItemName()));
+                GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(timeLeft, txt+locTxt+nextThing.GetItemName()));
 
                 if (!HighLogic.LoadedSceneIsEditor && TimeWarp.CurrentRateIndex == 0)
                 {
-                    string tooltip = buildItem.GetTimeLeft() > 86400d * 365.25 * 5 ? null : $"√ Gain/Loss:\n{(SpaceCenterManagement.Instance.GetBudgetDelta(buildItem.GetTimeLeft())):N0}";
+                    string tooltip = timeLeft > 86400d * 365.25 * 5 ? null : $"√ Gain/Loss:\n{(SpaceCenterManagement.Instance.GetBudgetDelta(timeLeft)):N0}";
                     if (GUILayout.Button(new GUIContent($"Warp to{Environment.NewLine}Complete", tooltip)))
                         KCTWarpController.Create(null); // warp to next item
                 }
@@ -217,61 +232,46 @@ namespace RP0
                     KCTWarpController.Instance?.StopWarp();
                     TimeWarp.SetRate(0, true);  // If the controller doesn't exist, stop warp anyway.
                 }
-
-                if (KCTSettings.Instance.AutoAlarms && buildItem.GetTimeLeft() > 30)    //don't check if less than 30 seconds to completion. Might fix errors people are seeing
-                {
-                    double UT = Planetarium.GetUniversalTime();
-                    if (!KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, buildItem.GetTimeLeft()))
-                    {
-                        // old alarm, need to delete to get the new alarm for the new buildItem
-                        SpaceCenterManagement.Instance.AlarmUT = buildItem.GetTimeLeft() + UT;
-                        txt = "RP-1: ";
-                        if (string.IsNullOrEmpty(SpaceCenterManagement.Instance.AlarmId) || (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId) && !AlarmHelper.DeleteAllAlarmsWithTitle(txt, true)))
-                        {
-                            RP0Debug.Log("No old alarm found, new alarm being created!");
-                        }
-                        else
-                        {
-                            RP0Debug.Log("Old alarm deleted, new alarm being created!");
-                        }
-
-                        if (buildItem.GetProjectType() == ProjectType.Reconditioning && buildItem is ReconRolloutProject reconRoll)
-                        {
-                            if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Reconditioning)
-                            {
-                                txt += $"{reconRoll.launchPadID} Reconditioning";
-                            }
-                            else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollout)
-                            {
-                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                                txt += $"{associated.shipName} rollout at {reconRoll.launchPadID}";
-                            }
-                            else if (reconRoll.RRType == ReconRolloutProject.RolloutReconType.Rollback)
-                            {
-                                VesselProject associated = reconRoll.LC.Warehouse.FirstOrDefault(vp => vp.shipID == reconRoll.AssociatedIdAsGuid);
-                                txt += $"{associated.shipName} rollback at {reconRoll.launchPadID}";
-                            }
-                            else
-                            {
-                                txt += $"{buildItem.GetItemName()} Complete";
-                            }
-                        }
-                        else
-                        {
-                            txt += $"{buildItem.GetItemName()} Complete";
-                        }
-                        KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
-                        if (buildItem.GetProjectType() == ProjectType.Crew) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew; // TODO, get the specific crew member being trained?
-                        else if (buildItem.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
-                        SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm(txt, "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
-                    }
-                }
             }
             else
             {
                 GUILayout.Label("No Active Projects");
             }
             GUILayout.EndHorizontal();
+            double UT = Planetarium.GetUniversalTime();
+            bool staleAlarm = _prevBuildItem != nextThing || _prevItemText != txt || (timeLeft > 100 && !KCTUtilities.IsApproximatelyEqual(SpaceCenterManagement.Instance.AlarmUT - UT, timeLeft));
+            // if the timeLeft is less than 100, the difference might be less than a second due to frame times, so we don't care about it
+            if (KCTSettings.Instance.AutoAlarms && _prevBuildItem != null && (staleAlarm || !AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId)))
+            {
+                SpaceCenterManagement.Instance.AlarmUT = timeLeft + UT;
+                if (nextThing == null)
+                {
+                    if (string.IsNullOrEmpty(SpaceCenterManagement.Instance.AlarmId) || (!AlarmHelper.DeleteAlarmWithID(SpaceCenterManagement.Instance.AlarmId)))
+                    {
+                        RP0Debug.Log("No old alarm found");
+                    }
+                    else
+                    {
+                        RP0Debug.Log("Old alarm deleted");
+                    }
+                    SpaceCenterManagement.Instance.AlarmId = "";
+                }
+                else if (!AlarmHelper.AlarmExistsID(SpaceCenterManagement.Instance.AlarmId))
+                {
+                    RP0Debug.Log($"Creating new alarm");
+                    KACWrapper.KACAPI.AlarmTypeEnum alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Raw;
+                    if (nextThing.GetProjectType() == ProjectType.Crew || nextThing.GetProjectType() == ProjectType.CrewRnR) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.Crew; // TODO, get the specific crew member(s) being trained?
+                    else if (nextThing.GetProjectType() == ProjectType.TechNode) alarmType = KACWrapper.KACAPI.AlarmTypeEnum.ScienceLab;
+                    SpaceCenterManagement.Instance.AlarmId = AlarmHelper.CreateAlarm($"RP-1: {txt}", "", SpaceCenterManagement.Instance.AlarmUT, alarmType);
+                }
+                else
+                {
+                    RP0Debug.Log($"Changing existing alarm");
+                    AlarmHelper.ChangeAlarm(SpaceCenterManagement.Instance.AlarmId, $"RP-1: {txt}", "", SpaceCenterManagement.Instance.AlarmUT);
+                }
+            }
+            _prevBuildItem = nextThing;
+            _prevItemText = txt;
 
             GUILayout.BeginHorizontal();
 
@@ -387,7 +387,6 @@ namespace RP0
             if (ksc.Constructions.Count == 0)
                 GUILayout.Label("No constructions under way at this space center.");
 
-            int cancelID = -1;
             double totalCost = 0d;
             for (int i = 0; i < ksc.Constructions.Count; i++)
             {
@@ -398,9 +397,8 @@ namespace RP0
 
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
-                    cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
-                    options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(cancelID); });
+                    options[0] = new DialogGUIButton("Yes", () => { CancelConstruction(constr); });
                     options[1] = new DialogGUIButton("No", () => { });
                     MultiOptionDialog diag = new MultiOptionDialog("cancelConstructionPopup", $"Are you sure you want to stop building {constr.GetItemName()}?\n\nYou have already spent <sprite=\"CurrencySpriteAsset\" name=\"Funds\" tint=1> {constr.spentRushCost:N0} funds on this construction ({(constr.spentCost / constr.cost):P0} of the total).", "Cancel Construction?", null, 300, options);
                     PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), diag, false, HighLogic.UISkin).HideGUIsWhilePopup();
@@ -421,12 +419,19 @@ namespace RP0
                     GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(double.MaxValue, identifier), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 }
 
-                if (!HighLogic.LoadedSceneIsEditor && buildRate > 0d)
+                if (!HighLogic.LoadedSceneIsEditor)
                 {
-                    if (GUILayout.Button(new GUIContent("Warp", $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(constr.GetTimeLeft()):N0}"), GUILayout.Width(45)))
+                    // Always draw the button, disabled when there is no progress, so that
+                    // dragging the work rate slider to 0 does not change the control IDs
+                    // of the sliders below it.
+                    bool canWarp = buildRate > 0d;
+                    GUI.enabled = canWarp;
+                    string warpTooltip = canWarp ? $"√ Gain/Loss:\n{SpaceCenterManagement.Instance.GetBudgetDelta(constr.GetTimeLeft()):N0}" : null;
+                    if (GUILayout.Button(new GUIContent("Warp", warpTooltip), GUILayout.Width(45)) && canWarp)
                     {
                         KCTWarpController.Create(constr);
                     }
+                    GUI.enabled = true;
                 }
                 else
                 {
@@ -457,7 +462,7 @@ namespace RP0
                 double br = c.GetBuildRate();
                 if (br > 0d)
                 {
-                    costday += br * 86400d / c.BP * -CurrencyUtils.Funds(c.FacilityType == SpaceCenterFacility.LaunchPad ? TransactionReasonsRP0.StructureConstructionLC : TransactionReasonsRP0.StructureConstruction, -c.cost * c.RushMultiplier);
+                    costday += br * 86400d / c.BP * -CurrencyUtils.Funds(c.TransactionReason, -c.cost * c.RushMultiplier);
                 }
             }
             GUILayout.Label($"√{costday:N0}", GetLabelRightAlignStyle());
@@ -485,7 +490,6 @@ namespace RP0
             if (techList.Count == 0)
                 GUILayout.Label("No tech nodes are being researched!\nBegin research by unlocking tech in the R&D building.");
             bool forceRecheck = false;
-            int cancelID = -1;
             for (int i = 0; i < techList.Count; i++)
             {
                 ResearchProject t = techList[i];
@@ -494,9 +498,8 @@ namespace RP0
                 if (GUILayout.Button("X", GUILayout.Width(_butW)))
                 {
                     forceRecheck = true;
-                    cancelID = i;
                     DialogGUIBase[] options = new DialogGUIBase[2];
-                    options[0] = new DialogGUIButton("Yes", () => { CancelTechNode(cancelID); });
+                    options[0] = new DialogGUIButton("Yes", () => { CancelTechNode(t); });
                     options[1] = new DialogGUIButton("No", () => { });
                     MultiOptionDialog diag = new MultiOptionDialog("cancelNodePopup", $"Are you sure you want to stop researching {t.techName}?\n\nThis will also cancel any dependent techs."
                         + (Crew.CrewHandler.Instance?.GetTrainingCoursesForTech(t.techID) ?? string.Empty), "Cancel Node?", null, 300, options);
@@ -681,6 +684,12 @@ namespace RP0
             if (SpaceCenterManagement.Instance.staffTarget.IsValid)
                 _allItems.Add(SpaceCenterManagement.Instance.staffTarget);
 
+            // Astronauts on R&R aren't queued projects, but we surface them here so they slot in
+            // by return-to-duty time. _timeBeforeItem is left at 0 because R&R runs on wall-clock,
+            // independent of the build queue, so its finish time is purely GetTimeLeftEst.
+            // The list is cached in CrewHandler and only rebuilt when nauts change R&R state.
+            _allItems.AddRange(Crew.CrewHandler.Instance.RnRProjects);
+
             // Precalc times and then sort
             foreach (var b in _allItems)
                 _estTimeForItem[b] = b.GetTimeLeftEst(_timeBeforeItem.ValueOrDefault(b));
@@ -767,6 +776,8 @@ namespace RP0
                 }
                 else if (t is VesselProject b && !b.LC.IsOperational)
                     GUILayout.Label("(site reconstructing)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
+                else if (t is Crew.TrainingCourse tc && !tc.HasTemplate)
+                    GUILayout.Label("(part not purchased)", GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 else
                     GUILayout.Label(RP0DTUtils.GetColonFormattedTimeWithTooltip(_estTimeForItem[t], "combined" + i, timeBeforeItem, true), GetLabelRightAlignStyle(), GUILayout.Width(_width1));
                 GUILayout.EndHorizontal();
@@ -866,6 +877,9 @@ namespace RP0
 
                 case ProjectType.VesselRepair:
                     return _repairTexture;
+
+                case ProjectType.CrewRnR:
+                    return _emptyTexture;   // TODO: add a custom texture
             }
 
             return _emptyTexture;
@@ -956,11 +970,14 @@ namespace RP0
             GUILayout.BeginHorizontal();
             if (GUILayout.Button(new GUIContent("New LC", "Design and build a new Launch Complex"), GUILayout.ExpandWidth(false)))
             {
+                if (HighLogic.LoadedSceneIsEditor)
+                    SpaceCenterManagement.Instance.EditorRecalculation();
                 GUIStates.ShowNewLC = true;
                 GUIStates.ShowModifyLC = false;
                 GUIStates.ShowLCManagement = false;
                 _centralWindowPosition.width = 300;
                 _centralWindowPosition.height = 1;
+                _newLCData.Name = $"Launch Complex {SpaceCenterManagement.Instance.ActiveSC.LaunchComplexes.Count}";
             }
             LCSpaceCenter ksc = SpaceCenterManagement.Instance.ActiveSC;
             if (ksc.LaunchComplexes.Count > 1 &&
@@ -1432,40 +1449,40 @@ namespace RP0
             if (!b.MeetsFacilityRequirements(facilityChecks))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                return;
             }
-            else
+            if (vesselLC.GetReconditioning(launchSite) is ReconRolloutProject recon)
             {
-                if (vesselLC.GetReconditioning(launchSite) is ReconRolloutProject recon)
-                {
-                    ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {RP0DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
-                    ScreenMessages.PostScreenMessage(message);
-                }
-                else
-                {
-                    SpaceCenterManagement.Instance.LaunchedVessel = b;
-                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
-                    {
-                        GUIStates.ShowBLPlus = false;
-                        if (!b.IsCrewable())
-                            b.Launch();
-                        else
-                        {
-                            GUIStates.ShowBuildList = false;
+                ScreenMessage message = new ScreenMessage($"Cannot launch while launch pad is being reconditioned. It will be finished in {RP0DTUtils.GetFormattedTime(recon.GetTimeLeft(), 0, false)}", 4f, ScreenMessageStyle.UPPER_CENTER);
+                ScreenMessages.PostScreenMessage(message);
+                return;
+            }
+            GameplayTips.Instance.ShowNoActiveContractWarning(pass =>
+            {
+                if (!pass) return;
 
-                            SpaceCenterManagement.ToolbarControl?.SetFalse();
-
-                            _centralWindowPosition.height = 1;
-                            AssignInitialCrew();
-                            GUIStates.ShowShipRoster = true;
-                        }
-                    }
+                SpaceCenterManagement.Instance.LaunchedVessel = b;
+                if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, pad.launchSiteName).Count == 0)
+                {
+                    GUIStates.ShowBLPlus = false;
+                    if (!b.IsCrewable())
+                        b.Launch();
                     else
                     {
                         GUIStates.ShowBuildList = false;
-                        GUIStates.ShowClearLaunch = true;
+
+                        SpaceCenterManagement.ToolbarControl?.SetFalse();
+
+                        _centralWindowPosition.height = 1;
+                        AssignInitialCrew();
+                        GUIStates.ShowShipRoster = true;
                     }
                 }
-            }
+                else
+                {
+                    ShowClearLaunchWindow(pad.launchSiteName);
+                }
+            });
         }
 
         private static void ProcessPlaneLaunch(VesselProject b, ReconRolloutProject airlaunchPrep)
@@ -1474,47 +1491,47 @@ namespace RP0
             if (!b.MeetsFacilityRequirements(facilityChecks))
             {
                 PopupDialog.SpawnPopupDialog(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), "cannotLaunchEditorChecksPopup", "Cannot Launch!", "Warning! This vessel did not pass the editor checks! Until you upgrade this launch complex (the Hangar) it cannot be launched. Listed below are the failed checks:\n" + string.Join("\n", facilityChecks.Select(s => $"• {s}").ToArray()), "Acknowledged", false, HighLogic.UISkin).HideGUIsWhilePopup();
+                return;
             }
-            else
+            bool operational = KCTUtilities.IsLaunchFacilityIntact(ProjectType.SPH);
+            if (!operational)
             {
-                bool operational = KCTUtilities.IsLaunchFacilityIntact(ProjectType.SPH);
-                if (!operational)
-                {
-                    ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
-                }
-                else
-                {
-                    GUIStates.ShowBLPlus = false;
-                    SpaceCenterManagement.Instance.LaunchedVessel = b;
+                ScreenMessages.PostScreenMessage("You must repair the runway prior to launch!", 4f, ScreenMessageStyle.UPPER_CENTER);
+                return;
+            }
+            GameplayTips.Instance.ShowNoActiveContractWarning(pass =>
+            {
+                if (!pass) return;
 
-                    if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
+                GUIStates.ShowBLPlus = false;
+                SpaceCenterManagement.Instance.LaunchedVessel = b;
+
+                if (ShipConstruction.FindVesselsLandedAt(HighLogic.CurrentGame.flightState, "Runway").Count == 0)
+                {
+                    if (airlaunchPrep != null)
                     {
-                        if (airlaunchPrep != null)
-                        {
-                            GUIStates.ShowBuildList = false;
-                            GUIStates.ShowAirlaunch = true;
-                        }
-                        else if (!b.IsCrewable())
-                        {
-                            b.Launch();
-                        }
-                        else
-                        {
-                            GUIStates.ShowBuildList = false;
-                            SpaceCenterManagement.ToolbarControl?.SetFalse();
-                            _centralWindowPosition.height = 1;
-                            AssignInitialCrew();
-                            GUIStates.ShowShipRoster = true;
-                        }
+                        GUIStates.ShowBuildList = false;
+                        GUIStates.ShowAirlaunch = true;
+                    }
+                    else if (!b.IsCrewable())
+                    {
+                        b.Launch();
                     }
                     else
                     {
                         GUIStates.ShowBuildList = false;
-                        GUIStates.ShowClearLaunch = true;
-                        GUIStates.ShowAirlaunch = airlaunchPrep != null;
+                        SpaceCenterManagement.ToolbarControl?.SetFalse();
+                        _centralWindowPosition.height = 1;
+                        AssignInitialCrew();
+                        GUIStates.ShowShipRoster = true;
                     }
                 }
-            }
+                else
+                {
+                    ShowClearLaunchWindow("Runway");
+                    GUIStates.ShowAirlaunch = airlaunchPrep != null;
+                }
+            });
         }
 
         private static void RenderMountUnmountAirlaunch(VesselProject b, ReconRolloutProject airlaunchPrep, int listIdx)
@@ -1702,7 +1719,7 @@ namespace RP0
                             }
                         }
 
-                        if (lpCount > 1 && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle this pad"), GUILayout.ExpandWidth(false)))
+                        if (lpCount > 1 && pad.isOperational && GUILayout.Button(new GUIContent("Dismantle", "Permanently dismantle this pad"), GUILayout.ExpandWidth(false)))
                         {
                             ksc.SwitchLaunchComplex(i);
                             lc.SwitchLaunchPad(j);
@@ -1776,6 +1793,8 @@ namespace RP0
 
                 if (initialCancel) // do this only once
                 {
+                    // Research rate depends on the queue position, so refresh it for the techs that moved up.
+                    SpaceCenterManagement.Instance.UpdateTechTimes();
                     SpaceCenterManagement.Instance.TechListUpdated();
                     SpaceCenterManagement.TechListIgnoreUpdates = false;
                     KCTUtilities.AddResearchedPartsToExperimental();
@@ -1783,11 +1802,17 @@ namespace RP0
             }
         }
 
-        public static void CancelConstruction(int index)
+        public static void CancelTechNode(ResearchProject project)
         {
-            if (SpaceCenterManagement.Instance.ActiveSC.Constructions.Count > index)
+            int index = SpaceCenterManagement.Instance.TechList.FindIndex(t => t.techID == project.techID);
+            if (index >= 0)
+                CancelTechNode(index);
+        }
+
+        public static void CancelConstruction(ConstructionProject item)
+        {
+            if (SpaceCenterManagement.Instance.KSCs.Exists(ksc => ksc.Constructions.Contains(item)))
             {
-                ConstructionProject item = SpaceCenterManagement.Instance.ActiveSC.Constructions[index];
                 RP0Debug.Log($"Cancelling construction: {item.GetItemName()}");
                 item.Cancel();
             }
@@ -1814,10 +1839,11 @@ namespace RP0
             ReconRolloutProject rollback = rollout == null ? b.LC.GetReconRollout(ReconRolloutProject.RolloutReconType.Rollback, launchSite) : null;
             bool isRollingOut = rollout != null && rollout.associatedID == vpID;
             bool isRollingBack = rollback != null && rollback.associatedID == vpID;
+            bool hasReconRollout = b.LC.Recon_Rollout.Exists(a => a.associatedID == vpID);
 
             // Only allow selecting launch site for planes.
             // Rockets use whatever location is set for their pad.
-            if (b.Type == ProjectType.SPH && b.LC.Recon_Rollout.Find(a => a.associatedID == vpID) == null && GUILayout.Button("Select LaunchSite"))
+            if (b.Type == ProjectType.SPH && !hasReconRollout && GUILayout.Button("Select LaunchSite"))
             {
                 _launchSites = KCTUtilities.GetLaunchSites(b.Type == ProjectType.VAB);
                 if (_launchSites.Any())
@@ -1832,7 +1858,7 @@ namespace RP0
                 }
             }
 
-            if (!isRollingOut && !isRollingBack && GUILayout.Button("Scrap"))
+            if (!hasReconRollout && GUILayout.Button("Scrap"))
             {
                 GUIStates.ShowBLPlus = false;
                 DialogGUIBase[] options = new DialogGUIBase[2];
@@ -1845,7 +1871,7 @@ namespace RP0
                 ResetBLWindow(false);
             }
 
-            if (!isRollingOut && !isRollingBack && GUILayout.Button("Edit"))
+            if (!hasReconRollout && GUILayout.Button("Edit"))
             {
                 GUIStates.ShowBLPlus = false;
                 EditorWindowPosition.height = 1;

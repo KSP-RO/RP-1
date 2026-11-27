@@ -16,6 +16,9 @@ namespace RP0
 
         public double TotalCredit => _totalCredit;
 
+        /// <summary>
+        /// The amount of credit earned for a unit of time, assuming the tech does not change during that time.
+        /// </summary>
         public double CreditForTime(double UT)
         {
             if (SpaceCenterManagement.Instance.TechList.Count == 0)
@@ -45,6 +48,29 @@ namespace RP0
             }
 
             return sum * mult;
+        }
+
+        /// <summary>
+        /// The amount of credit earned for a unit of time, assuming the tech does change during that time.
+        /// </summary>
+        public double TotalCreditForTime(double utDelta)
+        {
+            double totalCredit = 0d;
+            double duration = 0d;
+            for (int i = 0; i < SpaceCenterManagement.Instance.TechList.Count && duration < utDelta; ++i)
+            {
+                var tech = SpaceCenterManagement.Instance.TechList[i];
+                double buildTime = tech.BuildRate > 0d ? tech.TimeLeft : tech.GetTimeLeftEst(duration);
+                double timeLeft = utDelta - duration;
+                if (buildTime > timeLeft)
+                    buildTime = timeLeft;
+                if (buildTime <= 0d) // failsafe, but we might somehow have a 0 build time from a completed tech
+                    continue;
+                totalCredit += CreditForTime(buildTime);
+                duration += buildTime;
+            }
+
+            return totalCredit;
         }
 
         /// <summary>
@@ -172,10 +198,25 @@ namespace RP0
 
         public void ProcessCredit(double cost, TransactionReasonsRP0 reason)
         {
+            if (cost == 0d)
+                return;
+
             var cmq = CurrencyModifierQueryRP0.RunQuery(reason, -cost, 0d, 0d);
             double postCMQCost = -cmq.GetTotal(CurrencyRP0.Funds, true);
+            if (double.IsNaN(postCMQCost))
+            {
+                RP0Debug.LogError("CMQ for a credit purchase returned NaN, ignoring and going back to regular cost.");
+                postCMQCost = cost;
+            }
+            else if (postCMQCost == 0d)
+            {
+                // Modifiers made the purchase free, nothing to spend
+                return;
+            }
+
             double remainingCost = SpendCredit(postCMQCost, reason);
-            Funding.Instance.AddFunds(-(float)(remainingCost * (cost / postCMQCost)), reason.Stock());
+            if (remainingCost > 0d)
+                Funding.Instance.AddFunds(-(float)(remainingCost * (cost / postCMQCost)), reason.Stock());
         }
 
         /// <summary>
@@ -291,7 +332,8 @@ namespace RP0
 
         public static UnityEngine.UI.Button Button = null;
         public static string TooltipText = null;
-        private static System.Reflection.MethodInfo IsHighlightedMethod = typeof(UnityEngine.UI.Selectable).GetMethod("IsHighlighted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+        private static System.Reflection.MethodInfo IsHighlightedMethod = typeof(UnityEngine.UI.Selectable)
+            .GetMethod("IsHighlighted", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
         public static int WindowID = "PartListTooltip".GetHashCode();
 
         public void Awake()

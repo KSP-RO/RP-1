@@ -154,7 +154,7 @@ namespace RP0.Harmony
             Vector3 maxSize;
             bool lcHumanRated;
             bool resourcesOK = true;
-            if (PresetManager.Instance.ActivePreset.GeneralSettings.Enabled && PresetManager.Instance.ActivePreset.GeneralSettings.BuildTimes)
+            if (SCMSaveSettings.Instance.Enabled && SCMSaveSettings.Instance.BuildTimes)
             {
                 totalMass = SpaceCenterManagement.Instance.EditorVessel.mass;
                 craftSize = SpaceCenterManagement.Instance.EditorVessel.ShipSize;

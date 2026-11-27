@@ -114,22 +114,22 @@ namespace RP0
             return GetRolloutCost(vessel) * 0.2;
         }
 
-        public static double GetAirlaunchCost(VesselProject vessel)
+        public static double GetAirlaunchCost(VesselProject vessel, AirlaunchTechLevel carrier = null)
         {
             if (!SCMSaveSettings.Instance.Enabled)
                 return 0;
 
-            double result = vessel.effectiveCost * 0.25d;
-            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetAirlaunchBP(vessel) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
+            double result = vessel.effectiveCost * 0.25d * (carrier?.CostMultiplier ?? 1d);
+            result = result * _RolloutCostBasePortion + Math.Max(0d, result * _RolloutCostSubsidyPortion - GetAirlaunchBP(vessel, carrier) * Database.SettingsSC.salaryEngineers / (365.25d * 86400d * _EngineerBPRate));
             return result * 0.5d;
         }
 
-        public static double GetAirlaunchBP(VesselProject vessel)
+        public static double GetAirlaunchBP(VesselProject vessel, AirlaunchTechLevel carrier = null)
         {
             if (!SCMSaveSettings.Instance.Enabled)
                 return 0;
 
-            return (vessel.effectiveCost - (vessel.cost * 0.5d)) * 12d;
+            return (vessel.effectiveCost - (vessel.cost * 0.5d)) * 12d * (carrier?.TimeMultiplier ?? 1d);
         }
 
         public static double GetEngineRefurbBPMultiplier(double runTime, double ratedBurnTime)

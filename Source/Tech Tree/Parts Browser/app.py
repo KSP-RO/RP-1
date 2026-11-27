@@ -100,6 +100,7 @@ def create_app(test_config=None):
                     part['module_tags'] = []
             text_file = open("data/" + make_safe_filename(mod)  + ".json", "w", newline='\n')
             text_file.write(json.dumps(parts_for_mod, indent=4, separators=(',', ': ')))
+            text_file.write('\n')
             text_file.close()
         return "true"
     @app.route('/api/generate_tree_engine_configs')

@@ -43,6 +43,7 @@ def generate_parts_tree(parts, module_tags_with_prefixes):
     text_file = open(output_dir + "TREE-Parts.cfg", "w", newline='\n')
     text_file.write(tree_parts_header)
     text_file.write(part_configs)
+    text_file.write("\n")
     text_file.close()
         
 def generate_part_config(part, module_tags_with_prefixes):

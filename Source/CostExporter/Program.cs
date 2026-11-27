@@ -76,10 +76,12 @@ namespace CostExporter
 
         private static string FixJSON(string json)
         {
-            var ret = json.Replace("\r\n    \"rp0\": false,", string.Empty);
-            ret = ret.Replace("\r\n  ", "\r\nxxxx").Replace("\r\nxxxx  ", "\r\nxxxxxxxx").Replace("\r\nxxxxxxxx  ", "\r\n            ");
-            ret = ret.Replace("\r\nxxxxxxxx", "\r\n        ").Replace("\r\nxxxx", "\r\n    ");
-            return ret;
+            // The serializer uses Environment.NewLine; always emit LF with a trailing newline to match the Parts Browser output on every OS.
+            var ret = json.Replace("\r\n", "\n");
+            ret = ret.Replace("\n    \"rp0\": false,", string.Empty);
+            ret = ret.Replace("\n  ", "\nxxxx").Replace("\nxxxx  ", "\nxxxxxxxx").Replace("\nxxxxxxxx  ", "\n            ");
+            ret = ret.Replace("\nxxxxxxxx", "\n        ").Replace("\nxxxx", "\n    ");
+            return ret + "\n";
         }
 
         static void Main(string[] args)

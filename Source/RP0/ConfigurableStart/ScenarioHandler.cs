@@ -82,6 +82,15 @@ namespace RP0.ConfigurableStart
         internal void OnDestroy()
         {
             GameEvents.onGameNewStart.Remove(OnGameNewStart);
+
+            // Unity does not run finally blocks of coroutines that are stopped by Destroy.
+            // Their Ignore scopes would otherwise stay open for the rest of the process.
+            if (_runningContractCoroutines > 0)
+            {
+                RP0Debug.LogWarning($"ScenarioHandler destroyed with {_runningContractCoroutines} contract coroutines still running");
+                CareerEventScope.Reset();
+            }
+
             if (Instance == this)
                 Instance = null;
         }
@@ -736,68 +745,72 @@ namespace RP0.ConfigurableStart
         {
             var ignoreCareerEventsScope = new CareerEventScope(CareerEventType.Ignore);
             _runningContractCoroutines++;
-            
-            // cache contract nodes
-            if (_contractNodes.Count == 0)
+            try
             {
-                var cfgNodes = GameDatabase.Instance.GetConfigNodes("CONTRACT_TYPE");
-
-                foreach (var node in cfgNodes)
+                // cache contract nodes
+                if (_contractNodes.Count == 0)
                 {
-                    if (node.GetValue("name") is string subT)
-                        _contractNodes[subT] = node;
-                }
-            }
+                    var cfgNodes = GameDatabase.Instance.GetConfigNodes("CONTRACT_TYPE");
 
-            // load behaviours so that they're correctly fired
-            if (_contractNodes.ContainsKey(c.subType))
-            {
-                ConfigNode cfgNode = _contractNodes[c.subType];
-
-                if (cfgNode.GetNodes("BEHAVIOUR") is var bNodes)
-                {
-                    var behaviourFactories = new List<BehaviourFactory>();
-
-                    foreach (var bNode in bNodes)
+                    foreach (var node in cfgNodes)
                     {
-                        BehaviourFactory.GenerateBehaviourFactory(bNode, c.contractType, out var behaviourFactory);
-                        if (behaviourFactory != null)
-                        {
-                            behaviourFactories.Add(behaviourFactory);
-                        }
+                        if (node.GetValue("name") is string subT)
+                            _contractNodes[subT] = node;
                     }
-
-                    if (BehaviourFactory.GenerateBehaviours(c, behaviourFactories))
-                        RP0Debug.Log($"Generated Behaviours for contract {c.subType}");
                 }
-            }
 
-            // now, complete the contract step by step
-            if (c.Offer())
-                yield return new WaitForFixedUpdate();
-
-            if (c.Accept())
-            {
-                yield return new WaitForFixedUpdate();
-            }
-
-            if (complete)
-            {
-                if (c.Complete())
+                // load behaviours so that they're correctly fired
+                if (_contractNodes.ContainsKey(c.subType))
                 {
-                    //yield return new WaitForFixedUpdate();
-                    Contracts.ContractSystem.Instance.ContractsFinished.Add(c);
+                    ConfigNode cfgNode = _contractNodes[c.subType];
+
+                    if (cfgNode.GetNodes("BEHAVIOUR") is var bNodes)
+                    {
+                        var behaviourFactories = new List<BehaviourFactory>();
+
+                        foreach (var bNode in bNodes)
+                        {
+                            BehaviourFactory.GenerateBehaviourFactory(bNode, c.contractType, out var behaviourFactory);
+                            if (behaviourFactory != null)
+                            {
+                                behaviourFactories.Add(behaviourFactory);
+                            }
+                        }
+
+                        if (BehaviourFactory.GenerateBehaviours(c, behaviourFactories))
+                            RP0Debug.Log($"Generated Behaviours for contract {c.subType}");
+                    }
+                }
+
+                // now, complete the contract step by step
+                if (c.Offer())
+                    yield return new WaitForFixedUpdate();
+
+                if (c.Accept())
+                {
+                    yield return new WaitForFixedUpdate();
+                }
+
+                if (complete)
+                {
+                    if (c.Complete())
+                    {
+                        //yield return new WaitForFixedUpdate();
+                        Contracts.ContractSystem.Instance.ContractsFinished.Add(c);
+                    }
+                    else
+                        RP0Debug.LogWarning($"Couldn't complete contract {c.subType}");
                 }
                 else
-                    RP0Debug.LogWarning($"Couldn't complete contract {c.subType}");
+                {
+                    Contracts.ContractSystem.Instance.Contracts.Add(c);
+                }
             }
-            else
+            finally
             {
-                Contracts.ContractSystem.Instance.Contracts.Add(c);
+                _runningContractCoroutines--;
+                ignoreCareerEventsScope.Dispose();
             }
-
-            _runningContractCoroutines--;
-            ignoreCareerEventsScope.Dispose();
         }
 
         private void ShowScenarioFailedToApplyMessage()

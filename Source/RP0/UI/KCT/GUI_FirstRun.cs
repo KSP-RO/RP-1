@@ -72,6 +72,7 @@ namespace RP0
                 if (GUILayout.Button($"Go to Staffing", HighLogic.Skin.button))
                 {
                     GUIStates.ShowPersonnelWindow = true;
+                    _LCIndex = SpaceCenterManagement.Instance.ActiveSC.LCIndex;
                 }
                 GUILayout.Label("");
             }

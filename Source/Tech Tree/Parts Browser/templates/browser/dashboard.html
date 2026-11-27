@@ -32,10 +32,14 @@
                 set: function(grid, o){
                     key = o['key'];
                     row = o['data'];
+                    if (key == 'module_tags') {
+                        // Editing the cell directly yields a comma-separated string, convert it back into an array.
+                        row['module_tags'] = normalizeModuleTags(row['module_tags'], true);
+                        grid.update();
+                    }
                     if (!(row['id'] in originalData)) {
                         originalData[row['id']] = JSON.clone(row);
-                        originalData[row['id']][key] = o['oldValue'];
-                        originalData[row['id']]['module_tags'] = row['module_tags'].slice();
+                        originalData[row['id']][key] = key == 'module_tags' ? normalizeModuleTags(o['oldValue'], false) : o['oldValue'];
                     }
                     changeSet = getChanges(originalData[row['id']], row);
                     
@@ -534,8 +538,48 @@
     }
     
     function compareArrays(arr1, arr2) {
-        return $(arr1).not(arr2).length == 0 && $(arr2).not(arr1).length == 0
+        arr1 = normalizeModuleTags(arr1, false);
+        arr2 = normalizeModuleTags(arr2, false);
+        return arr1.every(function(x) { return arr2.indexOf(x) >= 0; }) &&
+               arr2.every(function(x) { return arr1.indexOf(x) >= 0; });
     };
+
+    var validModuleTags = null;
+    $.get('/api/module_tags', function(response) {
+        validModuleTags = $.map(response['data'], function(x) { return x['tag']; });
+    });
+
+    // Converts the module tags value into a deduplicated array of tags.
+    // Value can be either an array or a comma-separated string (when edited directly inside the grid).
+    function normalizeModuleTags(value, warnAboutUnknown) {
+        var tags;
+        if (Array.isArray(value)) {
+            tags = value;
+        } else if (value === undefined || value === null) {
+            tags = [];
+        } else {
+            tags = String(value).split(',');
+        }
+
+        var result = [];
+        var unknown = [];
+        $.each(tags, function(i, tag) {
+            tag = String(tag).trim();
+            if (tag.length == 0 || result.indexOf(tag) >= 0) {
+                return;
+            }
+            if (warnAboutUnknown && validModuleTags && validModuleTags.indexOf(tag) < 0) {
+                unknown.push(tag);
+                return;
+            }
+            result.push(tag);
+        });
+
+        if (unknown.length > 0) {
+            alert("Ignoring unknown module tag(s): " + unknown.join(", "));
+        }
+        return result;
+    }
     
     var queuedChanges = {};
     

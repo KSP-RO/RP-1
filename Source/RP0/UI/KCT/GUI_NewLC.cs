@@ -16,6 +16,7 @@ namespace RP0
         private static string _lengthLimit = "2";
         private static LCData _newLCData = new LCData();
         private static int _resourceCount = 0;
+        private static LaunchComplexType _resourceKeysLCType;
         private static List<string> _allResourceKeys = new List<string>();
         private static List<string> _allResourceValues = new List<string>();
         private static Vector2 _resourceListScroll = new Vector2();
@@ -41,7 +42,7 @@ namespace RP0
 
         private static void SetResources()
         {
-            if (_resourceCount == 0) GetAllResourceKeys();
+            RefreshResourceKeys();
             for (int i = 0; i < _resourceCount; i++)
             {
                 if (_newLCData.resourcesHandled.TryGetValue(_allResourceKeys[i], out double resourceValue))
@@ -184,18 +185,32 @@ namespace RP0
             SetResources();
         }
 
-        private static void GetAllResourceKeys()
+        /// <summary>
+        /// Rebuilds the resource list if it is empty or was built for another LC type.
+        /// The ignored resources differ between hangars and pads.
+        /// </summary>
+        /// <returns>True if the list was rebuilt. The values are then blank and need to be filled again.</returns>
+        private static bool RefreshResourceKeys()
         {
+            if (_resourceCount > 0 && _resourceKeysLCType == _newLCData.lcType)
+                return false;
+
+            _allResourceKeys.Clear();
+            _allResourceValues.Clear();
+            _resourceCount = 0;
+            _resourceKeysLCType = _newLCData.lcType;
+
+            LCResourceType ignoredResType = _newLCData.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore;
             foreach (var kvp in Database.ResourceInfo.LCResourceTypes)
             {
-                if((kvp.Value & LCResourceType.Fuel) != 0 
-                    && (kvp.Value & (_newLCData.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore)) == 0)
+                if ((kvp.Value & LCResourceType.Fuel) != 0 && (kvp.Value & ignoredResType) == 0)
                 {
                     _allResourceKeys.Add(kvp.Key);
                     _allResourceValues.Add(string.Empty);
                     ++_resourceCount;
                 }
             }
+            return true;
         }
 
         public static void DrawNewLCWindow(int windowID)
@@ -205,6 +220,8 @@ namespace RP0
 
             bool isModify = GUIStates.ShowModifyLC;
             bool isHangar = isModify && activeLC.LCType == LaunchComplexType.Hangar;
+            if (!isModify)
+                _newLCData.lcType = LaunchComplexType.Pad;
 
             GUILayout.BeginVertical();
             if (isModify)
@@ -678,7 +695,9 @@ namespace RP0
             //LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             //bool isModify = GUIStates.ShowModifyLC;
 
-            if (_resourceCount == 0) GetAllResourceKeys();
+            // Only on Layout, so that the control count stays the same until Repaint.
+            if (Event.current.type == EventType.Layout && RefreshResourceKeys())
+                SetResources();
 
             Rect parentPos = _centralWindowPosition;
             _lcResourcesPosition.width = 250;

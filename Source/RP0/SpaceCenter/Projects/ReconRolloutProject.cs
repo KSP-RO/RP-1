@@ -202,8 +202,8 @@ namespace RP0
         {
             if (RRType == RolloutReconType.Reconditioning)
             {
-                bool isHRCapped = IsCapped && !isHumanRated && LC.IsHumanRated;
-                return Formula.GetReconditioningBuildRate(LC, isHRCapped);
+                bool isHRCapped = !isHumanRated && LC.IsHumanRated;
+                return Formula.GetReconditioningBuildRate(LC, isHRCapped) * CurrencyUtils.Rate(transactionReasonTime);
             }
             else
             {

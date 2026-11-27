@@ -84,9 +84,6 @@ namespace RP0
         {
             get
             {
-                if (LCType == LaunchComplexType.Hangar)
-                    return null;
-
                 if (_efficiencySource == null)
                     _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, true);
 
@@ -97,10 +94,14 @@ namespace RP0
         {
             get
             {
+                double efficiency = EfficiencySource.Efficiency;
                 if (LCType == LaunchComplexType.Hangar)
-                    return LCEfficiency.MaxEfficiency;
+                {
+                    double rocketPortion = Stats.GetHangarRocketPortion();
+                    efficiency = UtilMath.Lerp(LCEfficiency.MaxEfficiency, efficiency, rocketPortion);
+                }
 
-                return EfficiencySource.Efficiency;
+                return efficiency;
             }
         }
 
@@ -190,8 +191,7 @@ namespace RP0
 
             // will create a new one if needed (it probably will be needed)
             // If it does, it will remove us from the old one, and then clear it if it's empty.
-            if (LCType != LaunchComplexType.Hangar)
-                _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, false);
+            _efficiencySource = LCEfficiency.GetOrCreateEfficiencyForLC(this, false);
 
             RecalculateBuildRates();
         }

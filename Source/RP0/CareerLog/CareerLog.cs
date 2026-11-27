@@ -28,7 +28,7 @@ namespace RP0
         public int LoadedSaveVersion = CurrentVersion;
 
         [KSPField(isPersistant = true)]
-        public string Scenario;
+        public string Scenario = string.Empty;
 
         public bool IsEnabled = false;
 
@@ -81,6 +81,11 @@ namespace RP0
                 if (!IsEnabled) return null;
 
                 double time = Planetarium.GetUniversalTime();
+                if (NextPeriodStart == 0)
+                {
+                    StartFirstPeriod(time);
+                }
+
                 while (time > NextPeriodStart)
                 {
                     SwitchToNextPeriod();
@@ -272,6 +277,18 @@ namespace RP0
             Scenario = scenarioName;
         }
 
+        /// <summary>
+        /// Discards all log periods. The next access to CurrentPeriod starts a new period at the month of the current UT.
+        /// Call this after the career start date has been changed.
+        /// </summary>
+        public void ResetPeriods()
+        {
+            _periodDict.Clear();
+            _currentPeriod = null;
+            CurPeriodStart = 0;
+            NextPeriodStart = 0;
+        }
+
         public void ExportToFile(string path)
         {
             var rows = _periodDict.Select(p => p.Value)
@@ -350,7 +367,7 @@ namespace RP0
             // Create JSON structure for arrays - afaict not supported on this unity version out of the box
             var jsonToSend = "{ \"jsonVer\": \"" + jsonVer + "\", ";
             jsonToSend += "\"rp1Ver\": \"" + rp1Ver + "\", ";
-            if (string.IsNullOrWhiteSpace(Scenario))
+            if (!string.IsNullOrWhiteSpace(Scenario))
                 jsonToSend += "\"scenario\": \"" + Scenario + "\", ";
 
             jsonToSend += "\"periods\": [";
@@ -576,6 +593,15 @@ namespace RP0
             NextPeriodStart = _currentPeriod.EndUT;
         }
 
+        private void StartFirstPeriod(double ut)
+        {
+            DateTime dt = ROUtils.DTUtils.UTToDate(ut);
+            DateTime monthStart = new DateTime(dt.Year, dt.Month, 1, 0, 0, 0, DateTimeKind.Utc);
+            CurPeriodStart = (monthStart - ROUtils.DTUtils.Epoch).TotalSeconds;
+            _currentPeriod = GetOrCreatePeriod(CurPeriodStart);
+            NextPeriodStart = _currentPeriod.EndUT;
+        }
+
         private LogPeriod GetOrCreatePeriod(double periodStartUt)
         {
             if (!_periodDict.TryGetValue(periodStartUt, out LogPeriod period))
@@ -673,7 +699,7 @@ namespace RP0
                 return;
             }
 
-            if (reasonRP0 == TransactionReasonsRP0.StructureConstruction)
+            if ((reasonRP0 & TransactionReasonsRP0.StructureConstructionAll) != 0)
             {
                 CurrentPeriod.ConstructionFees -= changeDelta;
                 return;
@@ -714,14 +740,19 @@ namespace RP0
         {
             // this function signature is inconsistent with the other currency-change events
             // but the whole point is that this can't operate off of CurrenciesModified, since unlock credit isn't tracked by that event
-            CurrentPeriod.SpentUnlockCredit += spentCredit;
+            if (CareerEventScope.ShouldIgnore || !IsEnabled) return;
+
+            LogPeriod period = CurrentPeriod;
+            if (period == null) return;
+
+            period.SpentUnlockCredit += spentCredit;
             if (reason == TransactionReasonsRP0.ToolingPurchase)
             {
-                CurrentPeriod.ToolingFees += spentCredit;
+                period.ToolingFees += spentCredit;
             }
             else if (reason == TransactionReasonsRP0.PartOrUpgradeUnlock)
             {
-                CurrentPeriod.EntryCosts += spentCredit;
+                period.EntryCosts += spentCredit;
             }
         }
 

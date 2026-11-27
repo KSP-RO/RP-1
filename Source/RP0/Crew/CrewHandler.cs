@@ -494,7 +494,7 @@ namespace RP0.Crew
             if (newTotal > Database.SettingsCrew.retireIncreaseCap)
             {
                 // Cap the total retirement increase at a specific number of years
-                retireOffset = retIncreaseTotal - Database.SettingsCrew.retireIncreaseCap;
+                retireOffset = Math.Max(0d, Database.SettingsCrew.retireIncreaseCap - retIncreaseTotal);
                 newTotal = Database.SettingsCrew.retireIncreaseCap;
             }
             _retireIncreases[pcmName] = newTotal;

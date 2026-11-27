@@ -191,7 +191,8 @@ namespace RP0
 
                     if (currentLC == SpaceCenterManagement.Instance.ActiveSC.ActiveLC)
                     {
-                        currentLC.SwitchLaunchPad(0);
+                        // The scene may still show the removed pad and the active index may have shifted, so don't save the scene state into any pad
+                        currentLC.SwitchLaunchPad(0, false);
                     }
 
                     SpaceCenterManagement.Instance.UnregsiterLP(this);
@@ -237,8 +238,7 @@ namespace RP0
 
             try
             {
-                int idx = SpaceCenterManagement.Instance.ActiveSC.ActiveLC.LaunchPads.IndexOf(this);
-                RP0Debug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}. Index {idx}");
+                RP0Debug.Log($"Switching to LaunchPad: {name} lvl: {level} destroyed? {IsDestroyed}");
 
                 //set the level to this level
                 if (KSPUtils.CurrentGameIsCareer())
@@ -287,10 +287,23 @@ namespace RP0
 
         public void SetDestructibleStateFromNode()
         {
+            ConfigNode intactNode = null;
             foreach (DestructibleBuilding facility in GetDestructibleFacilityReferences())
             {
                 if (DestructionNode.GetNode(facility.id) is ConfigNode node)
+                {
                     facility.Load(node);
+                }
+                else
+                {
+                    // Pads with no saved state (e.g. newly built) are intact
+                    if (intactNode == null)
+                    {
+                        intactNode = new ConfigNode();
+                        intactNode.AddValue("intact", true);
+                    }
+                    facility.Load(intactNode);
+                }
             }
         }
 
@@ -300,6 +313,10 @@ namespace RP0
         /// </summary>
         public void RefreshDestructionNode()
         {
+            // Pad buildings only exist in these scenes. Elsewhere the scene would read as an empty state.
+            if (HighLogic.LoadedScene != GameScenes.SPACECENTER && HighLogic.LoadedScene != GameScenes.FLIGHT)
+                return;
+
             DestructionNode = new ConfigNode("DestructionState");
             foreach (DestructibleBuilding facility in GetDestructibleFacilityReferences())
             {

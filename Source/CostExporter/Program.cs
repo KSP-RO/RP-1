@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Text.Json;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Text.Json.Serialization;
 
 namespace CostExporter
@@ -15,10 +16,10 @@ namespace CostExporter
             public string title { get; set; }
             public string description { get; set; }
             public string mod { get; set; }
-            [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
-            public int cost { get; set; }
-            [JsonNumberHandling(JsonNumberHandling.AllowReadingFromString)]
-            public int entry_cost { get; set; }
+            // The Parts Browser stores costs either as JSON numbers or as strings (which can be empty or decimal).
+            // Keep the raw element so values that aren't changed get written back in exactly the same form.
+            public JsonElement cost { get; set; }
+            public JsonElement entry_cost { get; set; }
             public string category { get; set; }
             public string info { get; set; }
             public string year { get; set; }
@@ -39,7 +40,31 @@ namespace CostExporter
             {
                 if (era == null)
                     era = string.Empty;
+                if (cost.ValueKind == JsonValueKind.Undefined)
+                    cost = EmptyCost;
+                if (entry_cost.ValueKind == JsonValueKind.Undefined)
+                    entry_cost = EmptyCost;
             }
+        }
+
+        private static readonly JsonElement EmptyCost = JsonDocument.Parse("\"\"").RootElement.Clone();
+
+        private static JsonElement CostToElement(int cost) => JsonDocument.Parse(cost.ToString(CultureInfo.InvariantCulture)).RootElement.Clone();
+
+        private static string CostToString(JsonElement cost) => cost.ValueKind switch
+        {
+            JsonValueKind.String => cost.GetString(),
+            JsonValueKind.Undefined => string.Empty,
+            _ => cost.GetRawText()
+        };
+
+        private static bool CostEquals(JsonElement cost, int value)
+        {
+            if (cost.ValueKind == JsonValueKind.Number)
+                return cost.TryGetDecimal(out decimal d) && d == value;
+            if (cost.ValueKind == JsonValueKind.String)
+                return decimal.TryParse(cost.GetString(), NumberStyles.Number, CultureInfo.InvariantCulture, out decimal d) && d == value;
+            return false;
         }
 
         public class CostData
@@ -85,10 +110,10 @@ namespace CostExporter
                     if (string.Equals(sub.name, item, StringComparison.InvariantCultureIgnoreCase))
                     {
                         missing = false;
-                        if (sub.cost != cost)
+                        if (!CostEquals(sub.cost, cost))
                         {
-                            output += "\n" + item + " : was " + sub.cost + ", now " + cost;
-                            sub.cost = cost;
+                            output += "\n" + item + " : was " + CostToString(sub.cost) + ", now " + cost;
+                            sub.cost = CostToElement(cost);
                         }
                     }
                 }
@@ -148,10 +173,10 @@ namespace CostExporter
                             || string.Equals(sub.title, c.config, StringComparison.InvariantCultureIgnoreCase)
                             || string.Equals(sub.entry_cost_mods, c.config, StringComparison.InvariantCultureIgnoreCase))
                         {
-                            if (sub.cost != c.cost)
+                            if (!CostEquals(sub.cost, c.cost))
                             {
-                                output += "\n" + sub.name + "(" + sub.title + ") : was " + sub.cost + ", now " + c.cost;
-                                sub.cost = c.cost;
+                                output += "\n" + sub.name + "(" + sub.title + ") : was " + CostToString(sub.cost) + ", now " + c.cost;
+                                sub.cost = CostToElement(c.cost);
                             }
                         }
                     }

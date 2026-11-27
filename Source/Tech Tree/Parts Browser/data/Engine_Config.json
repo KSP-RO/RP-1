@@ -20813,5 +20813,27 @@
         "entry_cost_mods": "300000,YF-Family-Hydrolox",
         "identical_part_name": "",
         "module_tags": []
+    },
+    {
+        "name": "Fuji",
+        "title": "Fuji",
+        "description": "",
+        "mod": "Engine_Config",
+        "cost": 0,
+        "entry_cost": 0,
+        "category": "ORBITAL",
+        "info": "",
+        "year": "1975",
+        "technology": "orbitalRocketry1972",
+        "era": "",
+        "ro": true,
+        "orphan": false,
+        "rp0_conf": false,
+        "spacecraft": "Fuji",
+        "engine_config": "Fuji",
+        "upgrade": false,
+        "entry_cost_mods": "10000",
+        "identical_part_name": "",
+        "module_tags": []
     }
 ]

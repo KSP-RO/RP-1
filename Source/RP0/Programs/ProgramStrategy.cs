@@ -150,7 +150,7 @@ namespace RP0.Programs
             if (!_program.CanComplete)
             {
                 // But double-check: are all objectives met and the program is active? Then for some reason
-                // the contract completion event handler didn't notice (and mark the program complete) but
+                // the event handlers in ProgramHandler didn't notice (and mark the program complete) but
                 // we will still let you complete the program.
                 if (_program.AllObjectivesMet && _program.IsActive && !_program.IsComplete)
                 {

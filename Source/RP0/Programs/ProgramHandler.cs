@@ -126,6 +126,8 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilityDespawn.Add(HideAdminGUI);
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
             GameEvents.Contract.onAccepted.Add(OnContractAccept);
+            GameEvents.OnTechnologyResearched.Add(OnTechResearched);
+            SCMEvents.OnFacilityUpgradeComplete?.Add(OnFacilityUpgradeComplete);
         }
 
         public void OnDestroy()
@@ -134,6 +136,8 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilityDespawn.Remove(HideAdminGUI);
             GameEvents.Contract.onCompleted.Remove(OnContractComplete);
             GameEvents.Contract.onAccepted.Remove(OnContractAccept);
+            GameEvents.OnTechnologyResearched.Remove(OnTechResearched);
+            SCMEvents.OnFacilityUpgradeComplete?.Remove(OnFacilityUpgradeComplete);
         }
 
         public override void OnLoad(ConfigNode node)
@@ -362,6 +366,21 @@ namespace RP0.Programs
             return 0f;
         }
 
+        /// <summary>
+        /// Marks the objectives of every active program complete if they are met but not yet processed.
+        /// </summary>
+        public void CheckProgramObjectives()
+        {
+            for (int i = ActivePrograms.Count - 1; i >= 0; --i)
+            {
+                Program p = ActivePrograms[i];
+                if (!p.CanComplete && p.AllObjectivesMet)
+                {
+                    p.MarkObjectivesComplete();
+                }
+            }
+        }
+
         private void OnContractAccept(Contract data)
         {
             if (SpaceCenterManagement.Instance.StartedProgram)
@@ -380,14 +399,7 @@ namespace RP0.Programs
             yield return null;
             yield return null;
 
-            for (int i = ActivePrograms.Count - 1; i >= 0; --i)
-            {
-                Program p = ActivePrograms[i];
-                if (!p.CanComplete && p.AllObjectivesMet)
-                {
-                    p.MarkObjectivesComplete();
-                }
-            }
+            CheckProgramObjectives();
 
             if (data is ConfiguredContract cc)
             {
@@ -402,6 +414,23 @@ namespace RP0.Programs
                 if (repToConf > 0f)
                     Confidence.Instance.AddConfidence(repToConf * data.ReputationCompletion, TransactionReasons.ContractReward);
             }
+        }
+
+        private void OnTechResearched(GameEvents.HostTargetAction<RDTech, RDTech.OperationResult> data)
+        {
+            if (data.target == RDTech.OperationResult.Successful)
+                CheckProgramObjectives();
+        }
+
+        private void OnFacilityUpgradeComplete(FacilityUpgradeProject data)
+        {
+            CheckProgramObjectives();
+        }
+
+        private IEnumerator CheckProgramObjectivesNextFrame()
+        {
+            yield return null;
+            CheckProgramObjectives();
         }
 
         private void ShowAdminGUI()
@@ -575,6 +604,10 @@ namespace RP0.Programs
                 ps.SetProgram(activeP);
 
             SpaceCenterManagement.Instance.StartedProgram = true;
+
+            // Deferred so that callers which complete the program or set its state right after activation are done first
+            // One such case is ConfigurableStart.
+            StartCoroutine(CheckProgramObjectivesNextFrame());
 
             return activeP;
         }

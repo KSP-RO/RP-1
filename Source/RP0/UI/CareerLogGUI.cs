@@ -28,13 +28,26 @@ namespace RP0
         public void RenderTab()
         {
             GUILayout.BeginVertical();
-            if (GUILayout.Button("Export to file", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(30), GUILayout.Width(125)))
+            if (GUILayout.Button("Export to CSV", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(30), GUILayout.Width(125)))
             {
                 try
                 {
                     string path = KSPUtil.ApplicationRootPath + "/RP-1_Career.csv";
                     CareerLog.Instance.ExportToFile(path);
                     _exportStatus = $"Career progress exported to {Path.GetFullPath(path)}";
+                }
+                catch (Exception ex)
+                {
+                    _exportStatus = $"Export failed: {ex.Message}";
+                }
+            }
+            if (GUILayout.Button("Export to JSON", HighLogic.Skin.button, GUILayout.ExpandWidth(false), GUILayout.Height(30), GUILayout.Width(150)))
+            {
+                try
+                {
+                    string path = KSPUtil.ApplicationRootPath + "/RP-1_Career.json";
+                    CareerLog.Instance.ExportToJsonFile(path);
+                    _exportStatus = $"Career log exported to {Path.GetFullPath(path)}";
                 }
                 catch (Exception ex)
                 {

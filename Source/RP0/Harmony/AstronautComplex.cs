@@ -54,7 +54,7 @@ namespace RP0.Harmony
                     label = "#rp0_AC_Crew_Status_Recovering";
                 }
 
-                cli.SetLabel(Localizer.Format(label, KSPUtil.PrintDate(time, false)));
+                cli.SetLabel(Localizer.Format(label, RP0DTUtils.PrintDate(time, false)));
             }
         }
 

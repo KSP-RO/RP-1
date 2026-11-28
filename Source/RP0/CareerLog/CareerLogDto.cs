@@ -44,7 +44,6 @@ namespace RP0
         public double fundsGainMult;
         public double confidence;
         public double reputation;
-        public double headlinesHype;
 
         public override string ToString()
         {
@@ -85,8 +84,7 @@ namespace RP0
                 $"{nameof(repFromPrograms)}: {repFromPrograms}, " +
                 $"{nameof(fundsGainMult)}: {fundsGainMult}, " +
                 $"{nameof(confidence)}: {confidence}, " +
-                $"{nameof(reputation)}: {reputation}, " +
-                $"{nameof(headlinesHype)}: {headlinesHype}";
+                $"{nameof(reputation)}: {reputation}";
         }
     }
 

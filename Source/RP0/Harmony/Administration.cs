@@ -53,6 +53,8 @@ namespace RP0.Harmony
             {
                 if (strat is ProgramStrategy ps)
                 {
+                    if (!ps.Program.IsActive && !ps.Program.IsComplete)
+                        ps.Program.ApplyProgramModifiers();
                     ps.Program.SetBestAllowableSpeed();
                 }
             }
@@ -392,6 +394,10 @@ namespace RP0.Harmony
         internal static void OnActivateProgramConfirm()
         {
             OnPopupDismiss();
+            Strategy selectedStrat = Administration.Instance.SelectedWrapper.strategy;
+            if (selectedStrat is ProgramStrategy && selectedStrat.CanBeActivated(out _))
+                BackupSaves.Create(BackupSaves.Kind.Program, selectedStrat.Title);
+
             if (Administration.Instance.SelectedWrapper.strategy.Activate())
             {
                 var newActiveStrat = Administration.Instance.SelectedWrapper.strategy;
@@ -522,7 +528,7 @@ namespace RP0.Harmony
                 string deactivateCostStr = leader.DeactivateCostString();
                 string reappointStr = cfg.RemoveOnDeactivate 
                     ? cfg.ReactivateCooldown > 0
-                        ? $"\n\n{Localizer.Format("#rp0_Leaders_Deactivates_WithCooldown", KSPUtil.PrintDateDelta(cfg.ReactivateCooldown, false))}"
+                        ? $"\n\n{Localizer.Format("#rp0_Leaders_Deactivates_WithCooldown", RP0DTUtils.PrintDateDelta(cfg.ReactivateCooldown, false))}"
                         : $"\n\n{Localizer.GetStringByTag("#rp0_Leaders_Deactivates")}"
                     : string.Empty;
                 string message = !string.IsNullOrEmpty(deactivateCostStr)

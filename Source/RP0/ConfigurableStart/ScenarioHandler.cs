@@ -16,7 +16,7 @@ namespace RP0.ConfigurableStart
     [KSPAddon(KSPAddon.Startup.MainMenu, false)]
     public class ScenarioHandler : MonoBehaviour
     {
-        public const string EmptyScenarioName = "None";
+        public const string EmptyScenarioName = "1951 Start (Default)";
 
         private string _curScenarioName;
         private readonly Dictionary<string, ConfigNode> _contractNodes = new Dictionary<string, ConfigNode>();    // to cache the contract nodes
@@ -42,6 +42,8 @@ namespace RP0.ConfigurableStart
                 Instance?.UpdateUI();
             }
         }
+
+        public string SelectedKSC { get; set; }
 
         public void SetCurrentScenarioFromName(string name)
         {
@@ -80,6 +82,15 @@ namespace RP0.ConfigurableStart
         internal void OnDestroy()
         {
             GameEvents.onGameNewStart.Remove(OnGameNewStart);
+
+            // Unity does not run finally blocks of coroutines that are stopped by Destroy.
+            // Their Ignore scopes would otherwise stay open for the rest of the process.
+            if (_runningContractCoroutines > 0)
+            {
+                RP0Debug.LogWarning($"ScenarioHandler destroyed with {_runningContractCoroutines} contract coroutines still running");
+                CareerEventScope.Reset();
+            }
+
             if (Instance == this)
                 Instance = null;
         }
@@ -87,7 +98,28 @@ namespace RP0.ConfigurableStart
         public void OnGameNewStart()
         {
             PresetPickerGUI.Instance?.SetVisible(false);
-            if (CurrentScenario == null || CurrentScenario.ScenarioName == EmptyScenarioName) return;
+
+            // Add the LastKSC proto before scene transition so that KSCLoader.OnGameStateCreated
+            // reads the desired site and calls SetSiteAndResetCamera with it on first SpaceCenter load.
+            // The KSC choice applies to every scenario, including the default one.
+            if (KSCSwitcherInterop.IsKSCSwitcherInstalled && !string.IsNullOrEmpty(SelectedKSC))
+            {
+                Game game = HighLogic.CurrentGame;
+                if (game != null)
+                {
+                    ProtoScenarioModule lastKscProto = game.scenarios.FirstOrDefault(s => s.moduleName == "LastKSC");
+                    if (lastKscProto == null && KSCSwitcherInterop.LastKSCType != null)
+                        lastKscProto = game.AddProtoScenarioModule(KSCSwitcherInterop.LastKSCType, GameScenes.TRACKSTATION);
+                    KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
+                }
+            }
+
+            if (CurrentScenario == null || CurrentScenario.ScenarioName == EmptyScenarioName)
+            {
+                if (HighLogic.CurrentGame?.Mode == Game.Modes.CAREER)
+                    StartCoroutine(ApplySelectedKSCWhenReady());
+                return;
+            }
 
             switch (HighLogic.CurrentGame.Mode)
             {
@@ -171,7 +203,10 @@ namespace RP0.ConfigurableStart
                 if (scn.StartingUT != 0)
                 {
                     SetDate(scn.StartingUT);
+                    CareerLog.Instance?.ResetPeriods();
                 }
+
+                CareerLog.Instance?.SetStartingScenario(scn.ScenarioName);
 
                 var allProgramsToAccept = scn.AcceptedPrograms.Concat(scn.CompletedPrograms);
                 foreach (Program p in allProgramsToAccept)
@@ -216,11 +251,6 @@ namespace RP0.ConfigurableStart
                     SetFacilityLevels(facilities);
                 }
 
-                if (scn.Applicants != null)
-                {
-                    SpaceCenterManagement.Instance.Applicants = scn.Applicants.Value;
-                }
-
                 if (!string.IsNullOrEmpty(scn.RFUnlockedConfigs))
                 {
                     string[] configs = Utilities.ArrayFromCommaSeparatedList(scn.RFUnlockedConfigs);
@@ -241,6 +271,8 @@ namespace RP0.ConfigurableStart
                     Dictionary<string, float> engines = Utilities.DictionaryFromCommaSeparatedString<float>(scn.TFStartingDU);
                     TFInterop.SetFlightDataForParts(engines);
                 }
+
+                ApplySelectedKSC();
 
                 foreach (LCData lcData in scn.LCs)
                 {
@@ -279,7 +311,7 @@ namespace RP0.ConfigurableStart
                     Confidence.Instance.SetConfidence(scn.StartingConfidence.Value);
                 }
 
-                StartCoroutine(CompleteScenarioInitialization());
+                StartCoroutine(CompleteScenarioInitialization(scn));
             }
             catch (Exception ex)
             {
@@ -290,10 +322,50 @@ namespace RP0.ConfigurableStart
             yield break;
         }
 
-        private IEnumerator CompleteScenarioInitialization()
+        /// <summary>
+        /// Applies the chosen KSC when no scenario parameters need to be applied.
+        /// </summary>
+        private IEnumerator ApplySelectedKSCWhenReady()
+        {
+            yield return WaitForInitialization(() => SpaceCenterManagement.Instance);
+            yield return new WaitForEndOfFrame();
+
+            try
+            {
+                ApplySelectedKSC();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+            }
+        }
+
+        private void ApplySelectedKSC()
+        {
+            if (!KSCSwitcherInterop.IsKSCSwitcherInstalled || string.IsNullOrEmpty(SelectedKSC)) return;
+
+            SpaceCenterManagement.Instance.SetActiveKSC(SelectedKSC);
+            KSCSwitcherInterop.SetLastKSCSite(SelectedKSC);
+            // CreateNewGame saves before onGameNewStart fires, so the sfs lacks the initial KSC state.
+            ProtoScenarioModule lastKscProto = HighLogic.CurrentGame?.scenarios?.FirstOrDefault(s => s.moduleName == "LastKSC");
+            KSCSwitcherInterop.AddLastKSCToProto(lastKscProto, SelectedKSC);
+        }
+
+        private IEnumerator CompleteScenarioInitialization(Scenario scn)
         {
             while (!ContractsInitialized)
                 yield return new WaitForFixedUpdate();
+
+            // ProgramHandler grants contract applicants 2 frames after a contract completes.
+            // Wait for that to finish so the scenario value is the final one.
+            for (int i = 0; i < 3; i++)
+                yield return null;
+
+            if (scn.Applicants != null)
+            {
+                SpaceCenterManagement.Instance.Applicants = scn.Applicants.Value;
+                RP0Debug.Log($"Set applicants: {scn.Applicants.Value}");
+            }
 
             RP0Debug.Log("Scenario applied");
             RP0Debug.Log("Destroying ScenarioLoader...");
@@ -591,7 +663,13 @@ namespace RP0.ConfigurableStart
                 {
                     if (contractName == subType.name)
                     {
-                        var contract = ForceGenerate(subType, 0, new System.Random().Next(), Contracts.Contract.State.Generated);
+                        Contracts.Contract.ContractPrestige prestige = Contracts.Contract.ContractPrestige.Trivial;
+                        if (subType.dataNode.IsDeterministic("prestige") && subType.prestige.Count == 1) // this is from ContractConfigurator.Util.MissionControlUI.GetPrestige()
+                        {
+                            prestige = subType.prestige.First();
+                        }
+                        
+                        var contract = ForceGenerate(subType, prestige, new System.Random().Next(), Contracts.Contract.State.Generated);
 
                         if (contract is null)
                         {
@@ -632,8 +710,6 @@ namespace RP0.ConfigurableStart
                 fi.SetValue(contract, state);
             if ((fi = baseT.GetField("seed", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
                 fi.SetValue(contract, seed);
-            if ((fi = baseT.GetField("agent", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
-                fi.SetValue(contract, Contracts.Agents.AgentList.Instance.GetSuitableAgentForContract(contract));
             contract.FundsFailure = Math.Max(contract.FundsFailure, contract.FundsAdvance);
             contract.GetType().GetMethod("SetupID", BindingFlags.NonPublic | BindingFlags.Instance)?.Invoke(contract, null);
 
@@ -651,6 +727,8 @@ namespace RP0.ConfigurableStart
                 fi.SetValue(contract, contractType.completedMessage);
             if ((fi = t.GetField("notes", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
                 fi.SetValue(contract, contractType.notes);
+            if ((fi = t.GetField("agent", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
+                fi.SetValue(contract, contractType.agent);
 
             // set expiry and deadline type to none
             if ((fi = t.GetField("expiryType", BindingFlags.NonPublic | BindingFlags.Instance)) is FieldInfo)
@@ -667,68 +745,72 @@ namespace RP0.ConfigurableStart
         {
             var ignoreCareerEventsScope = new CareerEventScope(CareerEventType.Ignore);
             _runningContractCoroutines++;
-            
-            // cache contract nodes
-            if (_contractNodes.Count == 0)
+            try
             {
-                var cfgNodes = GameDatabase.Instance.GetConfigNodes("CONTRACT_TYPE");
-
-                foreach (var node in cfgNodes)
+                // cache contract nodes
+                if (_contractNodes.Count == 0)
                 {
-                    if (node.GetValue("name") is string subT)
-                        _contractNodes[subT] = node;
-                }
-            }
+                    var cfgNodes = GameDatabase.Instance.GetConfigNodes("CONTRACT_TYPE");
 
-            // load behaviours so that they're correctly fired
-            if (_contractNodes.ContainsKey(c.subType))
-            {
-                ConfigNode cfgNode = _contractNodes[c.subType];
-
-                if (cfgNode.GetNodes("BEHAVIOUR") is var bNodes)
-                {
-                    var behaviourFactories = new List<BehaviourFactory>();
-
-                    foreach (var bNode in bNodes)
+                    foreach (var node in cfgNodes)
                     {
-                        BehaviourFactory.GenerateBehaviourFactory(bNode, c.contractType, out var behaviourFactory);
-                        if (behaviourFactory != null)
-                        {
-                            behaviourFactories.Add(behaviourFactory);
-                        }
+                        if (node.GetValue("name") is string subT)
+                            _contractNodes[subT] = node;
                     }
-
-                    if (BehaviourFactory.GenerateBehaviours(c, behaviourFactories))
-                        RP0Debug.Log($"Generated Behaviours for contract {c.subType}");
                 }
-            }
 
-            // now, complete the contract step by step
-            if (c.Offer())
-                yield return new WaitForFixedUpdate();
-
-            if (c.Accept())
-            {
-                yield return new WaitForFixedUpdate();
-            }
-
-            if (complete)
-            {
-                if (c.Complete())
+                // load behaviours so that they're correctly fired
+                if (_contractNodes.ContainsKey(c.subType))
                 {
-                    //yield return new WaitForFixedUpdate();
-                    Contracts.ContractSystem.Instance.ContractsFinished.Add(c);
+                    ConfigNode cfgNode = _contractNodes[c.subType];
+
+                    if (cfgNode.GetNodes("BEHAVIOUR") is var bNodes)
+                    {
+                        var behaviourFactories = new List<BehaviourFactory>();
+
+                        foreach (var bNode in bNodes)
+                        {
+                            BehaviourFactory.GenerateBehaviourFactory(bNode, c.contractType, out var behaviourFactory);
+                            if (behaviourFactory != null)
+                            {
+                                behaviourFactories.Add(behaviourFactory);
+                            }
+                        }
+
+                        if (BehaviourFactory.GenerateBehaviours(c, behaviourFactories))
+                            RP0Debug.Log($"Generated Behaviours for contract {c.subType}");
+                    }
+                }
+
+                // now, complete the contract step by step
+                if (c.Offer())
+                    yield return new WaitForFixedUpdate();
+
+                if (c.Accept())
+                {
+                    yield return new WaitForFixedUpdate();
+                }
+
+                if (complete)
+                {
+                    if (c.Complete())
+                    {
+                        //yield return new WaitForFixedUpdate();
+                        Contracts.ContractSystem.Instance.ContractsFinished.Add(c);
+                    }
+                    else
+                        RP0Debug.LogWarning($"Couldn't complete contract {c.subType}");
                 }
                 else
-                    RP0Debug.LogWarning($"Couldn't complete contract {c.subType}");
+                {
+                    Contracts.ContractSystem.Instance.Contracts.Add(c);
+                }
             }
-            else
+            finally
             {
-                Contracts.ContractSystem.Instance.Contracts.Add(c);
+                _runningContractCoroutines--;
+                ignoreCareerEventsScope.Dispose();
             }
-
-            _runningContractCoroutines--;
-            ignoreCareerEventsScope.Dispose();
         }
 
         private void ShowScenarioFailedToApplyMessage()

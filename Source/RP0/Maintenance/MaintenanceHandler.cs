@@ -311,6 +311,24 @@ namespace RP0
             return LCUpkeep(lc, lc.LaunchPadCount);
         }
 
+        private bool TryGetFacilityDailyMaintenance(SpaceCenterFacility facility, int level, out double cost)
+        {
+            if (Database.FacilityYearlyMaintenance.TryGetValue(facility, out List<double> yearlyMaint))
+            {
+                cost = yearlyMaint[Math.Min(level, yearlyMaint.Count - 1)] / 365.25d;
+                return true;
+            }
+
+            if (Database.FacilityLevelCosts.TryGetValue(facility, out List<int> facCosts))
+            {
+                cost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, level));
+                return true;
+            }
+
+            cost = 0d;
+            return false;
+        }
+
         private double GetFacilityUpgradeRatio(SpaceCenterFacility facility)
         {
             foreach (var fac in SpaceCenterManagement.Instance.ActiveSC.FacilityUpgrades)
@@ -336,7 +354,11 @@ namespace RP0
             }
 
             if (SpaceCenterManagement.Instance.TechList.Count > 0)
-                ResearchSalaryPerDay = Researchers * Database.SettingsSC.salaryResearchers / 365.25d;
+            {
+                double wr = SpaceCenterManagement.Instance.TechList[0].workRate;
+                double idleMult = Database.SettingsSC.ResearcherIdleSalaryMult;
+                ResearchSalaryPerDay = Researchers * Database.SettingsSC.salaryResearchers / 365.25d * (idleMult + (1d - idleMult) * wr);
+            }
             else
                 ResearchSalaryPerDay = Researchers * Database.SettingsSC.salaryResearchers * Database.SettingsSC.ResearcherIdleSalaryMult / 365.25d;
 
@@ -345,16 +367,14 @@ namespace RP0
                 if (Database.LockedFacilities.Contains(facility))
                     continue;
 
-                if (!Database.FacilityLevelCosts.TryGetValue(facility, out var facCosts))
+                int level = KCTUtilities.GetFacilityLevel(facility);
+                if (!TryGetFacilityDailyMaintenance(facility, level, out double cost))
                     continue;
 
-                double cost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, KCTUtilities.GetFacilityLevel(facility)));
                 double ratio = GetFacilityUpgradeRatio(facility);
-                if (ratio > 0d)
-                {
-                    double newCost = ComputeDailyMaintenanceCost(MathUtils.SumThrough(facCosts, 1 + KCTUtilities.GetFacilityLevel(facility)));
+                if (ratio > 0d && TryGetFacilityDailyMaintenance(facility, level + 1, out double newCost))
                     cost = UtilMath.LerpUnclamped(cost, newCost, ratio);
-                }
+
                 FacilityMaintenanceCosts[facility] = cost;
             }
 
@@ -407,6 +427,11 @@ namespace RP0
             if (HighLogic.CurrentGame == null)
                 return;
 
+            // Skip maintenance/upkeep/reputation processing while simulating; an SCM sim can jump
+            // UT forward by years and this would churn funds/rep against time that isn't passing.
+            if (SpaceCenterManagement.Instance?.IsSimulatedFlight == true)
+                return;
+
             if (_frameCount++ < 2)
             {
                 return;
@@ -449,6 +474,10 @@ namespace RP0
 
         public void FixedUpdate()
         {
+            // See Update(): don't process crew/maintenance during a simulation time jump.
+            if (SpaceCenterManagement.Instance?.IsSimulatedFlight == true)
+                return;
+
             double UT = Planetarium.GetUniversalTime();
             if (_lastUpdateFixed == 0)
                 _lastUpdateFixed = UT;
@@ -529,7 +558,7 @@ namespace RP0
             }
 
             // Finally, update all builds
-            SpaceCenterManagement.Instance.ProgressBuildTime(UTDiff);
+            SpaceCenterManagement.Instance?.ProgressBuildTime(UTDiff);
         }
 
         public void OnDestroy()

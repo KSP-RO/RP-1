@@ -16,6 +16,7 @@ namespace RP0
         private static string _lengthLimit = "2";
         private static LCData _newLCData = new LCData();
         private static int _resourceCount = 0;
+        private static LaunchComplexType _resourceKeysLCType;
         private static List<string> _allResourceKeys = new List<string>();
         private static List<string> _allResourceValues = new List<string>();
         private static Vector2 _resourceListScroll = new Vector2();
@@ -24,6 +25,12 @@ namespace RP0
         private static bool _assignEngOnComplete = true;
 
         private const double _MinResourceVolume = 250d;
+
+        // Cap the amount of characters that can be entered into the fields below. Without a limit the
+        // resulting costs (and thus construction times) can grow large enough to break the date formatting.
+        private const int _MaxTonnageChars = 6;
+        private const int _MaxSizeChars = 4;
+        private const int _MaxResourceChars = 7;
 
         private static void SetStrings()
         {
@@ -35,7 +42,7 @@ namespace RP0
 
         private static void SetResources()
         {
-            if (_resourceCount == 0) GetAllResourceKeys();
+            RefreshResourceKeys();
             for (int i = 0; i < _resourceCount; i++)
             {
                 if (_newLCData.resourcesHandled.TryGetValue(_allResourceKeys[i], out double resourceValue))
@@ -178,18 +185,32 @@ namespace RP0
             SetResources();
         }
 
-        private static void GetAllResourceKeys()
+        /// <summary>
+        /// Rebuilds the resource list if it is empty or was built for another LC type.
+        /// The ignored resources differ between hangars and pads.
+        /// </summary>
+        /// <returns>True if the list was rebuilt. The values are then blank and need to be filled again.</returns>
+        private static bool RefreshResourceKeys()
         {
+            if (_resourceCount > 0 && _resourceKeysLCType == _newLCData.lcType)
+                return false;
+
+            _allResourceKeys.Clear();
+            _allResourceValues.Clear();
+            _resourceCount = 0;
+            _resourceKeysLCType = _newLCData.lcType;
+
+            LCResourceType ignoredResType = _newLCData.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore;
             foreach (var kvp in Database.ResourceInfo.LCResourceTypes)
             {
-                if((kvp.Value & LCResourceType.Fuel) != 0 
-                    && (kvp.Value & (_newLCData.lcType == LaunchComplexType.Hangar ? LCResourceType.HangarIgnore : LCResourceType.PadIgnore)) == 0)
+                if ((kvp.Value & LCResourceType.Fuel) != 0 && (kvp.Value & ignoredResType) == 0)
                 {
                     _allResourceKeys.Add(kvp.Key);
                     _allResourceValues.Add(string.Empty);
                     ++_resourceCount;
                 }
             }
+            return true;
         }
 
         public static void DrawNewLCWindow(int windowID)
@@ -199,6 +220,8 @@ namespace RP0
 
             bool isModify = GUIStates.ShowModifyLC;
             bool isHangar = isModify && activeLC.LCType == LaunchComplexType.Hangar;
+            if (!isModify)
+                _newLCData.lcType = LaunchComplexType.Pad;
 
             GUILayout.BeginVertical();
             if (isModify)
@@ -239,7 +262,7 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Name:", GUILayout.ExpandWidth(false));
-                _newLCData.Name = GUILayout.TextField(_newLCData.Name);
+                _newLCData.Name = GUILayout.TextField(_newLCData.Name, _MaxNameChars);
                 GUILayout.EndHorizontal();
             }
 
@@ -262,7 +285,7 @@ namespace RP0
 
                 GUILayout.BeginHorizontal();
                 GUILayout.Label("Maximum tonnage:", GUILayout.ExpandWidth(false));
-                _tonnageLimit = GUILayout.TextField(_tonnageLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+                _tonnageLimit = GUILayout.TextField(_tonnageLimit, _MaxTonnageChars, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
                 if (float.TryParse(_tonnageLimit, out _newLCData.massMax))
                 {
                     parsedTonnage = true;
@@ -339,19 +362,19 @@ namespace RP0
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Length limit:", GUILayout.ExpandWidth(false));
-            _lengthLimit = GUILayout.TextField(_lengthLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+            _lengthLimit = GUILayout.TextField(_lengthLimit, _MaxSizeChars, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Width limit:", GUILayout.ExpandWidth(false));
-            _widthLimit = GUILayout.TextField(_widthLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+            _widthLimit = GUILayout.TextField(_widthLimit, _MaxSizeChars, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
             GUILayout.BeginHorizontal();
             GUILayout.Label("Height limit:", GUILayout.ExpandWidth(false));
-            _heightLimit = GUILayout.TextField(_heightLimit, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty);
+            _heightLimit = GUILayout.TextField(_heightLimit, _MaxSizeChars, GetTextFieldRightAlignStyle()).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
             GUILayout.Label("m", GetLabelRightAlignStyle(), GUILayout.ExpandWidth(false));
             GUILayout.EndHorizontal();
 
@@ -432,7 +455,7 @@ namespace RP0
 
                 double buildTime = ConstructionProject.CalculateBuildTime(totalCost, oldTotalCost, SpaceCenterFacility.LaunchPad, null);
                 double buildCost = -CurrencyUtils.Funds(TransactionReasonsRP0.StructureConstructionLC, -totalCost);
-                string sBuildTime = KSPUtil.PrintDateDelta(buildTime, includeTime: false);
+                string sBuildTime = RP0DTUtils.PrintDateDelta(buildTime, includeTime: false);
                 string costString = isModify ? "Modify Cost:" : "Build Cost:";
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(costString, GUILayout.ExpandWidth(false));
@@ -672,7 +695,9 @@ namespace RP0
             //LCItem activeLC = KerbalConstructionTimeData.Instance.ActiveKSC.ActiveLaunchComplexInstance;
             //bool isModify = GUIStates.ShowModifyLC;
 
-            if (_resourceCount == 0) GetAllResourceKeys();
+            // Only on Layout, so that the control count stays the same until Repaint.
+            if (Event.current.type == EventType.Layout && RefreshResourceKeys())
+                SetResources();
 
             Rect parentPos = _centralWindowPosition;
             _lcResourcesPosition.width = 250;
@@ -692,7 +717,7 @@ namespace RP0
             {
                 GUILayout.BeginHorizontal();
                 GUILayout.Label(_allResourceKeys[i]);
-                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
+                _allResourceValues[i] = GUILayout.TextField(_allResourceValues[i], _MaxResourceChars, GetTextFieldRightAlignStyle(), GUILayout.Width(90)).Replace(",", string.Empty).Replace(".", string.Empty).Replace("-", string.Empty);
 
                 bool remove = true;
                 if (!string.IsNullOrEmpty(_allResourceValues[i]))

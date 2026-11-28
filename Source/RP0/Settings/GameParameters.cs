@@ -80,6 +80,28 @@ namespace RP0
         [GameParameters.CustomParameterUI("Show tooling reminders", toolTip = "When enabled, a warning is shown on integration when the vessel has untooled parts.")]
         public bool ShowToolingReminders = true;
 
+        [GameParameters.CustomParameterUI("Make firing cooldown alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader can be removed with a penalty.")]
+        public bool MakeAlarmCooldownOver = false; // TODO this should be changed to MakeFiringCooldownOver on a save breaking update
+
+        [GameParameters.CustomParameterUI("Make hiring cooldown alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is removed that shows when the leader can be re-hired.")]
+        public bool MakeAlarmHiringCooldownOver = true;
+
+        [GameParameters.CustomParameterUI("Make free to remove alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader can be removed without penalties.")]
+        public bool MakeAlarmFreeRemove = true;
+
+        //[GameParameters.CustomParameterUI("Make retirement alarm", toolTip = "When enabled, an alarm will be automatically created when a leader is recruited that shows when that leader will retire on their own.")]
+        // retirement of leaders is not used anymore, uncomment this if it is added back
+        public bool MakeAlarmRetirement = true;
+
+        [GameParameters.CustomParameterUI("Make program complete alarm", toolTip = "When enabled, an alarm will be automatically created when a program is activated that shows when that program must be completed by to avoid penalties.")]
+        public bool MakeAlarmProgramComplete = true;
+
+        [GameParameters.CustomParameterUI("Enable no active contract warning", toolTip = "When enabled, a warning will be shown when launching a craft while you have no active contracts (excluding auto-accepted contracts).", gameMode = GameParameters.GameMode.CAREER)]
+        public bool NoActiveContractWarning = true;
+
+        [GameParameters.CustomIntParameterUI("Backup saves to keep", minValue = 0, maxValue = 20, gameMode = GameParameters.GameMode.CAREER, toolTip = "A backup save is made before each launch and before accepting a program. This is how many of each kind are kept. They are listed at the bottom of the Load Game dialog. Set to 0 to disable.")]
+        public int BackupSavesToKeep = 5;
+
         // The following values are persisted to the savegame but are not shown in the difficulty settings UI
         public int CommsPayload = ContractGUI.MinPayload;
         public int WeatherPayload = ContractGUI.MinPayload;
@@ -93,7 +115,6 @@ namespace RP0
         public bool AvionicsWindow_ShowInfo3 = true;
         public bool NeverShowUntrainedReminders = false;
         public bool NeverShowHSFProgramReminders = false;
-        public int RATLTipShown = 0;
 
         public string CareerLog_URL;
         public string CareerLog_Token;
@@ -104,6 +125,7 @@ namespace RP0
             IsTrainingEnabled = IsMissionTrainingEnabled = IsCrewRnREnabled = IsRetirementEnabled = isCareer;
             CareerLogEnabled = isCareer;
             ShowToolingReminders = isCareer;
+            NoActiveContractWarning = isCareer;
 
             switch (preset)
             {

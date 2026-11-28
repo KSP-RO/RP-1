@@ -55,6 +55,9 @@ namespace RP0.Programs
 
         public HashSet<string> DisabledPrograms { get; private set; } = new HashSet<string>();
 
+        // ACTIVEPROGRAM and COMPLETEDPROGRAM nodes without a matching template, written back unchanged on save
+        private readonly List<ConfigNode> _unknownProgramNodes = new List<ConfigNode>();
+
         // Put here since we can't add to StrategySystem
         [KSPField(isPersistant = true)]
         public PersistentDictionaryValueTypes<string, double> ActivatedStrategies = new PersistentDictionaryValueTypes<string, double>();
@@ -123,6 +126,8 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilityDespawn.Add(HideAdminGUI);
             GameEvents.Contract.onCompleted.Add(OnContractComplete);
             GameEvents.Contract.onAccepted.Add(OnContractAccept);
+            GameEvents.OnTechnologyResearched.Add(OnTechResearched);
+            SCMEvents.OnFacilityUpgradeComplete?.Add(OnFacilityUpgradeComplete);
         }
 
         public void OnDestroy()
@@ -131,6 +136,8 @@ namespace RP0.Programs
             GameEvents.onGUIAdministrationFacilityDespawn.Remove(HideAdminGUI);
             GameEvents.Contract.onCompleted.Remove(OnContractComplete);
             GameEvents.Contract.onAccepted.Remove(OnContractAccept);
+            GameEvents.OnTechnologyResearched.Remove(OnTechResearched);
+            SCMEvents.OnFacilityUpgradeComplete?.Remove(OnFacilityUpgradeComplete);
         }
 
         public override void OnLoad(ConfigNode node)
@@ -157,23 +164,8 @@ namespace RP0.Programs
                     }
                 }
 
-                foreach (ConfigNode cn in node.GetNodes("ACTIVEPROGRAM"))
-                {
-                    string progName = cn.GetValue(nameof(Program.name));
-                    Program programTemplate = Programs.FirstOrDefault(p => p.name == progName) ?? throw new Exception("Failed to find ACTIVEPROGRAM " + progName);
-                    var program = new Program(programTemplate);
-                    program.Load(cn);
-                    ActivePrograms.Add(program);
-                }
-
-                foreach (ConfigNode cn in node.GetNodes("COMPLETEDPROGRAM"))
-                {
-                    string progName = cn.GetValue(nameof(Program.name));
-                    Program programTemplate = Programs.FirstOrDefault(p => p.name == progName) ?? throw new Exception("Failed to find COMPLETEDPROGRAM " + progName);
-                    var program = new Program(programTemplate);
-                    program.Load(cn);
-                    CompletedPrograms.Add(program);
-                }
+                LoadProgramNodes(node, "ACTIVEPROGRAM", ActivePrograms);
+                LoadProgramNodes(node, "COMPLETEDPROGRAM", CompletedPrograms);
 
                 _ready = true; // done BEFORE upgrading because we have to do hijinks there
 
@@ -225,6 +217,25 @@ namespace RP0.Programs
             }
         }
 
+        private void LoadProgramNodes(ConfigNode node, string nodeName, List<Program> target)
+        {
+            foreach (ConfigNode cn in node.GetNodes(nodeName))
+            {
+                string progName = cn.GetValue(nameof(Program.name));
+                if (progName == null || !ProgramDict.TryGetValue(progName, out Program programTemplate))
+                {
+                    // Keep the node as-is so the program comes back if its definition is restored later
+                    RP0Debug.LogWarning($"ProgramHandler: no RP0_PROGRAM found for {nodeName} {progName}, keeping it in the save but ignoring it");
+                    _unknownProgramNodes.Add(cn.CreateCopy());
+                    continue;
+                }
+
+                var program = new Program(programTemplate);
+                program.Load(cn);
+                target.Add(program);
+            }
+        }
+
         public void OnLoadStrategiesComplete()
         {
             if (_upgrade_v02)
@@ -261,6 +272,9 @@ namespace RP0.Programs
                 node.AddNode(cn);
             }
 
+            foreach (ConfigNode cn in _unknownProgramNodes)
+                node.AddNode(cn);
+
             var disableds = new ConfigNode("DISABLEDPROGRAMS");
             foreach (var p in DisabledPrograms)
                 disableds.AddValue(p, true);
@@ -279,12 +293,12 @@ namespace RP0.Programs
         public void ProcessFunding()
         {
             Profiler.BeginSample("RP0ProcessFunding");
-            double fundsOld = Funding.Instance.Funds;
+            //double fundsOld = Funding.Instance.Funds;
             foreach (Program p in ActivePrograms)
             {
                 p.ProcessFunding();
             }
-            RP0Debug.Log($"ProgramHandler added {Funding.Instance.Funds - fundsOld} funds.");
+            //RP0Debug.Log($"ProgramHandler added {Funding.Instance.Funds - fundsOld} funds.");
             Profiler.EndSample();
         }
 
@@ -336,6 +350,37 @@ namespace RP0.Programs
             return 0f;
         }
 
+        public float RepToConfidenceForParam(ContractParameter param, bool isAwarding)
+        {
+            foreach (Program p in ActivePrograms)
+                if (p.optionalParams.Contains(param.ID))
+                    return p.RepToConfidence;
+
+            if (isAwarding)
+                return 0f;
+
+            foreach (Program p in CompletedPrograms)
+                if (p.optionalParams.Contains(param.ID))
+                    return p.RepToConfidence;
+
+            return 0f;
+        }
+
+        /// <summary>
+        /// Marks the objectives of every active program complete if they are met but not yet processed.
+        /// </summary>
+        public void CheckProgramObjectives()
+        {
+            for (int i = ActivePrograms.Count - 1; i >= 0; --i)
+            {
+                Program p = ActivePrograms[i];
+                if (!p.CanComplete && p.AllObjectivesMet)
+                {
+                    p.MarkObjectivesComplete();
+                }
+            }
+        }
+
         private void OnContractAccept(Contract data)
         {
             if (SpaceCenterManagement.Instance.StartedProgram)
@@ -354,14 +399,7 @@ namespace RP0.Programs
             yield return null;
             yield return null;
 
-            for (int i = ActivePrograms.Count - 1; i >= 0; --i)
-            {
-                Program p = ActivePrograms[i];
-                if (!p.CanComplete && p.AllObjectivesMet)
-                {
-                    p.MarkObjectivesComplete();
-                }
-            }
+            CheckProgramObjectives();
 
             if (data is ConfiguredContract cc)
             {
@@ -371,16 +409,28 @@ namespace RP0.Programs
                     SpaceCenterManagement.Instance.Applicants += applicants;
 
                 // Handle Confidence
+                // Note: optional parameter confidence is awarded at parameter completion time (see PatchContractParameter.Postfix_AwardCompletion).
                 float repToConf = RepToConfidenceForContract(cc, true);
                 if (repToConf > 0f)
-                {
-                    float rep = 0;
-                    foreach (var param in cc.AllParameters)
-                        if (param.Optional && param.ReputationCompletion > 0 && param.State == ParameterState.Complete)
-                            rep += param.ReputationCompletion;
-                    Confidence.Instance.AddConfidence(repToConf * (rep + data.ReputationCompletion), TransactionReasons.ContractReward);
-                }
+                    Confidence.Instance.AddConfidence(repToConf * data.ReputationCompletion, TransactionReasons.ContractReward);
             }
+        }
+
+        private void OnTechResearched(GameEvents.HostTargetAction<RDTech, RDTech.OperationResult> data)
+        {
+            if (data.target == RDTech.OperationResult.Successful)
+                CheckProgramObjectives();
+        }
+
+        private void OnFacilityUpgradeComplete(FacilityUpgradeProject data)
+        {
+            CheckProgramObjectives();
+        }
+
+        private IEnumerator CheckProgramObjectivesNextFrame()
+        {
+            yield return null;
+            CheckProgramObjectives();
         }
 
         private void ShowAdminGUI()
@@ -503,7 +553,7 @@ namespace RP0.Programs
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Accepted: ", HighLogic.Skin.label);
-                    GUILayout.Label(KSPUtil.dateTimeFormatter.PrintDateCompact(p.acceptedUT, false, false), HighLogic.Skin.label);
+                    GUILayout.Label(RP0DTUtils.PrintDateCompact(p.acceptedUT, false, false), HighLogic.Skin.label);
                     GUILayout.EndHorizontal();
                 }
 
@@ -511,7 +561,7 @@ namespace RP0.Programs
                 {
                     GUILayout.BeginHorizontal();
                     GUILayout.Label("Completed: ", HighLogic.Skin.label);
-                    GUILayout.Label(KSPUtil.dateTimeFormatter.PrintDateCompact(p.completedUT, false, false), HighLogic.Skin.label);
+                    GUILayout.Label(RP0DTUtils.PrintDateCompact(p.completedUT, false, false), HighLogic.Skin.label);
                     GUILayout.EndHorizontal();
                 }
             }
@@ -554,6 +604,10 @@ namespace RP0.Programs
                 ps.SetProgram(activeP);
 
             SpaceCenterManagement.Instance.StartedProgram = true;
+
+            // Deferred so that callers which complete the program or set its state right after activation are done first
+            // One such case is ConfigurableStart.
+            StartCoroutine(CheckProgramObjectivesNextFrame());
 
             return activeP;
         }

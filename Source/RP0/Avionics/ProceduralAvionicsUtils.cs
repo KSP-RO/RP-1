@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using RealFuels.Tanks;
+using System.Collections.Generic;
+using System.Reflection;
 
 namespace RP0.ProceduralAvionics
 {
@@ -7,6 +9,10 @@ namespace RP0.ProceduralAvionics
         private static bool _enableLogging = true;
 
         private const string LogPrefix = "[ProcAvi] ";
+
+        private static readonly FieldInfo _tanksDictField = typeof(ModuleFuelTanks).GetField("tanksDict", BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.FlattenHierarchy);
+
+        public static Dictionary<string, FuelTank> GetTanks(ModuleFuelTanks rfPM) => (Dictionary<string, FuelTank>)_tanksDictField.GetValue(rfPM);
 
         public static void Log(params string[] message)
         {

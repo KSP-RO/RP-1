@@ -118,7 +118,9 @@ namespace RP0.Programs
             int freeSlots = ProgramHandler.Instance.MaxProgramSlots - ProgramHandler.Instance.ActiveProgramSlots;
             if (_program.slots > freeSlots)
             {
-                reason = $"This program requires {_program.slots} free slots but only {freeSlots} slots are available.";
+                reason = (freeSlots != 1)
+                    ? $"This program requires {_program.slots} free slots but only {freeSlots} slots are available."
+                    : $"This program requires {_program.slots} free slots but only 1 slot is available.";
                 return false;
             }
 
@@ -148,7 +150,7 @@ namespace RP0.Programs
             if (!_program.CanComplete)
             {
                 // But double-check: are all objectives met and the program is active? Then for some reason
-                // the contract completion event handler didn't notice (and mark the program complete) but
+                // the event handlers in ProgramHandler didn't notice (and mark the program complete) but
                 // we will still let you complete the program.
                 if (_program.AllObjectivesMet && _program.IsActive && !_program.IsComplete)
                 {

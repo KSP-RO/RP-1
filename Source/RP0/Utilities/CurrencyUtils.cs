@@ -10,12 +10,12 @@ namespace RP0
         public static Currency Stock(this CurrencyRP0 c) => (Currency)c;
         public static CurrencyRP0 RP0(this Currency c) => (CurrencyRP0)c;
 
-        public static double Funds(TransactionReasonsRP0 reason, double funds, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, funds, 0d, 0d, 0d, 0d).GetTotal(CurrencyRP0.Funds, includeHidden);
-        public static double Science(TransactionReasonsRP0 reason, double sci, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, sci, 0d, 0d, 0d).GetTotal(CurrencyRP0.Science, includeHidden);
-        public static double Rep(TransactionReasonsRP0 reason, double rep, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, rep, 0d, 0d).GetTotal(CurrencyRP0.Reputation, includeHidden);
-        public static double Conf(TransactionReasonsRP0 reason, double conf, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, conf, 0d).GetTotal(CurrencyRP0.Confidence, includeHidden);
-        public static double Rate(TransactionReasonsRP0 reason, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, 0d).GetTotal(CurrencyRP0.Rate, includeHidden);
-        public static double Time(TransactionReasonsRP0 reason, double time, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQuery(reason, 0d, 0d, 0d, 0d, time).GetTotal(CurrencyRP0.Time, includeHidden);
+        public static double Funds(TransactionReasonsRP0 reason, double funds, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQueryForTotal(CurrencyRP0.Funds, includeHidden, reason, funds, 0d, 0d, 0d, 0d);
+        public static double Science(TransactionReasonsRP0 reason, double sci, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQueryForTotal(CurrencyRP0.Science, includeHidden, reason, 0d, sci, 0d, 0d, 0d);
+        public static double Rep(TransactionReasonsRP0 reason, double rep, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQueryForTotal(CurrencyRP0.Reputation, includeHidden, reason, 0d, 0d, rep, 0d, 0d);
+        public static double Conf(TransactionReasonsRP0 reason, double conf, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQueryForTotal(CurrencyRP0.Confidence, includeHidden, reason, 0d, 0d, 0d, conf, 0d);
+        public static double Rate(TransactionReasonsRP0 reason, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQueryForTotal(CurrencyRP0.Rate, includeHidden, reason, 0d, 0d, 0d, 0d, 0d);
+        public static double Time(TransactionReasonsRP0 reason, double time, bool includeHidden = false) => CurrencyModifierQueryRP0.RunQueryForTotal(CurrencyRP0.Time, includeHidden, reason, 0d, 0d, 0d, 0d, time);
 
         public static void ProcessCurrency(TransactionReasonsRP0 reason, Dictionary<CurrencyRP0, double> dict, bool invert = false)
         {
@@ -39,6 +39,24 @@ namespace RP0
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Returns the fraction (0..1) of an already-run fund cost query that the player can currently afford.
+        /// Uses the query's processed total including hidden post-multiplier deltas (the same basis CanAfford
+        /// uses), so leader/strategy modifiers are respected. Returns 1 when the cost is fully covered (or is a
+        /// gain) and 0 when no funds are available. Intended for advancing a project as far as funds allow,
+        /// spending down to ~0 without ever going negative.
+        /// </summary>
+        public static double GetAffordableFundsFraction(CurrencyModifierQuery query)
+        {
+            double effectiveCost = query is CurrencyModifierQueryRP0 cmq
+                ? -cmq.GetTotal(CurrencyRP0.Funds, includeHidden: true)
+                : -query.GetTotal(Currency.Funds);
+            if (effectiveCost <= 0d)
+                return 1d;
+            double fraction = Funding.Instance.Funds / effectiveCost;
+            return fraction < 0d ? 0d : (fraction > 1d ? 1d : fraction);
         }
     }
 }

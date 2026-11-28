@@ -8,7 +8,7 @@ namespace RP0.ConfigurableStart
         private static readonly IDateTimeFormatter _timeFormatter = KSPUtil.dateTimeFormatter;
 
         public static long Epoch { get; set; } = 0;
-        public static string GetFormattedDateString(long UT) => _timeFormatter.PrintDateCompact(UT, true);
+        public static string GetFormattedDateString(long UT) => RP0DTUtils.PrintDateCompact(UT, true, outOfRangeStr: "(invalid)");
 
         public static string GetDatePreview(string dateString)
         {

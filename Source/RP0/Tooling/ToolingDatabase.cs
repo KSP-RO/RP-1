@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace RP0
 {
@@ -7,6 +8,11 @@ namespace RP0
         public float Value { get; set; }
         public List<ToolingEntry> Children { get; } = new List<ToolingEntry>();
 
+        // Set on merged-leaf entries to record which DB type(s) supplied this exact
+        // (mass, diameter, length) combination. Null on entries that live in the database
+        // proper, and on non-leaf merged entries.
+        public HashSet<string> Sources { get; set; }
+
         public ToolingEntry(float value)
         {
             Value = value;
@@ -14,40 +20,80 @@ namespace RP0
     }
     public class ToolingDatabase
     {
-        protected static float comparisonEpsilonHigh = 1.04f;
-        protected static float comparisonEpsilonLow = 0.96f;
+        public const float toolingMargin = .04f;
+        protected const float comparisonHigh = 1.00f + toolingMargin;
+        protected const float comparisonLow = 1.00f - toolingMargin;
+        // Relative float slop, carrying no physical meaning -- unlike toolingMargin. Pads the margin
+        // comparison so a value sitting exactly on the 4% boundary still counts as covered, and is
+        // the entire tolerance of the exact comparison.
+        protected const float epsilon = 1e-6f;
+
+        public static float GetLowComparison(float value) => value * (comparisonLow - epsilon);
+
+        public static float GetHighComparison(float value) => value * (comparisonHigh + epsilon);
 
         protected static int EpsilonCompare(float a, float b)
         {
-            if (a > b * comparisonEpsilonLow && a < b * comparisonEpsilonHigh)
+            if (a > GetLowComparison(b) && a < GetHighComparison(b))
                 return 0;
 
             return a.CompareTo(b);
         }
 
+        /// <summary>
+        /// Matches two entries being merged for display. Deliberately NOT <see cref="EpsilonCompare"/>:
+        /// that treats anything within the 4% tooling margin as equal, which is right for "does this
+        /// tooling cover that part?" but wrong for building a list -- merging a 90t entry into a 93t
+        /// one relabels it 93t and drops it as a row of its own. The band is relative to the larger
+        /// operand so the result does not depend on which side is compared first.
+        /// </summary>
+        /// <param name="a">First value.</param>
+        /// <param name="b">Second value.</param>
+        /// <returns>0 when the two are the same to within <see cref="epsilon"/>, else their relative order.</returns>
+        protected static int ExactCompare(float a, float b)
+        {
+            if (Math.Abs(a - b) <= epsilon * Math.Max(Math.Abs(a), Math.Abs(b)))
+                return 0;
+
+            return a.CompareTo(b);
+        }
+
+        // Cached so passing a comparator to GetEntryIndex doesn't allocate a delegate per call --
+        // it runs per-part in the editor via GetToolingLevel.
+        private static readonly Comparison<float> _epsilonComparison = EpsilonCompare;
+        private static readonly Comparison<float> _exactComparison = ExactCompare;
+
         public static Dictionary<string, List<ToolingEntry>> toolings = new Dictionary<string, List<ToolingEntry>>();
 
+        // Bumps on every mutation (UnlockTooling adding entries, Load wiping the table).
+        // Lets the UI cache derived views (e.g. merged grouped entries) and invalidate
+        // without scanning the whole tree each frame.
+        public static int Generation { get; private set; }
+
         protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min)
+            => GetEntryIndex(value, list, out min, _epsilonComparison);
+
+        /// <summary>Binary search over the ascending entry list.</summary>
+        /// <param name="value">Value to look for.</param>
+        /// <param name="list">Entries to search, ascending.</param>
+        /// <param name="min">Receives the index the value would be inserted at when there's no match.</param>
+        /// <param name="compare">
+        /// Decides what counts as the same entry: <see cref="EpsilonCompare"/> for coverage queries
+        /// (a slightly smaller tooling still covers a part), <see cref="ExactCompare"/> when merging
+        /// types together for display.
+        /// </param>
+        /// <returns>Index of the matching entry, or -1 when there is none.</returns>
+        protected static int GetEntryIndex(float value, List<ToolingEntry> list, out int min, Comparison<float> compare)
         {
             min = 0;
             int max = list.Count - 1;
             while (min <= max)
             {
                 int mid = (min + max) / 2;
-                switch (EpsilonCompare(value, list[mid].Value))
-                {
-                    case 0:
-                        return mid;
-
-                    case 1:
-                        min = mid + 1;
-                        break;
-
-                    default:
-                    case -1:
-                        max = mid - 1;
-                        break;
-                }
+                int cmp = compare(value, list[mid].Value);
+                if (cmp == 0) return mid;
+                if (cmp > 0) min = mid + 1;
+                else max = mid - 1;
             }
             return -1;
         }
@@ -72,23 +118,111 @@ namespace RP0
                 return parameters.Length;
             }
 
-            List<ToolingEntry> entries;
-            var level = 0;
-            if (toolings.TryGetValue(type, out entries))
+            if (toolings.TryGetValue(type, out List<ToolingEntry> entries))
             {
-                for (int i = 0; i < parameters.Length; ++i)
-                {
-                    var entryIndex = GetEntryIndex(parameters[i], entries, out _);
-                    if (entryIndex == -1)
-                    {
-                        break;
-                    }
-                    level++;
-                    entries = entries[entryIndex].Children;
-                }
+                return GetMatchDepth(parameters, 0, entries);
             }
 
-            return level;
+            return 0;
+        }
+
+        /// <summary>
+        /// Counts how many parameters in a row, starting from the given one, are covered by the
+        /// entries. Follows every matching entry and returns the deepest result.
+        /// </summary>
+        /// <param name="parameters">Tooling parameters, one per tree level.</param>
+        /// <param name="paramIndex">Index of the parameter that the entries are matched against.</param>
+        /// <param name="entries">Entries of the tree level that belongs to that parameter.</param>
+        /// <returns>Number of matched levels, 0 when the first one already misses.</returns>
+        protected static int GetMatchDepth(float[] parameters, int paramIndex, List<ToolingEntry> entries)
+        {
+            if (paramIndex >= parameters.Length)
+                return 0;
+
+            if (!GetEntryRange(parameters[paramIndex], entries, out int first, out int last, out _))
+                return 0;
+
+            int maxDepth = parameters.Length - paramIndex;
+            int best = 0;
+            for (int i = first; i <= last && best < maxDepth; ++i)
+            {
+                int depth = 1 + GetMatchDepth(parameters, paramIndex + 1, entries[i].Children);
+                if (depth > best)
+                    best = depth;
+            }
+
+            return best;
+        }
+
+        /// <summary>
+        /// Finds every entry within the tooling margin of the value. Stored entries can sit close
+        /// enough for their margins to overlap, so more than one can cover the same value. The
+        /// matches are always next to each other in the ascending list.
+        /// </summary>
+        /// <param name="value">Value to look for.</param>
+        /// <param name="list">Entries to search, ascending.</param>
+        /// <param name="first">Receives the index of the first matching entry.</param>
+        /// <param name="last">Receives the index of the last matching entry.</param>
+        /// <param name="insertionIndex">Receives the index the value would be inserted at when there's no match.</param>
+        /// <returns>True when at least one entry matches.</returns>
+        protected static bool GetEntryRange(float value, List<ToolingEntry> list, out int first, out int last, out int insertionIndex)
+        {
+            first = last = GetEntryIndex(value, list, out insertionIndex);
+            if (first == -1)
+                return false;
+
+            while (first > 0 && EpsilonCompare(value, list[first - 1].Value) == 0)
+                first--;
+            while (last < list.Count - 1 && EpsilonCompare(value, list[last + 1].Value) == 0)
+                last++;
+            return true;
+        }
+
+        /// <summary>
+        /// Returns a freshly-merged tree combining the entries of every supplied type. Used by the
+        /// tooling UI to collapse grouped types (e.g. all Avionics-N* tech levels under one
+        /// Avionics-N entry) without mutating the underlying database.
+        /// </summary>
+        /// <param name="types">Database keys whose entries are combined.</param>
+        public static List<ToolingEntry> GetMergedEntries(IEnumerable<string> types)
+        {
+            var merged = new List<ToolingEntry>();
+            foreach (var type in types)
+            {
+                if (toolings.TryGetValue(type, out var entries))
+                {
+                    foreach (var entry in entries)
+                        MergeEntryInto(merged, entry, type);
+                }
+            }
+            return merged;
+        }
+
+        private static void MergeEntryInto(List<ToolingEntry> target, ToolingEntry source, string sourceType)
+        {
+            // Exact match, not the tooling margin: target accumulates entries from several types, and
+            // two of them landing within 4% of each other are still two distinct toolings.
+            int existing = GetEntryIndex(source.Value, target, out int insertionIndex, _exactComparison);
+            ToolingEntry dest;
+            if (existing >= 0)
+            {
+                dest = target[existing];
+            }
+            else
+            {
+                dest = new ToolingEntry(source.Value);
+                target.Insert(insertionIndex, dest);
+            }
+            if (source.Children.Count == 0)
+            {
+                if (dest.Sources == null) dest.Sources = new HashSet<string>();
+                dest.Sources.Add(sourceType);
+            }
+            else
+            {
+                foreach (var child in source.Children)
+                    MergeEntryInto(dest.Children, child, sourceType);
+            }
         }
 
         public static bool UnlockTooling(string type, params float[] parameters)
@@ -102,8 +236,24 @@ namespace RP0
 
             for (int i = 0; i < parameters.Length; ++i)
             {
-                var entryIndex = GetEntryIndex(parameters[i], entries, out var insertionIndex);
-                if (entryIndex == -1)
+                int entryIndex;
+                if (GetEntryRange(parameters[i], entries, out int first, out int last, out int insertionIndex))
+                {
+                    // Several entries can cover the value. Continue under the one that already
+                    // holds the most of the remaining parameters, so nothing gets added twice.
+                    entryIndex = first;
+                    int bestDepth = -1;
+                    for (int j = first; j <= last; ++j)
+                    {
+                        int depth = GetMatchDepth(parameters, i + 1, entries[j].Children);
+                        if (depth > bestDepth)
+                        {
+                            bestDepth = depth;
+                            entryIndex = j;
+                        }
+                    }
+                }
+                else
                 {
                     entries.Insert(insertionIndex, new ToolingEntry(parameters[i]));
                     entryIndex = insertionIndex;
@@ -112,6 +262,7 @@ namespace RP0
                 entries = entries[entryIndex].Children;
             }
 
+            if (toolingUnlocked) Generation++;
             return toolingUnlocked;
         }
 
@@ -124,6 +275,7 @@ namespace RP0
         private static void LoadDBFromNode(ConfigNode node)
         {
             toolings.Clear();
+            Generation++;
 
             if (node == null) return;
 

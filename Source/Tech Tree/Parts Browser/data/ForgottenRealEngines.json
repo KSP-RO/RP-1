@@ -97,6 +97,7 @@
         "entry_cost_mods": "LE-7",
         "identical_part_name": "LE-7",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]

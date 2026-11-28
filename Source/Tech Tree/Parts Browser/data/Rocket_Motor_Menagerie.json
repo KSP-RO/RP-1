@@ -19,6 +19,7 @@
         "entry_cost_mods": "LRBE",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -42,6 +43,7 @@
         "entry_cost_mods": "RS-25-650",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -66,6 +68,7 @@
         "entry_cost_mods": "SSBE",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -90,6 +93,7 @@
         "entry_cost_mods": "RS-25A-50X",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]

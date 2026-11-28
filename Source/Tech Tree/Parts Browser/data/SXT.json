@@ -924,6 +924,7 @@
         "entry_cost_mods": "RD-0120",
         "identical_part_name": "RD-0120",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo",
             "Hydrolox"
         ]
@@ -1318,6 +1319,7 @@
         "entry_cost_mods": "RD-170",
         "identical_part_name": "RD-170",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },
@@ -1740,6 +1742,7 @@
         "entry_cost_mods": "4x-NK-21",
         "identical_part_name": "",
         "module_tags": [
+            "EngineLiquidStaged",
             "EngineLiquidTurbo"
         ]
     },

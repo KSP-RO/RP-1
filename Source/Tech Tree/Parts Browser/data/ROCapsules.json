@@ -4870,7 +4870,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Vostok Hoop Antenna",
         "module_tags": [
             "Instruments"
         ]
@@ -4923,7 +4923,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Vostok Decoupler",
         "module_tags": []
     },
     {
@@ -4946,7 +4946,7 @@
         "engine_config": "",
         "upgrade": false,
         "entry_cost_mods": "",
-        "identical_part_name": "",
+        "identical_part_name": "Vostok Parachute",
         "module_tags": []
     },
     {

@@ -362,14 +362,23 @@ namespace RP0
                 double siteTotal = 0d;
                 foreach (var lc in ksc.LaunchComplexes)
                 {
-                    if (!lc.IsOperational)
+                    double cost = MaintenanceHandler.Instance.LCUpkeep(lc) * PeriodFactor;
+                    if (!lc.IsOperational && cost == 0d)
                         continue;
 
-                    double cost = MaintenanceHandler.Instance.LCUpkeep(lc) * PeriodFactor;
                     cost = CurrencyUtils.Funds(TransactionReasonsRP0.StructureRepairLC, -cost);
                     siteTotal += cost;
+
+                    string name = lc.Name;
+                    if (!lc.IsOperational)
+                    {
+                        LCConstructionProject lcc = ksc.LCConstructions.Find(c => c.lcID == lc.ID);
+                        if (lcc != null)
+                            name += lcc.isModify ? " (modifying)" : " (constructing)";
+                    }
+
                     GUILayout.BeginHorizontal();
-                    GUILayout.Label($"   {lc.Name}", HighLogic.Skin.label, GUILayout.Width(160));
+                    GUILayout.Label($"   {name}", HighLogic.Skin.label, GUILayout.Width(160));
                     GUILayout.Label(FormatCost(cost), RightLabel, GUILayout.Width(160));
                     GUILayout.EndHorizontal();
                 }

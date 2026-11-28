@@ -26,6 +26,8 @@ jobs:
   validate-cfg-files:
     uses: KSP-RO/BuildTools/.github/workflows/validate-cfg-files.yml@master
 
+  # The RP0.Tests project needs the KSP DLLs, and therefore cannot run on forks. It is run locally instead.
+
   build:
     # The type of runner that the job will run on
     runs-on: ubuntu-22.04
